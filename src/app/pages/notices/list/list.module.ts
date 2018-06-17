@@ -1,10 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
+import { Routes, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+const routes: Routes = [
+  {
+    path: '',
+    data: {
+        title: 'ค้นหาข้อมูล',
+        urls: [{ title: 'หน้าหลัก', url: '/' }, { title: '1.5 แจ้งความนำจับ' }]
+    },
+    component: ListComponent
+}
+]
 
 @NgModule({
   imports: [
-    CommonModule
+    FormsModule,
+    CommonModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [ListComponent]
 })
