@@ -28,6 +28,11 @@
     "@ng-bootstrap/ng-bootstrap": "^1.1.2",
     "@types/jquery": "^2.0.42",
     "core-js": "^2.4.1",
+    "datatables.net-bs": "^1.10.16",
+    "datatables.net-dt": "^1.10.16",
+    "datatables.net-editor-bs": "^1.6.3",
+    "datatables.net-responsive-bs": "^2.2.1",
+    "jquery": "^3.3.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
   },

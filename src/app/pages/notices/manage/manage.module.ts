@@ -8,8 +8,9 @@ const routes: Routes = [
     {
         path: '',
         data: {
-            title: 'จัดการข้อมูล',
+            // title: 'จัดการข้อมูล',
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: '1.5 แจ้งความนำจับ' }]
+            page: {type: 'manage', next: '/notice/list'}
         },
         component: ManageComponent
     }

@@ -9,7 +9,8 @@ const routes: Routes = [
     path: '',
     data: {
         // title: 'ค้นหาข้อมูล',
-        urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาใบแจ้งความนำจับ' }]
+        urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาใบแจ้งความนำจับ' }],
+        page: {type: 'list', next: '/notice/manage'}
     },
     component: ListComponent
 }
