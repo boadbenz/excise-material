@@ -8,8 +8,8 @@ const routes: Routes = [
   {
     path: '',
     data: {
-        title: 'ค้นหาข้อมูล',
-        urls: [{ title: 'หน้าหลัก', url: '/' }, { title: '1.5 แจ้งความนำจับ' }]
+        // title: 'ค้นหาข้อมูล',
+        urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาใบแจ้งความนำจับ' }]
     },
     component: ListComponent
 }
