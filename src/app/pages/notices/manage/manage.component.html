@@ -1,3 +1,279 @@
-<p>
-  manage works!
-</p>
+<div class="card card-outline-success">
+    <div class="card-header">
+        <h4 class="card-title m-b-0 text-white">ผู้รับแจ้ง</h4>
+    </div>
+    <div class="card-body">
+
+        <form class="form-horizontal">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">เลขที่บันทึกแจ้งความ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control">
+                    </div>
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">วันที่รับแจ้งความ :
+                    <span class="text-danger">*</span>
+                </label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="date" class="form-control" id="" placeholder="วว/ดด/ปปปป" appDatepicker>
+
+                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                    <input type="text" name="" id="" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ใช้ได้ภายในกำหนด (วัน) :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">สิ้นสุดวันที่ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">เขียนที่ :
+                    <span class="text-danger">*</span>
+                </label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ผู้รับแจ้งความ :
+                    <span class="text-danger">*</span>
+                </label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="text" name="" id="" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">หน่วยงาน :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control">
+                    </div>
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ตำแหน่ง :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <app-staff></app-staff>
+                </div>
+            </div> -->
+        </form>
+
+    </div>
+</div>
+
+<div class="card card-outline-success">
+    <div class="card-header">
+        <!-- <app-header-dropdown></app-header-dropdown> -->
+        <h4 class="card-title m-b-0 text-white">รายละเอียดผู้แจ้งความ</h4>
+    </div>
+    <div class="card-body">
+
+        <form class="form-horizontal">
+            <div class="row">
+                <div class="col-6">
+
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ชื่อ(นามแฝง) ผู้แจ้ง :
+                    <span class="text-danger">*</span>
+                </label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">อายุผู้แจ้ง (ปี) :</label>
+                <div class="form-group input-group col-lg-4 col-md-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">บ้านเลขที่ :</label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="text" class="form-control">
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">หมู่ที่ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">อาคาร/สถานที่ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ห้อง :</label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ชั้น :</label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="text" class="form-control">
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ตรอก/ซอย :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ถนน :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <input type="text" class="form-control">
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ต./อ./จ. :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <select name="" id="" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">รายละเอียดแจ้งความ :</label>
+                <div class="col-lg-10 col-md-8 form-group ">
+                    <textarea name="" id="" cols="" rows="5" class="form-control"></textarea>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div class="card card-outline-success">
+    <div class="card-header">
+        <!-- <app-header-dropdown></app-header-dropdown> -->
+        <h4 class="card-title m-b-0 text-white">รายละเอียดการกระทำความผิด</h4>
+    </div>
+    <div class="card-body">
+
+        <form class="form-horizontal">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">บ้านเลขที่ :</label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="text" class="form-control">
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">หมู่ที่ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">อาคาร/สถานที่ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ห้อง :</label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ชั้น :</label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="text" class="form-control">
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ตรอก/ซอย :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ถนน :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <input type="text" class="form-control">
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label text-right">ต./อ./จ. :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <select name="" id="" class="form-control"></select>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<div class="card card-outline-success">
+    <div class="card-header">
+        <!-- <app-header-dropdown></app-header-dropdown> -->
+        <h4 class="card-title m-b-0 text-white">สินค้าต้องสงสัย</h4>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>สินค้า</th>
+                    <th>จำนวน</th>
+                    <th>หน่วย</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        <input type="text" name="" id="">
+                    </td>
+                    <td>
+                        <input type="text" name="" id="">
+                    </td>
+                    <td>
+                        <select name="" id="" class="form-control">
+                            <option value=""></option>
+                        </select>
+                    </td>
+                    <td>
+                        <a href="javaScript:void(0);" class="text-danger">
+                            <i class="fa fa-trash-o fa-xl"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
