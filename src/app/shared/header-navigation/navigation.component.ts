@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
 declare var jQuery: any;
@@ -17,13 +17,12 @@ export class NavigationComponent implements OnInit {
     nextPageTitle: string;
     mode: string;
 
-    private sub: any;
-    // @Output() btnCreate = new EventEmitter();
-    // @Output() btnAdvSearch = new EventEmitter();
+    @Output() btnSave: EventEmitter<boolean> = new EventEmitter();
+    @Output() btnCancel: EventEmitter<boolean> = new EventEmitter();
 
     constructor(
         private router: Router,
-        private activatedRoute: ActivatedRoute,
+        private activatedRoute: ActivatedRoute
     ) { };
 
     ngOnInit(): void {
@@ -48,6 +47,14 @@ export class NavigationComponent implements OnInit {
                     this.nextPageTitle = next['title'];
                 }
             });
+    }
+
+    onSave() {
+        this.btnSave.emit(true);
+    }
+
+    onCancel() {
+        this.btnCancel.emit(true);
     }
 
     create() {

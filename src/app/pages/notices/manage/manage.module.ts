@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
 
 const routes: Routes = [
     {
@@ -27,6 +28,8 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes)
     ],
-    declarations: [ManageComponent]
+    declarations: [
+        ManageComponent
+    ]
 })
 export class ManageModule { }

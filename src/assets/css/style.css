@@ -22,7 +22,7 @@ Author: Themedesigner
 Email: niravjoshi87@gmail.com
 File: scss
 */
-@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
+@import url("https://fonts.googleapis.com/css?family=Kanit:300,400,500,600,700&subset=thai");
 /*Theme Colors*/
 /*bootstrap Color*/
 /*Light colors*/
@@ -36,7 +36,7 @@ File: scss
 @import url(../scss/icons/themify-icons/themify-icons.css);
 @import url(../scss/icons/flag-icon-css/flag-icon.min.css);
 @import url(../scss/icons/material-design-iconic-font/css/materialdesignicons.min.css);
-@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
+@import url("https://fonts.googleapis.com/css?family=Kanit:300,400,500,600,700&subset=thai");
 @import url(../css/spinners.css);
 @import url(../css/animate.css);
 .preloader {
@@ -97,7 +97,7 @@ Global Styles
 
 body {
   background: #fff;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Kanit', sans-serif;
   margin: 0;
   overflow-x: hidden;
   color: #67757c;
@@ -137,7 +137,7 @@ h4,
 h5,
 h6 {
   color: #455a64;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Kanit', sans-serif;
   font-weight: 400; }
 
 h1 {
@@ -2637,7 +2637,7 @@ Dashboard1 chart
     stroke: #26c6da; }
 
 .c3-chart-arcs-title, .c3-legend-item {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Kanit', sans-serif;
   fill: #67757c; }
 
 html body #visitor .c3-chart-arcs-title {
@@ -2970,7 +2970,7 @@ Form Material page
   padding: 10px 10px 10px 0;
   display: block;
   border: none;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Kanit', sans-serif;
   border-radius: 0px;
   border-bottom: 1px solid #d9d9d9; }
 
@@ -4193,7 +4193,7 @@ Horizontal Timeline page
   border: 1px solid rgba(120, 130, 140, 0.13);
   padding: 8px 16px;
   height: auto;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Kanit', sans-serif;
   font-weight: 400;
   border-radius: 0; }
 

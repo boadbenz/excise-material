@@ -5,12 +5,4 @@ export class NoticeService {
 
   constructor() { }
 
-  @HostListener('click') onSave() {
-
-  }
-
-  @HostListener('click') onCancel() {
-
-  }
-
 }

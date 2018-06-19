@@ -5,10 +5,13 @@ Email: niravjoshi87@gmail.com
 File: scss
 */
 // Variables
-@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700');
+@import url('https://fonts.googleapis.com/css?family=Kanit:300,400,500,600,700&subset=thai');
+$bodyfont: 'Kanit', sans-serif;
+$headingfont: 'Kanit', sans-serif;
+// @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700');
 
-$bodyfont:'Poppins', sans-serif;
-$headingfont:'Poppins', sans-serif; 
+// $bodyfont:'Poppins', sans-serif;
+// $headingfont:'Poppins', sans-serif; 
 
 
 /*Theme Colors*/
