@@ -39,17 +39,36 @@
                         <i class="mdi mdi-menu"></i>
                     </a>
                 </li>
-                <!-- <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
                         <i class="ti-menu"></i>
                     </a>
-                </li> -->
+                </li>
                 <li *ngIf="pageType == 'list'" class="nav-item">
-                    <div class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
-                        <a href="" class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;"
+                    <div class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
+                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;"
                         (click)="create()">
                             <i class="ti-plus"></i>
                             สร้างข้อมูล
+                        </a>
+                    </div>
+                </li>
+
+                <li *ngIf="pageType == 'manage'" class="nav-item">
+                    <div class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
+                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;"
+                        (click)="create()">
+                            <i class="ti-plus"></i>
+                            บันทึก
+                        </a>
+                    </div>
+                </li>
+                <li *ngIf="pageType == 'manage'" class="nav-item">
+                    <div class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
+                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;"
+                        (click)="create()">
+                            <i class="ti-plus"></i>
+                            ยกเลิก
                         </a>
                     </div>
                 </li>
@@ -57,7 +76,7 @@
             <!-- ============================================================== -->
             <!-- search -->
             <!-- ============================================================== -->
-            <ul *ngIf="pageType == 'list'" class="navbar-nav my-lg-0 row">
+            <ul *ngIf="pageType == 'list'" class="navbar-nav my-lg-0">
                 <!-- ============================================================== -->
                 <!-- Serch -->
                 <!-- ============================================================== -->

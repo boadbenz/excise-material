@@ -1,4 +1,4 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     {
@@ -8,7 +8,7 @@ export const routes: Routes = [
         path: 'notice',
         children: [
             { path: 'list', loadChildren: './pages/notices/list/list.module#ListModule' },
-            { path: 'manage', loadChildren: './pages/notices/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode', loadChildren: './pages/notices/manage/manage.module#ManageModule' }
         ]
     },
 

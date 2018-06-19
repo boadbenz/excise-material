@@ -5,23 +5,24 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
-  {
-    path: '',
-    data: {
-        // title: 'ค้นหาข้อมูล',
-        urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาใบแจ้งความนำจับ' }],
-        page: {type: 'list', next: '/notice/manage'}
-    },
-    component: ListComponent
-}
+    {
+        path: '',
+        data: {
+            // title: 'ค้นหาข้อมูล',
+            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาใบแจ้งความนำจับ' }],
+            pageType: 'list',
+            nextPage: { title: 'แจ้งความ', url: '/notice/manage' }
+        },
+        component: ListComponent
+    }
 ]
 
 @NgModule({
-  imports: [
-    FormsModule,
-    CommonModule,
-    RouterModule.forChild(routes)
-  ],
-  declarations: [ListComponent]
+    imports: [
+        FormsModule,
+        CommonModule,
+        RouterModule.forChild(routes)
+    ],
+    declarations: [ListComponent]
 })
 export class ListModule { }

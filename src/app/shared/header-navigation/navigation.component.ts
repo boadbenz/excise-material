@@ -4,6 +4,7 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 declare var jQuery: any;
 
 @Component({
+    // tslint:disable-next-line:component-selector
     selector: 'ma-navigation',
     templateUrl: './navigation.component.html',
     styleUrls: ['./navigation.component.scss']
@@ -13,7 +14,10 @@ export class NavigationComponent implements OnInit {
 
     pageType: string;
     nextPage: string;
+    nextPageTitle: string;
+    mode: string;
 
+    private sub: any;
     // @Output() btnCreate = new EventEmitter();
     // @Output() btnAdvSearch = new EventEmitter();
 
@@ -35,14 +39,19 @@ export class NavigationComponent implements OnInit {
             .filter(route => route.outlet === 'primary')
             .mergeMap(route => route.data)
             .subscribe((event) => {
-                const page = event['page'];
-                this.pageType = page['type'];
-                this.nextPage = page['next'];
+                if (event['pageType']) {
+                    this.pageType = event['pageType'];
+                }
+                if (event['nextPage']) {
+                    const next = event['nextPage'];
+                    this.nextPage = next['url'];
+                    this.nextPageTitle = next['title'];
+                }
             });
     }
 
     create() {
-        this.router.navigate([`${this.nextPage}`], { queryParams: { c: true } });
+        this.router.navigate([`${this.nextPage}`, 'c']);
     }
 
     advSearch() {

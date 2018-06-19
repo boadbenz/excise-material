@@ -9,8 +9,13 @@ const routes: Routes = [
         path: '',
         data: {
             // title: 'จัดการข้อมูล',
-            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: '1.5 แจ้งความนำจับ' }]
-            page: {type: 'manage', next: '/notice/list'}
+            urls: [
+                { title: 'หน้าหลัก', url: '/' },
+                { title: 'ค้นหาใบแจ้งความนำจับ', url: '/notice/list' },
+                { title: 'จัดการข้อมูลใบแจ้งความนำจับ' }
+            ],
+            pageType: 'manage',
+            nextPage: { title: 'งานจับกุม', url: '/arrest/manage' }
         },
         component: ManageComponent
     }
