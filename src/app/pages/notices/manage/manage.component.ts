@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-manage',
@@ -13,7 +14,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   @Input() navigation: NavigationComponent;
 
   constructor(
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private suspectModalService: NgbModal
   ) {
 
   }
@@ -26,5 +28,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
+  }
+
+  openSuspect(e) {
+    this.suspectModalService.open(e, { size: 'lg', centered: true });
   }
 }

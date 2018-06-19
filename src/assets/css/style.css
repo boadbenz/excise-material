@@ -1036,6 +1036,12 @@ Buttons
     -webkit-box-shadow: 0 14px 26px -12px rgba(40, 190, 189, 0.42), 0 4px 23px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(40, 190, 189, 0.2);
     box-shadow: 0 14px 26px -12px rgba(40, 190, 189, 0.42), 0 4px 23px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(40, 190, 189, 0.2); }
 
+.btn-ghost {
+  background-color: transparent; 
+  border-color: white;
+  color: white;
+}
+
 .btn-info,
 .btn-info.disabled {
   background: #1e88e5;
@@ -1852,7 +1858,9 @@ form label {
   font-weight: 400; }
 
 .form-group {
-  margin-bottom: 25px; }
+  /* margin-bottom: 25px;  */
+  margin-bottom: 15px;
+}
 
 .form-horizontal label {
   margin-bottom: 0px; }

@@ -13,6 +13,7 @@ import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.component';
 import { AppComponent } from './app.component';
 import { routes } from './app.routing';
+// import { SuspectModalComponent } from './pages/component/suspect-modal/suspect-modal.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { routes } from './app.routing';
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-        RightSidebarComponent
+        RightSidebarComponent,
+        // SuspectModalComponent
     ],
     imports: [
         BrowserModule,

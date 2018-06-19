@@ -1,4 +1,4 @@
-<div class="card card-outline-success">
+<div class="card card-outline-info">
     <div class="card-header">
         <h4 class="card-title m-b-0 text-white">ผู้รับแจ้ง</h4>
     </div>
@@ -13,10 +13,10 @@
                     </div>
                 </div>
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับแจ้งความ :
-                    <span class="text-danger">*</span>
+                    <!-- <span class="text-danger">*</span> -->
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="date" class="form-control form-control-sm" id="" placeholder="วว/ดด/ปปปป" appDatepicker>
+                    <input type="date" class="form-control form-control-sm" id="" placeholder="วว/ดด/ปปปป">
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" name="" id="" class="form-control form-control-sm">
@@ -24,7 +24,7 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">ใช้ได้ภายในกำหนด (วัน) :</label>
+                <label for="" class="col-lg-2 col-md-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
                 <div class="col-lg-4 col-md-7">
                     <div class="form-group ">
                         <input type="text" name="" id="" class="form-control form-control-sm">
@@ -41,7 +41,7 @@
 
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">เขียนที่ :
-                    <span class="text-danger">*</span>
+                    <!-- <span class="text-danger">*</span> -->
                 </label>
                 <div class="col-lg-4 col-md-7">
                     <div class="form-group ">
@@ -50,7 +50,7 @@
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้รับแจ้งความ :
-                    <span class="text-danger">*</span>
+                    <!-- <span class="text-danger">*</span> -->
                 </label>
                 <div class="form-group col-lg-4 col-md-7">
                     <input type="text" name="" id="" class="form-control form-control-sm">
@@ -76,7 +76,7 @@
     </div>
 </div>
 
-<div class="card card-outline-success">
+<div class="card card-outline-info">
     <div class="card-header">
         <h4 class="card-title m-b-0 text-white">รายละเอียดผู้แจ้งความ</h4>
     </div>
@@ -90,7 +90,7 @@
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">ชื่อ(นามแฝง) ผู้แจ้ง :
-                    <span class="text-danger">*</span>
+                    <!-- <span class="text-danger">*</span> -->
                 </label>
                 <div class="col-lg-4 col-md-7">
                     <div class="form-group ">
@@ -165,7 +165,7 @@
     </div>
 </div>
 
-<div class="card card-outline-success">
+<div class="card card-outline-info">
     <div class="card-header">
         <h4 class="card-title m-b-0 text-white">รายละเอียดการกระทำความผิด</h4>
     </div>
@@ -227,16 +227,20 @@
     </div>
 </div>
 
-<div class="card card-outline-success">
+<div class="card card-outline-info">
     <div class="card-header">
-        <h4 class="card-title m-b-0 text-white">สินค้าต้องสงสัย</h4>
+        <h4 class="card-title m-b-0 text-white">ผู้ต้องสงสัย</h4>
     </div>
     <div class="card-body">
         <div class="row form-group">
             <div class="col-10"></div>
             <div class="col-2">
-                <button class="btn btn-block btn-info">เพิ่มสินค้า</button>
+                <button class="btn btn-block btn-info" (click)="openSuspect(suspect)">เพิ่มสินค้า</button>
             </div>
+
+            <ng-template #suspect let-c="close" let-d="dismiss">
+                    <app-suspect-modal></app-suspect-modal>
+            </ng-template>
         </div>
         <table class="table">
             <thead>
@@ -264,9 +268,9 @@
                             <option value=""></option>
                         </select>
                     </td>
-                    <td>
+                    <td class="text-center">
                         <a href="javaScript:void(0);" class="text-danger">
-                            <i class="fa fa-trash-o fa-xl"></i>
+                            <i class="fa fa-trash-o fa-lg"></i>
                         </a>
                     </td>
                 </tr>
@@ -275,7 +279,7 @@
     </div>
 </div>
 
-<div class="card card-outline-success">
+<div class="card card-outline-info">
     <div class="card-header">
         <h4 class="card-title m-b-0 text-white">สินค้าต้องสงสัย</h4>
     </div>
@@ -306,9 +310,9 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>
+                    <td class="text-center">
                         <a href="javaScript:void(0);" class="text-danger">
-                            <i class="fa fa-trash-o fa-xl"></i>
+                            <i class="fa fa-trash-o fa-lg"></i>
                         </a>
                     </td>
                 </tr>
@@ -317,7 +321,7 @@
     </div>
 </div>
 
-<div class="card card-outline-success">
+<div class="card card-outline-info">
     <div class="card-header">
         <h4 class="card-title m-b-0 text-white">หลักฐานการแจ้งความ</h4>
     </div>
@@ -334,46 +338,46 @@
         </div>
         <div class="row">
 
-                <label for="" class="col-lg-2 col-md-4 control-label">ที่อยู่เอกสารแนบ :</label>
-                <div class="col-lg-4 col-md-7 form-group ">
-                    <select name="" id="" class="form-control form-control-sm"></select>
-                </div>
+            <label for="" class="col-lg-2 col-md-4 control-label">ที่อยู่เอกสารแนบ :</label>
+            <div class="col-lg-4 col-md-7 form-group ">
+                <select name="" id="" class="form-control form-control-sm"></select>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="card card-outline-success">
-        <div class="card-header">
-            <h4 class="card-title m-b-0 text-white">เอสารแนบภายใน</h4>
-        </div>
-        <div class="card-body">
-            <div class="row form-group">
-                <div class="col-10"></div>
-                <div class="col-2">
-                    <button class="btn btn-block btn-info">เพิ่มเอกสารแนบ</button>
-                </div>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ลำดับ</th>
-                        <th>ชื่อเอกสารแนบ</th>
-                        <th>ที่อยู่เอกสารแนบ</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="javaScript:void(0);" class="text-danger">
-                                <i class="fa fa-trash-o fa-xl"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="card card-outline-info">
+    <div class="card-header">
+        <h4 class="card-title m-b-0 text-white">เอสารแนบภายใน</h4>
     </div>
+    <div class="card-body">
+        <div class="row form-group">
+            <div class="col-10"></div>
+            <div class="col-2">
+                <button class="btn btn-block btn-info">เพิ่มเอกสารแนบ</button>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>ชื่อเอกสารแนบ</th>
+                    <th>ที่อยู่เอกสารแนบ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-center">
+                        <a href="javaScript:void(0);" class="text-danger">
+                            <i class="fa fa-trash-o fa-lg"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
