@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal';
 
 @Component({
   selector: 'app-manage',
-  templateUrl: './manage.component.html'
+  templateUrl: './manage.component.html',
 })
 export class ManageComponent implements OnInit, OnDestroy {
 
@@ -13,10 +14,11 @@ export class ManageComponent implements OnInit, OnDestroy {
   @Input() navigation: NavigationComponent;
 
   constructor(
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private modalService: NgbModal
   ) {
 
-  }
+    }
 
   ngOnInit() {
     this.sub = this.activeRoute.params.subscribe(p => {
@@ -26,5 +28,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
+  }
+
+  openWindowCustomClass(content) {
+    this.modalService.open(content, { 
+      size: 'lg'
+    });
   }
 }
