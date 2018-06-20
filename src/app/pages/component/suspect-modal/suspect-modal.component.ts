@@ -3,7 +3,6 @@ import { Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@ang
 import * as $ from 'jquery';
 import 'datatables.net-bs';
 import { options } from '../../../config/dataTable';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-suspect-modal',

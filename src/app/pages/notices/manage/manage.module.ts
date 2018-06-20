@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
 import { SuspectModalComponent } from '../../component/suspect-modal/suspect-modal.component';
+import { CardActionsCollapseComponent } from '../../component/card-actions/card-actions.component';
 
 const routes: Routes = [
     {
@@ -31,7 +32,8 @@ const routes: Routes = [
     ],
     declarations: [
         ManageComponent,
-        SuspectModalComponent
+        SuspectModalComponent,
+        CardActionsCollapseComponent
     ]
 })
 export class ManageModule { }

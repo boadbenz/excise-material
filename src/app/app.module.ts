@@ -13,7 +13,7 @@ import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.component';
 import { AppComponent } from './app.component';
 import { routes } from './app.routing';
-// import { SuspectModalComponent } from './pages/component/suspect-modal/suspect-modal.component';
+import { CardActionsModule } from './pages/component/card-actions/card-actions.module';
 
 @NgModule({
     declarations: [
@@ -21,15 +21,15 @@ import { routes } from './app.routing';
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-        RightSidebarComponent,
-        // SuspectModalComponent
+        RightSidebarComponent
     ],
     imports: [
         BrowserModule,
         NgbModule.forRoot(),
         FormsModule,
         HttpModule,
-        RouterModule.forRoot(routes)
+        RouterModule.forRoot(routes),
+        // CardActionsModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy }

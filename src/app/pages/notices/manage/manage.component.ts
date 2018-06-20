@@ -28,7 +28,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.activeRoute.params.subscribe(p => {
-      this.mode = p['mode'];
+      this.mode = p['mode'];      
     });
   }
 

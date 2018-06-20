@@ -17,6 +17,8 @@ export class NavigationComponent implements OnInit {
     nextPageTitle: string;
     mode: string;
 
+    private subParam: any;
+
     @Output() btnSave: EventEmitter<boolean> = new EventEmitter();
     @Output() btnCancel: EventEmitter<boolean> = new EventEmitter();
 
@@ -58,7 +60,7 @@ export class NavigationComponent implements OnInit {
     }
 
     create() {
-        this.router.navigate([`${this.nextPage}`, 'c']);
+        this.router.navigate([`${this.nextPage}`, 'c', 'new']);
     }
 
     advSearch() {
