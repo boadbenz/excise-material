@@ -9,17 +9,17 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่บันทึกแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="" id="" class="form-control form-control-sm">
+                        <input type="text" name="" id="" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่รับแจ้งความ :
                     <!-- <span class="text-danger">*</span> -->
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" class="form-control form-control-sm" id="" placeholder="วว/ดด/ปปปป">
+                    <input type="date" class="form-control form-control-sm" id="" placeholder="วว/ดด/ปปปป" [disabled]="mode == 'p'">
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" name="" id="" class="form-control form-control-sm">
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
             </div>
 
@@ -27,16 +27,17 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="" id="" class="form-control form-control-sm">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" name="" id="" class="form-control form-control-sm">
+                <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
+                        <input type="date" class="form-control form-control-sm" id="" placeholder="วว/ดด/ปปปป" readonly>
+    
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" name="" id="" class="form-control form-control-sm" readonly>
                     </div>
-                </div>
             </div>
 
             <div class="row">
@@ -45,7 +46,7 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="" id="" class="form-control form-control-sm">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </div>
                 </div>
 
@@ -53,7 +54,7 @@
                     <!-- <span class="text-danger">*</span> -->
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" name="" id="" class="form-control form-control-sm">
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
             </div>
 
@@ -61,13 +62,13 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="" id="" class="form-control form-control-sm">
+                        <input type="text" name="" id="" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="" id="" class="form-control form-control-sm">
+                        <input type="text" name="" id="" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
             </div>
@@ -85,7 +86,7 @@
         <form class="form-horizontal">
             <div class="row form-group">
                 <div class="col">
-                    <input type="checkbox" id="md_checkbox_25" class="filled-in chk-col-indigo">
+                    <input type="checkbox" id="md_checkbox_25" class="filled-in chk-col-indigo" [disabled]="mode == 'p'">
                     <label for="md_checkbox_25">สายลับขอปิดนาม</label>
                 </div>
             </div>
@@ -95,25 +96,25 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm">
+                        <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">อายุผู้แจ้ง (ปี) :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
             </div>
 
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm">
+                        <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </div>
                 </div>
             </div>
@@ -122,43 +123,43 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm">
+                        <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
             </div>
 
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
             </div>
 
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select name="" id="" class="form-control form-control-sm"></select>
+                    <select name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'"></select>
                 </div>
             </div>
 
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียดแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm"></textarea>
+                    <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" [disabled]="mode == 'p'"></textarea>
                 </div>
             </div>
         </form>
@@ -176,12 +177,12 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm">
+                        <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </div>
                 </div>
             </div>
@@ -190,36 +191,36 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm">
+                        <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
             </div>
 
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
             </div>
 
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm">
+                    <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select name="" id="" class="form-control form-control-sm"></select>
+                    <select name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'"></select>
                 </div>
             </div>
 
@@ -236,7 +237,7 @@
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info">เพิ่มสินค้า</button>
+                <button class="btn btn-block btn-info" [disabled]="mode == 'p'">เพิ่มสินค้า</button>
             </div>
         </div>
         <table class="table">
@@ -255,18 +256,18 @@
                         1
                     </td>
                     <td>
-                        <input type="text" name="" id="" class="form-control form-control-sm">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </td>
                     <td>
-                        <input type="text" name="" id="" class="form-control form-control-sm">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'">
                     </td>
                     <td>
-                        <select name="" id="" class="form-control form-control-sm">
+                        <select name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'">
                             <option value=""></option>
                         </select>
                     </td>
                     <td class="text-center">
-                        <a href="javaScript:void(0);" class="text-danger">
+                        <a href="javaScript:void(0);" class="text-danger" *ngIf="mode != 'p'">
                             <i class="fa fa-trash-o fa-lg"></i>
                         </a>
                     </td>
@@ -284,11 +285,11 @@
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info" (click)="openSuspect(suspect)">เพิ่มผู้ต้องสงสัย</button>
+                <button class="btn btn-block btn-info" (click)="openSuspect(suspect)" [disabled]="mode == 'p'">เพิ่มผู้ต้องสงสัย</button>
             </div>
 
             <ng-template #suspect let-c="close" let-d="dismiss">
-                <app-suspect-modal></app-suspect-modal>
+                <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()"></app-suspect-modal>
             </ng-template>
         </div>
         <table class="table">
@@ -312,7 +313,7 @@
                     <td></td>
                     <td></td>
                     <td class="text-center">
-                        <a href="javaScript:void(0);" class="text-danger">
+                        <a href="javaScript:void(0);" class="text-danger" *ngIf="mode != 'p'">
                             <i class="fa fa-trash-o fa-lg"></i>
                         </a>
                     </td>
@@ -330,18 +331,18 @@
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                <input type="text" class="form-control form-control-sm">
+                <input type="text" class="form-control form-control-sm" [disabled]="mode == 'p'">
             </div>
             <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                <select name="" id="" class="form-control form-control-sm"></select>
+                <select name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'"></select>
             </div>
         </div>
         <div class="row">
 
             <label for="" class="col-lg-2 col-sm-4 control-label">ที่อยู่เอกสารแนบ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                <select name="" id="" class="form-control form-control-sm"></select>
+                <select name="" id="" class="form-control form-control-sm" [disabled]="mode == 'p'"></select>
             </div>
         </div>
     </div>
@@ -355,7 +356,7 @@
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info">เพิ่มเอกสารแนบ</button>
+                <button class="btn btn-block btn-info" [disabled]="mode == 'p'">เพิ่มเอกสารแนบ</button>
             </div>
         </div>
         <table class="table">
@@ -373,7 +374,7 @@
                     <td></td>
                     <td></td>
                     <td class="text-center">
-                        <a href="javaScript:void(0);" class="text-danger">
+                        <a href="javaScript:void(0);" class="text-danger" *ngIf="mode != 'p'">
                             <i class="fa fa-trash-o fa-lg"></i>
                         </a>
                     </td>

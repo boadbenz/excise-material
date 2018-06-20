@@ -8,8 +8,8 @@
         <!-- ============================================================== -->
         <div class="navbar-header">
             <a class="navbar-brand" [routerLink]="['/']">
-               <!-- Logo icon -->
-               <b>
+                <!-- Logo icon -->
+                <b>
                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                     <!-- Dark Logo icon -->
                     <img src="assets/images/logo-excise.png" alt="homepage" class="dark-logo" style="height: 60px;" />
@@ -46,14 +46,15 @@
                 </li>
                 <li *ngIf="pageType == 'list'" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark" href="javascript:void(0)">
-                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;"
-                        (click)="create()">
+                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;" (click)="create()">
                             <i class="ti-plus"></i>
                             สร้างข้อมูล
                         </a>
                     </div>
                 </li>
-
+                <!-- ============================================================== -->
+                <!-- Manage -->
+                <!-- ============================================================== -->
                 <li *ngIf="pageType == 'manage'" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark" href="javascript:void(0)">
                         <a class="btn btn-ghost" (click)="onSave()">

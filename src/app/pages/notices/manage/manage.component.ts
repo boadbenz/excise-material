@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { SuspectModalComponent } from '../../component/suspect-modal/suspect-modal.component';
 
 @Component({
   selector: 'app-manage',
@@ -10,6 +11,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class ManageComponent implements OnInit, OnDestroy {
 
   private sub: any;
+  mode: string;
+  modal: any;
+
+  // ----- Model ------ //
+  // @Input() suspectComponent: SuspectModalComponent;
 
   @Input() navigation: NavigationComponent;
 
@@ -22,7 +28,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.activeRoute.params.subscribe(p => {
-      // console.log(p['mode']);
+      this.mode = p['mode'];
     });
   }
 
@@ -31,6 +37,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   openSuspect(e) {
-    this.suspectModalService.open(e, { size: 'lg', centered: true });
+   this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
   }
+
 }

@@ -20,7 +20,7 @@
     </div>
 
 
-    <a href="javaScript:void(0);" class="close text-white" aria-label="Close" (click)="d($event)">
+    <a href="javaScript:void(0);" class="close text-white" aria-label="Close" (click)="dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
     </a>
 </div>
@@ -85,11 +85,11 @@
     </div>
 <hr>
     <div class="table-responsive">
-        <table class="dataTable table table-sm table-striped table-hover ">
+        <table id="suspectModal" #suspectModal class="table table-sm table-striped table-hover ">
             <thead>
                 <tr>
-                    <th>
-                        <input type="checkbox" id="th" class="filled-in chk-col-indigo">
+                    <th class="text-center">
+                        <input type="checkbox" id="th" class="filled-in chk-col-indigo" (change)="checkAll()" [checked]="isCheckAll">
                         <label for="th"></label>
                     </th>
                     <th>ลำดับ</th>
@@ -104,7 +104,7 @@
             <tbody>
                 <tr>
                     <td class="text-center">
-                        <input type="checkbox" id="td_1" class="filled-in chk-col-indigo">
+                        <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
                         <label for="td_1"></label>
                     </td>
                     <td>1</td>
@@ -124,5 +124,5 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-info" (click)="c($event)">บันทึก</button>
+    <button type="button" class="btn btn-info" (click)="close('Save click')">บันทึก</button>
 </div>

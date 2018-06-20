@@ -1,10 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { options } from '../../../config/dataTable';
+import { options as dataTableOptions } from '../../../config/dataTable';
 
-// import * as $ from 'jquery';
-
-declare var $: any;
+import * as $ from 'jquery';
 import 'datatables.net-bs';
 
 @Component({
@@ -21,20 +19,21 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.onDetactTable();
   }
 
   onDetactTable() {
     const table: any = $('table');
 
-    // if ($.fn.dataTable.isDataTable('table')) {
+    if ($.fn.dataTable.isDataTable('table')) {
 
-    //   this.dataTable = table.DataTable();
-    //   this.dataTable.destroy();
-    // }
+      this.dataTable = table.DataTable();
+      this.dataTable.destroy();
+    }
 
     this._chRef.detectChanges();
 
-    this.dataTable = table.DataTable(options);
+    this.dataTable = table.DataTable(dataTableOptions);
 
   }
 

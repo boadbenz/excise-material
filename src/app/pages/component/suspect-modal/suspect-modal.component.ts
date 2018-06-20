@@ -1,31 +1,58 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 
-declare var $: any;
+import * as $ from 'jquery';
+import 'datatables.net-bs';
+import { options } from '../../../config/dataTable';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-suspect-modal',
-  templateUrl: './suspect-modal.component.html',
-  styleUrls: ['./suspect-modal.component.scss']
+    selector: 'app-suspect-modal',
+    templateUrl: './suspect-modal.component.html',
+    styleUrls: ['./suspect-modal.component.scss']
 })
 export class SuspectModalComponent implements OnInit {
 
-  isOpen = false;
+    isOpen = false;
+    isCheckAll = false;
+    private dataTable : any;
 
-  constructor(private activeModel: NgbActiveModal) { }
+    @Output() d = new EventEmitter();
+    @Output() c = new EventEmitter();
+    // @Output() suspectModel: any;
 
-  ngOnInit() {
-  }
+    constructor(private _chRef: ChangeDetectorRef) { }
 
-  toggle(e) {
-    $(e).slideToggle();
-  }
+    ngOnInit() {
+        this.onDetactTable();
+    }
 
-  d(e: any) {
-    this.activeModel.dismiss();
-  }
+    private onDetactTable() {
+        const table: any = $('table#suspectModal');
 
-  c(e: any) {
-    this.activeModel.close();
-  }
+        if ($.fn.dataTable.isDataTable('table#suspectModal')) {
+
+            this.dataTable = table.DataTable();
+            this.dataTable.destroy();
+        }
+
+        this._chRef.detectChanges();
+
+        this.dataTable = table.DataTable(options);
+    }
+
+    checkAll() {
+        this.isCheckAll = !this.isCheckAll;
+    }
+
+    toggle(e) {
+        $(e).slideToggle();
+    }
+
+    dismiss(e: any) {
+        this.d.emit(e);
+    }
+
+    close(e: any) {        
+        this.c.emit(e);
+    }
 }
