@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 declare var $: any;
 
@@ -11,13 +12,20 @@ export class SuspectModalComponent implements OnInit {
 
   isOpen = false;
 
-  constructor() { }
+  constructor(private activeModel: NgbActiveModal) { }
 
   ngOnInit() {
   }
 
   toggle(e) {
     $(e).slideToggle();
+  }
 
+  d(e: any) {
+    this.activeModel.dismiss();
+  }
+
+  c(e: any) {
+    this.activeModel.close();
   }
 }
