@@ -10,6 +10,12 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/notices/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/notices/manage/manage.module#ManageModule' }
         ]
+    }, {
+        path: 'proof',
+        children: [
+            { path: 'list', loadChildren: './pages/proof/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/proof/manage/manage.module#ManageModule' }
+        ]
     },
 
     // {
