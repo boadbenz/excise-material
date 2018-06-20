@@ -1,0 +1,28 @@
+.border-navy {
+  border-color: #005C97;
+}
+
+.table-striped tbody tr:nth-of-type(2n+1) {
+  background: rgb(229, 238, 244);
+}
+
+.card-navy {
+  background: rgb(204, 222, 234);
+}
+
+.btn-search {
+  background: rgb(0, 94, 141);
+  color: white;
+  font-size: 16px;
+  width: 120px;
+  height: 40px;
+}
+
+.icn-collapse {
+  color: black;
+  font-size: 18px;
+}
+
+.view-action {
+  cursor: pointer;
+}

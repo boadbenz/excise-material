@@ -1,3 +1,4 @@
+import { NavigationService } from './shared/header-navigation/navigation.service';
 import * as $ from 'jquery';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -11,6 +12,9 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.component';
 import { AppComponent } from './app.component';
+import { Xcs6004020000Service } from './pages/component/xcs60-04-02-00-00/xcs60-04-02-00-00.service';
+import { Xcs6004030000Service } from './pages/component/xcs60-04-03-00-00/xcs60-04-03-00-00.service';
+
 
 const routes: Routes = [
     {
@@ -55,7 +59,19 @@ const routes: Routes = [
     }, {
         path: 'typehead',
         loadChildren: './pages/component/typehead/typehead.module#TypeheadModule'
-    }, {
+    }, 
+    {
+        path: 'ILG60-04-01-00',
+        loadChildren: './pages/component/xcs60-04-01-00-00/xcs60-04-01-00-00.module#Xcs6004010000Module'
+    },
+    {
+        path: 'ILG60-04-02-00',
+        loadChildren: './pages/component/xcs60-04-02-00-00/xcs60-04-02-00-00.module#Xcs6004020000Module'
+    },
+    {
+        path: 'ILG60-04-03-00',
+        loadChildren: './pages/component/xcs60-04-03-00-00/xcs60-04-03-00-00.module#Xcs6004030000Module'
+    },{
         path: 'fontawesome',
         loadChildren: './pages/icons/fontawesome/fontawesome.module#FontawesomeModule'
     }, {
@@ -73,7 +89,7 @@ const routes: Routes = [
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-        RightSidebarComponent
+        RightSidebarComponent,
     ],
     imports: [
         BrowserModule,
@@ -82,7 +98,7 @@ const routes: Routes = [
         HttpModule,
         RouterModule.forRoot(routes)
     ],
-    providers: [],
+    providers: [NavigationService, Xcs6004020000Service, Xcs6004030000Service],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
