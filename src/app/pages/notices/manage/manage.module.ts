@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
-import { SuspectModalComponent } from '../../component/suspect-modal/suspect-modal.component';
-import { CardActionsCollapseComponent } from '../../component/card-actions/card-actions.component';
+import { CardActionsModule } from '../../component/card-actions/card-actions.module';
+import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
 
 const routes: Routes = [
     {
@@ -27,12 +26,12 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        CardActionsModule,
+        SuspectModalModule
     ],
     declarations: [
-        ManageComponent,
-        SuspectModalComponent,
-        CardActionsCollapseComponent
+        ManageComponent
     ]
 })
 export class ManageModule { }

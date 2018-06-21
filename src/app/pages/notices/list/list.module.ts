@@ -4,7 +4,6 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { CardActionsCloseComponent } from '../../component/card-actions/card-actions.component';
 
 const routes: Routes = [
     {
@@ -23,11 +22,10 @@ const routes: Routes = [
         FormsModule,
         CommonModule,
         RouterModule.forChild(routes),
-        // CardActionsModule
+        CardActionsModule
     ],
     declarations: [
         ListComponent,
-        CardActionsCloseComponent
     ]
 })
 export class ListModule { }

@@ -14,6 +14,8 @@ import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.compo
 import { AppComponent } from './app.component';
 import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
+import { CardActionsModule } from './pages/component/card-actions/card-actions.module';
+import { ManageModule } from './pages/notices/manage/manage.module';
 
 @NgModule({
     declarations: [
@@ -29,7 +31,7 @@ import { NavigationService } from './shared/header-navigation/navigation.service
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
-        // CardActionsModule
+        // ManageModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

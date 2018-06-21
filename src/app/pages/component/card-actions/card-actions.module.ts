@@ -15,10 +15,10 @@ import {
         CardActionsCloseComponent,
         CardActionsCollapseComponent
     ],
-    // exports: [
-    //     CardActionsComponent,
-    //     CardActionsCloseComponent,
-    //     CardActionsCollapseComponent
-    // ]
+    exports: [
+        CardActionsComponent,
+        CardActionsCloseComponent,
+        CardActionsCollapseComponent
+    ]
 })
 export class CardActionsModule { }
