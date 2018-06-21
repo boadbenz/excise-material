@@ -39,7 +39,7 @@ File: scss
 @import url("https://fonts.googleapis.com/css?family=Kanit:300,400,500,600,700&subset=thai");
 @import url(../css/spinners.css);
 @import url(../css/animate.css);
-@import url(../plugins/wizard/steps.css);
+@import url(../css/steps.css);
 .preloader {
   width: 100%;
   height: 100%;
