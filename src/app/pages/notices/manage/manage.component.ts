@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { SuspectModalComponent } from '../../component/suspect-modal/suspect-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({

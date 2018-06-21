@@ -1,8 +1,4 @@
 import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
-import { options } from '../../../config/dataTable';
-
-import * as $ from 'jquery';
-import 'datatables.net-bs';
 
 @Component({
   selector: 'app-notice-list-modal',
@@ -14,7 +10,6 @@ export class NoticeListModalComponent implements OnInit {
   isOpen = false;
   isCheckAll = false;
   advSearch = false;
-  private dataTable: any;
 
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
@@ -26,17 +21,17 @@ export class NoticeListModalComponent implements OnInit {
   }
 
   private onDetactTable() {
-    const table: any = $('table#suspectModal');
+    // const table: any = $('table#suspectModal');
 
-    if ($.fn.dataTable.isDataTable('table#suspectModal')) {
+    // if ($.fn.dataTable.isDataTable('table#suspectModal')) {
 
-      this.dataTable = table.DataTable();
-      this.dataTable.destroy();
-    }
+    //   this.dataTable = table.DataTable();
+    //   this.dataTable.destroy();
+    // }
 
-    this._chRef.detectChanges();
+    // this._chRef.detectChanges();
 
-    this.dataTable = table.DataTable(options);
+    // this.dataTable = table.DataTable(options);
   }
 
   checkAll() {

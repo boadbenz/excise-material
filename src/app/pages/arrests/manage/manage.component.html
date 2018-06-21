@@ -1,14 +1,16 @@
-<div class="card card-outline-info">
-    <div class="card-header">
+<!-- <app-step-wizard></app-step-wizard> -->
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0 text-white">ข้อมูลการจับกุม</h4>
+        <h4 class="card-title m-b-0">ข้อมูลการจับกุม</h4>
     </div>
     <div class="card-body">
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">ใบแจ้งความนำจับ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
-                <a href="javaScript:void(0);" class="more" (click)="openModal(noticelist)">
+                <a href="javaScript:void(0);" class="more text-secondary" (click)="openModal(noticelist)">
                     <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                 </a>
 
@@ -43,7 +45,7 @@
                 </div>
             </div>
 
-            <label for="" class="col-lg-2 col-sm-4 control-label">เขียนที่</label>
+            <label for="" class="col-lg-2 col-sm-4 control-label">เขียนที่ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
@@ -61,16 +63,16 @@
     </div>
 </div>
 
-<div class="card card-outline-info">
-    <div class="card-header">
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0 text-white">ผู้จับกุม</h4>
+        <h4 class="card-title m-b-0">ผู้จับกุม</h4>
     </div>
     <div class="card-body">
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info" [disabled]="showEditField">เพิ่มผู้ร่วมจับกุม</button>
+                <button class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มผู้ร่วมจับกุม</button>
             </div>
         </div>
 
@@ -116,10 +118,10 @@
     </div>
 </div>
 
-<div class="card card-outline-info">
-    <div class="card-header">
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0 text-white">สถานที่เกิดเหตุ</h4>
+        <h4 class="card-title m-b-0">สถานที่เกิดเหตุ</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -175,16 +177,16 @@
     </div>
 </div>
 
-<div class="card card-outline-info">
-    <div class="card-header">
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0 text-white">ผู้ต้องหา</h4>
+        <h4 class="card-title m-b-0">ผู้ต้องหา</h4>
     </div>
     <div class="card-body">
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info" (click)="openModal(lawbreaker)" [disabled]="showEditField">เพิ่มผู้ต้องหา</button>
+                <button class="btn btn-block btn-themecolor" (click)="openModal(lawbreaker)" [disabled]="showEditField">เพิ่มผู้ต้องหา</button>
             </div>
 
             <ng-template #lawbreaker let-c="close" let-d="dismiss">
@@ -232,16 +234,16 @@
     </div>
 </div>
 
-<div class="card card-outline-info">
-    <div class="card-header">
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0 text-white">ของกลาง</h4>
+        <h4 class="card-title m-b-0">ของกลาง</h4>
     </div>
     <div class="card-body">
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info" [disabled]="showEditField">เพิ่มของกลาง</button>
+                <button class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มของกลาง</button>
             </div>
         </div>
 
@@ -292,16 +294,16 @@
     </div>
 </div>
 
-<div class="card card-outline-info">
-    <div class="card-header">
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0 text-white">ข้อกล่าวหา</h4>
+        <h4 class="card-title m-b-0">ข้อกล่าวหา</h4>
     </div>
     <div class="card-body">
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info" [disabled]="showEditField" (click)="openModal(allegation)">เพิ่มข้อกล่าวหา</button>
+                <button class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="openModal(allegation)">เพิ่มข้อกล่าวหา</button>
             </div>
         </div>
 
@@ -347,10 +349,10 @@
     </div>
 </div>
 
-<div class="card card-outline-info">
-    <div class="card-header">
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0 text-white">รายละเอียดการจับกุม</h4>
+        <h4 class="card-title m-b-0">รายละเอียดการจับกุม</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -374,16 +376,16 @@
     </div>
 </div>
 
-<div class="card card-outline-info">
-    <div class="card-header">
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0 text-white">เอกสารแนบภายใน</h4>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
     </div>
     <div class="card-body">
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info" [disabled]="showEditField">เพิ่มเอกสารแนบ</button>
+                <button class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มเอกสารแนบ</button>
             </div>
         </div>
 

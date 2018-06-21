@@ -1,4 +1,4 @@
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -14,8 +14,6 @@ import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.compo
 import { AppComponent } from './app.component';
 import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
-import { CardActionsModule } from './pages/component/card-actions/card-actions.module';
-import { ManageModule } from './pages/notices/manage/manage.module';
 
 @NgModule({
     declarations: [
@@ -31,7 +29,6 @@ import { ManageModule } from './pages/notices/manage/manage.module';
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
-        // ManageModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

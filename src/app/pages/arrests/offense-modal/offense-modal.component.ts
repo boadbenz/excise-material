@@ -1,8 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { options as dataTableOptions } from '../../../config/dataTable';
-
-import * as $ from 'jquery';
-import 'datatables.net-bs';
 
 @Component({
   selector: 'app-offense-modal',
@@ -22,17 +18,17 @@ export class OffenseModalComponent implements OnInit {
   }
 
   onDetactTable() {
-    const table: any = $('table');
+    // const table: any = $('table');
 
-    if ($.fn.dataTable.isDataTable('table')) {
+    // if ($.fn.dataTable.isDataTable('table')) {
 
-      this.dataTable = table.DataTable();
-      this.dataTable.destroy();
-    }
+    //   this.dataTable = table.DataTable();
+    //   this.dataTable.destroy();
+    // }
 
-    this._chRef.detectChanges();
+    // this._chRef.detectChanges();
 
-    this.dataTable = table.DataTable(dataTableOptions);
+    // this.dataTable = table.DataTable(dataTableOptions);
 
   }
 

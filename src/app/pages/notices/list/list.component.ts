@@ -1,9 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { options as dataTableOptions } from '../../../config/dataTable';
-
-import * as $ from 'jquery';
-import 'datatables.net-bs';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
@@ -31,7 +27,7 @@ export class ListComponent implements OnInit {
         this.navservice.setSearchBar(true);
         this.navservice.setNewButton(true);
         this.advSearch = this.navservice.showAdvSearch;
-        
+
     }
 
     ngOnInit() {
@@ -39,17 +35,17 @@ export class ListComponent implements OnInit {
     }
 
     onDetactTable() {
-        const table: any = $('table');
+        // const table: any = $('table');
 
-        if ($.fn.dataTable.isDataTable('table')) {
+        // if ($.fn.dataTable.isDataTable('table')) {
 
-            this.dataTable = table.DataTable();
-            this.dataTable.destroy();
-        }
+        //     this.dataTable = table.DataTable();
+        //     this.dataTable.destroy();
+        // }
 
-        this._chRef.detectChanges();
+        // this._chRef.detectChanges();
 
-        this.dataTable = table.DataTable(dataTableOptions);
+        // this.dataTable = table.DataTable(dataTableOptions);
 
     }
 

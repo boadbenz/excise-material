@@ -31,7 +31,9 @@
           "../src/assets/js/custom.js",
           "../src/assets/js/pace.min.js",
           "../src/assets/plugins/styleswitcher/jQuery.style.switcher.js",
-          "../src/assets/plugins/datatables/pagination-scrolling.js"
+          "../src/assets/plugins/wizard/jquery.steps.min.js",
+          "../src/assets/plugins/wizard/jquery.validate.min.js",
+          "../src/assets/plugins/wizard/steps.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

@@ -1,58 +1,54 @@
 import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 
-import * as $ from 'jquery';
-import 'datatables.net-bs';
-import { options } from '../../../config/dataTable';
-
 @Component({
-  selector: 'app-lawbreaker-modal',
-  templateUrl: './lawbreaker-modal.component.html',
-  styleUrls: ['./lawbreaker-modal.component.scss']
+    selector: 'app-lawbreaker-modal',
+    templateUrl: './lawbreaker-modal.component.html',
+    styleUrls: ['./lawbreaker-modal.component.scss']
 })
 
 export class LawbreakerModalComponent implements OnInit {
-  
-  isOpen = false;
-  isCheckAll = false;
-  private dataTable : any;
 
-  @Output() d = new EventEmitter();
-  @Output() c = new EventEmitter();
+    isOpen = false;
+    isCheckAll = false;
+    advSearch = false;
 
-  constructor(private _chRef: ChangeDetectorRef) { }
+    @Output() d = new EventEmitter();
+    @Output() c = new EventEmitter();
 
-  ngOnInit() {
-      this.onDetactTable();
-  }
+    constructor(private _chRef: ChangeDetectorRef) { }
 
-  private onDetactTable() {
-      const table: any = $('table#suspectModal');
+    ngOnInit() {
+        this.onDetactTable();
+    }
 
-      if ($.fn.dataTable.isDataTable('table#suspectModal')) {
+    private onDetactTable() {
+        //   const table: any = $('table#suspectModal');
 
-          this.dataTable = table.DataTable();
-          this.dataTable.destroy();
-      }
+        //   if ($.fn.dataTable.isDataTable('table#suspectModal')) {
 
-      this._chRef.detectChanges();
+        //       this.dataTable = table.DataTable();
+        //       this.dataTable.destroy();
+        //   }
 
-      this.dataTable = table.DataTable(options);
-  }
+        //   this._chRef.detectChanges();
 
-  checkAll() {
-      this.isCheckAll = !this.isCheckAll;
-  }
+        //   this.dataTable = table.DataTable(options);
+    }
 
-  toggle(e) {
-      $(e).slideToggle();
-  }
+    checkAll() {
+        this.isCheckAll = !this.isCheckAll;
+    }
 
-  dismiss(e: any) {
-      this.d.emit(e);
-  }
+    toggle(e) {
+       this.advSearch = !this.advSearch;
+    }
 
-  close(e: any) {        
-      this.c.emit(e);
-  }
+    dismiss(e: any) {
+        this.d.emit(e);
+    }
+
+    close(e: any) {
+        this.c.emit(e);
+    }
 
 }

@@ -1,9 +1,9 @@
 <!-- <app-horizontal-timeline></app-horizontal-timeline> -->
 
-<div *ngIf="advSearch | async" class="card card-outline-info">
-    <div class="card-header">
+<div *ngIf="advSearch | async" class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-close></app-card-actions-close>
-        <h4 class="card-title m-b-0 text-white">ค้นหา</h4>
+        <h4 class="card-title m-b-0">ค้นหา</h4>
     </div>
     <div class="card-body">
         <form class="form-horizontal">
@@ -55,7 +55,7 @@
                 <div class="row form-group">
                     <div class="col-10"></div>
                     <div class="col-2">
-                        <button type="submit" class="btn btn-info btn-block">ค้นข้อมูล</button>
+                        <button type="submit" class="btn btn-info btn-themecolor">ค้นข้อมูล</button>
                     </div>
                 </div>
             </div>
@@ -64,14 +64,13 @@
 
 </div>
 
-<div class="card">
-    <div class="card-body">
-
+<div class="card unset-radius">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="dataTable table table-sm table-striped table-hover ">
+            <table class="table table-sm table-striped">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
+                        <th class="text-center">ลำดับ</th>
                         <th>เลขที่ใบแจ้งความ</th>
                         <th>วันที่แจ้งความ</th>
                         <th>ผู้รับแจ้ง</th>
@@ -82,25 +81,12 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td class="text-center">1</td>
                         <td>1</td>
                         <td>1</td>
                         <td>1</td>
                         <td>1</td>
                         <td>1</td>
-                        <td>1</td>
-                        <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/notice/manage/v/xxx-xxx-xxx']">
-                                <i class="fa fa-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>2</td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/notice/manage/v/xxx-xxx-xxx']">
                                 <i class="fa fa-eye fa-lg"></i>
@@ -109,6 +95,28 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="card-footer card-footer-unset">
+        <div class="row justify-content-between m-l-5">
+            <div clas="col">
+                <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |<< </a>
+                        <label> หน้าที่
+                            <select>
+                                <option value="1">1</option>
+                            </select> จาก 1 หน้า</label>
+                        <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
+                        รายการที่ 1 - 1 จาก 1 รายการ
+            </div>
+            <div class="col col-lg-3 text-right">
+                <label>แสดง
+                    <select>
+                        <option (click)="numPage = 5">5</option>
+                        <option (click)="numPage = 10">10</option>
+                        <option (click)="numPage = 15">15</option>
+                        <option (click)="numPage = 20">20</option>
+                    </select> รายการ</label>
+            </div>
         </div>
     </div>
 </div>

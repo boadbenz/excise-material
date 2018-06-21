@@ -12,7 +12,7 @@ export class CardActionsComponent {
 @Component({
     selector: 'app-card-actions-close',
     template: 
-    `<div class="card-actions text-white">
+    `<div class="card-actions">
         <a class="" (click)="close($event)">
             <i class="fa fa-times"></i>
         </a>
@@ -29,7 +29,7 @@ export class CardActionsCloseComponent {
 @Component({
     selector: 'app-card-actions-collapse',
     template: 
-    `<div class="card-actions text-white">
+    `<div class="card-actions">
         <a class="" (click)="collapse($event)">
             <i class="fa fa-chevron-down"></i>
         </a>

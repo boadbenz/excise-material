@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { LawbreakerModalModule } from '../lawbreaker-modal/lawbreaker-modal.module';
 import { AllegationModalModule } from '../allegation-modal/allegation-modal.module';
 import { NoticeListModalModule } from '../../notices/notice-list-modal/notice-list-modal.module';
+import { StepWizardModule } from '../../component/step-wizard/step-wizard.module';
 
 const routes: Routes = [
   {
@@ -32,7 +33,8 @@ const routes: Routes = [
     LawbreakerModalModule,
     CardActionsModule,
     AllegationModalModule,
-    NoticeListModalModule
+    NoticeListModalModule,
+    StepWizardModule
   ],
   declarations: [
     ManageComponent

@@ -39,6 +39,7 @@ File: scss
 @import url("https://fonts.googleapis.com/css?family=Kanit:300,400,500,600,700&subset=thai");
 @import url(../css/spinners.css);
 @import url(../css/animate.css);
+@import url(../plugins/wizard/steps.css);
 .preloader {
   width: 100%;
   height: 100%;
@@ -126,6 +127,10 @@ a.link {
 
 html body .mdi:before, html body .mdi-set {
   line-height: initial; }
+
+.unset-radius {
+  border-radius: unset !important;
+}
 
 /*******************
 Headings
@@ -2524,6 +2529,11 @@ ul#themecolors {
     background: #7460ee;
     border-color: #7460ee; }
 
+.card-outline-bluish {
+  border-color: #ccdeea;}
+  .card-outline-bluish .card-header {
+    background: #ccdeea;
+    border-color: #ccdeea;}
 /*============================================================== 
 Breadcrumb
  ============================================================== */
@@ -6618,6 +6628,11 @@ File: scss
 
 .card-inverse .card-blockquote, .card-inverse .card-footer, .card-inverse .card-header, .card-inverse .card-title {
   color: #ffffff; }
+
+.card-footer-unset {
+  background: transparent !important;
+  border-top: unset !important;
+}
 
 /*
 Template Name: Material Pro Admin

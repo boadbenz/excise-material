@@ -19,7 +19,7 @@ export class LawbreakerComponent implements OnInit {
         private ngModalService: NgbModal,
         private activatedRoute: ActivatedRoute,
         private navService: NavigationService
-    ) {         
+    ) {
         this.navService.setNextPageButton(false);
         this.navService.setDeleteButton(false);
         this.navService.setPrintButton(false);
@@ -55,7 +55,7 @@ export class LawbreakerComponent implements OnInit {
         });
 
         this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p;            
+            this.showEditField = p;
         });
     }
 
