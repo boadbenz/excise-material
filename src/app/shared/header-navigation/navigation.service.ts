@@ -6,6 +6,7 @@ export class NavigationService {
 
 	// modeSource = new BehaviorSubject<string>('');
 	showAdvSearch = new BehaviorSubject<Boolean>(false);
+	showNewButton = new BehaviorSubject<Boolean>(false);
 	showPrintButton = new BehaviorSubject<Boolean>(false);
 	showEditButton = new BehaviorSubject<Boolean>(false);
 	showSaveButton = new BehaviorSubject<Boolean>(false);
@@ -23,6 +24,10 @@ export class NavigationService {
 	  } else {
 		this.showAdvSearch.next(true);
 	  }
+	}
+
+	setNewButton(status: boolean) {
+		this.showNewButton.next(status);
 	}
   
 	setEditField(status: boolean) {

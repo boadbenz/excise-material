@@ -13,7 +13,7 @@ import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.component';
 import { AppComponent } from './app.component';
 import { routes } from './app.routing';
-import { CardActionsModule } from './pages/component/card-actions/card-actions.module';
+import { NavigationService } from './shared/header-navigation/navigation.service';
 
 @NgModule({
     declarations: [
@@ -32,7 +32,8 @@ import { CardActionsModule } from './pages/component/card-actions/card-actions.m
         // CardActionsModule
     ],
     providers: [
-        { provide: LocationStrategy, useClass: HashLocationStrategy }
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        NavigationService
     ],
     bootstrap: [AppComponent]
 })

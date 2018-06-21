@@ -44,9 +44,9 @@
                         <i class="ti-menu"></i>
                     </a>
                 </li>
-                <li *ngIf="pageType == 'list'" class="nav-item">
-                    <div class="nav-link text-muted waves-effect waves-dark" href="javascript:void(0)">
-                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;" (click)="create()">
+                <li *ngIf="newButton | async" class="nav-item">
+                    <div class="nav-link text-muted waves-effect waves-dark">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickNew()">
                             <i class="ti-plus"></i>
                             สร้างข้อมูล
                         </a>
@@ -55,30 +55,38 @@
                 <!-- ============================================================== -->
                 <!-- Manage -->
                 <!-- ============================================================== -->
-                <li *ngIf="pageType == 'manage'" class="nav-item">
-                    <div class="nav-link text-muted waves-effect waves-dark" href="javascript:void(0)">
-                        <a class="btn btn-ghost" (click)="onSave()">
+                <li *ngIf="printButton | async" class="nav-item">
+                    <div class="nav-link text-muted waves-effect waves-dark">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickSave()">
+                            <i class="ti-print"></i>
+                            พิมพ์
+                        </a>
+                    </div>
+                </li>
+                <li *ngIf="saveButton | async" class="nav-item">
+                    <div class="nav-link text-muted waves-effect waves-dark">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickSave()">
                             <i class="ti-save"></i>
                             บันทึก
                         </a>
                     </div>
                 </li>
-                <li *ngIf="pageType == 'manage'" class="nav-item">
-                    <div class="nav-link text-muted waves-effect waves-dark" href="javascript:void(0)">
-                        <a class="btn btn-ghost" (click)="onCancel()">
+                <li *ngIf="cancelButton | async" class="nav-item">
+                    <div class="nav-link text-muted waves-effect waves-dark">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickCancel()">
                             <i class="ti-close"></i>
                             ยกเลิก
                         </a>
                     </div>
                 </li>
             </ul>
+            <!-- <ul *ngIf="searchBar | async" class="navbar-nav my-lg-0">
+
+            </ul> -->
             <!-- ============================================================== -->
             <!-- search -->
             <!-- ============================================================== -->
-            <ul *ngIf="pageType == 'list'" class="navbar-nav my-lg-0">
-                <!-- ============================================================== -->
-                <!-- Serch -->
-                <!-- ============================================================== -->
+            <ul *ngIf="searchBar | async" class="navbar-nav my-lg-0">
                 <li class="nav-item col-8">
                     <form class="app-search">
                         <input type="search" name="" id="" class="form-control">
@@ -87,11 +95,8 @@
                         </a>
                     </form>
                 </li>
-                <!-- ============================================================== -->
-                <!-- Advance search -->
-                <!-- ============================================================== -->
                 <li class="nav-item col-4">
-                    <a href="javaScript:void(0);" class="btn text-white" (click)="advSearch()">
+                    <a href="javaScript:void(0);" class="btn text-white" (click)="clickAdvSearch()">
                         ค้นหาขั้นสูง
                     </a>
                 </li>

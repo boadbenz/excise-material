@@ -4,41 +4,46 @@ import { options as dataTableOptions } from '../../../config/dataTable';
 
 import * as $ from 'jquery';
 import 'datatables.net-bs';
+import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html'
+    selector: 'app-list',
+    templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit {
 
-  dataTable: any;
+    dataTable: any;
 
-  constructor(
-    private _router: Router,
-    private _chRef: ChangeDetectorRef
-  ) { }
-
-  ngOnInit() {
-    this.onDetactTable();
-  }
-
-  onDetactTable() {
-    const table: any = $('table');
-
-    if ($.fn.dataTable.isDataTable('table')) {
-
-      this.dataTable = table.DataTable();
-      this.dataTable.destroy();
+    constructor(
+        private _router: Router,
+        private _chRef: ChangeDetectorRef,
+        private navservice: NavigationService
+    ) {
+        this.navservice.setSearchBar(true);
+        this.navservice.setNewButton(true);
     }
 
-    this._chRef.detectChanges();
+    ngOnInit() {
+        this.onDetactTable();
+    }
 
-    this.dataTable = table.DataTable(dataTableOptions);
+    onDetactTable() {
+        const table: any = $('table');
 
-  }
+        if ($.fn.dataTable.isDataTable('table')) {
 
-  view(noticeCode: string) {
-    this._router.navigate(['/notice/manage'], { queryParams: { v: true, nationalityCode: noticeCode } });
-  }
+            this.dataTable = table.DataTable();
+            this.dataTable.destroy();
+        }
+
+        this._chRef.detectChanges();
+
+        this.dataTable = table.DataTable(dataTableOptions);
+
+    }
+
+    view(noticeCode: string) {
+        this._router.navigate(['/notice/manage'], { queryParams: { v: true, nationalityCode: noticeCode } });
+    }
 
 }
