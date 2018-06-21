@@ -28,27 +28,27 @@ export class NavigationComponent implements OnInit {
     ) { };
 
     ngOnInit(): void {
-        this
-            .router.events
-            .filter(event => event instanceof NavigationEnd)
-            .map(() => this.activatedRoute)
-            .map(route => {
-                // tslint:disable-next-line:curly
-                while (route.firstChild) route = route.firstChild;
-                return route;
-            })
-            .filter(route => route.outlet === 'primary')
-            .mergeMap(route => route.data)
-            .subscribe((event) => {
-                if (event['pageType']) {
-                    this.pageType = event['pageType'];
-                }
-                if (event['nextPage']) {
-                    const next = event['nextPage'];
-                    this.nextPage = next['url'];
-                    this.nextPageTitle = next['title'];
-                }
-            });
+        // this
+        //     .router.events
+        //     .filter(event => event instanceof NavigationEnd)
+        //     .map(() => this.activatedRoute)
+        //     .map(route => {
+        //         // tslint:disable-next-line:curly
+        //         while (route.firstChild) route = route.firstChild;
+        //         return route;
+        //     })
+        //     .filter(route => route.outlet === 'primary')
+        //     .mergeMap(route => route.data)
+        //     .subscribe((event) => {
+        //         if (event['pageType']) {
+        //             this.pageType = event['pageType'];
+        //         }
+        //         if (event['nextPage']) {
+        //             const next = event['nextPage'];
+        //             this.nextPage = next['url'];
+        //             this.nextPageTitle = next['title'];
+        //         }
+        //     });
     }
 
     onSave() {
@@ -59,7 +59,7 @@ export class NavigationComponent implements OnInit {
         this.btnCancel.emit(true);
     }
 
-    create() {
+    onNextToCreate() {
         this.router.navigate([`${this.nextPage}`, 'c', 'new']);
     }
 
