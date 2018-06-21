@@ -1,0 +1,121 @@
+<div class="modal-header bg-theme">
+    <div class="row">
+        <div class="col-lg-5 form-group">
+            <h4 class="modal-title text-white">รายละเอียดข้อกล่าวหา</h4>
+        </div>
+        <div class="col-lg-5 col-sm-8">
+            <form class="app-search">
+                <input type="search" name="" id="" class="form-control form-control-sm" placeholder="ค้นหาฐานความผิดมาตรา/ฐานความผิด">
+                <a class="srh-btn">
+                    <i class="ti-search"></i>
+                </a>
+            </form>
+        </div>
+        <div class="col-lg-2 col-sm-4 p-0">
+            <a href="javaScript:void(0);" (click)="toggle()" class="text-white">ค้นหาขั้นสูง</a>
+        </div>
+
+        <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
+            <span aria-hidden="true">
+                <i class=" ti-close"></i>
+            </span>
+        </a>
+    </div>
+</div>
+<div class="modal-body font-14">
+    <form *ngIf="advSearch" class="form-horizontal">
+        <div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-3">เลขที่ใบแจ้งความ :</label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group">
+                        <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+
+                        <label for="">&nbsp; ถึง &nbsp;</label>
+
+                        <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-3">ชื่อผู้รับแจ้ง :</label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group">
+                        <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                    </div>
+                </div>
+                <label for="" class="col-lg-2 col-sm-3">หน่วยงาน :</label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group">
+                        <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-3">ผู้ต้องสงสัย :</label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group">
+                        <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-10"></div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-info btn-block">ค้นข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-body p-1">
+            <table id="noticeList" class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ลำดับ</th>
+                        <th>เลขที่ใบแจ้งความ</th>
+                        <th>วันที่แจ้งความ</th>
+                        <th>ผู้รับแจ้งความ</th>
+                        <th>หน่วยงาน</th>
+                        <th>ผู้ต้องสงสัย</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="md_checkbox_25" class="filled-in chk-col-indigo" checked="">
+                            <label for="md_checkbox_25"></label>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="javaScript:void(0)" class="text-secondary">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-info" (click)="close('Save click')">บันทึก</button>
+</div>

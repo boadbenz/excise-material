@@ -4,7 +4,7 @@ import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
+import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
 
 const routes: Routes = [
     {
@@ -28,7 +28,7 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         CardActionsModule,
-        SuspectModalModule
+        LawbreakerModalModule
     ],
     declarations: [
         ManageComponent

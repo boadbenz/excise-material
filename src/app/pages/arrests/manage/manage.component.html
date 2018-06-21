@@ -8,6 +8,13 @@
             <label for="" class="col-lg-2 col-sm-4 control-label">ใบแจ้งความนำจับ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                <a href="javaScript:void(0);" class="more" (click)="openModal(noticelist)">
+                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                </a>
+
+                <ng-template #noticelist let-c="close" let-d="dismiss">
+                    <app-notice-list-modal (c)="modal.close()" (d)="modal.dismiss()"></app-notice-list-modal>
+                </ng-template>
             </div>
 
             <label for="" class="col-lg-2 col-sm-4 control-label">หมายค้น :</label>
@@ -208,7 +215,7 @@
                         <td></td>
                         <td></td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" [routerLink]="['/arrest/lawbreaker/v/xx']" *ngIf="!showEditField">
+                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/arrest/lawbreaker/v/xx']" *ngIf="!showEditField">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
@@ -294,7 +301,7 @@
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info" [disabled]="showEditField">เพิ่มข้อกล่าวหา</button>
+                <button class="btn btn-block btn-info" [disabled]="showEditField" (click)="openModal(allegation)">เพิ่มข้อกล่าวหา</button>
             </div>
         </div>
 

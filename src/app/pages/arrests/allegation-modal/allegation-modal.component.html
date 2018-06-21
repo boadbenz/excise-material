@@ -1,12 +1,9 @@
 <div class="modal-header bg-theme">
-    <h4 class="modal-title text-white">เพิ่มผู้ต้องสงสัย
-        <button type="button" class="btn btn-ghost">
-            <i class="ti-plus"></i>
-            สร้างข้อมูล
-        </button>
-    </h4>
     <div class="row">
-        <div class="col-md-8 col-sm-10">
+        <div class="col-lg-5 form-group">
+            <h4 class="modal-title text-white">รายละเอียดข้อกล่าวหา</h4>
+        </div>
+        <div class="col-lg-5 col-sm-8">
             <form class="app-search">
                 <input type="search" name="" id="" class="form-control form-control-sm" placeholder="ค้นหาฐานความผิดมาตรา/ฐานความผิด">
                 <a class="srh-btn">
@@ -14,17 +11,16 @@
                 </a>
             </form>
         </div>
-        <div class="col-md-4 col-sm-12">
-            <a href="javaScript:void(0);" class="btn text-white">ค้นหาขั้นสูง</a>
+        <div class="col-lg-2 col-sm-4 p-0">
+            <a href="javaScript:void(0);" class="text-white">ค้นหาขั้นสูง</a>
         </div>
+
+        <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
+            <span aria-hidden="true">
+                <i class=" ti-close"></i>
+            </span>
+        </a>
     </div>
-
-
-    <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
-        <span aria-hidden="true">
-            <i class=" ti-close"></i>
-        </span>
-    </a>
 </div>
 <div class="modal-body font-14">
     <div class="card">

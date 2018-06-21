@@ -6,6 +6,7 @@ import { CardActionsModule } from '../../component/card-actions/card-actions.mod
 import { FormsModule } from '@angular/forms';
 import { LawbreakerModalModule } from '../lawbreaker-modal/lawbreaker-modal.module';
 import { AllegationModalModule } from '../allegation-modal/allegation-modal.module';
+import { NoticeListModalModule } from '../../notices/notice-list-modal/notice-list-modal.module';
 
 const routes: Routes = [
   {
@@ -30,7 +31,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     LawbreakerModalModule,
     CardActionsModule,
-    AllegationModalModule
+    AllegationModalModule,
+    NoticeListModalModule
   ],
   declarations: [
     ManageComponent
