@@ -4,44 +4,51 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class NavigationService {
 
-	private modeSource = new BehaviorSubject<string>('');
-	private actionSave = new BehaviorSubject<boolean>(false);
-	private actionCancel = new BehaviorSubject<boolean>(false);
-	private actionPrint = new BehaviorSubject<boolean>(false);
-	private actionEdit = new BehaviorSubject<boolean>(false);
-	private actionToCreate = new BehaviorSubject<boolean>(false);
-
-	currentMode = this.modeSource.asObservable();
-	currentActionSave = this.actionSave.asObservable();
-	currentActionCancel = this.actionCancel.asObservable();
-	currentActionPrint = this.actionPrint.asObservable();
-	currentActionEdit = this.actionEdit.asObservable();
-	currentActionToCreate = this.actionToCreate.asObservable();
-
-	constructor() { }
-
-	changeMode(data: string) {
-		this.modeSource.next(data);
+	// modeSource = new BehaviorSubject<string>('');
+	showAdvSearch = new BehaviorSubject<Boolean>(false);
+	showPrintButton = new BehaviorSubject<Boolean>(false);
+	showEditButton = new BehaviorSubject<Boolean>(false);
+	showSaveButton = new BehaviorSubject<Boolean>(false);
+	showCancelButton = new BehaviorSubject<Boolean>(false);
+	showDeleteButton = new BehaviorSubject<Boolean>(false);
+	showProofButton = new BehaviorSubject<Boolean>(false);
+	showSearchBar = new BehaviorSubject<Boolean>(false);
+	showFieldEdit = new BehaviorSubject<Boolean>(true);
+  
+	constructor() {}
+  
+	setAdvSearch() {
+	  if (this.showAdvSearch.getValue()) {
+		this.showAdvSearch.next(false);
+	  } else {
+		this.showAdvSearch.next(true);
+	  }
 	}
-
-	onActionSave(e: boolean) {
-		this.actionSave.next(e);
+  
+	setEditField(status: boolean) {
+	  this.showFieldEdit.next(status);
 	}
-
-	onActionEdit(e: boolean) {
-		this.actionEdit.next(e);
+  
+	setSearchBar(status: boolean) {
+	  this.showSearchBar.next(status);
 	}
-
-	onActionPrint(e: boolean) {
-		this.actionPrint.next(e);
+  
+	setPrintButton(status: boolean) {
+	  this.showPrintButton.next(status);
 	}
-
-	onActionCancel(e: boolean) {
-		this.actionCancel.next(e);
+	setEditButton(status: boolean) {
+	  this.showEditButton.next(status);
 	}
-
-	onActionNextToCreate(e: boolean) {
-		this.actionToCreate.next(e);
+	setDeleteButton(status: boolean) {
+	  this.showDeleteButton.next(status);
+	}
+  
+	setSaveButton(status: boolean) {
+	  this.showSaveButton.next(status);
+	}
+  
+	setCancelButton(status: boolean) {
+	  this.showCancelButton.next(status);
 	}
 
 }
