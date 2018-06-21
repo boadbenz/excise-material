@@ -7,47 +7,47 @@
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">ใบแจ้งความนำจับ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
 
             <label for="" class="col-lg-2 col-sm-4 control-label">หมายค้น :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">ส.ส.2/27 :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
 
             <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่ใบงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เขียน :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group input-group">
-                    <input type="date" name="" id="" class="form-control form-control-sm">
+                    <input type="date" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                     <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
-                    <input type="text" name="" id="" class="form-control form-control-sm">
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
 
             <label for="" class="col-lg-2 col-sm-4 control-label">เขียนที่</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">วันที่จับกุม :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group input-group">
-                    <input type="date" name="" id="" class="form-control form-control-sm">
+                    <input type="date" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                     <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
-                    <input type="text" name="" id="" class="form-control form-control-sm">
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
         </div>
@@ -76,6 +76,7 @@
                         <th>ตำแหน่ง</th>
                         <th>หน่วยงาน</th>
                         <th>ฐานะ</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,16 +85,21 @@
                             1
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm">
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm">
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm">
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <select name="" id=""></select>
+                            <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
+                        </td>
+                        <td>
+                            <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -112,51 +118,51 @@
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
             <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
             <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
             <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
             <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-sm-4 control-label">รหัสไปษณีย์ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
             <label for="" class="col-lg-2 col-sm-4 control-label">สน.ท้องที่เกิดเหตุ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                <input type="text" name="" id="" class="form-control form-control-sm">
+                <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
             </div>
         </div>
     </div>
@@ -171,11 +177,11 @@
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-info" (click)="openSuspect(suspect)" [disabled]="showEditField">เพิ่มผู้ต้องหา</button>
+                <button class="btn btn-block btn-info" (click)="openModal(lawbreaker)" [disabled]="showEditField">เพิ่มผู้ต้องหา</button>
             </div>
 
-            <ng-template #suspect let-c="close" let-d="dismiss">
-                <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()"></app-suspect-modal>
+            <ng-template #lawbreaker let-c="close" let-d="dismiss">
+                <app-lawbreaker-modal (c)="modal.close()" (d)="modal.dismiss()"></app-lawbreaker-modal>
             </ng-template>
         </div>
 
@@ -190,6 +196,7 @@
                         <th>ชื่อ</th>
                         <th>จำนวนครั้งกระทำผิด</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -201,8 +208,13 @@
                         <td></td>
                         <td></td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);">
+                            <a href="javaScript:void(0);" [routerLink]="['/arrest/lawbreaker/v/xx']" *ngIf="!showEditField">
                                 <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
                     </tr>
@@ -236,29 +248,35 @@
                         <th>หน่วย</th>
                         <th>ปริมาณสุทธิ</th>
                         <th>หน่วย</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>ลำดับ</td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm">
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm">
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <select name="" id="" class="form-control form-control-sm">
+                            <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                                 <option value=""></option>
                             </select>
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm">
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <select name="" id="" class="form-control form-control-sm">
+                            <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                                 <option value=""></option>
                             </select>
+                        </td>
+                        <td>
+                            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -289,6 +307,8 @@
                         <th>ข้อกล่าวหา</th>
                         <th>ชื่อผู้กระทำผิด</th>
                         <th>รายระเอียดของกลาง</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -298,9 +318,24 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td>
+                            <a href="javaScript:void(0)" class="text-danger" (click)="openModal(allegation)" *ngIf="!showEditField">
+                                <i class="fa fa-edit fa-lg"></i>
+                            </a>
+
+                        </td>
+                        <td>
+                            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+
+            <ng-template #allegation let-c="close" let-d="dismiss">
+                <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()"></app-allegation-modal>
+            </ng-template>
         </div>
     </div>
 </div>
@@ -352,16 +387,22 @@
                         <th>ลำดับ</th>
                         <th>ชื่อเอกสารแนบ</th>
                         <th>ที่อยู่เอกสารแนบ</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>1</td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm">
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm">
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
                         </td>
                     </tr>
                 </tbody>

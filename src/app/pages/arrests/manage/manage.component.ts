@@ -32,7 +32,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ngOnInit() {
       this.sub = this.activeRoute.params.subscribe(p => {
           this.mode = p['mode'];
-          if (p['mode'] == 'c') {
+          if (p['mode'] == 'c' || p['mode'] == 'u') {
               // set false
               this.navService.setEditButton(false);
               this.navService.setDeleteButton(false);
@@ -50,6 +50,16 @@ export class ManageComponent implements OnInit, OnDestroy {
               this.navService.setEditButton(true);
               this.navService.setDeleteButton(true);
               this.navService.setEditField(true);
+
+          } else {
+            // set false
+            this.navService.setSaveButton(false);
+            this.navService.setCancelButton(false);
+            this.navService.setPrintButton(false);
+            this.navService.setEditButton(false);
+            this.navService.setDeleteButton(false);
+            // set true
+            this.navService.setEditField(true);
           }
       });
       this.navService.showFieldEdit.subscribe(p => {
@@ -61,7 +71,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.sub.unsubscribe();
   }
 
-  openSuspect(e) {
+  openModal(e) {
       this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
   }
 

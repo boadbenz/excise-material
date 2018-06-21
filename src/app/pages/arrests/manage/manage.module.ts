@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
+import { FormsModule } from '@angular/forms';
+import { LawbreakerModalModule } from '../lawbreaker-modal/lawbreaker-modal.module';
+import { AllegationModalModule } from '../allegation-modal/allegation-modal.module';
 
 const routes: Routes = [
   {
@@ -23,10 +25,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    FormsModule,
     CommonModule,
     RouterModule.forChild(routes),
+    LawbreakerModalModule,
     CardActionsModule,
-    SuspectModalModule
+    AllegationModalModule
   ],
   declarations: [
     ManageComponent

@@ -1,0 +1,90 @@
+<div class="modal-header bg-theme">
+    <h4 class="modal-title text-white">เพิ่มผู้ต้องสงสัย
+        <button type="button" class="btn btn-ghost">
+            <i class="ti-plus"></i>
+            สร้างข้อมูล
+        </button>
+    </h4>
+    <div class="row">
+        <div class="col-md-8 col-sm-10">
+            <form class="app-search">
+                <input type="search" name="" id="" class="form-control form-control-sm" placeholder="ค้นหาฐานความผิดมาตรา/ฐานความผิด">
+                <a class="srh-btn">
+                    <i class="ti-search"></i>
+                </a>
+            </form>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <a href="javaScript:void(0);" class="btn text-white">ค้นหาขั้นสูง</a>
+        </div>
+    </div>
+
+
+    <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
+        <span aria-hidden="true">
+            <i class=" ti-close"></i>
+        </span>
+    </a>
+</div>
+<div class="modal-body font-14">
+    <div class="card">
+        <div class="card-body p-1">
+            <table id="allegation" class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ลำดับ</th>
+                        <th>ฐานความผิดมาตรา</th>
+                        <th>ฐานความผิด</th>
+                        <th>บทกำหนดโทษ</th>
+                        <th>อัตราโทษ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input name="group5" type="radio" id="radio_34" class="with-gap radio-col-indigo">
+                            <label for="radio_34"></label>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-1">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ลำดับ</th>
+                        <th>ชื่อผู้กระทำความผิด</th>
+                        <th>รายละเอียดของกลาง</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="md_checkbox_25" class="filled-in chk-col-indigo" checked="">
+                            <label for="md_checkbox_25"></label>
+                        </td>
+                        <td>1</td>
+                        <td>xxx</td>
+                        <td>
+                            <select name="" id="" class="form-control form-control-sm"></select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-info" (click)="close('Save click')">บันทึก</button>
+</div>

@@ -14,7 +14,8 @@ export const routes: Routes = [
         path: 'arrest',
         children: [
             { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' },
+            { path: 'lawbreaker/:mode/:code', loadChildren: './pages/arrests/lawbreaker/lawbreaker.module#LawbreakerModule' }
         ]
     },
 
