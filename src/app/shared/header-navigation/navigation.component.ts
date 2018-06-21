@@ -11,7 +11,7 @@ import { NavigationService } from './navigation.service';
     styleUrls: ['./navigation.component.scss']
 
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
     newButton: any;
     printButton: any;
     editButton: any;
@@ -19,9 +19,17 @@ export class NavigationComponent {
     cancelButton: any;
     saveButton: any;
     searchBar: any;
-    proofButton: any;
+    nextPageButton: any;
 
-    constructor(private navService: NavigationService) {
+    //-----------------
+    nextPage: string;
+    nextPageTitle: string;
+
+    constructor(
+        private router: Router,
+        private activatedRoute: ActivatedRoute,
+        private navService: NavigationService
+    ) {
         this.newButton = this.navService.showNewButton;
         this.printButton = this.navService.showPrintButton;
         this.editButton = this.navService.showEditButton;
@@ -29,7 +37,28 @@ export class NavigationComponent {
         this.cancelButton = this.navService.showCancelButton;
         this.saveButton = this.navService.showSaveButton;
         this.searchBar = this.navService.showSearchBar;
-        this.proofButton = this.navService.showProofButton;
+        this.nextPageButton = this.navService.showNextPageButton;
+    }
+    
+    ngOnInit(): void {
+        this
+            .router.events
+            .filter(event => event instanceof NavigationEnd)
+            .map(() => this.activatedRoute)
+            .map(route => {
+                // tslint:disable-next-line:curly
+                while (route.firstChild) route = route.firstChild;
+                return route;
+            })
+            .filter(route => route.outlet === 'primary')
+            .mergeMap(route => route.data)
+            .subscribe((event) => {
+                if (event['nextPage']) {
+                    const next = event['nextPage'];
+                    this.nextPage = next['url'];
+                    this.nextPageTitle = next['title'];
+                }
+            });
     }
 
     clickAdvSearch() {
@@ -37,7 +66,15 @@ export class NavigationComponent {
     }
 
     clickNew() {
-        // this.navService.setNewButton
+        this.router.navigate([`${this.nextPage}`, 'c', 'new']);
+    }
+
+    clickNextPage() {
+        this.router.navigate([`${this.nextPage}`, 'c', 'new']);
+    }
+
+    clickPrint() {
+        
     }
 
     clickEdit() {
@@ -50,61 +87,11 @@ export class NavigationComponent {
 
     clickSave() {
         this.navService.setEditField(false);
+        this.navService.setOnSave(true);
     }
 
-    // pageType: string;
-    // nextPage: string;
-    // nextPageTitle: string;
-    // mode: string;
-
-    // private subParam: any;
-
-    // @Output() btnSave: EventEmitter<boolean> = new EventEmitter();
-    // @Output() btnCancel: EventEmitter<boolean> = new EventEmitter();
-
-    // constructor(
-    //     private router: Router,
-    //     private activatedRoute: ActivatedRoute
-    // ) { };
-
-    // ngOnInit(): void {
-    //     this
-    //         .router.events
-    //         .filter(event => event instanceof NavigationEnd)
-    //         .map(() => this.activatedRoute)
-    //         .map(route => {
-    //             // tslint:disable-next-line:curly
-    //             while (route.firstChild) route = route.firstChild;
-    //             return route;
-    //         })
-    //         .filter(route => route.outlet === 'primary')
-    //         .mergeMap(route => route.data)
-    //         .subscribe((event) => {
-    //             if (event['pageType']) {
-    //                 this.pageType = event['pageType'];
-    //             }
-    //             if (event['nextPage']) {
-    //                 const next = event['nextPage'];
-    //                 this.nextPage = next['url'];
-    //                 this.nextPageTitle = next['title'];
-    //             }
-    //         });
-    // }
-
-    // onSave() {
-    //     this.btnSave.emit(true);
-    // }
-
-    // onCancel() {
-    //     this.btnCancel.emit(true);
-    // }
-
-    // onNextToCreate() {
-    //     this.router.navigate([`${this.nextPage}`, 'c', 'new']);
-    // }
-
-    // advSearch() {
-    //     jQuery('#advSearch').slideToggle();
-    // }
+    clickDelete() {
+        this.navService.setOnDelete(true);
+    }
 
 }

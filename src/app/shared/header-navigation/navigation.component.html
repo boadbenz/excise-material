@@ -57,9 +57,25 @@
                 <!-- ============================================================== -->
                 <li *ngIf="printButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
-                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickSave()">
-                            <i class="ti-print"></i>
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickPrint()">
+                            <i class="ti-printer"></i>
                             พิมพ์
+                        </a>
+                    </div>
+                </li>
+                <li *ngIf="editButton | async" class="nav-item">
+                    <div class="nav-link text-muted waves-effect waves-dark">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickEdit()">
+                            <i class="fa fa-edit"></i>
+                            แก้ไข
+                        </a>
+                    </div>
+                </li>
+                <li *ngIf="deleteButton | async" class="nav-item">
+                    <div class="nav-link text-muted waves-effect waves-dark">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickDelete()" style="background-color: #f47023">
+                            <i class="ti-trash"></i>
+                            ลบ
                         </a>
                     </div>
                 </li>
@@ -101,6 +117,13 @@
                     </a>
                 </li>
             </ul>
+            <div *ngIf="nextPageButton | async" class="navbar-nav my-lg-0">
+                <div class="nav-link text-muted waves-effect waves-dark">
+                    <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickNextPage()">
+                        {{nextPageTitle}} >>
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
 </header>

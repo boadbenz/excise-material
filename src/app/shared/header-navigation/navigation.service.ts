@@ -7,6 +7,7 @@ export class NavigationService {
 	// modeSource = new BehaviorSubject<string>('');
 	showAdvSearch = new BehaviorSubject<Boolean>(false);
 	showNewButton = new BehaviorSubject<Boolean>(false);
+	showNextPageButton = new BehaviorSubject<Boolean>(false);
 	showPrintButton = new BehaviorSubject<Boolean>(false);
 	showEditButton = new BehaviorSubject<Boolean>(false);
 	showSaveButton = new BehaviorSubject<Boolean>(false);
@@ -15,6 +16,9 @@ export class NavigationService {
 	showProofButton = new BehaviorSubject<Boolean>(false);
 	showSearchBar = new BehaviorSubject<Boolean>(false);
 	showFieldEdit = new BehaviorSubject<Boolean>(true);
+
+	onSave = new BehaviorSubject<Boolean>(false);
+	onDelete = new BehaviorSubject<Boolean>(false);
   
 	constructor() {}
   
@@ -25,11 +29,7 @@ export class NavigationService {
 		this.showAdvSearch.next(true);
 	  }
 	}
-
-	setNewButton(status: boolean) {
-		this.showNewButton.next(status);
-	}
-  
+ 
 	setEditField(status: boolean) {
 	  this.showFieldEdit.next(status);
 	}
@@ -54,6 +54,22 @@ export class NavigationService {
   
 	setCancelButton(status: boolean) {
 	  this.showCancelButton.next(status);
+	}
+
+	setNewButton(status: boolean) {
+		this.showNewButton.next(status);
+	}
+	
+	setNextPageButton(status: boolean) {
+		this.showNextPageButton.next(status);
+	}
+
+	setOnSave(status: boolean) {
+		this.onSave.next(status);
+	}
+	
+	setOnDelete(status: boolean) {
+		this.onDelete.next(status);
 	}
 
 }

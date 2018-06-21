@@ -12,7 +12,6 @@ const routes: Routes = [
         data: {
             // title: 'ค้นหาข้อมูล',
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาใบแจ้งความนำจับ' }],
-            pageType: 'list',
             nextPage: { title: 'แจ้งความ', url: '/notice/manage' }
         },
         component: ListComponent

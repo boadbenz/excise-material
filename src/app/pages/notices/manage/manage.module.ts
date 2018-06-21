@@ -17,7 +17,6 @@ const routes: Routes = [
                 { title: 'ค้นหาใบแจ้งความนำจับ', url: '/notice/list' },
                 { title: 'จัดการข้อมูลใบแจ้งความนำจับ' }
             ],
-            pageType: 'manage',
             nextPage: { title: 'งานจับกุม', url: '/arrest/manage' }
         },
         component: ManageComponent
