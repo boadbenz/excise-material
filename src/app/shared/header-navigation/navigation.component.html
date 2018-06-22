@@ -1,0 +1,105 @@
+<!-- ============================================================== -->
+<!-- Topbar header - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<header class="topbar">
+    <nav class="navbar top-navbar navbar-expand-md navbar-light">
+        <!-- ============================================================== -->
+        <!-- Logo -->
+        <!-- ============================================================== -->
+        <div class="navbar-header">
+            <a class="navbar-brand" [routerLink]="['/']">
+               <!-- Logo icon -->
+               <b>
+                    <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                    <!-- Dark Logo icon -->
+                    <img src="assets/images/logo-excise.png" alt="homepage" class="dark-logo" style="height: 60px;" />
+                    <!-- Light Logo icon -->
+                    <img src="assets/images/logo-excise.png" alt="homepage" class="light-logo" style="height: 60px;" />
+                </b>
+                <!--End Logo icon -->
+                <!-- Logo text -->
+                <span class="text-white heading">
+                    กรมสรรพสามิต
+                </span>
+                <br>
+                <span class="text-white sub-heading">THE EXCISE DEPARTMENT</span>
+            </a>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Logo -->
+        <!-- ============================================================== -->
+        <div class="navbar-collapse">
+            <!-- ============================================================== -->
+            <!-- toggle and nav items -->
+            <!-- ============================================================== -->
+            <ul class="navbar-nav mr-auto mt-md-0">
+                <!-- This is  -->
+                <li class="nav-item">
+                    <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)">
+                        <i class="mdi mdi-menu"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
+                        <i class="ti-menu"></i>
+                    </a>
+                </li>
+                <li *ngIf="pageType == 'list'" class="nav-item">
+                    <div class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
+                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;"
+                        (click)="create()">
+                            <i class="ti-plus"></i>
+                            สร้างข้อมูล
+                        </a>
+                    </div>
+                </li>
+
+                <li *ngIf="pageType == 'manage'" class="nav-item">
+                    <div class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
+                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;"
+                        (click)="onSave()">
+                            <i class="ti-plus"></i>
+                            บันทึก
+                        </a>
+                    </div>
+                </li>
+                <li *ngIf="pageType == 'manage'" class="nav-item">
+                    <div class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
+                        <a class="btn btn-secondary text-white" style="background-color: transparent; border-color: white;"
+                        (click)="create()">
+                            <i class="ti-plus"></i>
+                            ยกเลิก
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <!-- ============================================================== -->
+            <!-- search -->
+            <!-- ============================================================== -->
+            <ul *ngIf="pageType == 'list'" class="navbar-nav my-lg-0">
+                <!-- ============================================================== -->
+                <!-- Serch -->
+                <!-- ============================================================== -->
+                <li class="nav-item col-8">
+                    <form class="app-search">
+                        <input type="search" name="" id="" class="form-control">
+                        <a class="srh-btn" style=" position: absolute;top: 8px;right: 28px;">
+                            <i class="ti-search"></i>
+                        </a>
+                    </form>
+                </li>
+                <!-- ============================================================== -->
+                <!-- Advance search -->
+                <!-- ============================================================== -->
+                <li class="nav-item col-4">
+                    <a href="javaScript:void(0);" class="btn text-white" (click)="advSearch()">
+                        ค้นหาขั้นสูง
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<!-- ============================================================== -->
+<!-- End Topbar header -->
+<!-- ============================================================== -->
