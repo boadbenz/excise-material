@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
+import { CardActionsModule } from '../../component/card-actions/card-actions.module';
+import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
 
 const routes: Routes = [
     {
@@ -15,7 +16,6 @@ const routes: Routes = [
                 { title: 'ค้นหาใบแจ้งความนำจับ', url: '/notice/list' },
                 { title: 'จัดการข้อมูลใบแจ้งความนำจับ' }
             ],
-            pageType: 'manage',
             nextPage: { title: 'งานจับกุม', url: '/arrest/manage' }
         },
         component: ManageComponent
@@ -26,7 +26,9 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        CardActionsModule,
+        LawbreakerModalModule
     ],
     declarations: [
         ManageComponent
