@@ -1,0 +1,60 @@
+.top-navbar {
+  background: linear-gradient(45deg, rgb(0, 94, 141), rgb(53, 57, 147));
+}
+
+.close-popup {
+  cursor: pointer;
+}
+
+.form-inline .form-control {
+  width: 300px;
+  background: transparent;
+  border-color: white;
+  color: white;
+}
+
+.adv-search {
+  text-decoration: underline !important;
+  cursor: pointer;
+}
+
+.icn-search {
+  position: absolute;
+  color: white;
+  font-size: 25px;
+  top: 11px;
+  right: 68px;
+}
+
+.header-btn {
+  font-size: 18px;
+  color: white;
+  background: transparent;
+  border-color: white;
+  width: 120px;
+  height: 40px;
+}
+
+.header-btn.btn-delete {
+  background: rgb(224, 112, 35);
+}
+
+.header-btn:hover {
+  background: rgb(11, 116, 168);
+}
+
+.table-striped tbody tr:nth-of-type(2n+1) {
+  background: rgb(229, 238, 244);
+}
+
+.icn-filter {
+  font-size: 25px;
+}
+
+.btn-print {
+  background: rgb(0, 94, 141);
+  color: white;
+  font-size: 16px;
+  width: 120px;
+  height: 40px;
+}

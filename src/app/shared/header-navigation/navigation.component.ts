@@ -4,66 +4,64 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 declare var jQuery: any;
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'ma-navigation',
-    templateUrl: './navigation.component.html',
-    styleUrls: ['./navigation.component.scss']
+  // tslint:disable-next-line:component-selector
+  selector: 'ma-navigation',
+  templateUrl: './navigation.component.html',
+  styleUrls: ['./navigation.component.scss']
 
 })
 export class NavigationComponent implements OnInit {
 
-    pageType: string;
-    nextPage: string;
-    nextPageTitle: string;
-    mode: string;
+  pageType: string;
+  nextPage: string;
+  nextPageTitle: string;
+  mode: string;
 
-    @Output() btnSave: EventEmitter<boolean> = new EventEmitter();
-    @Output() btnCancel: EventEmitter<boolean> = new EventEmitter();
-    
+  @Output() btnSave: EventEmitter<boolean> = new EventEmitter();
+  @Output() btnCancel: EventEmitter<boolean> = new EventEmitter();
 
-    constructor(
-        private router: Router,
-        private activatedRoute: ActivatedRoute
-    ) { };
 
-    ngOnInit(): void {
-        this
-            .router.events
-            .filter(event => event instanceof NavigationEnd)
-            .map(() => this.activatedRoute)
-            .map(route => {
-                // tslint:disable-next-line:curly
-                while (route.firstChild) route = route.firstChild;
-                return route;
-            })
-            .filter(route => route.outlet === 'primary')
-            .mergeMap(route => route.data)
-            .subscribe((event) => {
-                if (event['pageType']) {
-                    this.pageType = event['pageType'];
-                }
-                if (event['nextPage']) {
-                    const next = event['nextPage'];
-                    this.nextPage = next['url'];
-                    this.nextPageTitle = next['title'];
-                }
-            });
-    }
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) { };
 
-    onSave() {
-        this.btnSave.emit(true);
-    }
+  ngOnInit(): void {
+    this
+      .router.events
+      .filter(event => event instanceof NavigationEnd)
+      .map(() => this.activatedRoute)
+      .map(route => {
+        // tslint:disable-next-line:curly
+        while (route.firstChild) route = route.firstChild;
+        return route;
+      })
+      .filter(route => route.outlet === 'primary')
+      .mergeMap(route => route.data)
+      .subscribe((event) => {
+        if (event['pageType']) {
+          this.pageType = event['pageType'];
+        }
+        if (event['nextPage']) {
+          const next = event['nextPage'];
+          this.nextPage = next['url'];
+          this.nextPageTitle = next['title'];
+        }
+      });
+  }
 
-    onCancel() {
-        this.btnCancel.emit(true);
-    }
+  onSave() {
+    this.btnSave.emit(true);
+  }
 
-    create() {
-        this.router.navigate([`${this.nextPage}`, 'c']);
-    }
+  onCancel() {
+    this.btnCancel.emit(true);
+  }
 
-    advSearch() {
-        jQuery('#advSearch').slideToggle();
-    }
+  create() {
+    this.router.navigate([`${this.nextPage}`, 'c']);
+  }
 
-}
+  advSearch() {
+    jQuery('#advSearch').slideToggle();
+  }
