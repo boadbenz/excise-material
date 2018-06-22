@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-
-import * as $ from 'jquery';
+import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-step-wizard',
@@ -10,22 +8,22 @@ import * as $ from 'jquery';
 export class StepWizardComponent implements OnInit {
 
   // steps: any;
+  @Input() sectionId: EventEmitter<number>;
 
   section = [
-    {name: 'ใบแจ้งความนำจับ'},
-    {name: 'งานจับกุม'},
-    {name: 'รับคำกล่าวโทษ'},
-    {name: 'งานตรวจรับและพิสูจน์ของกลาง'},
-    {name: 'งานเปรียบเทียบปรับและชำระค่าปรับ'},
-    {name: 'นำส่งเงินรายได้'},
-    {name: 'คำร้องขอรับเงินสินบนรางวัล'}
+    { id: 1, name: 'ใบแจ้งความนำจับ' },
+    { id: 2, name: 'งานจับกุม' },
+    { id: 3, name: 'รับคำกล่าวโทษ' },
+    { id: 4, name: 'งานตรวจรับและพิสูจน์ของกลาง' },
+    { id: 5, name: 'งานเปรียบเทียบปรับและชำระค่าปรับ' },
+    { id: 6, name: 'นำส่งเงินรายได้' },
+    { id: 7, name: 'คำร้องขอรับเงินสินบนรางวัล' }
   ]
 
   constructor() { }
 
 
   ngOnInit() {
-
   }
 
 }

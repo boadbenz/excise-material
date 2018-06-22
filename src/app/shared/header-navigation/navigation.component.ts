@@ -39,7 +39,7 @@ export class NavigationComponent implements OnInit {
         this.searchBar = this.navService.showSearchBar;
         this.nextPageButton = this.navService.showNextPageButton;
     }
-    
+
     ngOnInit(): void {
         this
             .router.events
@@ -71,11 +71,11 @@ export class NavigationComponent implements OnInit {
 
     clickNextPage() {
         this.router.navigate([`${this.nextPage}`, 'c', 'new']);
-        
+
     }
 
     clickPrint() {
-        
+
     }
 
     clickEdit() {
@@ -101,7 +101,7 @@ export class NavigationComponent implements OnInit {
     }
 
     clickSave() {
-        this.navService.setEditField(false);
+        // set true
         this.navService.setOnSave(true);
     }
 
