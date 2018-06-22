@@ -16,6 +16,13 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/proof/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/proof/manage/manage.module#ManageModule' }
         ]
+    }, {
+        path: 'accusations',
+        children: [
+            { path: 'list', loadChildren: './pages/accusations/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/accusations/manage-view/manage-view.module#ManageViewModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/accusations/manage/manage.module#ManageModule' }
+        ]
     },
 
     // {

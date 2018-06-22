@@ -19,6 +19,7 @@ export class NavigationComponent implements OnInit {
 
     @Output() btnSave: EventEmitter<boolean> = new EventEmitter();
     @Output() btnCancel: EventEmitter<boolean> = new EventEmitter();
+    
 
     constructor(
         private router: Router,

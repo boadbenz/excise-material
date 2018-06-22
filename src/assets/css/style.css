@@ -37,6 +37,7 @@ File: scss
 @import url(../scss/icons/flag-icon-css/flag-icon.min.css);
 @import url(../scss/icons/material-design-iconic-font/css/materialdesignicons.min.css);
 @import url("https://fonts.googleapis.com/css?family=Kanit:300,400,500,600,700&subset=thai");
+@import url(../css/steps.css);
 @import url(../css/spinners.css);
 @import url(../css/animate.css);
 .preloader {

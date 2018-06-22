@@ -58,6 +58,17 @@
                     </ul>
                 </li>
                 <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="accusations/list">
+                        <i class="mdi mdi-account-alert"></i>
+                        <span class="hide-menu">4. รับคำกล่าวโทษ </span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="arrest/list">2.1 บันทึกการจับกุม(ส.ส. 2/39)</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="proof/list">
                         <i class="mdi mdi-account-alert"></i>
                         <span class="hide-menu">5. งานตรวจรับและพิสูจน์ของกลาง</span>
