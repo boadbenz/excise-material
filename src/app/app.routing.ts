@@ -17,6 +17,12 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' },
             { path: 'lawbreaker/:mode/:code', loadChildren: './pages/arrests/lawbreaker/lawbreaker.module#LawbreakerModule' }
         ]
+    }, {
+        path: 'investigation',
+        children: [
+            { path: 'list', loadChildren: './pages/investigation/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/investigation/manage/manage.module#ManageModule' }
+        ]
     },
 
     {

@@ -1,4 +1,3 @@
-
 <div *ngIf="advSearch | async" class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
         <app-card-actions-close></app-card-actions-close>
@@ -8,14 +7,29 @@
         <form class="form-horizontal">
             <div>
                 <div class="row">
-                    <label for="" class="col-lg-2 col-sm-3">เลขที่ใบแจ้งความ :</label>
+                    <label for="" class="col-lg-2 col-sm-3">เลขที่สืบสวน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                        </div>
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-3">คดีสืบสวนที่ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3">หัวข้อการสืบสวน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <input type="text" id="" class="form-control form-control-sm" placeholder="">
                         </div>
                     </div>
 
-                    <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
+                    <label for="" class="col-lg-2 col-sm-3">วันที่เริ่มสืบสวน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
                             <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
@@ -23,30 +37,6 @@
                             <label for="">&nbsp; ถึง &nbsp;</label>
 
                             <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-3">ชื่อผู้รับแจ้ง :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-9">
-                        <div class="form-group">
-                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
-                        </div>
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-3">หน่วยงาน :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-9">
-                        <div class="form-group">
-                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-3">ผู้ต้องสงสัย :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-9">
-                        <div class="form-group">
-                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
                         </div>
                     </div>
                 </div>
@@ -70,11 +60,12 @@
                 <thead>
                     <tr>
                         <th class="text-center">ลำดับ</th>
-                        <th>เลขที่ใบแจ้งความ</th>
-                        <th>วันที่แจ้งความ</th>
-                        <th>ผู้รับแจ้ง</th>
-                        <th>หน่วยงาน</th>
-                        <th>ผู้ต้องสงสัย</th>
+                        <th>เลขที่สืบสวน</th>
+                        <th>คดีสืบสวนที่</th>
+                        <th>หัวข้อการสืบสวน</th>
+                        <th>วันที่เริ่มสืบสวน</th>
+                        <th>วันที่สิ้นสุดสืบสวน</th>
+                        <th>ครั้งที่สืบสวนล่าสุด</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -86,8 +77,9 @@
                         <td>1</td>
                         <td>1</td>
                         <td>1</td>
+                        <td>1</td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/notice/manage/v/xxx-xxx-xxx']">
+                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/investigation/manage/v/xxx-xxx-xxx']">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
@@ -99,7 +91,8 @@
     <div class="card-footer card-footer-unset">
         <div class="row justify-content-between m-l-5">
             <div clas="col">
-                <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |<< </a>
+                <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
+                    << </a>
                         <label> หน้าที่
                             <select>
                                 <option value="1">1</option>

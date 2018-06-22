@@ -4,15 +4,14 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 
 @Component({
     selector: 'app-list',
-    templateUrl: './list.component.html'
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
 
-    dataTable: any;
     advSearch: any;
 
     constructor(
-        private _router: Router,
         private navservice: NavigationService
     ) {
         // set false
@@ -29,26 +28,6 @@ export class ListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.onDetactTable();
-    }
-
-    onDetactTable() {
-        // const table: any = $('table');
-
-        // if ($.fn.dataTable.isDataTable('table')) {
-
-        //     this.dataTable = table.DataTable();
-        //     this.dataTable.destroy();
-        // }
-
-        // this._chRef.detectChanges();
-
-        // this.dataTable = table.DataTable(dataTableOptions);
-
-    }
-
-    view(noticeCode: string) {
-        this._router.navigate(['/notice/manage'], { queryParams: { v: true, nationalityCode: noticeCode } });
     }
 
 }
