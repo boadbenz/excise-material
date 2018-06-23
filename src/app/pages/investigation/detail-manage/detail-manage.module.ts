@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetailComponent } from './detail.component';
+import { DetailManageComponent } from './detail-manage.component';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { RouterModule, Routes } from '@angular/router';
 import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
@@ -14,12 +14,12 @@ const routes: Routes = [
       urls: [
         { title: 'หน้าหลัก', url: '/' },
         { title: 'ค้นหางานการสืบสวน', url: '/investigation/list' },
-        { title: 'จัดการงานสืบสวน', url: '/investigation/c/new' },
+        { title: 'จัดการงานสืบสวน', url: '/investigation/manage/c/new' },
         { title: 'จัดการข้อมูลรายละเอียดรายงานการสืบสวน' }
       ],
       nextPage: { title: '', url: '' }
     },
-    component: DetailComponent
+    component: DetailManageComponent
   }
 ];
 
@@ -31,6 +31,6 @@ const routes: Routes = [
     LawbreakerModalModule,
     OffenseModalModule
   ],
-  declarations: [DetailComponent]
+  declarations: [DetailManageComponent]
 })
-export class DetailModule { }
+export class DetailManageModule { }

@@ -17,6 +17,7 @@ export class NavigationService {
     showSearchBar = new BehaviorSubject<Boolean>(false);
     showFieldEdit = new BehaviorSubject<Boolean>(true);
 
+    onEdit = new BehaviorSubject<Boolean>(false);
     onSave = new BehaviorSubject<Boolean>(false);
     onDelete = new BehaviorSubject<Boolean>(false);
 
@@ -62,6 +63,10 @@ export class NavigationService {
 
     setNextPageButton(status: boolean) {
         this.showNextPageButton.next(status);
+    }
+
+    setOnEdit(status: boolean) {
+        this.onEdit.next(status);
     }
 
     setOnSave(status: boolean) {

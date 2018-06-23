@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
-    selector: 'app-detail',
-    templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss']
+    selector: 'app-investigate-detail-manage',
+    templateUrl: './detail-manage.component.html',
+    styleUrls: ['./detail-manage.component.scss']
 })
-export class DetailComponent implements OnInit, OnDestroy {
+export class DetailManageComponent implements OnInit, OnDestroy {
 
     modal: any;
     showEditField: any;
@@ -28,9 +28,11 @@ export class DetailComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.sub = this.activeRoute.params.subscribe(p => {
-            this.mode = p['mode'];
-            if (p['mode'] === 'c') {
+            // this.mode = p['mode'];
+
+            if (p['mode'] === 'c' || p['mode'] === 'u') {
                 // set false
+                this.navService.setPrintButton(false);
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
@@ -49,25 +51,39 @@ export class DetailComponent implements OnInit, OnDestroy {
                 this.navService.setEditField(true);
             }
         });
-        this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p;
+        this.sub = this.navService.showFieldEdit.subscribe(status => {
+            this.showEditField = status;
         });
 
-        this.navService.onSave.subscribe(status => {
+        this.sub = this.navService.onSave.subscribe(status => {
             if (status) {
-                // set true
-                this.navService.setEditField(true);
-                this.navService.setEditButton(true);
-                this.navService.setPrintButton(true);
-                this.navService.setDeleteButton(true);
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
+                this.onSave();
             }
         });
+
+        this.sub = this.navService.onEdit.subscribe(status => {
+            if (status) {
+                this.onEdit();
+            }
+        })
     }
 
-    ngOnDestroy() {
+    private onSave() {
+        // set true
+        this.navService.setEditField(true);
+        this.navService.setEditButton(true);
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        // set false
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
+    }
+
+    private onEdit() {
+
+    }
+
+    ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
 

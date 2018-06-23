@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
@@ -14,12 +13,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     mode: string;
     modal: any;
 
-    // --------
     showEditField: any;
 
     constructor(
+        private router: Router,
         private activeRoute: ActivatedRoute,
-        private ngModal: NgbModal,
         private navService: NavigationService
     ) {
         // set false
@@ -31,7 +29,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
-            if (p['mode'] === 'c') {
+            if (p['mode'] === 'c' || p['mode'] === 'u') {
                 // set false
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
@@ -51,22 +49,42 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditField(true);
             }
         });
-        this.navService.showFieldEdit.subscribe(p => {
+        this.sub = this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
 
-        this.navService.onSave.subscribe(status => {
+        this.sub = this.navService.onSave.subscribe(status => {
             if (status) {
-                // set true
-                this.navService.setEditField(true);
-                this.navService.setEditButton(true);
-                this.navService.setPrintButton(true);
-                this.navService.setDeleteButton(true);
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
+                this.onSave();
+
             }
         });
+
+        this.sub = this.navService.onEdit.subscribe(status => {
+            if (status) {
+                this.onEdit();
+
+            }
+        })
+    }
+
+    private onSave() {
+        // set true
+        this.navService.setEditField(true);
+        this.navService.setEditButton(true);
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        // set false
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
+        // set action save = false
+        this.navService.setOnSave(false);
+    }
+
+    private onEdit() {
+        this.router.navigate(['/investigation/detail-manage', 'u', 'xxx-xxx']);
+        // set action edit = false
+        this.navService.setOnEdit(false);
     }
 
     ngOnDestroy(): void {
