@@ -1,5 +1,6 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 
 @Component({
@@ -88,9 +89,20 @@ export class ManageViewComponent implements OnInit {
   detailData: any;
   private getDataFromListPage: any;
 
-  constructor(private router: Router, private activeRoute: ActivatedRoute) { }
+  constructor(private router: Router, private activeRoute: ActivatedRoute, private navService: NavigationService) { }
 
   ngOnInit() {
+
+    //set show button
+    this.navService.setPrintButton(true);
+    this.navService.setNewButton(false);
+    this.navService.setSearchBar(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setSaveButton(false);
+
+
     this.getDataFromListPage = this.activeRoute.queryParams
       .subscribe(params => {
         //check id from list page

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ManageComponent } from './manage.component';
+import { CardActionsModule } from './../../component/card-actions/card-actions.module';
 
 const routes: Routes = [
     {
@@ -25,6 +26,7 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
+        CardActionsModule,
         RouterModule.forChild(routes)
     ],
     declarations: [

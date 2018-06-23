@@ -1,10 +1,10 @@
 <div class="row m-t-10">
   <div class="col-12">
-    <div id="advSearch" style="display: none;" class="card">
+    <div class="card" *ngIf="advSearch | async">
       <div class="card-header card-navy">
         ค้นหาขั้นสูง
         <div class="card-actions">
-          <a class="btn-close" (click)="advSearch()">
+          <a class="btn-close" (click)="closeAdvSearch()">
             <i class="ti-close"></i>
           </a>
         </div>
@@ -91,7 +91,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="footable" *ngFor="let item of listData; let i = index;">
+              <tr class="footable" *ngFor="let item of listData | slice:0:numberPage; let i = index;">
                 <td>{{i+1}}</td>
                 <td>{{item.arrestCode}}</td>
                 <td>{{item.lawsuitNo}}</td>
@@ -108,23 +108,21 @@
         <div class="card-footer bg-transparent">
           <div class="row justify-content-between">
             <div clas="col">
-              <a class="icn-pagination"> |
-                << </a>
-                  <label> หน้าที่
-                    <select>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                    </select> จาก 2 หน้า</label>
-                  <a class="icn-pagination m-r-10"> >>| </a>
-                  รายการที่ 1 - 5 จาก 5 รายการ
+              <a class="icn-pagination"> |&lt;&lt; </a>
+              <label> หน้าที่
+                <select>
+                  <option *ngFor="let number of numberSelectPage;">{{number}}</option>
+                </select> จาก {{allPageCount}} หน้า</label>
+              <a class="icn-pagination m-r-10"> &gt;&gt;| </a>
+              รายการที่ 1 - {{numberPage}} จาก {{listData.length}} รายการ
             </div>
             <div class="col col-lg-3 text-right">
               <label>แสดง
                 <select>
-                  <option (click)="numPage = 5">5</option>
-                  <option (click)="numPage = 10">10</option>
-                  <option (click)="numPage = 15">15</option>
-                  <option (click)="numPage = 20">20</option>
+                  <option (click)="changeNumPage(5)">5</option>
+                  <option (click)="changeNumPage(10)">10</option>
+                  <option (click)="changeNumPage(15)">15</option>
+                  <option (click)="changeNumPage(20)">20</option>
                 </select> รายการ</label>
             </div>
           </div>

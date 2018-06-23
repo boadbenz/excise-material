@@ -1,5 +1,5 @@
+import { NavigationService } from './../../../shared/header-navigation/navigation.service';
 import { Router } from '@angular/router';
-import { NavigationComponent } from './../../../shared/header-navigation/navigation.component';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -20,8 +20,6 @@ export class ListComponent implements OnInit {
       lastName: "บิงขุนทด",
       departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
       positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน",
-      
-      
     },
     {
       arrestCode: "TN90806026000002",
@@ -68,24 +66,47 @@ export class ListComponent implements OnInit {
       positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
     }
   ];
-  arrestCode: String;
-  lawsuitNo: String;
+  arrestCode: string;
+  lawsuitNo: string;
   lawsuitDateStart: Date;
   lawsuitDateEnd: Date;
   lawName: string;
   departmentlawName: string;
+  advSearch: any;
+  allPageCount: number = 0;
+  numberPage: number = 5;
+  numberSelectPage;
+  
 
-  constructor(private navbar: NavigationComponent, private router: Router) { }
+  constructor(private navService: NavigationService, private router: Router) {
+    this.advSearch = this.navService.showAdvSearch;
 
-  ngOnInit() {
   }
 
-  advSearch() {
-    this.navbar.advSearch();
+  ngOnInit() {
+    this.navService.setSearchBar(true);
+    this.navService.setPrintButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setSaveButton(false);
+
+    this.allPageCount = this.listData.length / this.numberPage;
+    this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i+1);
   }
 
   viewData(arrestCode: string) {
     this.router.navigate(['/accusations/manage', 'R'], { queryParams: { code: arrestCode } });
+  }
+
+  closeAdvSearch() {
+    this.navService.showAdvSearch.next(false);
+  }
+
+  changeNumPage(numPage: number) {
+    this.numberPage = numPage;
+    this.allPageCount = Math.ceil(this.listData.length / this.numberPage);
+    this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i+1);
   }
 
 }

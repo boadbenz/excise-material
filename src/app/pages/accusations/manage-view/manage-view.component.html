@@ -40,70 +40,64 @@
     <strong class="text-dark">
       ข้อมูลการจับกุม
     </strong>
-    <div class="card-actions">
-      <a data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">
-        <i class="fa fa-caret-down icn-collapse"></i>
-      </a>
-    </div>
+    <app-card-actions-collapse></app-card-actions-collapse>
   </div>
-  <div class="" id="">
-    <div class="card-body">
-      <div class="form-body">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">เลขที่ใบงาน : </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="detailData.arrestCode" name="arrestCode" disabled>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
-              <div class="col-md-4">
-                <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
-              </div>
-              <label class="col-form-label text-center col-md-2">เวลา</label>
-              <div class="col-md-3">
-                <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
-              </div>
+  <div class="card-body">
+    <div class="form-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">เลขที่ใบงาน : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="detailData.arrestCode" name="arrestCode" disabled>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">เขียนที่ : </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="localtionName" disabled>
-              </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
+            <div class="col-md-4">
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">ชื่อผู้กล่าวหา : </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="fullName" name="fullName" disabled>
-              </div>
+            <label class="col-form-label text-center col-md-2">เวลา</label>
+            <div class="col-md-3">
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="detailData.positionLawName" name="positionLawName" disabled>
-              </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">เขียนที่ : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="localtionName" disabled>
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="departmentlawName" disabled>
-              </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">ชื่อผู้กล่าวหา : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="fullName" name="fullName" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="detailData.positionLawName" name="positionLawName" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="departmentlawName" disabled>
             </div>
           </div>
         </div>
@@ -116,11 +110,7 @@
     <strong class="text-dark">
       ข้อมูลคดีรับคำกล่าวโทษ
     </strong>
-    <div class="card-actions">
-      <a data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
-        <i class="fa fa-caret-down icn-collapse"></i>
-      </a>
-    </div>
+    <app-card-actions-collapse></app-card-actions-collapse>
   </div>
   <div class="card-body">
     <div class="table-responsive table-striped no-wrap">

@@ -1,3 +1,4 @@
+import { NavigationService } from './../../../shared/header-navigation/navigation.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
@@ -105,13 +106,15 @@ export class ManageComponent implements OnInit {
     departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
     positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
   }]
-  
+
   condemnData: any;
   showField: any;
   allegationYear: any;
   allegationNumber: any;
-  showPopUp: boolean = false;
   fullName: any;
+  navServiceSub: any;
+
+
   fileItem = [{
     fileName: "",
     filePath: "",
@@ -119,25 +122,46 @@ export class ManageComponent implements OnInit {
 
   private getDatafromManageViewPage: any;
 
-  constructor(private router: Router, private activeRoute: ActivatedRoute) { }
-
-
+  constructor(private router: Router, private activeRoute: ActivatedRoute, private navService: NavigationService) { }
 
   ngOnInit() {
-    this.getDatafromManageViewPage = this.activeRoute.params
-    .subscribe(params => {
-      //check id from manage-view page
-      for (let i = 0; i < this.condemnTableData.length; i++) {
-        if (params.code == this.condemnTableData[i].arrestCode) {
-          this.condemnData = this.condemnTableData[i];
-          this.fullName =
-            this.condemnTableData[i].titleName +
-            this.condemnTableData[i].firstName +
-            " " +
-            this.condemnTableData[i].lastName;
-        }
+
+    //set show button
+    this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
+      this.showField = status;
+      if (!this.showField) {
+        this.navService.setCancelButton(true);
+        this.navService.setSaveButton(true);
+        this.navService.setPrintButton(false);
+        this.navService.setSearchBar(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setEditButton(false);
+
+      } else {
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setSearchBar(false);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
       }
     });
+
+    //subscribe data from manage view page
+    this.getDatafromManageViewPage = this.activeRoute.params
+      .subscribe(params => {
+        //check id from manage view page
+        for (let i = 0; i < this.condemnTableData.length; i++) {
+          if (params.code == this.condemnTableData[i].arrestCode) {
+            this.condemnData = this.condemnTableData[i];
+            this.fullName =
+              this.condemnTableData[i].titleName +
+              this.condemnTableData[i].firstName +
+              " " +
+              this.condemnTableData[i].lastName;
+          }
+        }
+      });
 
     var splitSlash = this.allegationData[0].allegationCode.split("/");
     this.allegationNumber = splitSlash[0];
@@ -150,6 +174,12 @@ export class ManageComponent implements OnInit {
       fileName: file[0].name,
       filePath: ""
     });
+  }
+
+
+  ngOnDestroy() {
+    this.getDatafromManageViewPage.unsubscribe();
+    this.navServiceSub.unsubscribe();
   }
 
 }
