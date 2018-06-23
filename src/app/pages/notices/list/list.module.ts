@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 
 const routes: Routes = [
     {
@@ -10,7 +11,6 @@ const routes: Routes = [
         data: {
             // title: 'ค้นหาข้อมูล',
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาใบแจ้งความนำจับ' }],
-            pageType: 'list',
             nextPage: { title: 'แจ้งความ', url: '/notice/manage' }
         },
         component: ListComponent
@@ -21,8 +21,11 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        CardActionsModule
     ],
-    declarations: [ListComponent]
+    declarations: [
+        ListComponent,
+    ]
 })
 export class ListModule { }
