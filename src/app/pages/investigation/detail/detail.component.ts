@@ -1,21 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
-    selector: 'app-manage',
-    templateUrl: './manage.component.html',
-    styleUrls: ['./manage.component.scss']
+    selector: 'app-detail',
+    templateUrl: './detail.component.html',
+    styleUrls: ['./detail.component.scss']
 })
-export class ManageComponent implements OnInit, OnDestroy {
+export class DetailComponent implements OnInit, OnDestroy {
 
-    private sub: any;
-    mode: string;
     modal: any;
-
-    // --------
     showEditField: any;
+    mode: string;
+    private sub: any;
 
     constructor(
         private activeRoute: ActivatedRoute,
@@ -69,8 +67,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    openModal(e) {
+        this.modal = this.ngModal.open(e, { size: 'lg', centered: true });
     }
 
 }

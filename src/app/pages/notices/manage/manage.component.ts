@@ -16,9 +16,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     // --------
     showEditField: any;
 
-    // ----- Model ------ //
-    // @Input() suspectComponent: SuspectModalComponent;
-
     constructor(
         private activeRoute: ActivatedRoute,
         private suspectModalService: NgbModal,
