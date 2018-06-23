@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DetailComponent } from './detail.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 
 
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
         { title: 'จัดการข้อมูลงานเปรียบแทียบและชำระค่าปรับ', url:'/fine/detail'},
         { title: 'รายละเอียดฐานความผิดเดิม'}
       ],
-      pageType: 'manage'
+      pageType: 'manage',
+      nextPage: { title: 'เปรียบเทียบ', url: '#' }
     },
     component: DetailComponent
   }
@@ -25,6 +27,7 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
+        CardActionsModule,
         RouterModule.forChild(routes)
     ],
     declarations: [

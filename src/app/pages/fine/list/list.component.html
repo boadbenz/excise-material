@@ -85,7 +85,7 @@
   <div class="col-12">
     <div class="card">
       <div>
-        <table class="table table-striped">
+        <!-- <table class="table table-striped">
           <thead>
             <tr>
               <th class="text-center">ลำดับ</th>
@@ -101,7 +101,6 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of response">
-              <!-- | slice:0:numPage; let i = index -->
               <td class="text-center">{{item.no}}</td>
               <td>{{item.work_no}}</td>
               <td>{{item.case_no}}</td>
@@ -111,11 +110,48 @@
               <td>{{item.compare_day}}</td>
               <td>{{item.department}}</td>
               <td>
-                <span class="glyphicon glyphicon-eye-open" (click)="viewData(item.work_no)"></span>
+                <i class="mdi mdi-eye" (click)="viewData(item.work_no)"></i>
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
+
+        <div class="card-body">
+            <div class="table-responsive table-striped no-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                          <th class="text-center">ลำดับ</th>
+                          <th>เลขที่ใบงาน</th>
+                          <th>เลขที่คดีรับคำกล่าว</th>
+                          <th>ทะเบียนตรวจพิสูจน์</th>
+                          <th>เลขที่เปรียบเทียบคดี</th>
+                          <th>ผู้เปรียบเทียบคดี</th>
+                          <th>วันที่เปรียบเทียบคดี</th>
+                          <th>หน่วยงาน</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of response">
+                          <td class="text-center">{{item.no}}</td>
+                          <td>{{item.work_no}}</td>
+                          <td>{{item.case_no}}</td>
+                          <td>{{item.checklist}}</td>
+                          <td>{{item.compare_no}}</td>
+                          <td>{{item.lawyer}}</td>
+                          <td>{{item.compare_day}}</td>
+                          <td>{{item.department}}</td>
+                          <td>
+                              <!-- (click)="viewData(item.work_no)" -->
+                            <i class="mdi mdi-eye fa-lg" (click)="viewData(false)"></i>
+                          </td>
+                        </tr>
+                      </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="row pages">
           <div class="col-9 ">
             <a href="#">|&lt;&lt;</a> หน้าที่

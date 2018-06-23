@@ -1,69 +1,26 @@
-<!-- <div class="wizard-content">
-    <div class="wizard-circle wizard clearfix clearfix">
-      <div class="steps tab-wizard">
-        <ul role="tablist">
-          <li role="tab" class="current" aria-disabled="false" aria-selected="true">
-            <a>
-              <span class="current-info audible">current step: </span>
-              <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 2. งานจับกุม </a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 3. รับคำกล่าวโทษ </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 6. นำส่งเงินรายได้ </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
-          </li>
-        </ul>
-      </div>
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดข้อกล่าวหา</h4>
     </div>
-  </div> -->
 
-<div class="card border-navy">
-    <div class="card-header card-navy">
-        <strong class="text-dark">
-            รายละเอียดข้อกล่าวหา
-        </strong>
-        <div class="card-actions">
-            <a data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">
-                <i class="fa fa-caret-down icn-collapse"></i>
-            </a>
-        </div>
-    </div>
     <div class="" id="">
         <div class="card-body">
             <div class="form-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-4">เลขที่ใบงาน : </label>
+                            <label class="col-form-label    col-md-4">เลขที่ใบงาน : </label>
                             <div class="col-md-8">
-                                <input class="form-control" type="text" name="allegationCode" disabled>
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-3">เลขที่คดีรับคำกล่าวโทษ : </label>
+                            <label class="col-form-label    col-md-3">เลขที่คดีรับคำกล่าวโทษ : </label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="allegationSubject" disabled>
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
@@ -71,9 +28,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-4">ทะเบียนตรวจพิสูจน์ : </label>
+                            <label class="col-form-label    col-md-4">ทะเบียนตรวจพิสูจน์ : </label>
                             <div class="col-md-8">
-                                <input class="form-control" type="text" name="allegationNo" disabled>
+                                <input class="form-control" type="text" name="allegationNo" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
@@ -81,11 +38,11 @@
                         <div class="form-group row">
                             <label class="col-form-label  col-md-3">วันที่รับทำคดี : </label>
                             <div class="col-md-4">
-                                <input class="form-control" type="text" name="lawsuitDate" disabled>
+                                <input class="form-control" type="text" name="lawsuitDate" [disabled]="viewMode">
                             </div>
                             <label class="col-form-label text-center col-md-2">เวลา</label>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" name="lawsuitTime" disabled>
+                                <input class="form-control" type="text" name="lawsuitTime" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
@@ -93,17 +50,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-4">ผู้กล่าวหา : </label>
+                            <label class="col-form-label    col-md-4">ผู้กล่าวหา : </label>
                             <div class="col-md-8">
-                                <input class="form-control" type="text" name="allegationCode" disabled>
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
+                            <label class="col-form-label    col-md-3">ตำแหน่ง : </label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="allegationSubject" disabled>
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
@@ -111,17 +68,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-4">หน่วยงาน : </label>
+                            <label class="col-form-label    col-md-4">หน่วยงาน : </label>
                             <div class="col-md-8">
-                                <input class="form-control" type="text" name="allegationCode" disabled>
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-3">สถานที่ขับกุม : </label>
+                            <label class="col-form-label    col-md-3">สถานที่ขับกุม : </label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="allegationSubject" disabled>
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
@@ -129,17 +86,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-4">ฐานความผิดมาตรา : </label>
+                            <label class="col-form-label    col-md-4">ฐานความผิดมาตรา : </label>
                             <div class="col-md-8">
-                                <input class="form-control" type="text" name="allegationCode" disabled>
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-3">ฐานความผิด : </label>
+                            <label class="col-form-label    col-md-3">ฐานความผิด : </label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="allegationSubject" disabled>
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
@@ -147,17 +104,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-4">บทกำหนดโทษ : </label>
+                            <label class="col-form-label    col-md-4">บทกำหนดโทษ : </label>
                             <div class="col-md-8">
-                                <input class="form-control" type="text" name="allegationCode" disabled>
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-md-3">อัตราโทษ : </label>
+                            <label class="col-form-label    col-md-3">อัตราโทษ : </label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="allegationSubject" disabled>
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
                             </div>
                         </div>
                     </div>
@@ -167,16 +124,11 @@
     </div>
 </div>
 
-<div class="card border-navy">
-    <div class="card-header card-navy">
-        <strong class="text-dark">
-            รายละเอียดเงินค่าปรับ
-        </strong>
-        <div class="card-actions">
-            <a data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
-                <i class="fa fa-caret-down icn-collapse"></i>
-            </a>
-        </div>
+<div class="card ">
+
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดเงินค่าปรับ</h4>
     </div>
     <div class="card-body">
         <div class="table-responsive table-striped no-wrap">
@@ -210,7 +162,7 @@
                         <td class="">80,000.00</td>
                         <td class="">800,000.00</td>
                         <td>
-                            <input class="form-control" type="text" disabled value="800,000.00">
+                            <input class="form-control" type="text" [disabled]="viewMode" value="800,000.00">
                         </td>
                         <td class="">160,000.00</td>
                         <td class="">160,000.00</td>
@@ -222,17 +174,12 @@
     </div>
 </div>
 
-<div class="card border-navy">
-    <div class="card-header card-navy">
-        <strong class="text-dark">
-            คำให้การของผู้ต้องหา
-        </strong>
-        <div class="card-actions">
-            <a data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
-                <i class="fa fa-caret-down icn-collapse"></i>
-            </a>
-        </div>
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">คำให้การของผู้ต้องหา</h4>
     </div>
+
     <div class="card-body">
         <div class="form-body">
 
@@ -241,11 +188,11 @@
                     <div class="form-group row">
                         <label class="col-form-label  col-md-3">วันที่จัดทำ : </label>
                         <div class="col-md-4">
-                            <input class="form-control" type="text" name="lawsuitDate" disabled>
+                            <input class="form-control" type="text" name="lawsuitDate" [disabled]="viewMode">
                         </div>
                         <label class="col-form-label text-center col-md-2">เวลา</label>
                         <div class="col-md-3">
-                            <input class="form-control" type="text" name="lawsuitTime" disabled>
+                            <input class="form-control" type="text" name="lawsuitTime" [disabled]="viewMode">
                         </div>
                     </div>
                 </div>
@@ -253,7 +200,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">เขียนที่ : </label>
                         <div class="col-md-7">
-                            <input class="form-control" type="text" name="allegationCode" disabled>
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                         </div>
                     </div>
                 </div>
@@ -264,7 +211,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-3">ชื่อผู้เปรียบเทียบ : </label>
                         <div class="col-md-9">
-                            <input class="form-control" type="text" name="allegationCode" disabled>
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                         </div>
                     </div>
                 </div>
@@ -272,7 +219,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                         <div class="col-md-7">
-                            <input class="form-control" type="text" name="allegationCode" disabled>
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                         </div>
                     </div>
                 </div>
@@ -282,7 +229,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-3">หน่วยงาน : </label>
                         <div class="col-md-9">
-                            <input class="form-control" type="text" name="allegationCode" disabled>
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                         </div>
                     </div>
                 </div>
@@ -314,7 +261,8 @@
                         </td>
                         <td class="text-center">/</td>
                         <td>
-                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpAccusation"></i>
+                            <i class="mdi mdi-eye fa-lg" data-toggle="modal" data-target="#editPopUpAccusation"></i>
+                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpAccusation" [hidden]="viewMode"></i>
                         </td>
                     </tr>
                 </tbody>
@@ -323,24 +271,19 @@
     </div>
 </div>
 
-<div class="card border-navy">
-    <div class="card-header card-navy">
-        <strong class="text-dark">
-            บันทึกการเปรียบเทียบคดีและชำระค่าปรับ
-        </strong>
-        <div class="card-actions">
-            <a data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
-                <i class="fa fa-caret-down icn-collapse"></i>
-            </a>
-        </div>
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">บันทึกการเปรียบเทียบคดีและชำระค่าปรับ</h4>
     </div>
+
     <div class="card-body">
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group row">
                         <div class="custom-control custom-checkbox col-form-label col-md-4">
-                            <input class="col-form-label filled-in chk-col-indigo" id="outOfCase" type="checkbox">
+                            <input class="col-form-label filled-in chk-col-indigo" id="outOfCase" type="checkbox" [disabled]="viewMode">
                             <label for="outOfCase">คดีเปรียบเทียบนอกสถานที่ทำการ</label>
                         </div>
                     </div>
@@ -351,7 +294,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">คดีเปรียบเทียบที่ : </label>
                         <div class="col-md-7">
-                            <input class="form-control" type="text" name="allegationCode" disabled>
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
                         </div>
                         <label class="col-form-label">/2560</label>
                     </div>
@@ -389,7 +332,8 @@
                         <td>001/2561</td>
                         <td>ยังไม่นำส่งรายได้</td>
                         <td>
-                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpRecordCase"></i>
+                            <i class="mdi mdi-eye fa-lg" data-toggle="modal" data-target="#editPopUpRecordCase"></i>
+                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpRecordCase" [hidden]="viewMode"></i>
                         </td>
                     </tr>
                 </tbody>
@@ -399,17 +343,12 @@
 </div>
 
 
-<div class="card border-navy">
-    <div class="card-header card-navy">
-        <strong class="text-dark">
-            รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ
-        </strong>
-        <div class="card-actions">
-            <a data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
-                <i class="fa fa-caret-down icn-collapse"></i>
-            </a>
-        </div>
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ</h4>
     </div>
+
     <div class="card-body">
         <!-- <div class="form-body">
             
@@ -436,7 +375,8 @@
                         </td>
                         <td>แบบอนุมัติ 4</td>
                         <td>
-                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpReport"></i>
+                            <i class="mdi mdi-eye fa-lg" data-toggle="modal" data-target="#editPopUpReport"></i>
+                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpReport" [hidden]="viewMode"></i>
                         </td>
                     </tr>
                 </tbody>
@@ -446,21 +386,16 @@
 </div>
 
 
-<div class="card border-navy">
-    <div class="card-header card-navy">
-        <strong class="text-dark">
-            เอกสารแนบภายใน
-        </strong>
-        <div class="card-actions">
-            <a data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">
-                <i class="fa fa-caret-down icn-collapse"></i>
-            </a>
-        </div>
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
     </div>
+
     <div class="" id="">
         <div class="card-body">
             <div class="text-right">
-                <input type="file" id="btn-browse" #file>
+                <input type="file" id="btn-browse" #file [disabled]="viewMode">
                 <label for="btn-browse" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
             </div>
             <div class="table-responsive table-striped no-wrap">
@@ -476,13 +411,13 @@
                         <tr class="footable">
                             <td class="text-center">1</td>
                             <td>
-                                <input class="form-control" type="text" nmae="fileName">
+                                <input class="form-control" type="text" nmae="fileName" [disabled]="viewMode">
                             </td>
                             <td>
-                                <input class="form-control" type="text" name="filePath">
+                                <input class="form-control" type="text" name="filePath" [disabled]="viewMode">
                             </td>
                             <td>
-                                <i class="ti-trash btn-action"></i>
+                                <i class="ti-trash btn-action" [hidden]="viewMode"></i>
                             </td>
                         </tr>
                     </tbody>
@@ -509,7 +444,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ชื่อผู้ต้องหา : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -517,7 +452,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">วันที่กำหนดชำระค่าปรับ : </label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" disabled>
+                                    <input class="form-control" type="text" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -527,7 +462,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">วันที่กำหนดชำระภาษี : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" disabled>
+                                    <input class="form-control" type="text" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -612,9 +547,12 @@
 <div class="modal fade" id="editPopUpRecordCase" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header top-navbar">
-                <h5 class="modal-title text-white">ชำระค่าปรับ</h5>
-                <i class="ti-close text-white close-popup" data-dismiss="modal"></i>
+            <div class="modal-header text-white top-navbar">
+                ชำระค่าปรับ
+                <div class="card-actions">
+                    <i class="ti-close text-white close-popup" data-dismiss="modal" data-target="editPopUpRecordCase"></i>
+
+                </div>
             </div>
             <div class="modal-body">
                 <div class="text-right"> XCS60-06-02-03-00 </div>
@@ -625,7 +563,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ชื่อผู้ต้องหา : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -633,7 +571,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ยอดชำระค่าปรับ : </label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" disabled>
+                                    <input class="form-control" type="text" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -644,11 +582,11 @@
                             <div class="form-group row">
                                 <label class="col-form-label  col-md-3">วันที่ชำระค่าปรับ : </label>
                                 <div class="col-md-4">
-                                    <input class="form-control" type="text" name="lawsuitDate" disabled>
+                                    <input class="form-control" type="text" name="lawsuitDate" [disabled]="viewMode">
                                 </div>
                                 <label class="col-form-label text-center col-md-2">เวลา</label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" name="lawsuitTime" disabled>
+                                    <input class="form-control" type="text" name="lawsuitTime" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -656,7 +594,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">เขียนที่ : </label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" disabled>
+                                    <input class="form-control" type="text" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -667,7 +605,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ผู้รับชำระค่าปรับ : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -675,7 +613,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ตำแหน่ง : </label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" disabled>
+                                    <input class="form-control" type="text" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -688,7 +626,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">หน่วยงาน : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -710,7 +648,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ใบเสร็จเล่มที่ : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -718,7 +656,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ใบเสร็จเลขที่ : </label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" disabled>
+                                    <input class="form-control" type="text" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -729,7 +667,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">หมายเลขอ้างอิง : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -740,8 +678,8 @@
             </div>
             <div class="modal-footer">
                 <div class="row">
-                    <button type="submit" class="btn waves-effect waves-light btn-orange" data-toggle="modal">ยกเลิกใบเสร็จ</button>
-                    <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal">บันทึก</button>
+                    <button type="submit" class="btn waves-effect waves-light btn-orange m-r-10" data-toggle="modal" data-target="editPopUpRecordCase">ยกเลิกใบเสร็จ</button>
+                    <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="editPopUpRecordCase">บันทึก</button>
                 </div>
 
             </div>
@@ -766,7 +704,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ชื่อผู้ต้องหา : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -777,11 +715,11 @@
                             <div class="form-group row">
                                 <label class="col-form-label  col-md-3">วันที่ชำระค่าปรับ : </label>
                                 <div class="col-md-4">
-                                    <input class="form-control" type="text" name="lawsuitDate" disabled>
+                                    <input class="form-control" type="text" name="lawsuitDate" [disabled]="viewMode">
                                 </div>
                                 <label class="col-form-label text-center col-md-2">เวลา</label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" name="lawsuitTime" disabled>
+                                    <input class="form-control" type="text" name="lawsuitTime" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -789,7 +727,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ค่าปรับคดีรวม : </label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" disabled>
+                                    <input class="form-control" type="text" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -800,7 +738,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">เขียนที่ : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -808,7 +746,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">วันที่จัดทำรายงานฯ : </label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" disabled>
+                                    <input class="form-control" type="text" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -845,7 +783,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ผู้เสนอพิจารณาเห็นชอบ : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -853,7 +791,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ตำแหน่ง : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -864,7 +802,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ผู้พิจารณาเห็นชอบ : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -873,7 +811,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ตำแหน่ง : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -883,7 +821,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">หน่วยงาน : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -894,7 +832,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ผู้มีอำนาจอนุมัติ : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -903,7 +841,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ตำแหน่ง : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -913,7 +851,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">หน่วยงาน : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -921,7 +859,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">คำสั่งกรมฯ ที่ : </label>
                                 <div class="input-group col-md-9">
-                                    <input class="form-control" type="text" name="fullName" disabled>
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
                                 </div>
                             </div>
                         </div>
@@ -938,29 +876,29 @@
                         </div>
                     </div>
                     <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <div class="custom-control custom-checkbox col-form-label col-md-2">
-                                        <label for="noneCaseBecause">ข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด :</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <textarea class="form-control" rows="3"></textarea>
-                                    </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-2">
+                                    <label for="noneCaseBecause">ข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด :</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-                                        <div class="custom-control custom-checkbox col-form-label col-md-2">
-                                            <label for="noneCaseBecause">เหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง :</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <textarea class="form-control" rows="3"></textarea>
-                                        </div>
-                                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-2">
+                                    <label for="noneCaseBecause">เหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง :</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
