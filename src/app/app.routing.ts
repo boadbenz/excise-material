@@ -16,7 +16,15 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/proof/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/proof/manage/manage.module#ManageModule' }
         ]
+    },{
+        path: 'fine',
+        children: [
+            { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
+            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' }
+        ]
     },
+
 
     // {
     //     path: 'accordion',

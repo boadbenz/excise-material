@@ -20,7 +20,7 @@ import { routes } from './app.routing';
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-        RightSidebarComponent
+        RightSidebarComponent,
     ],
     imports: [
         BrowserModule,
