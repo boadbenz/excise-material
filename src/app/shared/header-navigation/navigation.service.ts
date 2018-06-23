@@ -20,6 +20,7 @@ export class NavigationService {
     onEdit = new BehaviorSubject<Boolean>(false);
     onSave = new BehaviorSubject<Boolean>(false);
     onDelete = new BehaviorSubject<Boolean>(false);
+    onCancel = new BehaviorSubject<Boolean>(false);
 
     constructor() { }
 
@@ -75,6 +76,10 @@ export class NavigationService {
 
     setOnDelete(status: boolean) {
         this.onDelete.next(status);
+    }
+
+    setOnCancel(status: boolean) {
+        this.onCancel.next(status);
     }
 
 }

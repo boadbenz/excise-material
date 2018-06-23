@@ -11,8 +11,6 @@ export class ListComponent implements OnInit {
   advSearch: any;
 
   constructor(
-    private _router: Router,
-    private _chRef: ChangeDetectorRef,
     private navservice: NavigationService
   ) {
     // set false

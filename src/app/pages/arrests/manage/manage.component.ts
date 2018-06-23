@@ -14,7 +14,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     mode: string;
     modal: any;
 
-    // --------
     showEditField: any;
 
     constructor(
@@ -69,20 +68,24 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.navService.onSave.subscribe(status => {
             if (status) {
-                // set true
-                this.navService.setEditField(true);
-                this.navService.setEditButton(true);
-                this.navService.setPrintButton(true);
-                this.navService.setDeleteButton(true);
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
+                this.onSave();
             }
-        })
+        });
     }
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();
+    }
+
+    private onSave() {
+        // set true
+        this.navService.setEditField(true);
+        this.navService.setEditButton(true);
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        // set false
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
     }
 
     openModal(e) {

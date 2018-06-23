@@ -55,9 +55,9 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-md-3 col-sm-4 control-label">มาตราความเชื่อมั่นของแหล่งข่าว :
+                <label for="" class="col-lg-3 col-sm-4 control-label">มาตราความเชื่อมั่นของแหล่งข่าว :
                 </label>
-                <div class="col-md-9 col-sm-8">
+                <div class="col-lg-9 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
                     </div>
@@ -65,9 +65,9 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-md-3 col-sm-4 control-label">ค่าของเนื้อข่าว :
+                <label for="" class="col-lg-3 col-sm-4 control-label">ค่าของเนื้อข่าว :
                 </label>
-                <div class="col-md-9 col-sm-8">
+                <div class="col-lg-9 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
                     </div>
@@ -85,11 +85,11 @@
     </div>
     <div class="card-body">
         <form class="form-horizontal">
-            <table class="table table-sm table-striped">
+            <table class="table table-sm table-striped table-set-border">
                 <thead>
                     <tr>
                         <th class="text-center"></th>
-                        <th>ลำดับ</th>
+                        <th class="text-center">ลำดับ</th>
                         <th>ชื่อผู้สืบสวน</th>
                         <th>หน่วยงาน</th>
                         <th>ตำแหน่ง</th>
@@ -101,7 +101,7 @@
                             <input type="checkbox" id="staff_td1" class="filled-in chk-col-indigo" [disabled]="showEditField">
                             <label for="staff_td1" class="m-0"></label>
                         </td>
-                        <td>1</td>
+                        <td class="text-center">1</td>
                         <td>1</td>
                         <td>1</td>
                         <td>1</td>
@@ -130,14 +130,14 @@
                 </ng-template>
             </div>
 
-            <table class="table table-sm table-striped">
+            <table class="table table-sm table-striped table-set-border">
                 <thead>
                     <tr>
                         <th class="text-center">
                             <input type="checkbox" id="offense_th" class="filled-in chk-col-indigo" [disabled]="showEditField">
                             <label for="offense_th" class="m-0"></label>
                         </th>
-                        <th>ลำดับ</th>
+                        <th class="text-center">ลำดับ</th>
                         <th>ประเภทผู้ต้องสงสัย</th>
                         <th>ประเภทบุคคล</th>
                         <th>หมายเลขอ้างอิง</th>
@@ -153,7 +153,7 @@
                             <input type="checkbox" id="offense_td" class="filled-in chk-col-indigo" [disabled]="showEditField">
                             <label for="offense_td" class="m-0"></label>
                         </td>
-                        <td>1</td>
+                        <td class="text-center">1</td>
                         <td>1</td>
                         <td>1</td>
                         <td>1</td>
@@ -195,14 +195,14 @@
             </div>
 
 
-            <table class="table table-sm table-striped">
+            <table class="table table-sm table-striped table-set-border">
                 <thead>
                     <tr>
                         <th class="text-center">
                             <input type="checkbox" id="location_th" class="filled-in chk-col-indigo" [disabled]="showEditField">
                             <label for="location_th" class="m-0"></label>
                         </th>
-                        <th>ลำดับ</th>
+                        <th class="text-center">ลำดับ</th>
                         <th>เลขที่</th>
                         <th>หมู่ที่</th>
                         <th>อาคาร</th>
@@ -221,7 +221,7 @@
                             <input type="checkbox" id="location_td" class="filled-in chk-col-indigo" [disabled]="showEditField">
                             <label for="location_td" class="m-0"></label>
                         </td>
-                        <td>
+                        <td class="text-center">
                             1
                         </td>
                         <td>
@@ -277,14 +277,14 @@
                 </div>
             </div>
 
-            <table class="table table-sm table-striped">
+            <table class="table table-sm table-striped table-set-border">
                 <thead>
                     <tr>
                         <th class="text-center">
                             <input type="checkbox" id="duty_th" class="filled-in chk-col-indigo" [disabled]="showEditField">
                             <label for="duty_th" class="m-0"></label>
                         </th>
-                        <th>ลำดับ</th>
+                        <th class="text-center">ลำดับ</th>
                         <th>สินค้า</th>
                         <th>จำนวน</th>
                         <th>หน่วย</th>
@@ -297,7 +297,7 @@
                             <input type="checkbox" id="duty_td" class="filled-in chk-col-indigo" [disabled]="showEditField">
                             <label for="duty_td" class="m-0"></label>
                         </td>
-                        <td>
+                        <td class="text-center">
                             1
                         </td>
                         <td>
@@ -355,12 +355,13 @@
                 </div>
             </div>
 
-            <table class="table table-sm table-striped">
+            <table class="table table-sm table-striped table-set-border">
                 <thead>
                     <tr>
                         <th class="text-center">ลำดับ</th>
                         <th>ชื่อเอกสารแนบ</th>
                         <th>ที่อยู่เอกสารแนบ</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
