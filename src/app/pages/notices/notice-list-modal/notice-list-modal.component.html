@@ -1,0 +1,152 @@
+<div class="modal-header bg-theme">
+    <div class="row">
+        <div class="col-lg-5">
+            <h4 class="modal-title text-white">อ้างอิงใบแจ้งความนำจับ</h4>
+        </div>
+        <div class="col-lg-5 col-sm-8">
+            <form class="app-search">
+                <input type="search" name="" id="" class="form-control form-control-sm">
+                <a class="srh-btn">
+                    <i class="ti-search"></i>
+                </a>
+            </form>
+        </div>
+        <div class="col-lg-2 col-sm-4 p-0">
+            <a href="javaScript:void(0);" (click)="toggle()" class="text-white">ค้นหาขั้นสูง</a>
+        </div>
+
+        <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
+            <span aria-hidden="true">
+                <i class=" ti-close"></i>
+            </span>
+        </a>
+    </div>
+</div>
+<div class="modal-body font-14">
+    <form *ngIf="advSearch" class="form-horizontal">
+        <div class="card card-outline-bluish unset-radius">
+            <div class="card-header unset-radius">
+                <app-card-actions-close></app-card-actions-close>
+                <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3">เลขที่ใบแจ้งความ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                        </div>
+                    </div>
+
+                    <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group input-group">
+                            <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+
+                            <label for="">&nbsp; ถึง &nbsp;</label>
+
+                            <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3">ชื่อผู้รับแจ้ง :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                        </div>
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-3">หน่วยงาน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3">ผู้ต้องสงสัย :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-lg-10 col-8"></div>
+                    <div class="col-lg-2 col-4">
+                        <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="card  unset-radius">
+        <div class="card-body p-0">
+            <table id="noticeList" class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ลำดับ</th>
+                        <th>เลขที่ใบแจ้งความ</th>
+                        <th>วันที่แจ้งความ</th>
+                        <th>ผู้รับแจ้งความ</th>
+                        <th>หน่วยงาน</th>
+                        <th>ผู้ต้องสงสัย</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <input name="group5" type="radio" id="radio_34" class="with-gap radio-col-indigo">
+                            <label for="radio_34" class="m-0"></label>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="javaScript:void(0)" class="text-secondary">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer card-footer-unset">
+            <div class="row justify-content-between m-l-5">
+                <div clas="col">
+                    <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
+                        << </a>
+                            <label> หน้าที่
+                                <select>
+                                    <option value="1">1</option>
+                                </select> จาก 1 หน้า</label>
+                            <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
+                            รายการที่ 1 - 1 จาก 1 รายการ
+                </div>
+                <div class="col col-lg-3 text-right">
+                    <label>แสดง
+                        <select>
+                            <option (click)="numPage = 5">5</option>
+                            <option (click)="numPage = 10">10</option>
+                            <option (click)="numPage = 15">15</option>
+                            <option (click)="numPage = 20">20</option>
+                        </select> รายการ</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="col-lg-2 col-4">
+        <button type="button" class="btn btn-block btn-themecolor" (click)="close('Save click')">บันทึก</button>
+    </div>
+</div>

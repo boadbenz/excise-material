@@ -39,6 +39,8 @@ File: scss
 @import url("https://fonts.googleapis.com/css?family=Kanit:300,400,500,600,700&subset=thai");
 @import url(../css/spinners.css);
 @import url(../css/animate.css);
+@import url(../css/steps.css);
+@import url(../css/modal.css);
 .preloader {
   width: 100%;
   height: 100%;
@@ -126,6 +128,10 @@ a.link {
 
 html body .mdi:before, html body .mdi-set {
   line-height: initial; }
+
+.unset-radius {
+  border-radius: unset !important;
+}
 
 /*******************
 Headings
@@ -957,6 +963,31 @@ Buttons
   .btn-rounded.btn-md {
     padding: 12px 35px;
     font-size: 16px; }
+
+    .btn-ghost {
+      background-color: transparent; 
+      border-color: white;
+      color: white !important;
+    }
+
+    .btn-ghost.disabled {
+      -webkit-box-shadow: 0 2px 2px 0 rgba(169, 169, 169, 0.14), 0 3px 1px -2px rgba(169, 169, 169, 0.2), 0 1px 5px 0 rgba(169, 169, 169, 0.12);
+      box-shadow: 0 2px 2px 0 rgba(169, 169, 169, 0.14), 0 3px 1px -2px rgba(169, 169, 169, 0.2), 0 1px 5px 0 rgba(169, 169, 169, 0.12);
+      -webkit-transition: 0.2s ease-in;
+      -o-transition: 0.2s ease-in;
+      transition: 0.2s ease-in;
+      background-color: #ffffff;
+      color: #67757c; }
+      .btn-ghost:hover,
+      .btn-ghost.disabled:hover {
+        -webkit-box-shadow: 0 14px 26px -12px rgba(169, 169, 169, 0.42), 0 4px 23px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(169, 169, 169, 0.2);
+        box-shadow: 0 14px 26px -12px rgba(169, 169, 169, 0.42), 0 4px 23px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(169, 169, 169, 0.2); }
+      .btn-ghost.active, .btn-ghost:focus,
+      .btn-ghost.disabled.active,
+      .btn-ghost.disabled:focus {
+        -webkit-box-shadow: 0 14px 26px -12px rgba(169, 169, 169, 0.42), 0 4px 23px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(169, 169, 169, 0.2);
+        box-shadow: 0 14px 26px -12px rgba(169, 169, 169, 0.42), 0 4px 23px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(169, 169, 169, 0.2); }
+    
 
 .btn-secondary,
 .btn-secondary.disabled {
@@ -1852,7 +1883,9 @@ form label {
   font-weight: 400; }
 
 .form-group {
-  margin-bottom: 25px; }
+  /* margin-bottom: 25px;  */
+  margin-bottom: 15px;
+}
 
 .form-horizontal label {
   margin-bottom: 0px; }
@@ -2497,6 +2530,11 @@ ul#themecolors {
     background: #7460ee;
     border-color: #7460ee; }
 
+.card-outline-bluish {
+  border-color: #ccdeea;}
+  .card-outline-bluish .card-header {
+    background: #ccdeea;
+    border-color: #ccdeea;}
 /*============================================================== 
 Breadcrumb
  ============================================================== */
@@ -6591,6 +6629,11 @@ File: scss
 
 .card-inverse .card-blockquote, .card-inverse .card-footer, .card-inverse .card-header, .card-inverse .card-title {
   color: #ffffff; }
+
+.card-footer-unset {
+  background: transparent !important;
+  border-top: unset !important;
+}
 
 /*
 Template Name: Material Pro Admin
