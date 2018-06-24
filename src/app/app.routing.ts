@@ -21,7 +21,11 @@ export const routes: Routes = [
         path: 'investigation',
         children: [
             { path: 'list', loadChildren: './pages/investigation/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/investigation/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code', loadChildren: './pages/investigation/manage/manage.module#ManageModule' },
+            {
+                path: 'detail-manage/:mode/:code',
+                loadChildren: './pages/investigation/detail-manage/detail-manage.module#DetailManageModule'
+            }
         ]
     }, {
         path: 'proof',

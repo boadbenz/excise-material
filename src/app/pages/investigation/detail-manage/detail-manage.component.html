@@ -1,0 +1,388 @@
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายงานการสืบสวน</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal">
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ครั้งที่สืบสวน :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เริ่มสืบสวน :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group input-group">
+                        <input type="date" class="form-control form-control-sm" [disabled]="showEditField">
+                        <label for="">&nbsp;&nbsp;ถึง&nbsp;&nbsp;</label>
+                        <input type="date" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ผู้ดูแลการสืบสวน :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">ผู้สั่งการ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-3 col-sm-4 control-label">มาตราความเชื่อมั่นของแหล่งข่าว :
+                </label>
+                <div class="col-lg-9 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-3 col-sm-4 control-label">ค่าของเนื้อข่าว :
+                </label>
+                <div class="col-lg-9 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">ผู้ร่วมทำการสืบสวน</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal">
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center"></th>
+                        <th class="text-center">ลำดับ</th>
+                        <th>ชื่อผู้สืบสวน</th>
+                        <th>หน่วยงาน</th>
+                        <th>ตำแหน่ง</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <input type="checkbox" id="staff_td1" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                            <label for="staff_td1" class="m-0"></label>
+                        </td>
+                        <td class="text-center">1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">ผู้ต้องสงสัย</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" (click)="openModal(lawbreaker)" [disabled]="showEditField">เพิ่มผู้ต้องสงสัย</button>
+                </div>
+
+                <ng-template #lawbreaker let-c="close" let-d="dismiss">
+                    <app-lawbreaker-modal (c)="modal.close()" (d)="modal.dismiss()"></app-lawbreaker-modal>
+                </ng-template>
+            </div>
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            <input type="checkbox" id="offense_th" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                            <label for="offense_th" class="m-0"></label>
+                        </th>
+                        <th class="text-center">ลำดับ</th>
+                        <th>ประเภทผู้ต้องสงสัย</th>
+                        <th>ประเภทบุคคล</th>
+                        <th>หมายเลขอ้างอิง</th>
+                        <th>ชื่อ</th>
+                        <th>จำนวนครั้งกระทำผิด</th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <input type="checkbox" id="offense_td" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                            <label for="offense_td" class="m-0"></label>
+                        </td>
+                        <td class="text-center">1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="openModal(offense)" *ngIf="!showEditField">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ng-template #offense let-c="close" let-d="dismiss">
+                <app-offense-modal (c)="modal.close()" (d)="modal.dismiss()"></app-offense-modal>
+            </ng-template>
+        </form>
+    </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">สถานที่ทำการสืบสวน</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มสถานที่</button>
+                </div>
+            </div>
+
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            <input type="checkbox" id="location_th" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                            <label for="location_th" class="m-0"></label>
+                        </th>
+                        <th class="text-center">ลำดับ</th>
+                        <th>เลขที่</th>
+                        <th>หมู่ที่</th>
+                        <th>อาคาร</th>
+                        <th>ห้อง</th>
+                        <th>ชั้น</th>
+                        <th>ตรอก</th>
+                        <th>ซอย</th>
+                        <th>ถนน</th>
+                        <th>ตำบล/อำเภอ/จังหวัด</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <input type="checkbox" id="location_td" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                            <label for="location_td" class="m-0"></label>
+                        </td>
+                        <td class="text-center">
+                            1
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">สินค้าต้องสงสัย</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มสินค้า</button>
+                </div>
+            </div>
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            <input type="checkbox" id="duty_th" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                            <label for="duty_th" class="m-0"></label>
+                        </th>
+                        <th class="text-center">ลำดับ</th>
+                        <th>สินค้า</th>
+                        <th>จำนวน</th>
+                        <th>หน่วย</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <input type="checkbox" id="duty_td" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                            <label for="duty_td" class="m-0"></label>
+                        </td>
+                        <td class="text-center">
+                            1
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดที่เกิดเหตุในการสืบสวน</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal">
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">หัวข้อการสืบสวน :
+                </label>
+                <div class="col-lg-10 col-sm-8">
+                    <div class="form-group ">
+                        <textarea name="" id="" cols="30" rows="5" class="form-control form-control-sm" [disabled]="showEditField"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มเอกสาร</button>
+                </div>
+            </div>
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th>ชื่อเอกสารแนบ</th>
+                        <th>ที่อยู่เอกสารแนบ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            1
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

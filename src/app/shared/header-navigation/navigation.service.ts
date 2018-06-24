@@ -17,8 +17,10 @@ export class NavigationService {
     showSearchBar = new BehaviorSubject<Boolean>(false);
     showFieldEdit = new BehaviorSubject<Boolean>(true);
 
+    onEdit = new BehaviorSubject<Boolean>(false);
     onSave = new BehaviorSubject<Boolean>(false);
     onDelete = new BehaviorSubject<Boolean>(false);
+    onCancel = new BehaviorSubject<Boolean>(false);
 
     constructor() { }
 
@@ -64,12 +66,20 @@ export class NavigationService {
         this.showNextPageButton.next(status);
     }
 
+    setOnEdit(status: boolean) {
+        this.onEdit.next(status);
+    }
+
     setOnSave(status: boolean) {
         this.onSave.next(status);
     }
 
     setOnDelete(status: boolean) {
         this.onDelete.next(status);
+    }
+
+    setOnCancel(status: boolean) {
+        this.onCancel.next(status);
     }
 
 }

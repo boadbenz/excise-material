@@ -1,38 +1,38 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
-    selector: 'app-manage',
-    templateUrl: './manage.component.html',
-    styleUrls: ['./manage.component.scss']
+    selector: 'app-investigate-detail-manage',
+    templateUrl: './detail-manage.component.html',
+    styleUrls: ['./detail-manage.component.scss']
 })
-export class ManageComponent implements OnInit, OnDestroy {
+export class DetailManageComponent implements OnInit, OnDestroy {
 
-    private sub: any;
-    mode: string;
     modal: any;
-
     showEditField: any;
+    mode: string;
+    private sub: any;
 
     constructor(
         private activeRoute: ActivatedRoute,
-        private suspectModalService: NgbModal,
+        private ngModal: NgbModal,
         private navService: NavigationService
     ) {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
-        // set true
-        this.navService.setNextPageButton(true);
+        this.navService.setNextPageButton(false);
     }
 
     ngOnInit() {
         this.sub = this.activeRoute.params.subscribe(p => {
-            this.mode = p['mode'];
+            // this.mode = p['mode'];
+
             if (p['mode'] === 'c' || p['mode'] === 'u') {
                 // set false
+                this.navService.setPrintButton(false);
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
@@ -49,32 +49,23 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
-
-            } else {
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                // set true
-                this.navService.setEditField(true);
             }
         });
-
-        this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p;
+        this.sub = this.navService.showFieldEdit.subscribe(status => {
+            this.showEditField = status;
         });
 
-        this.navService.onSave.subscribe(status => {
+        this.sub = this.navService.onSave.subscribe(status => {
             if (status) {
                 this.onSave();
             }
         });
-    }
 
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
+        this.sub = this.navService.onEdit.subscribe(status => {
+            if (status) {
+                this.onEdit();
+            }
+        })
     }
 
     private onSave() {
@@ -88,8 +79,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setCancelButton(false);
     }
 
+    private onEdit() {
+
+    }
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
+    }
+
     openModal(e) {
-        this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
+        this.modal = this.ngModal.open(e, { size: 'lg', centered: true });
     }
 
 }
