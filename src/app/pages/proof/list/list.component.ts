@@ -5,7 +5,7 @@ import { options } from '../../../config/dataTable';
 // import * as $ from 'jquery';
 
 declare var $: any;
-import 'datatables.net-bs';
+// import 'datatables.net-bs';
 
 @Component({
   selector: 'app-list',
