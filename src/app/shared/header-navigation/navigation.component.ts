@@ -21,7 +21,6 @@ export class NavigationComponent implements OnInit {
     searchBar: any;
     nextPageButton: any;
 
-    //-----------------
     nextPage: string;
     nextPageTitle: string;
 
@@ -71,7 +70,6 @@ export class NavigationComponent implements OnInit {
 
     clickNextPage() {
         this.router.navigate([`${this.nextPage}`, 'c', 'new']);
-
     }
 
     clickPrint() {
@@ -87,6 +85,8 @@ export class NavigationComponent implements OnInit {
         // set true
         this.navService.setSaveButton(true);
         this.navService.setCancelButton(true);
+        // set event click edit
+        this.navService.setOnEdit(true);
     }
 
     clickCancel() {
@@ -98,6 +98,8 @@ export class NavigationComponent implements OnInit {
         // set false
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
+        // set event click cancel
+        this.navService.setOnCancel(true);
     }
 
     clickSave() {

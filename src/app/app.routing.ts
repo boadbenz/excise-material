@@ -21,7 +21,11 @@ export const routes: Routes = [
         path: 'investigation',
         children: [
             { path: 'list', loadChildren: './pages/investigation/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/investigation/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code', loadChildren: './pages/investigation/manage/manage.module#ManageModule' },
+            {
+                path: 'detail-manage/:mode/:code',
+                loadChildren: './pages/investigation/detail-manage/detail-manage.module#DetailManageModule'
+            }
         ]
     }, {
         path: 'proof',
@@ -35,6 +39,20 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/income/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
+        ]
+    }, {
+        path: 'accusations',
+        children: [
+            { path: 'list', loadChildren: './pages/accusations/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/accusations/manage-view/manage-view.module#ManageViewModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/accusations/manage/manage.module#ManageModule' }
+        ]
+    }, {
+        path: 'fine',
+        children: [
+            { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
+            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' }
         ]
     },
 

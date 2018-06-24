@@ -21,7 +21,7 @@ import { NavigationService } from './shared/header-navigation/navigation.service
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-        RightSidebarComponent
+        RightSidebarComponent,
     ],
     imports: [
         BrowserModule,

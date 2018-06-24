@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -8,7 +8,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
     templateUrl: './lawbreaker.component.html',
     styleUrls: ['./lawbreaker.component.scss']
 })
-export class LawbreakerComponent implements OnInit {
+export class LawbreakerComponent implements OnInit, OnDestroy {
 
     modal: any;
     private mode: any;
@@ -28,7 +28,7 @@ export class LawbreakerComponent implements OnInit {
     ngOnInit() {
         this.sub = this.activatedRoute.params.subscribe(p => {
             this.mode = p['mode'];
-            if (p['mode'] == 'c' || p['mode'] == 'u') {
+            if (p['mode'] === 'c' || p['mode'] === 'u') {
                 // set false
                 this.navService.setEditButton(false);
                 this.navService.setEditField(false);
@@ -36,7 +36,7 @@ export class LawbreakerComponent implements OnInit {
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
 
-            } else if (p['mode'] == 'v') {
+            } else if (p['mode'] === 'v') {
                 // set false
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
@@ -54,9 +54,20 @@ export class LawbreakerComponent implements OnInit {
             }
         });
 
-        this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p;
+        this.sub = this.navService.showFieldEdit.subscribe(status => {
+            this.showEditField = status;
         });
+
+        // this.sub = this.navService.onCancel.subscribe(status => {
+        //     if (status) {
+        //         this.navService.setDeleteButton(false);
+        //     }
+        // })
+
+    }
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
     }
 
     openOffenseDetailModal(e: any) {

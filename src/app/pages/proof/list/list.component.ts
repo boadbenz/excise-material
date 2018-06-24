@@ -1,6 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+=======
+import { options } from '../../../config/dataTable';
+
+// import * as $ from 'jquery';
+
+declare var $: any;
+// import 'datatables.net-bs';
+>>>>>>> f5fbb3c18a476c9a3235de0764ff2588f007bf63
 
 @Component({
     selector: 'app-list',

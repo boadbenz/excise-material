@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 declare var jQuery: any;
 
@@ -11,31 +12,36 @@ export class CardActionsComponent {
 
 @Component({
     selector: 'app-card-actions-close',
-    template: 
-    `<div class="card-actions">
+    template:
+        `<div class="card-actions">
         <a class="" (click)="close($event)">
             <i class="fa fa-times"></i>
         </a>
     </div>`,
 })
 export class CardActionsCloseComponent {
+
+    constructor(private navService: NavigationService) { }
+
     close(e): void {
         e.preventDefault();
-        const ibox = jQuery(e.target).closest('div.card');
-        ibox.slideToggle(200);
+        this.navService.setAdvSearch();
     }
 }
 
 @Component({
     selector: 'app-card-actions-collapse',
-    template: 
-    `<div class="card-actions">
+    template:
+        `<div class="card-actions">
         <a class="" (click)="collapse($event)">
             <i class="fa fa-chevron-down"></i>
         </a>
     </div>`,
 })
 export class CardActionsCollapseComponent {
+
+    constructor() { }
+
     collapse(e): void {
         e.preventDefault();
         const ibox = jQuery(e.target).closest('div.card');
@@ -44,10 +50,10 @@ export class CardActionsCollapseComponent {
         content.slideToggle(200);
         button.toggleClass('fa-chevron-down').toggleClass('fa-chevron-up');
         ibox.toggleClass('').toggleClass('border-bottom');
-        setTimeout(function () {
-            ibox.resize();
-            ibox.find('[id^=map-]').resize();
-        }, 50);
+        // setTimeout(function () {
+        //     ibox.resize();
+        //     ibox.find('[id^=map-]').resize();
+        // }, 50);
 
     }
 }

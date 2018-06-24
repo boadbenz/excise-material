@@ -19,7 +19,7 @@ const routes: Routes = [
               { title: 'ค้นหางานจับกุม', url: '/arrest/list' },
               { title: 'จัดการข้อมูลบันทึกจับกุม' }
           ],
-          nextPage: { title: 'รับคำกล่าวโทษ', url: '/' }
+          nextPage: { title: 'รับคำกล่าวโทษ', url: '/accusations/manage' }
       },
       component: ManageComponent
   }
