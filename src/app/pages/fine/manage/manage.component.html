@@ -1,0 +1,910 @@
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดข้อกล่าวหา</h4>
+    </div>
+
+    <div class="" id="">
+        <div class="card-body">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-4">เลขที่ใบงาน : </label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-3">เลขที่คดีรับคำกล่าวโทษ : </label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-4">ทะเบียนตรวจพิสูจน์ : </label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="allegationNo" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label  col-md-3">วันที่รับทำคดี : </label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="lawsuitDate" [disabled]="viewMode">
+                            </div>
+                            <label class="col-form-label text-center col-md-2">เวลา</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="lawsuitTime" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-4">ผู้กล่าวหา : </label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-3">ตำแหน่ง : </label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-4">หน่วยงาน : </label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-3">สถานที่ขับกุม : </label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-4">ฐานความผิดมาตรา : </label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-3">ฐานความผิด : </label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-4">บทกำหนดโทษ : </label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label    col-md-3">อัตราโทษ : </label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" name="allegationSubject" [disabled]="viewMode">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card ">
+
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดเงินค่าปรับ</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive table-striped no-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+                        <th class="footable-sortable">จำนวนครั้ง</th>
+                        <th class="footable-sortable">ของกลาง</th>
+                        <th class="footable-sortable">จำนวนเท่า</th>
+                        <th class="footable-sortable">มูลค่าภาษี</th>
+                        <th class="footable-sortable">ค่าปรับสุทธิ</th>
+                        <th class="footable-sortable">ยอดชำระ</th>
+                        <th class="footable-sortable">สินบน</th>
+                        <th class="footable-sortable">รางวัล</th>
+                        <th class="footable-sortable">ส่งคลัง</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="footable">
+                        <td class="">นายธวัชชัย บิง</td>
+                        <td class="text-center">
+                            <b>
+                                <u>
+                                    <a (click)="viewData()">2</a>
+                                </u>
+                            </b>
+                        </td>
+                        <td>Hoegaarden/Wit</td>
+                        <td class="text-center">10</td>
+                        <td class="">80,000.00</td>
+                        <td class="">800,000.00</td>
+                        <td>
+                            <input class="form-control" type="text" [disabled]="viewMode" value="800,000.00">
+                        </td>
+                        <td class="">160,000.00</td>
+                        <td class="">160,000.00</td>
+                        <td class="">480,000.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">คำให้การของผู้ต้องหา</h4>
+    </div>
+
+    <div class="card-body">
+        <div class="form-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label  col-md-3">วันที่จัดทำ : </label>
+                        <div class="col-md-4">
+                            <input class="form-control" type="text" name="lawsuitDate" [disabled]="viewMode">
+                        </div>
+                        <label class="col-form-label text-center col-md-2">เวลา</label>
+                        <div class="col-md-3">
+                            <input class="form-control" type="text" name="lawsuitTime" [disabled]="viewMode">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-4">เขียนที่ : </label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3">ชื่อผู้เปรียบเทียบ : </label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-4">ตำแหน่ง : </label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3">หน่วยงาน : </label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive table-striped no-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="footable-sortable text-center">ลำดับ</th>
+                        <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+                        <th class="footable-sortable">วันที่กำหนดชำระค่าปรับ</th>
+                        <th class="footable-sortable">วันที่กำหนดชำระภาษี</th>
+                        <th class="footable-sortable text-center">ปล่อยตัวชั่วคราว</th>
+                        <th class="footable-sortable"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="footable">
+                        <td class="text-center">1</td>
+                        <td>
+                            นายธวัชชัย บิงขุนทด
+                        </td>
+                        <td>
+                            10-ม.ค.-2560
+                        </td>
+                        <td>
+                            10-ม.ค.-2560
+                        </td>
+                        <td class="text-center">/</td>
+                        <td>
+                            <i class="mdi mdi-eye fa-lg" data-toggle="modal" data-target="#editPopUpAccusation"></i>
+                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpAccusation" [hidden]="viewMode"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">บันทึกการเปรียบเทียบคดีและชำระค่าปรับ</h4>
+    </div>
+
+    <div class="card-body">
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <div class="custom-control custom-checkbox col-form-label col-md-4">
+                            <input class="col-form-label filled-in chk-col-indigo" id="outOfCase" type="checkbox" [disabled]="viewMode">
+                            <label for="outOfCase">คดีเปรียบเทียบนอกสถานที่ทำการ</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-4">คดีเปรียบเทียบที่ : </label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+                        </div>
+                        <label class="col-form-label">/2560</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive table-striped no-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="footable-sortable text-center">ลำดับ</th>
+                        <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+                        <th class="footable-sortable">วันที่ชำระค่าปรับ</th>
+                        <th class="footable-sortable">ผู้รับชำระค่าปรับ</th>
+                        <th class="footable-sortable">ช่องทางชำระ</th>
+                        <th class="footable-sortable">ใบเสร็จเล่มที่</th>
+                        <th class="footable-sortable">ใบเสร็จเลขที่/เลขอ้างอิง</th>
+                        <th class="footable-sortable">สถานะคดี</th>
+                        <th class="footable-sortable"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="footable">
+                        <td class="text-center">1</td>
+                        <td>
+                            นายธวัชชัย บิงขุนทด
+                        </td>
+                        <td>
+                            10-ม.ค.-2560
+                        </td>
+                        <td>นางสาวฟาติมา ตันดิลกตระกูล</td>
+                        <td>เงินสด
+                        </td>
+                        <td>33</td>
+                        <td>001/2561</td>
+                        <td>ยังไม่นำส่งรายได้</td>
+                        <td>
+                            <i class="mdi mdi-eye fa-lg" data-toggle="modal" data-target="#editPopUpRecordCase"></i>
+                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpRecordCase" [hidden]="viewMode"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ</h4>
+    </div>
+
+    <div class="card-body">
+        <!-- <div class="form-body">
+            
+        </div> -->
+        <div class="table-responsive table-striped no-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="footable-sortable text-center">ลำดับ</th>
+                        <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+                        <th class="footable-sortable">วันที่จัดทำรายงานฯ</th>
+                        <th class="footable-sortable">แบบอนุมัติ</th>
+                        <th class="footable-sortable"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="footable">
+                        <td class="text-center">1</td>
+                        <td>
+                            นายธวัชชัย บิงขุนทด
+                        </td>
+                        <td>
+                            10-ม.ค.-2560
+                        </td>
+                        <td>แบบอนุมัติ 4</td>
+                        <td>
+                            <i class="mdi mdi-eye fa-lg" data-toggle="modal" data-target="#editPopUpReport"></i>
+                            <i class="ti-pencil-alt btn-action" data-toggle="modal" data-target="#editPopUpReport" [hidden]="viewMode"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="card ">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+    </div>
+
+    <div class="" id="">
+        <div class="card-body">
+            <div class="text-right">
+                <input type="file" id="btn-browse" #file [disabled]="viewMode">
+                <label for="btn-browse" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
+            </div>
+            <div class="table-responsive table-striped no-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="footable-sortable text-center">ลำดับ</th>
+                            <th class="footable-sortable">ชื่อเอกสารแนบ</th>
+                            <th class="footable-sortable">ที่อยู่เอกสารแนบ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="footable">
+                            <td class="text-center">1</td>
+                            <td>
+                                <input class="form-control" type="text" nmae="fileName" [disabled]="viewMode">
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" name="filePath" [disabled]="viewMode">
+                            </td>
+                            <td>
+                                <i class="ti-trash btn-action" [hidden]="viewMode"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editPopUpAccusation" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header top-navbar">
+                <h5 class="modal-title text-white">คำให้การของผู้ต้องหา</h5>
+                <i class="ti-close text-white close-popup" data-dismiss="modal"></i>
+            </div>
+            <div class="modal-body">
+                <div class="text-right"> XCS60-06-02-02-00 </div>
+                <div class="form-body m-t-10">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ชื่อผู้ต้องหา : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">วันที่กำหนดชำระค่าปรับ : </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">วันที่กำหนดชำระภาษี : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="col-form-label col-md-3">ข้อมูลการปล่อยตัวชั่วคราว</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-2">
+                                    <input class="col-form-label filled-in chk-col-indigo" id="noneCaseBecause" type="checkbox">
+                                    <label for="noneCaseBecause">ประกัน :</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-2">
+                                    <input class="col-form-label filled-in chk-col-indigo" id="noneCaseBecause" type="checkbox">
+                                    <label for="noneCaseBecause">ประกันและหลักประกัน :</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="col-form-label col-md-12">การแจ้งสิทธิให้แจ้งญาติหรือผู้ซึ่งไว้วางใจทรายถึงการถูกจับและสถานที่ถูกควบคุม</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-10">
+                                    <input class="col-form-label filled-in chk-col-indigo" id="noneCaseBecause" type="checkbox">
+                                    <label for="noneCaseBecause">ร้องขอ :</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-10">
+                                    <input class="col-form-label filled-in chk-col-indigo" id="noneCaseBecause" type="checkbox">
+                                    <label for="noneCaseBecause">ไม่ร้องขอ :</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-2">
+                                    <label for="noneCaseBecause">คำให้การของผู้ต้องหา :</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editPopUpRecordCase" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-white top-navbar">
+                ชำระค่าปรับ
+                <div class="card-actions">
+                    <i class="ti-close text-white close-popup" data-dismiss="modal" data-target="editPopUpRecordCase"></i>
+
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="text-right"> XCS60-06-02-03-00 </div>
+                <div class="form-body m-t-10">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ชื่อผู้ต้องหา : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ยอดชำระค่าปรับ : </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label  col-md-3">วันที่ชำระค่าปรับ : </label>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" name="lawsuitDate" [disabled]="viewMode">
+                                </div>
+                                <label class="col-form-label text-center col-md-2">เวลา</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="lawsuitTime" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">เขียนที่ : </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ผู้รับชำระค่าปรับ : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ตำแหน่ง : </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">หน่วยงาน : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ช่องทางชำระค่าปรับ : </label>
+                                <div class="col-md-9">
+                                    <select class="custom-select col-12">
+                                        <option selected="">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ใบเสร็จเล่มที่ : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ใบเสร็จเลขที่ : </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">หมายเลขอ้างอิง : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <button type="submit" class="btn waves-effect waves-light btn-orange m-r-10" data-toggle="modal" data-target="editPopUpRecordCase">ยกเลิกใบเสร็จ</button>
+                    <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="editPopUpRecordCase">บันทึก</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editPopUpReport" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header top-navbar">
+                <h5 class="modal-title text-white">รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ</h5>
+                <i class="ti-close text-white close-popup" data-dismiss="modal"></i>
+            </div>
+            <div class="modal-body">
+                <div class="text-right"> XCS60-06-02-04-00 </div>
+                <div class="form-body m-t-10">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ชื่อผู้ต้องหา : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label  col-md-3">วันที่ชำระค่าปรับ : </label>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" name="lawsuitDate" [disabled]="viewMode">
+                                </div>
+                                <label class="col-form-label text-center col-md-2">เวลา</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="lawsuitTime" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ค่าปรับคดีรวม : </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">เขียนที่ : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">วันที่จัดทำรายงานฯ : </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">แบบอนุมัติ : </label>
+                                <div class="input-group col-md-9">
+                                    <label class="custom-control custom-radio col-md-2">
+                                        <input id="radio1" name="radio" type="radio" class="custom-control-input">
+                                        <span class="custom-control-label">แบบอนุมัติ 1</span>
+                                    </label>
+                                    <label class="custom-control custom-radio col-md-2">
+                                        <input id="radio1" name="radio" type="radio" class="custom-control-input">
+                                        <span class="custom-control-label">แบบอนุมัติ 2</span>
+                                    </label>
+                                    <label class="custom-control custom-radio col-md-2">
+                                        <input id="radio1" name="radio" type="radio" class="custom-control-input">
+                                        <span class="custom-control-label">แบบอนุมัติ 3</span>
+                                    </label>
+                                    <label class="custom-control custom-radio col-md-2">
+                                        <input id="radio1" name="radio" type="radio" class="custom-control-input">
+                                        <span class="custom-control-label">แบบอนุมัติ 4</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ผู้เสนอพิจารณาเห็นชอบ : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ตำแหน่ง : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ผู้พิจารณาเห็นชอบ : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ตำแหน่ง : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">หน่วยงาน : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ผู้มีอำนาจอนุมัติ : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ตำแหน่ง : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">หน่วยงาน : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">คำสั่งกรมฯ ที่ : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">วันที่ออกคำสั่ง : </label>
+                                <div class="input-group col-md-9">
+                                    <input class="form-control" type="text" name="fullName">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-2">
+                                    <label for="noneCaseBecause">ข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด :</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="custom-control custom-checkbox col-form-label col-md-2">
+                                    <label for="noneCaseBecause">เหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง :</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>

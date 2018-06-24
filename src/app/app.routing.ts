@@ -40,6 +40,13 @@ export const routes: Routes = [
             { path: 'manage/:mode', loadChildren: './pages/accusations/manage-view/manage-view.module#ManageViewModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/accusations/manage/manage.module#ManageModule' }
         ]
+    }, {
+        path: 'fine',
+        children: [
+            { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
+            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' }
+        ]
     },
 
     {
