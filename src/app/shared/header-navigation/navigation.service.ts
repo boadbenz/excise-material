@@ -43,9 +43,11 @@ export class NavigationService {
     setPrintButton(status: boolean) {
         this.showPrintButton.next(status);
     }
+
     setEditButton(status: boolean) {
         this.showEditButton.next(status);
     }
+    
     setDeleteButton(status: boolean) {
         this.showDeleteButton.next(status);
     }
