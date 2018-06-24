@@ -4,8 +4,6 @@ import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { EvidenceModalModule } from '../evidence-modal/evidence-modal.module';
-//import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 
 const routes: Routes = [
     {
@@ -14,10 +12,10 @@ const routes: Routes = [
             // title: 'จัดการข้อมูล',
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง', url: '/proof/list' },
-                { title: 'จัดการข้อมูลงานตรวจรับและพิสูจน์ของกลาง' }
+                { title: 'ค้นหารายการนำส่งเงินรายได้', url: '/income/list' },
+                { title: 'จัดการข้อมูลนำส่งเงินรายได้' }
             ],
-            nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/proof/manage' }
+            nextPage: { title: 'จัดการข้อมูลนำส่งเงินรายได้', url: '/income/manage' }
         },
         component: ManageComponent
     }
@@ -29,8 +27,6 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         CardActionsModule,
-        EvidenceModalModule,
-        //PrintDocModalModule
     ],
     declarations: [
         ManageComponent

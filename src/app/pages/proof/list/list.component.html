@@ -1,10 +1,11 @@
 <!-- <app-horizontal-timeline></app-horizontal-timeline> -->
 
-<div id="advSearch" style="display: none;" class="card card-outline-success">
-    <div class="card-header">
-        <!-- <app-header-dropdown></app-header-dropdown> -->
-        <h4 class="card-title m-b-0 text-white">ค้นหา</h4>
+<div *ngIf="advSearch | async" class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-close></app-card-actions-close>
+        <h4 class="card-title m-b-0">ค้นหา</h4>
     </div>
+
     <div class="card-body">
         <form class="form-horizontal">
             <div>
@@ -49,26 +50,26 @@
                     </div>
                 </div>
                 <div class="row">
-                        <label for="" class="col-lg-2 col-sm-3 control-label">ชื่อผู้ตรวจรับ :</label>
-                        <div class="col-lg-4 col-md-7 col-sm-9">
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="text" id="" class="form-control" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-    
-                        <label for="" class="col-lg-2 col-sm-3 control-label">วันที่ตรวจพิสูจน์ :</label>
-                        <div class="col-lg-4 col-md-7 col-sm-9">
-                            <div class="form-group input-group form-line">
-                                <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
-    
-                                <label for="">&nbsp; ถึง &nbsp;</label>
-    
-                                <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                    <label for="" class="col-lg-2 col-sm-3 control-label">ชื่อผู้ตรวจรับ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" id="" class="form-control" placeholder="">
                             </div>
                         </div>
                     </div>
+
+                    <label for="" class="col-lg-2 col-sm-3 control-label">วันที่ตรวจพิสูจน์ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group input-group form-line">
+                            <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+
+                            <label for="">&nbsp; ถึง &nbsp;</label>
+
+                            <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-3 control-label">ชื่อผู้ตรวจพิสูจน์ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
@@ -122,9 +123,9 @@
                         <td>นายธวัชชัย</td>
                         <td>10-ม.ค.-2560</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>
-                            <a href="">
-                                <i class="fa fa-eye"></i>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/proof/manage/v/xxx-xxx-xxx']">
+                                <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
                     </tr>
@@ -137,9 +138,9 @@
                         <td>นายธวัชชัย</td>
                         <td>19-มี.ค.-2560</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>
-                            <a href="">
-                                <i class="fa fa-eye"></i>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/proof/manage/v/xxx-xxx-xxx']">
+                                <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
                     </tr>
@@ -152,9 +153,9 @@
                         <td>นายธวัชชัย</td>
                         <td>22-ต.ค.-2560</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>
-                            <a href="">
-                                <i class="fa fa-eye"></i>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/proof/manage/v/xxx-xxx-xxx']">
+                                <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
                     </tr>
@@ -167,9 +168,9 @@
                         <td>นายธวัชชัย</td>
                         <td>11-ธ.ค.-2560</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>
-                            <a href="">
-                                <i class="fa fa-eye"></i>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/proof/manage/v/xxx-xxx-xxx']">
+                                <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
                     </tr>
@@ -182,14 +183,38 @@
                         <td>นายธวัชชัย</td>
                         <td>3-มี.ค.-2560</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>
-                            <a href="">
-                                <i class="fa fa-eye"></i>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/proof/manage/v/xxx-xxx-xxx']">
+                                <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="card-footer card-footer-unset">
+        <div class="row justify-content-between m-l-5">
+            <div clas="col">
+                <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
+                    << </a>
+                        <label> หน้าที่
+                            <select>
+                                <option value="1">1</option>
+                            </select> จาก 1 หน้า</label>
+                        <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
+                        รายการที่ 1 - 1 จาก 1 รายการ
+            </div>
+            <div class="col col-lg-3 text-right">
+                <label>แสดง
+                    <select>
+                        <option (click)="numPage = 5">5</option>
+                        <option (click)="numPage = 10">10</option>
+                        <option (click)="numPage = 15">15</option>
+                        <option (click)="numPage = 20">20</option>
+                    </select> รายการ</label>
+            </div>
         </div>
     </div>
 </div>

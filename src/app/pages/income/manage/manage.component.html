@@ -1,0 +1,282 @@
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดการนำส่งเงินรายได้</h4>
+    </div>
+    <div class="card-body">
+
+        <form class="form-horizontal">
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่นำส่งเงิน :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control form-control-sm" value="Auto Generate" readonly>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
+                </label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="date" class="form-control form-control-sm" id="" placeholder="วว/ดด/ปปปป" appDatepicker [disabled]="showEditField">
+
+                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">เรียน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เขียนที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้จัดทำ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">สถานะนำส่งเงิน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" name="" id="" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายการที่ยังไม่นำส่งเงินรายได้</h4>
+    </div>
+    <div class="card-body">
+
+        <form class="form-horizontal">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="dataTable table table-sm table-striped table-hover ">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="text-align: center">ลำดับ</th>
+                                    <th>เลขคดีเปรียบเทียบ</th>
+                                    <th>เลขที่ใบเสร็จ</th>
+                                    <th>ผู้ต้องหา</th>
+                                    <th>ผู้รับชำระค่าปรับ</th>
+                                    <th>วันที่ชำระ</th>
+                                    <th>ยอดชำระ</th>
+                                    <th>เงินสินบน</th>
+                                    <th>เงินรางวัล</th>
+                                    <th>เงินส่งคลัง</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center">
+                                        <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
+                                        <label for="td_1" class="m-0"></label>
+                                    </td>
+                                    <td style="text-align: center">1</td>
+                                    <td>001/2561</td>
+                                    <td>001/2561</td>
+                                    <td>นายธวัชชัย บิงขุนทด</td>
+                                    <td>น.ส.แพรทิพย์ โครตแสนลี</td>
+                                    <td>10 พ.ค. 2561</td>
+                                    <td>10,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>6,000,000</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center">
+                                        <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
+                                        <label for="td_1" class="m-0"></label>
+                                    </td>
+                                    <td style="text-align: center">1</td>
+                                    <td>001/2561</td>
+                                    <td>001/2561</td>
+                                    <td>นายธวัชชัย บิงขุนทด</td>
+                                    <td>น.ส.แพรทิพย์ โครตแสนลี</td>
+                                    <td>10 พ.ค. 2561</td>
+                                    <td>10,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>6,000,000</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center">
+                                        <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
+                                        <label for="td_1" class="m-0"></label>
+                                    </td>
+                                    <td style="text-align: center">1</td>
+                                    <td>001/2561</td>
+                                    <td>001/2561</td>
+                                    <td>นายธวัชชัย บิงขุนทด</td>
+                                    <td>น.ส.แพรทิพย์ โครตแสนลี</td>
+                                    <td>10 พ.ค. 2561</td>
+                                    <td>10,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>6,000,000</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center">
+                                        <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
+                                        <label for="td_1" class="m-0"></label>
+                                    </td>
+                                    <td style="text-align: center">1</td>
+                                    <td>001/2561</td>
+                                    <td>001/2561</td>
+                                    <td>นายธวัชชัย บิงขุนทด</td>
+                                    <td>น.ส.แพรทิพย์ โครตแสนลี</td>
+                                    <td>10 พ.ค. 2561</td>
+                                    <td>10,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>6,000,000</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center">
+                                        <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
+                                        <label for="td_1" class="m-0"></label>
+                                    </td>
+                                    <td style="text-align: center">1</td>
+                                    <td>001/2561</td>
+                                    <td>001/2561</td>
+                                    <td>นายธวัชชัย บิงขุนทด</td>
+                                    <td>น.ส.แพรทิพย์ โครตแสนลี</td>
+                                    <td>10 พ.ค. 2561</td>
+                                    <td>10,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>2,000,000</td>
+                                    <td>6,000,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-footer card-footer-unset">
+                        <div class="row justify-content-between m-l-5">
+                            <div clas="col">
+                                <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
+                                    << </a>
+                                        <label> หน้าที่
+                                            <select>
+                                                <option value="1">1</option>
+                                            </select> จาก 1 หน้า</label>
+                                        <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
+                                        รายการที่ 1 - 1 จาก 1 รายการ
+                            </div>
+                            <div class="col col-lg-3 text-right">
+                                <label>แสดง
+                                    <select>
+                                        <option (click)="numPage = 5">5</option>
+                                        <option (click)="numPage = 10">10</option>
+                                        <option (click)="numPage = 15">15</option>
+                                        <option (click)="numPage = 20">20</option>
+                                    </select> รายการ</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ยอดนำส่งรวม :</label>
+                <div class="form-group col-lg-4 col-md-7">
+                    <input type="text" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">จำนวนคดี :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <input type="text" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เงินสินบน :</label>
+                <div class="form-group col-lg-4 col-md-7">
+                    <input type="text" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">เงินรางวัล :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <input type="text" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เงินส่งคลัง :</label>
+                <div class="form-group col-lg-4 col-md-7">
+                    <input type="text" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

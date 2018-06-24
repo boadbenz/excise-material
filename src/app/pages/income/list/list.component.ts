@@ -38,7 +38,7 @@ export class ListComponent implements OnInit {
     }
 
     view(noticeCode: string) {
-        this._router.navigate(['/proof/manage'], { queryParams: { v: true, nationalityCode: noticeCode } });
+        this._router.navigate(['/income/manage'], { queryParams: { v: true, nationalityCode: noticeCode } });
     }
 
 }

@@ -10,8 +10,8 @@ const routes: Routes = [
         path: '',
         data: {
             // title: 'ค้นหาข้อมูล',
-            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง' }],
-            nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/proof/manage' }
+            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหารายการนำส่งเงินรายได้' }],
+            nextPage: { title: 'จัดการข้อมูลนำส่งเงินรายได้', url: '/income/manage' }
         },
         component: ListComponent
     }

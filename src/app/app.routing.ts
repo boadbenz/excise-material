@@ -27,7 +27,14 @@ export const routes: Routes = [
         path: 'proof',
         children: [
             { path: 'list', loadChildren: './pages/proof/list/list.module#ListModule' },
-            { path: 'manage/:mode', loadChildren: './pages/proof/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code', loadChildren: './pages/proof/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'income',
+        children: [
+            { path: 'list', loadChildren: './pages/income/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
         ]
     },
 
