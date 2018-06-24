@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 
 @Component({
+    // tslint:disable-next-line:component-selector
     selector: 'breadcrumb',
     templateUrl: './breadcrumb.component.html'
 })

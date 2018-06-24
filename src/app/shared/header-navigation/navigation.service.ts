@@ -47,7 +47,7 @@ export class NavigationService {
     setEditButton(status: boolean) {
         this.showEditButton.next(status);
     }
-    
+
     setDeleteButton(status: boolean) {
         this.showDeleteButton.next(status);
     }
