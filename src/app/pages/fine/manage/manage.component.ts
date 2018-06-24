@@ -9,39 +9,41 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 })
 export class ManageComponent implements OnInit {
 
-  viewMode:boolean =true;
-  // advSearch: any;
+  viewMode: any;
+  sub: any;
 
+  constructor(private router: Router, private navService: NavigationService) { }
 
-  constructor(
-    private router: Router,
-    private navservice: NavigationService
-) {
-//  true
-    this.navservice.setEditButton(true);
-    this.navservice.setDeleteButton(true);
-    this.navservice.setPrintButton(true);
-    this.navservice.setNextPageButton(true);
+  ngOnInit() {
 
-// false
-    this.navservice.setSaveButton(false);
-    this.navservice.setCancelButton(false);
-    this.navservice.setSearchBar(false);
-    this.navservice.setNewButton(false);
-    // this.advSearch = this.navservice.showAdvSearch;
+    this.sub = this.navService.showFieldEdit.subscribe(status => {
+      this.viewMode = status;
+      if (!this.viewMode) {
+        this.navService.setCancelButton(true);
+        this.navService.setSaveButton(true);
+        this.navService.setPrintButton(false);
+        this.navService.setSearchBar(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setEditButton(false);
 
-}
+      } else {
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setSearchBar(false);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+      }
+    });
 
-ngOnInit() {
-  
-}
+  }
 
-  viewData(){
+  viewData() {
     this.router.navigate(['fine/detail']);
   }
 
-  // viewData(arrestCode:string){
-  //   this.router.navigate(['/fine/manage', 'R'], { queryParams: {  arrestCode: arrestCode} });
-  // }
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 
 }
