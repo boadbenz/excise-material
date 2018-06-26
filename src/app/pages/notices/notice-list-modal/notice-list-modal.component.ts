@@ -1,4 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import { NoticeList } from '../notice-list';
+import { NoticeService } from '../notice.service';
 
 @Component({
   selector: 'app-notice-list-modal',
@@ -11,13 +13,17 @@ export class NoticeListModalComponent implements OnInit {
   isCheckAll = false;
   advSearch = false;
 
+  noticeList = new Array<NoticeList>();
+
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
 
-  constructor(private _chRef: ChangeDetectorRef) { }
+  constructor(private noticeServie: NoticeService) {
+
+   }
 
   ngOnInit() {
-    this.onDetactTable();
+    this.noticeList = this.noticeServie.getList;
   }
 
   private onDetactTable() {

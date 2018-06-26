@@ -4,6 +4,7 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
+import { NoticeService } from '../notice.service';
 
 const routes: Routes = [
     {
@@ -26,6 +27,9 @@ const routes: Routes = [
     ],
     declarations: [
         ListComponent,
+    ], 
+    providers: [
+        NoticeService
     ]
 })
 export class ListModule { }

@@ -100,17 +100,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr *ngFor="let item of noticeList; let i=index">
                         <td class="text-center">
-                            <input name="group5" type="radio" id="radio_34" class="with-gap radio-col-indigo">
-                            <label for="radio_34" class="m-0"></label>
+                            <input name="group" type="radio" [id]="'radio'+i" class="with-gap radio-col-indigo">
+                            <label [for]="'radio' + i" class="m-0"></label>
                         </td>
-                        <td class="text-center"></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="text-center">{{i+1}}</td>
+                        <td>{{item.noticeCode}}</td>
+                        <td>{{item.noticeDate | date:'dd-MM-yyyy'}}</td>
+                        <td>{{item.staff}}</td>
+                        <td>{{item.department}}</td>
+                        <td>{{item.lawbreaker}}</td>
                         <td>
                             <a href="javaScript:void(0)" class="text-secondary">
                                 <i class="fa fa-eye fa-lg"></i>

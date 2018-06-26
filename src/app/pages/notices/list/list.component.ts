@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { NoticeList } from '../notice-list';
+import { NoticeService } from '../notice.service';
 
 @Component({
     selector: 'app-list',
@@ -11,9 +13,12 @@ export class ListComponent implements OnInit {
     dataTable: any;
     advSearch: any;
 
+    noticeList = new Array<NoticeList>();
+
     constructor(
         private _router: Router,
-        private navservice: NavigationService
+        private navservice: NavigationService,
+        private noticeService: NoticeService
     ) {
         // set false
         this.navservice.setEditButton(false);
@@ -29,7 +34,7 @@ export class ListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.onDetactTable();
+       this.noticeList = this.noticeService.getList;
     }
 
     onDetactTable() {
@@ -48,7 +53,7 @@ export class ListComponent implements OnInit {
     }
 
     view(noticeCode: string) {
-        this._router.navigate(['/notice/manage'], { queryParams: { v: true, nationalityCode: noticeCode } });
+        this._router.navigate([`/notice/manage/v/${noticeCode}`]);
     }
 
 }

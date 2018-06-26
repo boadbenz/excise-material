@@ -36,29 +36,22 @@
             <ul id="sidebarnav">
                 <!-- <li class="nav-small-cap">PERSONAL</li> -->
                 <li>
-                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" href="javaScript:void(0);">
-                        <i class="mdi mdi-account-search"></i>
-                        <span class="hide-menu">1. งานสืบสวนข้อมูล</span>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="investigation/list">
+                        <i class="mdi mdi-account-alert"></i>
+                        1 รายงานการสืบสวน
                     </a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="investigation/list">1.2 รายงานการสืบสวน</a>
-                        </li>
-                        <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="notice/list">1.5 ใบแจ้งความนำจับ</a>
-                        </li>
-                    </ul>
                 </li>
                 <li>
-                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" href="javaScript:void(0);">
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="notice/list">
                         <i class="mdi mdi-account-alert"></i>
-                        <span class="hide-menu">2. งานกุม</span>
+                        2 ใบแจ้งความนำจับ
                     </a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="arrest/list">2.1 บันทึกการจับกุม(ส.ส. 2/39)</a>
-                        </li>
-                    </ul>
+                </li>
+                <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="arrest/list">
+                        <i class="mdi mdi-account-alert"></i>
+                        3 บันทึกการจับกุม(ส.ส. 2/39)
+                    </a>
                 </li>
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="accusations/list">
