@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
@@ -17,6 +17,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     constructor(
         private ngModalService: NgbModal,
+        private router: Router,
         private activatedRoute: ActivatedRoute,
         private navService: NavigationService
     ) {

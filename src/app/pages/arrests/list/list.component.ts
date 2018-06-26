@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { ArrestList } from './arrest-list';
+import { ArrestsService } from '../arrests.service';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html'
@@ -10,8 +12,11 @@ export class ListComponent implements OnInit {
   dataTable: any;
   advSearch: any;
 
+  arrestList = new Array<ArrestList>();
+
   constructor(
-    private navservice: NavigationService
+    private navservice: NavigationService,
+    private arrestService: ArrestsService
   ) {
     // set false
     this.navservice.setEditButton(false);
@@ -28,7 +33,7 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.onDetactTable();
+    this.arrestList = this.arrestService.getList;
   }
 
   onDetactTable() {

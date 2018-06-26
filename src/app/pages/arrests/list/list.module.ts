@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
+import { ArrestsService } from '../arrests.service';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
   ],
   declarations: [
     ListComponent
-  ]
+  ],
+  providers: [ArrestsService]
 })
 export class ListModule { }
