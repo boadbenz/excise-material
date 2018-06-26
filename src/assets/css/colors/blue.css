@@ -58,7 +58,8 @@ File: scss
 /*Top bar
 *******************/
 .topbar {
-  background: #005C97;
+  background: linear-gradient(45deg, #005C97, #353993);
+  
 }
 
 .topbar .navbar-header {
@@ -90,7 +91,7 @@ a.link:hover, a.link:focus {
 }
 
 .bg-theme {
-  background-color: #005C97 !important;
+  background: linear-gradient(45deg, #005C97, #353993);
 }
 
 .pagination > .active > a,

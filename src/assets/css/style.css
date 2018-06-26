@@ -1977,7 +1977,7 @@ File: scss
     display: none; }
 
 .page-wrapper {
-  background: #eef5f9;
+  /* background: #eef5f9; */
   padding-bottom: 60px; }
 
 .container-fluid {
@@ -2121,10 +2121,12 @@ File: scss
 *******************/
 .page-titles {
   background: #ffffff;
-  margin: 0 -30px 30px;
+  /* margin: 0 -30px 30px; */
+  margin: 0 -30px 0px;
   padding: 15px;
-  -webkit-box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
-  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1); }
+  /* -webkit-box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);  */
+}
   .page-titles h3 {
     margin-bottom: 0px;
     margin-top: 8px; }
@@ -2141,7 +2143,9 @@ File: scss
       color: #a6b7bf;
       font-size: 11px; }
     .page-titles .breadcrumb .breadcrumb-item.active {
-      color: #99abb4; }
+      /* color: #99abb4;  */
+      color: #005c9a;
+    }
 
 /*******************
  Right side toggle
