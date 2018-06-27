@@ -1,8 +1,8 @@
 export class ArrestList {
     public noticeCode: string;
     public arrestCode: string;
-    public arrestDate: string;
-    public accused: string;
-    public department: string;
+    public occurrenceDate: string;
+    public fullName: string;
+    public departmentName: string;
     public location: string;
 }

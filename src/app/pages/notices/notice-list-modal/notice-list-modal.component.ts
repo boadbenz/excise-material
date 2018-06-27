@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
-import { NoticeList } from '../notice-list';
 import { NoticeService } from '../notice.service';
+import { NoticeList } from '../list/notice-list';
 
 @Component({
   selector: 'app-notice-list-modal',

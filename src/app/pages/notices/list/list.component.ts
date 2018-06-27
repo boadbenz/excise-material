@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { NoticeList } from '../notice-list';
 import { NoticeService } from '../notice.service';
+import { NoticeList } from './notice-list';
 
 @Component({
     selector: 'app-list',
