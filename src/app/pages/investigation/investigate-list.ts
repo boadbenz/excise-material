@@ -1,4 +1,5 @@
 import { InvestigateDetail } from './investigate-detail';
+import { InvestigateTeam } from './investigate-team';
 
 export class InvestigateList {
     public InvestigateCode: string;
@@ -7,5 +8,6 @@ export class InvestigateList {
     public DateEnd: Date;
     public Subject: string;
     public IsActive: number;
-    public InvestigationDetail: Array<InvestigateDetail>;
+    public InvestigationDetail: InvestigateDetail[];
+    public InvestigationTeam: InvestigateTeam[];
 }

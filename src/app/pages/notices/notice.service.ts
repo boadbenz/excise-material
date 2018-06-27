@@ -1,5 +1,5 @@
 import { Injectable, HostListener } from '@angular/core';
-import { NoticeList } from './notice-list';
+import { NoticeList } from './list/notice-list';
 
 const options = { year: 'numeric', month: 'short', day: 'numeric' };
 

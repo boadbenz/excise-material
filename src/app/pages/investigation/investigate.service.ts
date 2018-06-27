@@ -8,17 +8,24 @@ export class InvestigateService {
 
     constructor(private http: HttpClient) { }
 
-    // private httpOptions = {
-    //     headers: new HttpHeaders(
-    //         {
-    //             'Content-Type': 'application/json'
-    //         })
-    // };
+    // tslint:disable-next-line:member-ordering
+    private httpOptions = {
+        headers: new HttpHeaders(
+            {
+                'Content-Type': 'application/json'
+            })
+    };
 
     getByKeyword(Textsearch: string) {
+        const params = Textsearch;
+        const url = `${appConfig.apiUrl}/InvestigategetByKeyword`;
+        return this.http.post<InvestigateList[]>(url, params, this.httpOptions);
+    }
+
+    getByInvestigateCode(Textsearch: string) {
         const params = { Textsearch };
         const url = `${appConfig.apiUrl}/InvestigategetByKeyword`;
-        this.http.post<InvestigateList>(url, params);
+        return this.http.post<InvestigateList>(url, params, this.httpOptions);
     }
 
 }

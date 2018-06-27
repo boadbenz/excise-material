@@ -10,13 +10,13 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" readonly>
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="investigate.InvestigateCode" name="InvestigateCode" readonly>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">คดีสืบสวนที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="investigate.InvestigateNo" name="InvestigateNo" [disabled]="showEditField">
                 </div>
             </div>
 
@@ -25,13 +25,13 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="date" class="form-control form-control-sm" [disabled]="showEditField">
+                        <input type="date" class="form-control form-control-sm" [(ngModel)]="investigate.DateStart" name="DateStart" [disabled]="showEditField">
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่สิ้นสุดสืบสวน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="date" class="form-control form-control-sm" [(ngModel)]="investigate.DateEnd" name="DateEnd" [disabled]="showEditField">
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
                 </label>
                 <div class="col-lg-10 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="investigate.Subject" name="Subject" [disabled]="showEditField">
                     </div>
                 </div>
             </div>
@@ -74,21 +74,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-center">
-                            1
+                    <tr *ngFor="let item of investigate.InvestigationTeam; let i=index;">
+                        <td class="text-center">{{i+1}}</td>
+                        <td>
+                            <input type="text" [value]="item.TitleName + ' ' + item.FirstName + ' ' + item.LastName" name="FullName" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                            <input type="text" [value]="item.PositionName" name="PositionName" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
-                        </td>
-                        <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                            <input type="text" [value]="item.DepartmentName" name="DepartmentName" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteStaff(item.StaffID)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
@@ -117,8 +115,8 @@
                 <thead>
                     <tr>
                         <th class="text-center">ลำดับ</th>
-                        <th>ชื่อผู้สืบสวน</th>
-                        <th>วันที่สืบสวน</th>
+                        <th>ครั้งที่สืบสวน</th>
+                        <th>วันที่เริ่มสืบสวน</th>
                         <th>วันที่สิ้นสุดการสืบสวน</th>
                         <th>ผู้ดูแลการสืบสวน</th>
                         <th>ผู้สั่งการ</th>
@@ -126,15 +124,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-center">1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                    <tr *ngFor="let item of investigate.InvestigationDetail; let i=index;">
+                        <td class="text-center">{{i+1}}</td>
+                        <td class="text-center">{{item.InvestigateDetailID}}</td>
+                        <td>{{item.InvestigateDateStart | date:'dd-MM-yyyy'}}</td>
+                        <td>{{item.InvestigateDateEnd | date:'dd-MM-yyyy'}}</td>
+                        <td>{{item.InvestigateDetailStaff}}</td>
+                        <td>{{item.InvestigateDetailStaff}}</td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/investigation/detail-manage/v/xxx-xxx']">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="onViewInvesDetail(item.InvestigateCode)">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>

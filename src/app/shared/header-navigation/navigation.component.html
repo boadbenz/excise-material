@@ -104,9 +104,10 @@
             <!-- ============================================================== -->
             <ul *ngIf="searchBar | async" class="navbar-nav my-lg-0">
                 <li class="nav-item col-8">
-                    <form class="app-search">
-                        <input type="search" name="" id="" class="form-control">
-                        <a class="srh-btn" style=" position: absolute;top: 8px;right: 28px;">
+                    <form class="app-search" #formSearch="ngForm" (ngSubmit)="clickSearch(formSearch.value)">
+                        <input type="search" name="Textsearch" id="" ngModel class="form-control" >
+                        <a href="javaScript:void(0);" (click)="clickSearch(formSearch.value)" class="srh-btn" 
+                        style="position: absolute;top: 8px;right: 28px;">
                             <i class="ti-search"></i>
                         </a>
                     </form>

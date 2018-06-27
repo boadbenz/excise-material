@@ -14,40 +14,41 @@ export class ArrestsService {
             {
                 noticeCode: 'LS90806026000002',
                 arrestCode: 'TN90806026000002',
-                arrestDate: (new Date).toLocaleDateString('th-TH', options),
-                accused: 'นายธวัชชัย บิงขุนทด',
-                department: 'สสท.ระนอง สาขาเมืองกระบุรี',
+                occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
+                fullName: 'นายธวัชชัย บิงขุนทด',
+                departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
                 location: 'สสท.ระนอง สาขาเมืองกระบุรี'
             }, {
                 noticeCode: 'LS90806026000002',
                 arrestCode: 'TN90806026000002',
-                arrestDate: (new Date).toLocaleDateString('th-TH', options),
-                accused: 'นายธวัชชัย บิงขุนทด',
-                department: 'สสท.ระนอง สาขาเมืองกระบุรี',
+                occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
+                fullName: 'นายธวัชชัย บิงขุนทด',
+                departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
                 location: 'สสท.ระนอง สาขาเมืองกระบุรี'
             }, {
                 noticeCode: 'LS90806026000002',
                 arrestCode: 'TN90806026000002',
-                arrestDate: (new Date).toLocaleDateString('th-TH', options),
-                accused: 'นายธวัชชัย บิงขุนทด',
-                department: 'สสท.ระนอง สาขาเมืองกระบุรี',
+                occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
+                fullName: 'นายธวัชชัย บิงขุนทด',
+                departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
                 location: 'สสท.ระนอง สาขาเมืองกระบุรี'
             }, {
                 noticeCode: 'LS90806026000002',
                 arrestCode: 'TN90806026000002',
-                arrestDate: (new Date).toLocaleDateString('th-TH', options),
-                accused: 'นายธวัชชัย บิงขุนทด',
-                department: 'สสท.ระนอง สาขาเมืองกระบุรี',
+                occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
+                fullName: 'นายธวัชชัย บิงขุนทด',
+                departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
                 location: 'สสท.ระนอง สาขาเมืองกระบุรี'
             }, {
                 noticeCode: 'LS90806026000002',
                 arrestCode: 'TN90806026000002',
-                arrestDate: (new Date).toLocaleDateString('th-TH', options),
-                accused: 'นายธวัชชัย บิงขุนทด',
-                department: 'สสท.ระนอง สาขาเมืองกระบุรี',
+                occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
+                fullName: 'นายธวัชชัย บิงขุนทด',
+                departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
                 location: 'สสท.ระนอง สาขาเมืองกระบุรี'
             }
         ]
+
         return this.arrestList;
     }
 

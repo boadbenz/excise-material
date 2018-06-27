@@ -21,9 +21,13 @@ export class NavigationService {
     onSave = new BehaviorSubject<Boolean>(false);
     onDelete = new BehaviorSubject<Boolean>(false);
     onCancel = new BehaviorSubject<Boolean>(false);
+    onSearch = new BehaviorSubject<Boolean>(false);
+
+    textSearch = new BehaviorSubject<string>('');
 
     constructor() { }
 
+    // -- Set Element --
     setAdvSearch() {
         if (this.showAdvSearch.getValue()) {
             this.showAdvSearch.next(false);
@@ -68,6 +72,9 @@ export class NavigationService {
         this.showNextPageButton.next(status);
     }
 
+    // -- End Set Element --
+
+    // -- Set Event --
     setOnEdit(status: boolean) {
         this.onEdit.next(status);
     }
@@ -83,5 +90,14 @@ export class NavigationService {
     setOnCancel(status: boolean) {
         this.onCancel.next(status);
     }
+
+    setOnSearch(textSearch: any) {
+        this.textSearch.next(textSearch);
+    }
+
+    setOnAdvSearch(object: any) {
+
+    }
+    // -- End Set Event
 
 }

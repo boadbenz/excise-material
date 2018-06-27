@@ -4,6 +4,8 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { InvestigateService } from '../investigate.service';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   {
@@ -20,6 +22,8 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    HttpModule,
+    HttpClientModule,
     RouterModule.forChild(routes),
     CardActionsModule
   ],

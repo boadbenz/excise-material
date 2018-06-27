@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostListener, Input, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NavigationService } from './navigation.service';
 
@@ -78,12 +78,16 @@ export class NavigationComponent implements OnInit {
         this.navService.setAdvSearch();
     }
 
+    clickSearch(textSearch: any) {
+        this.navService.setOnSearch(textSearch);
+    }
+
     clickNew() {
-        this.router.navigate([`${this.nextPage}`, 'c', 'new']);
+        this.router.navigate([`${this.nextPage}`, 'C', 'NEW']);
     }
 
     clickNextPage() {
-        this.router.navigate([`${this.nextPage}`, 'c', 'new']);
+        this.router.navigate([`${this.nextPage}`, 'C', 'NEW']);
     }
 
     clickPrint() {
