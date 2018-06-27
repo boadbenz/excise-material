@@ -36,12 +36,10 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header card-navy">
-    <strong class="text-dark">
-      ข้อกล่าวหา
-    </strong>
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">ข้อกล่าวหา</h5>
   </div>
   <div class="card-body">
     <div class="form-body">
@@ -85,12 +83,10 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header card-navy">
-    <strong class="text-dark">
-      ของกลาง
-    </strong>
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">ของกลาง</h5>
   </div>
   <div class="card-body">
     <div class="table-responsive table-striped no-wrap">
@@ -134,12 +130,10 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header card-navy">
-    <strong class="text-dark">
-      รับคำกล่าวโทษ
-    </strong>
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">รับคำกล่าวโทษ</h5>
   </div>
   <div class="card-body">
     <div class="form-body">
@@ -275,12 +269,10 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header card-navy">
-    <strong class="text-dark">
-      เอกสารแนบภายใน
-    </strong>
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">เอกสารแนบภายใน</h5>
   </div>
   <div class="card-body">
     <div class="text-right">
@@ -320,7 +312,9 @@
       <div class="modal-header top-navbar text-white">
         ลักษณะคดีรายผู้ต้องหา
         <div class="card-actions">
-          <i class="ti-close close-popup" data-toggle="modal" data-target="#editPopUp"></i>
+          <a data-toggle="modal" data-target="#editPopUp">
+            <i class="ti-close"></i>
+          </a>
         </div>
       </div>
       <div class="modal-body">
@@ -333,7 +327,7 @@
                 <div class="input-group col-md-9">
                   <input class="form-control" type="text" name="fullName" [(ngModel)]="fullName" disabled>
                   <span class="input-group-addon">
-                    <i class="mdi mdi-eye view-action" aria-hidden="true"></i>
+                    <i class="mdi mdi-eye" aria-hidden="true"></i>
                   </span>
                 </div>
               </div>
@@ -368,12 +362,10 @@
             </div>
           </div>
         </div>
-        <div class="card card-popup">
-          <div class="card-header card-navy">
-            <strong class="text-dark">
-              คำพิพากษาของศาล
-            </strong>
+        <div class="card card-outline-bluish unset-radius">
+          <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
+            <h5 class="card-title m-b-0">คำพิพากษาของศาล</h5>
           </div>
           <div class="card-body card-overflow">
             <div class="form-body">

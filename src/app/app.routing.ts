@@ -54,6 +54,13 @@ export const routes: Routes = [
             { path: 'manage/:mode', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' }
         ]
+    },{
+        path: 'reduction',
+        children: [
+            { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule' }
+        ]
     },
 
     {
