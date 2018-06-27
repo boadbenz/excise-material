@@ -1,6 +1,6 @@
 import { InvestigateDetail } from './investigate-detail';
 
-export class InvestigationList {
+export class InvestigateList {
     public InvestigateCode: string;
     public InvestigateNo: string;
     public DateStart: Date;

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
+import { InvestigateService } from '../investigate.service';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CardActionsModule
   ],
-  declarations: [ListComponent]
+  declarations: [ListComponent],
+  providers: [InvestigateService]
 })
 export class ListModule { }
