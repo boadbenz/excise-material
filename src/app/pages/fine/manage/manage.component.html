@@ -1,40 +1,40 @@
 <div class="wizard-content">
-    <div class="wizard-circle wizard clearfix clearfix">
-      <div class="steps tab-wizard">
-        <ul role="tablist">
-          <li role="tab" class="current" aria-disabled="false" aria-selected="true">
-            <a>
-              <span class="current-info audible">current step: </span>
-              <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 2. งานจับกุม </a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 3. รับคำกล่าวโทษ </a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 6. นำส่งเงินรายได้ </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
-          </li>
-        </ul>
-      </div>
+  <div class="wizard-circle wizard clearfix clearfix">
+    <div class="steps tab-wizard">
+      <ul role="tablist">
+        <li role="tab" class="current" aria-disabled="false" aria-selected="true">
+          <a>
+            <span class="current-info audible">current step: </span>
+            <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
+        </li>
+        <li role="tab" class="current" aria-disabled="true">
+          <a>
+            <span class="step"></span> 2. งานจับกุม </a>
+        </li>
+        <li role="tab" class="current" aria-disabled="true">
+          <a>
+            <span class="step"></span> 3. รับคำกล่าวโทษ </a>
+        </li>
+        <li role="tab" class="current" aria-disabled="true">
+          <a>
+            <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
+        </li>
+        <li role="tab" class="current" aria-disabled="true">
+          <a>
+            <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
+        </li>
+        <li role="tab" class="disabled" aria-disabled="true">
+          <a>
+            <span class="step"></span> 6. นำส่งเงินรายได้ </a>
+        </li>
+        <li role="tab" class="disabled" aria-disabled="true">
+          <a>
+            <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
+        </li>
+      </ul>
     </div>
   </div>
+</div>
 <div class="card ">
   <div class="card-header  unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>
@@ -164,8 +164,8 @@
     <h4 class="card-title m-b-0">รายละเอียดเงินค่าปรับ</h4>
   </div>
   <div class="card-body">
-      <div class="table-responsive">
-           <table class="dataTable table table-sm table-striped table-hover">
+    <div class="table-responsive">
+      <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
             <th class="footable-sortable">ชื่อผู้ต้องหา</th>
@@ -267,7 +267,7 @@
       </div>
     </div>
     <div class="table-responsive">
-         <table class="dataTable table table-sm table-striped table-hover">
+      <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
             <th class="footable-sortable text-center">ลำดับ</th>
@@ -337,7 +337,7 @@
       </div>
     </div>
     <div class="table-responsive">
-         <table class="dataTable table table-sm table-striped table-hover">
+      <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
             <th class="footable-sortable text-center">ลำดับ</th>
@@ -388,8 +388,8 @@
     <h4 class="card-title m-b-0">รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ</h4>
   </div>
   <div class="card-body">
-      <div class="table-responsive">
-           <table class="dataTable table table-sm table-striped table-hover">
+    <div class="table-responsive">
+      <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
             <th class="footable-sortable text-center">ลำดับ</th>
@@ -435,7 +435,7 @@
       <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
     </div>
     <div class="table-responsive">
-         <table class="dataTable table table-sm table-striped table-hover">
+      <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
             <th class="footable-sortable text-center">ลำดับ</th>
@@ -578,11 +578,10 @@
               </div>
             </div>
           </div>
-
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="testimonyPopup">บันทึก</button>
+        <div class="text-right">
+          <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#testimonyPopup">บันทึก</button>
+        </div>
       </div>
     </div>
   </div>
@@ -712,14 +711,12 @@
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn waves-effect waves-light btn-orange m-r-10" data-toggle="modal" data-target="payPopup">ยกเลิกใบเสร็จ</button>
-        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="payPopup">บันทึก</button>
+        <div class="text-right">
+          <button type="submit" class="btn waves-effect waves-light btn-orange m-r-10" data-toggle="modal" data-target="#payPopup">ยกเลิกใบเสร็จ</button>
+          <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#payPopup">บันทึก</button>
+        </div>
       </div>
     </div>
   </div>
@@ -943,9 +940,9 @@
           </div>
 
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="approvePopup">บันทึก</button>
+        <div class="text-right">
+          <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#approvePopup">บันทึก</button>
+        </div>
       </div>
     </div>
   </div>
