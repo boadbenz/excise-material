@@ -104,15 +104,14 @@
             <!-- ============================================================== -->
             <ul *ngIf="searchBar | async" class="navbar-nav my-lg-0">
                 <li class="nav-item col-8">
-                    <form class="app-search" #formSearch="ngForm" (ngSubmit)="clickSearch(formSearch.value)">
+                    <form autocomplete="off" class="app-search" #formSearch="ngForm" (ngSubmit)="clickSearch(formSearch.value)">
                         <input type="search" name="Textsearch" id="" ngModel class="form-control" >
-                        <a href="javaScript:void(0);" (click)="clickSearch(formSearch.value)" class="srh-btn" 
-                        style="position: absolute;top: 8px;right: 28px;">
+                        <a href="javaScript:void(0);" (click)="clickSearch(formSearch.value)" class="srh-btn">
                             <i class="ti-search"></i>
                         </a>
                     </form>
                 </li>
-                <li class="nav-item col-4">
+                <li class="nav-item col-9">
                     <a href="javaScript:void(0);" class="btn text-white" (click)="clickAdvSearch()">
                         ค้นหาขั้นสูง
                     </a>

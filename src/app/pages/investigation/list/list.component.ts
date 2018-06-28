@@ -53,7 +53,8 @@ export class ListComponent implements OnInit, OnDestroy {
     onSearch(Textsearch: any) {
         this.invesService.getByKeyword(Textsearch)
             .subscribe(list => {
-
+                this.invesList = [];
+                
                 if (!list) {
                     alert('ไม่พบข้อมูล');
                     return false;
