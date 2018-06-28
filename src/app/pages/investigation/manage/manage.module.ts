@@ -6,7 +6,7 @@ import { CardActionsModule } from '../../component/card-actions/card-actions.mod
 import { InvestigateService } from '../investigate.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -31,6 +31,7 @@ const routes: Routes = [
     HttpModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     CardActionsModule
   ],

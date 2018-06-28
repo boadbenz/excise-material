@@ -1,22 +1,25 @@
-<div class="card card-outline-bluish unset-radius">
-    <div class="card-header  unset-radius">
-        <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0">คดีที่สืบสวน</h4>
-    </div>
-    <div class="card-body">
-        <form class="form-horizontal">
+<form class="form-horizontal" >
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 class="card-title m-b-0">คดีที่สืบสวน</h4>
+        </div>
+        <div class="card-body">
+
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่สืบสวน :
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="investigate.InvestigateCode" name="InvestigateCode" readonly>
+                        <input type="text" [(ngModel)]="investigate.InvestigateCode" name="InvestigateCode" class="form-control form-control-sm"
+                            readonly>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">คดีสืบสวนที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="investigate.InvestigateNo" name="InvestigateNo" [disabled]="showEditField" required>
+                    <input type="text" [(ngModel)]="investigate.InvestigateNo" name="InvestigateNo" [disabled]="showEditField"
+                        class="form-control form-control-sm">
                 </div>
             </div>
 
@@ -25,13 +28,15 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="date" class="form-control form-control-sm" [(ngModel)]="investigate.DateStart" name="DateStart" [disabled]="showEditField">
+                        <input type="date" [(ngModel)]="investigate.DateStart" name="DateStart" class="form-control form-control-sm"
+                            [disabled]="showEditField">
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่สิ้นสุดสืบสวน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" class="form-control form-control-sm" [(ngModel)]="investigate.DateEnd" name="DateEnd" readonly>
+                    <input type="date" [(ngModel)]="investigate.DateEnd" name="DateEnd" class="form-control form-control-sm"
+                        readonly>
                 </div>
             </div>
 
@@ -41,28 +46,27 @@
                 </label>
                 <div class="col-lg-10 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="investigate.Subject" name="Subject" [disabled]="showEditField">
+                        <input type="text" [(ngModel)]="investigate.Subject" name="Subject" class="form-control form-control-sm"
+                            [disabled]="showEditField">
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
-</div>
-
-<div class="card card-outline-bluish unset-radius">
-    <div class="card-header  unset-radius">
-        <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0">ทีมสืบสวน</h4>
-    </div>
-    <div class="card-body">
-        <div class="row form-group">
-            <div class="col-lg-10 col-md-9 col-sm-8"></div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มผู้สืบสวน</button>
-            </div>
         </div>
+    </div>
 
-        <form class="form-horizontal">
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 class="card-title m-b-0">ทีมสืบสวน</h4>
+        </div>
+        <div class="card-body">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มผู้สืบสวน</button>
+                </div>
+            </div>
+
             <table class="table table-sm table-striped table-set-border">
                 <thead>
                     <tr>
@@ -75,15 +79,38 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of investigate.InvestigationTeam; let i=index;">
+
+                        <input type="hidden" [(ngModel)]="item.StaffID" name="StaffID">
+                        <input type="hidden" [(ngModel)]="item.ProgramCode" name="ProgramCode">
+                        <input type="hidden" [(ngModel)]="item.ProcessCode" name="ProcessCode">
+                        <input type="hidden" [(ngModel)]="item.InvestigateCode" name="InvestigateCode">
+                        <input type="hidden" [(ngModel)]="item.StaffCode" name="StaffCode">
+                        <input type="hidden" [(ngModel)]="item.TitleName" name="TitleName">
+                        <input type="hidden" [(ngModel)]="item.FirstName" name="FirstName">
+                        <input type="hidden" [(ngModel)]="item.LastName" name="LastName">
+                        <input type="hidden" [(ngModel)]="item.PositionCode" name="PositionCode">
+                        <input type="hidden" [(ngModel)]="item.PosLevel" name="PosLevel">
+                        <input type="hidden" [(ngModel)]="item.PosLevelName" name="PosLevelName">
+                        <input type="hidden" [(ngModel)]="item.DepartmentCode" name="DepartmentCode">
+                        <input type="hidden" [(ngModel)]="item.DepartmentLevel" name="DepartmentLevel">
+                        <input type="hidden" [(ngModel)]="item.OfficeCode" name="OfficeCode">
+                        <input type="hidden" [(ngModel)]="item.OfficeName" name="OfficeName">
+                        <input type="hidden" [(ngModel)]="item.OfficeShortName" name="OfficeShortName">
+                        <input type="hidden" [(ngModel)]="item.ContributorID" name="ContributorID">
+                        <input type="hidden" [(ngModel)]="item.IsActive" name="IsActive">
+
                         <td class="text-center">{{i+1}}</td>
                         <td>
-                            <input type="text" [value]="item.TitleName + ' ' + item.FirstName + ' ' + item.LastName" name="FullName" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                            <input type="text" [value]="item.TitleName + ' ' + item.FirstName + ' ' + item.LastName" name="FullName" id="" class="form-control form-control-sm"
+                                [disabled]="showEditField">
                         </td>
                         <td>
-                            <input type="text" [value]="item.PositionName" name="PositionName" id="" class="form-control form-control-sm" readonly>
+                            <input type="text" [value]="item.PositionName" [(ngModel)]="item.PositionName" name="PositionName" id="" class="form-control form-control-sm"
+                                readonly>
                         </td>
                         <td>
-                            <input type="text" [value]="item.DepartmentName" name="DepartmentName" id="" class="form-control form-control-sm" readonly>
+                            <input type="text" [value]="item.DepartmentName" [(ngModel)]="item.DepartmentName" name="DepartmentName" id="" class="form-control form-control-sm"
+                                readonly>
                         </td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteStaff(item.StaffID)">
@@ -93,52 +120,52 @@
                     </tr>
                 </tbody>
             </table>
-        </form>
+        </div>
     </div>
-</div>
 
-<div class="card card-outline-bluish unset-radius">
-    <div class="card-header  unset-radius">
-        <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0">รายงานการสืบสวน</h4>
-    </div>
-    <div class="card-body">
-        <form class="form-horizontal">
-            <div class="row form-group">
-                <div class="col-lg-10 col-md-9 col-sm-8"></div>
-                <div class="col-lg-2 col-md-3 col-sm-4">
-                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มรายงาน</button>
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 class="card-title m-b-0">รายงานการสืบสวน</h4>
+        </div>
+        <div class="card-body">
+            <form class="form-horizontal">
+                <div class="row form-group">
+                    <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                    <div class="col-lg-2 col-md-3 col-sm-4">
+                        <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มรายงาน</button>
+                    </div>
                 </div>
-            </div>
 
-            <table class="table table-sm table-striped table-set-border">
-                <thead>
-                    <tr>
-                        <th class="text-center">ลำดับ</th>
-                        <th>ครั้งที่สืบสวน</th>
-                        <th>วันที่เริ่มสืบสวน</th>
-                        <th>วันที่สิ้นสุดการสืบสวน</th>
-                        <th>ผู้ดูแลการสืบสวน</th>
-                        <th>ผู้สั่งการ</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let item of investigate.InvestigationDetail; let i=index;">
-                        <td class="text-center">{{i+1}}</td>
-                        <td class="text-center">{{item.InvestigateDetailID}}</td>
-                        <td>{{item.InvestigateDateStart | date:'dd-MM-yyyy'}}</td>
-                        <td>{{item.InvestigateDateEnd | date:'dd-MM-yyyy'}}</td>
-                        <td>{{item.InvestigateDetailStaff}}</td>
-                        <td>{{item.InvestigateDetailStaff}}</td>
-                        <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="onViewInvesDetail(item.InvestigateCode)">
-                                <i class="fa fa-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
+                <table class="table table-sm table-striped table-set-border">
+                    <thead>
+                        <tr>
+                            <th class="text-center">ลำดับ</th>
+                            <th class="text-center">ครั้งที่สืบสวน</th>
+                            <th>วันที่เริ่มสืบสวน</th>
+                            <th>วันที่สิ้นสุดการสืบสวน</th>
+                            <th>ผู้ดูแลการสืบสวน</th>
+                            <th>ผู้สั่งการ</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of investigate.InvestigationDetail; let i=index;">
+                            <td class="text-center">{{i+1}}</td>
+                            <td class="text-center">{{item.InvestigateDetailID}}</td>
+                            <td>{{item.InvestigateDateStart | date:'dd-MM-yyyy'}}</td>
+                            <td>{{item.InvestigateDateEnd | date:'dd-MM-yyyy'}}</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center">
+                                <a href="javaScript:void(0);" class="text-secondary" (click)="onViewInvesDetail(item.InvestigateCode)" *ngIf="!showEditField">
+                                    <i class="fa fa-eye fa-lg"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
     </div>
-</div>
+</form>

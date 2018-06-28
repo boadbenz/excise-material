@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { InvestigateService } from '../investigate.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { InvestigateList } from '../investigate-list';
+import { Investigate } from '../investigate';
+import { pagination } from '../../../config/pagination';
 
 @Component({
     selector: 'app-list',
@@ -13,9 +14,11 @@ import { InvestigateList } from '../investigate-list';
 export class ListComponent implements OnInit, OnDestroy {
 
     advSearch: any;
-    invesList = new Array<InvestigateList>();
-
+    invesList = new Array<Investigate>();
+    invesPaginate = pagination;
     private subOnSearch: any;
+
+    @ViewChild('invesTable') invesTable: ElementRef;
 
     constructor(
         private navService: NavigationService,
@@ -54,7 +57,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.invesService.getByKeyword(Textsearch)
             .subscribe(list => {
                 this.invesList = [];
-                
+
                 if (!list) {
                     alert('ไม่พบข้อมูล');
                     return false;
@@ -66,6 +69,9 @@ export class ListComponent implements OnInit, OnDestroy {
                     this.invesList.push(list);
                 }
 
+                // set total record
+                this.invesPaginate.TotalItems = this.invesList.length;
+
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
             });
@@ -73,5 +79,15 @@ export class ListComponent implements OnInit, OnDestroy {
 
     clickView(invesCode: string) {
         this.router.navigate([`/investigation/manage/R/${invesCode}`]);
+    }
+
+    pageChanges(event) {
+        // this.invesPaginate.CurrentPage = event.currentPage;
+        // this.invesPaginate.TotalItems = event.totalItems;
+        // this.invesPaginate.PageSize = event.pageSize;
+        // this.invesPaginate.TotalPageLinkButtons = event.totalPageLinkButtons;
+        
+        console.log(this.invesTable.nativeElement);
+        
     }
 }

@@ -1,11 +1,11 @@
 import { InvestigateDetail } from './investigate-detail';
 import { InvestigateTeam } from './investigate-team';
 
-export class InvestigateList {
+export class Investigate {
     public InvestigateCode: string;
     public InvestigateNo: string;
-    public DateStart: Date;
-    public DateEnd: Date;
+    public DateStart: string;
+    public DateEnd: string;
     public Subject: string;
     public IsActive: number;
     public InvestigationDetail: InvestigateDetail[];

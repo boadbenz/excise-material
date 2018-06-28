@@ -3,7 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { InvestigateService } from '../investigate.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { InvestigateList } from '../investigate-list';
+import { Investigate } from '../investigate';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import * as formatDate from '../../../config/dateFormat';
+import { InvestigateTeam } from '../investigate-team';
+import { InvestigateDetail } from '../investigate-detail';
 
 @Component({
     selector: 'app-manage',
@@ -15,11 +19,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
 
     showEditField: any;
-
-    investigate = new InvestigateList();
+    investigateForm: FormGroup;
+    investTeamForm: FormGroup;
+    investigate = new Investigate();
+    investigateTeam = new Array<InvestigateTeam>();
+    investigateDetail = new Array<InvestigateDetail>();
 
     constructor(
         private router: Router,
+        private formBuilder: FormBuilder,
         private activeRoute: ActivatedRoute,
         private navService: NavigationService,
         private invesService: InvestigateService
@@ -31,6 +39,30 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
+        this.active_Route();
+
+        this.navigate_Service();
+
+        this.createForm();
+    }
+
+    createForm() {
+        this.investigateForm = this.formBuilder.group({
+            InvestigateCode: '',
+            InvestigateNo: '',
+            DateStart: '',
+            DateEnd: '',
+            Subject: ''
+        });
+    
+        this.investTeamForm = this.formBuilder.group({
+            
+        })
+
+    }
+
+    private active_Route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             if (p['mode'] === 'C' || p['mode'] === 'U') {
                 // set false
@@ -53,9 +85,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (p['code']) {
-                this.onLoadInvestigate(p['code']);
+                this.Investigate_GetByCon(p['code']);
             }
         });
+    }
+
+    private navigate_Service() {
         this.sub = this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
@@ -75,11 +110,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private onLoadInvestigate(Textsearch: any) {
-        this.sub = this.invesService.getByInvestigateCode(Textsearch)
+    private Investigate_GetByCon(InvestigateCode: string) {
+        this.sub = this.invesService.getByCon(InvestigateCode)
             .subscribe(item => {
                 this.investigate = item;
-                console.log(this.investigate);
+                this.investigate.DateStart = formatDate.format(item.DateStart);
+                this.investigate.DateEnd = formatDate.format(item.DateEnd);
 
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
@@ -97,6 +133,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setCancelButton(false);
         // set action save = false
         this.navService.setOnSave(false);
+
+        console.log(this.investigate);
+
     }
 
     private onEdit() {

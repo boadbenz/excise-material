@@ -6,6 +6,8 @@ import { CardActionsModule } from '../../component/card-actions/card-actions.mod
 import { InvestigateService } from '../investigate.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -24,8 +26,10 @@ const routes: Routes = [
     CommonModule,
     HttpModule,
     HttpClientModule,
+    FormsModule,
     RouterModule.forChild(routes),
-    CardActionsModule
+    CardActionsModule,
+    PaginationTableModule
   ],
   declarations: [ListComponent],
   providers: [InvestigateService]
