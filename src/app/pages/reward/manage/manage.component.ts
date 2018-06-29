@@ -12,7 +12,7 @@ export class ManageComponent implements OnInit {
   viewMode: any;
   sub: any;
   courtCase: string ="";
-  test:string="เปรียบเทียบคดี";
+  test:string="ส่งฟ้องศาล";
 
   constructor(private router: Router, private navService: NavigationService) { }
 
@@ -42,7 +42,7 @@ export class ManageComponent implements OnInit {
   }
 
   changePage(page: string , caseSelect: string) {
-    console.log(caseSelect)
+    // console.log(caseSelect)
     if (page == 'bribe'){
       this.router.navigate(['reward/bribe']);
     }

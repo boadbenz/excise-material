@@ -11,6 +11,7 @@ export class RewardComponent implements OnInit {
   viewMode: any;
   sub: any;
   private getmode: any;
+  court: boolean;
 
   constructor(private router: Router, private navService: NavigationService, private activeRoute: ActivatedRoute) { }
 
@@ -38,10 +39,22 @@ export class RewardComponent implements OnInit {
 
     this.getmode = this.activeRoute.params
       .subscribe(params => {
-        // params.code
-        console.log(params);
+        if(params.caseSelect == "เปรียบเทียบคดี"){
+          this.court = false;
+          // console.log("เปรียบเทียบคดี"+this.court);
+        }
+        else if(params.caseSelect == "ส่งฟ้องศาล"){
+          this.court = true;
+          // console.log("ส่งฟ้องศาล"+this.court);
+        }
+        
+        
       });
 
+  }
+
+  addSupport(i){
+    document.getElementById("add").innerHTML = '<td><input type="checkbox" class="filled-in chk-col-indigo" id="'+i+'"><label for="'+i+'"></label></td><td class="text-center">'+i+'</td><td><select class="form-control"></select></td><td><input class="form-control" type="text" ></td><td><input class="form-control" type="text" ></td><td><input class="form-control" type="text" ></td><td><select class="form-control"></select></td><td><input class="form-control" type="text" disabled></td><td><select class="form-control"></select></td><td><input class="form-control" type="text" disabled></td><td><input class="form-control" type="text" disabled></td><td><input class="form-control" type="text" disabled></td><i class="ti-trash btn-action (click)="addSupport('+i+')"></i></td>';
   }
 
 }

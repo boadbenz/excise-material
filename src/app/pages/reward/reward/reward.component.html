@@ -164,48 +164,48 @@
 </div>
 
 <!-- ส่งฟ้องศาล ซ่อน -->
-<div class="card" >
-    <div class="card-header  unset-radius">
-      <app-card-actions-collapse></app-card-actions-collapse>
-      <h4 class="card-title m-b-0">คำร้องขอรับเงินรางวัล กรณีคดีถึงที่สุดโดยการเปรียบเทียบคดี</h4>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="dataTable table table-sm table-striped table-hover">
-          <thead>
-            <tr>
-              <th class="footable-sortable text-center">ลำดับ</th>
-              <th class="footable-sortable">ชื่อผู้ต้องหา</th>
-              <th class="footable-sortable">ชื่อศาล</th>
-              <th class="footable-sortable">เลขคดีดำ</th>
-              <th class="footable-sortable">เลขคดีแดง</th>
-              <th class="footable-sortable">คำพิพากษาฎีกาที่</th>
-              <th class="footable-sortable">วันที่อ่านคำพิพากษา</th>
-              <th class="footable-sortable">ค่าปรับ</th>
-              <th class="footable-sortable">จำนวนงวด</th>
-              <th class="footable-sortable">วันที่ชำระ</th>
-              <th class="footable-sortable">รอบชำระทุก</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="footable">
-              <td class="text-center">1</td>
-              <td class="">นายธวัชชัย บิงขุนทด</td>
-              <td>มีนบุรี</td>
-              <td>มย.222/2561</td>
-              <td>มย.222/2561</td>
-              <td>1267/2561</td>
-              <td>10-ม.ค.-2560</td>
-              <td>2,000,000.00</td>
-              <td class="text-center">2</td>
-              <td>10-ม.ค.-2560</td>
-              <td>1 เดือน</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<div class="card" [hidden]="!court">
+  <div class="card-header  unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">รายละเอียดคำพิพากษาของศาล</h4>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="dataTable table table-sm table-striped table-hover">
+        <thead>
+          <tr>
+            <th class="footable-sortable text-center">ลำดับ</th>
+            <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+            <th class="footable-sortable">ชื่อศาล</th>
+            <th class="footable-sortable">เลขคดีดำ</th>
+            <th class="footable-sortable">เลขคดีแดง</th>
+            <th class="footable-sortable">คำพิพากษาฎีกาที่</th>
+            <th class="footable-sortable">วันที่อ่านคำพิพากษา</th>
+            <th class="footable-sortable">ค่าปรับ</th>
+            <th class="footable-sortable">จำนวนงวด</th>
+            <th class="footable-sortable">วันที่ชำระ</th>
+            <th class="footable-sortable">รอบชำระทุก</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="footable">
+            <td class="text-center">1</td>
+            <td class="">นายธวัชชัย บิงขุนทด</td>
+            <td>มีนบุรี</td>
+            <td>มย.222/2561</td>
+            <td>มย.222/2561</td>
+            <td>1267/2561</td>
+            <td>10-ม.ค.-2560</td>
+            <td>2,000,000.00</td>
+            <td class="text-center">2</td>
+            <td>10-ม.ค.-2560</td>
+            <td>1 เดือน</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
+</div>
 
 <div class="card ">
   <div class="card-header  unset-radius">
@@ -218,7 +218,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
           <div class="col-md-8">
-            <input class="form-control" type="text"  disabled>
+            <input class="form-control" type="text" disabled>
           </div>
         </div>
       </div>
@@ -228,7 +228,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">เขียนที่ : </label>
           <div class="col-md-8">
-            <input class="form-control" type="text"  [disabled]="viewMode">
+            <input class="form-control" type="text" [disabled]="viewMode">
           </div>
         </div>
       </div>
@@ -297,6 +297,8 @@
   </div>
   <div class="card-body">
     <div class="text-right">
+        <!-- addSupport ส่ง id -->
+        <input type="button" id="btn-browse" [disabled]="viewMode" (click)="addSupport(3)">
       <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> เพิ่มจนท.สนับสนุน </label>
     </div>
     <div class="table-responsive">
@@ -334,7 +336,7 @@
         <tbody>
           <tr class="footable">
             <td>
-              <input type="checkbox" class="filled-in chk-col-indigo" id="1">  
+              <input type="checkbox" class="filled-in chk-col-indigo" id="1">
               <label for="1"></label>
             </td>
             <td class="text-center">1</td>
@@ -410,6 +412,9 @@
               <i class="ti-trash btn-action"></i>
             </td>
           </tr>
+          <tr class="footable" id="add">
+
+          </tr>
           <tr class="footable">
             <td></td>
             <td></td>
@@ -443,7 +448,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text"  disabled>
+            <input class="form-control" type="text" disabled>
           </div>
         </div>
       </div>
@@ -453,7 +458,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text"  disabled>
+            <input class="form-control" type="text" disabled>
           </div>
         </div>
       </div>
@@ -475,7 +480,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text"  disabled>
+            <input class="form-control" type="text" disabled>
           </div>
         </div>
       </div>
