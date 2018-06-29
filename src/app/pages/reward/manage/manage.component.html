@@ -254,7 +254,7 @@
         </div>
       </div>
       <div class="text-right">
-        <input type="file" id="btn-browse" #file disabled>
+        <input type="button" id="btn-browse" [disabled]="viewMode" data-toggle="modal" data-target="#bribePopup">
         <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> ขอรับสินบน </label>
       </div>
     </div>
@@ -282,7 +282,7 @@
             <td>10-ม.ค.-2560</td>
             <td class="">1/1</td>
             <td>
-              <a href="javaScript:void(0);" class="text-secondary" data-toggle="modal" data-target="#bribePopup">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="changePage('bribe','')">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
             </td>
@@ -329,7 +329,7 @@
         </div>
       </div>
       <div class="text-right">
-        <input type="file" id="btn-browse" #file disabled>
+        <input type="button" id="btn-browse" [disabled]="viewMode" data-toggle="modal" data-target="#rewardPopup">
         <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> ขอรับเงินรางวัล</label>
       </div>
     </div>
@@ -353,11 +353,11 @@
             <td>RW90806026000002</td>
             <td>10-ม.ค.-2560</td>
             <td>นายธวัชชัย บิงขุนทด</td>
-            <td>เปรียบเทียบคดี</td>
+            <td>{{test}}</td>
             <td>10-ม.ค.-2560</td>
             <td>1/1</td>
             <td>
-              <a href="javaScript:void(0);" class="text-secondary" data-toggle="modal" data-target="#rewardPopup">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="changePage('reward',test)">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
             </td>
@@ -393,7 +393,7 @@
       <div class="modal-header top-navbar text-white">
         เลือกรายการที่ต้องการขอรับเงินสินบน
         <div class="card-actions">
-          <i class="ti-close text-white close-popup" data-dismiss="modal" data-target="testimonyPopup"></i>
+          <i class="ti-close text-white close-popup" data-dismiss="modal" data-target="#bribePopup"></i>
         </div>
       </div>
       <div class="modal-body">
@@ -478,7 +478,7 @@
           </div>
         </div>
         <div class="text-right">
-          <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#bribePopup" (click)="changePage('bribe','')">ถัดไป</button>
+          <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#bribePopup" >ถัดไป</button>
         </div>
       </div>
     </div>
@@ -507,6 +507,7 @@
                   <label for="compare" class="col-md-5">เปรียบเทียบคดี</label>
                   <input name="courtCaseRadio" value="filedCourt" [(ngModel)]="courtCase" id="filedCourtRadio" class="col-form-label with-gap radio-col-indigo" type="radio">
                   <label for="filedCourtRadio" class="col-md-5">ส่งฟ้องศาล</label>
+                  <!-- {{courtCase}} -->
                 </div>
               </div>
             </div>
@@ -543,7 +544,7 @@
           </div>
         </div>
         <div class="text-right">
-          <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#rewardPopup" (click)="changePage('reward','courtCase')">ถัดไป</button>
+          <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#rewardPopup">ถัดไป</button>
         </div>
       </div>
     </div>

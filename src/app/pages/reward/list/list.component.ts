@@ -22,8 +22,8 @@ export class ListComponent implements OnInit {
      this.navservice.setSaveButton(false);
      this.navservice.setCancelButton(false);
      this.navservice.setNextPageButton(false);
-     this.navservice.setNewButton(false);
      // set true
+     this.navservice.setNewButton(true);
      this.navservice.setSearchBar(true);
      this.advSearch = this.navservice.showAdvSearch;
 

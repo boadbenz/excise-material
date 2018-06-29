@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
@@ -10,8 +10,9 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 export class RewardComponent implements OnInit {
   viewMode: any;
   sub: any;
+  private getmode: any;
 
-  constructor(private router: Router, private navService: NavigationService) { }
+  constructor(private router: Router, private navService: NavigationService, private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
 
@@ -34,6 +35,12 @@ export class RewardComponent implements OnInit {
         this.navService.setSaveButton(false);
       }
     });
+
+    this.getmode = this.activeRoute.params
+      .subscribe(params => {
+        // params.code
+        console.log(params);
+      });
 
   }
 
