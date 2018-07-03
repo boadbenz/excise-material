@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
 
@@ -26,6 +26,8 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
         RouterModule.forChild(routes),
         CardActionsModule,
         LawbreakerModalModule

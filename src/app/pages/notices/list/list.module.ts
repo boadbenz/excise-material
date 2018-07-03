@@ -5,6 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { NoticeService } from '../notice.service';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
     {
@@ -22,12 +24,14 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
+        HttpModule,
+        HttpClientModule,
         RouterModule.forChild(routes),
         CardActionsModule
     ],
     declarations: [
         ListComponent,
-    ], 
+    ],
     providers: [
         NoticeService
     ]

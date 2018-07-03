@@ -1,7 +1,7 @@
-import { InvestigateDetailLocal } from "./investigate-detail-local";
-import { InvestigateDetailProduct } from "./investigate-detail-product";
-import { InvestigateDetailStaff } from "./investigate-detail-staff";
-import { InvestigateDetailSuspect } from "./investigate-detail-suspect";
+import { InvestigateDetailLocal } from './investigate-detail-local';
+import { InvestigateDetailProduct } from './investigate-detail-product';
+import { InvestigateDetailStaff } from './investigate-detail-staff';
+import { InvestigateDetailSuspect } from './investigate-detail-suspect';
 
 export class InvestigateDetail {
         public ConfidenceOfNews: string;

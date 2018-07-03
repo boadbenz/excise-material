@@ -91,7 +91,7 @@ export class NavigationComponent implements OnInit {
     }
 
     clickPrint() {
-
+        this.navService.setOnPrint(true);
     }
 
     clickEdit() {

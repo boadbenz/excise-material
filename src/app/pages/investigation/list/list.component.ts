@@ -5,6 +5,8 @@ import { InvestigateService } from '../investigate.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Investigate } from '../investigate';
 import { pagination } from '../../../config/pagination';
+import { Message } from '../../../config/message';
+import { async } from '@angular/core/testing';
 
 @Component({
     selector: 'app-list',
@@ -37,14 +39,13 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setNewButton(true);
         this.advSearch = this.navService.showAdvSearch;
 
-
     }
 
     ngOnInit() {
-        this.subOnSearch = this.navService.textSearch.subscribe(Textsearch => {
+        this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
+                await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
-                this.navService.setOnSearch('');
             }
         })
     }
@@ -54,27 +55,51 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearch(Textsearch: any) {
-        this.invesService.getByKeyword(Textsearch)
-            .subscribe(list => {
-                this.invesList = [];
+        this.invesService.getByKeyword(Textsearch).subscribe(list => {
 
-                if (!list) {
-                    alert('ไม่พบข้อมูล');
-                    return false;
-                }
+            this.onSearchComplete(list)
 
-                if (Array.isArray(list)) {
-                    this.invesList = list;
-                } else {
-                    this.invesList.push(list);
-                }
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
+    }
 
-                // set total record
-                this.invesPaginate.TotalItems = this.invesList.length;
+    onAdvSearch(form: any) {
+
+        const sDateCompare = new Date(form.value.DateStartFrom);
+        const eDateCompare = new Date(form.value.DateStartTo);
+
+        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+            alert(Message.checkDate);
+        } else {
+            form.value.DateStartFrom = sDateCompare.getTime();
+            form.value.DateStartTo = eDateCompare.getTime();
+            this.invesService.getByConAdv(form.value).subscribe(list => {
+
+                this.onSearchComplete(list)
 
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
             });
+        }
+    }
+
+    onSearchComplete(list: any) {
+        this.invesList = [];
+
+        if (!list) {
+            alert(Message.noRecord);
+            return false;
+        }
+
+        if (Array.isArray(list)) {
+            this.invesList = list;
+        } else {
+            this.invesList.push(list);
+        }
+
+        // set total record
+        this.invesPaginate.TotalItems = this.invesList.length;
     }
 
     clickView(invesCode: string) {
@@ -86,8 +111,8 @@ export class ListComponent implements OnInit, OnDestroy {
         // this.invesPaginate.TotalItems = event.totalItems;
         // this.invesPaginate.PageSize = event.pageSize;
         // this.invesPaginate.TotalPageLinkButtons = event.totalPageLinkButtons;
-        
+
         console.log(this.invesTable.nativeElement);
-        
+
     }
 }

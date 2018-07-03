@@ -22,8 +22,9 @@ export class NavigationService {
     onDelete = new BehaviorSubject<Boolean>(false);
     onCancel = new BehaviorSubject<Boolean>(false);
     onSearch = new BehaviorSubject<Boolean>(false);
+    onPrint = new BehaviorSubject<Boolean>(false);
 
-    textSearch = new BehaviorSubject<string>('');
+    searchByKeyword = new BehaviorSubject<string>('');
 
     constructor() { }
 
@@ -92,11 +93,15 @@ export class NavigationService {
     }
 
     setOnSearch(textSearch: any) {
-        this.textSearch.next(textSearch);
+        this.searchByKeyword.next(textSearch);
     }
 
     setOnAdvSearch(object: any) {
 
+    }
+
+    setOnPrint(status: boolean) {
+        this.onPrint.next(status);
     }
     // -- End Set Event
 

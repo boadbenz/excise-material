@@ -3122,8 +3122,17 @@ Form Material page
 .form-group.error input, .form-group.error select, .form-group.error textarea {
   border: 1px solid #fc4b6c; }
 
+.ng-invalid:not(form)  {
+  border: 1px solid #fc4b6c;
+  /* border-left: 5px solid #fc4b6c; */
+}
+
 .form-group.validate input, .form-group.validate select, .form-group.validate textarea {
   border: 1px solid #26c6da; }
+
+/* .ng-valid[required], .ng-valid.required  {
+    border: 1px solid #26c6da;
+} */
 
 .form-group.error .help-block ul {
   padding: 0px;

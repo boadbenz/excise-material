@@ -7,6 +7,8 @@ import { InvestigateService } from '../investigate.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PrintdocModalModule } from '../printdoc-modal/printdoc-modal.module';
 
 const routes: Routes = [
   {
@@ -32,8 +34,10 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    NgbModule.forRoot(),
     RouterModule.forChild(routes),
-    CardActionsModule
+    CardActionsModule,
+    PrintdocModalModule
   ],
   declarations: [ManageComponent],
   providers: [InvestigateService]
