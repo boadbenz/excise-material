@@ -1,0 +1,286 @@
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">รายละเอียดคดี</h5>
+  </div>
+  <div class="card-body">
+    <div class="form-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">เลขที่ใบงาน : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.arrestCode" name="arrestCode" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">วันที่จับกุม : </label>
+            <div class="form-group input-group col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
+              <label class="col-form-label text-right col-md-2">เวลา</label>
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">ผู้กล่าวหา : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="fullName" name="" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.positionlawName" name="positionlawName" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="departmentlawName" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">สถานที่จับกุม : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.locationlawName" name="locationlawName" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitNo" name="lawsuitNo" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">วันที่รับคดี : </label>
+            <div class="form-group input-group col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
+              <label class="col-form-label text-right col-md-2">เวลา</label>
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">ฐานความผิดมาตรา : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.faultNo" name="faultNo" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">ฐานความผิด : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.faultSubject" name="faultSubject" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">บทกำหนดโทษ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.faultNo" name="faultNo" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">อัตราโทษ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.penalty" name="penalty" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">เลขที่คดีเปรียบเทียบ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitNo" name="lawsuitNo" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">วันที่เปรียบเทียบ : </label>
+            <div class="form-group input-group col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
+              <label class="col-form-label text-right col-md-2">เวลา</label>
+              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">ผู้เปรียบเทียบ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="fullName" name="" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.positionlawName" name="positionlawName" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="departmentlawName" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">รายละเอียดการปรับเพิ่มหรือปรับลด</h5>
+  </div>
+  <div class="card-body">
+    <div class="text-right m-b-10">
+      <button [ngClass]="{disabled : showField}" class="btn waves-effect waves-light btn-navy" [disabled]="showField" (click)="showReductionPopup()">
+      ปรับเพิ่ม-ลด </button>
+    </div>
+    <div class="table-responsive table-striped no-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="footable-sortable">ลำดับ</th>
+            <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+            <th class="footable-sortable">ค่าปรับเดิม</th>
+            <th class="footable-sortable">ค่าปรับใหม่</th>
+            <th class="footable-sortable">วันที่ชำระค่าปรับ</th>
+            <th class="footable-sortable">ช่องทางชำระ</th>
+            <th class="footable-sortable">ใบเสร็จเล่มที่</th>
+            <th class="footable-sortable">ใบเสร็จเลขที่/เลขอ้างอิง</th>
+            <th class="footable-sortable">สถานะคดี</th>
+            <th class="footable-sortable"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="footable" *ngFor="let item of tableData; let i = index;">
+            <td>{{i+1}}</td>
+            <td>{{item.fullName}}</td>
+            <td>{{item.oldFine}}</td>
+            <td>{{item.newFine}}</td>
+            <td>{{item.dateFine}}</td>
+            <td>{{item.payment}}</td>
+            <td>{{item.receiptNo}}</td>
+            <td>{{item.receiptRef}}</td>
+            <td>{{item.statusCase}}</td>
+            <td>
+              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(i)">
+                <i class="mdi mdi-eye fa-lg"></i>
+              </a>
+              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData(i)" [hidden]="showField">
+                <i class="ti-pencil-alt btn-action"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="reductionPopup" tabindex="-1" role="dialog" #reductionPopup>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header top-navbar text-white">
+        เลือกรายการที่ต้องการปรับเพิ่ม-ลดค่าปรับเปรียบเทียบคดี
+        <div class="card-actions">
+          <a data-toggle="modal" data-target="#reductionPopup">
+            <i class="ti-close"></i>
+          </a>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="text-right"> ILG60-09-02-01-00 </div>
+        <div class="table-responsive table-striped no-wrap table-bordered m-t-10">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th class="footable-sortable text-center">
+                  <div class="custom-control custom-checkbox">
+                    <input id="checkbox_checkAll" [(ngModel)]="selectAll" type="checkbox" class="col-form-label filled-in chk-col-indigo">
+                    <label for="checkbox_checkAll"></label>
+                  </div>
+                </th>
+                <th class="footable-sortable">ลำดับ</th>
+                <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+                <th class="footable-sortable">ลักษณะคดี </th>
+                <th class="footable-sortable">เลขที่ดคีเปรียบเทียบ/คำพิพากษาฎีกาที่ </th>
+                <th class="footable-sortable">วันที่ชำระเงิน </th>
+                <th class="footable-sortable">งวดชำระ </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="footable" *ngFor="let item of tableData; let i = index;">
+                <td class="text-center">
+                  <div class="custom-control custom-checkbox">
+                    <input id="checkbox_{{i}}" [checked]="selectAll" type="checkbox" class="col-form-label filled-in chk-col-indigo">
+                    <label for="checkbox_{{i}}"></label>
+                  </div>
+                </td>
+                <td>{{i+1}}</td>
+                <td>{{item.fullName}}</td>
+                <td>{{item.typeCase}}</td>
+                <td>{{item.receiptRef}}</td>
+                <td>{{item.dateFine}}</td>
+                <td>{{item.period}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#reductionPopup">ถัดไป</button>
+      </div>
+    </div>
+  </div>
+</div>

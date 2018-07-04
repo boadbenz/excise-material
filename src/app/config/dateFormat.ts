@@ -1,5 +1,3 @@
-import * as moment from 'moment';
-
 export function toLocalNumeric(date: string): string {
     if (date === '' || date == null) {
         return null;

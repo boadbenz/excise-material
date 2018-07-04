@@ -5,8 +5,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 
 @Component({
   selector: 'app-manage-view',
-  templateUrl: './manage-view.component.html',
-  styleUrls: ['./manage-view.component.scss']
+  templateUrl: './manage-view.component.html'
 })
 export class ManageViewComponent implements OnInit {
 
