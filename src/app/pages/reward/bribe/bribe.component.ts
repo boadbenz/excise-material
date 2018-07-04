@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
-  selector: 'app-manage',
-  templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.scss']
+  selector: 'app-bribe',
+  templateUrl: './bribe.component.html',
+  styleUrls: ['./bribe.component.scss']
 })
-export class ManageComponent implements OnInit {
+export class BribeComponent implements OnInit {
 
   viewMode: any;
   sub: any;
@@ -25,7 +25,6 @@ export class ManageComponent implements OnInit {
         this.navService.setSearchBar(false);
         this.navService.setDeleteButton(false);
         this.navService.setEditButton(false);
-
       } else {
         this.navService.setPrintButton(true);
         this.navService.setDeleteButton(true);
@@ -35,15 +34,5 @@ export class ManageComponent implements OnInit {
         this.navService.setSaveButton(false);
       }
     });
-
   }
-
-  viewData() {
-    this.router.navigate(['fine/detail']);
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
 }

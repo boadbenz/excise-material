@@ -11,6 +11,7 @@ export class ManageComponent implements OnInit {
 
   viewMode: any;
   sub: any;
+  courtCase: string ="";
 
   constructor(private router: Router, private navService: NavigationService) { }
 
@@ -38,8 +39,15 @@ export class ManageComponent implements OnInit {
 
   }
 
-  viewData() {
-    this.router.navigate(['fine/detail']);
+  changePage(page: string , caseSelect: string) {
+    if (page == 'bribe'){
+      this.router.navigate(['reward/bribe']);
+    }
+    else if (page == 'reward'){
+      
+      this.router.navigate(['reward/reward', caseSelect]);
+    }
+    
   }
 
   ngOnDestroy() {

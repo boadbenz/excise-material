@@ -1,3 +1,12 @@
+.pages {
+  padding: 10px;
+}
+
+.pages a {
+  color: #67757c;
+}
+
+
 // .table {
 //     color: black;
 //     font-size: 14px;
@@ -85,4 +94,12 @@
     cursor: pointer;
   }
   
-  
+  .padding-adv-search {
+    padding-right: 0;
+    padding-left: 0px;
+
+  }
+
+  .padding-input-adv-search {
+    padding-left: 5px;
+  }

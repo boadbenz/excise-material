@@ -54,6 +54,14 @@ export const routes: Routes = [
             { path: 'manage/:mode', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' }
         ]
+    }, {
+        path: 'reward',
+        children: [
+            { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
+            { path: 'bribe', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
+            { path: 'reward/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
+        ]
     },
 
     {

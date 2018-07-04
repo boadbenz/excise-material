@@ -3,12 +3,11 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @Component({
-  selector: 'app-manage',
-  templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.scss']
+  selector: 'app-reward',
+  templateUrl: './reward.component.html',
+  styleUrls: ['./reward.component.scss']
 })
-export class ManageComponent implements OnInit {
-
+export class RewardComponent implements OnInit {
   viewMode: any;
   sub: any;
 
@@ -36,14 +35,6 @@ export class ManageComponent implements OnInit {
       }
     });
 
-  }
-
-  viewData() {
-    this.router.navigate(['fine/detail']);
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
 }
