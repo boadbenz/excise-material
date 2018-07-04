@@ -4,6 +4,9 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { ArrestsService } from '../arrests.service';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -20,6 +23,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    HttpModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     CardActionsModule
   ],

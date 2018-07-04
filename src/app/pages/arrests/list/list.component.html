@@ -6,7 +6,7 @@
         <h4 class="card-title m-b-0">ค้นหา</h4>
     </div>
     <div class="card-body">
-        <form class="form-horizontal">
+        <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
             <div>
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-3">ใบรับแจ้งความนำจับ :</label>
@@ -81,23 +81,23 @@
                     <tr>
                         <th class="text-center">ลำดับ</th>
                         <th>เลขที่ใบแจ้งความ</th>
-                        <th>วันที่แจ้งความ</th>
-                        <th>ผู้รับแจ้ง</th>
+                        <th>เลขที่ใบงาน</th>
+                        <th>วันที่จับกุม</th>
+                        <th>ชื่อผู้กล่าวหา</th>
                         <th>หน่วยงาน</th>
-                        <th>ผู้ต้องสงสัย</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of arrestList; let i=index">
                         <td class="text-center">{{i+1}}</td>
-                        <td>{{item.noticeCode}}</td>
-                        <td>{{item.arrestCode}}</td>
-                        <td>{{item.fullName}}</td>
-                        <td>{{item.departmentName}}</td>
-                        <td>{{item.location}}</td>
+                        <td>{{item.NoticeCode}}</td>
+                        <td>{{item.ArrestCode}}</td>
+                        <td>{{item.OccurrenceDate}}</td>
+                        <td>{{item.ArrestStaff[0].FullName}}</td>
+                        <td>{{item.ArrestStaff[0].DepartmentName}}</td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/arrest/manage/v/xxx-xxx-xxx']">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.NoticeCode)">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
