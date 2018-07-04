@@ -5,6 +5,7 @@ import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
 import { HttpErrorResponse } from '@angular/common/http';
+import { toLocalShort } from '../../../config/dateFormat';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -47,7 +48,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearch(Textsearch: any) {
-        this.onSearchComplete(this.arrestService.getByKeyword(Textsearch));
+        this.arrestService.getByKeyword(Textsearch).then(res => this.onSearchComplete(res));
     }
 
     onAdvSearch(form: any) {
@@ -60,11 +61,11 @@ export class ListComponent implements OnInit, OnDestroy {
         } else {
             form.value.DateStartFrom = sDateCompare.getTime();
             form.value.DateStartTo = eDateCompare.getTime();
-            this.onSearchComplete(this.arrestService.getByConAdv(form.value));
+            this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
         }
     }
 
-    onSearchComplete(list: any) {
+    onSearchComplete(list: Arrest[]) {
         this.arrestList = [];
 
         if (!list) {
@@ -72,11 +73,17 @@ export class ListComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        if (Array.isArray(list)) {
-            this.arrestList = list;
-        } else {
-            this.arrestList.push(list);
-        }
+        list.map(p => {
+            p.OccurrenceDate = toLocalShort(p.OccurrenceDate);
+            console.log(p.ArrestStaff);
+        })
+        this.arrestList = list;
+        
+        // if (Array.isArray(list)) {
+        //     this.arrestList = list;
+        // } else {
+        //     this.arrestList.push(list);
+        // }
 
         // set total record
         // this.invesPaginate.TotalItems = this.arrestList.length;

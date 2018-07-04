@@ -18,32 +18,29 @@ export class ArrestsService {
             })
     };
 
-    getByKeyword(Textsearch: string): Array<Arrest> {
+    async getByKeyword(Textsearch: string): Promise<Arrest[]> {
         const params = Textsearch;
         const url = `${appConfig.api7788}/ArrestgetByKeyword`;
-        let result = new Array<Arrest>();
 
-        this.http.post<any>(url, params, this.httpOptions).subscribe(r => {
-            result = r.ResponseData
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
-
-        return result;
+        try {
+            let res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData as Arrest[];
+        } catch (error) {
+            await alert(error);
+        }
     }
 
-    getByConAdv(form: any): Array<Arrest> {
+    async getByConAdv(form: any): Promise<Arrest[]> {
         const params = JSON.stringify(form);
         const url = `${appConfig.api7788}/ArrestgetByConAdv`;
-        let result = new Array<Arrest>();
 
-        this.http.post<any>(url, params, this.httpOptions).subscribe(r => {
-            result = r.ResponseData
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
+        try {
+            let res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData as Arrest[];
+        } catch (error) {
+            await alert(error);
+        }
 
-        return result;
     }
 
     // get getList() {
