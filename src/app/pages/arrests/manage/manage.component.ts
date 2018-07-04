@@ -31,7 +31,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
-            if (p['mode'] === 'c' || p['mode'] === 'u') {
+            if (p['mode'] === 'C') {
                 // set false
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
@@ -40,7 +40,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
 
-            } else if (p['mode'] === 'v') {
+            } else if (p['mode'] === 'R') {
                 // set false
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
