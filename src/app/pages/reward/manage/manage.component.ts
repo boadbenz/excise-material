@@ -12,6 +12,7 @@ export class ManageComponent implements OnInit {
   viewMode: any;
   sub: any;
   courtCase: string ="";
+  test:string="ส่งฟ้องศาล";
 
   constructor(private router: Router, private navService: NavigationService) { }
 
@@ -26,6 +27,7 @@ export class ManageComponent implements OnInit {
         this.navService.setSearchBar(false);
         this.navService.setDeleteButton(false);
         this.navService.setEditButton(false);
+        this.navService.setNewButton(false);
 
       } else {
         this.navService.setPrintButton(true);
@@ -34,17 +36,17 @@ export class ManageComponent implements OnInit {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
+        this.navService.setNewButton(false);
       }
     });
-
   }
 
   changePage(page: string , caseSelect: string) {
+    // console.log(caseSelect)
     if (page == 'bribe'){
       this.router.navigate(['reward/bribe']);
     }
     else if (page == 'reward'){
-      
       this.router.navigate(['reward/reward', caseSelect]);
     }
     
