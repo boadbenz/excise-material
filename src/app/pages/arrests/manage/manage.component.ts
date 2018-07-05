@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { toLocalNumeric } from 'app/config/dateFormat';
-import { ArrestLocale } from '../arrest-locale';
 import { ArrestStaff } from '../arrest-staff';
+import { Message } from 'app/config/message';
+import { ArrestProduct } from '../arrest-product';
+import { ArrestDocument } from '../arrest-document';
 
 @Component({
     selector: 'app-manage',
@@ -16,7 +18,7 @@ import { ArrestStaff } from '../arrest-staff';
 export class ManageComponent implements OnInit, OnDestroy {
 
     private sub: any;
-    mode: string;
+    private mode: string;
     modal: any;
     arrestCode: string;
     showEditField: any;
@@ -31,19 +33,32 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.arrestForm.get('ArrestLocale') as FormArray;
     }
 
-    get ArrestLawbreaker(): FormArray{
+    get ArrestLawbreaker(): FormArray {
         return this.arrestForm.get('ArrestLawbreaker') as FormArray;
+    }
+
+    get ArrestProduct(): FormArray {
+        return this.arrestForm.get('ArrestProduct') as FormArray;
+    }
+
+    get ArrestIndictment(): FormArray {
+        return this.arrestForm.get('ArrestIndictment') as FormArray;
+    }
+
+    get ArrestDocument(): FormArray {
+        return this.arrestForm.get('ArrestDocument') as FormArray;
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
     constructor(
-        public fb: FormBuilder,
+        private fb: FormBuilder,
         private activeRoute: ActivatedRoute,
         private suspectModalService: NgbModal,
         private navService: NavigationService,
         private ngbModel: NgbModal,
-        private arrestService: ArrestsService
+        private arrestService: ArrestsService,
+        private router: Router
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -60,7 +75,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.createForm();
     }
 
-    createForm() {
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
+    }
+
+    private createForm() {
         this.arrestForm = this.fb.group({
             ArrestCode: [null],
             ArrestDate: [null],
@@ -79,12 +98,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             InvestigationSurveyDocument: [null],
             InvestigationCode: [null],
             IsActive: [null],
-            ArrestStaff: this.fb.array([this.createArrestStaffForm()]),
-            ArrestLocale: this.fb.array([this.createArrestLocaleForm()])
+            ArrestStaff: this.fb.array([this.createStaffForm()]),
+            ArrestLocale: this.fb.array([this.createLocaleForm()]),
+            ArrestLawbreaker: this.fb.array([this.createLawbreakerForm()]),
+            ArrestProduct: this.fb.array([this.createProductForm()]),
+            ArrestIndictment: this.fb.array([this.createIndicmentForm()]),
+            ArrestDocument: this.fb.array([this.createDocumentForm()])
         })
     }
 
-    createArrestStaffForm(): FormGroup {
+    private createStaffForm(): FormGroup {
         return this.fb.group({
             StaffID: [null],
             ProgramCode: [null],
@@ -110,7 +133,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    createArrestLocaleForm(): FormGroup {
+    private createLocaleForm(): FormGroup {
         return this.fb.group({
             LocaleID: [null],
             IsArrest: [null],
@@ -137,7 +160,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    createArrestLawbreakerForm(): FormGroup {
+    private createLawbreakerForm(): FormGroup {
         return this.fb.group({
             LawbreakerID: [null],
             ArrestCode: [null],
@@ -149,6 +172,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             CompanyOtherName: [null],
             CompanyRegistrationNo: [null],
             CompanyLicenseNo: [null],
+            CompanyFullName: [null],
             FoundedDate: [null],
             LicenseDateForm: [null],
             LicenseDateTo: [null],
@@ -162,6 +186,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             LawbreakerLastName: [null],
             LawbreakerOtherName: [null],
             LawbreakerDesc: [null],
+            LawbreakerFullName: [null],
             IDCard: [null],
             PassportNo: [null],
             VISAType: [null],
@@ -189,25 +214,69 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    setArrestLocale(locale: ArrestLocale[]) {
-        if (locale) {
-            locale.map(item => item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`);
-            const itemFGs = locale.map(item => this.fb.group(item));
+    private createProductForm(): FormGroup {
+        return this.fb.group({
+            ProductID: [null],
+            ProductType: [null],
+            ArrestCode: [null],
+            GroupCode: [null],
+            IsDomestic: [null],
+            ProductCode: [null],
+            BrandCode: [null],
+            BrandNameTH: [null],
+            BrandNameEN: [null],
+            SubBrandCode: [null],
+            SubBrandNameTH: [null],
+            SubBrandNameEN: [null],
+            ModelCode: [null],
+            ModelName: [null],
+            FixNo1: [null],
+            DegreeCode: [null],
+            Degree: [null],
+            SizeCode: [null],
+            Size: [null],
+            SizeUnitCode: [null],
+            SizeUnitName: [null],
+            FixNo2: [null],
+            SequenceNo: [null],
+            ProductDesc: [null],
+            CarNo: [null],
+            Qty: [null],
+            QtyUnit: [null],
+            NetVolume: [null],
+            NetVolumeUnit: [null],
+            IsActive: [null]
+        })
+    }
+
+    private createIndicmentForm(): FormGroup {
+        return this.fb.group({
+            IndictmentID: [null],
+            IsProve: [null],
+            IsActive: [null],
+            GuiltBaseID: [null],
+        })
+    }
+
+    private createDocumentForm(): FormGroup {
+        return this.fb.group({
+            DocumentID: [null],
+            ReferenceCode: [null],
+            FilePath: [null],
+            DataSource: [null],
+            IsActive: [null],
+        })
+    }
+
+    private setItemFormArray(array: any[], formControl: string) {
+        if (array !== undefined && array.length) {
+            const itemFGs = array.map(item => this.fb.group(item));
             const itemFormArray = this.fb.array(itemFGs);
-            this.arrestForm.setControl('ArrestLocale', itemFormArray);
+            this.arrestForm.setControl(formControl, itemFormArray);
         }
     }
 
-    setArrestStaff(locale: ArrestStaff[]) {
-        if (locale) {
-            locale.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
-            const itemFGs = locale.map(item => this.fb.group(item));
-            const itemFormArray = this.fb.array(itemFGs);
-            this.arrestForm.setControl('ArrestStaff', itemFormArray);
-        }
-    }
-
-    active_route() {
+    private active_route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
             if (p['mode'] === 'C') {
@@ -228,7 +297,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
-
             }
 
             if (p['code']) {
@@ -271,13 +339,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
-    }
-
     private getByCon(code: string) {
-        this.arrestService.getByCon(code).then(res => {
-            this.arrestForm.reset({
+        this.arrestService.getByCon(code).then(async res => {
+            await this.arrestForm.reset({
                 ArrestCode: res.ArrestCode,
                 ArrestDate: toLocalNumeric(res.ArrestDate),
                 ArrestTime: res.ArrestTime,
@@ -297,8 +361,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsActive: res.IsActive,
             })
 
-            this.setArrestStaff(res.ArrestStaff);
-            // this.setArrestLocale(res.ArrestLocale)
+            await res.ArrestLocale.map(item => item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`);
+            await res.ArrestStaff.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
+            await res.ArrestLawbreaker.map(item => {
+                item.LawbreakerFullName = `${item.LawbreakerTitleName} ${item.LawbreakerFirstName}`;
+                item.LawbreakerFullName += ` ${item.LawbreakerMiddleName} ${item.LawbreakerLastName}`;
+                item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`
+            });
+
+            this.setItemFormArray(res.ArrestStaff, 'ArrestStaff');
+            this.setItemFormArray(res.ArrestLocale, 'ArrestLocale');
+            this.setItemFormArray(res.ArrestLawbreaker, 'ArrestLawbreaker');
+            this.setItemFormArray(res.ArrestProduct, 'ArrestProduct');
+            this.setItemFormArray(res.ArrestDocument, 'ArrestDocument');
         })
     }
 
@@ -321,10 +396,51 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     }
 
+    private deleteTableRow(form: FormArray, indexForm: number) {
+        if (this.mode === 'C') {
+            form.removeAt(indexForm);
+
+        } else if (this.mode === 'R') {
+            if (confirm(Message.confirmAction)) {
+                form.removeAt(indexForm);
+            }
+        }
+    }
+
     openModal(e) {
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 
+    addStaff() {
+        this.ArrestStaff.push(this.fb.group(new ArrestStaff()));
+    }    
+    
+    addProduct() {
+        this.ArrestProduct.push(this.fb.group(new ArrestProduct()));
+    }
 
+    addDocument() {
+        this.ArrestDocument.value
+        this.ArrestDocument.push(this.fb.group(new ArrestDocument()));
+    }
 
+    viewLawbreaker(id: number) {
+        this.router.navigate([`/arrest/lawbreaker/R/${id}`]);
+    }
+
+    deleteStaff(indexForm: number) {
+        this.deleteTableRow(this.ArrestStaff, indexForm);
+    }
+
+    deleteLawbreaker(indexForm: number) {
+        this.deleteTableRow(this.ArrestLawbreaker, indexForm);
+    }
+
+    deleteProduct(indexForm: number) {
+        this.deleteTableRow(this.ArrestProduct, indexForm);
+    }
+
+    deleteDocument(indexForm: number) {
+        this.deleteTableRow(this.ArrestDocument, indexForm);
+    }
 }

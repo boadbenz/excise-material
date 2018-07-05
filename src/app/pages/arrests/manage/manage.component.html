@@ -22,7 +22,7 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">หมายค้น :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="InvestigationSurveyDocument" class="form-control form-control-sm" readonly>
+                    <input type="text" formControlName="InvestigationSurveyDocument" class="form-control form-control-sm" [readonly]="showEditField">
                     <a href="javaScript:void(0);" class="more text-secondary">
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </a>
@@ -31,7 +31,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ส.ส.2/27 :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="InvestigationCode" class="form-control form-control-sm" readonly>
+                    <input type="text" formControlName="InvestigationCode" class="form-control form-control-sm" [readonly]="showEditField">
                     <a href="javaScript:void(0);" class="more text-secondary">
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </a>
@@ -39,7 +39,7 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่ใบงาน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="ArrestCode" class="form-control form-control-sm" readonly>
+                    <input type="text" formControlName="ArrestCode" class="form-control form-control-sm" [readonly]="showEditField">
                     <a href="javaScript:void(0);" class="more text-secondary">
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </a>
@@ -82,7 +82,7 @@
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มผู้ร่วมจับกุม</button>
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addStaff()">เพิ่มผู้ร่วมจับกุม</button>
                 </div>
             </div>
 
@@ -111,11 +111,12 @@
                                 <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly>
                             </td>
                             <td>
-                                <select formControlName="ContributorID" class="form-control form-control-sm" [disabled]="showEditField">
-                                </select>
+                                <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField">
+                                <!-- <select formControlName="ContributorID" class="form-control form-control-sm" [disabled]="showEditField">
+                                </select> -->
                             </td>
                             <td>
-                                <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField">
+                                <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField" (click)="deleteStaff(i)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -226,21 +227,40 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody formArrayName="ArrestLawbreaker">
+                        <tr *ngFor="let item of ArrestLawbreaker.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{item.get('EntityType').value}}</td>
+                            <td>{{item.get('LawbreakerType').value}}</td>
+                            <td>
+                                <span *ngIf="item.get('EntityType').value == 0">
+                                    {{item.get('CompanyRegistrationNo').value}}
+                                </span>
+                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 0">
+                                    {{item.get('PassportNo').value}}
+                                </span>
+                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 1">
+                                    {{item.get('IDCard').value}}
+                                </span>
+                            </td>
+                            <td>
+                                <span *ngIf="item.get('EntityType').value == 0">
+                                    {{item.get('CompanyFullName').value}}
+                                </span>
+                                <span *ngIf="item.get('EntityType').value == 1">
+                                    {{item.get('LawbreakerFullName').value}}
+                                </span>
+                            </td>
                             <td></td>
                             <td class="text-center">
-                                <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/arrest/lawbreaker/v/xx']" *ngIf="!showEditField">
+                                <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" 
+                                (click)="viewLawbreaker(item.get('LawbreakerID').value)">
                                     <i class="fa fa-eye fa-lg"></i>
                                 </a>
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField">
+                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField"
+                                (click)="deleteLawbreaker(i)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -261,7 +281,8 @@
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มของกลาง</button>
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField"
+                    (click)="addProduct()">เพิ่มของกลาง</button>
                 </div>
             </div>
 
@@ -278,30 +299,30 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">ลำดับ</td>
+                    <tbody formArrayName="ArrestProduct">
+                        <tr *ngFor="let item of ArrestProduct.controls; let i=index;" [formGroupName]="i">
+                            <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" name="" id="" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="ProductDesc" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" name="" id="" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
-                                    <option value=""></option>
-                                </select>
+                                <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField">
+                                <!-- <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                </select> -->
                             </td>
                             <td>
-                                <input type="text" name="" id="" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
-                                    <option value=""></option>
-                                </select>
+                                <input type="text" formControlName="NetVolumeUnit" class="form-control form-control-sm" [readonly]="showEditField">
+                                <!-- <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField"></select> -->
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField">
+                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField"
+                                (click)="deleteProduct(i)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -338,9 +359,9 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center"></td>
+                    <tbody formArrayName="ArrestIndictment">
+                        <tr *ngFor="let item of ArrestIndictment.controls; let i=index;" [formGroupName]="i">
+                            <td class="text-center">{{i+1}}</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -376,19 +397,19 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
-                    <textarea name="" id="" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
+                    <textarea formControlName="Behaviour" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">คำให้การของผู้ต้องหา :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
-                    <textarea name="" id="" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
+                    <textarea formControlName="Testimony" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">การแจ้งสิทธิ :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
-                    <textarea name="" id="" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
+                    <textarea formControlName="Prompt" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
                 </div>
             </div>
         </div>
@@ -403,7 +424,8 @@
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มเอกสารแนบ</button>
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField"
+                    (click)="addDocument()">เพิ่มเอกสารแนบ</button>
                 </div>
             </div>
 
@@ -417,17 +439,21 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">1</td>
+                    <tbody formArrayName="ArrestDocument">
+                        <tr *ngFor="let item of ArrestDocument.controls; let i=index;"  [formGroupName]="i">
+                            <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" name="" id="" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="DocumentID" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" name="" id="" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="FilePath" class="form-control form-control-sm" [readonly]="showEditField">
+                                <a href="javaScript:void(0)" class="text-secondary" style="position: absolute;right: 100px;bottom: 36px;">
+                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                </a>
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField">
+                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" 
+                                (click)="deleteDocument(i)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>

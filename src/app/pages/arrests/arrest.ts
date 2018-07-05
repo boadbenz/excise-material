@@ -3,6 +3,7 @@ import { ArrestIndictment } from './arrest-indictment';
 import { ArrestLocale } from './arrest-locale';
 import { ArrestLawbreaker } from './arrest-lawbreaker';
 import { ArrestProduct } from './arrest-product';
+import { ArrestDocument } from './arrest-document';
 
 export class Arrest {
     public ArrestCode: string;
@@ -27,5 +28,5 @@ export class Arrest {
     public ArrestIndictment: Array<ArrestIndictment>;
     public ArrestLawbreaker: Array<ArrestLawbreaker>;
     public ArrestProduct: Array<ArrestProduct>;
-    public ArrestDocument = [];
+    public ArrestDocument: Array<ArrestDocument>;
 }
