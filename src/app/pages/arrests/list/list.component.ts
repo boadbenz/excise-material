@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
-import { Message } from '../../../config/message';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Message } from 'app/config/message';
+import { toLocalShort } from 'app/config/dateFormat';
+import { pagination } from 'app/config/pagination';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -12,16 +13,19 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class ListComponent implements OnInit, OnDestroy {
 
     private subOnSearch: any;
-
+    paginage = pagination;
     dataTable: any;
     advSearch: any;
 
     arrestList = new Array<Arrest>();
 
+    @ViewChild('arrestTable') arrestTable: ElementRef;
+
     constructor(
         private navService: NavigationService,
         private arrestService: ArrestsService,
-        private router: Router
+        private router: Router,
+        private chRef: ChangeDetectorRef
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -47,7 +51,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearch(Textsearch: any) {
-        this.onSearchComplete(this.arrestService.getByKeyword(Textsearch));
+        this.arrestService.getByKeyword(Textsearch).then(res => this.onSearchComplete(res));
     }
 
     onAdvSearch(form: any) {
@@ -60,30 +64,42 @@ export class ListComponent implements OnInit, OnDestroy {
         } else {
             form.value.DateStartFrom = sDateCompare.getTime();
             form.value.DateStartTo = eDateCompare.getTime();
-            this.onSearchComplete(this.arrestService.getByConAdv(form.value));
+            this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
         }
     }
 
-    onSearchComplete(list: any) {
-        this.arrestList = [];
-
-        if (!list) {
+    onSearchComplete(list: Arrest[]) {
+        if (!list.length) {
             alert(Message.noRecord);
             return false;
         }
 
-        if (Array.isArray(list)) {
-            this.arrestList = list;
-        } else {
-            this.arrestList.push(list);
-        }
+        this.arrestList = [];
+        list.map(p => {
+            p.OccurrenceDate = toLocalShort(p.OccurrenceDate);
+            p.ArrestStaff.map(staff => {
+                staff.FullName = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
+            });
+        })
+        this.arrestList = list;
 
         // set total record
-        // this.invesPaginate.TotalItems = this.arrestList.length;
+        this.paginage.TotalItems = this.arrestList.length;
+
     }
 
-    clickView(invesCode: string) {
-        this.router.navigate([`/investigation/manage/R/${invesCode}`]);
+    clickView(code: string) {
+        this.router.navigate([`/arrest/manage/R/${code}`]);
+    }
+
+    pageChanges(event) {
+        // this.invesPaginate.CurrentPage = event.currentPage;
+        // this.invesPaginate.TotalItems = event.totalItems;
+        // this.invesPaginate.PageSize = event.pageSize;
+        // this.invesPaginate.TotalPageLinkButtons = event.totalPageLinkButtons;
+
+        console.log(this.arrestTable.nativeElement);
+
     }
 
     ngOnDestroy() {

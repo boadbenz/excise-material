@@ -24,6 +24,7 @@ export class PaginationTableComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log(this.TotalItems);
         this.changePage();
     }
 

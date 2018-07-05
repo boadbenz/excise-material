@@ -20,4 +20,5 @@ export class ArrestLocale {
     public ZipCode: string;
     public Policestation: string;
     public IsActive: string;
+    public Region: string;
 }

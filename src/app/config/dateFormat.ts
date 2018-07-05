@@ -13,3 +13,9 @@ export function toLocalNumeric(date: string): string {
     return `${yyyy}-${_mm}-${_dd}`;
 }
 
+export function toLocalShort(date: string): string {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const dd = new Date(date);
+    return dd.toLocaleString('th-TH', options);
+}
+
