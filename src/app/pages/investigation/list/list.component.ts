@@ -6,7 +6,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Investigate } from '../investigate';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
-import { async } from '@angular/core/testing';
 
 @Component({
     selector: 'app-list',

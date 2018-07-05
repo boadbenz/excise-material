@@ -25,6 +25,7 @@ export class PaginationTableService {
      */
     getPagingServiceItems(totalItems: number, currentPage: number, pageSize: number, totalPageLinkButtons: number) {
 
+
         if (totalItems == 0) {
             return {
                 startPage: 0,

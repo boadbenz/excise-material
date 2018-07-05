@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LawbreakerModalModule } from '../lawbreaker-modal/lawbreaker-modal.module';
 import { AllegationModalModule } from '../allegation-modal/allegation-modal.module';
 import { NoticeListModalModule } from '../../notices/notice-list-modal/notice-list-modal.module';
 import { StepWizardModule } from '../../component/step-wizard/step-wizard.module';
+import { ArrestsService } from '../arrests.service';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   {
@@ -27,8 +30,11 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    FormsModule,
     CommonModule,
+    HttpModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     LawbreakerModalModule,
     CardActionsModule,
@@ -38,6 +44,7 @@ const routes: Routes = [
   ],
   declarations: [
     ManageComponent
-  ]
+  ],
+  providers: [ArrestsService]
 })
 export class ManageModule { }

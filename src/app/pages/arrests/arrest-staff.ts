@@ -18,6 +18,7 @@ export class ArrestStaff {
     public OfficeName: string;
     public OfficeShortName: string;
     public ContributorCode: string;
+    public ContributorID: string;
     public IsActive: string;
     public FullName: string;
 }

@@ -12,14 +12,14 @@
                     <label for="" class="col-lg-2 col-sm-3">ใบรับแจ้งความนำจับ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                            <input type="text" name="NoticeCode" class="form-control form-control-sm" placeholder="">
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-3">เลขที่ใบงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                            <input type="text" name="ArrestCode" class="form-control form-control-sm" placeholder="">
                         </div>
                     </div>
 
@@ -29,17 +29,17 @@
                     <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
-                            <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" name="OccurrenceDateFrom" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
 
                             <label for="">&nbsp; ถึง &nbsp;</label>
 
-                            <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" name="OccurrenceDateTo" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-3">ชื่อผู้กล่าวหา :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                            <input type="text" name="StaffName" class="form-control form-control-sm" placeholder="">
                         </div>
                     </div>
                 </div>
@@ -48,14 +48,7 @@
                     <label for="" class="col-lg-2 col-sm-3">หน่วยงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
-                        </div>
-                    </div>
-
-                    <label for="" class="col-lg-2 col-sm-3">เขียนที่ :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-9">
-                        <div class="form-group">
-                            <input type="text" id="" class="form-control form-control-sm" placeholder="">
+                            <input type="text" name="OfficeName" class="form-control form-control-sm" placeholder="">
                         </div>
                     </div>
                 </div>
@@ -76,7 +69,7 @@
     <div class="card-body p-0">
 
         <div class="table-responsive">
-            <table class="table table-sm table-striped">
+            <table #arrestTable class="table table-sm table-striped">
                 <thead>
                     <tr>
                         <th class="text-center">ลำดับ</th>
@@ -95,13 +88,13 @@
                         <td>{{item.ArrestCode}}</td>
                         <td class="text-center">{{item.OccurrenceDate}}</td>
                         <td>
-                            <div *ngFor="let staff of item.ArrestStaff;">{{staff.FirstName}}</div>
+                            <div *ngFor="let staff of item.ArrestStaff;">{{staff.FullName}}</div>
                         </td>
                         <td>
                             <div *ngFor="let staff of item.ArrestStaff;">{{staff.DepartmentName}}</div>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.NoticeCode)">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.ArrestCode)">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
@@ -112,26 +105,12 @@
         </div>
     </div>
     <div class="card-footer card-footer-unset">
-        <div class="row justify-content-between m-l-5">
-            <div clas="col">
-                <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
-                    << </a>
-                        <label> หน้าที่
-                            <select>
-                                <option value="1">1</option>
-                            </select> จาก 1 หน้า</label>
-                        <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
-                        รายการที่ 1 - 1 จาก 1 รายการ
-            </div>
-            <div class="col col-lg-3 text-right">
-                <label>แสดง
-                    <select>
-                        <option (click)="numPage = 5">5</option>
-                        <option (click)="numPage = 10">10</option>
-                        <option (click)="numPage = 15">15</option>
-                        <option (click)="numPage = 20">20</option>
-                    </select> รายการ</label>
-            </div>
-        </div>
+        <app-pagination-table 
+            [TotalItems]="paginage.TotalItems" 
+            [CurrentPage]="paginage.CurrentPage" 
+            [PageSize]="paginage.PageSize"
+            [TotalPageLinkButtons]="paginage.TotalPageLinkButtons" 
+            [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
+            (onPageChange)="pageChanges($event)"></app-pagination-table>
     </div>
 </div>

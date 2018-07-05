@@ -23,7 +23,7 @@ export class ArrestsService {
         const url = `${appConfig.api7788}/ArrestgetByKeyword`;
 
         try {
-            let res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             return res.ResponseData as Arrest[];
         } catch (error) {
             await alert(error);
@@ -35,12 +35,23 @@ export class ArrestsService {
         const url = `${appConfig.api7788}/ArrestgetByConAdv`;
 
         try {
-            let res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             return res.ResponseData as Arrest[];
         } catch (error) {
             await alert(error);
         }
+    }
 
+    async getByCon(ArrestCode: string): Promise<Arrest> {
+        const params = { ArrestCode };
+        const url = `${appConfig.api7788}/ArrestgetByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData as Arrest;
+        } catch (error) {
+            await alert(error);
+        }
     }
 
     // get getList() {
