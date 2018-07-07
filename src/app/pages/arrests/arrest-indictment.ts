@@ -1,4 +1,4 @@
-import { OpsArrestIndicmentDetailCollection } from "./ops-arrest-indicment-detail-collection";
+import { OpsArrestIndicmentDetailCollection } from './ops-arrest-indicment-detail-collection';
 
 export class ArrestIndictment {
     public IndictmentID: number;

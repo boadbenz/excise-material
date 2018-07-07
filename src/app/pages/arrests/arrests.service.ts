@@ -54,6 +54,78 @@ export class ArrestsService {
         }
     }
 
+    async updDelete(ArrestCode: string): Promise<any> {
+        const params = { ArrestCode };
+        const url = `${appConfig.api7788}/ArrestupdDelete`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async staffupdDelete(StaffID: string): Promise<any> {
+        const params = { StaffID };
+        const url = `${appConfig.api7788}/ArrestStaffupdDelete`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async lawbreakerupdDelete(LawbreakerID: string): Promise<any> {
+        const params = { LawbreakerID };
+        const url = `${appConfig.api7788}/ArrestLawbreakerupdDelete`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async productupdDelete(ProductID: string): Promise<any> {
+        const params = { ProductID };
+        const url = `${appConfig.api7788}/ArrestProductupdDelete`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async indicmentupdDelete(IndicmentID: string): Promise<any> {
+        const params = { IndicmentID };
+        const url = `${appConfig.api7788}/ArrestIndicmentupdDelete`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async updByCon(Arrest: Arrest): Promise<any> {
+        const params = Arrest;
+        const url = `${appConfig.api7788}/ArrestupdByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
     // get getList() {
     //     this.arrestList = [
     //         {

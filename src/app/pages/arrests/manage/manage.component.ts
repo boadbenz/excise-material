@@ -9,6 +9,7 @@ import { ArrestStaff, Contributor } from '../arrest-staff';
 import { Message } from 'app/config/message';
 import { ArrestProduct } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
+import { ArrestIndictment } from '../arrest-indictment';
 
 @Component({
     selector: 'app-manage',
@@ -373,6 +374,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setItemFormArray(res.ArrestLocale, 'ArrestLocale');
             this.setItemFormArray(res.ArrestLawbreaker, 'ArrestLawbreaker');
             this.setItemFormArray(res.ArrestProduct, 'ArrestProduct');
+            this.setItemFormArray(res.ArrestIndictment, 'ArrestIndictment');
             this.setItemFormArray(res.ArrestDocument, 'ArrestDocument');
         })
     }
@@ -393,7 +395,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private onDelete() {
-
+        this.arrestService.updDelete(this.arrestCode).then(res => {
+            // tslint:disable-next-line:triple-equals
+            if (res.IsSuccess == true) {
+                alert(Message.saveComplete);
+            } else {
+                alert(Message.saveError);
+            }
+        })
     }
 
     private deleteTableRow(form: FormArray, indexForm: number) {
@@ -419,9 +428,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ArrestProduct.push(this.fb.group(new ArrestProduct()));
     }
 
-    addDocument() {
-        console.log(this.ArrestDocument.value);
+    addIndicment() {
+        this.ArrestIndictment.push(this.fb.group(new ArrestIndictment()));
+    }
 
+    addDocument() {
         this.ArrestDocument.push(this.fb.group(new ArrestDocument()));
     }
 
@@ -429,19 +440,84 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.router.navigate([`/arrest/lawbreaker/R/${id}`]);
     }
 
-    deleteStaff(indexForm: number) {
-        this.deleteTableRow(this.ArrestStaff, indexForm);
+    deleteStaff(indexForm: number, staffId: string) {
+        if (this.mode === 'C') {
+            this.ArrestStaff.removeAt(indexForm);
+
+        } else if (this.mode === 'R') {
+            if (confirm(Message.confirmAction)) {
+                this.arrestService.staffupdDelete(staffId).then(res => {
+                    // tslint:disable-next-line:triple-equals
+                    if (res.IsSuccess == true) {
+                        this.ArrestStaff.removeAt(indexForm);
+                    } else {
+                        alert(Message.saveError);
+                    }
+                })
+            }
+        }
     }
 
-    deleteLawbreaker(indexForm: number) {
-        this.deleteTableRow(this.ArrestLawbreaker, indexForm);
+    deleteLawbreaker(indexForm: number, lawbreakerId: string) {
+        if (this.mode === 'C') {
+            this.ArrestLawbreaker.removeAt(indexForm);
+
+        } else if (this.mode === 'R') {
+            if (confirm(Message.confirmAction)) {
+                this.arrestService.lawbreakerupdDelete(lawbreakerId).then(res => {
+                    // tslint:disable-next-line:triple-equals
+                    if (res.IsSuccess == true) {
+                        this.ArrestLawbreaker.removeAt(indexForm);
+                    } else {
+                        alert(Message.saveError);
+                    }
+                })
+            }
+        }
     }
 
-    deleteProduct(indexForm: number) {
-        this.deleteTableRow(this.ArrestProduct, indexForm);
+    deleteProduct(indexForm: number, productId: string) {
+        if (this.mode === 'C') {
+            this.ArrestProduct.removeAt(indexForm);
+
+        } else if (this.mode === 'R') {
+            if (confirm(Message.confirmAction)) {
+                this.arrestService.productupdDelete(productId).then(res => {
+                    // tslint:disable-next-line:triple-equals
+                    if (res.IsSuccess == true) {
+                        this.ArrestProduct.removeAt(indexForm);
+                    } else {
+                        alert(Message.saveError);
+                    }
+                })
+            }
+        }
+    }
+
+    deleteIndicment(indexForm: number, indicmtmentId: string) {
+        if (this.mode === 'C') {
+            this.ArrestIndictment.removeAt(indexForm);
+
+        } else if (this.mode === 'R') {
+            if (confirm(Message.confirmAction)) {
+                this.arrestService.indicmentupdDelete(indicmtmentId).then(res => {
+                    // tslint:disable-next-line:triple-equals
+                    if (res.IsSuccess == true) {
+                        this.ArrestIndictment.removeAt(indexForm);
+                    } else {
+                        alert(Message.saveError);
+                    }
+                })
+            }
+        }
     }
 
     deleteDocument(indexForm: number) {
         this.deleteTableRow(this.ArrestDocument, indexForm);
+    }
+
+    handleArrestDocInput(file: FileList, indexForm: number) {
+        // this.ArrestDocument.patchValue({
+        // })
     }
 }

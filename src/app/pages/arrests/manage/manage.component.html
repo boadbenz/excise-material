@@ -66,7 +66,7 @@
                     <div class="form-group input-group">
                         <input type="date" formControlName="OccurrenceDate" class="form-control form-control-sm" [readonly]="showEditField">
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
-                        <input type="text" แ="OccurrenceTime" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="OccurrenceTime" class="form-control form-control-sm" [readonly]="showEditField">
                     </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                                 </select> -->
                             </td>
                             <td>
-                                <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField" (click)="deleteStaff(i)">
+                                <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField" (click)="deleteStaff(i, item.get('StaffID').value)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -173,12 +173,6 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="hidden" formControlName="SubDistrictCode">
-                        <input type="hidden" formControlName="SubDistrict">
-                        <input type="hidden" formControlName="DistrictCode">
-                        <input type="hidden" formControlName="District">
-                        <input type="hidden" formControlName="ProvinceCode">
-                        <input type="hidden" formControlName="Province">
                         <input type="text" formControlName="Region" class="form-control form-control-sm" [readonly]="showEditField">
                     </div>
                 </div>
@@ -260,7 +254,7 @@
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField"
-                                (click)="deleteLawbreaker(i)">
+                                (click)="deleteLawbreaker(i, item.get('LawbreakerID').value)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -322,7 +316,7 @@
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField"
-                                (click)="deleteProduct(i)">
+                                (click)="deleteProduct(i, item.get('ProductID').value)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -373,7 +367,8 @@
 
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField">
+                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" 
+                                (click)="deleteIndicment(i, item.get('IndictmentID').value)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
