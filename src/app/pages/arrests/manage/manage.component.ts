@@ -5,7 +5,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { toLocalNumeric } from 'app/config/dateFormat';
-import { ArrestStaff } from '../arrest-staff';
+import { ArrestStaff, Contributor } from '../arrest-staff';
 import { Message } from 'app/config/message';
 import { ArrestProduct } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
@@ -413,14 +413,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     addStaff() {
         this.ArrestStaff.push(this.fb.group(new ArrestStaff()));
-    }    
-    
+    }
+
     addProduct() {
         this.ArrestProduct.push(this.fb.group(new ArrestProduct()));
     }
 
     addDocument() {
-        this.ArrestDocument.value
+        console.log(this.ArrestDocument.value);
+
         this.ArrestDocument.push(this.fb.group(new ArrestDocument()));
     }
 

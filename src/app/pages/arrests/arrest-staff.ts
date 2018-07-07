@@ -22,3 +22,18 @@ export class ArrestStaff {
     public IsActive = '';
     public FullName = '';
 }
+
+class Types {
+    public value: string;
+    public text: string;
+}
+
+export const Contributor: Types[] = [
+    {
+        value: '1',
+        text: 'contributor1'
+    }, {
+        value: '2',
+        text: 'contributor2'
+    }
+]

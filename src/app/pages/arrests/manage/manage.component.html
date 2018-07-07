@@ -446,10 +446,10 @@
                                 <input type="text" formControlName="DocumentID" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="FilePath" class="form-control form-control-sm" [readonly]="showEditField">
-                                <a href="javaScript:void(0)" class="text-secondary" style="position: absolute;right: 100px;bottom: 36px;">
+                                <input type="file" formControlName="FilePath" class="dropify" [readonly]="showEditField">
+                                <!-- <a href="javaScript:void(0)" class="text-secondary" style="position: absolute;right: 100px;bottom: 36px;">
                                     <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                                </a>
+                                </a> -->
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" 

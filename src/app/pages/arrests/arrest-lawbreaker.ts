@@ -53,7 +53,7 @@ export class ArrestLawbreaker {
     public ArrestLawbreakerAddress: Array<ArrestLawbreakerAddress>
 }
 
-export class Types {
+class Types {
     public value: string;
     public text: string;
 }
