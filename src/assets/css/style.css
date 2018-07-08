@@ -735,6 +735,7 @@ Table Cell
   border-color: #f3f1f1; }
 
 .table thead th, .table th {
+  vertical-align: middle;
   font-weight: 500; }
 
 .table-hover tbody tr:hover {
