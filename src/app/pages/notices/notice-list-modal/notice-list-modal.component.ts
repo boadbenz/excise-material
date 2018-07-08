@@ -20,10 +20,10 @@ export class NoticeListModalComponent implements OnInit {
 
   constructor(private noticeServie: NoticeService) {
 
-   }
+  }
 
   ngOnInit() {
-    this.noticeList = this.noticeServie.getList;
+    // this.noticeList = this.noticeServie.getList;
   }
 
   private onDetactTable() {
@@ -38,6 +38,10 @@ export class NoticeListModalComponent implements OnInit {
     // this._chRef.detectChanges();
 
     // this.dataTable = table.DataTable(options);
+  }
+
+  onSearchAdv(f: any) {
+
   }
 
   checkAll() {

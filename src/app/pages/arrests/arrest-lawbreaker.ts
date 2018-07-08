@@ -1,4 +1,4 @@
-import { ArrestLawbreakerAddress } from "./arrest-lawbreaker-address";
+import { ArrestLawbreakerAddress } from './arrest-lawbreaker-address';
 
 export class ArrestLawbreaker {
     public LawbreakerID: number;
@@ -11,6 +11,7 @@ export class ArrestLawbreaker {
     public CompanyOtherName: string;
     public CompanyRegistrationNo: string;
     public CompanyLicenseNo: string;
+    public CompanyFullName: string;
     public FoundedDate: string;
     public LicenseDateForm: string;
     public LicenseDateTo: string;
@@ -24,6 +25,7 @@ export class ArrestLawbreaker {
     public LawbreakerLastName: string;
     public LawbreakerOtherName: string;
     public LawbreakerDesc: string;
+    public LawbreakerFullName: string;
     public IDCard: string;
     public PassportNo: string;
     public VISAType: number;
@@ -49,4 +51,67 @@ export class ArrestLawbreaker {
     public PhotoDesc: string;
     public IsActive: number;
     public ArrestLawbreakerAddress: Array<ArrestLawbreakerAddress>
+    public IsNewItem: boolean;
 }
+
+class Types {
+    public value: string;
+    public text: string;
+}
+
+export const VISATypes: Types[] = [
+    {
+        value: '1',
+        text: 'ประเภทคนเดินทางผ่านราชอาณาจักร (Transit Visa)'
+    }, {
+        value: '2',
+        text: 'ประเภทนักท่องเที่ยว (Tourist Visa)'
+    }
+];
+
+export const EntityTypes: Types[] = [
+    {
+        value: '1',
+        text: 'บุคคลธรรมดา'
+    }, {
+        value: '2',
+        text: 'นิติบุคคล'
+    }
+]
+
+export const GenderTypes: Types[] = [
+    {
+        value: 'M',
+        text: 'ชาย'
+    }, {
+        value: 'F',
+        text: 'หญิง'
+    }
+]
+
+export const LawbreakerTypes: Types[] = [
+    {
+        value: '0',
+        text: 'ชาวต่างชาติ'
+    }, {
+        value: '1',
+        text: 'ชาวไทย'
+    }
+]
+
+export const MaritalStatus: Types[] = [
+    {
+        value: '1',
+        text: 'โสด'
+    }, {
+        value: '2',
+        text: 'สมรส'
+    }, {
+        value: '3',
+        text: 'หย่าร้าง'
+    }, {
+        value: '4',
+        text: 'หม้าย'
+    },
+]
+

@@ -1,4 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
+import { ArrestLawbreaker } from '../arrest-lawbreaker';
+import { ArrestProduct } from '../arrest-product';
+import { ArrestIndictment } from '../arrest-indictment';
 
 @Component({
     selector: 'app-allegation-modal',
@@ -9,6 +12,11 @@ export class AllegationModalComponent implements OnInit {
 
     isOpen = false;
     isCheckAll = false;
+
+    @Input() mode: string;
+    @Input() lawbreaker = new Array<ArrestLawbreaker>();
+    @Input() product = new Array<ArrestProduct>();
+    @Input() indicment = new Array<ArrestIndictment>();
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();

@@ -1,24 +1,40 @@
 export class ArrestStaff {
-    public StaffID: string;
-    public ProgramCode: string;
-    public ProcessCode: string;
-    public ArrestCode: string;
-    public StaffCode: string;
-    public TitleName: string;
-    public FirstName: string;
-    public LastName: string;
-    public PositionCode: string;
-    public PositionName: string;
-    public PosLevel: string;
-    public PosLevelName: string;
-    public DepartmentCode: string;
-    public DepartmentName: string;
-    public DepartmentLevel: string;
-    public OfficeCode: string;
-    public OfficeName: string;
-    public OfficeShortName: string;
-    public ContributorCode: string;
-    public ContributorID: string;
-    public IsActive: string;
-    public FullName: string;
+    public StaffID = '';
+    public ProgramCode = '';
+    public ProcessCode = '';
+    public ArrestCode = '';
+    public StaffCode = '';
+    public TitleName = '';
+    public FirstName = '';
+    public LastName = '';
+    public PositionCode = '';
+    public PositionName = '';
+    public PosLevel = '';
+    public PosLevelName = '';
+    public DepartmentCode = '';
+    public DepartmentName = '';
+    public DepartmentLevel = '';
+    public OfficeCode = '';
+    public OfficeName = '';
+    public OfficeShortName = '';
+    public ContributorCode = '';
+    public ContributorID = '';
+    public IsActive = '';
+    public FullName = '';
+    public IsNewItem: boolean;
 }
+
+class Types {
+    public value: string;
+    public text: string;
+}
+
+export const Contributor: Types[] = [
+    {
+        value: '1',
+        text: 'contributor1'
+    }, {
+        value: '2',
+        text: 'contributor2'
+    }
+]

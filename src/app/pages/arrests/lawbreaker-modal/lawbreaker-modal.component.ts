@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { LawbreakerTypes, EntityTypes } from '../arrest-lawbreaker';
 
 @Component({
     selector: 'app-lawbreaker-modal',
@@ -12,27 +13,23 @@ export class LawbreakerModalComponent implements OnInit {
     isCheckAll = false;
     advSearch = false;
 
+    lawbreakerType = LawbreakerTypes;
+    entityType = EntityTypes;
+
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
 
-    constructor(private _chRef: ChangeDetectorRef) { }
+    constructor() { }
 
     ngOnInit() {
         this.onDetactTable();
     }
 
     private onDetactTable() {
-        //   const table: any = $('table#suspectModal');
+    }
 
-        //   if ($.fn.dataTable.isDataTable('table#suspectModal')) {
+    onSearchAdv(f: any) {
 
-        //       this.dataTable = table.DataTable();
-        //       this.dataTable.destroy();
-        //   }
-
-        //   this._chRef.detectChanges();
-
-        //   this.dataTable = table.DataTable(options);
     }
 
     checkAll() {
@@ -40,7 +37,7 @@ export class LawbreakerModalComponent implements OnInit {
     }
 
     toggle(e) {
-       this.advSearch = !this.advSearch;
+        this.advSearch = !this.advSearch;
     }
 
     dismiss(e: any) {

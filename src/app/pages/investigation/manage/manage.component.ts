@@ -200,8 +200,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onDelete() {
         if (confirm(Message.confirmAction)) {
             this.invesService.updDelete(this.investCode).subscribe(result => {
+                // tslint:disable-next-line:triple-equals
                 if (result.IsSuccess == 'True') {
                     alert(Message.saveComplete);
+                // tslint:disable-next-line:triple-equals
                 } else if (result.IsSuccess == 'False') {
                     alert(Message.saveError);
                 }
