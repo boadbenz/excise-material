@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationTableComponent } from './pagination-table.component';
-import { PaginationTableService } from './pagination-table.service';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -10,7 +9,6 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   declarations: [PaginationTableComponent],
-  exports:[PaginationTableComponent],
-  providers: [PaginationTableService]
+  exports: [PaginationTableComponent]
 })
 export class PaginationTableModule { }

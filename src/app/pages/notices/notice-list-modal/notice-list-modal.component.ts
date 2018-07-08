@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { NoticeService } from '../notice.service';
-import { NoticeList } from '../list/notice-list';
+import { pagination } from 'app/config/pagination';
 
 @Component({
   selector: 'app-notice-list-modal',
@@ -13,7 +13,7 @@ export class NoticeListModalComponent implements OnInit {
   isCheckAll = false;
   advSearch = false;
 
-  noticeList = new Array<NoticeList>();
+  paginage = pagination;
 
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
@@ -23,21 +23,6 @@ export class NoticeListModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.noticeList = this.noticeServie.getList;
-  }
-
-  private onDetactTable() {
-    // const table: any = $('table#suspectModal');
-
-    // if ($.fn.dataTable.isDataTable('table#suspectModal')) {
-
-    //   this.dataTable = table.DataTable();
-    //   this.dataTable.destroy();
-    // }
-
-    // this._chRef.detectChanges();
-
-    // this.dataTable = table.DataTable(options);
   }
 
   onSearchAdv(f: any) {
@@ -58,6 +43,10 @@ export class NoticeListModalComponent implements OnInit {
 
   close(e: any) {
     this.c.emit(e);
+  }
+
+  async pageChanges(event) {
+    // this.invesList = await this.investigate.slice(event.startIndex - 1, event.endIndex);
   }
 
 }

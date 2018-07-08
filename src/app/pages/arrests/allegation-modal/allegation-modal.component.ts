@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, Input } fro
 import { ArrestLawbreaker } from '../arrest-lawbreaker';
 import { ArrestProduct } from '../arrest-product';
 import { ArrestIndictment } from '../arrest-indictment';
+import { pagination } from 'app/config/pagination';
 
 @Component({
     selector: 'app-allegation-modal',
@@ -12,6 +13,8 @@ export class AllegationModalComponent implements OnInit {
 
     isOpen = false;
     isCheckAll = false;
+
+    paginage = pagination;
 
     @Input() mode: string;
     @Input() lawbreaker = new Array<ArrestLawbreaker>();
@@ -24,21 +27,6 @@ export class AllegationModalComponent implements OnInit {
     constructor(private _chRef: ChangeDetectorRef) { }
 
     ngOnInit() {
-        this.onDetactTable();
-    }
-
-    private onDetactTable() {
-        //   const table: any = $('table#allegation');
-
-        //   if ($.fn.dataTable.isDataTable('table#allegation')) {
-
-        //       this.dataTable = table.DataTable();
-        //       this.dataTable.destroy();
-        //   }
-
-        //   this._chRef.detectChanges();
-
-        //   this.dataTable = table.DataTable(options);
     }
 
     checkAll() {
@@ -57,5 +45,7 @@ export class AllegationModalComponent implements OnInit {
         this.c.emit(e);
     }
 
-
+    async pageChanges(event: any) {
+        // this.arrestList = await this.arrest.slice(event.startIndex - 1, event.endIndex);
+    }
 }

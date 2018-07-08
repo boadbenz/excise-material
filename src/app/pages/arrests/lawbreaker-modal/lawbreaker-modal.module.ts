@@ -4,6 +4,7 @@ import { LawbreakerModalComponent } from './lawbreaker-modal.component';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 
 @NgModule({
   imports: [
@@ -11,7 +12,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    CardActionsModule
+    CardActionsModule,
+    PaginationTableModule
   ],
   declarations: [LawbreakerModalComponent],
   exports: [

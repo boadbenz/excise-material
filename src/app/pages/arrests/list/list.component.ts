@@ -18,8 +18,10 @@ export class ListComponent implements OnInit, OnDestroy {
     advSearch: any;
 
     arrestList = new Array<Arrest>();
+    arrest = new Array<Arrest>();
 
     @ViewChild('arrestTable') arrestTable: ElementRef;
+
 
     constructor(
         private navService: NavigationService,
@@ -56,8 +58,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onAdvSearch(form: any) {
 
-        const sDateCompare = new Date(form.value.DateStartFrom);
-        const eDateCompare = new Date(form.value.DateStartTo);
+        const sDateCompare = new Date(form.value.OccurrenceDateFrom);
+        const eDateCompare = new Date(form.value.OccurrenceDateTo);
 
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkDate);
@@ -74,17 +76,18 @@ export class ListComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        this.arrestList = [];
-        list.map(p => {
+        this.arrest = [];
+        list.map((p, i) => {
+            p.RowsId = i + 1;
             p.OccurrenceDate = toLocalShort(p.OccurrenceDate);
             p.ArrestStaff.map(staff => {
                 staff.FullName = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
             });
         })
-        this.arrestList = list;
+        this.arrest = list;
 
         // set total record
-        this.paginage.TotalItems = this.arrestList.length;
+        this.paginage.TotalItems = this.arrest.length;
 
     }
 
@@ -92,14 +95,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.router.navigate([`/arrest/manage/R/${code}`]);
     }
 
-    pageChanges(event) {
-        // this.invesPaginate.CurrentPage = event.currentPage;
-        // this.invesPaginate.TotalItems = event.totalItems;
-        // this.invesPaginate.PageSize = event.pageSize;
-        // this.invesPaginate.TotalPageLinkButtons = event.totalPageLinkButtons;
-
-        console.log(this.arrestTable.nativeElement);
-
+    async pageChanges(event: any) {
+        this.arrestList = await this.arrest.slice(event.startIndex - 1, event.endIndex);
     }
 
     ngOnDestroy() {

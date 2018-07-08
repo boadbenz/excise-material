@@ -54,27 +54,13 @@
             </table>
         </div>
         <div class="card-footer card-footer-unset">
-            <div class="row justify-content-between m-l-5">
-                <div clas="col">
-                    <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
-                        << </a>
-                            <label> หน้าที่
-                                <select>
-                                    <option value="1">1</option>
-                                </select> จาก 1 หน้า</label>
-                            <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
-                            รายการที่ 1 - 1 จาก 1 รายการ
-                </div>
-                <div class="col col-lg-3 text-right">
-                    <label>แสดง
-                        <select>
-                            <option (click)="numPage = 5">5</option>
-                            <option (click)="numPage = 10">10</option>
-                            <option (click)="numPage = 15">15</option>
-                            <option (click)="numPage = 20">20</option>
-                        </select> รายการ</label>
-                </div>
-            </div>
+            <app-pagination-table 
+                [TotalItems]="paginage.TotalItems" 
+                [CurrentPage]="paginage.CurrentPage" 
+                [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
+                (onPageChange)="pageChanges($event)">
+            </app-pagination-table>
         </div>
     </div>
 

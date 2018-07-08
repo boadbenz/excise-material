@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
-import { NoticeList } from './notice-list';
 import { Message } from 'app/config/message';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Notice } from '../notice';
+import { pagination } from 'app/config/pagination';
 
 @Component({
     selector: 'app-list',
@@ -16,8 +16,9 @@ export class ListComponent implements OnInit {
     private subOnSearch: any;
     advSearch: any;
 
+    paginage = pagination;
+
     notice = new Array<Notice>();
-    noticeList = new Array<NoticeList>();
 
     @ViewChild('noticeTable') noticeTable: ElementRef;
 
@@ -98,13 +99,7 @@ export class ListComponent implements OnInit {
         this._router.navigate([`/notice/manage/v/${noticeCode}`]);
     }
 
-    pageChanges(event) {
-        // this.invesPaginate.CurrentPage = event.currentPage;
-        // this.invesPaginate.TotalItems = event.totalItems;
-        // this.invesPaginate.PageSize = event.pageSize;
-        // this.invesPaginate.TotalPageLinkButtons = event.totalPageLinkButtons;
-
-        console.log(this.noticeTable.nativeElement);
+    async pageChanges(event) {
 
     }
 
