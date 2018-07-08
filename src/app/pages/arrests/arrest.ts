@@ -6,6 +6,7 @@ import { ArrestProduct } from './arrest-product';
 import { ArrestDocument } from './arrest-document';
 
 export class Arrest {
+    public RowsId: number;
     public ArrestCode: string;
     public ArrestDate: string;
     public ArrestTime: string;

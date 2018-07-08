@@ -83,7 +83,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of arrestList; let i=index">
-                        <td class="text-center">{{i+1}}</td>
+                        <td class="text-center">{{item.RowsId}}</td>
                         <td>{{item.NoticeCode}}</td>
                         <td>{{item.ArrestCode}}</td>
                         <td class="text-center">{{item.OccurrenceDate}}</td>
@@ -109,8 +109,8 @@
             [TotalItems]="paginage.TotalItems" 
             [CurrentPage]="paginage.CurrentPage" 
             [PageSize]="paginage.PageSize"
-            [TotalPageLinkButtons]="paginage.TotalPageLinkButtons" 
             [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
-            (onPageChange)="pageChanges($event)"></app-pagination-table>
+            (onPageChange)="pageChanges($event)">
+        </app-pagination-table>
     </div>
 </div>

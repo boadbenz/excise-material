@@ -15,8 +15,9 @@ import { Message } from '../../../config/message';
 export class ListComponent implements OnInit, OnDestroy {
 
     advSearch: any;
+    investigate = new Array<Investigate>();
     invesList = new Array<Investigate>();
-    invesPaginate = pagination;
+    paginage = pagination;
     private subOnSearch: any;
 
     @ViewChild('invesTable') invesTable: ElementRef;
@@ -84,7 +85,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearchComplete(list: any) {
-        this.invesList = [];
+        this.investigate = [];
 
         if (!list) {
             alert(Message.noRecord);
@@ -92,26 +93,23 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         if (Array.isArray(list)) {
-            this.invesList = list;
+            this.investigate = list;
         } else {
-            this.invesList.push(list);
+            this.investigate.push(list);
         }
 
+        if (!this.investigate.length) {
+            alert(Message.noRecord);
+        }
         // set total record
-        this.invesPaginate.TotalItems = this.invesList.length;
+        this.paginage.TotalItems = this.investigate.length;
     }
 
     clickView(invesCode: string) {
         this.router.navigate([`/investigation/manage/R/${invesCode}`]);
     }
 
-    pageChanges(event) {
-        // this.invesPaginate.CurrentPage = event.currentPage;
-        // this.invesPaginate.TotalItems = event.totalItems;
-        // this.invesPaginate.PageSize = event.pageSize;
-        // this.invesPaginate.TotalPageLinkButtons = event.totalPageLinkButtons;
-
-        console.log(this.invesTable.nativeElement);
-
+    async pageChanges(event) {
+        this.invesList = await this.investigate.slice(event.startIndex - 1, event.endIndex);
     }
 }

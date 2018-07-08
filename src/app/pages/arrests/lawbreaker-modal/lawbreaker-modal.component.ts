@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { LawbreakerTypes, EntityTypes } from '../arrest-lawbreaker';
+import { pagination } from 'app/config/pagination';
 
 @Component({
     selector: 'app-lawbreaker-modal',
@@ -15,6 +16,8 @@ export class LawbreakerModalComponent implements OnInit {
 
     lawbreakerType = LawbreakerTypes;
     entityType = EntityTypes;
+
+    paginage = pagination;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
@@ -46,6 +49,10 @@ export class LawbreakerModalComponent implements OnInit {
 
     close(e: any) {
         this.c.emit(e);
+    }
+
+    async pageChanges(event: any) {
+        // this.arrestList = await this.arrest.slice(event.startIndex - 1, event.endIndex);
     }
 
 }
