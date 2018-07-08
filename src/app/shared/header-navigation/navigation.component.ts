@@ -108,14 +108,14 @@ export class NavigationComponent implements OnInit {
     }
 
     clickCancel() {
-        // set true
-        this.navService.setEditField(true);
-        this.navService.setEditButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        // set false
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
+        // // set true
+        // this.navService.setEditField(true);
+        // this.navService.setEditButton(true);
+        // this.navService.setPrintButton(true);
+        // this.navService.setDeleteButton(true);
+        // // set false
+        // this.navService.setSaveButton(false);
+        // this.navService.setCancelButton(false);
         // set event click cancel
         this.navService.setOnCancel(true);
     }

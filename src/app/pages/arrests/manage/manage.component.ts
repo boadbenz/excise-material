@@ -10,6 +10,7 @@ import { Message } from 'app/config/message';
 import { ArrestProduct } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment } from '../arrest-indictment';
+import { ArrestLawbreaker } from '../arrest-lawbreaker';
 
 @Component({
     selector: 'app-manage',
@@ -19,7 +20,7 @@ import { ArrestIndictment } from '../arrest-indictment';
 export class ManageComponent implements OnInit, OnDestroy {
 
     private sub: any;
-    private mode: string;
+    mode: string;
     modal: any;
     arrestCode: string;
     showEditField: any;
@@ -298,11 +299,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
-            }
 
-            if (p['code']) {
-                this.arrestCode = p['code'];
-                this.getByCon(p['code']);
+                if (p['code']) {
+                    this.arrestCode = p['code'];
+                    this.getByCon(p['code']);
+                }
             }
         });
     }
@@ -332,6 +333,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.sub = this.navService.onCancel.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnCancel(false);
+                this.router.navigate(['/arrest/list']);
+            }
+        })
+
         this.sub = this.navService.onPrint.subscribe(async status => {
             if (status) {
                 await this.navService.setOnPrint(false);
@@ -360,15 +368,20 @@ export class ManageComponent implements OnInit, OnDestroy {
                 InvestigationSurveyDocument: res.InvestigationSurveyDocument,
                 InvestigationCode: res.InvestigationCode,
                 IsActive: res.IsActive,
-            })
-
+            });
             await res.ArrestLocale.map(item => item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`);
-            await res.ArrestStaff.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
+            await res.ArrestStaff.map(item => {
+                item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`;
+                item.IsNewItem = false;
+            });
             await res.ArrestLawbreaker.map(item => {
                 item.LawbreakerFullName = `${item.LawbreakerTitleName} ${item.LawbreakerFirstName}`;
                 item.LawbreakerFullName += ` ${item.LawbreakerMiddleName} ${item.LawbreakerLastName}`;
-                item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`
+                item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
+                item.IsNewItem = false;
             });
+            await res.ArrestProduct.map(item => item.IsNewItem = false);
+            await res.ArrestIndictment.map(item => item.IsNewItem = false);
 
             this.setItemFormArray(res.ArrestStaff, 'ArrestStaff');
             this.setItemFormArray(res.ArrestLocale, 'ArrestLocale');
@@ -380,18 +393,61 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private onCreate() {
-        // set true
-        this.navService.setEditField(true);
-        this.navService.setEditButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        // set false
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
+        const arrestDate = new Date(this.arrestForm.value.ArrestDate);
+        const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
+        this.arrestForm.value.ArrestDate = arrestDate.toISOString()
+        this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
+
+        console.log(JSON.stringify(this.arrestForm.value));
+        this.arrestService.insAll(this.arrestForm.value).then(res => {
+            // tslint:disable-next-line:triple-equals
+            if (res.IsSuccess == true) {
+                this.onComplete();
+            } else {
+                alert(Message.saveError);
+            }
+        })
     }
 
     private onReviced() {
+        console.log(JSON.stringify(this.arrestForm.value));
+        this.arrestService.updByCon(this.arrestForm.value).then(async res => {
+            if (res.IsSuccess === true) {
+                // this.onComplete();
+                let isSuccess: boolean;
+                const staff = this.ArrestStaff.value;
+                await staff.filter(item => item.IsNewItem === true)
+                    .map(item => {
+                        this.arrestService.staffinsAll(item).then(s => isSuccess = s.IsSuccess);
+                        if (isSuccess === false) { return false; }
+                    });
 
+                const lawbreaker = this.ArrestLawbreaker.value;
+                await lawbreaker.filter(item => item.IsNewItem === true)
+                    .map(item => {
+                        this.arrestService.lawbreakerinsAll(item).then(s => isSuccess = s.IsSuccess);
+                        if (isSuccess === false) { return false; }
+                    });
+
+                const product = this.ArrestProduct.value;
+                await product.filter(item => item.IsNewItem === true)
+                    .map(item => {
+                        this.arrestService.productinsAll(item).then(s => isSuccess = s.IsSuccess);
+                        if (isSuccess === false) { return false; }
+                    });
+
+                const indicment = this.ArrestIndictment.value;
+                await indicment.filter(item => item.IsNewItem === true)
+                    .map(item => {
+                        this.arrestService.indicmentinsAll(item).then(s => isSuccess = s.IsSuccess);
+                        if (isSuccess === false) { return false; }
+                    });
+
+                this.onComplete();
+            } else {
+                alert(Message.saveError);
+            }
+        })
     }
 
     private onDelete() {
@@ -403,6 +459,21 @@ export class ManageComponent implements OnInit, OnDestroy {
                 alert(Message.saveError);
             }
         })
+    }
+
+    private async onComplete() {
+        // set true
+        await this.navService.setEditField(true);
+        await this.navService.setEditButton(true);
+        await this.navService.setPrintButton(true);
+        await this.navService.setDeleteButton(true);
+        // set false
+        await this.navService.setSaveButton(false);
+        await this.navService.setCancelButton(false);
+
+        this.arrestForm.reset();
+
+        alert(Message.saveComplete);
     }
 
     private deleteTableRow(form: FormArray, indexForm: number) {
@@ -421,15 +492,24 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addStaff() {
-        this.ArrestStaff.push(this.fb.group(new ArrestStaff()));
+        // tslint:disable-next-line:prefer-const
+        let staff = new ArrestStaff();
+        staff.IsNewItem = true;
+        this.ArrestStaff.push(this.fb.group(staff));
     }
 
     addProduct() {
-        this.ArrestProduct.push(this.fb.group(new ArrestProduct()));
+        // tslint:disable-next-line:prefer-const
+        let product = new ArrestProduct();
+        product.IsNewItem = true;
+        this.ArrestProduct.push(this.fb.group(product));
     }
 
     addIndicment() {
-        this.ArrestIndictment.push(this.fb.group(new ArrestIndictment()));
+        // tslint:disable-next-line:prefer-const
+        let indicment = new ArrestIndictment();
+        indicment.IsNewItem = true;
+        this.ArrestIndictment.push(this.fb.group(indicment));
     }
 
     addDocument() {

@@ -37,13 +37,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr *ngFor="let indic of indicment; let i=index;">
                         <td class="text-center">
-                            <input name="group5" type="radio" id="radio_34" class="with-gap radio-col-indigo">
-                            <label for="radio_34" class="m-0"></label>
+                            <input name="indicRadio" type="radio" [id]="'indic'+i" class="with-gap radio-col-indigo">
+                            <label [for]="'indic'+i" class="m-0"></label>
                         </td>
-                        <td class="text-center"></td>
-                        <td></td>
+                        <td class="text-center">{{i+1}}</td>
+                        <td>
+                            <span></span>
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -88,15 +90,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr *ngFor="let item of lawbreaker; let i=index;">
                         <td class="text-center">
-                            <input type="checkbox" id="md_checkbox_25" class="filled-in chk-col-indigo" checked="">
-                            <label for="md_checkbox_25" class="m-0"></label>
+                            <input type="checkbox" [id]="'lb' + i" class="filled-in chk-col-indigo">
+                            <label [for]="'lb' + i" class="m-0"></label>
                         </td>
-                        <td class="text-center">1</td>
-                        <td>xxx</td>
+                        <td class="text-center">{{i+1}}</td>
                         <td>
-                            <select name="" id="" class="form-control form-control-sm"></select>
+                            {{item.LawbreakerFullName}}
+                        </td>
+                        <td>
+                            <select name="" id="" class="form-control form-control-sm">
+                                <option value="" disabled selected></option>
+                                <option *ngFor="let p of product" [value]="p.ProductID">{{p.ProductDesc}}</option>
+                            </select>
                         </td>
                     </tr>
                 </tbody>

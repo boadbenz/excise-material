@@ -11,6 +11,7 @@ import { StepWizardModule } from '../../component/step-wizard/step-wizard.module
 import { ArrestsService } from '../arrests.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
 
 const routes: Routes = [
   {
@@ -40,7 +41,8 @@ const routes: Routes = [
     CardActionsModule,
     AllegationModalModule,
     NoticeListModalModule,
-    StepWizardModule
+    StepWizardModule,
+    PrintDocModalModule
   ],
   declarations: [
     ManageComponent

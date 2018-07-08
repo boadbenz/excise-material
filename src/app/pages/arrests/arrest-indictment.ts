@@ -6,4 +6,5 @@ export class ArrestIndictment {
     public IsActive: number;
     public GuiltBaseID: number;
     public OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
+    public IsNewItem: boolean;
 }

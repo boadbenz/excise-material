@@ -1,4 +1,4 @@
-import { ArrestLawbreakerAddress } from "./arrest-lawbreaker-address";
+import { ArrestLawbreakerAddress } from './arrest-lawbreaker-address';
 
 export class ArrestLawbreaker {
     public LawbreakerID: number;
@@ -51,6 +51,7 @@ export class ArrestLawbreaker {
     public PhotoDesc: string;
     public IsActive: number;
     public ArrestLawbreakerAddress: Array<ArrestLawbreakerAddress>
+    public IsNewItem: boolean;
 }
 
 class Types {

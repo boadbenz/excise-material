@@ -21,6 +21,7 @@ export class ArrestStaff {
     public ContributorID = '';
     public IsActive = '';
     public FullName = '';
+    public IsNewItem: boolean;
 }
 
 class Types {

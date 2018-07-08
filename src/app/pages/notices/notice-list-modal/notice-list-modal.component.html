@@ -23,10 +23,14 @@
     </div>
 </div>
 <div class="modal-body font-14">
-    <form *ngIf="advSearch" class="form-horizontal">
+    <form *ngIf="advSearch" #form="ngForm" (ngSubmit)="onSearchAdv(form)" class="form-horizontal">
         <div class="card card-outline-bluish unset-radius">
             <div class="card-header unset-radius">
-                <app-card-actions-close></app-card-actions-close>
+                <div class="card-actions">
+                    <a class="" (click)="toggle()">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
                 <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
             </div>
             <div class="card-body">

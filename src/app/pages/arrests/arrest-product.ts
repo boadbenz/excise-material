@@ -29,4 +29,5 @@ export class ArrestProduct {
     public NetVolume = '';
     public NetVolumeUnit = '';
     public IsActive = '';
+    public IsNewItem: boolean;
 }

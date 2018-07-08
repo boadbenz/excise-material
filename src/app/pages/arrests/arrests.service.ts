@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { appConfig } from '../../app.config';
 import { Arrest } from './arrest';
+import { ArrestStaff } from './arrest-staff';
+import { ArrestLawbreaker } from './arrest-lawbreaker';
+import { ArrestProduct } from './arrest-product';
+import { ArrestIndictment } from './arrest-indictment';
 
 // const options = { year: 'numeric', month: 'short', day: 'numeric' };
 
@@ -114,6 +118,63 @@ export class ArrestsService {
         }
     }
 
+    async insAll(Arrest: Arrest): Promise<any> {
+        const params = Arrest;
+        const url = `${appConfig.api7788}/ArrestinsAll`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async staffinsAll(Staff: ArrestStaff): Promise<any> {
+        const params = Arrest;
+        const url = `${appConfig.api7788}/ArrestStaffinsAll`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async lawbreakerinsAll(lawbreaker: ArrestLawbreaker): Promise<any> {
+        const params = lawbreaker;
+        const url = `${appConfig.api7788}/ArrestLawbreakerinsAll`;
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async productinsAll(product: ArrestProduct): Promise<any> {
+        const params = product;
+        const url = `${appConfig.api7788}/ArrestProductinsAll`;
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async indicmentinsAll(indicment: ArrestIndictment): Promise<any> {
+        const params = indicment;
+        const url = `${appConfig.api7788}/ArrestIndicmentinsAll`;
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res.ResponseData;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
     async updByCon(Arrest: Arrest): Promise<any> {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestupdByCon`;
@@ -125,48 +186,5 @@ export class ArrestsService {
             await alert(error);
         }
     }
-
-    // get getList() {
-    //     this.arrestList = [
-    //         {
-    //             noticeCode: 'LS90806026000002',
-    //             arrestCode: 'TN90806026000002',
-    //             occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
-    //             fullName: 'นายธวัชชัย บิงขุนทด',
-    //             departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-    //             location: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    //         }, {
-    //             noticeCode: 'LS90806026000002',
-    //             arrestCode: 'TN90806026000002',
-    //             occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
-    //             fullName: 'นายธวัชชัย บิงขุนทด',
-    //             departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-    //             location: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    //         }, {
-    //             noticeCode: 'LS90806026000002',
-    //             arrestCode: 'TN90806026000002',
-    //             occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
-    //             fullName: 'นายธวัชชัย บิงขุนทด',
-    //             departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-    //             location: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    //         }, {
-    //             noticeCode: 'LS90806026000002',
-    //             arrestCode: 'TN90806026000002',
-    //             occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
-    //             fullName: 'นายธวัชชัย บิงขุนทด',
-    //             departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-    //             location: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    //         }, {
-    //             noticeCode: 'LS90806026000002',
-    //             arrestCode: 'TN90806026000002',
-    //             occurrenceDate: (new Date).toLocaleDateString('th-TH', options),
-    //             fullName: 'นายธวัชชัย บิงขุนทด',
-    //             departmentName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-    //             location: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    //         }
-    //     ]
-
-    //     return this.arrestList;
-    // }
 
 }

@@ -1,5 +1,9 @@
 <app-step-wizard [sectionId]="2"></app-step-wizard>
 
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+    <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+</ng-template>
+
 <form action="" [formGroup]="arrestForm">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
@@ -247,14 +251,12 @@
                             </td>
                             <td></td>
                             <td class="text-center">
-                                <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" 
-                                (click)="viewLawbreaker(item.get('LawbreakerID').value)">
+                                <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="viewLawbreaker(item.get('LawbreakerID').value)">
                                     <i class="fa fa-eye fa-lg"></i>
                                 </a>
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField"
-                                (click)="deleteLawbreaker(i, item.get('LawbreakerID').value)">
+                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteLawbreaker(i, item.get('LawbreakerID').value)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -275,8 +277,7 @@
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField"
-                    (click)="addProduct()">เพิ่มของกลาง</button>
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addProduct()">เพิ่มของกลาง</button>
                 </div>
             </div>
 
@@ -315,8 +316,7 @@
                                 <!-- <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField"></select> -->
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField"
-                                (click)="deleteProduct(i, item.get('ProductID').value)">
+                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i, item.get('ProductID').value)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -357,7 +357,7 @@
                         <tr *ngFor="let item of ArrestIndictment.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td></td>
-                            <td></td>
+                            <td>{{item.get('GuiltBaseID').value}}</td>
                             <td></td>
                             <td></td>
                             <td>
@@ -367,8 +367,7 @@
 
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" 
-                                (click)="deleteIndicment(i, item.get('IndictmentID').value)">
+                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(i, item.get('IndictmentID').value)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
@@ -377,7 +376,12 @@
                 </table>
 
                 <ng-template #allegation let-c="close" let-d="dismiss">
-                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()"></app-allegation-modal>
+                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()"
+                    [mode]="mode"
+                    [lawbreaker]="ArrestLawbreaker.value"
+                    [product]="ArrestProduct.value"
+                    [indicment]="ArrestIndictment.value"
+                    ></app-allegation-modal>
                 </ng-template>
             </div>
         </div>
@@ -419,8 +423,7 @@
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField"
-                    (click)="addDocument()">เพิ่มเอกสารแนบ</button>
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addDocument()">เพิ่มเอกสารแนบ</button>
                 </div>
             </div>
 
@@ -435,7 +438,7 @@
                         </tr>
                     </thead>
                     <tbody formArrayName="ArrestDocument">
-                        <tr *ngFor="let item of ArrestDocument.controls; let i=index;"  [formGroupName]="i">
+                        <tr *ngFor="let item of ArrestDocument.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
                                 <input type="text" formControlName="DocumentID" class="form-control form-control-sm" [readonly]="showEditField">
@@ -447,8 +450,7 @@
                                 </a> -->
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" 
-                                (click)="deleteDocument(i)">
+                                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteDocument(i)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>
