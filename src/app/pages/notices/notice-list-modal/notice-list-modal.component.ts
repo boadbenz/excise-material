@@ -1,6 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { NoticeService } from '../notice.service';
-import { NoticeList } from '../list/notice-list';
 import { pagination } from 'app/config/pagination';
 
 @Component({
@@ -15,8 +14,6 @@ export class NoticeListModalComponent implements OnInit {
   advSearch = false;
 
   paginage = pagination;
-
-  noticeList = new Array<NoticeList>();
 
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
