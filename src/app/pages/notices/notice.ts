@@ -15,7 +15,6 @@ export class Notice {
     public GroupNameDesc: string;
     public CommunicationChannelID: string;
     public ArrestCode: string;
-    public StaffFullName: string;
     public IsActive: number;
     public Noticestaff: Array<NoticeStaff>;
     public Noticeinformer: Array<NoticeInformer>;

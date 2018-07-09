@@ -18,16 +18,34 @@ export class NoticeService {
             })
     };
 
-    getByKeyword(Textsearch: any) {
+    async getByKeyword(Textsearch: any): Promise<Notice[]> {
         const params = Textsearch;
-        const url = `${appConfig.apiUrl}/NoticegetbyKeyword`;
-        return this.http.post<Notice[]>(url, params, this.httpOptions);
+        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            if (res.IsSuccess === false) {
+                alert(res.ResponseData.Msg);
+                return [];
+            }
+            return res.ResponseData as Notice[];
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
-    getByConAdv(form: any) {
+    async getByConAdv(form: any): Promise<Notice[]> {
         const params = JSON.stringify(form);
-        const url = `${appConfig.apiUrl}/NoticegetByConAdv`;
-        return this.http.post<Notice[]>(url, params, this.httpOptions);
+        const url = `${appConfig.api8082}/NoticegetByConAdv`;
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            if (res.IsSuccess === false) {
+                alert(res.ResponseData.Msg);
+                return [];
+            }
+            return res.ResponseData as Notice[];
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
 }

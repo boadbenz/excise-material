@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
 import { Message } from 'app/config/message';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Notice } from '../notice';
 import { pagination } from 'app/config/pagination';
+import { toLocalShort } from 'app/config/dateFormat';
 
 @Component({
     selector: 'app-list',
@@ -19,6 +19,7 @@ export class ListComponent implements OnInit {
     paginage = pagination;
 
     notice = new Array<Notice>();
+    noticeList = new Array<Notice>();
 
     @ViewChild('noticeTable') noticeTable: ElementRef;
 
@@ -50,10 +51,8 @@ export class ListComponent implements OnInit {
     }
 
     onSearch(Textsearch: any) {
-        this.noticeService.getByKeyword(Textsearch).subscribe(list => {
+        this.noticeService.getByKeyword(Textsearch).then(list => {
             this.onSearchComplete(list)
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
         });
     }
 
@@ -65,42 +64,42 @@ export class ListComponent implements OnInit {
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkDate);
         } else {
-            form.value.DateStartFrom = sDateCompare.getTime();
-            form.value.DateStartTo = eDateCompare.getTime();
-            this.noticeService.getByConAdv(form.value).subscribe(list => {
-
+            form.value.DateStartFrom = sDateCompare.toISOString();
+            form.value.DateStartTo = eDateCompare.toISOString();
+            this.noticeService.getByConAdv(form.value).then(list => {
                 this.onSearchComplete(list)
-
-            }, (err: HttpErrorResponse) => {
-                alert(err.message);
             });
         }
     }
 
-    onSearchComplete(list: any) {
+    async onSearchComplete(list: Notice[]) {
         this.notice = [];
 
-        if (!list) {
+        if (!list.length) {
             alert(Message.noRecord);
             return false;
         }
 
-        if (Array.isArray(list)) {
-            this.notice = list;
-        } else {
-            this.notice.push(list);
-        }
+        await list.map(item => {
+            item.NoticeDate = toLocalShort(item.NoticeDate);
+            item.Noticestaff.map(s => {
+                s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+            });
+            item.NoticeSuspect.map(s => {
+                s.SuspectFullName = `${s.SuspecTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+            })
+        })
 
         // set total record
-        // this.invesPaginate.TotalItems = this.notice.length;
+        this.paginage.TotalItems = this.notice.length;
     }
 
     view(noticeCode: string) {
-        this._router.navigate([`/notice/manage/v/${noticeCode}`]);
+        this._router.navigate([`/notice/manage/R/${noticeCode}`]);
     }
 
     async pageChanges(event) {
-
+        this.noticeList = await this.notice.slice(event.startIndex - 1, event.endIndex);
     }
 
 }
