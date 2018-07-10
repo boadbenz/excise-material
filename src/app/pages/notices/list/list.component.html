@@ -83,10 +83,10 @@
                         <td>{{item.NoticeCode}}</td>
                         <td>{{item.NoticeDate}}</td>
                         <td>
-                            <div *ngFor="let staff of item.Noticestaff;">{{staff.FullName}}</div>
+                            <div *ngFor="let staff of item.NoticeStaff;">{{staff.StaffFullName}}</div>
                         </td>
                         <td>
-                            <div *ngFor="let staff of item.Noticestaff;">{{staff.DepartmentName}}</div>
+                            <div *ngFor="let staff of item.NoticeStaff;">{{staff.DepartmentName}}</div>
                         </td>
                         <td>
                             <div *ngFor="let suspect of item.NoticeSuspect;">{{suspect.SuspectFullName}}</div>

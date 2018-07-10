@@ -16,9 +16,9 @@ export class Notice {
     public CommunicationChannelID: string;
     public ArrestCode: string;
     public IsActive: number;
-    public Noticestaff: Array<NoticeStaff>;
-    public Noticeinformer: Array<NoticeInformer>;
-    public Noticelocale: Array<NoticeLocale>;
+    public NoticeStaff: Array<NoticeStaff>;
+    public NoticeInformer: Array<NoticeInformer>;
+    public NoticeLocale: Array<NoticeLocale>;
     public NoticeProduct: Array<NoticeProduct>;
     public NoticeSuspect: Array<NoticeSuspect>;
 }

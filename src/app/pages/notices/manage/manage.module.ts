@@ -5,6 +5,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
+import { NoticeService } from '../notice.service';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 
 const routes: Routes = [
     {
@@ -28,12 +31,14 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        HttpClientModule,
+        HttpModule,
         RouterModule.forChild(routes),
         CardActionsModule,
         LawbreakerModalModule
     ],
     declarations: [
         ManageComponent
-    ]
+    ], providers: [NoticeService]
 })
 export class ManageModule { }

@@ -48,4 +48,19 @@ export class NoticeService {
         }
     }
 
+    async getByCon(NoticeCode: string): Promise<Notice> {
+        const params = { NoticeCode };
+        const url = `${appConfig.api8082}/NoticegetByCon`;
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            if (res.IsSuccess === false) {
+                alert(res.ResponseData.Msg);
+                return new Notice();
+            }
+            return res.ResponseData as Notice
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
 }

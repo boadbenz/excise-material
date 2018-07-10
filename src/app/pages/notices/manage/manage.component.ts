@@ -5,6 +5,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { NoticeInformer } from '../notice-informer';
 import { NoticeStaff } from '../notice-staff';
+import { NoticeService } from '../notice.service';
 
 @Component({
     selector: 'app-manage',
@@ -15,16 +16,36 @@ export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
     mode: string;
     modal: any;
-
+    noticeCode: string;
     noticeForm: FormGroup;
-
     showEditField: any;
+
+    get NoticeStaffForm(): FormArray {
+        return this.noticeForm.get('NoticeStaffForm') as FormArray;
+    }
+
+    get NoticeInformerForm(): FormArray {
+        return this.noticeForm.get('NoticeInformerForm') as FormArray;
+    }
+
+    get NoticeLocaleForm(): FormArray {
+        return this.noticeForm.get('NoticeLocaleForm') as FormArray;
+    }
+
+    get NoticeProductForm(): FormArray {
+        return this.noticeForm.get('NoticeProductForm') as FormArray;
+    }
+
+    get NoticeSuspectForm(): FormArray {
+        return this.noticeForm.get('NoticeSuspectForm') as FormArray;
+    }
 
     constructor(
         private activeRoute: ActivatedRoute,
         private suspectModalService: NgbModal,
         private fb: FormBuilder,
-        private navService: NavigationService
+        private navService: NavigationService,
+        private noticeService: NoticeService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -40,9 +61,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        this.setNoticeinFormer(new Array<NoticeInformer>());
+        // this.setNoticeinFormer(new Array<NoticeInformer>());
 
-        this.setNoticestaff(new Array<NoticeStaff>());
+        // this.setNoticestaff(new Array<NoticeStaff>());
     }
 
     private active_route() {
@@ -66,6 +87,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
+
+                if (p['code']) {
+                    this.noticeCode = p['code'];
+                    this.getByCon(p['code']);
+                }
             }
         });
     }
@@ -91,54 +117,205 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.noticeForm = this.fb.group({
-            NoticeCode: new FormControl(''),
-            NoticeStationCode: new FormControl(''),
-            NoticeStation: new FormControl(''),
-            NoticeDate: new FormControl(''),
-            NoticeTime: new FormControl(''),
-            NoticeDue: new FormControl(''),
-            NoticeDueDate: new FormControl(''),
-            GroupNameDesc: new FormControl(''),
-            CommunicationChannelID: new FormControl(''),
-            ArrestCode: new FormControl(''),
-            StaffFullName: new FormControl(''),
-            IsActive: new FormControl(''),
-            Noticestaff: this.fb.array([]),
-            Noticeinformer: this.fb.array([]),
-            Noticelocale: this.fb.array([]),
-            NoticeProduct: this.fb.array([]),
-            NoticeSuspect: this.fb.array([])
+            NoticeCode: [null],
+            NoticeStationCode: [null],
+            NoticeStation: [null],
+            NoticeDate: [null],
+            NoticeTime: [null],
+            NoticeDue: [null],
+            NoticeDueDate: [null],
+            GroupNameDesc: [null],
+            CommunicationChannelID: [null],
+            ArrestCode: [null],
+            IsActive: [null],
+            NoticeStaffForm: this.fb.array([this.createStaffForm()]),
+            NoticeInformerForm: this.fb.array([this.createInformerForm()]),
+            NoticeLocaleForm: this.fb.array([this.createLocaleForm()]),
+            NoticeProductForm: this.fb.array([this.createProductForm()]),
+            NoticeSuspectForm: this.fb.array([this.createSuspectForm()])
         })
     }
 
-    get Noticestaff(): FormArray {
-        return this.noticeForm.get('Noticestaff') as FormArray;
+    private createStaffForm(): FormGroup {
+        return this.fb.group({
+            StaffID: [null],
+            ProgramCode: [null],
+            ProcessCode: [null],
+            ArrestCode: [null],
+            StaffCode: [null],
+            TitleName: [null],
+            FirstName: [null],
+            LastName: [null],
+            PositionCode: [null],
+            PositionName: [null],
+            PosLevel: [null],
+            PosLevelName: [null],
+            DepartmentCode: [null],
+            DepartmentName: [null],
+            DepartmentLevel: [null],
+            OfficeCode: [null],
+            OfficeName: [null],
+            OfficeShortName: [null],
+            ContributorID: [null],
+            IsActive: [null],
+            FullName: [null]
+        })
     }
 
-    setNoticestaff(staff: NoticeStaff[]) {
-        if (staff) {
-            // informer.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
-            const itemFGs = staff.map(item => this.fb.group(item));
+    private createInformerForm(): FormGroup {
+        return this.fb.group({
+            InformerID: [null],
+            InformerType: [null],
+            NoticeCode: [null],
+            TitleCode: [null],
+            TitleName: [null],
+            FirstName: [null],
+            LastName: [null],
+            FullName: [null],
+            IDCard: [null],
+            Age: [null],
+            GenderType: [null],
+            Location: [null],
+            Address: [null],
+            Village: [null],
+            Building: [null],
+            Floor: [null],
+            Room: [null],
+            Alley: [null],
+            Road: [null],
+            SubDistrictCode: [null],
+            SubDistrict: [null],
+            DistrictCode: [null],
+            District: [null],
+            ProvinceCode: [null],
+            Province: [null],
+            ZipCode: [null],
+            TelephoneNo: [null],
+            InformerInfo: [null],
+            IsActive: [null],
+        })
+    }
+
+    private createLocaleForm(): FormGroup {
+        return this.fb.group({
+            LocaleID: [null],
+            IsArrest: [null],
+            ArrestCode: [null],
+            GPS: [null],
+            Location: [null],
+            Address: [null],
+            Village: [null],
+            Building: [null],
+            Floor: [null],
+            Room: [null],
+            Alley: [null],
+            Road: [null],
+            SubDistrictCode: [null],
+            SubDistrict: [null],
+            DistrictCode: [null],
+            District: [null],
+            ProvinceCode: [null],
+            Province: [null],
+            ZipCode: [null],
+            Policestation: [null],
+            IsActive: [null],
+            Region: [null]
+        })
+    }
+
+    private createProductForm(): FormGroup {
+        return this.fb.group({
+            ProductID: [null],
+            ProductType: [null],
+            ArrestCode: [null],
+            GroupCode: [null],
+            IsDomestic: [null],
+            ProductCode: [null],
+            BrandCode: [null],
+            BrandNameTH: [null],
+            BrandNameEN: [null],
+            SubBrandCode: [null],
+            SubBrandNameTH: [null],
+            SubBrandNameEN: [null],
+            ModelCode: [null],
+            ModelName: [null],
+            FixNo1: [null],
+            DegreeCode: [null],
+            Degree: [null],
+            SizeCode: [null],
+            Size: [null],
+            SizeUnitCode: [null],
+            SizeUnitName: [null],
+            FixNo2: [null],
+            SequenceNo: [null],
+            ProductDesc: [null],
+            CarNo: [null],
+            Qty: [null],
+            QtyUnit: [null],
+            NetVolume: [null],
+            NetVolumeUnit: [null],
+            IsActive: [null]
+        })
+    }
+
+    private createSuspectForm(): FormGroup {
+        return this.fb.group({
+            SuspectID: [null],
+            SuspectReferenceID: [null],
+            NoticeCode: [null],
+            SuspectTitleName: [null],
+            SuspectFirstName: [null],
+            SuspectLastName: [null],
+            CompanyTitleName: [null],
+            CompanyName: [null],
+            CompanyOtherName: [null],
+            IsActive: [null],
+            SuspectFullName: [null],
+        })
+    }
+
+    private setItemFormArray(array: any[], formControl: string) {
+        if (array !== undefined && array.length) {
+            const itemFGs = array.map(item => this.fb.group(item));
             const itemFormArray = this.fb.array(itemFGs);
-            this.noticeForm.setControl('Noticestaff', itemFormArray);
+            this.noticeForm.setControl(formControl, itemFormArray);
         }
     }
 
-    get Noticeinformer(): FormArray {
-        return this.noticeForm.get('Noticeinformer') as FormArray;
-    }
+    private getByCon(code: string) {
+        this.noticeService.getByCon(code).then(async res => {
+            await this.noticeForm.reset({
+                NoticeCode: res.NoticeCode,
+                NoticeStationCode: res.NoticeStationCode,
+                NoticeStation: res.NoticeStation,
+                NoticeDate: res.NoticeDate,
+                NoticeTime: res.NoticeTime,
+                NoticeDue: res.NoticeDue,
+                NoticeDueDate: res.NoticeDueDate,
+                GroupNameDesc: res.GroupNameDesc,
+                CommunicationChannelID: res.CommunicationChannelID,
+                ArrestCode: res.ArrestCode,
+                IsActive: res.IsActive,
+            });
 
-    setNoticeinFormer(informer: NoticeInformer[]) {
-        if (informer) {
-            // informer.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
-            const itemFGs = informer.map(item => this.fb.group(item));
-            const itemFormArray = this.fb.array(itemFGs);
-            this.noticeForm.setControl('Noticeinformer', itemFormArray);
-        }
-    }
+            await res.NoticeStaff.map(item =>
+                item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+            );
 
-    get Noticelocale(): FormArray {
-        return this.noticeForm.get('Noticelocale') as FormArray;
+            await res.NoticeInformer.map(item => 
+                item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+            );
+
+            await res.NoticeSuspect.map(item => 
+                item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`
+            )
+
+            this.setItemFormArray(res.NoticeStaff, 'NoticeStaff');
+            this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
+            this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+            this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
+            this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
+        })
     }
 
     ngOnDestroy(): void {

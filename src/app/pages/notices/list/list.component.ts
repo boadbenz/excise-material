@@ -21,8 +21,6 @@ export class ListComponent implements OnInit {
     notice = new Array<Notice>();
     noticeList = new Array<Notice>();
 
-    @ViewChild('noticeTable') noticeTable: ElementRef;
-
     constructor(
         private _router: Router,
         private navservice: NavigationService,
@@ -41,7 +39,7 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navservice.showAdvSearch;
     }
 
-    ngOnInit() {
+    ngOnInit() {      
         this.subOnSearch = this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navservice.setOnSearch('');
@@ -51,9 +49,7 @@ export class ListComponent implements OnInit {
     }
 
     onSearch(Textsearch: any) {
-        this.noticeService.getByKeyword(Textsearch).then(list => {
-            this.onSearchComplete(list)
-        });
+        this.noticeService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
     }
 
     onAdvSearch(form: any) {
@@ -66,30 +62,29 @@ export class ListComponent implements OnInit {
         } else {
             form.value.DateStartFrom = sDateCompare.toISOString();
             form.value.DateStartTo = eDateCompare.toISOString();
-            this.noticeService.getByConAdv(form.value).then(list => {
-                this.onSearchComplete(list)
-            });
+            this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
         }
     }
 
     async onSearchComplete(list: Notice[]) {
-        this.notice = [];
 
         if (!list.length) {
             alert(Message.noRecord);
             return false;
         }
 
+        this.notice = [];
         await list.map(item => {
             item.NoticeDate = toLocalShort(item.NoticeDate);
-            item.Noticestaff.map(s => {
+            item.NoticeStaff.map(s => {
                 s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
             });
             item.NoticeSuspect.map(s => {
-                s.SuspectFullName = `${s.SuspecTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+                s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
             })
         })
 
+        this.notice = list
         // set total record
         this.paginage.TotalItems = this.notice.length;
     }
