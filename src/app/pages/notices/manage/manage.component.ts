@@ -6,6 +6,12 @@ import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { NoticeInformer } from '../notice-informer';
 import { NoticeStaff } from '../notice-staff';
 import { NoticeService } from '../notice.service';
+import { regions } from '../../../models/region';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/map';
+import { toLocalNumeric } from 'app/config/dateFormat';
 
 @Component({
     selector: 'app-manage',
@@ -19,6 +25,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     noticeCode: string;
     noticeForm: FormGroup;
     showEditField: any;
+    searching = false;
+
+    region = regions
 
     get NoticeStaffForm(): FormArray {
         return this.noticeForm.get('NoticeStaffForm') as FormArray;
@@ -60,10 +69,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navigate_service();
 
         this.createForm();
-
-        // this.setNoticeinFormer(new Array<NoticeInformer>());
-
-        // this.setNoticestaff(new Array<NoticeStaff>());
     }
 
     private active_route() {
@@ -77,6 +82,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
+
+                this.noticeForm.reset({ NoticeCode: `NT-${(new Date).getTime}` })
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -97,11 +104,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private navigate_service() {
-        this.navService.showFieldEdit.subscribe(p => {
+        this.sub = this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
 
-        this.navService.onSave.subscribe(status => {
+        this.sub = this.navService.onSave.subscribe(status => {
             if (status) {
                 // set true
                 this.navService.setEditField(true);
@@ -125,7 +132,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeDue: [null],
             NoticeDueDate: [null],
             GroupNameDesc: [null],
-            CommunicationChannelID: [null],
+            CommunicationChanelID: [null],
+            DataSource: [null],
+            FilePath: [null],
             ArrestCode: [null],
             IsActive: [null],
             NoticeStaffForm: this.fb.array([this.createStaffForm()]),
@@ -158,7 +167,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeShortName: [null],
             ContributorID: [null],
             IsActive: [null],
-            FullName: [null]
+            StaffFullName: [null]
         })
     }
 
@@ -193,6 +202,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             TelephoneNo: [null],
             InformerInfo: [null],
             IsActive: [null],
+            Region: [null]
         })
     }
 
@@ -254,7 +264,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             QtyUnit: [null],
             NetVolume: [null],
             NetVolumeUnit: [null],
-            IsActive: [null]
+            IsActive: [null],
+            BrandFullName: [null]
         })
     }
 
@@ -288,12 +299,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 NoticeCode: res.NoticeCode,
                 NoticeStationCode: res.NoticeStationCode,
                 NoticeStation: res.NoticeStation,
-                NoticeDate: res.NoticeDate,
+                NoticeDate: toLocalNumeric(res.NoticeDate),
                 NoticeTime: res.NoticeTime,
                 NoticeDue: res.NoticeDue,
-                NoticeDueDate: res.NoticeDueDate,
+                NoticeDueDate: toLocalNumeric(res.NoticeDueDate),
                 GroupNameDesc: res.GroupNameDesc,
-                CommunicationChannelID: res.CommunicationChannelID,
+                CommunicationChanelID: res.CommunicationChanelID,
                 ArrestCode: res.ArrestCode,
                 IsActive: res.IsActive,
             });
@@ -302,21 +313,35 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
             );
 
-            await res.NoticeInformer.map(item => 
+            await res.NoticeInformer.map(item =>
                 item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
             );
 
-            await res.NoticeSuspect.map(item => 
+            await res.NoticeSuspect.map(item =>
                 item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`
             )
 
-            this.setItemFormArray(res.NoticeStaff, 'NoticeStaff');
-            this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
-            this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-            this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
-            this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
+            await res.NoticeProduct.map(item =>
+                item.BrandFullName = `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`
+            )
+
+            this.setItemFormArray(res.NoticeStaff, 'NoticeStaffForm');
+            this.setItemFormArray(res.NoticeInformer, 'NoticeInformerForm');
+            this.setItemFormArray(res.NoticeLocale, 'NoticeLocaleForm');
+            this.setItemFormArray(res.NoticeProduct, 'NoticeProductForm');
+            this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspectForm');
         })
     }
+
+    searchRegion = (text$: Observable<string>) =>
+        text$
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .map(term =>
+                this.region
+                    .map(item => `${item.SubDistrict} / ${item.District} / ${item.Province}`)
+                    .filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)
+            );
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();

@@ -9,7 +9,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่บันทึกแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="NoticeCode" class="form-control form-control-sm" readonly>
+                        <input type="text" formControlName="NoticeCode" class="form-control form-control-sm" [disabled]="showEditField">
                     </div>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่รับแจ้งความ :
@@ -32,31 +32,14 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm" readonly>
+                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm">
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" name="" class="form-control form-control-sm" readonly>
+                    <input type="text" name="" class="form-control form-control-sm">
                 </div>
             </div>
 
             <div class="row">
-                <!-- <label for="" class="col-lg-2 col-sm-4 control-label">เขียนที่ :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" formControlName="NoticeStation" class="form-control form-control-sm" [disabled]="showEditField">
-                    </div>
-                </div>
-
-                <label for="" class="col-lg-2 col-sm-4 control-label">ผู้รับแจ้งความ :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [disabled]="showEditField">
-                </div> -->
-            </div>
-
-            <div class="row" formArrayName="NoticeStaffForm" *ngFor="let item of NoticeStaffForm.controls; let i=index;" [formGroupName]="i">
-
                 <label for="" class="col-lg-2 col-sm-4 control-label">เขียนที่ :
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
@@ -65,111 +48,129 @@
                     </div>
                 </div>
 
-                <label for="" class="col-lg-2 col-sm-4 control-label">ผู้รับแจ้งความ :
+                <!-- <label for="" class="col-lg-2 col-sm-4 control-label">ผู้รับแจ้งความ :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [disabled]="showEditField">
-                </div>
+                </div> -->
+            </div>
 
-                <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" readonly>
+            <div formArrayName="NoticeStaffForm">
+                <div class="row" *ngFor="let item of NoticeStaffForm.controls; let i=index;" [formGroupName]="i">
+
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ผู้รับแจ้งความ :
+                    </label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [disabled]="showEditField">
                     </div>
-                </div>
-                <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
+
+                    <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" [disabled]="showEditField">
+                        </div>
                     </div>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" formControlName="PositionName" class="form-control form-control-sm" [disabled]="showEditField">
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card card-outline-bluish unset-radius" formArrayName="NoticeInformerForm" *ngFor="let item of NoticeInformerForm.controls; let i=index;"
-        [formGroupName]="i">
+    <div class="card card-outline-bluish unset-radius">
+
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">รายละเอียดผู้แจ้งความ</h4>
         </div>
-        <div class="card-body">
-            <div class="row form-group">
-                <div class="col">
-                    <input type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo" [disabled]="showEditField">
-                    <label for="md_checkbox_25">สายลับขอปิดนาม</label>
-                </div>
-            </div>
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อ(นามแฝง) ผู้แจ้ง :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" formControlName="FullName" [disabled]="showEditField">
+        <div class="card-body" formArrayName="NoticeInformerForm">
+            <div *ngFor="let item of NoticeInformerForm.controls; let i=index;" [formGroupName]="i">
+
+                <div class="row form-group">
+                    <div class="col">
+                        <input type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                        <label for="md_checkbox_25">สายลับขอปิดนาม</label>
                     </div>
                 </div>
 
-                <label for="" class="col-lg-2 col-sm-4 control-label">อายุผู้แจ้ง (ปี) :</label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="Age" [disabled]="showEditField">
-                </div>
-            </div>
-
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="Address" [disabled]="showEditField">
-                </div>
-                <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" formControlName="Village" [disabled]="showEditField">
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อ(นามแฝง) ผู้แจ้ง :
+                    </label>
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" class="form-control form-control-sm" formControlName="FullName" [disabled]="showEditField">
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" formControlName="Building" [disabled]="showEditField">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">อายุผู้แจ้ง (ปี) :</label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <input type="text" class="form-control form-control-sm" formControlName="Age" [disabled]="showEditField">
                     </div>
                 </div>
 
-                <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="Room" [disabled]="showEditField">
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <input type="text" class="form-control form-control-sm" formControlName="Address" [disabled]="showEditField">
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" class="form-control form-control-sm" formControlName="Village" [disabled]="showEditField">
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="Floor" [disabled]="showEditField">
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" class="form-control form-control-sm" formControlName="Building" [disabled]="showEditField">
+                        </div>
+                    </div>
+
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <input type="text" class="form-control form-control-sm" formControlName="Room" [disabled]="showEditField">
+                    </div>
                 </div>
 
-                <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm" formControlName="Alley" [disabled]="showEditField">
-                </div>
-            </div>
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <input type="text" class="form-control form-control-sm" formControlName="Floor" [disabled]="showEditField">
+                    </div>
 
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm" formControlName="Road" [disabled]="showEditField">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                        <input type="text" class="form-control form-control-sm" formControlName="Alley" [disabled]="showEditField">
+                    </div>
                 </div>
-                <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
-                </div>
-            </div>
 
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียดแจ้งความ :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" [disabled]="showEditField"></textarea>
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                        <input type="text" class="form-control form-control-sm" formControlName="Road" [disabled]="showEditField">
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                        <input type="text" formControlName="Region" [ngbTypeahead]="searchRegion" class="form-control form-control-sm" [readOnly]="showEditField"
+                        />
+                    </div>
                 </div>
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียดแจ้งความ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                        <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" [disabled]="showEditField"></textarea>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -179,56 +180,63 @@
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">รายละเอียดการกระทำความผิด</h4>
         </div>
-        <div class="card-body" formArrayName="NoticeLocaleForm" *ngFor="let item of NoticeLocaleForm.controls; let i=index;" [formGroupName]="i">
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="Address" [disabled]="showEditField">
-                </div>
-                <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
-                    </div>
-                </div>
-            </div>
+        <div class="card-body" formArrayName="NoticeLocaleForm">
 
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+            <div *ngFor="let item of NoticeLocaleForm.controls; let i=index;" [formGroupName]="i">
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <input type="text" class="form-control form-control-sm" formControlName="Address" [disabled]="showEditField">
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" formControlName="Village" class="form-control form-control-sm" [disabled]="showEditField">
+                        </div>
                     </div>
                 </div>
 
-                <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" formControlName="Building" class="form-control form-control-sm" [disabled]="showEditField">
+                        </div>
+                    </div>
+
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <input type="text" formControlName="Room" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
                 </div>
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <input type="text" formControlName="Floor" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                        <input type="text" formControlName="Alley" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                        <input type="text" formControlName="Road" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                        <input type="text" formControlName="Region" [ngbTypeahead]="searchRegion" class="form-control form-control-sm" [readOnly]="showEditField"
+                        />
+                    </div>
+                </div>
+
             </div>
 
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
-                </div>
-
-                <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
-                </div>
-            </div>
-
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
-                </div>
-                <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -254,19 +262,19 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody formArrayName="NoticeProductForm">
+                    <tr *ngFor="let item of NoticeLocaleForm.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
                             1
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                            <input type="text" formControlName="BrandFullName" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                            <input type="text" formControlName="Qty" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                            <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
                                 <option value=""></option>
                             </select>
                         </td>
@@ -337,18 +345,19 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [disabled]="showEditField">
+                    </select>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
+                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
             <div class="row">
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ที่อยู่เอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
+                    <input type="file" formControlName="FilePath" [disabled]="showEditField">
                 </div>
             </div>
         </div>

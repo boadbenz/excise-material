@@ -29,4 +29,5 @@ export class NoticeProduct {
     public NetWeightUnit: string;
     public Remarks: string;
     public IsActive: number;
+    public BrandFullName: string;
 }

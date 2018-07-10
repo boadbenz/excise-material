@@ -8,6 +8,7 @@ import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker
 import { NoticeService } from '../notice.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
     {
@@ -33,6 +34,7 @@ const routes: Routes = [
         ReactiveFormsModule,
         HttpClientModule,
         HttpModule,
+        NgbModule.forRoot(),
         RouterModule.forChild(routes),
         CardActionsModule,
         LawbreakerModalModule
