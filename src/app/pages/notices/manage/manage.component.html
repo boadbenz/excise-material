@@ -93,7 +93,9 @@
 
                 <div class="row form-group">
                     <div class="col">
-                        <input type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo" [readOnly]="showEditField"
+                        <input *ngIf="showEditField" type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
+                            disabled>
+                        <input *ngIf="!showEditField" type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
                             (change)="onChangeConceal()">
                         <label for="md_checkbox_25">สายลับขอปิดนาม</label>
                     </div>
@@ -159,22 +161,26 @@
                         <input type="text" class="form-control form-control-sm" formControlName="Road" [readOnly]="isConceal" [readOnly]="showEditField">
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" formControlName="Region" 
-                            [ngbTypeahead]="searchRegion" 
-                            class="form-control form-control-sm" 
-                            [disabled]="isConceal"
+
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">                        
+                        <ng-template #informRegionResult let-r="result" let-t="term">
+                                {{ r.SubDistrict }} {{r.District}} {{r.Province}}
+                        </ng-template>
+
+                        <input type="text" formControlName="Region" class="form-control form-control-sm"
+                            [ngbTypeahead]="searchRegion"  
+                            [readOnly]="isConceal"
                             [readOnly]="showEditField" 
-                            (change)="onInformmerRegionChange($event)"
-                            />
+                            [(ngModel)]="objInformmerRegion" 
+                            [resultTemplate]="informRegionResult"
+                            [inputFormatter]="formatterArray" />
                     </div>
                 </div>
-
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียดแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" [readonly]="showEditField"
-                            [readOnly]="isConceal"></textarea>
+                        <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" [readOnly]="isConceal"
+                            [readOnly]="showEditField"></textarea>
                     </div>
                 </div>
 
@@ -235,11 +241,28 @@
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField">
                     </div>
+
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" formControlName="Region" [ngbTypeahead]="searchRegion" class="form-control form-control-sm" 
-                        [readonly]="showEditField"
-                        />
+                        
+
+                        <!-- <input type="hidden" formControlName="SubDistrictCode" [(ngModel)]="objLocaleRegion.SubDistrictCode">
+                        <input type="hidden" formControlName="SubDistrict" [(ngModel)]="objLocaleRegion.SubDistrict">
+                        <input type="hidden" formControlName="DistrictCode" [(ngModel)]="objLocaleRegion.DistrictCode">
+                        <input type="hidden" formControlName="District" [(ngModel)]="objLocaleRegion.District">
+                        <input type="hidden" formControlName="ProvinceCode" [(ngModel)]="objLocaleRegion.ProvinceCode">
+                        <input type="hidden" formControlName="Province" [(ngModel)]="objLocaleRegion.Province">
+                        <input type="hidden" formControlName="ZipCode" [(ngModel)]="objLocaleRegion.ZipCode"> -->
+                        <ng-template #localeRegionResult let-r="result" let-t="term">
+                            {{ r.SubDistrict }} {{r.District}} {{r.Province}}
+                        </ng-template>
+                        <input type="text" formControlName="Region" class="form-control form-control-sm"
+                            [ngbTypeahead]="searchRegion"  
+                            [readOnly]="isConceal"
+                            [readOnly]="showEditField" 
+                            [(ngModel)]="objLocaleRegion" 
+                            [resultTemplate]="localeRegionResult"
+                            [inputFormatter]="formatterArray" />
                     </div>
                 </div>
 
@@ -257,9 +280,7 @@
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <button class="btn btn-block btn-themecolor" [disabled]="showEditField"
-                    (click)="addProduct()"
-                    >เพิ่มสินค้า</button>
+                    <button class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addProduct()">เพิ่มสินค้า</button>
                 </div>
             </div>
             <table class="table table-sm table-striped table-set-border">
@@ -276,7 +297,9 @@
                     <tr *ngFor="let item of NoticeProductForm.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
                         <td>
-                            <input type="text" formControlName="BrandFullName" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchProduct">
+                            <input type="text" formControlName="BrandFullName" class="form-control form-control-sm" [readonly]="showEditField" 
+                            >
+                            <!-- [ngbTypeahead]="searchProduct" -->
                         </td>
                         <td>
                             <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
@@ -287,8 +310,7 @@
                             </select>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField"
-                            (click)="onDeleteProduct(item.get('ProductID').value, i)">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteProduct(item.get('ProductID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
@@ -335,8 +357,7 @@
                         <td>{{item.get('SuspectFullName').value}}</td>
                         <td></td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField"
-                            (click)="onDeleteSuspect(item.get('SuspectID').value, i)">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteSuspect(item.get('SuspectID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
@@ -398,7 +419,7 @@
                     </tr>
                 </thead>
                 <tbody formArrayName="NoticeDocumentForm">
-                    <tr *ngFor="let item of NoticeDocumentForm; let i=index;" [formGroupName]="i">
+                    <tr *ngFor="let item of NoticeDocumentForm.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
                         <td>
                             <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
@@ -407,8 +428,7 @@
                             <input type="file" formControlName="FilePath" [readonly]="showEditField">
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField"
-                            >
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteDocument(item.get('DocumentID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
