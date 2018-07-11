@@ -9,7 +9,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่บันทึกแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="NoticeCode" class="form-control form-control-sm" [disabled]="showEditField">
+                        <input type="text" formControlName="NoticeCode" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่รับแจ้งความ :
@@ -93,7 +93,8 @@
 
                 <div class="row form-group">
                     <div class="col">
-                        <input type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                        <input type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo" [disabled]="showEditField"
+                            (change)="onChangeConceal()">
                         <label for="md_checkbox_25">สายลับขอปิดนาม</label>
                     </div>
                 </div>
@@ -103,25 +104,25 @@
                     </label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" class="form-control form-control-sm" formControlName="FullName" [disabled]="showEditField">
+                            <input type="text" class="form-control form-control-sm" formControlName="FullName" [readOnly]="isConceal" [disabled]="showEditField">
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">อายุผู้แจ้ง (ปี) :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Age" [disabled]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Age" [readOnly]="isConceal" [disabled]="showEditField">
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Address" [disabled]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Address" [readOnly]="isConceal" [disabled]="showEditField">
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" class="form-control form-control-sm" formControlName="Village" [disabled]="showEditField">
+                            <input type="text" class="form-control form-control-sm" formControlName="Village" [readOnly]="isConceal" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -130,44 +131,50 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" class="form-control form-control-sm" formControlName="Building" [disabled]="showEditField">
+                            <input type="text" class="form-control form-control-sm" formControlName="Building" [readOnly]="isConceal" [disabled]="showEditField">
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Room" [disabled]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Room" [readOnly]="isConceal" [disabled]="showEditField">
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Floor" [disabled]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Floor" [readOnly]="isConceal" [disabled]="showEditField">
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" class="form-control form-control-sm" formControlName="Alley" [disabled]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Alley" [readOnly]="isConceal" [disabled]="showEditField">
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" class="form-control form-control-sm" formControlName="Road" [disabled]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Road" [readOnly]="isConceal" [disabled]="showEditField">
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" formControlName="Region" [ngbTypeahead]="searchRegion" class="form-control form-control-sm" [readOnly]="showEditField"
-                        />
+                        <input type="text" formControlName="Region" 
+                            [ngbTypeahead]="searchRegion" 
+                            class="form-control form-control-sm" 
+                            [readOnly]="isConceal"
+                            [disabled]="showEditField" 
+                            (change)="onInformmerRegionChange($event)"
+                            />
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียดแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" [disabled]="showEditField"></textarea>
+                        <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" [disabled]="showEditField"
+                            [readOnly]="isConceal"></textarea>
                     </div>
                 </div>
 
@@ -230,7 +237,8 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" formControlName="Region" [ngbTypeahead]="searchRegion" class="form-control form-control-sm" [readOnly]="showEditField"
+                        <input type="text" formControlName="Region" [ngbTypeahead]="searchRegion" class="form-control form-control-sm" 
+                        [readonly]="showEditField"
                         />
                     </div>
                 </div>
@@ -263,12 +271,10 @@
                     </tr>
                 </thead>
                 <tbody formArrayName="NoticeProductForm">
-                    <tr *ngFor="let item of NoticeLocaleForm.controls; let i=index;" [formGroupName]="i">
-                        <td class="text-center">
-                            1
-                        </td>
+                    <tr *ngFor="let item of NoticeProductForm.controls; let i=index;" [formGroupName]="i">
+                        <td class="text-center">{{i+1}}</td>
                         <td>
-                            <input type="text" formControlName="BrandFullName" class="form-control form-control-sm" [disabled]="showEditField">
+                            <input type="text" formControlName="BrandFullName" class="form-control form-control-sm" [disabled]="showEditField" [ngbTypeahead]="searchProduct">
                         </td>
                         <td>
                             <input type="text" formControlName="Qty" class="form-control form-control-sm" [disabled]="showEditField">
@@ -279,7 +285,8 @@
                             </select>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField"
+                            (click)="onDeleteProduct(item.get('ProductID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
@@ -317,16 +324,17 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-center"></td>
+                <tbody formArrayName="NoticeSuspectForm">
+                    <tr *ngFor="let item of NoticeSuspectForm.controls; let i=index;" [formGroupName]="i">
+                        <td class="text-center">{{i+1}}</td>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
+                        <td>{{item.get('SuspectFullName').value}}</td>
                         <td></td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField"
+                            (click)="onDeleteSuspect(item.get('SuspectID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
@@ -346,6 +354,9 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                     <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [disabled]="showEditField">
+                        <option *ngFor="let item of communicateModel; let i=index;" [value]="item.CommunicationChanelID">
+                            {{item.CommunicationChanelName}}
+                        </option>
                     </select>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
@@ -387,10 +398,15 @@
                 <tbody>
                     <tr>
                         <td class="text-center"></td>
-                        <td></td>
-                        <td></td>
+                        <td>
+                            <input type="text" formControlName="DataSource" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <input type="file" formControlName="FilePath" [disabled]="showEditField">
+                        </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField"
+                            >
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>

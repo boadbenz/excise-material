@@ -6,12 +6,13 @@ import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { NoticeInformer } from '../notice-informer';
 import { NoticeStaff } from '../notice-staff';
 import { NoticeService } from '../notice.service';
-import { regions } from '../../../models/region';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 import { toLocalNumeric } from 'app/config/dateFormat';
+import { products, regions, communicate } from '../../../models';
+import { Message } from 'app/config/message';
 
 @Component({
     selector: 'app-manage',
@@ -26,8 +27,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     noticeForm: FormGroup;
     showEditField: any;
     searching = false;
+    isConceal = false;
 
-    region = regions
+    regionModel = regions
+    productModel = products
+    communicateModel = communicate
 
     get NoticeStaffForm(): FormArray {
         return this.noticeForm.get('NoticeStaffForm') as FormArray;
@@ -82,8 +86,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-
-                this.noticeForm.reset({ NoticeCode: `NT-${(new Date).getTime}` })
+                this.noticeCode = `NT-${(new Date).getTime()}`;
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -108,6 +111,19 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.showEditField = p;
         });
 
+        // this.sub = this.navService.onSave.subscribe(async status => {
+        //     if (status) {
+        //         // set action save = false
+        //         await this.navService.setOnSave(false);
+        //         if (this.mode === 'C') {
+        //             this.onCreate();
+
+        //         } else if (this.mode === 'R') {
+        //             this.onReviced();
+        //         }
+        //     }
+        // });
+
         this.sub = this.navService.onSave.subscribe(status => {
             if (status) {
                 // set true
@@ -119,12 +135,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
             }
+            
         });
     }
 
     private createForm() {
         this.noticeForm = this.fb.group({
-            NoticeCode: [null],
+            NoticeCode: new FormControl(this.noticeCode),
             NoticeStationCode: [null],
             NoticeStation: [null],
             NoticeDate: [null],
@@ -175,7 +192,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.fb.group({
             InformerID: [null],
             InformerType: [null],
-            NoticeCode: [null],
+            NoticeCode: new FormControl(this.noticeCode),
             TitleCode: [null],
             TitleName: [null],
             FirstName: [null],
@@ -273,7 +290,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.fb.group({
             SuspectID: [null],
             SuspectReferenceID: [null],
-            NoticeCode: [null],
+            NoticeCode: new FormControl(this.noticeCode),
             SuspectTitleName: [null],
             SuspectFirstName: [null],
             SuspectLastName: [null],
@@ -338,10 +355,101 @@ export class ManageComponent implements OnInit, OnDestroy {
             .debounceTime(200)
             .distinctUntilChanged()
             .map(term =>
-                this.region
-                    .map(item => `${item.SubDistrict} / ${item.District} / ${item.Province}`)
+                this.regionModel
+                    .map(item => `${item.SubDistrict} ${item.District} ${item.Province}`)
                     .filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)
             );
+
+    searchProduct = (text$: Observable<string>) =>
+        text$
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .map(term =>
+                this.productModel
+                    .map(item => `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`)
+                    .filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)
+            );
+
+    async onInformmerRegionChange(ele: any) {
+        const subDistinct = (ele.target.value).split(' ')[0];
+        const r = await this.regionModel
+            .filter(item => item.SubDistrict == subDistinct)
+            // .map(item => {
+            //     this.NoticeInformerForm.at(0).patchValue({
+            //         SubDistrictCode: item.SubDistrictCode,
+            //         SubDistrict: item.SubDistrict,
+            //         DistrictCode: item.DistrictCode,
+            //         District: item.District,
+            //         ProvinceCode: item.ProvinceCode,
+            //         Province: item.Province,
+            //         ZipCode: item.ZipCode
+            //     });
+            // });
+
+        console.log([{...r}]);
+    }
+
+    onLocaleRegionChange() {
+
+    }
+
+    onProductChange() {
+
+    }
+
+    onDeleteProduct(id: string, index: number) {
+        if (this.mode === 'C') {
+            this.NoticeProductForm.removeAt(index);
+
+        } else if (this.mode === 'R') {
+            if (confirm(Message.confirmAction)) {
+                this.noticeService.productupdDelete(id).then(isSuccess => {
+                    // tslint:disable-next-line:triple-equals
+                    if (isSuccess == true) {
+                        this.NoticeProductForm.removeAt(index);
+                    } else {
+                        alert(Message.saveError);
+                    }
+                })
+            }
+        }
+    }
+
+    onDeleteSuspect(id: string, index: number) {
+        if (this.mode === 'C') {
+            this.NoticeSuspectForm.removeAt(index);
+
+        } else if (this.mode === 'R') {
+            if (confirm(Message.confirmAction)) {
+                this.noticeService.suspectupdDelete(id).then(isSuccess => {
+                    // tslint:disable-next-line:triple-equals
+                    if (isSuccess == true) {
+                        this.NoticeSuspectForm.removeAt(index);
+                    } else {
+                        alert(Message.saveError);
+                    }
+                })
+            }
+        }
+    }
+
+    onDeleteDocument(id: number, index: number) {
+        // if (this.mode === 'C') {
+        //     this.Noticed.removeAt(index);
+
+        // } else if (this.mode === 'R') {
+        //     if (confirm(Message.confirmAction)) {
+        //         this.noticeService.suspectupdDelete(id).then(isSuccess => {
+        //             // tslint:disable-next-line:triple-equals
+        //             if (isSuccess == true) {
+        //                 this.NoticeSuspectForm.removeAt(index);
+        //             } else {
+        //                 alert(Message.saveError);
+        //             }
+        //         })
+        //     }
+        // }
+    }
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();
@@ -351,4 +459,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 
+    onChangeConceal() {
+        this.isConceal = !this.isConceal;
+    }
 }
