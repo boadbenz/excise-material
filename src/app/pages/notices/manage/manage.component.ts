@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
-import { NoticeInformer } from '../notice-informer';
-import { NoticeStaff } from '../notice-staff';
 import { NoticeService } from '../notice.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
@@ -13,6 +11,9 @@ import 'rxjs/add/operator/map';
 import { toLocalNumeric } from 'app/config/dateFormat';
 import { products, regions, communicate } from '../../../models';
 import { Message } from 'app/config/message';
+import { NoticeProduct } from '../notice-product';
+import { NoticeSuspect } from '../notice-suspect';
+import { NoticeDocument } from '../notice-document';
 
 @Component({
     selector: 'app-manage',
@@ -53,9 +54,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.noticeForm.get('NoticeSuspectForm') as FormArray;
     }
 
+    get NoticeDocumentForm(): FormArray {
+        return this.noticeForm.get('NoticeDocumentForm') as FormArray;
+    }
+
     constructor(
         private activeRoute: ActivatedRoute,
         private suspectModalService: NgbModal,
+        private router: Router,
         private fb: FormBuilder,
         private navService: NavigationService,
         private noticeService: NoticeService
@@ -111,6 +117,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.showEditField = p;
         });
 
+        this.sub = this.navService.onCancel.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnCancel(false);
+                this.router.navigate(['/arrest/list']);
+            }
+        })
+
         // this.sub = this.navService.onSave.subscribe(async status => {
         //     if (status) {
         //         // set action save = false
@@ -134,8 +147,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set false
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
-            }
-            
+            }            
         });
     }
 
@@ -158,7 +170,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeInformerForm: this.fb.array([this.createInformerForm()]),
             NoticeLocaleForm: this.fb.array([this.createLocaleForm()]),
             NoticeProductForm: this.fb.array([this.createProductForm()]),
-            NoticeSuspectForm: this.fb.array([this.createSuspectForm()])
+            NoticeSuspectForm: this.fb.array([this.createSuspectForm()]),
+            NoticeDocumentForm: this.fb.array([this.createDocumentForm()])
         })
     }
 
@@ -282,7 +295,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             NetVolume: [null],
             NetVolumeUnit: [null],
             IsActive: [null],
-            BrandFullName: [null]
+            BrandFullName: [null],
+            IsNewItem: [null]
         })
     }
 
@@ -299,6 +313,18 @@ export class ManageComponent implements OnInit, OnDestroy {
             CompanyOtherName: [null],
             IsActive: [null],
             SuspectFullName: [null],
+            IsNewItem: [null]
+        })
+    }
+
+    private createDocumentForm(): FormGroup {
+        return this.fb.group({
+            DocumentID: [null],
+            ReferenceCode: [null],
+            FilePath: [null],
+            DataSource: [null],
+            IsActive: [null],
+            IsNewItem: [null]
         })
     }
 
@@ -347,7 +373,26 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setItemFormArray(res.NoticeLocale, 'NoticeLocaleForm');
             this.setItemFormArray(res.NoticeProduct, 'NoticeProductForm');
             this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspectForm');
+            this.setItemFormArray(res.NoticeDocument, 'NoticeDocumentForm')
         })
+    }
+
+    addProduct(){
+        let product = new NoticeProduct();
+        product.IsNewItem = true;
+        this.NoticeProductForm.push(this.fb.group(product));
+    }
+
+    // addSuspect(){
+    //     let suspect = new NoticeSuspect();
+    //     suspect.IsNewItem = true;
+    //     this.NoticeSuspectForm.push(this.fb.group(suspect));
+    // }
+
+    addDocument(){
+        let document = new NoticeDocument();
+        document.IsNewItem = true;
+        this.NoticeDocumentForm.push(this.fb.group(document));
     }
 
     searchRegion = (text$: Observable<string>) =>

@@ -3,6 +3,7 @@ import { NoticeInformer } from './notice-informer';
 import { NoticeLocale } from './notice-locale';
 import { NoticeProduct } from './notice-product';
 import { NoticeSuspect } from './notice-suspect';
+import { NoticeDocument } from './notice-document';
 
 export class Notice {
     public NoticeCode: string;
@@ -23,4 +24,5 @@ export class Notice {
     public NoticeLocale: Array<NoticeLocale>;
     public NoticeProduct: Array<NoticeProduct>;
     public NoticeSuspect: Array<NoticeSuspect>;
+    public NoticeDocument: Array<NoticeDocument>;
 }

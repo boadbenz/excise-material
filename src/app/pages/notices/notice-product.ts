@@ -30,4 +30,5 @@ export class NoticeProduct {
     public Remarks: string;
     public IsActive: number;
     public BrandFullName: string;
+    public IsNewItem: boolean;
 }

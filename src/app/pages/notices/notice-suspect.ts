@@ -10,4 +10,5 @@ export class NoticeSuspect {
     public CompanyOtherName: string;
     public IsActive: number;
     public SuspectFullName: string;
+    public IsNewItem: boolean;
 }
