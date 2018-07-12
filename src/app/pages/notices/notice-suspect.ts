@@ -12,3 +12,12 @@ export class NoticeSuspect {
     public SuspectFullName: string;
     public IsNewItem: boolean;
 }
+
+// "SuspectReferenceID":"1",
+//          "NoticeCode":"{{NoticeCode}}",
+//          "SuspectTitleName":"นาย",
+//          "SuspectFirstName":"สุภชัย",
+//          "SuspectLastName":"อํานวย",
+//          "CompanyTitleName":"Smart Vision",
+//          "CompanyName":"SmartGroup",
+//          "CompanyOtherName":"A Smart"

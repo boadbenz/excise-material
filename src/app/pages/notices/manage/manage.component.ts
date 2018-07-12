@@ -5,15 +5,22 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { NoticeService } from '../notice.service';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/switchMap';
 import { toLocalNumeric } from 'app/config/dateFormat';
-import { products, regions, communicate } from '../../../models';
+import { products, regions, communicate, DutyUnit } from 'app/models';
 import { Message } from 'app/config/message';
-import { NoticeProduct } from '../notice-product';
+import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
 import { NoticeSuspect } from '../notice-suspect';
-import { NoticeDocument } from '../notice-document';
+import { NoticeDocument, NoticeDocumentFormControl } from '../notice-document';
+import { NoticeStaffFormControl } from '../notice-staff';
+import { NoticeInformerFormControl } from '../notice-informer';
+import { NoticeLocaleFormControl } from '../notice-locale';
 
 @Component({
     selector: 'app-manage',
@@ -28,33 +35,35 @@ export class ManageComponent implements OnInit, OnDestroy {
     noticeCode: string;
     noticeForm: FormGroup;
     searching = false;
+    searchFailed = false;
     isConceal = false;
 
-    regionModel = regions
-    productModel = products
-    communicateModel = communicate
+    regionModel = regions;
+    productModel = products;
+    communicateModel = communicate;
+    dutyUnitModel = DutyUnit;
 
-    get NoticeStaffForm(): FormArray {
+    get NoticeStaff(): FormArray {
         return this.noticeForm.get('NoticeStaff') as FormArray;
     }
 
-    get NoticeInformerForm(): FormArray {
+    get NoticeInformer(): FormArray {
         return this.noticeForm.get('NoticeInformer') as FormArray;
     }
 
-    get NoticeLocaleForm(): FormArray {
+    get NoticeLocale(): FormArray {
         return this.noticeForm.get('NoticeLocale') as FormArray;
     }
 
-    get NoticeProductForm(): FormArray {
+    get NoticeProduct(): FormArray {
         return this.noticeForm.get('NoticeProduct') as FormArray;
     }
 
-    get NoticeSuspectForm(): FormArray {
+    get NoticeSuspect(): FormArray {
         return this.noticeForm.get('NoticeSuspect') as FormArray;
     }
 
-    get NoticeDocumentForm(): FormArray {
+    get NoticeDocument(): FormArray {
         return this.noticeForm.get('NoticeDocument') as FormArray;
     }
 
@@ -141,18 +150,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     private createForm() {
         this.noticeForm = this.fb.group({
             NoticeCode: new FormControl(this.noticeCode),
-            NoticeStationCode: [null],
+            NoticeStationCode: new FormControl('Code'),
             NoticeStation: [null],
             NoticeDate: [null],
             NoticeTime: [null],
             NoticeDue: [null],
             NoticeDueDate: [null],
-            GroupNameDesc: [null],
+            GroupNameDesc: new FormControl('groupDesc'),
             CommunicationChanelID: [null],
             DataSource: [null],
             FilePath: [null],
             ArrestCode: [null],
-            IsActive: [null],
+            IsActive: new FormControl(1),
             NoticeStaff: this.fb.array([this.createStaffForm()]),
             NoticeInformer: this.fb.array([this.createInformerForm()]),
             NoticeLocale: this.fb.array([this.createLocaleForm()]),
@@ -162,129 +171,25 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+
     private createStaffForm(): FormGroup {
-        return this.fb.group({
-            StaffID: [null],
-            ProgramCode: [null],
-            ProcessCode: [null],
-            ArrestCode: [null],
-            StaffCode: [null],
-            TitleName: [null],
-            FirstName: [null],
-            LastName: [null],
-            PositionCode: [null],
-            PositionName: [null],
-            PosLevel: [null],
-            PosLevelName: [null],
-            DepartmentCode: [null],
-            DepartmentName: [null],
-            DepartmentLevel: [null],
-            OfficeCode: [null],
-            OfficeName: [null],
-            OfficeShortName: [null],
-            ContributorID: [null],
-            IsActive: [null],
-            StaffFullName: [null]
-        })
+        NoticeStaffFormControl.NoticeCode = new FormControl(this.noticeCode);
+        return this.fb.group(NoticeStaffFormControl)
     }
 
     private createInformerForm(): FormGroup {
-        return this.fb.group({
-            InformerID: [null],
-            InformerType: [null],
-            NoticeCode: new FormControl(this.noticeCode),
-            TitleCode: [null],
-            TitleName: [null],
-            FirstName: [null],
-            LastName: [null],
-            FullName: [null],
-            IDCard: [null],
-            Age: [null],
-            GenderType: [null],
-            Location: [null],
-            Address: [null],
-            Village: [null],
-            Building: [null],
-            Floor: [null],
-            Room: [null],
-            Alley: [null],
-            Road: [null],
-            SubDistrictCode: [null],
-            SubDistrict: [null],
-            DistrictCode: [null],
-            District: [null],
-            ProvinceCode: [null],
-            Province: [null],
-            ZipCode: [null],
-            TelephoneNo: [null],
-            InformerInfo: [null],
-            IsActive: [null],
-            Region: [null]
-        })
+        NoticeInformerFormControl.NoticeCode = new FormControl(this.noticeCode);
+        return this.fb.group(NoticeInformerFormControl)
     }
 
     private createLocaleForm(): FormGroup {
-        return this.fb.group({
-            LocaleID: [null],
-            IsArrest: [null],
-            ArrestCode: [null],
-            GPS: [null],
-            Location: [null],
-            Address: [null],
-            Village: [null],
-            Building: [null],
-            Floor: [null],
-            Room: [null],
-            Alley: [null],
-            Road: [null],
-            SubDistrictCode: [null],
-            SubDistrict: [null],
-            DistrictCode: [null],
-            District: [null],
-            ProvinceCode: [null],
-            Province: [null],
-            ZipCode: [null],
-            Policestation: [null],
-            IsActive: [null],
-            Region: [null]
-        })
+        NoticeLocaleFormControl.NoticeCode = new FormControl(this.noticeCode);
+        return this.fb.group(NoticeLocaleFormControl)
     }
 
     private createProductForm(): FormGroup {
-        return this.fb.group({
-            ProductID: [null],
-            ProductType: [null],
-            ArrestCode: [null],
-            GroupCode: [null],
-            IsDomestic: [null],
-            ProductCode: [null],
-            BrandCode: [null],
-            BrandNameTH: [null],
-            BrandNameEN: [null],
-            SubBrandCode: [null],
-            SubBrandNameTH: [null],
-            SubBrandNameEN: [null],
-            ModelCode: [null],
-            ModelName: [null],
-            FixNo1: [null],
-            DegreeCode: [null],
-            Degree: [null],
-            SizeCode: [null],
-            Size: [null],
-            SizeUnitCode: [null],
-            SizeUnitName: [null],
-            FixNo2: [null],
-            SequenceNo: [null],
-            ProductDesc: [null],
-            CarNo: [null],
-            Qty: [null],
-            QtyUnit: [null],
-            NetVolume: [null],
-            NetVolumeUnit: [null],
-            IsActive: [null],
-            BrandFullName: [null],
-            IsNewItem: [null]
-        })
+        NoticeProductFormControl.NoticeCode = new FormControl(this.noticeCode);
+        return this.fb.group(NoticeProductFormControl)
     }
 
     // private createSuspectForm(): FormGroup {
@@ -305,14 +210,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // }
 
     private createDocumentForm(): FormGroup {
-        return this.fb.group({
-            DocumentID: [null],
-            ReferenceCode: [null],
-            FilePath: [null],
-            DataSource: [null],
-            IsActive: [null],
-            IsNewItem: [null]
-        })
+        return this.fb.group(NoticeDocumentFormControl)
     }
 
     private setItemFormArray(array: any[], formControl: string) {
@@ -325,6 +223,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private getByCon(code: string) {
         this.noticeService.getByCon(code).then(async res => {
+            this.noticeCode = res.NoticeCode;
             await this.noticeForm.reset({
                 NoticeCode: res.NoticeCode,
                 NoticeStationCode: res.NoticeStationCode,
@@ -360,19 +259,20 @@ export class ManageComponent implements OnInit, OnDestroy {
             )
 
             this.setItemFormArray(res.NoticeStaff, 'NoticeStaffForm');
-            this.setItemFormArray(res.NoticeInformer, 'NoticeInformerForm');
-            this.setItemFormArray(res.NoticeLocale, 'NoticeLocaleForm');
-            this.setItemFormArray(res.NoticeProduct, 'NoticeProductForm');
-            this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspectForm');
-            this.setItemFormArray(res.NoticeDocument, 'NoticeDocumentForm')
+            this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
+            this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+            this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
+            this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
+            this.setItemFormArray(res.NoticeDocument, 'NoticeDocument')
         })
     }
 
     private onCreate() {
         const noticeDate = new Date(this.noticeForm.value.NoticeDate);
         const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
-        this.noticeForm.value.NoticeDate = noticeDate.getTime();
-        this.noticeForm.value.NoticeDueDate = noticeDueDate.getTime();
+        this.noticeForm.value.NoticeDate = noticeDate.toISOString();
+        this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
+
         this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
             if (isSuccess) { this.onComplete() }
         });
@@ -381,8 +281,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onReviced() {
         const noticeDate = new Date(this.noticeForm.value.NoticeDate);
         const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
-        this.noticeForm.value.NoticeDate = noticeDate.getTime();
-        this.noticeForm.value.NoticeDueDate = noticeDueDate.getTime();
+        this.noticeForm.value.NoticeDate = noticeDate.toISOString();
+        this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
         this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
             if (isSuccess) { this.onComplete() }
         })
@@ -404,19 +304,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     addProduct() {
         let product = new NoticeProduct();
         product.IsNewItem = true;
-        this.NoticeProductForm.push(this.fb.group(product));
+        this.NoticeProduct.push(this.fb.group(product));
     }
 
     // addSuspect(){
     //     let suspect = new NoticeSuspect();
     //     suspect.IsNewItem = true;
-    //     this.NoticeSuspectForm.push(this.fb.group(suspect));
+    //     this.NoticeSuspect.push(this.fb.group(suspect));
     // }
 
     addDocument() {
         let document = new NoticeDocument();
         document.IsNewItem = true;
-        this.NoticeDocumentForm.push(this.fb.group(document));
+        this.NoticeDocument.push(this.fb.group(document));
     }
 
 
@@ -434,16 +334,17 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     searchProduct = (text$: Observable<string>) =>
         text$
-            .debounceTime(200)
+            .debounceTime(300)
             .distinctUntilChanged()
-            .map(term =>
-                this.productModel
-                    .filter(v =>
-                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
-                    ).slice(0, 10)
-            );
+            .do(() => this.searching = true)
+            .switchMap(term =>
+                this.noticeService.productgetByKeyword(term)
+                    .do(() => this.searchFailed = false)
+                    .catch(() => {
+                        this.searchFailed = true;
+                        return Observable.of([]);
+                    })
+            ).do(() => this.searching = false);
 
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
@@ -452,7 +353,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         `${x.SubDistrict} ${x.District} ${x.Province}`;
 
     selectItemInformmerRegion(ele: any) {
-        this.NoticeInformerForm.at(0).patchValue({
+        ele.item.NoticeCode = this.noticeCode;
+        this.NoticeInformer.at(0).patchValue({
             SubDistrictCode: ele.item.SubDistrictCode,
             SubDistrict: ele.item.SubDistrict,
             DistrictCode: ele.item.DistrictCode,
@@ -464,7 +366,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemLocaleRegion(ele: any) {
-        this.NoticeLocaleForm.at(0).patchValue({
+        ele.item.NoticeCode = this.noticeCode;
+        this.NoticeLocale.at(0).patchValue({
             SubDistrictCode: ele.item.SubDistrictCode,
             SubDistrict: ele.item.SubDistrict,
             DistrictCode: ele.item.DistrictCode,
@@ -476,33 +379,24 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemProductItem(ele: any, index: number) {
-        this.NoticeProductForm.at(index).patchValue({
-            BrandCode: ele.item.BrandCode,
-            BrandNameTH: ele.item.BrandNameTH,
-            SubBrandCode: ele.item.SubBrandCode,
-            SubBrandNameTH: ele.item.SubBrandNameTH,
-            ModelCode: ele.item.ModelCode,
-            ModelName: ele.item.ModelName,
-            Qty: ele.item.Qty,
-            QtyUnit: ele.item.QtyUnit
-        })
-
+        ele.item.NoticeCode = this.noticeCode;
+        this.NoticeProduct.at(index).reset(ele.item)
     }
 
     onDeleteProduct(id: string, index: number) {
         if (this.mode === 'C') {
-            this.NoticeProductForm.removeAt(index);
+            this.NoticeProduct.removeAt(index);
 
         } else if (this.mode === 'R') {
-            if (!this.NoticeProductForm.at(index).get('ProductID').value) {
-                this.NoticeProductForm.removeAt(index);
+            if (!this.NoticeProduct.at(index).get('ProductID').value) {
+                this.NoticeProduct.removeAt(index);
                 return false;
             }
 
             if (confirm(Message.confirmAction)) {
                 this.noticeService.productupdDelete(id).then(isSuccess => {
                     if (isSuccess == true) {
-                        this.NoticeProductForm.removeAt(index);
+                        this.NoticeProduct.removeAt(index);
                     } else {
                         alert(Message.saveError);
                     }
@@ -513,18 +407,18 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     onDeleteSuspect(id: string, index: number) {
         if (this.mode === 'C') {
-            this.NoticeSuspectForm.removeAt(index);
+            this.NoticeSuspect.removeAt(index);
 
         } else if (this.mode === 'R') {
-            if (!this.NoticeSuspectForm.at(index).get('SuspectID').value) {
-                this.NoticeSuspectForm.removeAt(index);
+            if (!this.NoticeSuspect.at(index).get('SuspectID').value) {
+                this.NoticeSuspect.removeAt(index);
                 return false;
             }
 
             if (confirm(Message.confirmAction)) {
                 this.noticeService.suspectupdDelete(id).then(isSuccess => {
                     if (isSuccess == true) {
-                        this.NoticeSuspectForm.removeAt(index);
+                        this.NoticeSuspect.removeAt(index);
                     } else {
                         alert(Message.saveError);
                     }
@@ -535,11 +429,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     onDeleteDocument(id: string, index: number) {
         if (this.mode === 'C') {
-            this.NoticeDocumentForm.removeAt(index);
+            this.NoticeDocument.removeAt(index);
 
         } else if (this.mode === 'R') {
-            if (!this.NoticeDocumentForm.at(index).get('DocumentID').value) {
-                this.NoticeDocumentForm.removeAt(index);
+            if (!this.NoticeDocument.at(index).get('DocumentID').value) {
+                this.NoticeDocument.removeAt(index);
                 return false;
             }
 
@@ -547,7 +441,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.noticeService.suspectupdDelete(id).then(isSuccess => {
                     // tslint:disable-next-line:triple-equals
                     if (isSuccess == true) {
-                        this.NoticeSuspectForm.removeAt(index);
+                        this.NoticeSuspect.removeAt(index);
                     } else {
                         alert(Message.saveError);
                     }
