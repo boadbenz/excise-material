@@ -19,5 +19,4 @@ export class NoticeStaff {
     public OfficeShortName: string;
     public ContributorCode: string;
     public IsActive: number;
-    public StaffFullName: string;
 }

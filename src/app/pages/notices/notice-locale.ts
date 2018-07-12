@@ -20,5 +20,4 @@ export class NoticeLocale {
     public ZipCode: string;
     public Policestation: string;
     public IsActive: number;
-    public Region: string;
 }

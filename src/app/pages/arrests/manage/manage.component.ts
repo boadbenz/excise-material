@@ -10,6 +10,7 @@ import { Message } from 'app/config/message';
 import { ArrestProduct } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment } from '../arrest-indictment';
+import { ArrestLawbreaker } from '../arrest-lawbreaker';
 
 @Component({
     selector: 'app-manage',
