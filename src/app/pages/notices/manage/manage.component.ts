@@ -427,9 +427,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // }
 
 
-    onInformmerRegionChange(ele: any) {
-        const subDistinct = (ele.target.value).split(' ')[0];
-        const r = this.regionModel.filter(item => item.SubDistrict == subDistinct)
+    onChangeInformmerRegion() {
         // .map(item => {
         //     this.NoticeInformerForm.at(0).patchValue({
         //         SubDistrictCode: item.SubDistrictCode,
@@ -442,7 +440,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         //     });
         // });
 
-        console.log(r);
+        console.log(this.objLocaleRegion);
     }
 
     onLocaleRegionChange() {

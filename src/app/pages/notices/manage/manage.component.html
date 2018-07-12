@@ -162,15 +162,15 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
 
-                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">                        
+                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubDistrict }} {{r.District}} {{r.Province}}
                         </ng-template>
-                        
+
                         <input type="text" class="form-control form-control-sm"
                             formControlName="Region"
                             [ngbTypeahead]="searchRegion"
-                            [(ngModel)]="objInformmerRegion"    
+                            [(ngModel)]="objInformmerRegion"
                             [resultTemplate]="rt"
                             [readOnly]="isConceal"
                             [readOnly]="showEditField"
@@ -245,23 +245,24 @@
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        
 
-                        <input type="text" formControlName="SubDistrictCode" [value]="objLocaleRegion.SubDistrictCode">
-                        <!-- <input type="hidden" formControlName="SubDistrict" [(ngModel)]="objLocaleRegion.SubDistrict">
-                        <input type="hidden" formControlName="DistrictCode" [(ngModel)]="objLocaleRegion.DistrictCode">
-                        <input type="hidden" formControlName="District" [(ngModel)]="objLocaleRegion.District">
-                        <input type="hidden" formControlName="ProvinceCode" [(ngModel)]="objLocaleRegion.ProvinceCode">
-                        <input type="hidden" formControlName="Province" [(ngModel)]="objLocaleRegion.Province">
-                        <input type="hidden" formControlName="ZipCode" [(ngModel)]="objLocaleRegion.ZipCode"> -->
+
+                        <input type="text" formControlName="SubDistrictCode" [ngModel]="objLocaleRegion.SubDistrictCode">
+                        <!-- <input type="text" formControlName="SubDistrict" [ngModel]="objLocaleRegion.SubDistrict">
+                        <input type="text" formControlName="DistrictCode" [(ngModel)]="objLocaleRegion.DistrictCode">
+                        <input type="text" formControlName="District" [(ngModel)]="objLocaleRegion.District">
+                        <input type="text" formControlName="ProvinceCode" [(ngModel)]="objLocaleRegion.ProvinceCode">
+                        <input type="text" formControlName="Province" [(ngModel)]="objLocaleRegion.Province">
+                        <input type="text" formControlName="ZipCode" [(ngModel)]="objLocaleRegion.ZipCode"> -->
+
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubDistrict }} {{r.District}} {{r.Province}}
                         </ng-template>
                         <input type="text" formControlName="Region" class="form-control form-control-sm"
-                            [(ngModel)]="objLocaleRegion" 
-                            [ngbTypeahead]="searchRegion"  
+                            [(ngModel)]="objLocaleRegion"
+                            [ngbTypeahead]="searchRegion"
                             [readOnly]="isConceal"
-                            [readOnly]="showEditField" 
+                            [readOnly]="showEditField"
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" />
                     </div>
@@ -298,7 +299,7 @@
                     <tr *ngFor="let item of NoticeProductForm.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
                         <td>
-                            <input type="text" formControlName="BrandFullName" class="form-control form-control-sm" [readonly]="showEditField" 
+                            <input type="text" formControlName="BrandFullName" class="form-control form-control-sm" [readonly]="showEditField"
                             >
                             <!-- [ngbTypeahead]="searchProduct" -->
                         </td>
