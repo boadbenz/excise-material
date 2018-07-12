@@ -40,9 +40,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                   <!-- <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
+                    <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
                         <i class="ti-menu"></i>
-                    </a>-->
+                    </a>
                 </li>
                 <li *ngIf="newButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
@@ -57,7 +57,7 @@
                 <!-- ============================================================== -->
                 <li *ngIf="printButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
-                        <a style="width:107px;" class="btn btn-ghost" href="javascript:void(0)" (click)="clickPrint()">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickPrint()">
                             <i class="ti-printer"></i>
                             พิมพ์
                         </a>
@@ -65,7 +65,7 @@
                 </li>
                 <li *ngIf="editButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
-                        <a style="width:107[x;" class="btn btn-ghost" href="javascript:void(0)" (click)="clickEdit()">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickEdit()">
                             <i class="fa fa-edit"></i>
                             แก้ไข
                         </a>
@@ -73,7 +73,7 @@
                 </li>
                 <li *ngIf="deleteButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
-                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickDelete()" style="background-color: #f47023; width: 107px;">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickDelete()" style="background-color: #f47023">
                             <i class="ti-trash"></i>
                             ลบ
                         </a>
@@ -81,7 +81,7 @@
                 </li>
                 <li *ngIf="saveButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
-                        <a style="width:107px;" class="btn btn-ghost" href="javascript:void(0)" (click)="clickSave()">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickSave()">
                             <i class="ti-save"></i>
                             บันทึก
                         </a>
@@ -89,7 +89,7 @@
                 </li>
                 <li *ngIf="cancelButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
-                        <a style="width:107px;" class="btn btn-ghost" href="javascript:void(0)" (click)="clickCancel()">
+                        <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickCancel()">
                             <i class="ti-close"></i>
                             ยกเลิก
                         </a>

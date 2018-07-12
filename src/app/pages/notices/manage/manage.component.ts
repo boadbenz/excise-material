@@ -128,128 +128,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.noticeForm.get('Noticeinformer') as FormArray;
     }
 
-<<<<<<< HEAD
     setNoticeinFormer(informer: NoticeInformer[]) {
         if (informer) {
             // informer.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
             const itemFGs = informer.map(item => this.fb.group(item));
             const itemFormArray = this.fb.array(itemFGs);
             this.noticeForm.setControl('Noticeinformer', itemFormArray);
-=======
-    addProduct() {
-        let product = new NoticeProduct();
-        product.IsNewItem = true;
-        this.NoticeProductForm.push(this.fb.group(product));
-    }
-
-    // addSuspect(){
-    //     let suspect = new NoticeSuspect();
-    //     suspect.IsNewItem = true;
-    //     this.NoticeSuspectForm.push(this.fb.group(suspect));
-    // }
-
-    addDocument() {
-        let document = new NoticeDocument();
-        document.IsNewItem = true;
-        this.NoticeDocumentForm.push(this.fb.group(document));
-    }
-
-    public objInformmerRegion: any;
-    public objLocaleRegion: any;
-    searchRegion = (text3$: Observable<string>) =>
-        text3$
-            .debounceTime(300)
-            .map(term => term === '' ? []
-                : this.regionModel
-                    .filter(v =>
-                        v.SubDistrict.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.District.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.Province.toLowerCase().indexOf(term.toLowerCase()) > -1
-                    ).slice(0, 10));
-
-    formatterRegion = (x: { SubDistrict: string, District: string, Province: string }) => `${x.SubDistrict} ${x.District} ${x.Province}`;
-
-    // public objProduct: any;
-    // searchProduct = (text$: Observable<string>) => {
-    //     text$
-    //         .debounceTime(200)
-    //         .distinctUntilChanged()
-    //         .map(term =>
-    //             this.productModel
-    //                 .map(item => `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`)
-    //                 .filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)
-    //         );
-    // }
-
-
-    onInformmerRegionChange(ele: any) {
-        const subDistinct = (ele.target.value).split(' ')[0];
-        const r = this.regionModel.filter(item => item.SubDistrict == subDistinct)
-        // .map(item => {
-        //     this.NoticeInformerForm.at(0).patchValue({
-        //         SubDistrictCode: item.SubDistrictCode,
-        //         SubDistrict: item.SubDistrict,
-        //         DistrictCode: item.DistrictCode,
-        //         District: item.District,
-        //         ProvinceCode: item.ProvinceCode,
-        //         Province: item.Province,
-        //         ZipCode: item.ZipCode
-        //     });
-        // });
-
-        console.log(r);
-    }
-
-    onLocaleRegionChange() {
-
-    }
-
-    onProductChange() {
-
-    }
-
-    onDeleteProduct(id: string, index: number) {
-        if (this.mode === 'C') {
-            this.NoticeProductForm.removeAt(index);
-
-        } else if (this.mode === 'R') {
-            if (!this.NoticeProductForm.at(index).get('ProductID').value) {
-                this.NoticeProductForm.removeAt(index);
-                return false;
-            }
-
-            if (confirm(Message.confirmAction)) {
-                this.noticeService.productupdDelete(id).then(isSuccess => {
-                    if (isSuccess == true) {
-                        this.NoticeProductForm.removeAt(index);
-                    } else {
-                        alert(Message.saveError);
-                    }
-                })
-            }
-        }
-    }
-
-    onDeleteSuspect(id: string, index: number) {
-        if (this.mode === 'C') {
-            this.NoticeSuspectForm.removeAt(index);
-
-        } else if (this.mode === 'R') {
-            if (!this.NoticeSuspectForm.at(index).get('SuspectID').value) {
-                this.NoticeSuspectForm.removeAt(index);
-                return false;
-            }
-
-            if (confirm(Message.confirmAction)) {
-                this.noticeService.suspectupdDelete(id).then(isSuccess => {
-                    if (isSuccess == true) {
-                        this.NoticeSuspectForm.removeAt(index);
-                    } else {
-                        alert(Message.saveError);
-                    }
-                })
-            }
->>>>>>> parent of 72cc74f... commit
         }
     }
 

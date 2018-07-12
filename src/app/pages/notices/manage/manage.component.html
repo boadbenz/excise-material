@@ -179,27 +179,10 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                     <input type="text" class="form-control form-control-sm" formControlName="Road" [disabled]="showEditField">
-=======
-                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">                        
-                        <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrict }} {{r.District}} {{r.Province}}
-                        </ng-template>
-                        
-                        <input type="text" class="form-control form-control-sm"
-                            formControlName="Region"
-                            [ngbTypeahead]="searchRegion"
-                            [(ngModel)]="objInformmerRegion"    
-                            [resultTemplate]="rt"
-                            [readOnly]="isConceal"
-                            [readOnly]="showEditField"
-                            [inputFormatter]="formatterRegion" />
-                    </div>
->>>>>>> parent of 72cc74f... commit
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
@@ -269,29 +252,7 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-<<<<<<< HEAD
                         <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
-=======
-                        
-
-                        <input type="text" formControlName="SubDistrictCode" [value]="objLocaleRegion.SubDistrictCode">
-                        <!-- <input type="hidden" formControlName="SubDistrict" [(ngModel)]="objLocaleRegion.SubDistrict">
-                        <input type="hidden" formControlName="DistrictCode" [(ngModel)]="objLocaleRegion.DistrictCode">
-                        <input type="hidden" formControlName="District" [(ngModel)]="objLocaleRegion.District">
-                        <input type="hidden" formControlName="ProvinceCode" [(ngModel)]="objLocaleRegion.ProvinceCode">
-                        <input type="hidden" formControlName="Province" [(ngModel)]="objLocaleRegion.Province">
-                        <input type="hidden" formControlName="ZipCode" [(ngModel)]="objLocaleRegion.ZipCode"> -->
-                        <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrict }} {{r.District}} {{r.Province}}
-                        </ng-template>
-                        <input type="text" formControlName="Region" class="form-control form-control-sm"
-                            [(ngModel)]="objLocaleRegion" 
-                            [ngbTypeahead]="searchRegion"  
-                            [readOnly]="isConceal"
-                            [readOnly]="showEditField" 
-                            [resultTemplate]="rt"
-                            [inputFormatter]="formatterRegion" />
->>>>>>> parent of 72cc74f... commit
                     </div>
                 </div>
             </div>
@@ -326,13 +287,7 @@
                             1
                         </td>
                         <td>
-<<<<<<< HEAD
                             <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
-=======
-                            <input type="text" formControlName="BrandFullName" class="form-control form-control-sm" [readonly]="showEditField" 
-                            >
-                            <!-- [ngbTypeahead]="searchProduct" -->
->>>>>>> parent of 72cc74f... commit
                         </td>
                         <td>
                             <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
