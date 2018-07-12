@@ -163,17 +163,18 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
 
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">                        
-                        <ng-template #informRegionResult let-r="result" let-t="term">
-                                {{ r.SubDistrict }} {{r.District}} {{r.Province}}
+                        <ng-template #rt let-r="result" let-t="term">
+                            {{ r.SubDistrict }} {{r.District}} {{r.Province}}
                         </ng-template>
-
-                        <input type="text" formControlName="Region" class="form-control form-control-sm"
-                            [ngbTypeahead]="searchRegion"  
+                        
+                        <input type="text" class="form-control form-control-sm"
+                            formControlName="Region"
+                            [ngbTypeahead]="searchRegion"
+                            [(ngModel)]="objInformmerRegion"    
+                            [resultTemplate]="rt"
                             [readOnly]="isConceal"
-                            [readOnly]="showEditField" 
-                            [(ngModel)]="objInformmerRegion" 
-                            [resultTemplate]="informRegionResult"
-                            [inputFormatter]="formatterArray" />
+                            [readOnly]="showEditField"
+                            [inputFormatter]="formatterRegion" />
                     </div>
                 </div>
                 <div class="row">
@@ -246,23 +247,23 @@
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         
 
-                        <!-- <input type="hidden" formControlName="SubDistrictCode" [(ngModel)]="objLocaleRegion.SubDistrictCode">
-                        <input type="hidden" formControlName="SubDistrict" [(ngModel)]="objLocaleRegion.SubDistrict">
+                        <input type="text" formControlName="SubDistrictCode" [value]="objLocaleRegion.SubDistrictCode">
+                        <!-- <input type="hidden" formControlName="SubDistrict" [(ngModel)]="objLocaleRegion.SubDistrict">
                         <input type="hidden" formControlName="DistrictCode" [(ngModel)]="objLocaleRegion.DistrictCode">
                         <input type="hidden" formControlName="District" [(ngModel)]="objLocaleRegion.District">
                         <input type="hidden" formControlName="ProvinceCode" [(ngModel)]="objLocaleRegion.ProvinceCode">
                         <input type="hidden" formControlName="Province" [(ngModel)]="objLocaleRegion.Province">
                         <input type="hidden" formControlName="ZipCode" [(ngModel)]="objLocaleRegion.ZipCode"> -->
-                        <ng-template #localeRegionResult let-r="result" let-t="term">
+                        <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubDistrict }} {{r.District}} {{r.Province}}
                         </ng-template>
                         <input type="text" formControlName="Region" class="form-control form-control-sm"
+                            [(ngModel)]="objLocaleRegion" 
                             [ngbTypeahead]="searchRegion"  
                             [readOnly]="isConceal"
                             [readOnly]="showEditField" 
-                            [(ngModel)]="objLocaleRegion" 
-                            [resultTemplate]="localeRegionResult"
-                            [inputFormatter]="formatterArray" />
+                            [resultTemplate]="rt"
+                            [inputFormatter]="formatterRegion" />
                     </div>
                 </div>
 

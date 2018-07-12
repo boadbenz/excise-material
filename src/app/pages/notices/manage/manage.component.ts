@@ -23,10 +23,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private sub: any;
     mode: string;
+    showEditField: any;
     modal: any;
     noticeCode: string;
     noticeForm: FormGroup;
-    showEditField: any;
     searching = false;
     isConceal = false;
 
@@ -356,6 +356,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
             );
 
+            await res.NoticeLocale.map(item =>
+                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
+            )
+
             await res.NoticeInformer.map(item =>
                 item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
             );
@@ -397,12 +401,18 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     public objInformmerRegion: any;
     public objLocaleRegion: any;
-    searchRegion = (text3$: Observable<string>) => {
+    searchRegion = (text3$: Observable<string>) =>
         text3$
-            .debounceTime(200)
+            .debounceTime(300)
             .map(term => term === '' ? []
-                : this.regionModel.filter(v => v.District.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
-    }
+                : this.regionModel
+                    .filter(v =>
+                        v.SubDistrict.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.District.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.Province.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
+
+    formatterRegion = (x: { SubDistrict: string, District: string, Province: string }) => `${x.SubDistrict} ${x.District} ${x.Province}`;
 
     // public objProduct: any;
     // searchProduct = (text$: Observable<string>) => {
@@ -416,7 +426,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     //         );
     // }
 
-    formatterArray = (x: { name: string }) => x.name;
 
     onInformmerRegionChange(ele: any) {
         const subDistinct = (ele.target.value).split(' ')[0];
