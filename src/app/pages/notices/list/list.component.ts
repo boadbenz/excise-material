@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
 import { Message } from 'app/config/message';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Notice } from '../notice';
 import { pagination } from 'app/config/pagination';
+import { toLocalShort } from 'app/config/dateFormat';
 
 @Component({
     selector: 'app-list',
@@ -19,8 +19,7 @@ export class ListComponent implements OnInit {
     paginage = pagination;
 
     notice = new Array<Notice>();
-
-    @ViewChild('noticeTable') noticeTable: ElementRef;
+    noticeList = new Array<Notice>();
 
     constructor(
         private _router: Router,
@@ -40,7 +39,7 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navservice.showAdvSearch;
     }
 
-    ngOnInit() {
+    ngOnInit() {      
         this.subOnSearch = this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navservice.setOnSearch('');
@@ -50,11 +49,7 @@ export class ListComponent implements OnInit {
     }
 
     onSearch(Textsearch: any) {
-        this.noticeService.getByKeyword(Textsearch).subscribe(list => {
-            this.onSearchComplete(list)
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
+        this.noticeService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
     }
 
     onAdvSearch(form: any) {
@@ -65,42 +60,41 @@ export class ListComponent implements OnInit {
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkDate);
         } else {
-            form.value.DateStartFrom = sDateCompare.getTime();
-            form.value.DateStartTo = eDateCompare.getTime();
-            this.noticeService.getByConAdv(form.value).subscribe(list => {
-
-                this.onSearchComplete(list)
-
-            }, (err: HttpErrorResponse) => {
-                alert(err.message);
-            });
+            form.value.DateStartFrom = sDateCompare.toISOString();
+            form.value.DateStartTo = eDateCompare.toISOString();
+            this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
         }
     }
 
-    onSearchComplete(list: any) {
-        this.notice = [];
+    async onSearchComplete(list: Notice[]) {
 
-        if (!list) {
+        if (!list.length) {
             alert(Message.noRecord);
             return false;
         }
 
-        if (Array.isArray(list)) {
-            this.notice = list;
-        } else {
-            this.notice.push(list);
-        }
+        this.notice = [];
+        await list.map(item => {
+            item.NoticeDate = toLocalShort(item.NoticeDate);
+            item.NoticeStaff.map(s => {
+                s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+            });
+            item.NoticeSuspect.map(s => {
+                s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+            })
+        })
 
+        this.notice = list
         // set total record
-        // this.invesPaginate.TotalItems = this.notice.length;
+        this.paginage.TotalItems = this.notice.length;
     }
 
     view(noticeCode: string) {
-        this._router.navigate([`/notice/manage/v/${noticeCode}`]);
+        this._router.navigate([`/notice/manage/R/${noticeCode}`]);
     }
 
     async pageChanges(event) {
-
+        this.noticeList = await this.notice.slice(event.startIndex - 1, event.endIndex);
     }
 
 }
