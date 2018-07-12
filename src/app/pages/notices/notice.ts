@@ -26,3 +26,4 @@ export class Notice {
     public NoticeSuspect: Array<NoticeSuspect>;
     public NoticeDocument: Array<NoticeDocument>;
 }
+

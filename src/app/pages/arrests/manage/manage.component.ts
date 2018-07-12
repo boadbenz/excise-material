@@ -397,7 +397,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        console.log(JSON.stringify(this.arrestForm.value));
         this.arrestService.insAll(this.arrestForm.value).then(res => {
             // tslint:disable-next-line:triple-equals
             if (res.IsSuccess == true) {
@@ -409,7 +408,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private onReviced() {
-        console.log(JSON.stringify(this.arrestForm.value));
+        const arrestDate = new Date(this.arrestForm.value.ArrestDate);
+        const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
+        this.arrestForm.value.ArrestDate = arrestDate.toISOString()
+        this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
+        
         this.arrestService.updByCon(this.arrestForm.value).then(async res => {
             if (res.IsSuccess === true) {
                 // this.onComplete();

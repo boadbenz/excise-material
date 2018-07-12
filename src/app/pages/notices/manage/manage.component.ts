@@ -35,27 +35,27 @@ export class ManageComponent implements OnInit, OnDestroy {
     communicateModel = communicate
 
     get NoticeStaffForm(): FormArray {
-        return this.noticeForm.get('NoticeStaffForm') as FormArray;
+        return this.noticeForm.get('NoticeStaff') as FormArray;
     }
 
     get NoticeInformerForm(): FormArray {
-        return this.noticeForm.get('NoticeInformerForm') as FormArray;
+        return this.noticeForm.get('NoticeInformer') as FormArray;
     }
 
     get NoticeLocaleForm(): FormArray {
-        return this.noticeForm.get('NoticeLocaleForm') as FormArray;
+        return this.noticeForm.get('NoticeLocale') as FormArray;
     }
 
     get NoticeProductForm(): FormArray {
-        return this.noticeForm.get('NoticeProductForm') as FormArray;
+        return this.noticeForm.get('NoticeProduct') as FormArray;
     }
 
     get NoticeSuspectForm(): FormArray {
-        return this.noticeForm.get('NoticeSuspectForm') as FormArray;
+        return this.noticeForm.get('NoticeSuspect') as FormArray;
     }
 
     get NoticeDocumentForm(): FormArray {
-        return this.noticeForm.get('NoticeDocumentForm') as FormArray;
+        return this.noticeForm.get('NoticeDocument') as FormArray;
     }
 
     constructor(
@@ -124,29 +124,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         })
 
-        // this.sub = this.navService.onSave.subscribe(async status => {
-        //     if (status) {
-        //         // set action save = false
-        //         await this.navService.setOnSave(false);
-        //         if (this.mode === 'C') {
-        //             this.onCreate();
-
-        //         } else if (this.mode === 'R') {
-        //             this.onReviced();
-        //         }
-        //     }
-        // });
-
-        this.sub = this.navService.onSave.subscribe(status => {
+        this.sub = this.navService.onSave.subscribe(async status => {
             if (status) {
-                // set true
-                this.navService.setEditField(true);
-                this.navService.setEditButton(true);
-                this.navService.setPrintButton(true);
-                this.navService.setDeleteButton(true);
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
+                // set action save = false
+                await this.navService.setOnSave(false);
+                if (this.mode === 'C') {
+                    this.onCreate();
+
+                } else if (this.mode === 'R') {
+                    this.onReviced();
+                }
             }
         });
     }
@@ -166,12 +153,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             FilePath: [null],
             ArrestCode: [null],
             IsActive: [null],
-            NoticeStaffForm: this.fb.array([this.createStaffForm()]),
-            NoticeInformerForm: this.fb.array([this.createInformerForm()]),
-            NoticeLocaleForm: this.fb.array([this.createLocaleForm()]),
-            NoticeProductForm: this.fb.array([this.createProductForm()]),
-            NoticeSuspectForm: this.fb.array([this.createSuspectForm()]),
-            NoticeDocumentForm: this.fb.array([this.createDocumentForm()])
+            NoticeStaff: this.fb.array([this.createStaffForm()]),
+            NoticeInformer: this.fb.array([this.createInformerForm()]),
+            NoticeLocale: this.fb.array([this.createLocaleForm()]),
+            NoticeProduct: this.fb.array([this.createProductForm()]),
+            NoticeSuspect: this.fb.array([]),
+            NoticeDocument: this.fb.array([this.createDocumentForm()])
         })
     }
 
@@ -300,22 +287,22 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private createSuspectForm(): FormGroup {
-        return this.fb.group({
-            SuspectID: [null],
-            SuspectReferenceID: [null],
-            NoticeCode: new FormControl(this.noticeCode),
-            SuspectTitleName: [null],
-            SuspectFirstName: [null],
-            SuspectLastName: [null],
-            CompanyTitleName: [null],
-            CompanyName: [null],
-            CompanyOtherName: [null],
-            IsActive: [null],
-            SuspectFullName: [null],
-            IsNewItem: [null]
-        })
-    }
+    // private createSuspectForm(): FormGroup {
+    //     return this.fb.group({
+    //         SuspectID: [null],
+    //         SuspectReferenceID: [null],
+    //         NoticeCode: new FormControl(this.noticeCode),
+    //         SuspectTitleName: [null],
+    //         SuspectFirstName: [null],
+    //         SuspectLastName: [null],
+    //         CompanyTitleName: [null],
+    //         CompanyName: [null],
+    //         CompanyOtherName: [null],
+    //         IsActive: [null],
+    //         SuspectFullName: [null],
+    //         IsNewItem: [null]
+    //     })
+    // }
 
     private createDocumentForm(): FormGroup {
         return this.fb.group({
@@ -381,6 +368,39 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+    private onCreate() {
+        const noticeDate = new Date(this.noticeForm.value.NoticeDate);
+        const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
+        this.noticeForm.value.NoticeDate = noticeDate.getTime();
+        this.noticeForm.value.NoticeDueDate = noticeDueDate.getTime();
+        this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
+            if (isSuccess) { this.onComplete() }
+        });
+    }
+
+    private onReviced() {
+        const noticeDate = new Date(this.noticeForm.value.NoticeDate);
+        const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
+        this.noticeForm.value.NoticeDate = noticeDate.getTime();
+        this.noticeForm.value.NoticeDueDate = noticeDueDate.getTime();
+        this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
+            if (isSuccess) { this.onComplete() }
+        })
+    }
+
+    private async onComplete() {
+        // set true
+        await this.navService.setEditField(true);
+        await this.navService.setEditButton(true);
+        await this.navService.setPrintButton(true);
+        await this.navService.setDeleteButton(true);
+        // set false
+        await this.navService.setSaveButton(false);
+        await this.navService.setCancelButton(false);
+
+        alert(Message.saveComplete);
+    }
+
     addProduct() {
         let product = new NoticeProduct();
         product.IsNewItem = true;
@@ -399,11 +419,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.NoticeDocumentForm.push(this.fb.group(document));
     }
 
-    public objInformmerRegion: any;
-    public objLocaleRegion: any;
+
     searchRegion = (text3$: Observable<string>) =>
         text3$
             .debounceTime(300)
+            .distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.regionModel
                     .filter(v =>
@@ -412,42 +432,60 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.Province.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
-    formatterRegion = (x: { SubDistrict: string, District: string, Province: string }) => `${x.SubDistrict} ${x.District} ${x.Province}`;
+    searchProduct = (text$: Observable<string>) =>
+        text$
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .map(term =>
+                this.productModel
+                    .filter(v =>
+                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10)
+            );
 
-    // public objProduct: any;
-    // searchProduct = (text$: Observable<string>) => {
-    //     text$
-    //         .debounceTime(200)
-    //         .distinctUntilChanged()
-    //         .map(term =>
-    //             this.productModel
-    //                 .map(item => `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`)
-    //                 .filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)
-    //         );
-    // }
+    formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
+        `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
 
+    formatterRegion = (x: { SubDistrict: string, District: string, Province: string }) =>
+        `${x.SubDistrict} ${x.District} ${x.Province}`;
 
-    onChangeInformmerRegion() {
-        // .map(item => {
-        //     this.NoticeInformerForm.at(0).patchValue({
-        //         SubDistrictCode: item.SubDistrictCode,
-        //         SubDistrict: item.SubDistrict,
-        //         DistrictCode: item.DistrictCode,
-        //         District: item.District,
-        //         ProvinceCode: item.ProvinceCode,
-        //         Province: item.Province,
-        //         ZipCode: item.ZipCode
-        //     });
-        // });
-
-        console.log(this.objLocaleRegion);
+    selectItemInformmerRegion(ele: any) {
+        this.NoticeInformerForm.at(0).patchValue({
+            SubDistrictCode: ele.item.SubDistrictCode,
+            SubDistrict: ele.item.SubDistrict,
+            DistrictCode: ele.item.DistrictCode,
+            District: ele.item.District,
+            ProvinceCode: ele.item.ProvinceCode,
+            Province: ele.item.Province,
+            ZipCode: ele.item.ZipCode
+        });
     }
 
-    onLocaleRegionChange() {
-
+    selectItemLocaleRegion(ele: any) {
+        this.NoticeLocaleForm.at(0).patchValue({
+            SubDistrictCode: ele.item.SubDistrictCode,
+            SubDistrict: ele.item.SubDistrict,
+            DistrictCode: ele.item.DistrictCode,
+            District: ele.item.District,
+            ProvinceCode: ele.item.ProvinceCode,
+            Province: ele.item.Province,
+            ZipCode: ele.item.ZipCode
+        });
     }
 
-    onProductChange() {
+    selectItemProductItem(ele: any, index: number) {
+        this.NoticeProductForm.at(index).patchValue({
+            BrandCode: ele.item.BrandCode,
+            BrandNameTH: ele.item.BrandNameTH,
+            SubBrandCode: ele.item.SubBrandCode,
+            SubBrandNameTH: ele.item.SubBrandNameTH,
+            ModelCode: ele.item.ModelCode,
+            ModelName: ele.item.ModelName,
+            Qty: ele.item.Qty,
+            QtyUnit: ele.item.QtyUnit
+        })
 
     }
 
