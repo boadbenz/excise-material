@@ -354,10 +354,14 @@
                 <tbody formArrayName="NoticeSuspect">
                     <tr *ngFor="let item of NoticeSuspect.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
-                        <td>{{item.get('SuspectTypeName').value}}</td>
-                        <td>{{item.get('EntityTypeName').value}}</td>
                         <td>
-                            <span *ngIf="item.get('EntityType').value == 0">
+                            <!-- {{item.get('SuspectType').value}}ห -->
+                        </td>
+                        <td>
+                            <!-- {{item.get('EntityType').value}} -->
+                        </td>
+                        <td>
+                            <!-- <span *ngIf="item.get('EntityType').value == 0">
                                 {{item.get('CompanyRegistrationNo').value}}
                             </span>
                             <span *ngIf="item.get('EntityType').value == 1 && item.get('SuspectType').value == 0">
@@ -365,15 +369,16 @@
                             </span>
                             <span *ngIf="item.get('EntityType').value == 1 && item.get('SuspectType').value == 1">
                                 {{item.get('Idcard').value}}
-                            </span>
+                            </span> -->
                         </td>
                         <td>
-                            <span *ngIf="item.get('EntityType').value == 0">
+                            <!-- <span *ngIf="item.get('EntityType').value == 0">
                                 {{item.get('CompanyFullName').value}}
                             </span>
                             <span *ngIf="item.get('EntityType').value == 1">
                                 {{item.get('SuspectFullName').value}}
-                            </span>
+                            </span> -->
+                            {{item.get('SuspectFullName').value}}
                         </td>
                         <td></td>
                         <td class="text-center">

@@ -275,7 +275,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
         this.noticeForm.value.NoticeDate = noticeDate.toISOString();
         this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
-
+    console.log(JSON.stringify(this.noticeForm.value));
+    
         this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
             if (isSuccess) { this.onComplete() }
         });
