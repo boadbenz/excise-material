@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { NoticeService } from '../notice.service';
-import { pagination } from 'app/config/pagination';
+import { pagination } from '../../../config/pagination';
 
 @Component({
   selector: 'app-notice-list-modal',

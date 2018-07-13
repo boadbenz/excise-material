@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
-import { Message } from 'app/config/message';
-import { toLocalShort } from 'app/config/dateFormat';
-import { pagination } from 'app/config/pagination';
+import { Message } from '../../../config/message';
+import { toLocalShort } from '../../../config/dateFormat';
+import { pagination } from '../../../config/pagination';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'

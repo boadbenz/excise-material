@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
-import { Message } from 'app/config/message';
+import { Message } from '../../../config/message';
 import { Notice } from '../notice';
-import { pagination } from 'app/config/pagination';
-import { toLocalShort } from 'app/config/dateFormat';
+import { pagination } from '../../../config/pagination';
+import { toLocalShort } from '../../../config/dateFormat';
 
 @Component({
     selector: 'app-list',
@@ -39,7 +39,7 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navservice.showAdvSearch;
     }
 
-    ngOnInit() {      
+    ngOnInit() {
         this.subOnSearch = this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navservice.setOnSearch('');

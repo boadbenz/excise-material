@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Injectable } from '@angular/core';
 import { LawbreakerTypes, EntityTypes, ArrestLawbreaker } from '../arrest-lawbreaker';
-import { pagination } from 'app/config/pagination';
+import { pagination } from '../../../config/pagination';
 import { Observable } from 'rxjs/Observable';
-import { appConfig } from 'app/app.config';
+import { appConfig } from '../../../app.config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
@@ -60,7 +60,9 @@ export class LawbreakerModalComponent implements OnInit {
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
 
-    constructor(private lawService: LawbreakerService) { }
+    constructor(
+        private lawService: LawbreakerService
+    ) { }
 
     ngOnInit() {
         this.onDetactTable();

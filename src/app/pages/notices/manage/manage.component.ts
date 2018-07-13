@@ -12,15 +12,16 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { toLocalNumeric } from 'app/config/dateFormat';
-import { products, regions, communicate, DutyUnit } from 'app/models';
-import { Message } from 'app/config/message';
+import { toLocalNumeric } from '../../../config/dateFormat';
+import { products, regions, communicate, DutyUnit } from '../../../models';
+import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
 import { NoticeSuspect } from '../notice-suspect';
 import { NoticeDocument, NoticeDocumentFormControl } from '../notice-document';
 import { NoticeStaffFormControl } from '../notice-staff';
 import { NoticeInformerFormControl } from '../notice-informer';
 import { NoticeLocaleFormControl } from '../notice-locale';
+import { Suspect } from '../../component/suspect-modal/suspect';
 
 @Component({
     selector: 'app-manage',
@@ -37,6 +38,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     searching = false;
     searchFailed = false;
     isConceal = false;
+
+    // importSuspectData = new Array<Suspect>();
 
     regionModel = regions;
     productModel = products;
@@ -307,11 +310,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.NoticeProduct.push(this.fb.group(product));
     }
 
-    // addSuspect(){
-    //     let suspect = new NoticeSuspect();
-    //     suspect.IsNewItem = true;
-    //     this.NoticeSuspect.push(this.fb.group(suspect));
-    // }
+    addSuspect(suspect: any[]) {
+        suspect.map(item => {
+            item.IsNewItem = true;
+            this.NoticeSuspect.push(this.fb.group(item))
+        });
+    }
 
     addDocument() {
         let document = new NoticeDocument();

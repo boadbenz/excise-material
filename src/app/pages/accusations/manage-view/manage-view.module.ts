@@ -1,4 +1,4 @@
-import { CardActionsModule } from './../../component/card-actions/card-actions.module';
+import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';

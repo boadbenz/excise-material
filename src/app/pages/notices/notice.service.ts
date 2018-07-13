@@ -41,7 +41,6 @@ export class NoticeService {
         if (Textsearch === '') {
             return Observable.of([]);
         }
-
         const params = { Textsearch };
         const url = `${appConfig.api8082}/NoticeProductgetByKeyword`;
         return this.http.post<any>(url, params, this.httpOptions)
@@ -49,6 +48,7 @@ export class NoticeService {
                 if (res.IsSuccess === false) {
                     return Observable.of([]);
                 }
+                console.log(res);
                 return res.ResponseData;
             })
     }
