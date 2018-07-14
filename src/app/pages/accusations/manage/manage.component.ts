@@ -52,58 +52,58 @@ export class ManageComponent implements OnInit {
   ];
 
   condemnTableData = [{
-    arrestCode: "TN90806026000001",
-    lawsuitNo: "001/2561",
-    lawsuitDate: "10-ม.ค.-2560",
+    ArrestCode: "TN90806026000001",
+    LawsuitNo: "001/2561",
+    LawsuitDate: "10-ม.ค.-2560",
     lawsuitTime: "12.14",
-    titleName: "นาย",
-    firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
-    positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
+    TitleName: "นาย",
+    FirstName: "ธวัชชัย",
+    LastName: "บิงขุนทด",
+    DepartmentName: "สสท.ระนอง สาขาเมืองกระบุรี",
+    positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน",
   },
   {
-    arrestCode: "TN90806026000002",
-    lawsuitNo: "น.001/2561",
-    lawsuitDate: "19-ม.ค.-2560",
+    ArrestCode: "TN90806026000002",
+    LawsuitNo: "น.001/2561",
+    LawsuitDate: "19-ม.ค.-2560",
     lawsuitTime: "16.32",
-    titleName: "นาย",
+    TitleName: "นาย",
     firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
+    LastName: "บิงขุนทด",
+    DepartmentName: "สสท.ระนอง สาขาเมืองกระบุรี",
     positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
   },
   {
-    arrestCode: "TN90806026000003",
-    lawsuitNo: "00122561",
-    lawsuitDate: "22-ม.ค.-2560",
+    ArrestCode: "TN90806026000003",
+    LawsuitNo: "00122561",
+    LawsuitDate: "22-ม.ค.-2560",
     lawsuitTime: "09.48",
-    titleName: "นาย",
+    TitleName: "นาย",
     firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
+    LastName: "บิงขุนทด",
+    DepartmentName: "สสท.ระนอง สาขาเมืองกระบุรี",
     positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
   },
   {
-    arrestCode: "TN90806026000004",
-    lawsuitNo: "003/2561",
-    lawsuitDate: "11-ม.ค.-2560",
+    ArrestCode: "TN90806026000004",
+    LawsuitNo: "003/2561",
+    LawsuitDate: "11-ม.ค.-2560",
     lawsuitTime: "11.00",
-    titleName: "นาย",
+    TitleName: "นาย",
     firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
+    LastName: "บิงขุนทด",
+    DepartmentName: "สสท.ระนอง สาขาเมืองกระบุรี",
     positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
   },
   {
-    arrestCode: "TN90806026000005",
-    lawsuitNo: "004/2561",
-    lawsuitDate: "13-ม.ค.-2561",
+    ArrestCode: "TN90806026000005",
+    LawsuitNo: "004/2561",
+    LawsuitDate: "13-ม.ค.-2561",
     lawsuitTime: "15.13",
-    titleName: "นาย",
+    TitleName: "นาย",
     firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
+    LastName: "บิงขุนทด",
+    DepartmentName: "สสท.ระนอง สาขาเมืองกระบุรี",
     positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
   }]
 
@@ -152,13 +152,13 @@ export class ManageComponent implements OnInit {
       .subscribe(params => {
         //check id from manage view page
         for (let i = 0; i < this.condemnTableData.length; i++) {
-          if (params.code == this.condemnTableData[i].arrestCode) {
+          if (params.code == this.condemnTableData[i].ArrestCode) {
             this.condemnData = this.condemnTableData[i];
             this.fullName =
-              this.condemnTableData[i].titleName +
-              this.condemnTableData[i].firstName +
+              this.condemnTableData[i].TitleName +
+              this.condemnTableData[i].FirstName +
               " " +
-              this.condemnTableData[i].lastName;
+              this.condemnTableData[i].LastName;
           }
         }
       });

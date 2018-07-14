@@ -30,59 +30,15 @@ export class ManageViewComponent implements OnInit {
     }
   ];
   listData = [{
-    arrestCode: "TN90806026000001",
-    lawsuitNo: "001/2561",
-    lawsuitDate: "10-ม.ค.-2560",
+    ArrestCode: "TN90806026000001",
+    LawsuitNo: "001/2561",
+    LawsuitDate: "10-ม.ค.-2560",
     lawsuitTime: "12.14",
-    titleName: "นาย",
-    firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
-    positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
-  },
-  {
-    arrestCode: "TN90806026000002",
-    lawsuitNo: "น.001/2561",
-    lawsuitDate: "19-ม.ค.-2560",
-    lawsuitTime: "16.32",
-    titleName: "นาย",
-    firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
-    positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
-  },
-  {
-    arrestCode: "TN90806026000003",
-    lawsuitNo: "00122561",
-    lawsuitDate: "22-ม.ค.-2560",
-    lawsuitTime: "09.48",
-    titleName: "นาย",
-    firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
-    positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
-  },
-  {
-    arrestCode: "TN90806026000004",
-    lawsuitNo: "003/2561",
-    lawsuitDate: "11-ม.ค.-2560",
-    lawsuitTime: "11.00",
-    titleName: "นาย",
-    firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
-    positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
-  },
-  {
-    arrestCode: "TN90806026000005",
-    lawsuitNo: "004/2561",
-    lawsuitDate: "13-ม.ค.-2561",
-    lawsuitTime: "15.13",
-    titleName: "นาย",
-    firstName: "ธวัชชัย",
-    lastName: "บิงขุนทด",
-    departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
-    positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน"
+    TitleName: "นาย",
+    FirstName: "ธวัชชัย",
+    LastName: "บิงขุนทด",
+    DepartmentName: "สสท.ระนอง สาขาเมืองกระบุรี",
+    positionLawName: "เจ้าพนักงานสรรพสามิตชำนาญงาน",
   }]
   fullName: any;
   detailData: any;
@@ -101,18 +57,18 @@ export class ManageViewComponent implements OnInit {
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
 
-
+    this.detailData = this.listData[0];
     this.getDataFromListPage = this.activeRoute.queryParams
       .subscribe(params => {
         //check id from list page
         for (let i = 0; i < this.listData.length; i++) {
-          if (params.code == this.listData[i].arrestCode) {
+          if (params.code == this.listData[i].ArrestCode) {
             this.detailData = this.listData[i];
             this.fullName =
-              this.listData[i].titleName +
-              this.listData[i].firstName +
+              this.listData[i].TitleName +
+              this.listData[i].FirstName +
               " " +
-              this.listData[i].lastName;
+              this.listData[i].LastName;
           }
         }
       });

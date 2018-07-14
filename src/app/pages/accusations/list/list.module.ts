@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AccusationsService } from '../accusations.service';
+import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 
 const routes: Routes = [
     {
@@ -22,9 +24,10 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        PaginationTableModule
     ],
-    providers: [NavigationComponent],
+    providers: [NavigationComponent, AccusationsService],
     declarations: [ListComponent]
 })
 export class ListModule { }
