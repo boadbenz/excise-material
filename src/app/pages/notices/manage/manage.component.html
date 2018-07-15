@@ -1,3 +1,6 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+    <app-print-doc-modal [NoticeCode]="noticeCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+</ng-template>
 <form class="form-horizontal" [formGroup]="noticeForm">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">
@@ -32,10 +35,10 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm">
+                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm"[readonly]="showEditField">
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" name="" class="form-control form-control-sm">
+                    <input type="text" name="" class="form-control form-control-sm"[readonly]="showEditField">
                 </div>
             </div>
 
@@ -192,7 +195,7 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
-            <h4 class="card-title m-b-0">รายละเอียดการกระทำความผิด</h4>
+            <h4 class="card-title m-b-0">สถานที่เกิดเหตุ</h4>
         </div>
         <div class="card-body" formArrayName="NoticeLocale">
 
@@ -249,9 +252,8 @@
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubDistrict }} {{r.District}} {{r.Province}}
                         </ng-template>
-                        <input type="text" formControlName="Region" class="form-control form-control-sm"
+                        <input type="text" class="form-control form-control-sm"
                             [ngbTypeahead]="searchRegion"
-                            [readOnly]="isConceal"
                             [readOnly]="showEditField"
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
@@ -307,9 +309,11 @@
                             <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                         </td>
                         <td>
-                            <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                            <select formControlName="QtyUnit" class="form-control form-control-sm">
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of dutyUnitModel;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                                <option *ngFor="let item of dutyUnitModel;"
+                                [disabled]="showEditField" 
+                                [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
                             </select>
                         </td>
                         <td class="text-center">
@@ -349,6 +353,7 @@
                         <th>ชื่อ</th>
                         <th>จำนวนครั้งการกระทำผิด</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody formArrayName="NoticeSuspect">
@@ -382,6 +387,11 @@
                         </td>
                         <td></td>
                         <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="onViewSuspect(item.get('SuspectID').value)">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteSuspect(item.get('SuspectID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
@@ -401,8 +411,11 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [disabled]="showEditField">
-                        <option *ngFor="let item of communicateModel; let i=index;" [value]="item.CommunicationChanelID">
+                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm">
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of communicateModel; let i=index;" 
+                        [value]="item.CommunicationChanelID"
+                        [disabled]="showEditField">
                             {{item.CommunicationChanelName}}
                         </option>
                     </select>
@@ -416,7 +429,17 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ที่อยู่เอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="file" formControlName="FilePath" [readonly]="showEditField">
+                        <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField">
+                    <!-- <div class="custom-file">
+                        <input id="communicate-file" type="file" class="custom-file-input" formControlName="FilePath" [readonly]="showEditField">
+                        <label for="communicate-file" class="custom-file-label">
+                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        </label>
+                    </div> -->
+                    <!-- <label for="communicate-file">
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                    </label> -->
+                    
                 </div>
             </div>
         </div>

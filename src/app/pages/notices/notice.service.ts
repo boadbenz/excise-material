@@ -5,6 +5,7 @@ import { Notice } from './notice';
 import { NoticeProduct } from './notice-product';
 import { Observable } from 'rxjs/Observable';
 import { Http, } from '@angular/http';
+import { Message } from 'app/config/message';
 
 @Injectable()
 export class NoticeService {
@@ -23,7 +24,7 @@ export class NoticeService {
     };
 
     async getByKeyword(Textsearch: any): Promise<Notice[]> {
-        const params = Textsearch;
+        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api8082}/NoticegetByKeyword`;
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -31,6 +32,12 @@ export class NoticeService {
                 alert(res.ResponseData.Msg);
                 return [];
             }
+
+            if (!res.ResponseData.length) {
+                alert(Message.noRecord);
+                return [];
+            }
+
             return res.ResponseData as Notice[];
         } catch (error) {
             alert(error.message);
@@ -130,7 +137,7 @@ export class NoticeService {
 
     async productupdDelete(ProductID: string): Promise<any> {
         const params = { ProductID };
-        const url = `${appConfig.api8082}/NoticeProductupdDelete`;
+        const url = `${appConfig.api8082}/NoticeproductupdDelete`;
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             if (res.IsSuccess === false) {

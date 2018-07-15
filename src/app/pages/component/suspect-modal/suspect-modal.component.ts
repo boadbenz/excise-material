@@ -1,10 +1,11 @@
-import { Component, OnInit, Output, EventEmitter, Injectable } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { Suspect, SuspectForm } from './suspect';
 import { pagination } from 'app/config/pagination';
 import { Observable } from 'rxjs/Observable';
 import { appConfig } from 'app/app.config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormArray, FormControl, FormBuilder, FormGroup } from '@angular/forms';
+import { Message } from 'app/config/message';
 
 const suspectTypes = [
     {
@@ -27,6 +28,7 @@ const entityTypes = [
 
 @Injectable()
 export class SuspectService {
+
     constructor(private http: HttpClient) { }
 
     // tslint:disable-next-line:member-ordering
@@ -37,20 +39,34 @@ export class SuspectService {
             })
     };
 
-    searchByKeyword(Textsearch: string) {
-
+    searchByKeyword(Textsearch: string): Observable<Suspect[]> {
+        if (Textsearch === '') {
+            return Observable.of([]);
+        }
+        const params = JSON.stringify(Textsearch);
+        const url = `${appConfig.api8082}/NoticeSuspectgetByKeyword`;
+        return this.response(params, url);
     }
 
     searchAdv(form: any): Observable<Suspect[]> {
         if (form === '') {
             return Observable.of([]);
         }
-
         const params = JSON.stringify(form);
         const url = `${appConfig.api8082}/SuspectgetByConAdv`;
+        return this.response(params, url);
+    }
+
+    private response(params: string, url: string) {
         return this.http.post<any>(url, params, this.httpOptions)
             .map(res => {
                 if (res.IsSuccess === false) {
+                    alert(res.ResponseData.Msg);
+                    return Observable.of([]);
+                }
+
+                if (!res.ResponseData.length) {
+                    alert(Message.noRecord);
                     return Observable.of([]);
                 }
                 return res.ResponseData;
@@ -63,8 +79,9 @@ export class SuspectService {
     templateUrl: './suspect-modal.component.html',
     styleUrls: ['./suspect-modal.component.scss']
 })
-export class SuspectModalComponent implements OnInit {
+export class SuspectModalComponent implements OnInit, OnDestroy {
 
+    private sub: any;
     isOpen = false;
     isCheckAll = false;
     advSearch = false;
@@ -94,7 +111,7 @@ export class SuspectModalComponent implements OnInit {
     ngOnInit() {
         this.suspectFormGroup = this.fb.group({
             Suspect: this.fb.array([])
-        })
+        });
     }
 
     private setItemFormArray(array: any[], formControl: string) {
@@ -105,21 +122,31 @@ export class SuspectModalComponent implements OnInit {
         }
     }
 
+    onSearchByKeyword(f: any) {
+        this.suspectService.searchByKeyword(f).subscribe(res => this.onComplete(res));
+    }
+
     onSearchAdv(f: any) {
-        this.suspectService.searchAdv(f).subscribe(async res => {
-            await res.map(item => {
-                item.IsChecked = false;
-                item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
-                item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;
-            });
-            this.suspect = res;
-            // set total record
-            this.paginage.TotalItems = this.suspect.length;
+        this.suspectService.searchAdv(f).subscribe(res => this.onComplete(res));
+    }
+
+    async onComplete(res: Suspect[]) {
+        this.suspect = new Array<Suspect>();
+        const list = await res.map(item => {
+            item.IsChecked = false;
+            item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
+            item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;
+            return item;
         });
+        this.suspect = list;
+        // set total record
+        this.paginage.TotalItems = this.suspect.length;
+        this.pageChanges(this.paginage);
     }
 
     checkAll() {
         this.isCheckAll = !this.isCheckAll;
+        this.Suspect.value.map(item => item.IsChecked = true);
     }
 
     toggle(e) {
@@ -153,6 +180,9 @@ export class SuspectModalComponent implements OnInit {
     async pageChanges(event: any) {
         const list = await this.suspect.slice(event.startIndex - 1, event.endIndex);
         this.setItemFormArray(list, 'Suspect')
+    }
+
+    ngOnDestroy() {
     }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -21,7 +21,7 @@ import { NoticeDocument, NoticeDocumentFormControl } from '../notice-document';
 import { NoticeStaffFormControl } from '../notice-staff';
 import { NoticeInformerFormControl } from '../notice-informer';
 import { NoticeLocaleFormControl } from '../notice-locale';
-import { Suspect } from '../../component/suspect-modal/suspect';
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
 
 @Component({
     selector: 'app-manage',
@@ -38,6 +38,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     searching = false;
     searchFailed = false;
     isConceal = false;
+
+    @ViewChild('printDocModal') printDocModel: ElementRef;
 
     // importSuspectData = new Array<Suspect>();
 
@@ -76,7 +78,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         private router: Router,
         private fb: FormBuilder,
         private navService: NavigationService,
-        private noticeService: NoticeService
+        private noticeService: NoticeService,
+        private ngbModel: NgbModal,
+        private preloader: PreloaderService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -132,7 +136,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sub = this.navService.onCancel.subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                this.router.navigate(['/arrest/list']);
+                this.router.navigate(['/notice/list']);
             }
         })
 
@@ -148,6 +152,27 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
             }
         });
+
+        this.sub = this.navService.onDelete.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnDelete(false);
+                this.onDelete();
+            }
+        });
+
+        this.sub = this.navService.onPrint.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnPrint(false);
+                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+            }
+        })
+
+        this.sub = this.navService.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnNextPage(false);
+                this.router.navigate(['/arrest/manage', 'C', this.noticeCode]);
+            }
+        })
     }
 
     private createForm() {
@@ -195,23 +220,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.fb.group(NoticeProductFormControl)
     }
 
-    // private createSuspectForm(): FormGroup {
-    //     return this.fb.group({
-    //         SuspectID: [null],
-    //         SuspectReferenceID: [null],
-    //         NoticeCode: new FormControl(this.noticeCode),
-    //         SuspectTitleName: [null],
-    //         SuspectFirstName: [null],
-    //         SuspectLastName: [null],
-    //         CompanyTitleName: [null],
-    //         CompanyName: [null],
-    //         CompanyOtherName: [null],
-    //         IsActive: [null],
-    //         SuspectFullName: [null],
-    //         IsNewItem: [null]
-    //     })
-    // }
-
     private createDocumentForm(): FormGroup {
         return this.fb.group(NoticeDocumentFormControl)
     }
@@ -249,9 +257,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
             )
 
-            await res.NoticeInformer.map(item =>
-                item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-            );
+            await res.NoticeInformer.map(item => {
+                this.isConceal = item.InformerType === 1 ? true : false;
+                item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`;
+            });
 
             await res.NoticeSuspect.map(item =>
                 item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`
@@ -270,25 +279,57 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private onCreate() {
+    private async onCreate() {
+        // Set Preloader
+        this.preloader.setShowPreloader(true);
+
         const noticeDate = new Date(this.noticeForm.value.NoticeDate);
         const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
         this.noticeForm.value.NoticeDate = noticeDate.toISOString();
         this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
-    console.log(JSON.stringify(this.noticeForm.value));
-    
-        this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
+        this.noticeForm.value.NoticeInformer.map(item => {
+            item.InformerType = item.InformerType === true ? 1 : 0;
+        });
+
+        console.log(JSON.stringify(this.noticeForm.value));
+
+        await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
             if (isSuccess) { this.onComplete() }
         });
+
+        this.preloader.setShowPreloader(false);
     }
 
-    private onReviced() {
+    private async onReviced() {
+        // Set Preloader
+        this.preloader.setShowPreloader(true);
+
         const noticeDate = new Date(this.noticeForm.value.NoticeDate);
         const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
         this.noticeForm.value.NoticeDate = noticeDate.toISOString();
         this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
-        this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
+        this.noticeForm.value.NoticeInformer.map(item => {
+            item.InformerType = item.InformerType === true ? 1 : 0;
+        });
+
+        console.log(JSON.stringify(this.noticeForm.value));
+
+        await this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
             if (isSuccess) { this.onComplete() }
+        })
+
+        this.preloader.setShowPreloader(false);
+    }
+
+    private async onDelete() {
+        // Set Preloader
+        this.preloader.setShowPreloader(true);
+
+        await this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
+            if (IsSuccess) {
+                this.onComplete();
+                this.router.navigate(['/notice/list']);
+            }
         })
     }
 
@@ -306,24 +347,43 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addProduct() {
+        const lastIndex = this.NoticeProduct.length - 1;
         let product = new NoticeProduct();
         product.IsNewItem = true;
-        this.NoticeProduct.push(this.fb.group(product));
+        if (lastIndex < 0) {
+            this.NoticeProduct.push(this.fb.group(product));
+        } else {
+            const lastDoc = this.NoticeProduct.at(lastIndex).value;
+            if (lastDoc.ProductID) {
+                this.NoticeProduct.push(this.fb.group(product));
+            }
+        }
     }
 
-    addSuspect(suspect: any[]) {
-        suspect.map(item => {
-            item.IsNewItem = true;
-            this.NoticeSuspect.push(this.fb.group(item))
-        });
+    addSuspect(suspect: NoticeSuspect[]) {
+        console.log(suspect);
+
+        if (suspect.length) {
+            suspect.map(item => {
+                item.IsNewItem = true;
+                this.NoticeSuspect.push(this.fb.group(item))
+            });
+        }
     }
 
     addDocument() {
+        const lastIndex = this.NoticeDocument.length - 1;
         let document = new NoticeDocument();
         document.IsNewItem = true;
-        this.NoticeDocument.push(this.fb.group(document));
+        if (lastIndex < 0) {
+            this.NoticeDocument.push(this.fb.group(document));
+        } else {
+            const lastDoc = this.NoticeDocument.at(lastIndex).value;
+            if (lastDoc.DataSource && lastDoc.FilePath) {
+                this.NoticeDocument.push(this.fb.group(document));
+            }
+        }
     }
-
 
     searchRegion = (text3$: Observable<string>) =>
         text3$
@@ -336,6 +396,18 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.District.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.Province.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
+
+    // searchProduct = (text$: Observable<string>) =>
+    //     text$
+    //         .debounceTime(300)
+    //         .distinctUntilChanged()
+    //         .map(term => term === '' ? []
+    //             : this.productModel
+    //                 .filter(v =>
+    //                     v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+    //                     v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+    //                     v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
+    //                 ).slice(0, 10));
 
     searchProduct = (text$: Observable<string>) =>
         text$
@@ -388,7 +460,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.NoticeProduct.at(index).reset(ele.item)
     }
 
-    onDeleteProduct(id: string, index: number) {
+    async onDeleteProduct(id: string, index: number) {
         if (this.mode === 'C') {
             this.NoticeProduct.removeAt(index);
 
@@ -399,18 +471,23 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (confirm(Message.confirmAction)) {
-                this.noticeService.productupdDelete(id).then(isSuccess => {
-                    if (isSuccess == true) {
+                this.preloader.setShowPreloader(true);
+
+                await this.noticeService.productupdDelete(id).then(isSuccess => {
+                    if (isSuccess === true) {
+                        alert(Message.delProductRecComplete);
                         this.NoticeProduct.removeAt(index);
                     } else {
-                        alert(Message.saveError);
+                        alert(Message.delProductRecFail);
                     }
                 })
+
+                this.preloader.setShowPreloader(false);
             }
         }
     }
 
-    onDeleteSuspect(id: string, index: number) {
+    async onDeleteSuspect(id: string, index: number) {
         if (this.mode === 'C') {
             this.NoticeSuspect.removeAt(index);
 
@@ -421,18 +498,23 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (confirm(Message.confirmAction)) {
-                this.noticeService.suspectupdDelete(id).then(isSuccess => {
-                    if (isSuccess == true) {
+                this.preloader.setShowPreloader(true);
+
+                await this.noticeService.suspectupdDelete(id).then(isSuccess => {
+                    if (isSuccess === true) {
+                        alert(Message.deleteSuspcetComplete);
                         this.NoticeSuspect.removeAt(index);
                     } else {
-                        alert(Message.saveError);
+                        alert(Message.deleteSuspectFalse);
                     }
                 })
+
+                this.preloader.setShowPreloader(false);
             }
         }
     }
 
-    onDeleteDocument(id: string, index: number) {
+    async onDeleteDocument(id: string, index: number) {
         if (this.mode === 'C') {
             this.NoticeDocument.removeAt(index);
 
@@ -443,16 +525,24 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (confirm(Message.confirmAction)) {
-                this.noticeService.suspectupdDelete(id).then(isSuccess => {
-                    // tslint:disable-next-line:triple-equals
-                    if (isSuccess == true) {
+                this.preloader.setShowPreloader(true);
+
+                await this.noticeService.suspectupdDelete(id).then(isSuccess => {
+                    if (isSuccess === true) {
+                        alert(Message.deleteDocumentComplete);
                         this.NoticeSuspect.removeAt(index);
                     } else {
-                        alert(Message.saveError);
+                        alert(Message.deleteDocumentFalse);
                     }
                 })
+
+                this.preloader.setShowPreloader(false);
             }
         }
+    }
+
+    onViewSuspect(id: string) {
+        this.router.navigate(['/arrest/lawbreaker', 'R', id])
     }
 
     ngOnDestroy(): void {

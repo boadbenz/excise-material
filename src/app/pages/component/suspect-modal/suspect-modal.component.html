@@ -9,8 +9,8 @@
           </h4>
       </div>
       <div class="col-lg-5 col-8">
-          <form class="app-search">
-              <input type="search" name="" id="" class="form-control form-control-sm">
+          <form class="app-search" #searchForm="ngForm" (ngSubmit)="onSearchByKeyword(searchForm.value)">
+              <input type="search" name="Textsearch" ngModel class="form-control form-control-sm">
               <a class="srh-btn">
                   <i class="ti-search"></i>
               </a>

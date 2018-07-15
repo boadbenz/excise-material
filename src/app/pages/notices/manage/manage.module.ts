@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
+import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
 
 const routes: Routes = [
     {
@@ -37,7 +38,8 @@ const routes: Routes = [
         NgbModule.forRoot(),
         RouterModule.forChild(routes),
         CardActionsModule,
-        SuspectModalModule
+        SuspectModalModule,
+        PrintDocModalModule
     ],
     declarations: [
         ManageComponent

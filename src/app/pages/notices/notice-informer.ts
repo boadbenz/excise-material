@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 
 export class NoticeInformer {
-    public InformerID: number;
+    public InformerID: string;
     public InformerType: number;
     public NoticeCode: string;
     public TitleCode: string;
@@ -10,7 +10,7 @@ export class NoticeInformer {
     public LastName: string;
     public FullName: string;
     public IDCard: string;
-    public Age: number;
+    public Age: string;
     public GenderType: string;
     public Location: string;
     public Address: string;
@@ -29,11 +29,11 @@ export class NoticeInformer {
     public ZipCode: string;
     public TelephoneNo: string;
     public InformerInfo: string;
-    public IsActive: number;
+    public IsActive: string;
 }
 
 export const NoticeInformerFormControl = {
-    InformerID: new FormControl(22),
+    InformerID: new FormControl('22'),
     InformerType: new FormControl(0),
     NoticeCode: new FormControl(null),
     TitleCode: new FormControl('k2'),

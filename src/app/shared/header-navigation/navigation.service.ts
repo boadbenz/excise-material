@@ -23,8 +23,9 @@ export class NavigationService {
     onCancel = new BehaviorSubject<Boolean>(false);
     onSearch = new BehaviorSubject<Boolean>(false);
     onPrint = new BehaviorSubject<Boolean>(false);
+    onNextPage = new BehaviorSubject<Boolean>(false);
 
-    searchByKeyword = new BehaviorSubject<string>('');
+    searchByKeyword = new BehaviorSubject<string>(null);
 
     constructor() { }
 
@@ -102,6 +103,10 @@ export class NavigationService {
 
     setOnPrint(status: boolean) {
         this.onPrint.next(status);
+    }
+
+    setOnNextPage(status: boolean) {
+        this.onNextPage.next(status);
     }
     // -- End Set Event
 

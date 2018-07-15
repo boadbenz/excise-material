@@ -412,7 +412,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
-        
+
         this.arrestService.updByCon(this.arrestForm.value).then(async res => {
             if (res.IsSuccess === true) {
                 // this.onComplete();

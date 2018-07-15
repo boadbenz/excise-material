@@ -87,7 +87,7 @@ export class NavigationComponent implements OnInit {
     }
 
     clickNextPage() {
-        this.router.navigate([`${this.nextPage}`, 'C', 'NEW']);
+        this.navService.setOnNextPage(true);
     }
 
     clickPrint() {

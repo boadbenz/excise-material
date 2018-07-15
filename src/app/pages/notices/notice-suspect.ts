@@ -11,6 +11,15 @@ export class NoticeSuspect {
     public IsActive: number;
     public SuspectFullName: string;
     public IsNewItem: boolean;
+
+    // public EntityType: string;
+    // public SuspectType: string;
+    // public SuspectTypeName: string;
+    // public EntityTypeName: string;
+    // public CompanyRegistrationNo: string;
+    // public PassportNo: string;
+    // public Idcard: string;
+    // public CompanyFullName: string;
 }
 
 // "SuspectReferenceID":"1",

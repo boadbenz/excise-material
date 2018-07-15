@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
-import { Message } from '../../../config/message';
+import { Message } from 'app/config/message';
 import { Notice } from '../notice';
-import { pagination } from '../../../config/pagination';
-import { toLocalShort } from '../../../config/dateFormat';
+import { pagination } from 'app/config/pagination';
+import { toLocalShort } from 'app/config/dateFormat';
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
 
 @Component({
     selector: 'app-list',
@@ -15,6 +16,7 @@ export class ListComponent implements OnInit {
 
     private subOnSearch: any;
     advSearch: any;
+    isRequired = false;
 
     paginage = pagination;
 
@@ -24,7 +26,8 @@ export class ListComponent implements OnInit {
     constructor(
         private _router: Router,
         private navservice: NavigationService,
-        private noticeService: NoticeService
+        private noticeService: NoticeService,
+        private preLoaderService: PreloaderService
     ) {
         // set false
         this.navservice.setEditButton(false);
@@ -39,20 +42,33 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navservice.showAdvSearch;
     }
 
-    ngOnInit() {
-        this.subOnSearch = this.navservice.searchByKeyword.subscribe(async Textsearch => {
+    async ngOnInit() {
+        this.preLoaderService.setShowPreloader(true);
+
+        this.onSearch('');
+
+        await this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
-                await this.navservice.setOnSearch('');
+                await this.navservice.setOnSearch(null);
                 this.onSearch(Textsearch);
             }
         })
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
-    onSearch(Textsearch: any) {
-        this.noticeService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+    async onSearch(Textsearch: any) {
+        this.preLoaderService.setShowPreloader(true);
+        await this.noticeService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+        this.preLoaderService.setShowPreloader(false);
     }
 
-    onAdvSearch(form: any) {
+    async onAdvSearch(form: any) {
+
+        if (!form.valid) {
+            this.isRequired = true;
+            return false;
+        }
 
         const sDateCompare = new Date(form.value.DateStartFrom);
         const eDateCompare = new Date(form.value.DateStartTo);
@@ -60,9 +76,13 @@ export class ListComponent implements OnInit {
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkDate);
         } else {
+            this.preLoaderService.setShowPreloader(true);
+
             form.value.DateStartFrom = sDateCompare.toISOString();
             form.value.DateStartTo = eDateCompare.toISOString();
-            this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
+            await this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
+
+            this.preLoaderService.setShowPreloader(false);
         }
     }
 
