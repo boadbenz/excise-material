@@ -6,6 +6,7 @@ import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
 import { toLocalShort } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -27,7 +28,7 @@ export class ListComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private arrestService: ArrestsService,
         private router: Router,
-        private chRef: ChangeDetectorRef
+        private sidebarService: SidebarService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -44,6 +45,10 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.sidebarService.setVersion('1.00');
+
+        this.onSearch('');
+
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');

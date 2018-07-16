@@ -3,13 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { toLocalNumeric } from '../../../config/dateFormat';
-import { ArrestStaff, Contributor } from '../arrest-staff';
+import { ArrestStaff, Contributor, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
-import { ArrestProduct } from '../arrest-product';
+import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment } from '../arrest-indictment';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { ArrestLocaleFormControl } from '../arrest-locale';
+import { ArrestLawbreakerFormControl } from '../arrest-lawbreaker';
 
 @Component({
     selector: 'app-manage',
@@ -59,7 +62,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private ngbModel: NgbModal,
         private arrestService: ArrestsService,
-        private router: Router
+        private router: Router,
+        private sidebarService: SidebarService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -69,6 +73,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
+        this.sidebarService.setVersion('1.00');
+
         this.active_route();
 
         this.navigate_Service();
@@ -82,191 +89,45 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.arrestForm = this.fb.group({
-            ArrestCode: [null],
-            ArrestDate: [null],
-            ArrestTime: [null],
-            OccurrenceDate: [null],
-            OccurrenceTime: [null],
-            ArrestStationCode: [null],
-            ArrestStation: [null],
-            HaveCulprit: [null],
-            Behaviour: [null],
-            Testimony: [null],
-            Prompt: [null],
-            IsMatchNotice: [null],
-            ArrestDesc: [null],
-            NoticeCode: [null],
-            InvestigationSurveyDocument: [null],
-            InvestigationCode: [null],
-            IsActive: [null],
+            ArrestCode: new FormControl(null),
+            ArrestDate: new FormControl(null),
+            ArrestTime: new FormControl(null),
+            OccurrenceDate: new FormControl(null),
+            OccurrenceTime: new FormControl(null),
+            ArrestStationCode: new FormControl(null),
+            ArrestStation: new FormControl(null),
+            HaveCulprit: new FormControl(null),
+            Behaviour: new FormControl(null),
+            Testimony: new FormControl(null),
+            Prompt: new FormControl(null),
+            IsMatchNotice: new FormControl(null),
+            ArrestDesc: new FormControl(null),
+            NoticeCode: new FormControl(null),
+            InvestigationSurveyDocument: new FormControl(null),
+            InvestigationCode: new FormControl(null),
+            IsActive: new FormControl(null),
             ArrestStaff: this.fb.array([this.createStaffForm()]),
-            ArrestLocale: this.fb.array([this.createLocaleForm()]),
+            ArrestLocale: this.fb.array([this.createLocalForm()]),
             ArrestLawbreaker: this.fb.array([this.createLawbreakerForm()]),
             ArrestProduct: this.fb.array([this.createProductForm()]),
-            ArrestIndictment: this.fb.array([this.createIndicmentForm()]),
-            ArrestDocument: this.fb.array([this.createDocumentForm()])
+            ArrestIndictment: this.fb.array([]),
+            ArrestDocument: this.fb.array([])
         })
     }
 
     private createStaffForm(): FormGroup {
-        return this.fb.group({
-            StaffID: [null],
-            ProgramCode: [null],
-            ProcessCode: [null],
-            ArrestCode: [null],
-            StaffCode: [null],
-            TitleName: [null],
-            FirstName: [null],
-            LastName: [null],
-            PositionCode: [null],
-            PositionName: [null],
-            PosLevel: [null],
-            PosLevelName: [null],
-            DepartmentCode: [null],
-            DepartmentName: [null],
-            DepartmentLevel: [null],
-            OfficeCode: [null],
-            OfficeName: [null],
-            OfficeShortName: [null],
-            ContributorID: [null],
-            IsActive: [null],
-            FullName: [null]
-        })
+        return this.fb.group(ArrestStaffFormControl);
     }
 
-    private createLocaleForm(): FormGroup {
-        return this.fb.group({
-            LocaleID: [null],
-            IsArrest: [null],
-            ArrestCode: [null],
-            GPS: [null],
-            Location: [null],
-            Address: [null],
-            Village: [null],
-            Building: [null],
-            Floor: [null],
-            Room: [null],
-            Alley: [null],
-            Road: [null],
-            SubDistrictCode: [null],
-            SubDistrict: [null],
-            DistrictCode: [null],
-            District: [null],
-            ProvinceCode: [null],
-            Province: [null],
-            ZipCode: [null],
-            Policestation: [null],
-            IsActive: [null],
-            Region: [null]
-        })
+    private createLocalForm(): FormGroup {
+        return this.fb.group(ArrestLocaleFormControl);
     }
 
     private createLawbreakerForm(): FormGroup {
-        return this.fb.group({
-            LawbreakerID: [null],
-            ArrestCode: [null],
-            LawbreakerRefID: [null],
-            EntityType: [null],
-            CompanyTitleCode: [null],
-            CompanyTitle: [null],
-            CompanyName: [null],
-            CompanyOtherName: [null],
-            CompanyRegistrationNo: [null],
-            CompanyLicenseNo: [null],
-            CompanyFullName: [null],
-            FoundedDate: [null],
-            LicenseDateForm: [null],
-            LicenseDateTo: [null],
-            TaxID: [null],
-            ExciseRegNo: [null],
-            LawbreakerType: [null],
-            LawbreakerTitleCode: [null],
-            LawbreakerTitleName: [null],
-            LawbreakerFirstName: [null],
-            LawbreakerMiddleName: [null],
-            LawbreakerLastName: [null],
-            LawbreakerOtherName: [null],
-            LawbreakerDesc: [null],
-            LawbreakerFullName: [null],
-            IDCard: [null],
-            PassportNo: [null],
-            VISAType: [null],
-            PassportCountryCode: [null],
-            PassportCountryName: [null],
-            PassportDateIn: [null],
-            PassportDateOut: [null],
-            BirthDate: [null],
-            GenderType: [null],
-            BloodType: [null],
-            NationalityCode: [null],
-            NationalityNameTH: [null],
-            RaceCode: [null],
-            RaceName: [null],
-            ReligionCode: [null],
-            ReligionName: [null],
-            MaritalStatus: [null],
-            Career: [null],
-            FatherName: [null],
-            MotherName: [null],
-            Remarks: [null],
-            LinkPhoto: [null],
-            PhotoDesc: [null],
-            IsActive: [null],
-        })
+        return this.fb.group(ArrestLawbreakerFormControl);
     }
-
     private createProductForm(): FormGroup {
-        return this.fb.group({
-            ProductID: [null],
-            ProductType: [null],
-            ArrestCode: [null],
-            GroupCode: [null],
-            IsDomestic: [null],
-            ProductCode: [null],
-            BrandCode: [null],
-            BrandNameTH: [null],
-            BrandNameEN: [null],
-            SubBrandCode: [null],
-            SubBrandNameTH: [null],
-            SubBrandNameEN: [null],
-            ModelCode: [null],
-            ModelName: [null],
-            FixNo1: [null],
-            DegreeCode: [null],
-            Degree: [null],
-            SizeCode: [null],
-            Size: [null],
-            SizeUnitCode: [null],
-            SizeUnitName: [null],
-            FixNo2: [null],
-            SequenceNo: [null],
-            ProductDesc: [null],
-            CarNo: [null],
-            Qty: [null],
-            QtyUnit: [null],
-            NetVolume: [null],
-            NetVolumeUnit: [null],
-            IsActive: [null]
-        })
-    }
-
-    private createIndicmentForm(): FormGroup {
-        return this.fb.group({
-            IndictmentID: [null],
-            IsProve: [null],
-            IsActive: [null],
-            GuiltBaseID: [null],
-        })
-    }
-
-    private createDocumentForm(): FormGroup {
-        return this.fb.group({
-            DocumentID: [null],
-            ReferenceCode: [null],
-            FilePath: [null],
-            DataSource: [null],
-            IsActive: [null],
-        })
+        return this.fb.group(ArrestProductFormControl);
     }
 
     private setItemFormArray(array: any[], formControl: string) {

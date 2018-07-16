@@ -7,6 +7,7 @@ import { Notice } from '../notice';
 import { pagination } from 'app/config/pagination';
 import { toLocalShort } from 'app/config/dateFormat';
 import { PreloaderService } from 'app/shared/preloader/preloader.component';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-list',
@@ -27,7 +28,8 @@ export class ListComponent implements OnInit {
         private _router: Router,
         private navservice: NavigationService,
         private noticeService: NoticeService,
-        private preLoaderService: PreloaderService
+        private preLoaderService: PreloaderService,
+        private sidebarService: SidebarService
     ) {
         // set false
         this.navservice.setEditButton(false);
@@ -45,6 +47,7 @@ export class ListComponent implements OnInit {
     async ngOnInit() {
         this.preLoaderService.setShowPreloader(true);
 
+        this.sidebarService.setVersion('1.00');
         this.onSearch('');
 
         await this.navservice.searchByKeyword.subscribe(async Textsearch => {

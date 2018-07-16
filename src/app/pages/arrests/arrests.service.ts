@@ -6,6 +6,7 @@ import { ArrestStaff } from './arrest-staff';
 import { ArrestLawbreaker } from './arrest-lawbreaker';
 import { ArrestProduct } from './arrest-product';
 import { ArrestIndictment } from './arrest-indictment';
+import { Message } from 'app/config/message';
 
 // const options = { year: 'numeric', month: 'short', day: 'numeric' };
 
@@ -23,11 +24,20 @@ export class ArrestsService {
     };
 
     async getByKeyword(Textsearch: string): Promise<Arrest[]> {
-        const params = Textsearch;
+        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api7788}/ArrestgetByKeyword`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            if (res.IsSuccess === false) {
+                alert(res.ResponseData.Msg);
+                return [];
+            }
+
+            if (!res.ResponseData.length) {
+                alert(Message.noRecord);
+                return [];
+            }
             return res.ResponseData as Arrest[];
         } catch (error) {
             await alert(error);

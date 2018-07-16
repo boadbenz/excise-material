@@ -22,6 +22,7 @@ import { NoticeStaffFormControl } from '../notice-staff';
 import { NoticeInformerFormControl } from '../notice-informer';
 import { NoticeLocaleFormControl } from '../notice-locale';
 import { PreloaderService } from 'app/shared/preloader/preloader.component';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-manage',
@@ -80,7 +81,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private noticeService: NoticeService,
         private ngbModel: NgbModal,
-        private preloader: PreloaderService
+        private preloader: PreloaderService,
+        private sidebarService: SidebarService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -90,6 +92,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.sidebarService.setVersion('1.00');
+
         this.active_route();
 
         this.navigate_service();

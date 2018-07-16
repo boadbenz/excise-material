@@ -8,7 +8,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NavigationComponent } from './shared/header-navigation/navigation.component';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
+import { SidebarComponent, SidebarService } from './shared/sidebar/sidebar.component';
 import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.component';
 import { AppComponent } from './app.component';
@@ -35,7 +35,8 @@ import { PreloaderComponent, PreloaderService } from './shared/preloader/preload
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         NavigationService,
-        PreloaderService
+        PreloaderService,
+        SidebarService
     ],
     bootstrap: [AppComponent]
 })

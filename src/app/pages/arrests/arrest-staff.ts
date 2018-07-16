@@ -1,3 +1,5 @@
+import { FormControl } from "@angular/forms";
+
 export class ArrestStaff {
     public StaffID = '';
     public ProgramCode = '';
@@ -18,7 +20,6 @@ export class ArrestStaff {
     public OfficeName = '';
     public OfficeShortName = '';
     public ContributorCode = '';
-    public ContributorID = '';
     public IsActive = '';
     public FullName = '';
     public IsNewItem: boolean;
@@ -38,3 +39,27 @@ export const Contributor: Types[] = [
         text: 'contributor2'
     }
 ]
+
+export const ArrestStaffFormControl = {
+    StaffID: new FormControl(null),
+    ProgramCode: new FormControl('XCS60-02-02'),
+    ProcessCode: new FormControl('0001'),
+    ArrestCode: new FormControl(null),
+    StaffCode: new FormControl(null),
+    TitleName: new FormControl(null),
+    FirstName: new FormControl(null),
+    LastName: new FormControl(null),
+    PositionCode: new FormControl(null),
+    PositionName: new FormControl(null),
+    PosLevel: new FormControl(null),
+    PosLevelName: new FormControl(null),
+    DepartmentCode: new FormControl(null),
+    DepartmentName: new FormControl(null),
+    DepartmentLevel: new FormControl(null),
+    OfficeCode: new FormControl(null),
+    OfficeName: new FormControl(null),
+    OfficeShortName: new FormControl(null),
+    ContributorCode: new FormControl(null),
+    IsActive: new FormControl(null),
+    FullName: new FormControl(null)
+}

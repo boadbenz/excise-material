@@ -1,6 +1,6 @@
 import { ArrestStaff } from './arrest-staff';
 import { ArrestIndictment } from './arrest-indictment';
-import { ArrestLocale } from './arrest-locale';
+import { ArrestLocale,  } from './arrest-locale';
 import { ArrestLawbreaker } from './arrest-lawbreaker';
 import { ArrestProduct } from './arrest-product';
 import { ArrestDocument } from './arrest-document';
