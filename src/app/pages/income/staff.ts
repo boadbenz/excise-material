@@ -1,0 +1,25 @@
+export class Staff {
+    public StaffCode : string;
+    public PerType : string;
+    public TitleName  : string;
+    public FirstName : string;
+    public LastName : string;
+    public OperationPosCode : string;
+    public OperationPosName : string;
+    public ManagementPosCode  : string;
+    public ManagementPosName : string;
+    public PosLevel  : string;
+    public PosLevelName : string;
+    public RepresentationPosCode : string;
+    public RepresentationPosName : string;
+    public OperationDeptCode : string;
+    public OperationDeptName  : string;
+    public UnderDeptCode : string;
+    public UnderDeptName  : string;
+    public DeptLevel : string;
+    public OfficeCode : string;
+    public OfficeName : string;
+    public OfficeShortName : string;
+    public StatusCode  : string;
+    public ISACTIVE   : number;
+}
