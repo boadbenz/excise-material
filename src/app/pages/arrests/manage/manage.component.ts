@@ -55,6 +55,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     @Input() _noticeCode: string;
     @ViewChild('printDocModal') printDocModel: ElementRef;
+    @Input() noticeCode: string;
 
     constructor(
         private fb: FormBuilder,
@@ -396,28 +397,30 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     addIndicment() {
         const lastIndex = this.ArrestIndictment.length - 1;
-        let item = new ArrestIndictment();
-        item.IsNewItem = true;
+        let indicment = new ArrestIndictment();
+        indicment.IsNewItem = true;
+        this.ArrestIndictment.push(this.fb.group(indicment));
         if (lastIndex < 0) {
-            this.ArrestIndictment.push(this.fb.group(item));
+            this.ArrestIndictment.push(this.fb.group(indicment));
         } else {
-            const lastDoc = this.ArrestIndictment.at(lastIndex).value;
-            if (lastDoc.ProductID) {
-                this.ArrestIndictment.push(this.fb.group(item));
+            const lastItem = this.ArrestIndictment.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                this.ArrestIndictment.push(this.fb.group(indicment));
             }
         }
     }
 
-    addDocument() {        
+    addDocument() {
         const lastIndex = this.ArrestDocument.length - 1;
-        let item = new ArrestDocument();
-        item.IsNewItem = true;
+        let indicment = new ArrestDocument();
+        indicment.IsNewItem = true;
+        this.ArrestDocument.push(this.fb.group(indicment));
         if (lastIndex < 0) {
-            this.ArrestDocument.push(this.fb.group(item));
+            this.ArrestDocument.push(this.fb.group(indicment));
         } else {
-            const lastDoc = this.ArrestDocument.at(lastIndex).value;
-            if (lastDoc.ProductID) {
-                this.ArrestDocument.push(this.fb.group(item));
+            const lastItem = this.ArrestDocument.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                this.ArrestDocument.push(this.fb.group(indicment));
             }
         }
     }

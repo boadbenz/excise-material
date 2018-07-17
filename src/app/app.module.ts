@@ -14,7 +14,7 @@ import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.compo
 import { AppComponent } from './app.component';
 import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
-import { PreloaderComponent, PreloaderService } from './shared/preloader/preloader.component';
+import { PreloaderModule } from './shared/preloader/preloader.module';
 
 @NgModule({
     declarations: [
@@ -22,20 +22,19 @@ import { PreloaderComponent, PreloaderService } from './shared/preloader/preload
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-        RightSidebarComponent,
-        PreloaderComponent,
+        RightSidebarComponent
     ],
     imports: [
         BrowserModule,
         NgbModule.forRoot(),
         FormsModule,
         HttpModule,
-        RouterModule.forRoot(routes)
+        RouterModule.forRoot(routes),
+        PreloaderModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         NavigationService,
-        PreloaderService,
         SidebarService
     ],
     bootstrap: [AppComponent]

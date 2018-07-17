@@ -18,8 +18,10 @@ export class NoticeListModalComponent implements OnInit {
     isCheckAll = false;
     advSearch = false;
     isRequired = false;
-    notice = Array<Notice>();
-    noticeList = Array<Notice>();
+    isNoRecord = false;
+    notice = new Array<Notice>();
+    noticeList = new Array<Notice>();
+    msgNorecord = Message.noRecord;
 
     paginage = pagination;
 
@@ -68,12 +70,6 @@ export class NoticeListModalComponent implements OnInit {
     }
 
     async onSearchComplete(list: Notice[]) {
-
-        if (!list.length) {
-            alert(Message.noRecord);
-            return false;
-        }
-
         this.notice = [];
         await list.map(item => {
             item.IsNoticeCode = null;
@@ -86,13 +82,14 @@ export class NoticeListModalComponent implements OnInit {
             })
         })
 
-        this.notice = list
+        this.notice = list;
         // set total record
-        this.paginage.TotalItems = this.notice.length;
+        this.paginage.TotalItems = list.length;
     }
 
-    view(noticeCode: string) {
-        this._router.navigate([`/notice/manage/R/${noticeCode}`]);
+    view(code: string) {
+        this.dismiss('Cross click');
+        this._router.navigate([`/notice/manage/R/${code}`]);
     }
 
     checkAll() {
