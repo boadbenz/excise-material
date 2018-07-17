@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -53,6 +53,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.arrestForm.get('ArrestDocument') as FormArray;
     }
 
+    @Input() _noticeCode: string;
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
     constructor(
@@ -89,14 +90,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.arrestForm = this.fb.group({
-            ArrestCode: new FormControl(null),
+            ArrestCode: new FormControl(this.arrestCode),
             ArrestDate: new FormControl(null),
             ArrestTime: new FormControl(null),
             OccurrenceDate: new FormControl(null),
             OccurrenceTime: new FormControl(null),
-            ArrestStationCode: new FormControl(null),
-            ArrestStation: new FormControl(null),
-            HaveCulprit: new FormControl(null),
+            ArrestStationCode: new FormControl('stationCode'),
+            ArrestStation: new FormControl('station'),
+            HaveCulprit: new FormControl(0),
             Behaviour: new FormControl(null),
             Testimony: new FormControl(null),
             Prompt: new FormControl(null),
@@ -116,17 +117,21 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private createStaffForm(): FormGroup {
+        ArrestStaffFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestStaffFormControl);
     }
 
     private createLocalForm(): FormGroup {
+        ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestLocaleFormControl);
     }
 
     private createLawbreakerForm(): FormGroup {
+        ArrestLawbreakerFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestLawbreakerFormControl);
     }
     private createProductForm(): FormGroup {
+        ArrestProductFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestProductFormControl);
     }
 
@@ -149,6 +154,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
+                this.arrestCode = `NT-${(new Date).getTime()}`;
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -209,7 +215,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private getByCon(code: string) {
-        this.arrestService.getByCon(code).then(async res => {
+        this.arrestService.getByCon(code).subscribe(async res => {
             await this.arrestForm.reset({
                 ArrestCode: res.ArrestCode,
                 ArrestDate: toLocalNumeric(res.ArrestDate),
@@ -258,7 +264,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        this.arrestService.insAll(this.arrestForm.value).then(res => {
+        this.arrestService.insAll(this.arrestForm.value).subscribe(res => {
             // tslint:disable-next-line:triple-equals
             if (res.IsSuccess == true) {
                 this.onComplete();
@@ -274,35 +280,35 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        this.arrestService.updByCon(this.arrestForm.value).then(async res => {
+        this.arrestService.updByCon(this.arrestForm.value).subscribe(async res => {
             if (res.IsSuccess === true) {
                 // this.onComplete();
                 let isSuccess: boolean;
                 const staff = this.ArrestStaff.value;
                 await staff.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.staffinsAll(item).then(s => isSuccess = s.IsSuccess);
+                        this.arrestService.staffinsAll(item).subscribe(s => isSuccess = s.IsSuccess);
                         if (isSuccess === false) { return false; }
                     });
 
                 const lawbreaker = this.ArrestLawbreaker.value;
                 await lawbreaker.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.lawbreakerinsAll(item).then(s => isSuccess = s.IsSuccess);
+                        this.arrestService.lawbreakerinsAll(item).subscribe(s => isSuccess = s.IsSuccess);
                         if (isSuccess === false) { return false; }
                     });
 
                 const product = this.ArrestProduct.value;
                 await product.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.productinsAll(item).then(s => isSuccess = s.IsSuccess);
+                        this.arrestService.productinsAll(item).subscribe(s => isSuccess = s.IsSuccess);
                         if (isSuccess === false) { return false; }
                     });
 
                 const indicment = this.ArrestIndictment.value;
                 await indicment.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.indicmentinsAll(item).then(s => isSuccess = s.IsSuccess);
+                        this.arrestService.indicmentinsAll(item).subscribe(s => isSuccess = s.IsSuccess);
                         if (isSuccess === false) { return false; }
                     });
 
@@ -314,9 +320,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private onDelete() {
-        this.arrestService.updDelete(this.arrestCode).then(res => {
+        this.arrestService.updDelete(this.arrestCode).subscribe(res => {
             // tslint:disable-next-line:triple-equals
-            if (res.IsSuccess == true) {
+            if (res.IsSuccess) {
                 alert(Message.saveComplete);
             } else {
                 alert(Message.saveError);
@@ -350,33 +356,70 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    setNoticeCode(e) {
+        console.log(e);
+        
+        this.arrestForm.patchValue({NoticeCode: e});
+    }
+
     openModal(e) {
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 
     addStaff() {
-        // tslint:disable-next-line:prefer-const
-        let staff = new ArrestStaff();
-        staff.IsNewItem = true;
-        this.ArrestStaff.push(this.fb.group(staff));
+        const lastIndex = this.ArrestStaff.length - 1;
+        let item = new ArrestStaff();
+        item.IsNewItem = true;
+        if (lastIndex < 0) {
+            this.ArrestStaff.push(this.fb.group(item));
+        } else {
+            const lastDoc = this.ArrestStaff.at(lastIndex).value;
+            if (lastDoc.StaffID) {
+                this.ArrestStaff.push(this.fb.group(item));
+            }
+        }
     }
 
     addProduct() {
-        // tslint:disable-next-line:prefer-const
-        let product = new ArrestProduct();
-        product.IsNewItem = true;
-        this.ArrestProduct.push(this.fb.group(product));
+        const lastIndex = this.ArrestProduct.length - 1;
+        let item = new ArrestProduct();
+        item.IsNewItem = true;
+        if (lastIndex < 0) {
+            this.ArrestProduct.push(this.fb.group(item));
+        } else {
+            const lastDoc = this.ArrestProduct.at(lastIndex).value;
+            if (lastDoc.ProductID) {
+                this.ArrestProduct.push(this.fb.group(item));
+            }
+        }
     }
 
     addIndicment() {
-        // tslint:disable-next-line:prefer-const
-        let indicment = new ArrestIndictment();
-        indicment.IsNewItem = true;
-        this.ArrestIndictment.push(this.fb.group(indicment));
+        const lastIndex = this.ArrestIndictment.length - 1;
+        let item = new ArrestIndictment();
+        item.IsNewItem = true;
+        if (lastIndex < 0) {
+            this.ArrestIndictment.push(this.fb.group(item));
+        } else {
+            const lastDoc = this.ArrestIndictment.at(lastIndex).value;
+            if (lastDoc.ProductID) {
+                this.ArrestIndictment.push(this.fb.group(item));
+            }
+        }
     }
 
-    addDocument() {
-        this.ArrestDocument.push(this.fb.group(new ArrestDocument()));
+    addDocument() {        
+        const lastIndex = this.ArrestDocument.length - 1;
+        let item = new ArrestDocument();
+        item.IsNewItem = true;
+        if (lastIndex < 0) {
+            this.ArrestDocument.push(this.fb.group(item));
+        } else {
+            const lastDoc = this.ArrestDocument.at(lastIndex).value;
+            if (lastDoc.ProductID) {
+                this.ArrestDocument.push(this.fb.group(item));
+            }
+        }
     }
 
     viewLawbreaker(id: number) {
@@ -389,7 +432,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
-                this.arrestService.staffupdDelete(staffId).then(res => {
+                this.arrestService.staffupdDelete(staffId).subscribe(res => {
                     // tslint:disable-next-line:triple-equals
                     if (res.IsSuccess == true) {
                         this.ArrestStaff.removeAt(indexForm);
@@ -407,7 +450,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
-                this.arrestService.lawbreakerupdDelete(lawbreakerId).then(res => {
+                this.arrestService.lawbreakerupdDelete(lawbreakerId).subscribe(res => {
                     // tslint:disable-next-line:triple-equals
                     if (res.IsSuccess == true) {
                         this.ArrestLawbreaker.removeAt(indexForm);
@@ -425,7 +468,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
-                this.arrestService.productupdDelete(productId).then(res => {
+                this.arrestService.productupdDelete(productId).subscribe(res => {
                     // tslint:disable-next-line:triple-equals
                     if (res.IsSuccess == true) {
                         this.ArrestProduct.removeAt(indexForm);
@@ -443,7 +486,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
-                this.arrestService.indicmentupdDelete(indicmtmentId).then(res => {
+                this.arrestService.indicmentupdDelete(indicmtmentId).subscribe(res => {
                     // tslint:disable-next-line:triple-equals
                     if (res.IsSuccess == true) {
                         this.ArrestIndictment.removeAt(indexForm);

@@ -1,8 +1,8 @@
-import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { NoticeService } from '../notice.service';
-import { pagination } from '../../../config/pagination';
-import { Router } from '../../../../../node_modules/@angular/router';
-import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { pagination } from 'app/config/pagination';
+import { Router } from '@angular/router';
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import { Message } from 'app/config/message';
 import { Notice } from '../notice';
 import { toLocalShort } from 'app/config/dateFormat';
@@ -25,14 +25,15 @@ export class NoticeListModalComponent implements OnInit {
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
+    @Output() noticeCode = new EventEmitter<string>();
+
+    @ViewChild('noticeTable') noticeTable: ElementRef
 
     constructor(
         private noticeService: NoticeService,
         private _router: Router,
         private preLoaderService: PreloaderService
-    ) {
-
-    }
+    ) { }
 
     ngOnInit() {
     }
@@ -75,6 +76,7 @@ export class NoticeListModalComponent implements OnInit {
 
         this.notice = [];
         await list.map(item => {
+            item.IsNoticeCode = null;
             item.NoticeDate = toLocalShort(item.NoticeDate);
             item.NoticeStaff.map(s => {
                 s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
@@ -105,7 +107,9 @@ export class NoticeListModalComponent implements OnInit {
         this.d.emit(e);
     }
 
-    close(e: any) {
+    async close(e: any) {
+        const code = await this.noticeList.find(item => item.IsNoticeCode !== '').NoticeCode;
+        this.noticeCode.emit(code);
         this.c.emit(e);
     }
 

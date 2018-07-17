@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearch(Textsearch: any) {
-        this.arrestService.getByKeyword(Textsearch).then(res => this.onSearchComplete(res));
+        this.arrestService.getByKeyword(Textsearch).subscribe(res => this.onSearchComplete(res));
     }
 
     onAdvSearch(form: any) {
@@ -71,7 +71,7 @@ export class ListComponent implements OnInit, OnDestroy {
         } else {
             form.value.DateStartFrom = sDateCompare.getTime();
             form.value.DateStartTo = eDateCompare.getTime();
-            this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
+            this.arrestService.getByConAdv(form.value).subscribe(res => this.onSearchComplete(res));
         }
     }
 

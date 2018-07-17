@@ -7,6 +7,7 @@ import { ArrestLawbreaker } from './arrest-lawbreaker';
 import { ArrestProduct } from './arrest-product';
 import { ArrestIndictment } from './arrest-indictment';
 import { Message } from 'app/config/message';
+import { Observable } from 'rxjs/Observable';
 
 // const options = { year: 'numeric', month: 'short', day: 'numeric' };
 
@@ -23,178 +24,120 @@ export class ArrestsService {
             })
     };
 
-    async getByKeyword(Textsearch: string): Promise<Arrest[]> {
+    private responseList(params: string, url: string) {
+        return this.http.post<any>(url, params, this.httpOptions)
+            .map(res => {
+                if (res.IsSuccess === false) {
+                    alert(res.ResponseData.Msg);
+                    return Observable.of([]);
+                }
+
+                if (!res.ResponseData.length) {
+                    alert(Message.noRecord);
+                    return Observable.of([]);
+                }
+                return res.ResponseData;
+            })
+    }
+
+    private response(params: string, url: string) {
+        return this.http.post<any>(url, params, this.httpOptions)
+            .map(res => {
+                if (res.IsSuccess === false) {
+                    alert(res.ResponseData.Msg);
+                    return Observable.of({});
+                }
+
+                if (!res.ResponseData.length) {
+                    alert(Message.noRecord);
+                    return Observable.of({});
+                }
+                return res.ResponseData;
+            })
+    }
+
+    getByKeyword(Textsearch: string): Observable<Arrest[]> {
         const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-        const url = `${appConfig.api7788}/ArrestgetByKeyword`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
-                return [];
-            }
-
-            if (!res.ResponseData.length) {
-                alert(Message.noRecord);
-                return [];
-            }
-            return res.ResponseData as Arrest[];
-        } catch (error) {
-            await alert(error);
-        }
+        const url = `${appConfig.api7788}/ArrestgetByKeyword`;        
+        return this.responseList(JSON.stringify(params), url);       
     }
 
-    async getByConAdv(form: any): Promise<Arrest[]> {
-        const params = JSON.stringify(form);
+    getByConAdv(form: any): Observable<Arrest[]> {
+        const params = form;
         const url = `${appConfig.api7788}/ArrestgetByConAdv`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData as Arrest[];
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responseList(JSON.stringify(params), url);   
     }
 
-    async getByCon(ArrestCode: string): Promise<Arrest> {
+    getByCon(ArrestCode: string): Observable<Arrest> {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestgetByCon`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData as Arrest;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async updDelete(ArrestCode: string): Promise<any> {
+    updDelete(ArrestCode: string): Observable<any> {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async staffupdDelete(StaffID: string): Promise<any> {
+    staffupdDelete(StaffID: string): Observable<any> {
         const params = { StaffID };
         const url = `${appConfig.api7788}/ArrestStaffupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async lawbreakerupdDelete(LawbreakerID: string): Promise<any> {
+    lawbreakerupdDelete(LawbreakerID: string): Observable<any> {
         const params = { LawbreakerID };
         const url = `${appConfig.api7788}/ArrestLawbreakerupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async productupdDelete(ProductID: string): Promise<any> {
+    productupdDelete(ProductID: string): Observable<any> {
         const params = { ProductID };
         const url = `${appConfig.api7788}/ArrestProductupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async indicmentupdDelete(IndicmentID: string): Promise<any> {
+     indicmentupdDelete(IndicmentID: string): Observable<any> {
         const params = { IndicmentID };
         const url = `${appConfig.api7788}/ArrestIndicmentupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async insAll(Arrest: Arrest): Promise<any> {
+    insAll(Arrest: Arrest): Observable<any> {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestinsAll`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async staffinsAll(Staff: ArrestStaff): Promise<any> {
+     staffinsAll(Staff: ArrestStaff): Observable<any> {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestStaffinsAll`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async lawbreakerinsAll(lawbreaker: ArrestLawbreaker): Promise<any> {
+    lawbreakerinsAll(lawbreaker: ArrestLawbreaker): Observable<any> {
         const params = lawbreaker;
         const url = `${appConfig.api7788}/ArrestLawbreakerinsAll`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async productinsAll(product: ArrestProduct): Promise<any> {
+    productinsAll(product: ArrestProduct): Observable<any> {
         const params = product;
         const url = `${appConfig.api7788}/ArrestProductinsAll`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async indicmentinsAll(indicment: ArrestIndictment): Promise<any> {
+    indicmentinsAll(indicment: ArrestIndictment): Observable<any> {
         const params = indicment;
         const url = `${appConfig.api7788}/ArrestIndicmentinsAll`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
-    async updByCon(Arrest: Arrest): Promise<any> {
+    updByCon(Arrest: Arrest): Observable<any> {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestupdByCon`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.response(JSON.stringify(params), url);
     }
 
 }

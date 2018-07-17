@@ -4,4 +4,6 @@ export class ArrestDocument {
     public FilePath = '';
     public DataSource = '';
     public IsActive = '';
+
+    public IsNewItem: boolean;
 }
