@@ -1,7 +1,7 @@
 <app-step-wizard [sectionId]="2"></app-step-wizard>
 
 <ng-template #printDocModal let-c="close" let-d="dismiss">
-    <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+    <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()" (outputNoticeCode)="noticeCode"></app-print-doc-modal>
 </ng-template>
 
 <form action="" [formGroup]="arrestForm">

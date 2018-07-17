@@ -365,8 +365,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addSuspect(suspect: NoticeSuspect[]) {
-        console.log(suspect);
-
         if (suspect.length) {
             suspect.map(item => {
                 item.IsNewItem = true;

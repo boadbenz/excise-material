@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -54,6 +54,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
+    @Input() noticeCode: string;
 
     constructor(
         private fb: FormBuilder,
@@ -355,10 +356,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addStaff() {
-        // tslint:disable-next-line:prefer-const
+        const lastIndex = this.ArrestStaff.length - 1;
         let staff = new ArrestStaff();
         staff.IsNewItem = true;
-        this.ArrestStaff.push(this.fb.group(staff));
+        if (lastIndex < 0) {
+            this.ArrestStaff.push(this.fb.group(staff));
+        } else {
+            const lastItem = this.ArrestStaff.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                this.ArrestStaff.push(this.fb.group(staff));
+            }
+        }
     }
 
     addProduct() {
@@ -369,14 +377,33 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addIndicment() {
-        // tslint:disable-next-line:prefer-const
+        const lastIndex = this.ArrestIndictment.length - 1;
         let indicment = new ArrestIndictment();
         indicment.IsNewItem = true;
         this.ArrestIndictment.push(this.fb.group(indicment));
+        if (lastIndex < 0) {
+            this.ArrestIndictment.push(this.fb.group(indicment));
+        } else {
+            const lastItem = this.ArrestIndictment.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                this.ArrestIndictment.push(this.fb.group(indicment));
+            }
+        }
     }
 
     addDocument() {
-        this.ArrestDocument.push(this.fb.group(new ArrestDocument()));
+        const lastIndex = this.ArrestDocument.length - 1;
+        let indicment = new ArrestDocument();
+        indicment.IsNewItem = true;
+        this.ArrestDocument.push(this.fb.group(indicment));
+        if (lastIndex < 0) {
+            this.ArrestDocument.push(this.fb.group(indicment));
+        } else {
+            const lastItem = this.ArrestDocument.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                this.ArrestDocument.push(this.fb.group(indicment));
+            }
+        }
     }
 
     viewLawbreaker(id: number) {

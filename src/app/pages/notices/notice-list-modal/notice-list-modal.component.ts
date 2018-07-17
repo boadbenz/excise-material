@@ -1,8 +1,8 @@
-import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { NoticeService } from '../notice.service';
-import { pagination } from '../../../config/pagination';
-import { Router } from '../../../../../node_modules/@angular/router';
-import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { pagination } from 'app/config/pagination';
+import { Router } from '@angular/router';
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import { Message } from 'app/config/message';
 import { Notice } from '../notice';
 import { toLocalShort } from 'app/config/dateFormat';
@@ -18,13 +18,16 @@ export class NoticeListModalComponent implements OnInit {
     isCheckAll = false;
     advSearch = false;
     isRequired = false;
-    notice = Array<Notice>();
-    noticeList = Array<Notice>();
+    isNoRecord = false;
+    notice = new Array<Notice>();
+    noticeList = new Array<Notice>();
+    msgNorecord = Message.noRecord;
 
     paginage = pagination;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
+    @Output() outputNoticeCode = new EventEmitter();
 
     constructor(
         private noticeService: NoticeService,
@@ -67,14 +70,9 @@ export class NoticeListModalComponent implements OnInit {
     }
 
     async onSearchComplete(list: Notice[]) {
-
-        if (!list.length) {
-            alert(Message.noRecord);
-            return false;
-        }
-
         this.notice = [];
         await list.map(item => {
+            item.IsChecked = false;
             item.NoticeDate = toLocalShort(item.NoticeDate);
             item.NoticeStaff.map(s => {
                 s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
@@ -84,13 +82,14 @@ export class NoticeListModalComponent implements OnInit {
             })
         })
 
-        this.notice = list
+        this.notice = list;
         // set total record
-        this.paginage.TotalItems = this.notice.length;
+        this.paginage.TotalItems = list.length;
     }
 
-    view(noticeCode: string) {
-        this._router.navigate([`/notice/manage/R/${noticeCode}`]);
+    view(code: string) {
+        this.dismiss('Cross click');
+        this._router.navigate([`/notice/manage/R/${code}`]);
     }
 
     checkAll() {
@@ -107,6 +106,11 @@ export class NoticeListModalComponent implements OnInit {
 
     close(e: any) {
         this.c.emit(e);
+        this.noticeList.map(item => {
+            if (item.IsActive) {
+                this.outputNoticeCode.emit(item.NoticeCode);
+            }
+        });
     }
 
     async pageChanges(event) {
