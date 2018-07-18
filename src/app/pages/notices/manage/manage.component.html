@@ -177,6 +177,7 @@
                             [readOnly]="showEditField"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemInformmerRegion($event)"
+                            value="{{item.get('Region').value}}"
                             />
                     </div>
                 </div>
@@ -257,7 +258,8 @@
                             [readOnly]="showEditField"
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
-                            (selectItem)="selectItemLocaleRegion($event)" />
+                            (selectItem)="selectItemLocaleRegion($event)" 
+                            value="{{item.get('Region').value}}"/>
                     </div>
                 </div>
 
@@ -300,7 +302,8 @@
                                 [ngbTypeahead]="searchProduct"
                                 [resultTemplate]="rt"
                                 [inputFormatter]="formatterProduct"
-                                (selectItem)="selectItemProductItem($event, i)" />
+                                (selectItem)="selectItemProductItem($event, i)"
+                                value="{{item.get('BrandFullName').value}}"/>
                         </td>
                         <td>
                             <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">

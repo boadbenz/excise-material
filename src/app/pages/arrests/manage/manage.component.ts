@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { ProductModel, ProvinceModel, DistrictModel, SubdistrictModel } from 'app/models'
+import {
+    ProductModel, ProvinceModel, DistrictModel, SubdistrictModel, RegionModel, StaffModel
+} from 'app/models'
 import * as ProductActions from 'app/actions/arrest/get-mas-productget-all.action';
 import { Observable } from 'rxjs/Observable';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
@@ -26,6 +28,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
+import { element } from 'protractor';
 
 @Component({
     selector: 'app-manage',
@@ -47,7 +50,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     subdistrict: SubdistrictModel[];
     district: DistrictModel[];
     province: ProvinceModel[];
-    typeheadProduct: ProductModel[];
+    typeheadStaff = new Array<StaffModel>();
+    typeheadRegion = new Array<RegionModel>();
+    typeheadProduct = new Array<ProductModel>();
 
     get ArrestStaff(): FormArray {
         return this.arrestForm.get('ArrestStaff') as FormArray;
@@ -98,7 +103,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.productModel = store.select('productModel');
     }
 
-    ngOnInit() {
+    async ngOnInit() {
 
         this.sidebarService.setVersion('1.00');
 
@@ -110,12 +115,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.preloader.setShowPreloader(true);
 
-        this.addProductStore()
-        this.addRegion()
+        await this.setStaffStore()
+        await this.setProductStore()
+        await this.setRegionStore()
 
         this.preloader.setShowPreloader(false);
-
-
     }
 
     ngOnDestroy(): void {
@@ -249,8 +253,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private addProductStore() {
-        this.arrestService.masProductgetAll().subscribe(res => {
+    private setProductStore() {
+        this.arrestService.masProductgetAll().then(res => {
             this.typeheadProduct = res;
             // res.map(item => {
             //     this.store.dispatch(new ProductActions.AddProduct(item))
@@ -258,7 +262,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private async addRegion() {
+    private setStaffStore() {
+        this.arrestService.masStaffgetAll().then(res =>
+            this.typeheadStaff = res
+        )
+    }
+
+    private async setRegionStore() {
 
         await this.arrestService.masSubdistrictgetAll().then(res =>
             this.subdistrict = res
@@ -270,7 +280,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.province = res
         )
 
-        let region = []
         await this.subdistrict
             .map(subdis =>
                 this.district
@@ -278,15 +287,26 @@ export class ManageComponent implements OnInit, OnDestroy {
                     .map(dis =>
                         this.province
                             .filter(pro => pro.ProvinceCode == dis.ProvinceCode)
-                            .map(pro => region.push({ ...subdis, ...dis, ...pro }))
+                            .map(pro => {
+                                let r = { ...subdis, ...dis, ...pro }
+                                this.typeheadRegion.push({
+                                    SubDistrictCode: r.subdistrictCode,
+                                    SubdistrictNameTH: r.subdistrictNameTH,
+                                    DistrictCode: r.DistrictCode,
+                                    DistrictNameTH: r.DistrictNameTH,
+                                    ProvinceCode: r.ProvinceCode,
+                                    ProvinceNameTH: r.ProvinceNameTH,
+                                    ZipCode: null
+                                })
+                            })
                     )
             )
-        
-        console.log(region);
+
+
     }
 
     private getByCon(code: string) {
-        this.arrestService.getByCon(code).subscribe(async res => {
+        this.arrestService.getByCon(code).then(async res => {
             await this.arrestForm.reset({
                 ArrestCode: res.ArrestCode,
                 ArrestDate: toLocalNumeric(res.ArrestDate),
@@ -335,13 +355,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        this.arrestService.insAll(this.arrestForm.value).subscribe(res => {
-            // tslint:disable-next-line:triple-equals
-            if (res.IsSuccess == true) {
-                this.onComplete();
-            } else {
-                alert(Message.saveError);
-            }
+        this.arrestService.insAll(this.arrestForm.value).then(IsSuccess => {
+            if (IsSuccess)
+                this.onComplete()
         })
     }
 
@@ -351,53 +367,44 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        this.arrestService.updByCon(this.arrestForm.value).subscribe(async res => {
-            if (res.IsSuccess === true) {
-                // this.onComplete();
+        this.arrestService.updByCon(this.arrestForm.value).then(async IsSuccess => {
+            if (IsSuccess) {
                 let isSuccess: boolean;
                 const staff = this.ArrestStaff.value;
                 await staff.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.staffinsAll(item).subscribe(s => isSuccess = s.IsSuccess);
-                        if (isSuccess === false) { return false; }
+                        this.arrestService.staffinsAll(item).then(IsSuccess => isSuccess = IsSuccess);
+                        if (!isSuccess) return false
                     });
 
                 const lawbreaker = this.ArrestLawbreaker.value;
                 await lawbreaker.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.lawbreakerinsAll(item).subscribe(s => isSuccess = s.IsSuccess);
-                        if (isSuccess === false) { return false; }
+                        this.arrestService.lawbreakerinsAll(item).then(IsSuccess => isSuccess = IsSuccess);
+                        if (!isSuccess) return false
                     });
 
                 const product = this.ArrestProduct.value;
                 await product.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.productinsAll(item).subscribe(s => isSuccess = s.IsSuccess);
-                        if (isSuccess === false) { return false; }
+                        this.arrestService.productinsAll(item).then(IsSuccess => isSuccess = IsSuccess);
+                        if (!isSuccess) return false
                     });
 
                 const indicment = this.ArrestIndictment.value;
                 await indicment.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.indicmentinsAll(item).subscribe(s => isSuccess = s.IsSuccess);
-                        if (isSuccess === false) { return false; }
+                        this.arrestService.indicmentinsAll(item).then(IsSuccess => isSuccess = IsSuccess);
+                        if (!isSuccess) return false
                     });
 
                 this.onComplete();
-            } else {
-                alert(Message.saveError);
             }
         })
     }
 
     private onDelete() {
-        this.arrestService.updDelete(this.arrestCode).subscribe(res => {
-            if (res.IsSuccess) {
-                alert(Message.saveComplete);
-            } else {
-                alert(Message.saveError);
-            }
-        })
+        this.arrestService.updDelete(this.arrestCode)
     }
 
     private async onComplete() {
@@ -411,8 +418,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setCancelButton(false);
 
         this.arrestForm.reset();
-
-        alert(Message.saveComplete);
     }
 
     private deleteTableRow(form: FormArray, indexForm: number) {
@@ -428,7 +433,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     setNoticeCode(e) {
         console.log(e);
-
         this.arrestForm.patchValue({ NoticeCode: e });
     }
 
@@ -504,13 +508,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
-                this.arrestService.staffupdDelete(staffId).subscribe(res => {
-                    // tslint:disable-next-line:triple-equals
-                    if (res.IsSuccess == true) {
-                        this.ArrestStaff.removeAt(indexForm);
-                    } else {
-                        alert(Message.saveError);
-                    }
+                this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
+                    if (IsSuccess)
+                        this.ArrestStaff.removeAt(indexForm)
                 })
             }
         }
@@ -522,13 +522,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
-                this.arrestService.lawbreakerupdDelete(lawbreakerId).subscribe(res => {
-                    // tslint:disable-next-line:triple-equals
-                    if (res.IsSuccess == true) {
-                        this.ArrestLawbreaker.removeAt(indexForm);
-                    } else {
-                        alert(Message.saveError);
-                    }
+                this.arrestService.lawbreakerupdDelete(lawbreakerId).then(IsSuccess => {
+                    if (IsSuccess)
+                        this.ArrestLawbreaker.removeAt(indexForm)
                 })
             }
         }
@@ -540,13 +536,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
-                this.arrestService.productupdDelete(productId).subscribe(res => {
-                    // tslint:disable-next-line:triple-equals
-                    if (res.IsSuccess == true) {
-                        this.ArrestProduct.removeAt(indexForm);
-                    } else {
-                        alert(Message.saveError);
-                    }
+                this.arrestService.productupdDelete(productId).then(IsSuccess => {
+                    if (IsSuccess)
+                        this.ArrestProduct.removeAt(indexForm)
                 })
             }
         }
@@ -558,13 +550,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
-                this.arrestService.indicmentupdDelete(indicmtmentId).subscribe(res => {
-                    // tslint:disable-next-line:triple-equals
-                    if (res.IsSuccess == true) {
-                        this.ArrestIndictment.removeAt(indexForm);
-                    } else {
-                        alert(Message.saveError);
-                    }
+                this.arrestService.indicmentupdDelete(indicmtmentId).then(IsSuccess => {
+                    if (IsSuccess)
+                        this.ArrestIndictment.removeAt(indexForm)
                 })
             }
         }
@@ -591,13 +579,61 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
+    searchRegion = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.typeheadRegion
+                    .filter(v =>
+                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
+
+    searchStaff = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.typeheadStaff
+                    .filter(v =>
+                        v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
+
+    formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
+        `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
+
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
 
-    selectItemProductItem(e, i) {
-        console.log(e.item);
+    formatterStaff = (x: {TitleName: string, FirstName: string, LastName: string}) =>
+                `${x.TitleName} ${x.FirstName} ${x.LastName}`
 
+    selectItemLocaleRegion(e) {
+        this.ArrestLocale.at(0).patchValue({
+            SubDistrictCode: e.item.subdistrictCode,
+            SubdistrictNameTH: e.item.subdistrictNameTH,
+            DistrictCode: e.item.DistrictCode,
+            DistrictNameTH: e.item.DistrictNameTH,
+            ProvinceCode: e.item.ProvinceCode,
+            ProvinceNameTH: e.item.ProvinceNameTH,
+        })
+    }
+
+    selectItemProductItem(e, i) {
         this.ArrestProduct.at(i).reset(e.item)
     }
+
+    selectItemStaff(e, i) {
+        this.ArrestStaff.at(i).reset(e.item);
+        this.ArrestStaff.at(i).patchValue({
+            PositionCode: e.item.OperationPosCode,
+            PositionName: e.item.OperationPosName
+        })
+    }
+
 
 }

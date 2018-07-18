@@ -20,7 +20,7 @@
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </a>
                     <ng-template #noticelist let-c="close" let-d="dismiss">
-                        <app-notice-list-modal (c)="modal.close()" (d)="modal.dismiss()" (noticeCode)="setNoticeCode($event)"></app-notice-list-modal>
+                        <app-modal-notice (c)="modal.close()" (d)="modal.dismiss()" (noticeCode)="setNoticeCode($event)"></app-modal-notice>
                     </ng-template>
                 </div>
 
@@ -109,7 +109,19 @@
                         <tr *ngFor="let item of ArrestStaff.controls; let i = index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" formControlName="FullName" class="form-control form-control-sm" [readonly]="showEditField">
+                                <ng-template #rt let-r="result" let-t="term">
+                                    {{ r.TitleName == null ? '' : r.TitleName }} 
+                                    {{r.FirstName == null ? '' : r.FirstName}} 
+                                    {{r.LastName == null ? '' : r.LastName}}
+                                </ng-template>
+            
+                                <input type="text" class="form-control form-control-sm"
+                                    [ngbTypeahead]="searchStaff"
+                                    [resultTemplate]="rt"
+                                    [readOnly]="showEditField"
+                                    [inputFormatter]="formatterStaff" 
+                                    (selectItem)="selectItemStaff($event, i)"
+                                    />
                             </td>
                             <td>
                                 <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
@@ -180,7 +192,18 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Region" class="form-control form-control-sm" [readonly]="showEditField">
+                        <ng-template #rt let-r="result" let-t="term">
+                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                        </ng-template>
+    
+                        <input type="text" class="form-control form-control-sm"
+                            [ngbTypeahead]="searchRegion"
+                            [resultTemplate]="rt"
+                            [readOnly]="showEditField"
+                            [inputFormatter]="formatterRegion" 
+                            (selectItem)="selectItemLocaleRegion($event)"
+                            />
+                        <!-- <input type="text" formControlName="Region" class="form-control form-control-sm" [readonly]="showEditField"> -->
                     </div>
                 </div>
                 <div class="row">

@@ -44,16 +44,18 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navservice.showAdvSearch;
     }
 
-     ngOnInit() {
+    async ngOnInit() {
 
         this.sidebarService.setVersion('1.00');
         this.paginage.TotalItems = 0;
-        
-        this.onSearch('');
+
+        this.preLoaderService.setShowPreloader(true);
+        await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+        this.preLoaderService.setShowPreloader(false);
 
         this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
-                this.navservice.setOnSearch(null);
+                await this.navservice.setOnSearch(null);
                 this.onSearch(Textsearch);
             }
         })
@@ -77,7 +79,7 @@ export class ListComponent implements OnInit {
         const sDateCompare = new Date(form.value.DateStartFrom);
         const eDateCompare = new Date(form.value.DateStartTo);
 
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+        if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
             alert(Message.checkDate);
         } else {
             this.preLoaderService.setShowPreloader(true);
@@ -93,7 +95,6 @@ export class ListComponent implements OnInit {
     async onSearchComplete(list: Notice[]) {
 
         if (!list.length) {
-            alert(Message.noRecord);
             return false;
         }
 

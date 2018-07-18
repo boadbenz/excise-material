@@ -168,7 +168,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.invesService.insAll(this.investigateForm.value).subscribe(p => {
                 this.onComplete();
             }, (err: HttpErrorResponse) => {
-                alert(Message.saveError);
+                alert(Message.saveFail);
             });
         }
     }
@@ -178,7 +178,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.invesService.updByCon(this.investigateForm.value).subscribe(p => {
                 this.onComplete();
             }, (err: HttpErrorResponse) => {
-                alert(Message.saveError);
+                alert(Message.saveFail);
             });
         }
     }
@@ -204,7 +204,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.saveComplete);
                 // tslint:disable-next-line:triple-equals
                 } else if (result.IsSuccess == 'False') {
-                    alert(Message.saveError);
+                    alert(Message.saveFail);
                 }
             }, (err: HttpErrorResponse) => {
                 alert(err.message);

@@ -30,6 +30,8 @@ export class NoticeInformer {
     public TelephoneNo: string;
     public InformerInfo: string;
     public IsActive: string;
+
+    public Region: string;
 }
 
 export const NoticeInformerFormControl = {
@@ -60,5 +62,6 @@ export const NoticeInformerFormControl = {
     ZipCode: new FormControl(null),
     TelephoneNo: new FormControl('0899595119'),
     InformerInfo: new FormControl('บุคคลจํานวน3คนทําการขายเหลาเถื่อนที่บานเชาหลัง'),
-    FullName: new FormControl(null)
+    FullName: new FormControl(null),
+    Region: new FormControl(null)
 }

@@ -21,6 +21,7 @@ export class ArrestStaff {
     public OfficeShortName = '';
     public ContributorCode = '';
     public IsActive = '';
+
     public FullName = '';
     public IsNewItem: boolean;
 }
@@ -61,5 +62,7 @@ export const ArrestStaffFormControl = {
     OfficeShortName: new FormControl(null),
     ContributorCode: new FormControl(null),
     IsActive: new FormControl(null),
-    FullName: new FormControl(null)
+
+    FullName: new FormControl(null),
+    IsNewItem: new FormControl(false)
 }

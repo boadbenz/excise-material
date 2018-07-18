@@ -23,195 +23,148 @@ export class NoticeService {
             })
     };
 
-    async getByKeyword(Textsearch: any): Promise<Notice[]> {
-        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+    private async responsePromisModify(params: string, url: string) {
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
-                return [];
+                alert(Message.saveFail);
+                return false;
             }
+            alert(Message.saveComplete)
+            return res.IsSuccess
+        } catch (err) {
+            alert(Message.saveFail)
+            return false
+        }
+    }
 
-            if (!res.ResponseData.length) {
+    private async resposePromisGet(params: string, url: string) {
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            if (res.IsSuccess === false) {
                 alert(Message.noRecord);
                 return [];
             }
-
-            return res.ResponseData as Notice[];
-        } catch (error) {
-            alert(error.message);
-        }
-    }
-
-    productgetByKeyword(Textsearch: string) {
-        if (Textsearch === '') {
-            return Observable.of([]);
-        }
-        const params = { Textsearch };
-        const url = `${appConfig.api8082}/NoticeProductgetByKeyword`;
-        return this.http.post<any>(url, params, this.httpOptions)
-            .map(res => {
-                if (res.IsSuccess === false) {
-                    return Observable.of([]);
-                }
-                console.log(res);
-                return res.ResponseData;
-            })
-    }
-
-    async getByConAdv(form: any): Promise<Notice[]> {
-        const params = JSON.stringify(form);
-        const url = `${appConfig.api8082}/NoticegetByConAdv`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
-                return [];
+            if (!res.ResponseData.length) {
+                alert(Message.noRecord)
+                return []
             }
-            return res.ResponseData as Notice[];
+            return res.ResponseData
         } catch (error) {
-            alert(error.message);
         }
+    }
+
+    async getByKeywordOnInt(): Promise<Notice[]> {
+        const params = { 'Textsearch': '' };
+        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        const res=  await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+        if (res.IsSuccess) {
+            return res.ResponseData
+        }
+    }
+
+    getByKeyword(Textsearch: any): Promise<Notice[]> {
+        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
+        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        return this.resposePromisGet(JSON.stringify(params), url)
+    }
+
+    getByConAdv(form: any): Promise<Notice[]> {
+        const url = `${appConfig.api8082}/NoticegetByConAdv`;
+        return this.resposePromisGet(JSON.stringify(form), url)
     }
 
     async getByCon(NoticeCode: string): Promise<Notice> {
         const params = { NoticeCode };
         const url = `${appConfig.api8082}/NoticegetByCon`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
-                return new Notice();
-            }
-            return res.ResponseData as Notice
-        } catch (error) {
-            alert(error.message);
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (res.IsSuccess === false) {
+            alert(Message.noRecord);
+            return new Notice();
         }
+        if (!res.ResponseData) {
+            alert(Message.noRecord)
+            return new Notice()
+        }
+        return res.ResponseData
     }
 
-    async insAll(Notice: Notice): Promise<any> {
+    insAll(Notice: Notice): Promise<any> {
         const params = Notice;
         const url = `${appConfig.api8082}/NoticeinsAll`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
-                return false;
-            }
-            return res.IsSuccess
-        } catch (error) {
-            alert(error.message);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    async updByCon(Notice: Notice): Promise<any> {
+    updByCon(Notice: Notice): Promise<any> {
         const params = Notice;
         const url = `${appConfig.api8082}/NoticeupdByCon`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
-                return false;
-            }
-            return res.IsSuccess
-        } catch (error) {
-            alert(error.message);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async updDelete(NoticeCode: string): Promise<any> {
         const params = { NoticeCode };
         const url = `${appConfig.api8082}/NoticeupdDelete`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(Message.deleteFail);
-                return false;
-            }
-            return res.IsSuccess
-        } catch (error) {
-            alert(Message.deleteFail);
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
+            alert(Message.delFail);
+            return false;
         }
+        alert(Message.delComplete)
+        return res.IsSuccess
     }
 
     async productupdDelete(ProductID: string): Promise<any> {
         const params = { ProductID };
         const url = `${appConfig.api8082}/NoticeproductupdDelete`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(Message.delProductFail);
-                return false;
-            }
-            alert(Message.delProductComplete)
-            return res.IsSuccess
-        } catch (error) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
             alert(Message.delProductFail);
+            return false;
         }
+        alert(Message.delProductComplete)
+        return res.IsSuccess
     }
 
     async staffupdDelete(StaffID: string): Promise<any> {
         const params = { StaffID };
         const url = `${appConfig.api8082}/NoticeStaffupdDelete`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(Message.deleteFail);
-                return false;
-            }
-            alert(Message.deleteComplete)
-            return res.IsSuccess
-        } catch (error) {
-            alert(Message.deleteFail);
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
+            return false;
         }
+        return res.IsSuccess
     }
 
     async informerupdDelete(InformerID: string): Promise<any> {
         const params = { InformerID };
         const url = `${appConfig.api8082}/NoticeInformerupdDelete`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(Message.deleteFail);
-                return false;
-            }
-            return res.IsSuccess
-        } catch (error) {
-            alert(Message.deleteFail);
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
+            return false;
         }
+        return res.IsSuccess
     }
 
     async localeupdDelete(LocaleID: string): Promise<any> {
         const params = { LocaleID };
         const url = `${appConfig.api8082}/NoticeLocaleupdDelete`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(Message.deleteFail);
-                return false;
-            }
-            alert(Message.deleteComplete)
-            return res.IsSuccess
-        } catch (error) {
-            alert(Message.deleteFail);
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
+            return false;
         }
+        return res.IsSuccess
     }
 
     async suspectupdDelete(SuspectID: string): Promise<any> {
         const params = { SuspectID };
         const url = `${appConfig.api8082}/NoticeSuspectupdDelete`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            if (res.IsSuccess === false) {
-                alert(Message.delSuspectFail);
-                return false;
-            }
-            alert(Message.delSuspcetComplete)
-            return res.IsSuccess
-        } catch (error) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
             alert(Message.delSuspectFail);
+            return false;
         }
+        alert(Message.delSuspcetComplete)
+        return res.IsSuccess
     }
 
 }

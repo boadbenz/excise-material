@@ -265,6 +265,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             await res.NoticeInformer.map(item => {
                 this.isConceal = item.InformerType === 1 ? true : false;
                 item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`;
+                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
             });
 
             await res.NoticeSuspect.map(item =>
@@ -347,7 +348,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
 
-        alert(Message.saveComplete);
     }
 
     addProduct() {
@@ -399,31 +399,31 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.Province.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
-    // searchProduct = (text$: Observable<string>) =>
-    //     text$
-    //         .debounceTime(300)
-    //         .distinctUntilChanged()
-    //         .map(term => term === '' ? []
-    //             : this.productModel
-    //                 .filter(v =>
-    //                     v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-    //                     v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-    //                     v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
-    //                 ).slice(0, 10));
-
     searchProduct = (text$: Observable<string>) =>
         text$
             .debounceTime(300)
             .distinctUntilChanged()
-            .do(() => this.searching = true)
-            .switchMap(term =>
-                this.noticeService.productgetByKeyword(term)
-                    .do(() => this.searchFailed = false)
-                    .catch(() => {
-                        this.searchFailed = true;
-                        return Observable.of([]);
-                    })
-            ).do(() => this.searching = false);
+            .map(term => term === '' ? []
+                : this.productModel
+                    .filter(v =>
+                        v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
+
+    // searchProduct = (text$: Observable<string>) =>
+    //     text$
+    //         .debounceTime(300)
+    //         .distinctUntilChanged()
+    //         .do(() => this.searching = true)
+    //         .switchMap(term =>
+    //             this.noticeService.productgetByKeyword(term)
+    //                 .do(() => this.searchFailed = false)
+    //                 .catch(() => {
+    //                     this.searchFailed = true;
+    //                     return Observable.of([]);
+    //                 })
+    //         ).do(() => this.searching = false);
 
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;

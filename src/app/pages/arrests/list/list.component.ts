@@ -60,13 +60,14 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onSearch(Textsearch: any) {
+        this.paginage.TotalItems = 0;
         this.preLoader.setShowPreloader(true);
-        await this.arrestService.getByKeyword(Textsearch).subscribe(res => this.onSearchComplete(res));
+        await this.arrestService.getByKeyword(Textsearch).then(res => this.onSearchComplete(res));
         this.preLoader.setShowPreloader(false);
     }
 
     async onAdvSearch(form: any) {
-
+        this.paginage.TotalItems = 0;
         const sDateCompare = new Date(form.value.OccurrenceDateFrom);
         const eDateCompare = new Date(form.value.OccurrenceDateTo);
 
@@ -76,7 +77,7 @@ export class ListComponent implements OnInit, OnDestroy {
             this.preLoader.setShowPreloader(true);
             form.value.DateStartFrom = sDateCompare.getTime();
             form.value.DateStartTo = eDateCompare.getTime();
-            await this.arrestService.getByConAdv(form.value).subscribe(res => this.onSearchComplete(res));
+            await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
             this.preLoader.setShowPreloader(false);
         }
     }
