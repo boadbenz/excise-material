@@ -1,18 +1,31 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/app.state';
+import { ProductModel, ProvinceModel, DistrictModel, SubdistrictModel } from 'app/models'
+import * as ProductActions from 'app/actions/arrest/get-mas-productget-all.action';
+import { Observable } from 'rxjs/Observable';
+import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { toLocalNumeric } from '../../../config/dateFormat';
-import { ArrestStaff, Contributor, ArrestStaffFormControl } from '../arrest-staff';
-import { Message } from '../../../config/message';
+import { toLocalNumeric } from 'app/config/dateFormat';
+import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
+import { Message } from 'app/config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment } from '../arrest-indictment';
-import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { ArrestLocaleFormControl } from '../arrest-locale';
 import { ArrestLawbreakerFormControl } from '../arrest-lawbreaker';
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
     selector: 'app-manage',
@@ -28,6 +41,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     showEditField: any;
 
     arrestForm: FormGroup;
+
+    productModel: Observable<ProductModel[]>;
+
+    subdistrict: SubdistrictModel[];
+    district: DistrictModel[];
+    province: ProvinceModel[];
+    typeheadProduct: ProductModel[];
 
     get ArrestStaff(): FormArray {
         return this.arrestForm.get('ArrestStaff') as FormArray;
@@ -65,13 +85,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ngbModel: NgbModal,
         private arrestService: ArrestsService,
         private router: Router,
-        private sidebarService: SidebarService
+        private sidebarService: SidebarService,
+        private preloader: PreloaderService,
+        private store: Store<AppState>
     ) {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
         // set true
         this.navService.setNextPageButton(true);
+
+        this.productModel = store.select('productModel');
     }
 
     ngOnInit() {
@@ -83,6 +107,15 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navigate_Service();
 
         this.createForm();
+
+        this.preloader.setShowPreloader(true);
+
+        this.addProductStore()
+        this.addRegion()
+
+        this.preloader.setShowPreloader(false);
+
+
     }
 
     ngOnDestroy(): void {
@@ -131,6 +164,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         ArrestLawbreakerFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestLawbreakerFormControl);
     }
+
     private createProductForm(): FormGroup {
         ArrestProductFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestProductFormControl);
@@ -213,6 +247,42 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
         })
+    }
+
+    private addProductStore() {
+        this.arrestService.masProductgetAll().subscribe(res => {
+            this.typeheadProduct = res;
+            // res.map(item => {
+            //     this.store.dispatch(new ProductActions.AddProduct(item))
+            // })
+        })
+    }
+
+    private async addRegion() {
+
+        await this.arrestService.masSubdistrictgetAll().then(res =>
+            this.subdistrict = res
+        )
+        await this.arrestService.masDistrictgetAll().then(res =>
+            this.district = res
+        )
+        await this.arrestService.masProvincegetAll().then(res =>
+            this.province = res
+        )
+
+        let region = []
+        await this.subdistrict
+            .map(subdis =>
+                this.district
+                    .filter(dis => dis.DistrictCode == subdis.districtCode)
+                    .map(dis =>
+                        this.province
+                            .filter(pro => pro.ProvinceCode == dis.ProvinceCode)
+                            .map(pro => region.push({ ...subdis, ...dis, ...pro }))
+                    )
+            )
+        
+        console.log(region);
     }
 
     private getByCon(code: string) {
@@ -322,7 +392,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private onDelete() {
         this.arrestService.updDelete(this.arrestCode).subscribe(res => {
-            // tslint:disable-next-line:triple-equals
             if (res.IsSuccess) {
                 alert(Message.saveComplete);
             } else {
@@ -359,8 +428,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     setNoticeCode(e) {
         console.log(e);
-        
-        this.arrestForm.patchValue({NoticeCode: e});
+
+        this.arrestForm.patchValue({ NoticeCode: e });
     }
 
     openModal(e) {
@@ -509,4 +578,26 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.ArrestDocument.patchValue({
         // })
     }
+
+    searchProduct = (text$: Observable<string>) =>
+        text$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.typeheadProduct
+                    .filter(v =>
+                        v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
+
+    formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
+        `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
+
+    selectItemProductItem(e, i) {
+        console.log(e.item);
+
+        this.ArrestProduct.at(i).reset(e.item)
+    }
+
 }

@@ -5,7 +5,7 @@ import { Notice } from './notice';
 import { NoticeProduct } from './notice-product';
 import { Observable } from 'rxjs/Observable';
 import { Http, } from '@angular/http';
-import { Message } from 'app/config/message';
+import { Message } from '../../config/message';
 
 @Injectable()
 export class NoticeService {

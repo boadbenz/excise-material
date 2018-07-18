@@ -1,11 +1,11 @@
 import { Component, OnInit, Output, EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { Suspect, SuspectForm } from './suspect';
-import { pagination } from 'app/config/pagination';
+import { pagination } from '../../../config/pagination';
 import { Observable } from 'rxjs/Observable';
-import { appConfig } from 'app/app.config';
+import { appConfig } from '../../../app.config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormArray, FormControl, FormBuilder, FormGroup } from '@angular/forms';
-import { Message } from 'app/config/message';
+import { Message } from '../../../config/message';
 
 const suspectTypes = [
     {

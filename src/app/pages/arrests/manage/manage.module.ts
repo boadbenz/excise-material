@@ -12,6 +12,9 @@ import { ArrestsService } from '../arrests.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
+import { StoreModule } from '@ngrx/store';
+import { productReducer } from '../../../reducers/product.reducer';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
   {
@@ -36,6 +39,10 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    NgbModule.forRoot(),
+    StoreModule.forRoot({
+      productModule: productReducer
+    }),
     RouterModule.forChild(routes),
     LawbreakerModalModule,
     CardActionsModule,

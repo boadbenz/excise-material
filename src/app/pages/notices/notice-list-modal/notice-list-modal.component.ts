@@ -1,11 +1,11 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { NoticeService } from '../notice.service';
-import { pagination } from 'app/config/pagination';
+import { pagination } from '../../../config/pagination';
 import { Router } from '@angular/router';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
-import { Message } from 'app/config/message';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { Message } from '../../../config/message';
 import { Notice } from '../notice';
-import { toLocalShort } from 'app/config/dateFormat';
+import { toLocalShort } from '../../../config/dateFormat';
 
 @Component({
     selector: 'app-notice-list-modal',
@@ -56,7 +56,7 @@ export class NoticeListModalComponent implements OnInit {
         const sDateCompare = new Date(form.value.DateStartFrom);
         const eDateCompare = new Date(form.value.DateStartTo);
 
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+        if (sDateCompare.getTime() >= eDateCompare.getTime()) {
             alert(Message.checkDate);
         } else {
             this.preLoaderService.setShowPreloader(true);

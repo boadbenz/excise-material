@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavigationService } from 'app/shared/header-navigation/navigation.service';
+import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
-import { Message } from 'app/config/message';
+import { Message } from '../../../config/message';
 import { Notice } from '../notice';
-import { pagination } from 'app/config/pagination';
-import { toLocalShort } from 'app/config/dateFormat';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
+import { pagination } from '../../../config/pagination';
+import { toLocalShort } from '../../../config/dateFormat';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({

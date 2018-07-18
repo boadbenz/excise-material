@@ -77,6 +77,9 @@
         </div>
     </div>
 
+
+        
+
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -298,7 +301,16 @@
                         <tr *ngFor="let item of ArrestProduct.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" formControlName="ProductDesc" class="form-control form-control-sm" [readonly]="showEditField">
+                                <ng-template #rt let-r="result" let-t="term">
+                                    {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}}
+                                </ng-template>
+                                <input type="text" class="form-control form-control-sm"
+                                    [readonly]="showEditField"
+                                    [ngbTypeahead]="searchProduct"
+                                    [resultTemplate]="rt"
+                                    [inputFormatter]="formatterProduct"
+                                    (selectItem)="selectItemProductItem($event, i)" />
+                                <!-- <input type="text" formControlName="ProductDesc" class="form-control form-control-sm" [readonly]="showEditField"> -->
                             </td>
                             <td>
                                 <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">

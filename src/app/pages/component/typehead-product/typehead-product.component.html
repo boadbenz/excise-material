@@ -1,0 +1,8 @@
+<ng-template #rt let-r="result" let-t="term">
+    {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}}
+</ng-template>
+<input type="text" class="form-control form-control-sm"
+    [ngbTypeahead]="searchProduct"
+    [resultTemplate]="rt"
+    [inputFormatter]="formatter"
+    (selectItem)="selectItemProductItem($event)" />

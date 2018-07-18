@@ -13,7 +13,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { toLocalNumeric } from '../../../config/dateFormat';
-import { products, regions, communicate, DutyUnit } from '../../../models';
+import { regions, communicate, DutyUnit } from '../../../models';
+import { products } from '../../../models/product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
 import { NoticeSuspect } from '../notice-suspect';
@@ -21,7 +22,7 @@ import { NoticeDocument, NoticeDocumentFormControl } from '../notice-document';
 import { NoticeStaffFormControl } from '../notice-staff';
 import { NoticeInformerFormControl } from '../notice-informer';
 import { NoticeLocaleFormControl } from '../notice-locale';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({

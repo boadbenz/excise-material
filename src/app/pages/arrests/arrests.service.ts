@@ -6,7 +6,8 @@ import { ArrestStaff } from './arrest-staff';
 import { ArrestLawbreaker } from './arrest-lawbreaker';
 import { ArrestProduct } from './arrest-product';
 import { ArrestIndictment } from './arrest-indictment';
-import { Message } from 'app/config/message';
+import { ProductModel } from '../../models/product.model';
+import { Message } from '../../config/message';
 import { Observable } from 'rxjs/Observable';
 
 // const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -56,16 +57,35 @@ export class ArrestsService {
             })
     }
 
+    private async responsePromis(params: string, url: string) {
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            if (res.IsSuccess === false) {
+                alert(res.ResponseData.Msg);
+                return [];
+            }
+
+            if (!res.ResponseData.length) {
+                alert(Message.noRecord);
+                return [];
+            }
+
+            return res.ResponseData;
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
     getByKeyword(Textsearch: string): Observable<Arrest[]> {
         const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-        const url = `${appConfig.api7788}/ArrestgetByKeyword`;        
-        return this.responseList(JSON.stringify(params), url);       
+        const url = `${appConfig.api7788}/ArrestgetByKeyword`;
+        return this.responseList(JSON.stringify(params), url);
     }
 
     getByConAdv(form: any): Observable<Arrest[]> {
         const params = form;
         const url = `${appConfig.api7788}/ArrestgetByConAdv`;
-        return this.responseList(JSON.stringify(params), url);   
+        return this.responseList(JSON.stringify(params), url);
     }
 
     getByCon(ArrestCode: string): Observable<Arrest> {
@@ -98,7 +118,7 @@ export class ArrestsService {
         return this.response(JSON.stringify(params), url);
     }
 
-     indicmentupdDelete(IndicmentID: string): Observable<any> {
+    indicmentupdDelete(IndicmentID: string): Observable<any> {
         const params = { IndicmentID };
         const url = `${appConfig.api7788}/ArrestIndicmentupdDelete`;
         return this.response(JSON.stringify(params), url);
@@ -110,7 +130,7 @@ export class ArrestsService {
         return this.response(JSON.stringify(params), url);
     }
 
-     staffinsAll(Staff: ArrestStaff): Observable<any> {
+    staffinsAll(Staff: ArrestStaff): Observable<any> {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestStaffinsAll`;
         return this.response(JSON.stringify(params), url);
@@ -138,6 +158,29 @@ export class ArrestsService {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestupdByCon`;
         return this.response(JSON.stringify(params), url);
+    }
+
+    //-- Mas --//
+
+    masSubdistrictgetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasSubdistricgetAll`;
+        return this.responsePromis('{}', url);
+        
+    }
+
+    masDistrictgetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasDistricgetAll`;
+        return this.responsePromis('{}', url);
+    }
+
+    masProvincegetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasProvincegetAll`;
+        return this.responsePromis('{}', url);
+    }
+
+    masProductgetAll(): Observable<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasProductgetAll`;
+        return this.responseList('{}', url);
     }
 
 }

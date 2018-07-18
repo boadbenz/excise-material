@@ -301,9 +301,6 @@
                                 [resultTemplate]="rt"
                                 [inputFormatter]="formatterProduct"
                                 (selectItem)="selectItemProductItem($event, i)" />
-
-                                <span *ngIf="searching">searching...</span>
-                                <div class="form-control-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
                         </td>
                         <td>
                             <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
