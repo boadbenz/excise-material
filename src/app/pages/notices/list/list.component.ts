@@ -44,15 +44,16 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navservice.showAdvSearch;
     }
 
-    async ngOnInit() {
-        this.preLoaderService.setShowPreloader(true);
+     ngOnInit() {
 
         this.sidebarService.setVersion('1.00');
+        this.paginage.TotalItems = 0;
+        
         this.onSearch('');
 
-        await this.navservice.searchByKeyword.subscribe(async Textsearch => {
+        this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
-                await this.navservice.setOnSearch(null);
+                this.navservice.setOnSearch(null);
                 this.onSearch(Textsearch);
             }
         })

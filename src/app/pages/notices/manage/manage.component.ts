@@ -328,11 +328,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onDelete() {
         // Set Preloader
-        this.preloader.setShowPreloader(true);
+        this.preloader.setShowPreloader(true);  
 
         await this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
             if (IsSuccess) {
-                this.onComplete();
                 this.router.navigate(['/notice/list']);
             }
         })
@@ -478,10 +477,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 await this.noticeService.productupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
-                        alert(Message.delProductRecComplete);
                         this.NoticeProduct.removeAt(index);
-                    } else {
-                        alert(Message.delProductRecFail);
                     }
                 })
 
@@ -505,10 +501,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 await this.noticeService.suspectupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
-                        alert(Message.deleteSuspcetComplete);
                         this.NoticeSuspect.removeAt(index);
-                    } else {
-                        alert(Message.deleteSuspectFalse);
                     }
                 })
 
@@ -532,11 +525,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 await this.noticeService.suspectupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
-                        alert(Message.deleteDocumentComplete);
                         this.NoticeSuspect.removeAt(index);
-                    } else {
-                        alert(Message.deleteDocumentFalse);
-                    }
+                    } 
                 })
 
                 this.preloader.setShowPreloader(false);

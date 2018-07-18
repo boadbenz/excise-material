@@ -126,12 +126,12 @@ export class NoticeService {
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
+                alert(Message.deleteFail);
                 return false;
             }
             return res.IsSuccess
         } catch (error) {
-            alert(error.message);
+            alert(Message.deleteFail);
         }
     }
 
@@ -141,12 +141,13 @@ export class NoticeService {
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
+                alert(Message.delProductFail);
                 return false;
             }
+            alert(Message.delProductComplete)
             return res.IsSuccess
         } catch (error) {
-            alert(error.message);
+            alert(Message.delProductFail);
         }
     }
 
@@ -156,12 +157,13 @@ export class NoticeService {
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
+                alert(Message.deleteFail);
                 return false;
             }
+            alert(Message.deleteComplete)
             return res.IsSuccess
         } catch (error) {
-            alert(error.message);
+            alert(Message.deleteFail);
         }
     }
 
@@ -171,12 +173,12 @@ export class NoticeService {
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
+                alert(Message.deleteFail);
                 return false;
             }
             return res.IsSuccess
         } catch (error) {
-            alert(error.message);
+            alert(Message.deleteFail);
         }
     }
 
@@ -186,12 +188,13 @@ export class NoticeService {
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
+                alert(Message.deleteFail);
                 return false;
             }
+            alert(Message.deleteComplete)
             return res.IsSuccess
         } catch (error) {
-            alert(error.message);
+            alert(Message.deleteFail);
         }
     }
 
@@ -201,12 +204,13 @@ export class NoticeService {
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             if (res.IsSuccess === false) {
-                alert(res.ResponseData.Msg);
+                alert(Message.delSuspectFail);
                 return false;
             }
+            alert(Message.delSuspcetComplete)
             return res.IsSuccess
         } catch (error) {
-            alert(error.message);
+            alert(Message.delSuspectFail);
         }
     }
 
