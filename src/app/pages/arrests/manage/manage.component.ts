@@ -2,25 +2,25 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { AppState } from '../../../app.state';
 import {
-    ProductModel, ProvinceModel, DistrictModel, SubdistrictModel, RegionModel, StaffModel
-} from 'app/models'
-import * as ProductActions from 'app/actions/arrest/get-mas-productget-all.action';
+    MasProductModel, MasProvinceModel, MasDistrictModel, MasSubdistrictModel, RegionModel, MasStaffModel
+} from '../../../models'
+import * as ProductActions from '../../../actions/arrest/get-mas-productget-all.action';
 import { Observable } from 'rxjs/Observable';
-import { NavigationService } from 'app/shared/header-navigation/navigation.service';
+import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { toLocalNumeric } from 'app/config/dateFormat';
+import { toLocalNumeric } from '../../../config/dateFormat';
 import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
-import { Message } from 'app/config/message';
+import { Message } from '../../../config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment } from '../arrest-indictment';
-import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestLocaleFormControl } from '../arrest-locale';
-import { ArrestLawbreakerFormControl } from '../arrest-lawbreaker';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
+import { ArrestLawbreakerFormControl, ArrestLawbreaker } from '../arrest-lawbreaker';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -29,6 +29,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { element } from 'protractor';
+import { MasOfficeModel } from '../../../models/mas-office.model';
 
 @Component({
     selector: 'app-manage',
@@ -45,14 +46,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     arrestForm: FormGroup;
 
-    productModel: Observable<ProductModel[]>;
+    // productModel: Observable<ProductModel[]>;
 
-    subdistrict: SubdistrictModel[];
-    district: DistrictModel[];
-    province: ProvinceModel[];
-    typeheadStaff = new Array<StaffModel>();
+    subdistrict: MasSubdistrictModel[];
+    district: MasDistrictModel[];
+    province: MasProvinceModel[];
+    typeheadOffice = new Array<MasOfficeModel>();
+    typeheadStaff = new Array<MasStaffModel>();
     typeheadRegion = new Array<RegionModel>();
-    typeheadProduct = new Array<ProductModel>();
+    typeheadProduct = new Array<MasProductModel>();
 
     get ArrestStaff(): FormArray {
         return this.arrestForm.get('ArrestStaff') as FormArray;
@@ -100,10 +102,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setNextPageButton(true);
 
-        this.productModel = store.select('productModel');
+        // this.productModel = store.select('productModel');
     }
 
     async ngOnInit() {
+        this.preloader.setShowPreloader(true);
 
         this.sidebarService.setVersion('1.00');
 
@@ -113,9 +116,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        this.preloader.setShowPreloader(true);
-
         await this.setStaffStore()
+        await this.setOfficeStore()
         await this.setProductStore()
         await this.setRegionStore()
 
@@ -147,7 +149,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsActive: new FormControl(null),
             ArrestStaff: this.fb.array([this.createStaffForm()]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
-            ArrestLawbreaker: this.fb.array([this.createLawbreakerForm()]),
+            ArrestLawbreaker: this.fb.array([]),
             ArrestProduct: this.fb.array([this.createProductForm()]),
             ArrestIndictment: this.fb.array([]),
             ArrestDocument: this.fb.array([])
@@ -251,6 +253,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
         })
+    }
+
+    private setOfficeStore() {
+        this.arrestService.masOfficegetAll().then(res =>
+            this.typeheadOffice = res
+        )
     }
 
     private setProductStore() {
@@ -440,6 +448,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 
+    addLawbreaker(e: ArrestLawbreaker[]){
+        e.map(item => 
+            this.ArrestLawbreaker.push(this.fb.group(item))
+        )
+    }
+
     addStaff() {
         const lastIndex = this.ArrestStaff.length - 1;
         let item = new ArrestStaff();
@@ -448,7 +462,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestStaff.push(this.fb.group(item));
         } else {
             const lastDoc = this.ArrestStaff.at(lastIndex).value;
-            if (lastDoc.StaffID) {
+            if (lastDoc.StaffCode) {
                 this.ArrestStaff.push(this.fb.group(item));
             }
         }
@@ -487,7 +501,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         const lastIndex = this.ArrestDocument.length - 1;
         let indicment = new ArrestDocument();
         indicment.IsNewItem = true;
-        this.ArrestDocument.push(this.fb.group(indicment));
         if (lastIndex < 0) {
             this.ArrestDocument.push(this.fb.group(indicment));
         } else {
@@ -569,7 +582,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     searchProduct = (text$: Observable<string>) =>
         text$
-            .debounceTime(300)
+            .debounceTime(200)
             .distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadProduct
@@ -581,7 +594,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     searchRegion = (text3$: Observable<string>) =>
         text3$
-            .debounceTime(300)
+            .debounceTime(200)
             .distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadRegion
@@ -593,7 +606,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     searchStaff = (text3$: Observable<string>) =>
         text3$
-            .debounceTime(300)
+            .debounceTime(200)
             .distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadStaff
@@ -603,14 +616,27 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
+    serachOffice = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.typeheadOffice
+                    .filter(v =>
+                        v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
+
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
 
-    formatterStaff = (x: {TitleName: string, FirstName: string, LastName: string}) =>
-                `${x.TitleName} ${x.FirstName} ${x.LastName}`
+    formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
+        `${x.TitleName} ${x.FirstName} ${x.LastName}`
+
+    formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
 
     selectItemLocaleRegion(e) {
         this.ArrestLocale.at(0).patchValue({
@@ -633,6 +659,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             PositionCode: e.item.OperationPosCode,
             PositionName: e.item.OperationPosName
         })
+    }
+
+    selectItemOffice(e) {
+        this.arrestForm.patchValue({
+            ArrestStationCode: e.item.OfficeCode,
+            ArrestStation: e.item.OfficeShortName
+        })
+
     }
 
 

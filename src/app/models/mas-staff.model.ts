@@ -1,5 +1,5 @@
 
-export interface StaffModel {
+export interface MasStaffModel {
     StaffCode: string;
     PerType: number;
     TitleName: string;
@@ -23,6 +23,6 @@ export interface StaffModel {
     OfficeShortName: string;
     StatusCode: string;
     IsActive: number;
-    
+
     FullName: string;
 }

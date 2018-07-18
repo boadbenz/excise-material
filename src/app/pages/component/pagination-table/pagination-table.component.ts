@@ -45,6 +45,11 @@ export class PaginationTableComponent implements OnInit, OnChanges {
         this.onPageChange.emit(this.paginate);
     }
 
+    changePageSize() {
+        this.CurrentPage = 1;
+        this.changePage();
+    }
+
     getPageItems() {
         // tslint:disable-next-line:radix
         const totalItems = parseInt(this.TotalItems.toString());

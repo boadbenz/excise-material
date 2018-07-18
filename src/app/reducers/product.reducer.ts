@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store'
-import { ProductModel } from '../models/product.model'
+import { MasProductModel } from '../models/mas-product.model'
 import * as ProductActions from '../actions/arrest/get-mas-productget-all.action'
 
 // Section 1
-const initialState: ProductModel = {
+const initialState: MasProductModel = {
     ProductID: null,
     GroupCode: null,
     IsDomestic: null,
@@ -33,7 +33,7 @@ const initialState: ProductModel = {
 }
 
 // Section 2
-export function productReducer(state: ProductModel[] = [initialState], action: ProductActions.Actions) {
+export function productReducer(state: MasProductModel[] = [initialState], action: ProductActions.Actions) {
 
     // Section 3
     switch(action.type) {

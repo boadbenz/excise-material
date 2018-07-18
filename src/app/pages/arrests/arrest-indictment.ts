@@ -6,5 +6,16 @@ export class ArrestIndictment {
     public IsActive: number;
     public GuiltBaseID: number;
     public OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
+    
+    SectionNo: string;
+    LawbreakerID: string;
+    LawbreakerName: string;
+    ProductID: string;
+    ProductName: string;
+    SectionName: string;
+    SectionDesc1: string;
+
+    
+
     public IsNewItem: boolean;
 }

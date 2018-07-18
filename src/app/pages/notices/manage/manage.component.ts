@@ -14,7 +14,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { toLocalNumeric } from '../../../config/dateFormat';
 import { regions, communicate, DutyUnit } from '../../../models';
-import { products } from '../../../models/product.model';
+import { products } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
 import { NoticeSuspect } from '../notice-suspect';

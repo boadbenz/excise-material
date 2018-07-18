@@ -11,7 +11,7 @@
   </div>
   <div class="col col-lg-3 text-right">
       <label>แสดง
-          <select name="PageSize" [(ngModel)]="PageSize" (change)="changePage()">
+          <select name="PageSize" [(ngModel)]="PageSize" (change)="changePageSize()">
               <option *ngFor="let row of RowsPerPageOptions;" [value]="row">{{row}}</option>
           </select> รายการ</label>
   </div>

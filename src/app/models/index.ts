@@ -3,9 +3,10 @@ export * from './region';
 export * from './communicationChanel';
 export * from './dutyUnit';
 
-export * from './product.model'
-export * from './subdistrict.model'
-export * from './district.model'
-export * from './province.model'
+export * from './mas-product.model'
+export * from './mas-subdistrict.model'
+export * from './mas-district.model'
+export * from './mas-province.model'
 export * from './region.model'
-export * from './staff.model'
+export * from './mas-staff.model'
+export * from './mas-law-group-section.modal'

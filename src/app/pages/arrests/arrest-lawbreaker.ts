@@ -51,6 +51,11 @@ export class ArrestLawbreaker {
     public LinkPhoto: string;
     public PhotoDesc: string;
     public IsActive: number;
+
+    EntityTypeName: string;
+    LawbreakerTypeName: string;
+    public IsChecked: boolean;
+    public RowId: number;
     public IsNewItem: boolean;
 }
 
@@ -121,6 +126,10 @@ export const ArrestLawbreakerFormControl = {
     LinkPhoto: new FormControl(null),
     PhotoDesc: new FormControl(null),
     IsActive: new FormControl(null),
+    
+    EntityTypeName: new FormControl(null),
+    LawbreakerTypeName: new FormControl(null),
+    IsChecked: new FormControl(false),
     IsNewItem: new FormControl(false)
 }
 

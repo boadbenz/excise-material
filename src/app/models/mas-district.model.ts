@@ -1,4 +1,4 @@
-export interface DistrictModel {
+export interface MasDistrictModel {
     DistrictCode: string,
     DistrictNameTH: string,
     DistrictNameEN: string,

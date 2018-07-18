@@ -1,10 +1,10 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
-import { pagination } from 'app/config/pagination';
+import { pagination } from '../../../config/pagination';
 import { Router } from '@angular/router';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
-import { Message } from 'app/config/message';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { Message } from '../../../config/message';
 import { Notice } from '../../notices/notice';
-import { toLocalShort } from 'app/config/dateFormat';
+import { toLocalShort } from '../../../config/dateFormat';
 import { ArrestsService } from '../../arrests/arrests.service';
 
 @Component({
@@ -56,7 +56,7 @@ export class ModalNoticeComponent implements OnInit {
         const sDateCompare = new Date(form.value.DateStartFrom);
         const eDateCompare = new Date(form.value.DateStartTo);
 
-        if (sDateCompare.getTime() >= eDateCompare.getTime()) {
+        if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
             alert(Message.checkDate);
         } else {
             this.preLoaderService.setShowPreloader(true);
@@ -71,7 +71,8 @@ export class ModalNoticeComponent implements OnInit {
 
     async onSearchComplete(list: Notice[]) {
         this.notice = [];
-        await list.map(item => {
+        await list.map((item, i) => {
+            item.RowId = i + 1;
             item.IsNoticeCode = null;
             item.NoticeDate = toLocalShort(item.NoticeDate);
             item.NoticeStaff.map(s => {
@@ -105,6 +106,8 @@ export class ModalNoticeComponent implements OnInit {
     }
 
     async close(e: any) {
+        const table = this.noticeTable.nativeElement
+        
         const code = await this.noticeList.find(item => item.IsNoticeCode !== '').NoticeCode;
         this.noticeCode.emit(code);
         this.c.emit(e);

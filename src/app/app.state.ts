@@ -1,5 +1,5 @@
-import { ProductModel } from './models/product.model';
+import { MasProductModel } from './models/mas-product.model';
 
 export interface AppState {
-  readonly productModel: ProductModel[];
+  readonly productModel: MasProductModel[];
 }

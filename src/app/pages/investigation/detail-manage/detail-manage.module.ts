@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { DetailManageComponent } from './detail-manage.component';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { RouterModule, Routes } from '@angular/router';
-import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
 import { OffenseModalModule } from '../../arrests/offense-modal/offense-modal.module';
+import { ModalLawbreakerModal } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 
 const routes: Routes = [
   {
@@ -28,7 +28,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     CardActionsModule,
-    LawbreakerModalModule,
+    ModalLawbreakerModal,
     OffenseModalModule
   ],
   declarations: [DetailManageComponent]

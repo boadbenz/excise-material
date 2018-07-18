@@ -1,4 +1,4 @@
-export interface ProductModel {
+export interface MasProductModel {
     ProductID: string;
     GroupCode: string;
     IsDomestic: string;

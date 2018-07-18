@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
-import { ProductModel, products } from '../../../models/product.model';
+import { MasProductModel, products } from '../../../models/mas-product.model';
 
 @Component({
     selector: 'app-typehead-product',
@@ -11,7 +11,7 @@ import { ProductModel, products } from '../../../models/product.model';
 })
 export class TypeheadProductComponent implements OnInit {
 
-    productModel: Observable<ProductModel[]>;
+    productModel: Observable<MasProductModel[]>;
 
     constructor(
         private store: Store<AppState>

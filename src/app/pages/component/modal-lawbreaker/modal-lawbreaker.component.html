@@ -9,9 +9,9 @@
             </h4>
         </div>
         <div class="col-lg-5 col-8">
-            <form class="app-search">
-                <input type="search" name="" id="" class="form-control form-control-sm">
-                <a class="srh-btn">
+            <form class="app-search" #searchFrom="ngForm" (ngSubmit)="onSearchByKey(searchFrom.value)">
+                <input type="search" name="Textsearch" ngModel id="" class="form-control form-control-sm">
+                <a class="srh-btn" (click)="onSearchByKey(searchFrom.value)">
                     <i class="ti-search"></i>
                 </a>
             </form>
@@ -51,7 +51,7 @@
 
                         <label for="" class="col-lg-2 col-sm-4">ประเภทบุคคล :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-                            <select name="SuspectType" ngModel class="form-control form-control-sm">
+                            <select name="lawbreakerType" ngModel class="form-control form-control-sm">
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of lawbreakerType" [value]="item.value">{{item.text}}</option>
                             </select>
@@ -101,7 +101,7 @@
     <div class="card unset-radius">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table id="suspectModal" #suspectModal class="table table-sm table-striped">
+                <table id="suspectModal" #suspectModal class="table table-sm table-striped" [formGroup]="lawbreakerFG">
                     <thead>
                         <tr>
                             <th class="text-center">
@@ -117,17 +117,34 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let item of lawbreakerList; let i=index;">
+                    <tbody formArrayName="Lawbreaker">
+                        <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">
-                                <input type="checkbox" [id]="'td'+1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
+                                <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo" [checked]="isCheckAll">
                                 <label [for]="'td'+i" class="m-0"></label>
                             </td>
-                            <td>{{i+1}}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{item.get('RowId').value}}</td>
+                            <td>{{item.get('LawbreakerTypeName').value}}</td>
+                            <td>{{item.get('EntityTypeName').value}}</td>
+                            <td>
+                                <span *ngIf="item.get('EntityType').value == 0">
+                                    {{item.get('CompanyRegistrationNo').value}}
+                                </span>
+                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 0">
+                                    {{item.get('PassportNo').value}}
+                                </span>
+                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 1">
+                                    {{item.get('Idcard').value}}
+                                </span>
+                            </td>
+                            <td>
+                                <span *ngIf="item.get('EntityType').value == 0">
+                                    {{item.get('CompanyFullName').value}}
+                                </span>
+                                <span *ngIf="item.get('EntityType').value == 1">
+                                    {{item.get('LawbreakerFullName').value}}
+                                </span>
+                            </td>
                             <td></td>
                             <td class="text-center">
                                 <a href="javaScript:void(0);" class="text-center text-secondary">
@@ -140,12 +157,8 @@
             </div>
         </div>
         <div class="card-footer card-footer-unset">
-            <app-pagination-table 
-                [TotalItems]="paginage.TotalItems" 
-                [CurrentPage]="paginage.CurrentPage" 
-                [PageSize]="paginage.PageSize"
-                [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
-                (onPageChange)="pageChanges($event)">
+            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
             </app-pagination-table>
         </div>
     </div>
