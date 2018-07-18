@@ -26,6 +26,7 @@ export class Notice {
     public NoticeSuspect: Array<NoticeSuspect>;
     public NoticeDocument: Array<NoticeDocument>;
 
+    public RowId: number;
     public IsNoticeCode: string;
 }
 

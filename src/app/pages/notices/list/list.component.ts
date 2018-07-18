@@ -97,7 +97,8 @@ export class ListComponent implements OnInit {
         }
 
         this.notice = [];
-        await list.map(item => {
+        await list.map((item, i) => {
+            item.RowId = i + 1;
             item.NoticeDate = toLocalShort(item.NoticeDate);
             item.NoticeStaff.map(s => {
                 s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
