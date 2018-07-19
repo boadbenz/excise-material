@@ -1,12 +1,19 @@
-import { OpsArrestIndicmentDetailCollection } from './ops-arrest-indicment-detail-collection';
+
+class OpsArrestIndicmentDetailCollection {
+    IndictmentDetailID: number;
+    LawsuitType: number;
+    IsActive: number;
+    IndictmentID: number;
+    LawbreakerID: number;
+}
 
 export class ArrestIndictment {
-    public IndictmentID: number;
-    public IsProve: number;
-    public IsActive: number;
-    public GuiltBaseID: number;
-    public OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
-    
+    IndictmentID: number;
+    IsProve: number;
+    IsActive: number;
+    GuiltBaseID: number;
+    OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
+
     SectionNo: string;
     LawbreakerID: string;
     LawbreakerName: string;
@@ -15,7 +22,5 @@ export class ArrestIndictment {
     SectionName: string;
     SectionDesc1: string;
 
-    
-
-    public IsNewItem: boolean;
+    IsNewItem: boolean;
 }

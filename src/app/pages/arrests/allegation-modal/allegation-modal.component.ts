@@ -17,6 +17,7 @@ export class AllegationModalComponent implements OnInit {
 
     isOpen = false;
     isCheckAll = false;
+    isCheck = false;
 
     paginage = pagination;
 
@@ -54,7 +55,7 @@ export class AllegationModalComponent implements OnInit {
         })
 
         await this.lawbreaker.map(item => {
-            item.IsChecked = false
+            item.IsChecked = this.isCheck
         })
         this.setItemFormArray(this.lawbreaker, 'Lawbreaker')
     }
@@ -86,6 +87,12 @@ export class AllegationModalComponent implements OnInit {
         }
     }
 
+    setIsChecked(i: number){
+        this.LawGroupSection.value.map((item, index) => {
+            item.IsChecked = i == index ? true : false;
+        })
+    }
+
     checkAll() {
         this.isCheckAll = !this.isCheckAll;
     }
@@ -96,10 +103,31 @@ export class AllegationModalComponent implements OnInit {
 
     close(e: any) {
         debugger
-        let indict = this.lawGroupFG.value
-        // .LawGroupSection as MasLawGroupSectionModel[];
-        // indict = indict.filter(item => item.IsChecked == true);
-        console.log(indict);
+        let _lawGroup = this.LawGroupSection.value.filter(item => item.IsChecked);
+        let _lawbreaker = this.Lawbreaker.value.filter(item => item.IsChecked);
+
+        let _indicment: ArrestIndictment[]
+        // _lawbreaker.map((item, i) => {
+        //     IndictmentID: i +1;
+        //     IsProve: 1;
+        //     IsActive: 1;
+        //     GuiltBaseID: null;
+        //     OpsArrestIndicmentDetailCollection: [];
+        //     LawbreakerID: item.LawbreakerID;
+        //     LawbreakerName: item.LawbreakerName;
+        
+        //     SectionNo: string;
+            
+        //     ProductID: string;
+        //     ProductName: string;
+        //     SectionName: string;
+        //     SectionDesc1: string;
+        
+        //     IsNewItem: boolean;
+        //    })
+        // })
+        // const _indicment = [..._lawGroup, ..._lawbreaker]
+        // console.log(_indicment);
         
 
         this.c.emit(e);
