@@ -13,8 +13,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { toLocalNumeric } from '../../../config/dateFormat';
-import { regions, communicate, DutyUnit } from '../../../models';
-import { products } from '../../../models/mas-product.model';
+import { regions, communicate, DutyUnit, RegionModel, MasDistrictModel, MasProvinceModel, MasSubdistrictModel } from '../../../models';
+import { products, MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
 import { NoticeSuspect } from '../notice-suspect';
@@ -24,6 +24,8 @@ import { NoticeInformerFormControl } from '../notice-informer';
 import { NoticeLocaleFormControl } from '../notice-locale';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { ArrestsService } from '../../arrests/arrests.service';
+import { MasOfficeModel } from '../../../models/mas-office.model';
 
 @Component({
     selector: 'app-manage',
@@ -49,6 +51,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     productModel = products;
     communicateModel = communicate;
     dutyUnitModel = DutyUnit;
+
+    subdistrict = new Array<MasSubdistrictModel>();
+    district = new Array<MasDistrictModel>();
+    province = new Array<MasProvinceModel>();
+    typeheadRegion = new Array<RegionModel>();
+    typeheadProduct = new Array<MasProductModel>();
+    typeheadOffice = new Array<MasOfficeModel>();
 
     get NoticeStaff(): FormArray {
         return this.noticeForm.get('NoticeStaff') as FormArray;
@@ -83,7 +92,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private noticeService: NoticeService,
         private ngbModel: NgbModal,
         private preloader: PreloaderService,
-        private sidebarService: SidebarService
+        private sidebarService: SidebarService,
+        private arrestService: ArrestsService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -92,14 +102,22 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setNextPageButton(true);
     }
 
-    ngOnInit() {
-        this.sidebarService.setVersion('1.00');
+    async ngOnInit() {
+        this.preloader.setShowPreloader(true);
+
+        this.sidebarService.setVersion('1.01');
 
         this.active_route();
 
         this.navigate_service();
 
         this.createForm();
+
+       await this.setRegionStore();
+       await this.setProductStore();
+    //    await this.setOfficeStore();
+
+       this.preloader.setShowPreloader(false);
     }
 
     private active_route() {
@@ -387,16 +405,63 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    private setOfficeStore() {
+        this.arrestService.masOfficegetAll().then(res =>
+            this.typeheadOffice = res
+        )
+    }
+
+    private setProductStore() {
+        this.arrestService.masProductgetAll().then(res => {
+            this.typeheadProduct = res;
+        })
+    }
+
+    private async setRegionStore() {
+
+        await this.arrestService.masSubdistrictgetAll().then(res =>
+            this.subdistrict = res
+        )
+        await this.arrestService.masDistrictgetAll().then(res =>
+            this.district = res
+        )
+        await this.arrestService.masProvincegetAll().then(res =>
+            this.province = res
+        )
+
+        await this.subdistrict
+            .map(subdis =>
+                this.district
+                    .filter(dis => dis.DistrictCode == subdis.districtCode)
+                    .map(dis =>
+                        this.province
+                            .filter(pro => pro.ProvinceCode == dis.ProvinceCode)
+                            .map(pro => {
+                                let r = { ...subdis, ...dis, ...pro }
+                                this.typeheadRegion.push({
+                                    SubDistrictCode: r.subdistrictCode,
+                                    SubdistrictNameTH: r.subdistrictNameTH,
+                                    DistrictCode: r.DistrictCode,
+                                    DistrictNameTH: r.DistrictNameTH,
+                                    ProvinceCode: r.ProvinceCode,
+                                    ProvinceNameTH: r.ProvinceNameTH,
+                                    ZipCode: null
+                                })
+                            })
+                    )
+            )
+    }
+
     searchRegion = (text3$: Observable<string>) =>
         text3$
             .debounceTime(300)
             .distinctUntilChanged()
             .map(term => term === '' ? []
-                : this.regionModel
+                : this.typeheadRegion
                     .filter(v =>
-                        v.SubDistrict.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.District.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.Province.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchProduct = (text$: Observable<string>) =>
@@ -404,7 +469,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .debounceTime(300)
             .distinctUntilChanged()
             .map(term => term === '' ? []
-                : this.productModel
+                : this.typeheadProduct
                     .filter(v =>
                         v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
@@ -428,18 +493,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
 
-    formatterRegion = (x: { SubDistrict: string, District: string, Province: string }) =>
-        `${x.SubDistrict} ${x.District} ${x.Province}`;
+    formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
+        `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
     selectItemInformmerRegion(ele: any) {
         ele.item.NoticeCode = this.noticeCode;
         this.NoticeInformer.at(0).patchValue({
             SubDistrictCode: ele.item.SubDistrictCode,
-            SubDistrict: ele.item.SubDistrict,
+            SubDistrict: ele.item.SubDistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
-            District: ele.item.District,
+            District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,
-            Province: ele.item.Province,
+            Province: ele.item.ProvinceNameTH,
             ZipCode: ele.item.ZipCode
         });
     }
@@ -448,11 +513,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         ele.item.NoticeCode = this.noticeCode;
         this.NoticeLocale.at(0).patchValue({
             SubDistrictCode: ele.item.SubDistrictCode,
-            SubDistrict: ele.item.SubDistrict,
+            SubDistrict: ele.item.SubDistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
-            District: ele.item.District,
+            District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,
-            Province: ele.item.Province,
+            Province: ele.item.ProvinceNameTH,
             ZipCode: ele.item.ZipCode
         });
     }

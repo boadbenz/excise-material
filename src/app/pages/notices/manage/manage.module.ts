@@ -10,6 +10,7 @@ import { HttpModule } from '@angular/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
 import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
+import { ArrestsService } from '../../arrests/arrests.service';
 
 const routes: Routes = [
     {
@@ -43,6 +44,6 @@ const routes: Routes = [
     ],
     declarations: [
         ManageComponent
-    ], providers: [NoticeService]
+    ], providers: [NoticeService, ArrestsService]
 })
 export class ManageModule { }

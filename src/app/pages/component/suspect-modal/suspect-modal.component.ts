@@ -1,11 +1,12 @@
 import { Component, OnInit, Output, EventEmitter, Injectable, OnDestroy } from '@angular/core';
-import { Suspect, SuspectForm } from './suspect';
 import { pagination } from '../../../config/pagination';
 import { Observable } from 'rxjs/Observable';
 import { appConfig } from '../../../app.config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormArray, FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Message } from '../../../config/message';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { NoticeSuspect } from '../../notices/notice-suspect';
 
 const suspectTypes = [
     {
@@ -39,38 +40,30 @@ export class SuspectService {
             })
     };
 
-    searchByKeyword(Textsearch: string): Observable<Suspect[]> {
-        if (Textsearch === '') {
-            return Observable.of([]);
-        }
+    searchByKeyword(Textsearch: string): Promise<NoticeSuspect[]> {
         const params = JSON.stringify(Textsearch);
         const url = `${appConfig.api8082}/NoticeSuspectgetByKeyword`;
         return this.response(params, url);
     }
 
-    searchAdv(form: any): Observable<Suspect[]> {
-        if (form === '') {
-            return Observable.of([]);
-        }
+    searchAdv(form: any): Promise<NoticeSuspect[]> {
         const params = JSON.stringify(form);
         const url = `${appConfig.api8082}/SuspectgetByConAdv`;
         return this.response(params, url);
     }
 
-    private response(params: string, url: string) {
-        return this.http.post<any>(url, params, this.httpOptions)
-            .map(res => {
-                if (res.IsSuccess === false) {
-                    alert(res.ResponseData.Msg);
-                    return Observable.of([]);
-                }
+    private async response(params: string, url: string) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise()
+        if (res.IsSuccess === false) {
+            alert(Message.noRecord);
+            return [];
+        }
 
-                if (!res.ResponseData.length) {
-                    alert(Message.noRecord);
-                    return Observable.of([]);
-                }
-                return res.ResponseData;
-            })
+        if (!res.ResponseData.length) {
+            alert(Message.noRecord);
+            return [];
+        }
+        return res.ResponseData;
     }
 }
 
@@ -85,8 +78,8 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
     isOpen = false;
     isCheckAll = false;
     advSearch = false;
-    suspect = new Array<Suspect>();
-    suspectList = new Array<Suspect>();
+    suspect = new Array<NoticeSuspect>();
+    suspectList = new Array<NoticeSuspect>();
 
     suspectTypes = suspectTypes;
     entityType = entityTypes;
@@ -97,7 +90,7 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
-    @Output() exportSuspectData = new EventEmitter<Suspect[]>()
+    @Output() exportSuspectData = new EventEmitter<NoticeSuspect[]>()
 
     get Suspect(): FormArray {
         return this.suspectFormGroup.get('Suspect') as FormArray;
@@ -105,7 +98,8 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
     constructor(
         private suspectService: SuspectService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private preloader: PreloaderService
     ) { }
 
     ngOnInit() {
@@ -122,19 +116,24 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSearchByKeyword(f: any) {
-        this.suspectService.searchByKeyword(f).subscribe(res => this.onComplete(res));
+    async onSearchByKeyword(f: any) {
+        this.preloader.setShowPreloader(true)
+        await this.suspectService.searchByKeyword(f).then(res => this.onComplete(res));
+        this.preloader.setShowPreloader(false)
     }
 
-    onSearchAdv(f: any) {
-        this.suspectService.searchAdv(f).subscribe(res => this.onComplete(res));
+    async onSearchAdv(f: any) {
+        this.preloader.setShowPreloader(true)
+        await this.suspectService.searchAdv(f).then(res => this.onComplete(res));
+        this.preloader.setShowPreloader(false)
     }
 
-    async onComplete(res: Suspect[]) {
-        this.suspect = new Array<Suspect>();
-        const list = await res.map(item => {
+    async onComplete(res: NoticeSuspect[]) {
+        this.suspect = new Array<NoticeSuspect>();
+        const list = await res.map((item, i) => {
+            item.RowId = i +1;
             item.IsChecked = false;
-            item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
+            item.CompanyFullName = `${item.CompanyTitleName} ${item.CompanyName}`;
             item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;
             return item;
         });
@@ -162,12 +161,12 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
     }
 
     async exportData() {
-        let form = this.suspectFormGroup.value.Suspect as Suspect[];
+        let form = this.suspectFormGroup.value.Suspect as NoticeSuspect[];
         form = await form
             .map(item => {
-                item.EntityTypeName = this.entityType.find(el => el.value == item.EntityType).text;
-                item.SuspectTypeName = this.suspectTypes.find(el => el.value == item.SuspectType).text;
-                item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
+                // item.EntityTypeName = this.entityType.find(el => el.value == item.EntityType).text;
+                // item.SuspectTypeName = this.suspectTypes.find(el => el.value == item.SuspectType).text;
+                item.CompanyFullName = `${item.CompanyTitleName} ${item.CompanyName}`;
                 item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;
                 return item;
             })

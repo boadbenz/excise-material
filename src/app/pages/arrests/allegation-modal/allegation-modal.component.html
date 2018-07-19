@@ -78,8 +78,7 @@
                     <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
                             <input type="checkbox" name="IsChecked" formControlName="IsChecked" 
-                            value="true"
-                            [id]="'lb' + i" class="filled-in chk-col-indigo">
+                            value="true" [id]="'lb' + i" class="filled-in chk-col-indigo">
                             <label [for]="'lb' + i" class="m-0"></label>
                         </td>
                         <td class="text-center">{{i+1}}</td>
