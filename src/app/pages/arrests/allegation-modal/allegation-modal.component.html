@@ -94,7 +94,8 @@
                             </span>
                         </td>
                         <td>
-                            <select formControlName="ProductID" class="form-control form-control-sm">
+                            <select formControlName="ProductID" class="form-control form-control-sm"
+                            (change)="selectItemPorduct($event, i)">
                                 <option value="" disabled selected></option>
                                 <option *ngFor="let p of product" [value]="p.ProductID">{{p.ProductDesc}}</option>
                             </select>

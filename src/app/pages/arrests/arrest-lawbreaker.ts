@@ -54,9 +54,11 @@ export class ArrestLawbreaker {
 
     EntityTypeName: string;
     LawbreakerTypeName: string;
-    public IsChecked: boolean;
-    public RowId: number;
-    public IsNewItem: boolean;
+    ProductID: string;
+    ProductName: string;
+    IsChecked: boolean;
+    RowId: number;
+    IsNewItem: boolean;
 }
 
 export const ArrestLawbreakerFormControl = {
@@ -129,6 +131,8 @@ export const ArrestLawbreakerFormControl = {
     
     EntityTypeName: new FormControl(null),
     LawbreakerTypeName: new FormControl(null),
+    ProductID: new FormControl(null),
+    ProductName: new FormControl(null),
     IsChecked: new FormControl(false),
     IsNewItem: new FormControl(false)
 }

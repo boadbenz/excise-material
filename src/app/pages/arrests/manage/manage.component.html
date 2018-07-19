@@ -403,15 +403,22 @@
                     <tbody formArrayName="ArrestIndictment">
                         <tr *ngFor="let item of ArrestIndictment.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
-                            <td></td>
+                            <td>{{item.get('SectionName').value}}</td>
                             <td>{{item.get('GuiltBaseID').value}}</td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                <div *ngFor="let law of item.value.Lawbreaker;">
+                                    {{law.LawbreakerName}}
+                                </div>
+                            </td>
+                            <td>
+                                <div *ngFor="let law of item.value.Lawbreaker;">
+                                    {{law.ProductName}}
+                                </div>
+                            </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-danger" (click)="openModal(allegation)" *ngIf="!showEditField">
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
-
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(i, item.get('IndictmentID').value)">
@@ -423,7 +430,7 @@
                 </table>
 
                 <ng-template #allegation let-c="close" let-d="dismiss">
-                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()"
+                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" (outPutIndicment)="addIndictment($event)"
                     [mode]="mode"
                     [lawbreaker]="ArrestLawbreaker.value"
                     [product]="ArrestProduct.value"
@@ -492,9 +499,6 @@
                             </td>
                             <td>
                                 <input type="file" formControlName="FilePath" class="dropify" [readonly]="showEditField">
-                                <!-- <a href="javaScript:void(0)" class="text-secondary" style="position: absolute;right: 100px;bottom: 36px;">
-                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                                </a> -->
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteDocument(i)">

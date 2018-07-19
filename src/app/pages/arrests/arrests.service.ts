@@ -8,6 +8,7 @@ import { ArrestProduct } from './arrest-product';
 import { ArrestIndictment } from './arrest-indictment';
 // import { ProductModel } from '../../models/product.model';
 import { Message } from '../../config/message';
+import { ArrestLocale } from './arrest-locale';
 // import { Observable } from 'rxjs/Observable';
 
 // const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -166,7 +167,17 @@ export class ArrestsService {
         const url = `${appConfig.api7788}/ArrestStaffinsAll`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         if (res.IsSuccess === false) {
-            alert(Message.saveStaffFail);
+            return false;
+        }
+        return res.IsSuccess
+    }
+
+    async localeinsAll(ArrestLocale: ArrestLocale): Promise<boolean> {
+        const params = ArrestLocale;
+        const url = `${appConfig.api7788}/ArrestLocaleinsAll`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (res.IsSuccess === false) {
+            alert(Message.saveLocaleFail);
             return false;
         }
         return res.IsSuccess
@@ -209,6 +220,13 @@ export class ArrestsService {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    async localeupdByCon(Locale: ArrestLocale): Promise<any> {
+        const params = Locale;
+        const url = `${appConfig.api7788}/ArrestLocaleupdByCon`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        return res.IsSuccess ? true: false;
     }
 
     //-- Arrest Notice --//

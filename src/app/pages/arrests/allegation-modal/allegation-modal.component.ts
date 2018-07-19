@@ -32,6 +32,7 @@ export class AllegationModalComponent implements OnInit {
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
+    @Output() outPutIndicment = new EventEmitter<ArrestIndictment[]>();
 
     get LawGroupSection(): FormArray {
         return this.lawGroupFG.get('LawGroupSection') as FormArray
@@ -56,6 +57,8 @@ export class AllegationModalComponent implements OnInit {
 
         await this.lawbreaker.map(item => {
             item.IsChecked = this.isCheck
+            item.ProductID = null
+            item.ProductName = null
         })
         this.setItemFormArray(this.lawbreaker, 'Lawbreaker')
     }
@@ -87,9 +90,16 @@ export class AllegationModalComponent implements OnInit {
         }
     }
 
-    setIsChecked(i: number){
+    setIsChecked(i: number) {
         this.LawGroupSection.value.map((item, index) => {
             item.IsChecked = i == index ? true : false;
+        })
+    }
+
+    selectItemPorduct(e: any, i: number) {
+        this.Lawbreaker.at(i).patchValue({
+            ProductID: e.target.value,
+            ProductName: e.target.textContent.trim()
         })
     }
 
@@ -101,35 +111,35 @@ export class AllegationModalComponent implements OnInit {
         this.d.emit(e);
     }
 
-    close(e: any) {
-        debugger
+    async close(e: any) {
+        let _lawbreaker = []
         let _lawGroup = this.LawGroupSection.value.filter(item => item.IsChecked);
-        let _lawbreaker = this.Lawbreaker.value.filter(item => item.IsChecked);
+        await this.Lawbreaker.value
+            .filter(item => item.IsChecked)
+            .map(item => {
+                _lawbreaker.push({
+                    LawbreakerID: item.LawbreakerID,
+                    LawbreakerName: item.LawbreakerFullName,
+                    ProductID: item.ProductID,
+                    ProductName: item.ProductName
+                })
+            });
 
-        let _indicment: ArrestIndictment[]
-        // _lawbreaker.map((item, i) => {
-        //     IndictmentID: i +1;
-        //     IsProve: 1;
-        //     IsActive: 1;
-        //     GuiltBaseID: null;
-        //     OpsArrestIndicmentDetailCollection: [];
-        //     LawbreakerID: item.LawbreakerID;
-        //     LawbreakerName: item.LawbreakerName;
+        let _indicment = []
+        await _lawGroup.map((lg, i) => {
+            _indicment.push({
+                IndictmentID: i + 1,
+                IsProve: 1,
+                IsActive: 1,
+                GuiltBaseID: null,
+                SectionNo: lg.SectionNo,
+                SectionDesc1: lg.SectionDesc1,
+                SectionName: lg.SectionName,
+                Lawbreaker: _lawbreaker,
+            })
+        })
         
-        //     SectionNo: string;
-            
-        //     ProductID: string;
-        //     ProductName: string;
-        //     SectionName: string;
-        //     SectionDesc1: string;
-        
-        //     IsNewItem: boolean;
-        //    })
-        // })
-        // const _indicment = [..._lawGroup, ..._lawbreaker]
-        // console.log(_indicment);
-        
-
+        this.outPutIndicment.emit(_indicment);
         this.c.emit(e);
     }
 

@@ -7,20 +7,21 @@ class OpsArrestIndicmentDetailCollection {
     LawbreakerID: number;
 }
 
+export class IndictmentLawbreaker {
+    LawbreakerID: string;
+    LawbreakerName: string;
+    ProductID: string;
+    ProductName: string;
+}
+
 export class ArrestIndictment {
     IndictmentID: number;
     IsProve: number;
     IsActive: number;
     GuiltBaseID: number;
-    OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
-
     SectionNo: string;
-    LawbreakerID: string;
-    LawbreakerName: string;
-    ProductID: string;
-    ProductName: string;
+    SectionDesc1: string;    
     SectionName: string;
-    SectionDesc1: string;
-
+    Lawbreaker: IndictmentLawbreaker[]
     IsNewItem: boolean;
 }

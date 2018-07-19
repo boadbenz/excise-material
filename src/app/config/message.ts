@@ -14,6 +14,9 @@ export const Message = {
     saveLawbreakerComplete: 'บันทึกข้อมูลผู้กระทำผิดสำเร็จ',
     saveLawbreakerFail: 'บันทึกข้อมูลผู้กระทำผิดไม่สำเร็จ',
 
+    saveLocaleComplete: 'บันทึกข้อมูลสถานที่เกิดเหตุสำเร็จ',
+    saveLocaleFail: 'บันทึกข้อมูลสถานที่เกิดเหตุไม่สำเร็จ',
+
     saveProductComplete: 'บันทึกข้อมูลสินค้าสำเร็จ',
     saveProductFail: 'บันทึกข้อมูลไม่สำเร็จ',
 

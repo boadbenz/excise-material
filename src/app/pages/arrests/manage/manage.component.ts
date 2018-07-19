@@ -357,27 +357,34 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private onCreate() {
+    private async onCreate() {
+        this.preloader.setShowPreloader(true);
         const arrestDate = new Date(this.arrestForm.value.ArrestDate);
         const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        this.arrestService.insAll(this.arrestForm.value).then(IsSuccess => {
+        await this.arrestService.insAll(this.arrestForm.value).then(IsSuccess => {
             if (IsSuccess)
                 this.onComplete()
         })
+        this.preloader.setShowPreloader(false);
     }
 
-    private onReviced() {
+    private async onReviced() {
+        this.preloader.setShowPreloader(true);
         const arrestDate = new Date(this.arrestForm.value.ArrestDate);
         const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        this.arrestService.updByCon(this.arrestForm.value).then(async IsSuccess => {
+        await this.arrestService.updByCon(this.arrestForm.value).then(async IsSuccess => {
             if (IsSuccess) {
                 let isSuccess: boolean;
+
+                await this.arrestService.localeupdByCon(this.ArrestLocale.at(0).value)
+                    .then(IsSuccess => { if (!IsSuccess) return false });
+
                 const staff = this.ArrestStaff.value;
                 await staff.filter(item => item.IsNewItem === true)
                     .map(item => {
@@ -409,10 +416,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.onComplete();
             }
         })
+
+        this.preloader.setShowPreloader(false);
     }
 
-    private onDelete() {
-        this.arrestService.updDelete(this.arrestCode)
+    private async onDelete() {
+        this.preloader.setShowPreloader(true);
+        await this.arrestService.updDelete(this.arrestCode)
+        this.preloader.setShowPreloader(false);
     }
 
     private async onComplete() {
@@ -440,7 +451,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     setNoticeCode(e) {
-        console.log(e);
         this.arrestForm.patchValue({ NoticeCode: e });
     }
 
@@ -448,8 +458,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 
-    addLawbreaker(e: ArrestLawbreaker[]){
-        e.map(item => 
+    addLawbreaker(e: ArrestLawbreaker[]) {
+        e.map(item =>
             this.ArrestLawbreaker.push(this.fb.group(item))
         )
     }
@@ -482,19 +492,21 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    addIndicment() {
-        const lastIndex = this.ArrestIndictment.length - 1;
-        let indicment = new ArrestIndictment();
-        indicment.IsNewItem = true;
-        this.ArrestIndictment.push(this.fb.group(indicment));
-        if (lastIndex < 0) {
-            this.ArrestIndictment.push(this.fb.group(indicment));
-        } else {
-            const lastItem = this.ArrestIndictment.at(lastIndex).value;
-            if (lastItem.DataSource && lastItem.FilePath) {
-                this.ArrestIndictment.push(this.fb.group(indicment));
-            }
-        }
+    addIndictment(e: ArrestIndictment[]) {
+        e.map(item => {
+            let FG = this.fb.group({
+                IndictmentID: item.IndictmentID,
+                IsProve: item.IsProve,
+                IsActive: item.IsActive,
+                GuiltBaseID: item.GuiltBaseID,
+                SectionNo: item.SectionNo,
+                SectionDesc1: item.SectionDesc1,
+                SectionName: item.SectionName,
+                Lawbreaker: this.fb.array(item.Lawbreaker),
+                IsNewItem: true
+            })
+            this.ArrestIndictment.push(FG)
+        })
     }
 
     addDocument() {
