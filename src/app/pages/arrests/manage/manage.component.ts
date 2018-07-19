@@ -135,18 +135,18 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestTime: new FormControl(null),
             OccurrenceDate: new FormControl(null),
             OccurrenceTime: new FormControl(null),
-            ArrestStationCode: new FormControl('stationCode'),
-            ArrestStation: new FormControl('station'),
+            ArrestStationCode: new FormControl(null),
+            ArrestStation: new FormControl(null),
             HaveCulprit: new FormControl(0),
             Behaviour: new FormControl(null),
             Testimony: new FormControl(null),
             Prompt: new FormControl(null),
             IsMatchNotice: new FormControl(null),
-            ArrestDesc: new FormControl(null),
+            ArrestDesc: new FormControl('N/A'),
             NoticeCode: new FormControl(null),
             InvestigationSurveyDocument: new FormControl(null),
             InvestigationCode: new FormControl(null),
-            IsActive: new FormControl(null),
+            IsActive: new FormControl(1),
             ArrestStaff: this.fb.array([this.createStaffForm()]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
             ArrestLawbreaker: this.fb.array([]),
@@ -363,6 +363,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
+        console.log(JSON.stringify(this.arrestForm.value));
 
         await this.arrestService.insAll(this.arrestForm.value).then(IsSuccess => {
             if (IsSuccess)
@@ -459,14 +460,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addLawbreaker(e: ArrestLawbreaker[]) {
-        e.map(item =>
+        e.map(item => {
+            item.ArrestCode = this.arrestCode
             this.ArrestLawbreaker.push(this.fb.group(item))
-        )
+        })
+        console.log(JSON.stringify(this.ArrestLawbreaker.value));
     }
 
     addStaff() {
         const lastIndex = this.ArrestStaff.length - 1;
         let item = new ArrestStaff();
+        item.ArrestCode = this.arrestCode;
         item.IsNewItem = true;
         if (lastIndex < 0) {
             this.ArrestStaff.push(this.fb.group(item));
@@ -481,6 +485,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     addProduct() {
         const lastIndex = this.ArrestProduct.length - 1;
         let item = new ArrestProduct();
+        item.ArrestCode = this.arrestCode;
         item.IsNewItem = true;
         if (lastIndex < 0) {
             this.ArrestProduct.push(this.fb.group(item));
@@ -495,6 +500,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     addIndictment(e: ArrestIndictment[]) {
         e.map(item => {
             let FG = this.fb.group({
+                ArrestCode: this.arrestCode,
                 IndictmentID: item.IndictmentID,
                 IsProve: item.IsProve,
                 IsActive: item.IsActive,
@@ -511,14 +517,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     addDocument() {
         const lastIndex = this.ArrestDocument.length - 1;
-        let indicment = new ArrestDocument();
-        indicment.IsNewItem = true;
+        let item = new ArrestDocument();
+        item.ArrestCode = this.arrestCode;
+        item.IsNewItem = true;
         if (lastIndex < 0) {
-            this.ArrestDocument.push(this.fb.group(indicment));
+            this.ArrestDocument.push(this.fb.group(item));
         } else {
             const lastItem = this.ArrestDocument.at(lastIndex).value;
             if (lastItem.DataSource && lastItem.FilePath) {
-                this.ArrestDocument.push(this.fb.group(indicment));
+                this.ArrestDocument.push(this.fb.group(item));
             }
         }
     }
@@ -653,23 +660,29 @@ export class ManageComponent implements OnInit, OnDestroy {
     selectItemLocaleRegion(e) {
         this.ArrestLocale.at(0).patchValue({
             SubDistrictCode: e.item.subdistrictCode,
-            SubdistrictNameTH: e.item.subdistrictNameTH,
+            SubDistrict: e.item.subdistrictNameTH,
             DistrictCode: e.item.DistrictCode,
-            DistrictNameTH: e.item.DistrictNameTH,
+            District: e.item.DistrictNameTH,
             ProvinceCode: e.item.ProvinceCode,
-            ProvinceNameTH: e.item.ProvinceNameTH,
+            Province: e.item.ProvinceNameTH,
         })
     }
 
     selectItemProductItem(e, i) {
         this.ArrestProduct.at(i).reset(e.item)
+        this.ArrestProduct.at(i).patchValue({
+            ArrestCode: this.arrestCode
+        })
     }
 
     selectItemStaff(e, i) {
         this.ArrestStaff.at(i).reset(e.item);
         this.ArrestStaff.at(i).patchValue({
+            ProgramCode: 'XCS60-02-02',
+            ProcessCode: '0002',
+            ArrestCode: this.arrestCode,
             PositionCode: e.item.OperationPosCode,
-            PositionName: e.item.OperationPosName
+            PositionName: e.item.OperationPosName.trim()
         })
     }
 

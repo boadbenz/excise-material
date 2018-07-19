@@ -1,4 +1,5 @@
 export class ArrestDocument {
+    ArrestCode: string;
     public DocumentID = '';
     public ReferenceCode = '';
     public FilePath = '';

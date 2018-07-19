@@ -29,7 +29,7 @@ export const ArrestLocaleFormControl = {
     IsArrest: new FormControl(null),
     ArrestCode: new FormControl(null),
     GPS: new FormControl(null),
-    Location: new FormControl(null),
+    Location: new FormControl("N/A"),
     Address: new FormControl(null),
     Village: new FormControl(null),
     Building: new FormControl(null),

@@ -7,7 +7,7 @@
             <form class="app-search" #searchFrom="ngForm" (ngSubmit)="onSearchByKey(searchFrom.value)">
                 <input type="search" name="Textsearch" ngModel class="form-control form-control-sm" 
                 placeholder="ค้นหาฐานความผิดมาตรา/ฐานความผิด">
-                <a class="srh-btn" (click)="onSearchByKey(searchFrom.value)">
+                <a class="srh-btn" (click)="onSearchByKey(searchFrom.value)" href="javaScript:void(0)">
                     <i class="ti-search"></i>
                 </a>
             </form>

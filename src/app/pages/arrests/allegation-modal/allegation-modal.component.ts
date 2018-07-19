@@ -77,6 +77,7 @@ export class AllegationModalComponent implements OnInit {
         await list.map((item, i) => {
             item.RowId = i + 1
             item.IsChecked = false
+            item.GuiltBaseID = item.GuiltBaseID == null ? 1 : item.GuiltBaseID
         })
         this.lawGroupSection = list;
         this.paginage.TotalItems = list.length;
@@ -128,10 +129,10 @@ export class AllegationModalComponent implements OnInit {
         let _indicment = []
         await _lawGroup.map((lg, i) => {
             _indicment.push({
-                IndictmentID: i + 1,
+                IndictmentID: lg.IndictmentID,
                 IsProve: 1,
                 IsActive: 1,
-                GuiltBaseID: null,
+                GuiltBaseID: lg.GuiltBaseID,
                 SectionNo: lg.SectionNo,
                 SectionDesc1: lg.SectionDesc1,
                 SectionName: lg.SectionName,

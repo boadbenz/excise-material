@@ -64,7 +64,7 @@ export class ArrestLawbreaker {
 export const ArrestLawbreakerFormControl = {
     LawbreakerID: new FormControl(null),
     ArrestCode: new FormControl(null),
-    LawbreakerRefID: new FormControl(null),
+    LawbreakerRefID: new FormControl(1),
     EntityType: new FormControl(null),
     CompanyTitleCode: new FormControl(null),
     CompanyTitle: new FormControl(null),

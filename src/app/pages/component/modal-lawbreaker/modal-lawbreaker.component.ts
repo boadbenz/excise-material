@@ -2,8 +2,9 @@ import { Component, OnInit, Output, EventEmitter, Injectable } from '@angular/co
 import { LawbreakerTypes, EntityTypes, ArrestLawbreaker } from '../../arrests/arrest-lawbreaker';
 import { pagination } from '../../../config/pagination';
 import { ArrestsService } from '../../arrests/arrests.service';
-import { FormGroup, FormArray, FormBuilder } from '../../../../../node_modules/@angular/forms';
+import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-modal-lawbreaker',
@@ -36,7 +37,8 @@ export class ModalLawbreakerComponent implements OnInit {
     constructor(
         private arrestService: ArrestsService,
         private fb: FormBuilder,
-        private preloader: PreloaderService
+        private preloader: PreloaderService,
+        private router: Router
     ) { }
 
     ngOnInit() {
@@ -67,6 +69,7 @@ export class ModalLawbreakerComponent implements OnInit {
         await list.map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;
+            item.LawbreakerRefID = item.LawbreakerRefID == null ? 1 : item.LawbreakerRefID
             item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`
             item.LawbreakerFullName = `${item.LawbreakerTitleName} ${item.LawbreakerFirstName} ${item.LawbreakerLastName}`
             item.LawbreakerTypeName = this.lawbreakerType.find(key => parseInt(key.value) == item.LawbreakerType).text
@@ -97,6 +100,11 @@ export class ModalLawbreakerComponent implements OnInit {
 
     dismiss(e: any) {
         this.d.emit(e);
+    }
+
+    view(id:number) {
+        this.dismiss('Cross click')
+        this.router.navigate([`/arrest/lawbreaker/R/${id}`])
     }
 
     async close(e: any) {

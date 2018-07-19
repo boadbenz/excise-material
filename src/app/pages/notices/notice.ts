@@ -27,6 +27,6 @@ export class Notice {
     public NoticeDocument: Array<NoticeDocument>;
 
     public RowId: number;
-    public IsNoticeCode: string;
+    public IsChecked: boolean;
 }
 

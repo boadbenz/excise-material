@@ -11,7 +11,7 @@
         <div class="col-lg-5 col-8">
             <form class="app-search" #searchForm="ngForm" (ngSubmit)="onSearchByKeyword(searchForm.value)">
                 <input type="search" name="Textsearch" ngModel class="form-control form-control-sm">
-                <a class="srh-btn">
+                <a class="srh-btn" (ngSubmit)="onSearchByKeyword(searchForm.value)" href="javaScript:void(0)">
                     <i class="ti-search"></i>
                 </a>
             </form>

@@ -6,6 +6,7 @@ import { Message } from '../../../config/message';
 import { Notice } from '../../notices/notice';
 import { toLocalShort } from '../../../config/dateFormat';
 import { ArrestsService } from '../../arrests/arrests.service';
+import { FormGroup, FormArray, FormBuilder } from '../../../../../node_modules/@angular/forms';
 
 @Component({
     selector: 'app-modal-notice',
@@ -24,6 +25,12 @@ export class ModalNoticeComponent implements OnInit {
 
     paginage = pagination;
 
+    noticeFG: FormGroup;
+
+    get NoticeList(): FormArray {
+        return this.noticeFG.get('NoticeList') as FormArray;
+    }
+
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
     @Output() noticeCode = new EventEmitter<string>();
@@ -33,11 +40,15 @@ export class ModalNoticeComponent implements OnInit {
     constructor(
         private arrestService: ArrestsService,
         private _router: Router,
-        private preLoaderService: PreloaderService
+        private preLoaderService: PreloaderService,
+        private fb: FormBuilder
     ) { }
 
     ngOnInit() {
         this.paginage.TotalItems = 0;
+        this.noticeFG = this.fb.group({
+            NoticeList: this.fb.array([])
+        })
     }
 
     async onSearch(Textsearch: any) {
@@ -73,7 +84,7 @@ export class ModalNoticeComponent implements OnInit {
         this.notice = [];
         await list.map((item, i) => {
             item.RowId = i + 1;
-            item.IsNoticeCode = null;
+            item.IsChecked = false;
             item.NoticeDate = toLocalShort(item.NoticeDate);
             item.NoticeStaff.map(s => {
                 s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
@@ -86,6 +97,12 @@ export class ModalNoticeComponent implements OnInit {
         this.notice = list;
         // set total record
         this.paginage.TotalItems = list.length;
+    }
+
+    setIsChecked(i: number) {
+        this.NoticeList.value.map((item, index) => {
+            item.IsChecked = i == index ? true : false;
+        })
     }
 
     view(code: string) {
@@ -106,15 +123,29 @@ export class ModalNoticeComponent implements OnInit {
     }
 
     async close(e: any) {
-        const table = this.noticeTable.nativeElement
-        
-        const code = await this.noticeList.find(item => item.IsNoticeCode !== '').NoticeCode;
+
+        const code = await this.NoticeList.value.find(item => item.IsChecked).NoticeCode;
         this.noticeCode.emit(code);
         this.c.emit(e);
     }
 
     async pageChanges(event) {
-        this.noticeList = await this.notice.slice(event.startIndex - 1, event.endIndex);
+        const list = await this.notice.slice(event.startIndex - 1, event.endIndex);
+        let _noticeList = [];
+        await list.map(item => {
+            let FG = this.fb.group({
+                IsChecked: item.IsChecked,
+                RowId: item.RowId,
+                NoticeCode: item.NoticeCode,
+                NoticeDate: item.NoticeDate,
+                NoticeStaff: this.fb.array(item.NoticeStaff),
+                NoticeSuspect: this.fb.array(item.NoticeSuspect)
+            })
+            _noticeList.push(FG)
+        })
+        const itemFormArray = this.fb.array(_noticeList);
+        this.noticeFG.setControl('NoticeList', itemFormArray);
     }
+
 
 }

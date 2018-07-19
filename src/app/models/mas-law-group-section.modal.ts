@@ -18,6 +18,7 @@ export interface MasLawGroupSectionModel {
     LawGroupID: number;
     SectionDesc2: string;
     SectionDesc3: string;
+    GuiltBaseID: number;
 
     IsChecked: boolean;
     RowId: number;

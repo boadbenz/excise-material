@@ -97,7 +97,7 @@
     <div class="card  unset-radius">
         <div class="card-body p-0">
             <div class="table-responsive table-sm table-striped">
-                <table #noticeTable class="table">
+                <table #noticeTable class="table" [formGroup]="noticeFG">
                     <thead>
                         <tr>
                             <th class="text-center"></th>
@@ -110,26 +110,28 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let item of noticeList; let i=index;">
+                    <tbody formArrayName="NoticeList">
+                        <tr *ngFor="let item of NoticeList.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">
-                                <input name="noticeRadio" [(ngModel)]="item.IsNoticeCode" type="radio" id="td{{i}}" value="{{item.NoticeCode}}" class="with-gap radio-col-indigo">
+                                <input name="IsChecked" formControlName="IsChecked" 
+                                type="radio" id="td{{i}}" (change)="setIsChecked(i)"
+                                class="with-gap radio-col-indigo">
                                 <label for="td{{i}}" class="m-0"></label>
                             </td>
-                            <td class="text-center">{{item.RowId}}</td>
-                            <td>{{item.NoticeCode}}</td>
-                            <td>{{item.NoticeDate}}</td>
+                            <td class="text-center">{{item.get('RowId').value}}</td>
+                            <td>{{item.get('NoticeCode').value}}</td>
+                            <td>{{item.get('NoticeDate').value}}</td>
                             <td>
-                                <div *ngFor="let staff of item.NoticeStaff;">{{staff.StaffFullName}}</div>
+                                <div *ngFor="let staff of item.value.NoticeStaff;">{{staff.StaffFullName}}</div>
                             </td>
                             <td>
-                                <div *ngFor="let staff of item.NoticeStaff;">{{staff.DepartmentName}}</div>
+                                <div *ngFor="let staff of item.value.NoticeStaff;">{{staff.DepartmentName}}</div>
                             </td>
                             <td>
-                                <div *ngFor="let suspect of item.NoticeSuspect;">{{suspect.SuspectFullName}}</div>
+                                <div *ngFor="let suspect of item.value.NoticeSuspect;">{{suspect.SuspectFullName}}</div>
                             </td>
                             <td class="text-center">
-                                <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.NoticeCode)">
+                                <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.value.NoticeCode)">
                                     <i class="fa fa-eye fa-lg"></i>
                                 </a>
                             </td>
