@@ -27,7 +27,7 @@ export class LawbreakerService {
         }
 
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8082}/SuspectgetByConAdv`;
+        const url = `${appConfig.apiUrl}/SuspectgetByConAdv`;
         return this.http.post<any>(url, params, this.httpOptions)
             .map(res => {
                 if (res.IsSuccess === false) {
