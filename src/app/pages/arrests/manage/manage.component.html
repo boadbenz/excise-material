@@ -376,12 +376,8 @@
                 </table>
 
                 <ng-template #allegation let-c="close" let-d="dismiss">
-                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()"
-                    [mode]="mode"
-                    [lawbreaker]="ArrestLawbreaker.value"
-                    [product]="ArrestProduct.value"
-                    [indicment]="ArrestIndictment.value"
-                    ></app-allegation-modal>
+                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" [mode]="mode" [lawbreaker]="ArrestLawbreaker.value" [product]="ArrestProduct.value"
+                        [indicment]="ArrestIndictment.value"></app-allegation-modal>
                 </ng-template>
             </div>
         </div>
