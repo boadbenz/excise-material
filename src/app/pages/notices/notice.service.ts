@@ -30,16 +30,13 @@ export class NoticeService {
         return this.http.post<Notice[]>(url, params, this.httpOptions);
     }
 
-<<<<<<< HEAD
-    getByConAdv(form: any) {
-=======
     productgetByKeyword(Textsearch: string) {
         if (Textsearch === '') {
             return Observable.of([]);
         }
 
         const params = { Textsearch };
-        const url = `${appConfig.api8082}/NoticeProductgetByKeyword`;
+        const url = `${appConfig.apiUrl}/NoticeProductgetByKeyword`;
         return this.http.post<any>(url, params, this.httpOptions)
             .map(res => {
                 if (res.IsSuccess === false) {
@@ -49,8 +46,7 @@ export class NoticeService {
             })
     }
 
-    async getByConAdv(form: any): Promise<Notice[]> {
->>>>>>> origin/FL_J
+    getByConAdv(form: any) {
         const params = JSON.stringify(form);
         const url = `${appConfig.apiUrl}/NoticegetByConAdv`;
         return this.http.post<Notice[]>(url, params, this.httpOptions);

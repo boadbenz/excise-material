@@ -20,11 +20,7 @@ export class NoticeStaff {
     public OfficeName: string;
     public OfficeShortName: string;
     public ContributorCode: string;
-<<<<<<< HEAD
-    public IsActive: number;
-=======
     public StaffFullName: string;
->>>>>>> origin/FL_J
 }
 
 export const NoticeStaffFormControl = {
