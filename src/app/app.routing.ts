@@ -59,8 +59,8 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
-            { path: 'bribe', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
-            { path: 'reward/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
+            { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
+            { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
         ]
     },
 

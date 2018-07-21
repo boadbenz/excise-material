@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 // import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
-
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   {
@@ -30,6 +30,7 @@ const routes: Routes = [
     FormsModule,
     CommonModule,
     CardActionsModule,
+    HttpClientModule,
     RouterModule.forChild(routes)
   ],
   declarations: [

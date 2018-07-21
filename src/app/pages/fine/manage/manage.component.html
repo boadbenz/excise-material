@@ -47,7 +47,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">เลขที่ใบงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.ArrestCode}}" disabled>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationSubject" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltCode}}" disabled>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ทะเบียนตรวจพิสูจน์ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationNo" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.ProveReportNo}}" disabled>
             </div>
           </div>
         </div>
@@ -73,11 +73,11 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">วันที่รับทำคดี : </label>
             <div class="col-md-3">
-              <input class="form-control" type="text" name="lawsuitDate" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
             </div>
             <label class="col-form-label text-center col-md-2">เวลา</label>
             <div class="col-md-3">
-              <input class="form-control" type="text" name="lawsuitTime" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltTime}}" disabled>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ผู้กล่าวหา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.arrest_name}}" disabled>
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationSubject" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.PositionName}}" disabled>
             </div>
           </div>
         </div>
@@ -105,7 +105,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.DepartmentName}}" disabled>
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">สถานที่จับกุม : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationSubject" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.location}}" disabled>
             </div>
           </div>
         </div>
@@ -123,7 +123,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ฐานความผิดมาตรา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.SectionName}}" disabled>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ฐานความผิด : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationSubject" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.GuiltBaseName}}" disabled>
             </div>
           </div>
         </div>
@@ -141,7 +141,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">บทกำหนดโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.SectionNo}}" disabled>
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">อัตราโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" name="allegationSubject" disabled>
+              <input class="form-control" type="text" value="{{detial_arrest.PenaltyDesc}}" disabled>
             </div>
           </div>
         </div>
@@ -164,8 +164,8 @@
     <h4 class="card-title m-b-0">รายละเอียดเงินค่าปรับ</h4>
   </div>
   <div class="card-body">
-    <div class="table-responsive">
-      <table class="dataTable table table-sm table-striped table-hover">
+    <div class="table-detial_arrestonsive">
+      <table class="dataTable table table-sm table-striped table-hover" *ngFor="let item of detial_money">
         <thead>
           <tr>
             <th class="footable-sortable">ชื่อผู้ต้องหา</th>
@@ -180,28 +180,29 @@
             <th class="footable-sortable">ส่งคลัง</th>
           </tr>
         </thead>
-        <tbody>
-          <tr class="footable">
-            <td class="">นายธวัชชัย บิง</td>
+        <tbody >
+          <tr class="footable" *ngFor="let itemDt of item.CompareDetailFine;">
+            <td>name*</td>
             <td class="text-center">
               <b>
                 <u>
-                  <a (click)="viewData()">2</a>
+                  <a (click)="viewData()">{{item.MistreatNo}}</a>
                 </u>
               </b>
             </td>
-            <td>Hoegaarden/Wit</td>
-            <td class="text-center">10</td>
-            <td class="">80,000.00</td>
-            <td class="">800,000.00</td>
+            <td>{{itemDt.ProductDesc}}</td>
+            <td class="text-center">{{itemDt.FineRate}}</td>
+            <td class="">{{itemDt.VatValue}}</td>
+            <td class="">*</td>
             <td>
-              <input class="form-control" type="text" [disabled]="viewMode" value="800,000.00">
+              <input class="form-control" type="text" [disabled]="viewMode" value="{{itemDt.CompareFine}}">
             </td>
-            <td class="">160,000.00</td>
-            <td class="">160,000.00</td>
-            <td class="">480,000.00</td>
+            <td class="">{{itemDt.BribeMoney}}</td>
+            <td class="">{{itemDt.RewardMoney}}</td>
+            <td class="">{{itemDt.TreasuryMoney}}</td>
           </tr>
         </tbody>
+
       </table>
     </div>
   </div>
@@ -219,11 +220,11 @@
           <div class="form-group row">
             <label class="col-form-label  col-md-3">วันที่จัดทำ : </label>
             <div class="col-md-4">
-              <input class="form-control" type="text" name="lawsuitDate" disabled>
+              <input class="form-control" type="text" value="{{detial_Compare_h.CompareDate}}" disabled>
             </div>
             <label class="col-form-label text-center col-md-2">เวลา</label>
             <div class="col-md-3">
-              <input class="form-control" type="text" name="lawsuitTime" disabled>
+              <input class="form-control" type="text" value="***" disabled>
             </div>
           </div>
         </div>
@@ -231,7 +232,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">เขียนที่ : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_Compare_h.Station}}" disabled>
             </div>
           </div>
         </div>
@@ -242,7 +243,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">ชื่อผู้เปรียบเทียบ : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_Compare_h.name}}" disabled>
             </div>
           </div>
         </div>
@@ -250,7 +251,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ตำแหน่ง : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_Compare_h.PositionName}}" disabled>
             </div>
           </div>
         </div>
@@ -260,13 +261,13 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">หน่วยงาน : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" name="allegationCode" disabled>
+              <input class="form-control" type="text" value="{{detial_Compare_h.DepartmentName}}" disabled>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-detial_arrestonsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -279,18 +280,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="footable">
-            <td class="text-center">1</td>
-            <td>
-              นายธวัชชัย บิงขุนทด
-            </td>
-            <td>
-              10-ม.ค.-2560
-            </td>
-            <td>
-              10-ม.ค.-2560
-            </td>
-            <td class="text-center">/</td>
+          <tr class="footable" *ngFor="let tb of detial_Compare; let i = index">
+            <td class="text-center">{{i + 1}}</td>
+            <td>***</td>
+            <td>{{tb.PaymentFineAppointDate}}</td>
+            <td>{{tb.PaymentVatDate}}</td>
+            <td class="text-center">{{tb.IsProvisionalAcquittal}}</td>
             <td>
               <a href="javaScript:void(0);" class="text-secondary" data-toggle="modal" data-target="#testimonyPopup">
                 <i class="mdi mdi-eye fa-lg"></i>
@@ -328,15 +323,15 @@
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label col-md-4">คดีเปรียบเทียบที่ : </label>
-            <div class="col-md-7">
-              <input class="form-control" type="text" name="allegationCode" [disabled]="viewMode">
+            <div class="col-md-8">
+              <input class="form-control col-md-7" type="text" value="{{detial_Compare.CompareCode}}" [disabled]="viewMode">
+              <label class="col-form-label">/2560</label>
             </div>
-            <label class="col-form-label">/2560</label>
           </div>
         </div>
       </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-detial_arrestonsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -352,20 +347,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="footable">
-            <td class="text-center">1</td>
-            <td>
-              นายธวัชชัย บิงขุนทด
-            </td>
-            <td>
-              10-ม.ค.-2560
-            </td>
-            <td>นางสาวฟาติมา ตันดิลกตระกูล</td>
-            <td>เงินสด
-            </td>
-            <td>33</td>
-            <td>001/2561</td>
-            <td>ยังไม่นำส่งรายได้</td>
+          <tr class="footable" *ngFor="let tbr of detial_CompareDetailReceipt; let i=index">
+            <td class="text-center">{{i+1}}</td>
+            <td>***</td>
+            <td>{{tbr.PaymentDate}}</td>
+            <td>***</td>
+            <td>{{tbr.ReceiptChanel}}</td>
+            <td>{{tbr.ReceiptBookNo}}</td>
+            <td>{{tbr.ReceiptNo}}</td>
+            <td>{{tbr.RevenueStatus}}</td>
             <td>
               <a href="javaScript:void(0);" class="text-secondary" data-toggle="modal" data-target="#payPopup">
                 <i class="mdi mdi-eye fa-lg"></i>
@@ -388,7 +378,7 @@
     <h4 class="card-title m-b-0">รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ</h4>
   </div>
   <div class="card-body">
-    <div class="table-responsive">
+    <div class="table-detial_arrestonsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -402,13 +392,9 @@
         <tbody>
           <tr class="footable">
             <td class="text-center">1</td>
-            <td>
-              นายธวัชชัย บิงขุนทด
-            </td>
-            <td>
-              10-ม.ค.-2560
-            </td>
-            <td>แบบอนุมัติ 4</td>
+            <td>***</td>
+            <td>{{detial_Compare.ApproveReportDate}}</td>
+            <td>{{detial_Compare.ApproveReportType}}</td>
             <td>
               <a href="javaScript:void(0);" class="text-secondary" data-toggle="modal" data-target="#approvePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
@@ -434,7 +420,7 @@
       <input type="file" id="btn-browse" #file [disabled]="viewMode">
       <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
     </div>
-    <div class="table-responsive">
+    <div class="table-detial_arrestonsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -445,12 +431,12 @@
         </thead>
         <tbody>
           <tr class="footable">
-            <td class="text-center">1</td>
+            <td class="text-center">***</td>
             <td>
-              <input class="form-control" type="text" nmae="fileName" [disabled]="viewMode">
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
             </td>
             <td>
-              <input class="form-control" type="text" name="filePath" [disabled]="viewMode">
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
             </td>
             <td>
               <i class="ti-trash btn-action" [hidden]="viewMode"></i>
@@ -479,7 +465,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ชื่อผู้ต้องหา : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" name="fullName" disabled>
+                  <input class="form-control" type="text" value="***" disabled>
                 </div>
               </div>
             </div>
@@ -487,7 +473,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">วันที่กำหนดชำระค่าปรับ : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" [disabled]="viewMode">
+                  <input class="form-control" type="text" [disabled]="viewMode" value="{{detial_Compare.PaymentFineDate}}">
                 </div>
               </div>
             </div>
@@ -497,7 +483,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">วันที่กำหนดชำระภาษี : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" [disabled]="viewMode">
+                  <input class="form-control" type="text" [disabled]="viewMode" value="{{detial_Compare.PaymentVatDate}}">
                 </div>
               </div>
             </div>
@@ -515,11 +501,11 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-4">
-                  <input class="col-form-label filled-in chk-col-indigo" id="insurance" type="checkbox" [disabled]="viewMode">
+                  <input class="col-form-label filled-in chk-col-indigo" id="insurance" type="checkbox" [disabled]="viewMode || detial_Compare.Bail != '' ">
                   <label for="insurance">ประกัน :</label>
                 </div>
                 <div class="col-md-7">
-                  <input class="form-control" type="text">
+                  <input class="form-control" type="text" value="{{detial_Compare.Bail}}">
                 </div>
               </div>
             </div>
@@ -529,11 +515,11 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-4">
-                  <input class="col-form-label filled-in chk-col-indigo" id="collateral" type="checkbox" [disabled]="viewMode">
+                  <input class="col-form-label filled-in chk-col-indigo" id="collateral" type="checkbox" [disabled]="viewMode || detial_Compare.Guarantee != '' ">
                   <label for="collateral">ประกันและหลักประกัน :</label>
                 </div>
                 <div class="col-md-7">
-                  <input class="form-control" type="text">
+                  <input class="form-control" type="text" value="{{detial_Compare.Guarantee}}">
                 </div>
               </div>
             </div>
@@ -551,7 +537,7 @@
             <div class="col-md-12">
               <div class="form-popup form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-10">
-                  <input class="col-form-label filled-in chk-col-indigo" id="request" type="checkbox" [disabled]="viewMode">
+                  <input class="col-form-label filled-in chk-col-indigo" id="request" type="checkbox" [disabled]="viewMode" ng-checked="detial_Compare.IsRequest">
                   <label for="request">ร้องขอ</label>
                 </div>
               </div>
@@ -561,7 +547,7 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-10">
-                  <input class="col-form-label filled-in chk-col-indigo" id="noRequest" type="checkbox" [disabled]="viewMode">
+                  <input class="col-form-label filled-in chk-col-indigo" id="noRequest" type="checkbox" [disabled]="viewMode" ng-checked="!detial_Compare.IsRequest">
                   <label for="noRequest">ไม่ร้องขอ</label>
                 </div>
               </div>
@@ -573,7 +559,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-3">คำให้การของผู้ต้องหา : </label>
                 <div class="col-md-9">
-                  <textarea class="form-control" [disabled]="viewMode" rows="5"></textarea>
+                  <textarea class="form-control" [disabled]="viewMode" rows="5">{{detial_Compare.LawbrakerTestimony}}</textarea>
                 </div>
               </div>
             </div>
@@ -605,7 +591,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ชื่อผู้ต้องหา : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="fullName" disabled>
+                  <input class="form-control" type="text" value="***" disabled>
                 </div>
               </div>
             </div>
@@ -613,7 +599,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ยอดชำระค่าปรับ : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" name="amount" disabled>
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.TotalFine}}" disabled>
                 </div>
               </div>
             </div>
@@ -624,11 +610,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ชำระค่าปรับ : </label>
                 <div class="col-md-3">
-                  <input class="form-control" type="text" name="payDate" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.PaymentDate}}" [disabled]="viewMode">
                 </div>
                 <label class="col-form-label text-center col-md-2">เวลา</label>
                 <div class="col-md-3">
-                  <input class="form-control" type="text" name="payTime" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.PaymentDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -636,7 +622,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">เขียนที่ : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" name="place" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.Station}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -647,7 +633,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้รับชำระค่าปรับ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="payerName" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_compare_staff.TitleName+detial_compare_staff.FirstName+' '+detial_compare_staff.LastName}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -655,7 +641,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ตำแหน่ง : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" name="position" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_compare_staff.PositionName}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -666,17 +652,19 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_compare_staff.DepartmentName}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-form-label col-md-5">ช่องทางชำระค่าปรับ : </label>
+                <label class="col-form-label col-md-5">ช่องทางชำระค่าปรับ : ***</label>
                 <div class="col-md-7">
                   <select class="custom-select col-12">
-                    <option selected="">1</option>
-                    <option value="2">2</option>
+                    <option selected="" value="เงินสด">เงินสด</option>
+                    <option value="EDC">EDC</option>
+                    <option value="เครดิต">เครดิต</option>
+                    <option value="เดบิต">เดบิต</option>
                   </select>
                 </div>
               </div>
@@ -688,7 +676,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ใบเสร็จเล่มที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="receiptsBook" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.ReceiptBookNo}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -696,7 +684,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ใบเสร็จเลขที่ : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" name="receiptsNo" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.ReceiptNo}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -707,7 +695,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หมายเลขอ้างอิง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="refNo" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.ReferenceNo}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -741,7 +729,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ชื่อผู้ต้องหา : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="fullName" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -752,11 +740,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ชำระค่าปรับ : </label>
                 <div class="col-md-3">
-                  <input class="form-control" type="text" name="payDate" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
                 <label class="col-form-label text-center col-md-2">เวลา</label>
                 <div class="col-md-3">
-                  <input class="form-control" type="text" name="payTime" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -764,7 +752,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ค่าปรับคดีรวม : </label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" name="payAmount" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -775,7 +763,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">เขียนที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -820,7 +808,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="postion" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -831,7 +819,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="deparment" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -842,7 +830,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้พิจารณาเห็นชอบ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="reviewer" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -851,7 +839,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="rank" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -862,7 +850,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="deparment" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -873,7 +861,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้มีอำนาจอนุมัติ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="approver" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -882,7 +870,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="rank" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -892,7 +880,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="department" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -900,7 +888,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">คำสั่งกรมฯ ที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="departOrder" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -911,7 +899,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ออกคำสั่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="dateOfIssue" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
