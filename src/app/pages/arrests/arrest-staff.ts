@@ -22,6 +22,7 @@ export class ArrestStaff {
     public ContributorCode = '';
     public IsActive = '';
 
+    ContributorID = '';
     public FullName = '';
     public IsNewItem: boolean;
 }
@@ -63,6 +64,7 @@ export const ArrestStaffFormControl = {
     ContributorCode: new FormControl(null),
     IsActive: new FormControl(null),
 
+    ContributorID: new FormControl(null),
     FullName: new FormControl(null),
     IsNewItem: new FormControl(false)
 }

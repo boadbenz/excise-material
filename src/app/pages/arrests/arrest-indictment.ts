@@ -1,3 +1,4 @@
+import { ArrestProductDetail } from "./arrest-product";
 
 class OpsArrestIndicmentDetailCollection {
     IndictmentDetailID: number;
@@ -23,6 +24,16 @@ export class ArrestIndictment {
     SectionNo: string;
     SectionDesc1: string;    
     SectionName: string;
-    Lawbreaker: IndictmentLawbreaker[]
+    Lawbreaker: IndictmentLawbreaker[];
+    ArrestIndictmentDetail: ArrestIndicmentDetail[];
+    ArrestProductDetail: ArrestProductDetail[];
     IsNewItem: boolean;
+}
+
+export class ArrestIndicmentDetail{
+    IndictmentDetailID: number;
+    LawsuitType: string;
+    IsActive: number;
+    IndictmentID: number;
+    LawbreakerID: number;
 }

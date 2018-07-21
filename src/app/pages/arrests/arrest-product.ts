@@ -1,4 +1,4 @@
-import { FormControl, FormBuilder } from "@angular/forms";
+import { FormControl } from '@angular/forms';
 
 export class ArrestProduct {
     public ProductID = '';
@@ -32,6 +32,21 @@ export class ArrestProduct {
     public NetVolumeUnit = '';
     public IsActive = '';
     public IsNewItem: boolean;
+    ProductFullName = '';
+}
+
+export class ArrestProductDetail {
+    ProductID: number;
+    IsProdcutCo: string;
+    Qty: string;
+    QtyUnit: string;
+    Size: string;
+    SizeUnit: string;
+    Weight: string;
+    WeightUnit: string;
+    MistreatRate: string;
+    Fine: string;
+    IndictmentDetailID: string;
 }
 
 export const ArrestProductFormControl = {
@@ -64,5 +79,6 @@ export const ArrestProductFormControl = {
     QtyUnit: new FormControl(null),
     NetVolume: new FormControl(null),
     NetVolumeUnit: new FormControl(null),
-    IsActive: new FormControl(false)
+    IsActive: new FormControl(false),
+    ProductFullName: new FormControl(null)
 }

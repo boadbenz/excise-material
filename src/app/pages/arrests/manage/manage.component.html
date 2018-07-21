@@ -4,7 +4,7 @@
     <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()" (outputNoticeCode)="noticeCode"></app-print-doc-modal>
 </ng-template>
 
-<form action="" [formGroup]="arrestForm">
+<form action="" [formGroup]="arrestFG">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -55,7 +55,7 @@
                     <div class="form-group input-group">
                         <input type="date" formControlName="ArrestDate" class="form-control form-control-sm" [readonly]="showEditField">
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
-                        <input type="text" formControlName="ArrestTime" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="date" formControlName="ArrestTime" class="form-control form-control-sm" [readonly]="showEditField">
                     </div>
                 </div>
 
@@ -71,6 +71,7 @@
                         [readOnly]="showEditField"
                         [inputFormatter]="formatterOffice" 
                         (selectItem)="selectItemOffice($event)"
+                        [value]="arrestFG.get('ArrestStation').value"
                         />
                     <!-- <input type="text" formControlName="ArrestStation" class="form-control form-control-sm" [readonly]="showEditField"> -->
                 </div>
@@ -132,6 +133,7 @@
                                     [readOnly]="showEditField"
                                     [inputFormatter]="formatterStaff" 
                                     (selectItem)="selectItemStaff($event, i)"
+                                    value="{{item.value.FullName}}"
                                     />
                             </td>
                             <td>
@@ -213,6 +215,7 @@
                             [readOnly]="showEditField"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemLocaleRegion($event)"
+                            value="{{item.value.Region}}"
                             />
                         <!-- <input type="text" formControlName="Region" class="form-control form-control-sm" [readonly]="showEditField"> -->
                     </div>
@@ -338,14 +341,16 @@
                             <td class="text-center">{{i+1}}</td>
                             <td>
                                 <ng-template #rt let-r="result" let-t="term">
-                                    {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}}
+                                    {{ r.SubBrandNameTH }} {{r.BrandNameTH}} {{r.ModelName}}
                                 </ng-template>
                                 <input type="text" class="form-control form-control-sm"
                                     [readonly]="showEditField"
                                     [ngbTypeahead]="searchProduct"
                                     [resultTemplate]="rt"
                                     [inputFormatter]="formatterProduct"
-                                    (selectItem)="selectItemProductItem($event, i)" />
+                                    (selectItem)="selectItemProductItem($event, i)" 
+                                    [value]="item.value.ProductFullName"
+                                    />
                             </td>
                             <td>
                                 <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">

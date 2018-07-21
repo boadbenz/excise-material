@@ -19,7 +19,7 @@ import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment } from '../arrest-indictment';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestLocaleFormControl } from '../arrest-locale';
-import { ArrestLawbreakerFormControl, ArrestLawbreaker } from '../arrest-lawbreaker';
+import { ArrestLawbreakerFormControl, ArrestLawbreaker, LawbreakerTypes, EntityTypes } from '../arrest-lawbreaker';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -28,8 +28,13 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { element } from 'protractor';
 import { MasOfficeModel } from '../../../models/mas-office.model';
+
+const arrayToObject = (array) =>
+    array.reduce((obj, item) => {
+        obj[item.id] = item
+        return obj
+    }, {})
 
 @Component({
     selector: 'app-manage',
@@ -44,9 +49,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     arrestCode: string;
     showEditField: any;
 
-    arrestForm: FormGroup;
-
-    // productModel: Observable<ProductModel[]>;
+    arrestFG: FormGroup;
 
     subdistrict: MasSubdistrictModel[];
     district: MasDistrictModel[];
@@ -56,28 +59,39 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadRegion = new Array<RegionModel>();
     typeheadProduct = new Array<MasProductModel>();
 
+    readonly lawbreakerType = LawbreakerTypes;
+    readonly entityType = EntityTypes;
+
     get ArrestStaff(): FormArray {
-        return this.arrestForm.get('ArrestStaff') as FormArray;
+        return this.arrestFG.get('ArrestStaff') as FormArray;
     }
 
     get ArrestLocale(): FormArray {
-        return this.arrestForm.get('ArrestLocale') as FormArray;
+        return this.arrestFG.get('ArrestLocale') as FormArray;
     }
 
     get ArrestLawbreaker(): FormArray {
-        return this.arrestForm.get('ArrestLawbreaker') as FormArray;
+        return this.arrestFG.get('ArrestLawbreaker') as FormArray;
     }
 
     get ArrestProduct(): FormArray {
-        return this.arrestForm.get('ArrestProduct') as FormArray;
+        return this.arrestFG.get('ArrestProduct') as FormArray;
     }
 
     get ArrestIndictment(): FormArray {
-        return this.arrestForm.get('ArrestIndictment') as FormArray;
+        return this.arrestFG.get('ArrestIndictment') as FormArray;
     }
 
     get ArrestDocument(): FormArray {
-        return this.arrestForm.get('ArrestDocument') as FormArray;
+        return this.arrestFG.get('ArrestDocument') as FormArray;
+    }
+
+    get ArrestInictmentDetail(): FormArray {
+        return this.arrestFG.get('ArrestInictmentDetail') as FormArray;
+    }
+
+    get ArrestProductDetail(): FormArray {
+        return this.arrestFG.get('ArrestProductDetail') as FormArray;
     }
 
     @Input() _noticeCode: string;
@@ -129,7 +143,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private createForm() {
-        this.arrestForm = this.fb.group({
+        this.arrestFG = this.fb.group({
             ArrestCode: new FormControl(this.arrestCode),
             ArrestDate: new FormControl(null),
             ArrestTime: new FormControl(null),
@@ -166,11 +180,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.fb.group(ArrestLocaleFormControl);
     }
 
-    private createLawbreakerForm(): FormGroup {
-        ArrestLawbreakerFormControl.ArrestCode = new FormControl(this.arrestCode);
-        return this.fb.group(ArrestLawbreakerFormControl);
-    }
-
     private createProductForm(): FormGroup {
         ArrestProductFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestProductFormControl);
@@ -180,7 +189,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (array !== undefined && array.length) {
             const itemFGs = array.map(item => this.fb.group(item));
             const itemFormArray = this.fb.array(itemFGs);
-            this.arrestForm.setControl(formControl, itemFormArray);
+            this.arrestFG.setControl(formControl, itemFormArray);
         }
     }
 
@@ -315,10 +324,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private getByCon(code: string) {
         this.arrestService.getByCon(code).then(async res => {
-            await this.arrestForm.reset({
+            await this.arrestFG.reset({
                 ArrestCode: res.ArrestCode,
                 ArrestDate: toLocalNumeric(res.ArrestDate),
-                ArrestTime: res.ArrestTime,
+                ArrestTime: toLocalNumeric(res.ArrestTime),
                 OccurrenceDate: toLocalNumeric(res.OccurrenceDate),
                 OccurrenceTime: res.OccurrenceTime,
                 ArrestStationCode: res.ArrestStationCode,
@@ -332,20 +341,26 @@ export class ManageComponent implements OnInit, OnDestroy {
                 NoticeCode: res.NoticeCode,
                 InvestigationSurveyDocument: res.InvestigationSurveyDocument,
                 InvestigationCode: res.InvestigationCode,
-                IsActive: res.IsActive,
+                IsActive: res.IsActive
             });
             await res.ArrestLocale.map(item => item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`);
             await res.ArrestStaff.map(item => {
                 item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`;
                 item.IsNewItem = false;
+                item.ContributorCode = item.ContributorCode == null ? item.ContributorID : item.ContributorCode
             });
             await res.ArrestLawbreaker.map(item => {
                 item.LawbreakerFullName = `${item.LawbreakerTitleName} ${item.LawbreakerFirstName}`;
                 item.LawbreakerFullName += ` ${item.LawbreakerMiddleName} ${item.LawbreakerLastName}`;
                 item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
+                item.EntityTypeName = this.entityType.find(e => parseInt(e.value) == item.EntityType).text
+                item.LawbreakerTypeName = this.lawbreakerType.find(e => parseInt(e.value) == item.LawbreakerType).text
                 item.IsNewItem = false;
             });
-            await res.ArrestProduct.map(item => item.IsNewItem = false);
+            await res.ArrestProduct.map(item => {
+                item.IsNewItem = false;
+                item.ProductFullName = `${item.SubBrandNameTH} ${item.BrandNameTH} ${item.ModelName}`;
+            });
             await res.ArrestIndictment.map(item => item.IsNewItem = false);
 
             this.setItemFormArray(res.ArrestStaff, 'ArrestStaff');
@@ -359,72 +374,102 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onCreate() {
         this.preloader.setShowPreloader(true);
-        const arrestDate = new Date(this.arrestForm.value.ArrestDate);
-        const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
-        this.arrestForm.value.ArrestDate = arrestDate.toISOString()
-        this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
-        console.log(JSON.stringify(this.arrestForm.value));
+        const arrestDate = new Date(this.arrestFG.value.ArrestDate);
+        const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
+        this.arrestFG.value.ArrestDate = arrestDate.toISOString()
+        this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
+        console.log(JSON.stringify(this.arrestFG.value));
 
-        await this.arrestService.insAll(this.arrestForm.value).then(IsSuccess => {
-            if (IsSuccess)
-                this.onComplete()
+        await this.arrestService.insAll(this.arrestFG.value).then(IsSuccess => {
+            if (!IsSuccess) {
+                alert(Message.saveFail)
+                return false
+            }
+
+            // this.arrestService.getByCon(this.arrestCode).then(res => {
+            //     res.ArrestIndictment.map()
+            // })
+
+            alert(Message.saveComplete)
+            this.onComplete()
+            alert(Message.saveComplete)
+            this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
         })
+
         this.preloader.setShowPreloader(false);
     }
 
     private async onReviced() {
         this.preloader.setShowPreloader(true);
-        const arrestDate = new Date(this.arrestForm.value.ArrestDate);
-        const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
-        this.arrestForm.value.ArrestDate = arrestDate.toISOString()
-        this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
+        const arrestDate = new Date(this.arrestFG.value.ArrestDate);
+        const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
+        this.arrestFG.value.ArrestDate = arrestDate.toISOString()
+        this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        await this.arrestService.updByCon(this.arrestForm.value).then(async IsSuccess => {
+        await this.arrestService.updByCon(this.arrestFG.value).then(async IsSuccess => {
             if (IsSuccess) {
-                let isSuccess: boolean;
-
                 await this.arrestService.localeupdByCon(this.ArrestLocale.at(0).value)
-                    .then(IsSuccess => { if (!IsSuccess) return false });
+                    .then(IsSuccess => {
+                        if (!IsSuccess) {
+                            alert(Message.saveLocaleFail)
+                            return false
+                        }
+                    });
 
                 const staff = this.ArrestStaff.value;
                 await staff.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.staffinsAll(item).then(IsSuccess => isSuccess = IsSuccess);
-                        if (!isSuccess) return false
+                        this.arrestService.staffinsAll(item).then(IsSuccess => {
+                            if (!IsSuccess) return false
+                        });
                     });
 
                 const lawbreaker = this.ArrestLawbreaker.value;
                 await lawbreaker.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.lawbreakerinsAll(item).then(IsSuccess => isSuccess = IsSuccess);
-                        if (!isSuccess) return false
+                        this.arrestService.lawbreakerinsAll(item).then(IsSuccess => {
+                            if (!IsSuccess) return false
+                        });
                     });
 
                 const product = this.ArrestProduct.value;
                 await product.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.productinsAll(item).then(IsSuccess => isSuccess = IsSuccess);
-                        if (!isSuccess) return false
+                        this.arrestService.productinsAll(item).then(IsSuccess => {
+                            if (!IsSuccess) return false
+                        });
                     });
 
                 const indicment = this.ArrestIndictment.value;
                 await indicment.filter(item => item.IsNewItem === true)
                     .map(item => {
-                        this.arrestService.indicmentinsAll(item).then(IsSuccess => isSuccess = IsSuccess);
-                        if (!isSuccess) return false
+                        this.arrestService.indicmentinsAll(item).then(IsSuccess => {
+                            if (!IsSuccess) return false
+                        });
                     });
-
-                this.onComplete();
             }
         })
 
+        alert(Message.saveComplete)
+        this.onComplete();
         this.preloader.setShowPreloader(false);
     }
 
     private async onDelete() {
-        this.preloader.setShowPreloader(true);
-        await this.arrestService.updDelete(this.arrestCode)
-        this.preloader.setShowPreloader(false);
+        if (confirm(Message.confirmAction)) {
+            this.preloader.setShowPreloader(true);
+            await this.arrestService.updDelete(this.arrestCode)
+                .then(IsSuccess => {
+                    if (IsSuccess) {
+                        alert(Message.delComplete)
+                        debugger
+                        this.router.navigate['/arrest/list']
+                    } else {
+                        alert(Message.delFail)
+                    }
+                })
+            this.preloader.setShowPreloader(false);
+        }
     }
 
     private async onComplete() {
@@ -436,8 +481,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         // set false
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
-
-        this.arrestForm.reset();
     }
 
     private deleteTableRow(form: FormArray, indexForm: number) {
@@ -452,7 +495,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     setNoticeCode(e) {
-        this.arrestForm.patchValue({ NoticeCode: e });
+        this.arrestFG.patchValue({ NoticeCode: e });
     }
 
     openModal(e) {
@@ -464,7 +507,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.ArrestCode = this.arrestCode
             this.ArrestLawbreaker.push(this.fb.group(item))
         })
-        console.log(JSON.stringify(this.ArrestLawbreaker.value));
     }
 
     addStaff() {
@@ -498,7 +540,37 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addIndictment(e: ArrestIndictment[]) {
-        e.map(item => {
+
+        e.map(async item => {
+            let indictDetail = [];
+            let productDetail = [];
+            await item.Lawbreaker.map(lb => {
+                indictDetail.push({
+                    IndictmentDetailID: null,
+                    LawsuitType: null,
+                    IsActive: 1,
+                    IndictmentID: null,
+                    LawbreakerID: lb.LawbreakerID
+                })
+
+                let productArray = this.typeheadProduct
+                let productObj = arrayToObject(productArray)
+
+                productDetail.push({
+                    ProductID: lb.ProductID,
+                    IsProdcutCo: "1",
+                    Qty: productObj.Qty,
+                    QtyUnit: productObj.QtyUnit,
+                    Size: productObj.Size,
+                    SizeUnit: productObj.SizeUnit,
+                    Weight: productObj.NetVolume,
+                    WeightUnit: productObj.NetVolumeUnit,
+                    MistreatRate: null,
+                    Fine: null,
+                    IndictmentDetailID: null
+                })
+            })
+
             let FG = this.fb.group({
                 ArrestCode: this.arrestCode,
                 IndictmentID: item.IndictmentID,
@@ -509,6 +581,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 SectionDesc1: item.SectionDesc1,
                 SectionName: item.SectionName,
                 Lawbreaker: this.fb.array(item.Lawbreaker),
+                ArrestIndictmentDetail: this.fb.array(indictDetail),
+                ArrestProductDetail: this.fb.array(productDetail),
                 IsNewItem: true
             })
             this.ArrestIndictment.push(FG)
@@ -687,7 +761,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemOffice(e) {
-        this.arrestForm.patchValue({
+        this.arrestFG.patchValue({
             ArrestStationCode: e.item.OfficeCode,
             ArrestStation: e.item.OfficeShortName
         })

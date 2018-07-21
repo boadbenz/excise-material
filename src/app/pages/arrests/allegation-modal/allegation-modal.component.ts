@@ -100,7 +100,7 @@ export class AllegationModalComponent implements OnInit {
     selectItemPorduct(e: any, i: number) {
         this.Lawbreaker.at(i).patchValue({
             ProductID: e.target.value,
-            ProductName: e.target.textContent.trim()
+            ProductName: this.product.find(item => item.ProductID == e.target.value).ProductDesc
         })
     }
 
