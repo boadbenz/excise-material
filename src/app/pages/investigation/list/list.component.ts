@@ -65,20 +65,22 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onAdvSearch(form: any) {
-
+      var options = { year: 'numeric', month: 'short', day: 'numeric' };
         const sDateCompare = new Date(form.value.DateStartFrom);
         const eDateCompare = new Date(form.value.DateStartTo);
-
+        console.log(`sDate: ${eDateCompare} eDate: ${eDateCompare}`)
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkDate);
         } else {
             form.value.DateStartFrom = sDateCompare.getTime();
             form.value.DateStartTo = eDateCompare.getTime();
+            form.value.StaffName = "สุทธิดล";
             this.invesService.getByConAdv(form.value).subscribe(list => {
 
                 this.onSearchComplete(list)
 
             }, (err: HttpErrorResponse) => {
+              console.log('error: ',err)
                 alert(err.message);
             });
         }
