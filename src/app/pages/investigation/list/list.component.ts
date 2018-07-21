@@ -74,7 +74,7 @@ export class ListComponent implements OnInit, OnDestroy {
           console.log(`sDate: ${sDateCompare} eDate: ${eDateCompare}`)
             form.value.DateStartFrom = sDateCompare.getTime();
             form.value.DateStartTo = eDateCompare.getTime();
-            form.value.StaffName = "ธวัชชัย";
+            // form.value.StaffName = "ธวัชชัย";
             this.invesService.getByConAdv(form.value).subscribe(list => {
               console.log('list: ',list)
                 this.onSearchComplete(list)
