@@ -106,10 +106,10 @@
                 <tbody>
                     <tr *ngFor="let item of noticeList; let i=index">
                         <td class="text-center">
-                            <input name="group" type="radio" [id]="'radio'+i" class="with-gap radio-col-indigo">
+                            <input name="group" type="radio" [id]="'radio'+i" class="with-gap radio-col-indigo" [(ngModel)]="radioData" [value]="item.NoticeCode">
                             <label [for]="'radio' + i" class="m-0"></label>
                         </td>
-                        <td class="text-center">{{i+1}}</td>
+                        <td class="text-center">{{item.RowsId}}</td>
                         <td>{{item.NoticeCode}}</td>
                         <td>{{item.NoticeDate}}</td>
                         <td>

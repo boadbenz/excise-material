@@ -628,4 +628,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     // this.ArrestDocument.patchValue({
     // })
   }
+
+  noticeSelect(NoticeCode: string) {
+    debugger;
+    this.arrestForm.value.NoticeCode = NoticeCode;
+  }
 }

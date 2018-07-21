@@ -25,6 +25,8 @@ export class NoticeListModalComponent implements OnInit {
   noticeList = new Array<Notice>();
   notice = new Array<Notice>();
 
+  radioData: any;
+
   paginage = pagination;
 
   @Output() d = new EventEmitter();
@@ -79,6 +81,7 @@ export class NoticeListModalComponent implements OnInit {
   }
 
   close(e: any) {
+    // this.radioData
     this.c.emit(e);
   }
 
