@@ -68,15 +68,15 @@ export class ListComponent implements OnInit, OnDestroy {
       var options = { year: 'numeric', month: 'short', day: 'numeric' };
         const sDateCompare = new Date(form.value.DateStartFrom);
         const eDateCompare = new Date(form.value.DateStartTo);
-        console.log(`sDate: ${eDateCompare} eDate: ${eDateCompare}`)
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkDate);
         } else {
+          console.log(`sDate: ${sDateCompare} eDate: ${eDateCompare}`)
             form.value.DateStartFrom = sDateCompare.getTime();
             form.value.DateStartTo = eDateCompare.getTime();
-            form.value.StaffName = "สุทธิดล";
+            form.value.StaffName = "ธวัชชัย";
             this.invesService.getByConAdv(form.value).subscribe(list => {
-
+              console.log('list: ',list)
                 this.onSearchComplete(list)
 
             }, (err: HttpErrorResponse) => {
@@ -103,6 +103,7 @@ export class ListComponent implements OnInit, OnDestroy {
         if (!this.investigate.length) {
             alert(Message.noRecord);
         }
+        this.invesList = this.investigate.slice(0, this.paginage.PageSize);
         // set total record
         this.paginage.TotalItems = this.investigate.length;
     }
@@ -112,6 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async pageChanges(event) {
+      console.log('pageChanges: ',event)
         this.invesList = await this.investigate.slice(event.startIndex - 1, event.endIndex);
     }
 }

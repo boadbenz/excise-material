@@ -32,6 +32,7 @@ export class InvestigateService {
     getByConAdv(form: any) {
 
         const params = JSON.stringify(form);
+        console.log('params: ',params)
         const url = `${appConfig.apiUrl}/InvestigategetByConAdv`;
         return this.http.post<Investigate[]>(url, params, this.httpOptions);
     }
