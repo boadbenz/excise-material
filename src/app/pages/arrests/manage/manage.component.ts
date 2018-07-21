@@ -408,7 +408,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   private onCreate() {
-    debugger;
     const arrestDate = new Date(this.arrestForm.value.ArrestDate);
     const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate);
     this.arrestForm.value.ArrestDate = arrestDate.toISOString();

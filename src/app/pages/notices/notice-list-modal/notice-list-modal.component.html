@@ -4,9 +4,9 @@
             <h4 class="modal-title text-white">อ้างอิงใบแจ้งความนำจับ</h4>
         </div>
         <div class="col-lg-5 col-sm-8">
-            <form class="app-search">
-                <input type="search" name="" id="" class="form-control form-control-sm">
-                <a class="srh-btn">
+            <form class="app-search" #formSearch="ngForm" (ngSubmit)="onSearch(formSearch.value)">
+                <input type="search" name="Textsearch" id="" class="form-control form-control-sm" ngModel>
+                <a class="srh-btn" (click)="onSearch(formSearch.value)" href="javaScript:void(0);">
                     <i class="ti-search"></i>
                 </a>
             </form>
@@ -110,13 +110,17 @@
                             <label [for]="'radio' + i" class="m-0"></label>
                         </td>
                         <td class="text-center">{{i+1}}</td>
-                        <td>{{item.noticeCode}}</td>
-                        <td>{{item.noticeDate}}</td>
-                        <td>{{item.staff}}</td>
-                        <td>{{item.department}}</td>
-                        <td>{{item.lawbreaker}}</td>
+                        <td>{{item.NoticeCode}}</td>
+                        <td>{{item.NoticeDate}}</td>
                         <td>
-                            <a href="javaScript:void(0)" class="text-secondary">
+                            <div *ngFor="let staff of item.NoticeStaff;">{{staff.StaffFullName}}</div>
+                        </td>
+                        <td>
+                            <div *ngFor="let staff of item.NoticeStaff;">{{staff.OfficeName}}</div>
+                        </td>
+                        <td></td>
+                        <td>
+                            <a href="javaScript:void(0)" class="text-secondary" (click)="clickView(item.NoticeCode)">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>
@@ -125,12 +129,8 @@
             </table>
         </div>
         <div class="card-footer card-footer-unset">
-            <app-pagination-table 
-                [TotalItems]="paginage.TotalItems" 
-                [CurrentPage]="paginage.CurrentPage" 
-                [PageSize]="paginage.PageSize"
-                [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
-                (onPageChange)="pageChanges($event)">
+            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
             </app-pagination-table>
         </div>
     </div>

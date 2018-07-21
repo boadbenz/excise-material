@@ -1,6 +1,16 @@
-import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  ChangeDetectorRef
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { Notice } from '../notice';
 import { NoticeService } from '../notice.service';
 import { pagination } from 'app/config/pagination';
+import { Message } from 'app/config/message';
+import { toLocalShort } from 'app/config/dateFormat';
 
 @Component({
   selector: 'app-notice-list-modal',
@@ -8,25 +18,52 @@ import { pagination } from 'app/config/pagination';
   styleUrls: ['./notice-list-modal.component.scss']
 })
 export class NoticeListModalComponent implements OnInit {
-
   isOpen = false;
   isCheckAll = false;
   advSearch = false;
+
+  noticeList = new Array<Notice>();
+  notice = new Array<Notice>();
 
   paginage = pagination;
 
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
 
-  constructor(private noticeServie: NoticeService) {
-
-  }
+  constructor(private noticeServie: NoticeService, private router: Router) {}
 
   ngOnInit() {
+    this.onSearch({ Textsearch: '' });
   }
 
-  onSearchAdv(f: any) {
+  onSearch(Textsearch: any) {
+    this.noticeServie
+      .noticegetByKeyword(Textsearch)
+      .then(res => this.onSearchComplete(res));
+  }
 
+  onSearchAdv(f: any) {}
+
+  onSearchComplete(list: Notice[]) {
+    if (!list.length) {
+      alert(Message.noRecord);
+      return false;
+    }
+
+    this.notice = [];
+    list.map((p, i) => {
+      p.RowsId = i + 1;
+      p.NoticeDate = toLocalShort(p.NoticeDate);
+      p.NoticeStaff.map(staff => {
+        staff.StaffFullName = `${staff.TitleName} ${staff.FirstName} ${
+          staff.LastName
+        }`;
+      });
+    });
+    this.notice = list;
+
+    // set total record
+    this.paginage.TotalItems = this.notice.length;
   }
 
   checkAll() {
@@ -45,8 +82,14 @@ export class NoticeListModalComponent implements OnInit {
     this.c.emit(e);
   }
 
-  async pageChanges(event) {
-    // this.invesList = await this.investigate.slice(event.startIndex - 1, event.endIndex);
+  async pageChanges(event: any) {
+    this.noticeList = await this.notice.slice(
+      event.startIndex - 1,
+      event.endIndex
+    );
   }
 
+  clickView(code: string) {
+    this.router.navigate([`/notice/manage/R/${code}`]);
+  }
 }
