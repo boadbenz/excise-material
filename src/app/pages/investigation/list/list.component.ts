@@ -65,13 +65,11 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onAdvSearch(form: any) {
-      var options = { year: 'numeric', month: 'short', day: 'numeric' };
         const sDateCompare = new Date(form.value.DateStartFrom);
         const eDateCompare = new Date(form.value.DateStartTo);
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkDate);
         } else {
-          console.log(`sDate: ${sDateCompare} eDate: ${eDateCompare}`)
             form.value.DateStartFrom = sDateCompare.getTime();
             form.value.DateStartTo = eDateCompare.getTime();
             // form.value.StaffName = "ธวัชชัย";
