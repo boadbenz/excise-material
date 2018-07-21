@@ -48,6 +48,8 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.onSearch({ Textsearch: '' });
+
     this.subOnSearch = this.navService.searchByKeyword.subscribe(
       async Textsearch => {
         if (Textsearch) {
