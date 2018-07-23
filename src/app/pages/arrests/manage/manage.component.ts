@@ -553,7 +553,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     LawbreakerID: lb.LawbreakerID
                 })
 
-                let productArray = this.typeheadProduct
+                let productArray = this.typeheadProduct.filter(item => item.ProductID == lb.ProductID)
                 let productObj = arrayToObject(productArray)
 
                 productDetail.push({
@@ -586,7 +586,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsNewItem: true
             })
             this.ArrestIndictment.push(FG)
+
+
+            console.log(this.ArrestIndictment.value);
         })
+
+
     }
 
     addDocument() {
