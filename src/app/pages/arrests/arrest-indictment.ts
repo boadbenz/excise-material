@@ -32,7 +32,7 @@ export class ArrestIndictment {
     SectionName: string;
     Lawbreaker: IndictmentLawbreaker[];
     ArrestIndictmentDetail: ArrestIndicmentDetail[];
-    ArrestProductDetail: ArrestProductDetail[];
+    OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
     IsNewItem: boolean;
 }
 
@@ -42,4 +42,5 @@ export class ArrestIndicmentDetail{
     IsActive: number;
     IndictmentID: number;
     LawbreakerID: number;
+    ArrestProductDetail: ArrestProductDetail[];
 }

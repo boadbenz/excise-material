@@ -372,47 +372,85 @@ export class ManageComponent implements OnInit, OnDestroy {
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
-        console.log(JSON.stringify(this.arrestFG.value));
-
-        const insAllService = await this.arrestService.insAll(this.arrestFG.value).then(IsSuccess => IsSuccess);
-
-        if (!insAllService) {
-            alert(Message.saveFail)
-            return false
-        }
-
-        // ถ้า บันทึกสำเร็จ ให้ค้นหาข้อมูลการจับกุม ด้วยเลขที่ ArrestCode เพื่อหาและนำเอา IndictmentID มาใช้งาน
-        const getByConService = await this.arrestService.getByCon(this.arrestCode).then(res => res);
-        if (!getByConService) {
-            alert(Message.saveFail)
-            return false;
-        }
+        // console.log(JSON.stringify(this.arrestFG.value));
 
         // ค้นหาข้อมูลภายใน ArrestIndictment และเปรียบเทียบ GuiltBaseID กับ
-        getByConService.ArrestIndictment.map(item1 => {
-            this.ArrestIndictment.value
-                .filter(item2 => item1.GuiltBaseID == item2.GuiltBaseID)
-                .map(() => {
-                    this.ArrestInictmentDetail.value.map(item3 => {
-                        // ___1. ให้ Set IndictmentID ให้กับ object รายการข้อกล่าวหา
-                        item3.IndictmentID = item1.IndictmentID
-                        // ___2. บันทึก ArrestIndicmentDetail object รายการข้อกล่าวหา
-                        const indictDetail = this.arrestService.indicmentDetailinsAll(item3).then(res2 => res2);
+        this.ArrestIndictment.value.map(async res0 => {
 
-                        if (!indictDetail) {
-                            return false;
-                        }
+            // this.ArrestIndictment.value.map((indict) => {
+            //     console.log('indictment: ', indict);
 
-                        
+            //     indict.ArrestIndictmentDetail.map(indictD => {
+            //         console.log('indictmentDetail: ', indictD);
+
+            //         indictD.ArrestProductDetail.map(productD => {
+            //             console.log('ProductDetail: ', productD);
+
+            //         })
+            //     })
+
+            const insAllService = await this.arrestService.insAll(this.arrestFG.value).then(IsSuccess => IsSuccess);
+
+            if (!insAllService) {
+                alert(Message.saveFail)
+                return false
+            }
+
+            // ถ้า บันทึกสำเร็จ ให้ค้นหาข้อมูลการจับกุม ด้วยเลขที่ ArrestCode เพื่อหาและนำเอา IndictmentID มาใช้งาน
+            const getByConService = await this.arrestService.getByCon(this.arrestCode).then(res => res);
+            if (!getByConService) {
+                alert(Message.saveFail)
+                return false;
+            }
+
+            // ค้นหาข้อมูลภายใน ArrestIndictment และเปรียบเทียบ GuiltBaseID กับ
+            getByConService.ArrestIndictment.map(res0 => {
+                this.ArrestIndictment.value
+                    .filter(item1 => res0.GuiltBaseID == item1.GuiltBaseID)
+                    .map((item1) => {
+
+                        item1.ArrestIndicmentDetail.map(async indictD => {
+                            // ___1. ให้ Set IndictmentID ให้กับ object IndicmentDetail
+                            indictD.IndictmentID = res0.IndictmentID;
+                            // ___2. บันทึก ArrestIndicmentDetail
+                            const indictDetail = await this.arrestService.indicmentDetailinsAll(indictD).then(res1 => res1);
+                            if (!indictDetail) return false;
+
+                            const indictGetService = await this.arrestService.indicmentgetByCon(res0.IndictmentID.toString()).then(res => res)
+                            if (!indictGetService.length) return false;
+
+                            indictD.ArrestProductDetail.map(productD => {
+
+                            })
+                            // this.arrestService.indicmentDetailgetByCon(indictDetail.x)
+
+                            // this.arrestService.indicmentDetailgetByCon(res1.IndicmentDetailID).then(res2 => {
+                            //     if (!res2) return false;
+
+                            //     res1
+                            // })
+                        })
+                        // this.ArrestInictmentDetail.value.map(item3 => {
+                        //     // ___1. ให้ Set IndictmentID ให้กับ object IndicmentDetail
+                        //     item3.IndictmentID = res0.IndictmentID
+                        //     // ___2. บันทึก ArrestIndicmentDetail
+                        //     const indictDetail = this.arrestService.indicmentDetailinsAll(item3).then(res2 => res2);
+
+                        //     if (!indictDetail) {
+                        //         return false;
+                        //     }
+
+
+                        //     this.arrestindict
+                        // })
                     })
-                })
-        })
+            })
 
-        //     // alert(Message.saveComplete)
-        //     // this.onComplete()
-        //     // alert(Message.saveComplete)
-        //     this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
-        // })
+            // alert(Message.saveComplete)
+            // this.onComplete()
+            // alert(Message.saveComplete)
+            this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
+        })
 
         this.preloader.setShowPreloader(false);
     }
@@ -558,32 +596,38 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addIndictment(e: ArrestIndictment[]) {
-
         e.map(async item => {
             let indictDetail = [];
-            let productDetail = [];
-            await item.Lawbreaker.map(lb => {
-                indictDetail.push({
-                    IndictmentDetailID: null,
-                    LawsuitType: null,
-                    IsActive: 1,
-                    IndictmentID: null,
-                    LawbreakerID: lb.LawbreakerID
-                })
 
-                productDetail.push({
-                    ProductID: lb.ProductID,
-                    IsProdcutCo: "1",
-                    Qty: lb.Qty,
-                    QtyUnit: lb.QtyUnit,
-                    Size: lb.Size,
-                    SizeUnit: lb.SizeUnit,
-                    Weight: lb.Weight,
-                    WeightUnit: lb.WeightUnit,
-                    MistreatRate: null,
-                    Fine: null,
-                    IndictmentDetailID: null
-                })
+            await item.Lawbreaker.map(lb => {
+                let productDetail = [];
+
+                productDetail.push(
+                    this.fb.group({
+                        ProductID: lb.ProductID,
+                        IsProdcutCo: "1",
+                        Qty: lb.Qty,
+                        QtyUnit: lb.QtyUnit,
+                        Size: lb.Size,
+                        SizeUnit: lb.SizeUnit,
+                        Weight: lb.Weight,
+                        WeightUnit: lb.WeightUnit,
+                        MistreatRate: null,
+                        Fine: null,
+                        IndictmentDetailID: null
+                    })
+                )
+
+                indictDetail.push(
+                    this.fb.group({
+                        IndictmentDetailID: null,
+                        LawsuitType: null,
+                        IsActive: 1,
+                        IndictmentID: null,
+                        LawbreakerID: lb.LawbreakerID,
+                        ArrestProductDetail: this.fb.array(productDetail)
+                    })
+                )
             })
 
             let FG = this.fb.group({
@@ -597,16 +641,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 SectionName: item.SectionName,
                 Lawbreaker: this.fb.array(item.Lawbreaker),
                 ArrestIndictmentDetail: this.fb.array(indictDetail),
-                ArrestProductDetail: this.fb.array(productDetail),
                 IsNewItem: true
             })
-            this.ArrestIndictment.push(FG)
-
-
-            console.log(this.ArrestIndictment.value);
+            this.ArrestIndictment.push(FG);
         })
-
-
     }
 
     addDocument() {

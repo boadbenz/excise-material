@@ -77,7 +77,7 @@ export class AllegationModalComponent implements OnInit {
         await list.map((item, i) => {
             item.RowId = i + 1
             item.IsChecked = false
-            item.GuiltBaseID = item.GuiltBaseID == null ? 1 : item.GuiltBaseID
+            item.GuiltBaseID = item.GuiltBaseID == null ? i + 1 : item.GuiltBaseID
         })
         this.lawGroupSection = list;
         this.paginage.TotalItems = list.length;

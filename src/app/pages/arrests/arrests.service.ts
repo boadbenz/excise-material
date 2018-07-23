@@ -152,10 +152,22 @@ export class ArrestsService {
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
+    indicmentgetByCon(IndicmentID: string): Promise<ArrestIndictment[]> {
+        const params = {IndicmentID};
+        const url = `${appConfig.api7788}/ArrestIndicmentgetByCon`;
+        return this.resposePromisGetList(JSON.stringify(params), url)
+    }
+
     indicmentDetailinsAll(indictment: ArrestIndicmentDetail): Promise<any> {
         const params = indictment;
         const url = `${appConfig.api7788}/ArrestIndicmentDetailinsAll`
         return this.responsePromisModify(JSON.stringify(params), url)
+    }
+
+    indicmentDetailgetByCon(IndicmentDetailID: string): Promise<ArrestIndicmentDetail> {
+        const params = { IndicmentDetailID };
+        const url = `${appConfig.api7788}/ArrestIndicmentDetailgetByCon`
+        return this.resposePromisGet(JSON.stringify(params), url)
     }
 
     updByCon(Arrest: Arrest): Promise<any> {
