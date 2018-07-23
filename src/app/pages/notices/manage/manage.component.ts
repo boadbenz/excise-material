@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -14,7 +14,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { toLocalNumeric } from '../../../config/dateFormat';
 import { regions, communicate, DutyUnit, RegionModel, MasDistrictModel, MasProvinceModel, MasSubdistrictModel } from '../../../models';
-import { products, MasProductModel } from '../../../models/mas-product.model';
+import { MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
 import { NoticeSuspect } from '../notice-suspect';
@@ -48,7 +48,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     // importSuspectData = new Array<Suspect>();
 
     regionModel = regions;
-    productModel = products;
     communicateModel = communicate;
     dutyUnitModel = DutyUnit;
 

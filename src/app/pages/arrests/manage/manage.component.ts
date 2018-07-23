@@ -30,12 +30,6 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { MasOfficeModel } from '../../../models/mas-office.model';
 
-const arrayToObject = (array) =>
-    array.reduce((obj, item) => {
-        obj[item.id] = item
-        return obj
-    }, {})
-
 @Component({
     selector: 'app-manage',
     templateUrl: './manage.component.html',
@@ -380,21 +374,80 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
         console.log(JSON.stringify(this.arrestFG.value));
 
-        await this.arrestService.insAll(this.arrestFG.value).then(IsSuccess => {
-            if (!IsSuccess) {
-                alert(Message.saveFail)
-                return false
-            }
+        const insAllService = await this.arrestService.insAll(this.arrestFG.value).then(IsSuccess => IsSuccess);
 
-            // this.arrestService.getByCon(this.arrestCode).then(res => {
-            //     res.ArrestIndictment.map()
-            // })
+        if (!insAllService) {
+            alert(Message.saveFail)
+            return false
+        }
 
-            alert(Message.saveComplete)
-            this.onComplete()
-            alert(Message.saveComplete)
-            this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
+        // ถ้า บันทึกสำเร็จ ให้ค้นหาข้อมูลการจับกุม ด้วยเลขที่ ArrestCode เพื่อหาและนำเอา IndictmentID มาใช้งาน
+        const getByConService = await this.arrestService.getByCon(this.arrestCode).then(res => res);
+        if (!getByConService) {
+            alert(Message.saveFail)
+            return false;
+        }
+
+        // ค้นหาข้อมูลภายใน ArrestIndictment และเปรียบเทียบ GuiltBaseID กับ
+        getByConService.ArrestIndictment.map(item1 => {
+            this.ArrestIndictment.value
+                .filter(item2 => item1.GuiltBaseID == item2.GuiltBaseID)
+                .map(() => {
+                    this.ArrestInictmentDetail.value.map(item3 => {
+                        // ___1. ให้ Set IndictmentID ให้กับ object รายการข้อกล่าวหา
+                        item3.IndictmentID = item1.IndictmentID
+                        // ___2. บันทึก ArrestIndicmentDetail object รายการข้อกล่าวหา
+                        const indictDetail = this.arrestService.indicmentDetailinsAll(item3).then(res2 => res2);
+
+                        if (!indictDetail) {
+                            return false;
+                        }
+
+                        
+                    })
+                })
         })
+
+        // // บันทึก ข้อมูลการจับกุม
+        // await this.arrestService.insAll(this.arrestFG.value).then(async IsSuccess => {
+        //     if (!IsSuccess) {
+        //         alert(Message.saveFail)
+        //         return false
+        //     }
+
+        //     // ถ้า บันทึกสำเร็จ ให้ค้นหาข้อมูลการจับกุม ด้วยเลขที่ ArrestCode เพื่อหาและนำเอา IndictmentID มาใช้งาน
+        //     await this.arrestService.getByCon(this.arrestCode).then(res => {
+        //         if (!res) {
+        //             return false;
+        //         }
+
+        //         // ค้นหาข้อมูลภายใน ArrestIndictment และเปรียบเทียบ GuiltBaseID กับ  
+        //         res.ArrestIndictment.map(res1 => {
+        //             this.ArrestIndictment.value.map(item1 => {
+        //                 // ถ้า GuiltBaseID ที่ return ออกมา = GuiltBaseID ในรายการข้อกล่าวหา 
+        //                 if (res1.GuiltBaseID == item1.GuiltBaseID) {
+        //                     this.ArrestInictmentDetail.value.map(item2 => {
+        //                         // ___1. ให้ Set IndictmentID ให้กับ object
+        //                         item2.IndictmentID = res1.IndictmentID
+        //                         // ___2. บันทึก ArrestIndicmentDetail
+        //                         this.arrestService.indicmentDetailinsAll(item2).then(res2 => {
+        //                             if (!res2) {
+        //                                 return false;
+        //                             }
+
+        //                             this.arrestService.indict
+        //                         })
+        //                     })
+        //                 }
+        //             })
+        //         })
+        //     })
+
+        //     // alert(Message.saveComplete)
+        //     // this.onComplete()
+        //     // alert(Message.saveComplete)
+        //     this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
+        // })
 
         this.preloader.setShowPreloader(false);
     }
@@ -553,18 +606,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                     LawbreakerID: lb.LawbreakerID
                 })
 
-                let productArray = this.typeheadProduct.filter(item => item.ProductID == lb.ProductID)
-                let productObj = arrayToObject(productArray)
-
                 productDetail.push({
                     ProductID: lb.ProductID,
                     IsProdcutCo: "1",
-                    Qty: productObj.Qty,
-                    QtyUnit: productObj.QtyUnit,
-                    Size: productObj.Size,
-                    SizeUnit: productObj.SizeUnit,
-                    Weight: productObj.NetVolume,
-                    WeightUnit: productObj.NetVolumeUnit,
+                    Qty: lb.Qty,
+                    QtyUnit: lb.QtyUnit,
+                    Size: lb.Size,
+                    SizeUnit: lb.SizeUnit,
+                    Weight: lb.Weight,
+                    WeightUnit: lb.WeightUnit,
                     MistreatRate: null,
                     Fine: null,
                     IndictmentDetailID: null

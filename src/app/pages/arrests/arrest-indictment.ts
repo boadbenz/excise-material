@@ -13,6 +13,12 @@ export class IndictmentLawbreaker {
     LawbreakerName: string;
     ProductID: string;
     ProductName: string;
+    Qty: string;
+    QtyUnit: string;
+    Size: string;
+    SizeUnit: string;
+    Weight: string;
+    WeightUnit: string;
 }
 
 export class ArrestIndictment {

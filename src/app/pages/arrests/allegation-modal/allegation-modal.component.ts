@@ -98,9 +98,16 @@ export class AllegationModalComponent implements OnInit {
     }
 
     selectItemPorduct(e: any, i: number) {
+        const _product = this.product.find(item => item.ProductID == e.target.value);
         this.Lawbreaker.at(i).patchValue({
             ProductID: e.target.value,
-            ProductName: this.product.find(item => item.ProductID == e.target.value).ProductDesc
+            ProductName: _product.ProductDesc,
+            Qty: _product.Qty,
+            QtyUnit: _product.QtyUnit,
+            Size: '',
+            SizeUnit: '',
+            Weight: _product.NetVolume,
+            WeightUnit: _product.NetVolumeUnit
         })
     }
 

@@ -110,7 +110,7 @@ export class ArrestsService {
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    insAll(Arrest: Arrest): Promise<any> {
+    insAll(Arrest: Arrest): Promise<boolean> {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url)
