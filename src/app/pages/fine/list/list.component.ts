@@ -76,8 +76,9 @@ export class ListComponent implements OnInit, OnDestroy {
             form.value.ProgramCode = "XCS06";
             form.value.ProcessCode = "01";
 
-            this.fineService.getByConAdv(form.value).subscribe(list => {
 
+            this.fineService.getByConAdv(form.value).then(async list => {
+debugger
                 this.onSearchComplete(list)
 
             }, (err: HttpErrorResponse) => {

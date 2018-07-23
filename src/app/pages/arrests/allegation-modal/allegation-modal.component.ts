@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, Input } fro
 import { ArrestLawbreaker } from '../arrest-lawbreaker';
 import { ArrestProduct } from '../arrest-product';
 import { ArrestIndictment } from '../arrest-indictment';
-import { pagination } from 'app/config/pagination';
+import { pagination } from '../../../config/pagination';
 
 @Component({
     selector: 'app-allegation-modal',

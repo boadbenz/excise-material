@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
-import { Message } from 'app/config/message';
+import { Message } from '../../../config/message';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Notice } from '../notice';
-import { pagination } from 'app/config/pagination';
+import { pagination } from '../../../config/pagination';
 
 @Component({
     selector: 'app-list',

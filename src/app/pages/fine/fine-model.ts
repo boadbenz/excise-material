@@ -1,3 +1,6 @@
+import { ArrestLawbreaker } from './arrest-lawbreaker';
+import { Time } from '../../../../node_modules/@angular/common';
+
 export class Compare {
     public CompareID: number;
     public CompareCode: string;
@@ -57,6 +60,7 @@ export class CompareDetail {
     public FineType: number;
     public AdjustReason: string;
     public CompareDetailFine: CompareDetailFine[];
+    public CompareDetailReceipt: CompareDetailReceipt[];
 }
 
 export class CompareDetailFine {
@@ -67,6 +71,29 @@ export class CompareDetailFine {
     public VatValue: number;
     public FineRate: number;
     public IsActive: number;
+}
+
+export class CompareDetailReceipt  {
+    public CompareReceiptID? : number;
+    public ReceiptType? : string;
+    public ReceiptBookNo? : string;
+    public ReceiptNo? : string;
+    public ReceiptDate? : Date;
+    public ReceiptChanel? : number;
+    public ReferenceNo? : string;
+    public StationCode?  : string;
+    public Station?  : string;
+    public CompareAuthority?  : number;
+    public CompareDetailID?  : number;
+    public PaymentDate?   : Date;
+    public FineType?   : number;
+    public TotalFine?   : number;
+    public RevernueStatus?   : number;
+    public RevernueDate?    : Date;
+    public Lawbreaker?: string;
+    public ReceipStaff? : string;
+    public ReceipPosition?: string;
+    public ReceipDepartment?: string;
 }
 
 export class CompareStaff {
@@ -92,3 +119,25 @@ export class CompareStaff {
     public IsActive: number;
 }
 
+
+export class ICompareDetail
+{
+    public CompareDetailID?: number;
+    public CompareID?: number;
+    public IndictmentDetailID?: number;
+    public Lawbreaker?: string;
+    public LawbrakerTestimony?: string;
+    public IsRequest?: number;
+    public IsProvisionalAcquittal?: number;
+    public Bail?: string;
+    public Guaruntee?: string;
+    public CompareFine?: number;
+    public PaymentFineDate?: Date;
+    public PaymentFineAppointDate?: Date;
+    public PaymentVatDate?: Date;
+    public ApproveReportDate?: Date; 
+    public ApproveReportType?: number;
+    public CommandDate?: Date;
+    public Fact?: string;
+    public CompareReason?: string;
+}

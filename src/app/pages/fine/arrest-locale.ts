@@ -1,8 +1,8 @@
-export class NoticeLocale {
-    public LocaleID: number;
-    public NoticeCode: string;
-    public CoordinateX: string;
-    public CoordinateY: string;
+export class ArrestLocale {
+    public LocaleID: string;
+    public IsArrest: string;
+    public ArrestCode: string;
+    public GPS: string;
     public Location: string;
     public Address: string;
     public Village: string;
@@ -19,5 +19,6 @@ export class NoticeLocale {
     public Province: string;
     public ZipCode: string;
     public Policestation: string;
-    public IsActive: number;
+    public IsActive: string;
+    public Region: string;
 }

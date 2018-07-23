@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { NavigationService } from './../../../shared/header-navigation/navigation.service';
+import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({

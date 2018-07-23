@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
-import { Message } from 'app/config/message';
-import { toLocalShort } from 'app/config/dateFormat';
-import { pagination } from 'app/config/pagination';
+import { Message } from '../../../config/message';
+import { toLocalShort } from '../../../config/dateFormat';
+import { pagination } from '../../../config/pagination';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -57,7 +57,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onAdvSearch(form: any) {
-
+        debugger
         const sDateCompare = new Date(form.value.OccurrenceDateFrom);
         const eDateCompare = new Date(form.value.OccurrenceDateTo);
 

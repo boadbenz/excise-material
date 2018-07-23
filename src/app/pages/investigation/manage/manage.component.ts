@@ -16,11 +16,14 @@ import 'rxjs/add/operator/map';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { async } from '@angular/core/testing';
 
-const states = [
-  {FullName:'Alabama',PositionName:'Police',DepartmentName:'ABPD'},
-  {FullName:'Alaska',PositionName:'Police',DepartmentName:'AKPD'},
-  {FullName:'American',PositionName:'Police',DepartmentName:'USAPD'}
-];
+const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
+    'Connecticut', 'Delaware', 'District Of Columbia', 'Federated States Of Micronesia', 'Florida', 'Georgia',
+    'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine',
+    'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana',
+    'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+    'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island',
+    'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Islands', 'Virginia',
+    'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
 
 @Component({
@@ -71,11 +74,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     createForm() {
         this.investigateForm = this.formBuilder.group({
-            InvestigateCode: '',
-            InvestigateNo: ['',Validators.required],
-            DateStart: '',
-            DateEnd: '',
-            Subject: '',
+            InvestigateCode: new FormControl({ value: '' }),
+            InvestigateNo: new FormControl({ value: '' }),
+            DateStart: new FormControl({ value: '' }),
+            DateEnd: new FormControl({ value: '' }),
+            Subject: new FormControl({ value: '' }),
             InvestigationTeam: this.formBuilder.array([])
         });
     }
@@ -157,7 +160,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.investigateDetail = item.InvestigationDetail;
 
         }, (err: HttpErrorResponse) => {
-          console.log('error: ',err)
             alert(err.message);
         });
     }
@@ -165,7 +167,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onCreate() {
         if (this.investigateForm.valid) {
             this.invesService.insAll(this.investigateForm.value).subscribe(p => {
-              console.log('onCreate: ', p)
                 this.onComplete();
             }, (err: HttpErrorResponse) => {
                 alert(Message.saveError);
@@ -213,14 +214,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onDeleteStaff(indexForm: number, invesCode: string) {
-      this.InvestigationTeam.removeAt(indexForm);
-        // this.invesService.detailGetByCon(invesCode).subscribe(result => {
-        //     if (result.length) {
-        //         alert(Message.cannotDelete);
-        //     } else {
-        //         this.InvestigationTeam.removeAt(indexForm);
-        //     }
-        // })
+        this.invesService.detailGetByCon(invesCode).subscribe(result => {
+            if (result.length) {
+                alert(Message.cannotDelete);
+            } else {
+                this.InvestigationTeam.removeAt(indexForm);
+            }
+        })
     }
 
     get InvestigationTeam(): FormArray {
@@ -245,16 +245,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .debounceTime(200)
             .distinctUntilChanged()
             .map(term => term.length < 2 ? []
-                : states.filter(v => v.FullName.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
-
-    formatter = (x: {FullName: string}) => x.FullName;
-
-    selectedStaff(event,index){
-      console.log(index)
-      console.log(event.item)
-      console.log(this.InvestigationTeam)
-      this.InvestigationTeam.at(index).patchValue(event.item)
-    }
+                : states.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
 
     onCreateInvestDetail() {
         this.router.navigate([`/investigation/detail-manage/C/NEW`]);

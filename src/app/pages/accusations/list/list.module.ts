@@ -1,4 +1,4 @@
-import { NavigationComponent } from './../../../shared/header-navigation/navigation.component';
+import { NavigationComponent } from '../../../shared/header-navigation/navigation.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';

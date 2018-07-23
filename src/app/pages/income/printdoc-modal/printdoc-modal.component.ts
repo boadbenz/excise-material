@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { IncomeService } from '../income.service';
-import { document } from '../Document';
+import { document } from '../document';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 @Component({
