@@ -1,12 +1,8 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
-<<<<<<< HEAD
-import { NoticeInformer } from '../notice-informer';
-import { NoticeStaff } from '../notice-staff';
-=======
 import { NoticeService } from '../notice.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -17,7 +13,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { toLocalNumeric } from 'app/config/dateFormat';
-import { products, regions, communicate, DutyUnit } from 'app/models';
+import { /*products, regions, communicate,*/ DutyUnit } from 'app/models';
 import { Message } from 'app/config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
 import { NoticeSuspect } from '../notice-suspect';
@@ -25,7 +21,6 @@ import { NoticeDocument, NoticeDocumentFormControl } from '../notice-document';
 import { NoticeStaffFormControl } from '../notice-staff';
 import { NoticeInformerFormControl } from '../notice-informer';
 import { NoticeLocaleFormControl } from '../notice-locale';
->>>>>>> origin/FL_J
 
 @Component({
     selector: 'app-manage',
@@ -36,21 +31,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
     mode: string;
     modal: any;
-<<<<<<< HEAD
-
-    noticeForm: FormGroup;
-
-    showEditField: any;
-=======
     noticeCode: string;
     noticeForm: FormGroup;
     searching = false;
     searchFailed = false;
     isConceal = false;
 
-    regionModel = regions;
-    productModel = products;
-    communicateModel = communicate;
+    // regionModel = regions;
+    // productModel = products;
+    // communicateModel = communicate;
     dutyUnitModel = DutyUnit;
 
     get NoticeStaff(): FormArray {
@@ -76,10 +65,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     get NoticeDocument(): FormArray {
         return this.noticeForm.get('NoticeDocument') as FormArray;
     }
->>>>>>> origin/FL_J
 
     constructor(
         private activeRoute: ActivatedRoute,
+        private router: Router,
         private suspectModalService: NgbModal,
         private fb: FormBuilder,
         private navService: NavigationService
@@ -98,9 +87,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        this.setNoticeinFormer(new Array<NoticeInformer>());
+        // this.setNoticeinFormer(new Array<NoticeInformer>());
 
-        this.setNoticestaff(new Array<NoticeStaff>());
+        // this.setNoticestaff(new Array<NoticeStaff>());
     }
 
     private active_route() {
@@ -130,12 +119,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private navigate_service() {
         this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p;
+            // this.showEditField = p;
         });
 
-<<<<<<< HEAD
-        this.navService.onSave.subscribe(status => {
-=======
         this.sub = this.navService.onCancel.subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
@@ -144,7 +130,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
 
         this.sub = this.navService.onSave.subscribe(async status => {
->>>>>>> origin/FL_J
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
@@ -160,36 +145,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.noticeForm = this.fb.group({
-<<<<<<< HEAD
-            NoticeCode: new FormControl(''),
-            NoticeStationCode: new FormControl(''),
-            NoticeStation: new FormControl(''),
-            NoticeDate: new FormControl(''),
-            NoticeTime: new FormControl(''),
-            NoticeDue: new FormControl(''),
-            NoticeDueDate: new FormControl(''),
-            GroupNameDesc: new FormControl(''),
-            CommunicationChannelID: new FormControl(''),
-            ArrestCode: new FormControl(''),
-            StaffFullName: new FormControl(''),
-            IsActive: new FormControl(''),
-            Noticestaff: this.fb.array([]),
-            Noticeinformer: this.fb.array([]),
-            Noticelocale: this.fb.array([]),
-            NoticeProduct: this.fb.array([]),
-            NoticeSuspect: this.fb.array([])
-        })
-    }
-
-    get Noticestaff(): FormArray {
-        return this.noticeForm.get('Noticestaff') as FormArray;
-    }
-
-    setNoticestaff(staff: NoticeStaff[]) {
-        if (staff) {
-            // informer.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
-            const itemFGs = staff.map(item => this.fb.group(item));
-=======
             NoticeCode: new FormControl(this.noticeCode),
             NoticeStationCode: new FormControl('Code'),
             NoticeStation: [null],
@@ -257,73 +212,55 @@ export class ManageComponent implements OnInit, OnDestroy {
     private setItemFormArray(array: any[], formControl: string) {
         if (array !== undefined && array.length) {
             const itemFGs = array.map(item => this.fb.group(item));
->>>>>>> origin/FL_J
             const itemFormArray = this.fb.array(itemFGs);
             this.noticeForm.setControl('Noticestaff', itemFormArray);
         }
     }
 
-<<<<<<< HEAD
-    get Noticeinformer(): FormArray {
-        return this.noticeForm.get('Noticeinformer') as FormArray;
-    }
-
-    setNoticeinFormer(informer: NoticeInformer[]) {
-        if (informer) {
-            // informer.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
-            const itemFGs = informer.map(item => this.fb.group(item));
-            const itemFormArray = this.fb.array(itemFGs);
-            this.noticeForm.setControl('Noticeinformer', itemFormArray);
-        }
-    }
-
-    get Noticelocale(): FormArray {
-        return this.noticeForm.get('Noticelocale') as FormArray;
-=======
     private getByCon(code: string) {
-        this.noticeService.getByCon(code).then(async res => {
-            this.noticeCode = res.NoticeCode;
-            await this.noticeForm.reset({
-                NoticeCode: res.NoticeCode,
-                NoticeStationCode: res.NoticeStationCode,
-                NoticeStation: res.NoticeStation,
-                NoticeDate: toLocalNumeric(res.NoticeDate),
-                NoticeTime: res.NoticeTime,
-                NoticeDue: res.NoticeDue,
-                NoticeDueDate: toLocalNumeric(res.NoticeDueDate),
-                GroupNameDesc: res.GroupNameDesc,
-                CommunicationChanelID: res.CommunicationChanelID,
-                ArrestCode: res.ArrestCode,
-                IsActive: res.IsActive,
-            });
+        // this.noticeService.getByCon(code).then(async res => {
+        //     this.noticeCode = res.NoticeCode;
+        //     await this.noticeForm.reset({
+        //         NoticeCode: res.NoticeCode,
+        //         NoticeStationCode: res.NoticeStationCode,
+        //         NoticeStation: res.NoticeStation,
+        //         NoticeDate: toLocalNumeric(res.NoticeDate),
+        //         NoticeTime: res.NoticeTime,
+        //         NoticeDue: res.NoticeDue,
+        //         NoticeDueDate: toLocalNumeric(res.NoticeDueDate),
+        //         GroupNameDesc: res.GroupNameDesc,
+        //         CommunicationChanelID: res.CommunicationChanelID,
+        //         ArrestCode: res.ArrestCode,
+        //         IsActive: res.IsActive,
+        //     });
 
-            await res.NoticeStaff.map(item =>
-                item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-            );
+        //     await res.NoticeStaff.map(item =>
+        //         item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+        //     );
 
-            await res.NoticeLocale.map(item =>
-                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
-            )
+        //     await res.NoticeLocale.map(item =>
+        //         item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
+        //     )
 
-            await res.NoticeInformer.map(item =>
-                item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-            );
+        //     await res.NoticeInformer.map(item =>
+        //         item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+        //     );
 
-            await res.NoticeSuspect.map(item =>
-                item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`
-            )
+        //     await res.NoticeSuspect.map(item =>
+        //         item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`
+        //     )
 
-            await res.NoticeProduct.map(item =>
-                item.BrandFullName = `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`
-            )
+        //     await res.NoticeProduct.map(item =>
+        //         item.BrandFullName = `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`
+        //     )
 
-            this.setItemFormArray(res.NoticeStaff, 'NoticeStaffForm');
-            this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
-            this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-            this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
-            this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
-            this.setItemFormArray(res.NoticeDocument, 'NoticeDocument')
-        })
+        //     this.setItemFormArray(res.NoticeStaff, 'NoticeStaffForm');
+        //     this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
+        //     this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+        //     this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
+        //     this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
+        //     this.setItemFormArray(res.NoticeDocument, 'NoticeDocument')
+        // })
     }
 
     private onCreate() {
@@ -332,9 +269,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeDate = noticeDate.toISOString();
         this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
 
-        this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
-            if (isSuccess) { this.onComplete() }
-        });
+        // this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
+        //     if (isSuccess) { this.onComplete() }
+        // });
     }
 
     private onReviced() {
@@ -342,9 +279,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
         this.noticeForm.value.NoticeDate = noticeDate.toISOString();
         this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
-        this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
-            if (isSuccess) { this.onComplete() }
-        })
+        // this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
+        //     if (isSuccess) { this.onComplete() }
+        // })
     }
 
     private async onComplete() {
@@ -362,7 +299,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     addProduct() {
         let product = new NoticeProduct();
-        product.IsNewItem = true;
+        // product.IsNewItem = true;
         this.NoticeProduct.push(this.fb.group(product));
     }
 
@@ -383,26 +320,27 @@ export class ManageComponent implements OnInit, OnDestroy {
         text3$
             .debounceTime(300)
             .distinctUntilChanged()
-            .map(term => term === '' ? []
-                : this.regionModel
-                    .filter(v =>
-                        v.SubDistrict.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.District.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.Province.toLowerCase().indexOf(term.toLowerCase()) > -1
-                    ).slice(0, 10));
+            .map(term => term === '' ? [] : [])
+                // : this.regionModel
+                //     .filter(v =>
+                //         v.SubDistrict.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                //         v.District.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                //         v.Province.toLowerCase().indexOf(term.toLowerCase()) > -1
+                //     ).slice(0, 10));
 
     searchProduct = (text$: Observable<string>) =>
         text$
             .debounceTime(300)
             .distinctUntilChanged()
             .do(() => this.searching = true)
-            .switchMap(term =>
-                this.noticeService.productgetByKeyword(term)
-                    .do(() => this.searchFailed = false)
-                    .catch(() => {
-                        this.searchFailed = true;
-                        return Observable.of([]);
-                    })
+            .switchMap(term => 
+                // this.noticeService.productgetByKeyword(term)
+                //     .do(() => this.searchFailed = false)
+                //     .catch(() => {
+                //         this.searchFailed = true;
+                //         return Observable.of([]);
+                //     })
+                {return null;}
             ).do(() => this.searching = false);
 
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
@@ -453,13 +391,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (confirm(Message.confirmAction)) {
-                this.noticeService.productupdDelete(id).then(isSuccess => {
-                    if (isSuccess == true) {
-                        this.NoticeProduct.removeAt(index);
-                    } else {
-                        alert(Message.saveError);
-                    }
-                })
+                // this.noticeService.productupdDelete(id).then(isSuccess => {
+                //     if (isSuccess == true) {
+                //         this.NoticeProduct.removeAt(index);
+                //     } else {
+                //         alert(Message.saveError);
+                //     }
+                // })
             }
         }
     }
@@ -475,13 +413,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (confirm(Message.confirmAction)) {
-                this.noticeService.suspectupdDelete(id).then(isSuccess => {
-                    if (isSuccess == true) {
-                        this.NoticeSuspect.removeAt(index);
-                    } else {
-                        alert(Message.saveError);
-                    }
-                })
+                // this.noticeService.suspectupdDelete(id).then(isSuccess => {
+                //     if (isSuccess == true) {
+                //         this.NoticeSuspect.removeAt(index);
+                //     } else {
+                //         alert(Message.saveError);
+                //     }
+                // })
             }
         }
     }
@@ -497,17 +435,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (confirm(Message.confirmAction)) {
-                this.noticeService.suspectupdDelete(id).then(isSuccess => {
-                    // tslint:disable-next-line:triple-equals
-                    if (isSuccess == true) {
-                        this.NoticeSuspect.removeAt(index);
-                    } else {
-                        alert(Message.saveError);
-                    }
-                })
+                // this.noticeService.suspectupdDelete(id).then(isSuccess => {
+                //     // tslint:disable-next-line:triple-equals
+                //     if (isSuccess == true) {
+                //         this.NoticeSuspect.removeAt(index);
+                //     } else {
+                //         alert(Message.saveError);
+                //     }
+                // })
             }
         }
->>>>>>> origin/FL_J
     }
 
     ngOnDestroy(): void {

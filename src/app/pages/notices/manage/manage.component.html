@@ -55,10 +55,6 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
-            <div class="row" formArrayName="Noticestaff">
-                <div *ngFor="let item of Noticestaff.controls; let i=index;" [formGroupName]="i">
-=======
             <div formArrayName="NoticeStaff">
                 <div class="row" *ngFor="let item of NoticeStaff.controls; let i=index;" [formGroupName]="i">
 
@@ -68,7 +64,6 @@
                         <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [readonly]="showEditField">
                     </div>
 
->>>>>>> origin/FL_J
                     <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
@@ -110,9 +105,6 @@
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">รายละเอียดผู้แจ้งความ</h4>
         </div>
-<<<<<<< HEAD
-        <div class="card-body">
-=======
         <div class="card-body" formArrayName="NoticeInformer">
             <div *ngFor="let item of NoticeInformer.controls; let i=index;" [formGroupName]="i">
 
@@ -125,7 +117,6 @@
                         <label for="md_checkbox_25">สายลับขอปิดนาม</label>
                     </div>
                 </div>
->>>>>>> origin/FL_J
 
             <input type="hidden" formControlName="InformerID">
             <input type="hidden" formControlName="NoticeCode">
@@ -206,12 +197,6 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm" formControlName="Road" [disabled]="showEditField">
-=======
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubDistrict }} {{r.District}} {{r.Province}}
@@ -226,7 +211,6 @@
                             (selectItem)="selectItemInformmerRegion($event)"
                             />
                     </div>
->>>>>>> origin/FL_J
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
@@ -248,15 +232,10 @@
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">รายละเอียดการกระทำความผิด</h4>
         </div>
-<<<<<<< HEAD
-        <div class="card-body" formArrayName="Noticelocale">
-            <div *ngFor="let item of Noticelocale.controls; let i=index;" [formGroupName]="i">
-=======
         <div class="card-body" formArrayName="NoticeLocale">
 
             <div *ngFor="let item of NoticeLocale.controls; let i=index;" [formGroupName]="i">
 
->>>>>>> origin/FL_J
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -303,9 +282,6 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-<<<<<<< HEAD
-                        <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
-=======
 
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubDistrict }} {{r.District}} {{r.Province}}
@@ -317,7 +293,6 @@
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemLocaleRegion($event)" />
->>>>>>> origin/FL_J
                     </div>
                 </div>
             </div>
@@ -346,15 +321,6 @@
                         <th></th>
                     </tr>
                 </thead>
-<<<<<<< HEAD
-                <tbody>
-                    <tr>
-                        <td class="text-center">
-                            1
-                        </td>
-                        <td>
-                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
-=======
                 <tbody formArrayName="NoticeProduct">
                     <tr *ngFor="let item of NoticeProduct.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
@@ -371,20 +337,14 @@
 
                                 <span *ngIf="searching">searching...</span>
                                 <div class="form-control-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
->>>>>>> origin/FL_J
                         </td>
                         <td>
                             <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-<<<<<<< HEAD
-                            <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
-                                <option value=""></option>
-=======
                             <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of dutyUnitModel;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
->>>>>>> origin/FL_J
                             </select>
                         </td>
                         <td class="text-center">
@@ -426,16 +386,9 @@
                         <th></th>
                     </tr>
                 </thead>
-<<<<<<< HEAD
-                <tbody>
-                    <tr>
-                        <td class="text-center"></td>
-                        <td></td>
-=======
                 <tbody formArrayName="NoticeSuspect">
                     <tr *ngFor="let item of NoticeSuspect.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
->>>>>>> origin/FL_J
                         <td></td>
                         <td></td>
                         <td></td>
@@ -498,13 +451,6 @@
                         <th></th>
                     </tr>
                 </thead>
-<<<<<<< HEAD
-                <tbody>
-                    <tr>
-                        <td class="text-center"></td>
-                        <td></td>
-                        <td></td>
-=======
                 <tbody formArrayName="NoticeDocument">
                     <tr *ngFor="let item of NoticeDocument.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
@@ -514,7 +460,6 @@
                         <td>
                             <input type="file" formControlName="FilePath" [readonly]="showEditField">
                         </td>
->>>>>>> origin/FL_J
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
                                 <i class="fa fa-trash-o fa-lg"></i>
