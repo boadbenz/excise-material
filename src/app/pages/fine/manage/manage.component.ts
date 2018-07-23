@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Compare, ICompareDetail, CompareDetail, CompareDetailReceipt } from '../fine-model';
 import { Lawsuit } from '../lawsuit-model';
 import { Arrest } from '../arrest';
-import { ICompareCon, ICompareConAdv } from '../condition-model';
+import { ICompareCon, ICompareConAdv, ICompareIns } from '../condition-model';
 import { GuiltBase } from '../guiltBase-model';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray, FormsModule } from '@angular/forms';
 import * as formatDate from '../../../config/dateFormat';
@@ -28,13 +28,17 @@ export class ManageComponent implements OnInit {
   modal: any;
 
 
+
   oCompare: Compare[];
-  //ListCompareDetail: CompareDetail[];
+  ListCompareDetail: CompareDetail[];
+  oCompareDetail: CompareDetail = {};
+
   ListCompareDetailReceipt: CompareDetailReceipt[];
   oCompareDetailReceipt: CompareDetailReceipt = {};
 
-  ListCompareDetail: ICompareDetail[];
-  oCompareDetail: ICompareDetail = {};
+  // ListCompareDetail: ICompareDetail[];
+  // oCompareDetail: ICompareDetail = {};
+  oCompareIns: ICompareIns = {};
 
   oLawsuit: Lawsuit;
   condtion: ICompareCon = {};
@@ -72,26 +76,26 @@ export class ManageComponent implements OnInit {
   // ----- ข้อมูลคำให้การของผู้ต้องหา (Show Table) ----- //
   iF3: number;
   ArrestName: string;
-  PaymentFineDate: string;
+  PaymentFineAppointDate: string;
   PaymentVatDate: string;
   Bail: string;
   Guaruntee: string;
-  IsRequest: number;
+  // yRequest: boolean;
+  // nRequest: boolean;
   LawbrakerTestimony: string;
 
   // ----- ข้อมูลบันทึกการเปรียบเทียบคดีและชำระค่าปรับ --- //
   iF4: number;
-  IsOutside: number;
-  CompareCode: string;
+  IsOutside: boolean;
   CompareYear: string;
-  ReceiptBookNo : string;
-  ReceiptNo : string;
-  ReceiptChanel : number;
-  ReferenceNo : string;
-  ReceipStation  : string;
-  PaymentDate   : string;
-  PaymentTime : string;
-  TotalFine   : number;
+  ReceiptBookNo: string;
+  ReceiptNo: string;
+  ReceiptChanel: number;
+  ReferenceNo: string;
+  ReceipStation: string;
+  PaymentDate: string;
+  PaymentTime: string;
+  TotalFine: number;
   Lawbreaker: string;
   ReceipStaff: string;
   ReceipPosition: string;
@@ -99,7 +103,7 @@ export class ManageComponent implements OnInit {
 
   // ---- รายงานการอนุมัติ ---//
   ApproveReportDate: string;
-  ApproveReportType: number;
+  ApproveReportType: string;
   CommandDate: string;
   Fact: string;
   CompareReason: string;
@@ -121,9 +125,12 @@ export class ManageComponent implements OnInit {
 
     this.oCompare = [];
 
-    debugger
-    this.PaymentFineDate = this.getCurrentDate();
+    this.setCompareIns();
+
+    this.PaymentFineAppointDate = this.getCurrentDate();
     this.PaymentVatDate = this.getCurrentDate();
+    this.CompareDate = this.getCurrentDate();
+    this.CompareTime = this.getCurrentTime();
 
     let date = new Date();
     this.CompareYear = (date.getFullYear() + 543).toString();
@@ -176,19 +183,19 @@ export class ManageComponent implements OnInit {
     //     this.showEditField = p;
     // });
 
-    // this.sub = this.navService.onSave.subscribe(async status => {
-    //     if (status) {
-    //         // set action save = false
-    //         await this.navService.setOnSave(false);
-    //         debugger
-    //         if (this.mode === 'C') {
-    //             this.onCreate();
+    this.sub = this.navService.onSave.subscribe(async status => {
+      if (status) {
+        // set action save = false
+        await this.navService.setOnSave(false);
+        debugger
+        if (this.CompareID == '-') {
+          this.onInsCompare();
 
-    //         } else if (this.mode === 'R') {
-    //             this.onReviced();
-    //         }
-    //     }
-    // });
+        } else {
+          this.onUpdCompare();
+        }
+      }
+    });
 
     // this.sub = this.navService.onDelete.subscribe(async status => {
     //     if (status) {
@@ -233,9 +240,35 @@ export class ManageComponent implements OnInit {
     this.getLawsuitByID(this.LawsuitID);
     this.getArrestByID(this.ArrestCode);
 
-    if(this.CompareID != '-')
-    {
+    if (this.CompareID != '-') {
+      this.setCompareCondition();
+      this.fineService.getByCon(this.condtion).then(async res => {
+        debugger
+        if (Array.isArray(res)) {
+          this.oCompare = res;
 
+          this.oCompareIns.CompareCode = this.oCompare[0].CompareCode.split("/")[0];
+          this.CompareYear = this.oCompare[0].CompareCode.split("/")[1];
+          this.oCompareIns.IsOutside = this.oCompare[0].IsOutside.toString();
+          this.oCompareIns.CompareStation = this.oCompare[0].CompareStation;
+          this.oCompareIns.CompareStationCode = this.oCompare[0].CompareStationCode;
+
+          if (this.oCompareIns.IsOutside == "1") {
+            this.IsOutside = true;
+          }
+          else {
+            this.IsOutside = false;
+          }
+
+          if (this.oCompare[0].CompareDetail.length > 0) {
+            for (var i = 0; i < this.oCompare[0].CompareDetail.length; i += 1) {
+              
+            }
+          }
+        }
+      }, (err: HttpErrorResponse) => {
+        alert(err.message);
+      });
     }
     // else
     // {
@@ -383,28 +416,42 @@ export class ManageComponent implements OnInit {
               + ' ' + this.oArrest.ArrestLawbreaker[i].LawbreakerLastName;
           }
 
+
+
           // ----- คำให้การผู้ต้องหา && รายงานการอนุมัติ ---//
           this.oCompareDetail = {
-            CompareID: null,
-            CompareDetailID: null,
-            IndictmentDetailID: null,
-            LawbrakerTestimony: null,
-            IsRequest: 0,
-            IsProvisionalAcquittal: null,
-            Bail: "",
-            Guaruntee: "",
-            CompareFine: null,
-            PaymentFineDate: null,
-            PaymentVatDate: null,
-            PaymentFineAppointDate: null,
-            Lawbreaker: this.ArrestName,
-            
-            // รายงานการอนุมัติ
-            ApproveReportDate: null,
-            ApproveReportType: null,
-            CommandDate: null,
+            CompareDetailID: "",
+            CompareID: "2",
+            IndictmentDetailID: "6",
+            CompareAction: "",
+            LawbrakerTestimony: "",
             Fact: "",
+            IsRequest: "0",
+            RequestForAction: "",
             CompareReason: "",
+            IsProvisionalAcquittal: "",
+            Bail: null,
+            Guaruntee: null,
+            CompareFine: "",
+            PaymentFineDate: "",
+            PaymentFineAppointDate: "",
+            PaymentVatDate: "",
+            TreasuryMoney: "",
+            BribeMoney: "",
+            RewardMoney: "",
+            ApproveStationCode: "",
+            ApproveStation: "",
+            ApproveReportDate: "",
+            CommandNo: "",
+            CommandDate: "",
+            CompareAuthority: "",
+            ApproveReportType: "",
+            MistreatNo: "",
+            FineType: "",
+            AdjustReason: "",
+            Lawbreaker: this.ArrestName,
+            CompareDetailFine: [],
+            CompareDetailReceipt: [],
           }
 
           this.ListCompareDetail.push(this.oCompareDetail);
@@ -458,25 +505,23 @@ export class ManageComponent implements OnInit {
 
     this.ArrestName = this.ListCompareDetail[i].Lawbreaker;
 
-    if (this.ListCompareDetail[i].PaymentFineDate != null) {
-      this.PaymentFineDate = new Date(this.ListCompareDetail[i].PaymentFineAppointDate).toISOString().substring(0, 10);
+    if (this.ListCompareDetail[i].PaymentFineDate != null && this.ListCompareDetail[i].PaymentFineDate != "") {
+      this.PaymentFineAppointDate = new Date(this.ListCompareDetail[i].PaymentFineAppointDate).toISOString().substring(0, 10);
     }
-    else
-    {
-      this.PaymentFineDate = this.getCurrentDate();
+    else {
+      this.PaymentFineAppointDate = this.getCurrentDate();
     }
 
-    if (this.ListCompareDetail[i].PaymentVatDate != null) {
+    if (this.ListCompareDetail[i].PaymentVatDate != null && this.ListCompareDetail[i].PaymentFineDate != "") {
       this.PaymentVatDate = new Date(this.ListCompareDetail[i].PaymentVatDate).toISOString().substring(0, 10);
     }
-    else
-    {
+    else {
       this.PaymentVatDate = this.getCurrentDate();
     }
 
     this.Bail = this.ListCompareDetail[i].Bail;
     this.Guaruntee = this.ListCompareDetail[i].Guaruntee;
-    this.IsRequest = this.ListCompareDetail[i].IsRequest;
+
     this.LawbrakerTestimony = this.ListCompareDetail[i].LawbrakerTestimony;
 
     this.iF3 = i;
@@ -484,11 +529,18 @@ export class ManageComponent implements OnInit {
 
   onSaveF3() {
     debugger
-    this.ListCompareDetail[this.iF3].PaymentFineAppointDate = new Date(this.PaymentFineDate);
-    this.ListCompareDetail[this.iF3].PaymentVatDate = new Date(this.PaymentVatDate);
+    this.ListCompareDetail[this.iF3].PaymentFineAppointDate = new Date(this.PaymentFineAppointDate).toISOString().substring(0, 10);
+    this.ListCompareDetail[this.iF3].PaymentVatDate = new Date(this.PaymentVatDate).toISOString().substring(0, 10);
     this.ListCompareDetail[this.iF3].Bail = this.Bail;
     this.ListCompareDetail[this.iF3].Guaruntee = this.Guaruntee;
-    this.ListCompareDetail[this.iF3].IsRequest = this.IsRequest;
+
+    // if (this.yRequest == true) {
+    //   this.ListCompareDetail[this.iF3].IsRequest = "1";
+    // }
+    // else {
+    //   this.ListCompareDetail[this.iF3].IsRequest = "0";
+    // }
+
     this.ListCompareDetail[this.iF3].LawbrakerTestimony = this.LawbrakerTestimony;
     this.ListCompareDetail[this.iF3].Lawbreaker = this.ArrestName;
     this.iF3 = 0;
@@ -505,21 +557,20 @@ export class ManageComponent implements OnInit {
       this.PaymentDate = new Date(this.ListCompareDetailReceipt[i].PaymentDate).toISOString().substring(0, 10);
       this.PaymentTime = new Date(this.ListCompareDetailReceipt[i].PaymentDate).toISOString().substring(0, 10);
     }
-    else
-    {
+    else {
       this.PaymentDate = this.getCurrentDate();
       this.PaymentTime = this.getCurrentDate();
     }
 
     this.ReceiptBookNo = this.ListCompareDetailReceipt[i].ReceiptBookNo;
     this.ReceiptNo = this.ListCompareDetailReceipt[i].ReceiptNo;
-    this.ReceiptChanel  = this.ListCompareDetailReceipt[i].ReceiptChanel;
+    this.ReceiptChanel = this.ListCompareDetailReceipt[i].ReceiptChanel;
     this.ReferenceNo = this.ListCompareDetailReceipt[i].ReferenceNo;
-    this.ReceipStation  = this.ListCompareDetailReceipt[i].Station;
-    this.TotalFine  = this.ListCompareDetailReceipt[i].TotalFine;
-    this.ReceipStaff  = this.ListCompareDetailReceipt[i].ReceipStaff;
-    this.ReceipPosition  = this.ListCompareDetailReceipt[i].ReceipPosition;
-    this.ReceipDepartment  = this.ListCompareDetailReceipt[i].ReceipDepartment; 
+    this.ReceipStation = this.ListCompareDetailReceipt[i].Station;
+    this.TotalFine = this.ListCompareDetailReceipt[i].TotalFine;
+    this.ReceipStaff = this.ListCompareDetailReceipt[i].ReceipStaff;
+    this.ReceipPosition = this.ListCompareDetailReceipt[i].ReceipPosition;
+    this.ReceipDepartment = this.ListCompareDetailReceipt[i].ReceipDepartment;
     this.iF4 = i;
   }
 
@@ -536,8 +587,7 @@ export class ManageComponent implements OnInit {
 
   }
 
-  ConfirmDelF4()
-  {
+  ConfirmDelF4() {
     // let dialogConfirm: any;
     // dialogConfirm.afterClosed().subscribe(isConfirm => {
     //   if (isConfirm) {
@@ -545,18 +595,18 @@ export class ManageComponent implements OnInit {
     //   }
     // });
 
-    for (var i = 0; i < this.ListCompareDetailReceipt.length; i += 1){
-          this.ListCompareDetailReceipt[i].ReceiptBookNo = null;
-          this.ListCompareDetailReceipt[i].ReceiptNo = null;
-          this.ListCompareDetailReceipt[i].ReceiptChanel = null;
-          this.ListCompareDetailReceipt[i].ReferenceNo = null;
-          this.ListCompareDetailReceipt[i].Station = null;
-          this.ListCompareDetailReceipt[i].TotalFine = null;
-          this.ListCompareDetailReceipt[i].PaymentDate = null;
-          this.ListCompareDetailReceipt[i].ReceipStaff = null;
-          this.ListCompareDetailReceipt[i].ReceipPosition = null;
-          this.ListCompareDetailReceipt[i].ReceipDepartment = null;
-        }
+    for (var i = 0; i < this.ListCompareDetailReceipt.length; i += 1) {
+      this.ListCompareDetailReceipt[i].ReceiptBookNo = null;
+      this.ListCompareDetailReceipt[i].ReceiptNo = null;
+      this.ListCompareDetailReceipt[i].ReceiptChanel = null;
+      this.ListCompareDetailReceipt[i].ReferenceNo = null;
+      this.ListCompareDetailReceipt[i].Station = null;
+      this.ListCompareDetailReceipt[i].TotalFine = null;
+      this.ListCompareDetailReceipt[i].PaymentDate = null;
+      this.ListCompareDetailReceipt[i].ReceipStaff = null;
+      this.ListCompareDetailReceipt[i].ReceipPosition = null;
+      this.ListCompareDetailReceipt[i].ReceipDepartment = null;
+    }
   }
 
   onClickEditF5(i: number) {
@@ -567,16 +617,14 @@ export class ManageComponent implements OnInit {
     if (this.ListCompareDetail[i].ApproveReportDate != null) {
       this.ApproveReportDate = new Date(this.ListCompareDetail[i].ApproveReportDate).toISOString().substring(0, 10);
     }
-    else
-    {
+    else {
       this.ApproveReportDate = this.getCurrentDate();
     }
 
     if (this.ListCompareDetail[i].CommandDate != null) {
       this.CommandDate = new Date(this.ListCompareDetail[i].CommandDate).toISOString().substring(0, 10);
     }
-    else
-    {
+    else {
       this.CommandDate = this.getCurrentDate();
     }
 
@@ -589,13 +637,103 @@ export class ManageComponent implements OnInit {
 
   onSaveF5() {
     debugger
-    this.ListCompareDetail[this.iF5].ApproveReportDate = new Date(this.ApproveReportDate);
-    this.ListCompareDetail[this.iF5].ApproveReportType = this.ApproveReportType;
-    this.ListCompareDetail[this.iF5].CommandDate = new Date(this.CommandDate);
+    this.ListCompareDetail[this.iF5].ApproveReportDate = new Date(this.ApproveReportDate).toString();
+    this.ListCompareDetail[this.iF5].ApproveReportType = this.ApproveReportType.toString();
+    this.ListCompareDetail[this.iF5].CommandDate = new Date(this.CommandDate).toString();
     this.ListCompareDetail[this.iF5].Fact = this.Fact;
     this.ListCompareDetail[this.iF5].CompareReason = this.CompareReason;
     this.iF5 = 0;
   }
+
+  onInsCompare() {
+    if (this.IsOutside == true) {
+      this.oCompareIns.IsOutside = "1";
+    }
+    else {
+      this.oCompareIns.IsOutside = "0";
+    }
+
+    this.oCompareIns.CompareCode = this.oCompareIns.CompareCode + "/" + this.CompareYear;
+    this.oCompareIns.CompareDate = this.CompareDate + " " + this.CompareTime;
+
+    this.fineService.insAll(this.oCompareIns).then(async res => {
+      if (res.IsSuccess == "True") {
+        for (var i = 0; i < this.ListCompareDetail.length; i += 1) {
+          if (this.ListCompareDetail[i].Bail == "") {
+            this.ListCompareDetail[i].Bail == null;
+          }
+
+          if (this.ListCompareDetail[i].Guaruntee == "") {
+            this.ListCompareDetail[i].Guaruntee == null;
+          }
+
+          if (this.ListCompareDetail[i].PaymentFineAppointDate != "") {
+            this.ListCompareDetail[i].PaymentFineAppointDate = this.ListCompareDetail[i].PaymentFineAppointDate + " 00:00:00.00";
+          }
+
+          if (this.ListCompareDetail[i].PaymentVatDate != "") {
+            this.ListCompareDetail[i].PaymentVatDate = this.ListCompareDetail[i].PaymentVatDate + " 00:00:00.00";
+          }
+
+
+          this.fineService.insDetailAll(this.ListCompareDetail[i]).then(async res => { });
+        }
+
+        alert(Message.saveComplete);
+      } else {
+        alert(Message.saveError);
+      }
+
+    }, (err: HttpErrorResponse) => {
+      alert(err.message);
+    });
+  }
+
+  onUpdCompare() {
+    if (this.IsOutside == true) {
+      this.oCompareIns.IsOutside = "1";
+    }
+    else {
+      this.oCompareIns.IsOutside = "0";
+    }
+
+    this.oCompareIns.CompareCode = this.oCompareIns.CompareCode + "/" + this.CompareYear;
+    this.oCompareIns.CompareID = this.CompareID;
+    this.oCompareIns.CompareDate = this.CompareDate + " " + this.CompareTime;
+
+    this.fineService.updByCon(this.oCompareIns).then(async res => {
+      if (res.IsSuccess == "True") {
+        for (var i = 0; i < this.ListCompareDetail.length; i += 1) {
+          if (this.ListCompareDetail[i].Bail == "") {
+            this.ListCompareDetail[i].Bail == null;
+          }
+
+          if (this.ListCompareDetail[i].Guaruntee == "") {
+            this.ListCompareDetail[i].Guaruntee == null;
+          }
+
+          if (this.ListCompareDetail[i].PaymentFineAppointDate != "") {
+            this.ListCompareDetail[i].PaymentFineAppointDate = this.ListCompareDetail[i].PaymentFineAppointDate + " 00:00:00.00";
+          }
+
+          if (this.ListCompareDetail[i].PaymentVatDate != "") {
+            this.ListCompareDetail[i].PaymentVatDate = this.ListCompareDetail[i].PaymentVatDate + " 00:00:00.00";
+          }
+
+
+          this.fineService.updDetailAll(this.ListCompareDetail[i]).then(async res => { });
+        }
+
+        alert(Message.saveComplete);
+      } else {
+        alert(Message.saveError);
+      }
+
+    }, (err: HttpErrorResponse) => {
+      alert(err.message);
+    });
+  }
+
 
   setCompareCondition() {
     this.condtion = {};
@@ -630,8 +768,53 @@ export class ManageComponent implements OnInit {
     }
   }
 
+  setCompareIns() {
+    this.oCompareIns = {
+      CompareID: "",
+      CompareCode: "",
+      CompareDate: "",
+      CompareStationCode: "",
+      CompareStation: "",
+      CompareSubdistrictCode: "",
+      CompareSubdistrict: "",
+      CompareDistrictCode: "",
+      CompareDistrict: "",
+      CompareProvinceCode: "",
+      CompareProvince: "",
+      AccuserSubdistrictCode: "",
+      AccuserSubdistrict: "",
+      AccuserDistrictCode: "",
+      AccuserDistrict: "",
+      AccuserProvinceCode: "",
+      AccuserProvince: "",
+      IsOutside: "0",
+      LawsuitID: this.LawsuitID
+    }
+  }
+
   getCurrentDate() {
     let date = new Date();
     return new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString().substring(0, 10);
   }
+
+  getCurrentTime() {
+    let date = new Date();
+    return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+  }
+
+  // rdYesChange(event):void
+  // {
+  //   if(event.target.value == "on")
+  //   {
+  //     this.oCompareDetail[this.iF3].IsRequest = "1";
+  //   }
+  // }
+
+  // rdNoChange(event):void
+  // {
+  //   if(event.target.value == "on")
+  //   {
+  //     this.oCompareDetail[this.iF3].IsRequest = "0";
+  //   }
+  // }
 }

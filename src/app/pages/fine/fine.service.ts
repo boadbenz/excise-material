@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Compare } from './fine-model';
+import { Compare, ICompareDetail, CompareDetail } from './fine-model';
 import { appConfig } from '../../app.config';
 import { Arrest } from './arrest';
 import { Lawsuit } from './lawsuit-model';
 import { GuiltBase } from './guiltBase-model';
+import { ICompareIns } from './condition-model';
 
 @Injectable()
 export class FineService {
@@ -100,6 +101,56 @@ export class FineService {
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             return res as GuiltBase;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async insAll(Compare: ICompareIns): Promise<any> {
+        const params = Compare;
+        const url = `${appConfig.api8881}/CompareinsAll`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async updByCon(Compare: ICompareIns): Promise<any> {
+        const params = Compare;
+        const url = `${appConfig.api8881}/CompareupdByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async insDetailAll(Compare: CompareDetail): Promise<any> {
+        debugger
+        const params = JSON.stringify(Compare);;
+        const url = `${appConfig.api8881}/CompareDetailinsAll`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async updDetailAll(Compare: CompareDetail): Promise<any> {
+        debugger
+        const params = JSON.stringify(Compare);;
+        const url = `${appConfig.api8881}/CompareDetailupdByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
         } catch (error) {
             await alert(error);
         }

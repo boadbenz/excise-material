@@ -30,47 +30,48 @@ export class Compare {
 }
 
 export class CompareDetail {
-    public CompareDetailID: number;
-    public CompareID: number;
-    public IndictmentDetailID: number;
-    public CompareAction: string;
-    public LawbrakerTestimony: string;
-    public Fact: string;
-    public IsRequest: number;
-    public RequestForAction: string;
-    public CompareReason: string;
-    public IsProvisionalAcquittal: number;
-    public Bail: string;
-    public Guaruntee: string;
-    public CompareFine: number;
-    public PaymentFineDate: Date;
-    public PaymentFineAppointDate: Date;
-    public PaymentVatDate: Date;
-    public TreasuryMoney: number;
-    public BribeMoney: number;
-    public RewardMoney: number;
-    public ApproveStationCode: string;
-    public ApproveStation: string;
-    public ApproveReportDate: Date;
-    public CommandNo: string;
-    public CommandDate: Date;
-    public CompareAuthority: number;
-    public ApproveReportType: number;
-    public MistreatNo: number;
-    public FineType: number;
-    public AdjustReason: string;
-    public CompareDetailFine: CompareDetailFine[];
-    public CompareDetailReceipt: CompareDetailReceipt[];
+    public CompareDetailID?: string;
+    public CompareID?: string;
+    public IndictmentDetailID?: string;
+    public CompareAction?: string;
+    public LawbrakerTestimony?: string;
+    public Fact?: string;
+    public IsRequest?: string;
+    public RequestForAction?: string;
+    public CompareReason?: string;
+    public IsProvisionalAcquittal?: string;
+    public Bail?: string;
+    public Guaruntee?: string;
+    public CompareFine?: string;
+    public PaymentFineDate?: string;
+    public PaymentFineAppointDate?: string;
+    public PaymentVatDate?: string;
+    public TreasuryMoney?: string;
+    public BribeMoney?: string;
+    public RewardMoney?: string;
+    public ApproveStationCode?: string;
+    public ApproveStation?: string;
+    public ApproveReportDate?: string;
+    public CommandNo?: string;
+    public CommandDate?: string;
+    public CompareAuthority?: string;
+    public ApproveReportType?: string;
+    public MistreatNo?: string;
+    public FineType?: string;
+    public AdjustReason?: string;
+    public Lawbreaker?: string;
+    public CompareDetailFine?: CompareDetailFine[];
+    public CompareDetailReceipt?: CompareDetailReceipt[];
 }
 
 export class CompareDetailFine {
-    public CompareFineID: number;
-    public CompareDetailID: number;
-    public ProductID: number;
-    public ProductFine: number;
-    public VatValue: number;
-    public FineRate: number;
-    public IsActive: number;
+    public CompareFineID?: number;
+    public CompareDetailID?: number;
+    public ProductID?: number;
+    public ProductFine?: number;
+    public VatValue?: number;
+    public FineRate?: number;
+    public IsActive?: number;
 }
 
 export class CompareDetailReceipt  {
@@ -126,8 +127,11 @@ export class ICompareDetail
     public CompareID?: number;
     public IndictmentDetailID?: number;
     public Lawbreaker?: string;
+    public CompareAction?: string;
     public LawbrakerTestimony?: string;
+    public Fact?: string;
     public IsRequest?: number;
+    public RequestForAction?: string;
     public IsProvisionalAcquittal?: number;
     public Bail?: string;
     public Guaruntee?: string;
@@ -138,6 +142,6 @@ export class ICompareDetail
     public ApproveReportDate?: Date; 
     public ApproveReportType?: number;
     public CommandDate?: Date;
-    public Fact?: string;
+    
     public CompareReason?: string;
 }
