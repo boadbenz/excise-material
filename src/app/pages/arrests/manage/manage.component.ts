@@ -408,41 +408,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
         })
 
-        // // บันทึก ข้อมูลการจับกุม
-        // await this.arrestService.insAll(this.arrestFG.value).then(async IsSuccess => {
-        //     if (!IsSuccess) {
-        //         alert(Message.saveFail)
-        //         return false
-        //     }
-
-        //     // ถ้า บันทึกสำเร็จ ให้ค้นหาข้อมูลการจับกุม ด้วยเลขที่ ArrestCode เพื่อหาและนำเอา IndictmentID มาใช้งาน
-        //     await this.arrestService.getByCon(this.arrestCode).then(res => {
-        //         if (!res) {
-        //             return false;
-        //         }
-
-        //         // ค้นหาข้อมูลภายใน ArrestIndictment และเปรียบเทียบ GuiltBaseID กับ  
-        //         res.ArrestIndictment.map(res1 => {
-        //             this.ArrestIndictment.value.map(item1 => {
-        //                 // ถ้า GuiltBaseID ที่ return ออกมา = GuiltBaseID ในรายการข้อกล่าวหา 
-        //                 if (res1.GuiltBaseID == item1.GuiltBaseID) {
-        //                     this.ArrestInictmentDetail.value.map(item2 => {
-        //                         // ___1. ให้ Set IndictmentID ให้กับ object
-        //                         item2.IndictmentID = res1.IndictmentID
-        //                         // ___2. บันทึก ArrestIndicmentDetail
-        //                         this.arrestService.indicmentDetailinsAll(item2).then(res2 => {
-        //                             if (!res2) {
-        //                                 return false;
-        //                             }
-
-        //                             this.arrestService.indict
-        //                         })
-        //                     })
-        //                 }
-        //             })
-        //         })
-        //     })
-
         //     // alert(Message.saveComplete)
         //     // this.onComplete()
         //     // alert(Message.saveComplete)
