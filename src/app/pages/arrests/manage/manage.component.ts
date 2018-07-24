@@ -372,67 +372,69 @@ export class ManageComponent implements OnInit, OnDestroy {
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
-        // console.log(JSON.stringify(this.arrestFG.value));
+        console.log(JSON.stringify(this.arrestFG.value));
+
+        let IsSuccess: boolean | true;
 
         // ___1.บันทึกข้อมูลจับกุม
-        const insAllService = await this.arrestService.insAll(this.arrestFG.value).then(IsSuccess => IsSuccess);
+        this.arrestService.insAll(this.arrestFG.value)
+            .then(async IsSuccess => {
+                if (!IsSuccess) { IsSuccess = false; return false; }
 
-        if (!insAllService) {
+                // ___2. ดึงข้อมูการจับกุม ด้วยเลขที่ ArrestCode
+                await this.arrestService.getByCon(this.arrestCode)
+                    .then(res => {
+                        if (!res) { IsSuccess = false; return false; }
+                        // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
+                        res.ArrestIndictment.map(res0 => {
+                            // ข้อกล่าวหา
+                            // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
+                            this.ArrestIndictment.value.filter(item1 => res0.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
+                                // รายละเอียดข้อกล่าวหา
+                                item1.ArrestIndictmentDetail.map(indictD => {
+                                    // ___5. Set IndictmentID ให้กับ object IndicmentDetail
+                                    indictD.IndictmentID = res0.IndictmentID;
+                                    // ___6. บันทึก ArrestIndictmentDetail
+                                    this.arrestService.indicmentDetailinsAll(indictD).then(indictDIns => {
+                                        if (!indictDIns) { IsSuccess = false; return false; }
+
+                                        IsSuccess = true
+                                        // debugger
+                                        // // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
+                                        // this.arrestService
+                                        //     .indicmentgetByCon(res0.IndictmentID.toString())
+                                        //     .then(indictDetailGet => {
+                                        //         debugger
+                                        //         if (!indictDetailGet) return false;
+
+                                        //         // รายละเอียดสินค้า
+                                        //         indictD.ArrestProductDetail.map(productD => {
+                                        //             debugger
+                                        //             // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
+                                        //             productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
+                                        //             // ___9.บันทึก ArrestProductDetail
+                                        //             this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
+                                        //         })
+                                        //     });
+                                    }, () => { IsSuccess = false; return false; });
+
+                                })
+                            })
+
+                        })
+
+                    }, () => { IsSuccess = false });
+
+            }, () => { IsSuccess = false });
+
+
+        if (IsSuccess) {
+            this.onComplete()
+            alert(Message.saveComplete)
+            this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
+        } else {
             alert(Message.saveFail)
-            return false
         }
-
-        // ___2. ดึงข้อมูการจับกุม ด้วยเลขที่ ArrestCode
-        const getByConService = await this.arrestService.getByCon(this.arrestCode).then(res => res);
-        if (!getByConService) {
-            alert(Message.saveFail)
-            return false;
-        }
-
-        // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
-        getByConService.ArrestIndictment.map(res0 => {
-            // ข้อกล่าวหา
-            // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
-            this.ArrestIndictment.value
-                .filter(item1 => res0.GuiltBaseID == item1.GuiltBaseID)
-                .map((item1) => {
-                    debugger
-                    // รายละเอียดข้อกล่าวหา
-                    item1.ArrestIndictmentDetail.map(indictD => {
-                        debugger
-                        // ___5. Set IndictmentID ให้กับ object IndicmentDetail
-                        indictD.IndictmentID = res0.IndictmentID;
-                        // ___6. บันทึก ArrestIndictmentDetail
-                        this.arrestService.indicmentDetailinsAll(indictD).then(indictDIns => {
-                            if (!indictDIns) return false;
-
-                            debugger
-                            // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
-                            this.arrestService
-                                .indicmentDetailgetByCon(res0.IndictmentID.toString())
-                                .then(indictDetailGet => {
-                                    debugger
-                                    if (!indictDetailGet) return false;
-        
-                                    // รายละเอียดสินค้า
-                                    indictD.ArrestProductDetail.map(productD => {
-                                        // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
-                                        productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
-                                        // ___9.บันทึก ArrestProductDetail
-                                        this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
-                                    })
-                                });
-                            
-                        });
-
-                    })
-                })
-        })
-
-        // alert(Message.saveComplete)
-        this.onComplete()
-        alert(Message.saveComplete)
-        this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
 
         this.preloader.setShowPreloader(false);
     }
@@ -763,8 +765,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
-    formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
-        `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
+    formatterProduct = (x: { SubBrandNameTH: string, BrandNameTH: string, ModelName: string }) =>
+        `${x.SubBrandNameTH} ${x.BrandNameTH} ${x.ModelName}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName} ${x.FirstName} ${x.LastName}`
@@ -785,7 +787,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     selectItemProductItem(e, i) {
         this.ArrestProduct.at(i).reset(e.item)
         this.ArrestProduct.at(i).patchValue({
-            ArrestCode: this.arrestCode
+            ArrestCode: this.arrestCode,
+            Qty: e.item.Size,
+            QtyUnit: e.item.SizeCode,
+            NetVolume: null,
+            NetVolumeUnit: e.item.SizeUnitCode
         })
     }
 
