@@ -60,6 +60,7 @@ export class CompareDetail {
     public FineType?: string;
     public AdjustReason?: string;
     public Lawbreaker?: string;
+    public LawbreakerID?: string;
     public CompareDetailFine?: CompareDetailFine[];
     public CompareDetailReceipt?: CompareDetailReceipt[];
 }

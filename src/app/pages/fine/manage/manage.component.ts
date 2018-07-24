@@ -13,7 +13,9 @@ import { FormBuilder, FormGroup, FormControl, Validators, FormArray, FormsModule
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { Observable } from 'rxjs/Observable';
+import { MatAutocomplete } from '@angular/material';
+import { ArrestIndictment } from '../../arrests/arrest-indictment';
 
 @Component({
   selector: 'app-manage',
@@ -27,7 +29,8 @@ export class ManageComponent implements OnInit {
   param: any;
   modal: any;
 
-
+  rawOptions = [];
+  options = [];
 
   oCompare: Compare[];
   ListCompareDetail: CompareDetail[];
@@ -262,7 +265,7 @@ export class ManageComponent implements OnInit {
 
           if (this.oCompare[0].CompareDetail.length > 0) {
             for (var i = 0; i < this.oCompare[0].CompareDetail.length; i += 1) {
-              
+
             }
           }
         }
@@ -450,6 +453,7 @@ export class ManageComponent implements OnInit {
             FineType: "",
             AdjustReason: "",
             Lawbreaker: this.ArrestName,
+            LawbreakerID: this.oArrest.ArrestLawbreaker[i].LawbreakerID,
             CompareDetailFine: [],
             CompareDetailReceipt: [],
           }
@@ -675,8 +679,23 @@ export class ManageComponent implements OnInit {
             this.ListCompareDetail[i].PaymentVatDate = this.ListCompareDetail[i].PaymentVatDate + " 00:00:00.00";
           }
 
+          this.setCompareConditionAdv();
+          this.fineService.getByConAdv(this.conditionAdv).then(async res => {
+            this.ListCompareDetail[i].CompareID = res[0].CompareID.toString();
 
-          this.fineService.insDetailAll(this.ListCompareDetail[i]).then(async res => { });
+           
+//             const test
+//  = (this.oArrest.ArrestIndictment.filter(f => f.IndictmentID==this.oLawsuit.IndictmentID));
+//             this.ListCompareDetail[i].IndictmentDetailID  = test
+
+            for (var i = 0; i < this.oArrest.ArrestIndictment.length; i += 1) {
+
+            }
+            
+
+            this.fineService.insDetailAll(this.ListCompareDetail[i]).then(async res => { });
+
+          });
         }
 
         alert(Message.saveComplete);
@@ -755,8 +774,8 @@ export class ManageComponent implements OnInit {
     this.conditionAdv = {};
 
     this.conditionAdv = {
-      ArrestCode: "050100020",
-      LawsuitCOde: "2561/20",
+      ArrestCode: this.ArrestCode,
+      LawsuitCOde: this.LawsuiltCode,
       ProveReportNo: "",
       CompareCode: "",
       CompareDateFrom: "",
@@ -817,4 +836,25 @@ export class ManageComponent implements OnInit {
   //     this.oCompareDetail[this.iF3].IsRequest = "0";
   //   }
   // }
+
+  test() {
+    alert("dd");
+  }
+
+  onAutoChange(value: string) {
+    if (value == '') {
+      this.options = [];
+    } else {
+      this.options = this.rawOptions.filter(f => f.name.toLowerCase().indexOf(value.toLowerCase()) > -1);
+    }
+  }
+  onAutoFocus(value: string) {
+    if (value == '') {
+      this.options = [];
+    }
+  }
+
+  onAutoSelecteWord(event) {
+    // this.courseInsert.Previous = event.id;
+  }
 }
