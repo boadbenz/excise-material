@@ -146,3 +146,9 @@ export class ICompareDetail
     
     public CompareReason?: string;
 }
+
+export class CompareStation
+{
+    public OfficeCode?: string;
+    public OfficeName?: string;
+}

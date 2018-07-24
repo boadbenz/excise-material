@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Compare, ICompareDetail, CompareDetail } from './fine-model';
+import { Compare, ICompareDetail, CompareDetail, CompareStation } from './fine-model';
 import { appConfig } from '../../app.config';
 import { Arrest } from './arrest';
 import { Lawsuit } from './lawsuit-model';
@@ -47,7 +47,7 @@ export class FineService {
 
     async getByConAdv(form: any): Promise<Compare[]> {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api7788}/ComparegetByConAdv`;
+        const url = `${appConfig.api8881}/ComparegetByConAdv`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -145,7 +145,7 @@ export class FineService {
 
     async updDetailAll(Compare: CompareDetail): Promise<any> {
         debugger
-        const params = JSON.stringify(Compare);;
+        const params = JSON.stringify(Compare);
         const url = `${appConfig.api8881}/CompareDetailupdByCon`;
 
         try {
@@ -155,4 +155,18 @@ export class FineService {
             await alert(error);
         }
     }
+
+    async getStation(): Promise<any> {
+        debugger
+        const params = {};
+        const url = `${appConfig.api8881}/CompareMasOfficegetByKeyword`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
 }

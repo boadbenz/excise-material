@@ -1,6 +1,13 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
   <app-printdoc-modal (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
 </ng-template>
+<input type="text" style="width:93%" [(ngModel)]="StationName" name="StationName" placeholder="Pick one" aria-label="Number"
+                matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of options" [value]="option.OfficeCode">
+                  {{ option.OfficeName }}
+                </mat-option>
+              </mat-autocomplete>
 
 <div class="wizard-content">
   <div class="wizard-circle wizard clearfix clearfix">
@@ -244,17 +251,20 @@
             <div class="col-md-7">
               <!-- <form autocomplete="on" class="app-search" #formSearch="ngForm" (ngSubmit)="test()">
                 <input type="search" name="Textsearch" id="" ngModel class="form-control">
-              </form> -->
+              </form> 
               <input class="form-control" type="text" [(ngModel)]="oCompareIns.CompareStation" name="CompareStation" [disabled]="viewMode">
               <input type="hidden" [(ngModel)]="oCompareIns.CompareStationCode" name="CompareStationCode">
-
-              <!-- <input type="text" [(ngModel)]="previousCourse" name="previousCourse" placeholder="Pick the previous crouse" aria-label="Number"
+            -->
+              <input type="text" style="width:93%" [(ngModel)]="StationName" name="StationName" placeholder="Pick one" aria-label="Number"
                 matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)">
               <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of options" [value]="option.name" (click)="onAutoSelecteWord(option)">
-                  {{ option.name }}
+                <mat-option *ngFor="let option of options" [value]="option.OfficeCode">
+                  {{ option.OfficeName }}
                 </mat-option>
-              </mat-autocomplete> -->
+              </mat-autocomplete>
+              <!-- <div  *ngFor="let option of options">
+                 {{ option.OfficeName }}
+              </div> -->
             </div>
           </div>
         </div>
@@ -323,6 +333,7 @@
       </table>
     </div>
   </div>
+
 </div>
 
 <!-- บันทึกการเปรียบเทียบคดีและชำระค่าปรับ -->

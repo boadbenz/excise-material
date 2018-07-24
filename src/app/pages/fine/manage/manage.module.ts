@@ -10,6 +10,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const routes: Routes = [
   {
@@ -41,9 +42,11 @@ const routes: Routes = [
     NgbModule.forRoot(),
     RouterModule.forChild(routes),
     CardActionsModule,
-    PrintDocModalModule
+    PrintDocModalModule,
+    MatAutocompleteModule
   ],
   declarations: [ ManageComponent],
-  providers: [FineService]
+  providers: [FineService],
+  exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

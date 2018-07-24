@@ -125,6 +125,7 @@ export class ManageComponent implements OnInit {
   ngOnInit() {
     this.active_Route();
     this.navigate_Service();
+    this.getStation();
 
     this.oCompare = [];
 
@@ -453,7 +454,7 @@ export class ManageComponent implements OnInit {
             FineType: "",
             AdjustReason: "",
             Lawbreaker: this.ArrestName,
-            LawbreakerID: this.oArrest.ArrestLawbreaker[i].LawbreakerID,
+            LawbreakerID: this.oArrest.ArrestLawbreaker[i].LawbreakerID.toString(),
             CompareDetailFine: [],
             CompareDetailReceipt: [],
           }
@@ -499,6 +500,21 @@ export class ManageComponent implements OnInit {
       this.GuiltBaseName = this.oGuiltBase.CompareMasLawGuiltBase.GuiltBaseName;  // CL1
       this.SectionNo = this.oGuiltBase.CompareMasLawPenalty.SectionNo.toString(); // CL1
       this.PenaltyDesc = this.oGuiltBase.CompareMasLawPenalty.PenaltyDesc;        // CL1
+    }, (err: HttpErrorResponse) => {
+      alert(err.message);
+    });
+  }
+
+  getStation() {
+    this.fineService.getStation().then(async res => {
+     if (res) {
+       debugger;
+       this.rawOptions = res;
+        // for (let i = 0; i < res.length; i++) {
+        //   this.rawOptions.push(res[i].OfficeName);
+        // }
+      }
+      debugger
     }, (err: HttpErrorResponse) => {
       alert(err.message);
     });
@@ -837,15 +853,13 @@ export class ManageComponent implements OnInit {
   //   }
   // }
 
-  test() {
-    alert("dd");
-  }
-
   onAutoChange(value: string) {
     if (value == '') {
       this.options = [];
     } else {
-      this.options = this.rawOptions.filter(f => f.name.toLowerCase().indexOf(value.toLowerCase()) > -1);
+      
+      this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+      debugger
     }
   }
   onAutoFocus(value: string) {
