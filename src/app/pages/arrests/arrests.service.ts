@@ -116,7 +116,7 @@ export class ArrestsService {
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    staffinsAll(ArrestStaff: ArrestStaff): Promise<any> {
+    staffinsAll(ArrestStaff: ArrestStaff): Promise<boolean> {
         const params = ArrestStaff;
         const url = `${appConfig.api7788}/ArrestStaffinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url)
@@ -128,25 +128,25 @@ export class ArrestsService {
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    lawbreakerinsAll(lawbreaker: ArrestLawbreaker): Promise<any> {
+    lawbreakerinsAll(lawbreaker: ArrestLawbreaker): Promise<boolean> {
         const params = lawbreaker;
         const url = `${appConfig.api7788}/ArrestLawbreakerinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    productinsAll(product: ArrestProduct): Promise<any> {
+    productinsAll(product: ArrestProduct): Promise<boolean> {
         const params = product;
         const url = `${appConfig.api7788}/ArrestProductinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    productDetailInsAll(productDetail: ArrestProductDetail) {
+    productDetailInsAll(productDetail: ArrestProductDetail): Promise<boolean> {
         const params = productDetail;
         const url = `${appConfig.api7788}/ArrestProductDetailinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    indicmentinsAll(indicment: ArrestIndictment): Promise<any> {
+    indicmentinsAll(indicment: ArrestIndictment): Promise<boolean> {
         const params = indicment;
         const url = `${appConfig.api7788}/ArrestIndicmentinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url)
@@ -158,7 +158,7 @@ export class ArrestsService {
         return this.resposePromisGetList(JSON.stringify(params), url)
     }
 
-    indicmentDetailinsAll(indictment: ArrestIndicmentDetail): Promise<any> {
+    indicmentDetailinsAll(indictment: ArrestIndicmentDetail): Promise<boolean> {
         const params = indictment;
         const url = `${appConfig.api7788}/ArrestIndicmentDetailinsAll`
         return this.responsePromisModify(JSON.stringify(params), url)
