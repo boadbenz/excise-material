@@ -5,7 +5,7 @@ import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
 import { pagination } from '../../../config/pagination';
 import { ArrestsService } from '../arrests.service';
 import { MasLawGroupSectionModel } from '../../../models';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 @Component({
@@ -125,6 +125,10 @@ export class AllegationModalComponent implements OnInit {
             Weight: _product.NetVolume,
             WeightUnit: _product.NetVolumeUnit
         })
+
+        console.log('====================================');
+        console.log(this.IndictmentLawbreaker.value);
+        console.log('====================================');
     }
 
     checkAll() {
@@ -171,7 +175,6 @@ export class AllegationModalComponent implements OnInit {
                 Lawbreaker: _lawbreaker,
             })
         })
-        console.log(_indicment);
         
         this.outPutIndicment.emit(_indicment);
         this.c.emit(e);

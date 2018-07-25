@@ -8,7 +8,7 @@ class OpsArrestIndicmentDetailCollection {
     LawbreakerID: number;
 }
 
-export class IndictmentLawbreaker {
+export class IndictmentLawbreaker {    
     LawbreakerID: string;
     LawbreakerFullName: string;
     CompanyFullName: string;
@@ -23,7 +23,6 @@ export class IndictmentLawbreaker {
 
     IsChecked: boolean;
     EntityType: number;
-
 }
 
 export class ArrestIndictment {
