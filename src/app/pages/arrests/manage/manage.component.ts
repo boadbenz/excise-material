@@ -383,18 +383,19 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 // ___2. ดึงข้อมูการจับกุม ด้วยเลขที่ ArrestCode
                 await this.arrestService.getByCon(this.arrestCode)
-                    .then(res => {
-                        if (!res) { IsSuccess = false; return false; }
+                    .then(arrestRes => {
+                        if (!arrestRes) { IsSuccess = false; return false; }
                         // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
-                        res.ArrestIndictment.map(res0 => {
+                        arrestRes.ArrestIndictment.map(indictObj => {
                             // ข้อกล่าวหา
                             // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
-                            this.ArrestIndictment.value.filter(item1 => res0.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
+                            this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
                                 // รายละเอียดข้อกล่าวหา
                                 item1.ArrestIndictmentDetail.map(indictD => {
                                     // ___5. Set IndictmentID ให้กับ object IndicmentDetail
-                                    indictD.IndictmentID = res0.IndictmentID;
+                                    indictD.IndictmentID = indictObj.IndictmentID;
                                     // ___6. บันทึก ArrestIndictmentDetail
+                                    debugger
                                     this.arrestService.indicmentDetailinsAll(indictD).then(indictDIns => {
                                         if (!indictDIns) { IsSuccess = false; return false; }
 
