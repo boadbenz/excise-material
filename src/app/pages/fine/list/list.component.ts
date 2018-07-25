@@ -105,8 +105,11 @@ debugger
         this.paginage.TotalItems = this.Compare.length;
     }
 
-    clickView(ArrestCode: string) {
-        this._router.navigate([`/fine/manage/R/${ArrestCode}`]);
+    clickView(LawsuitID: string,ArrestCode: string, CompareID:string) {
+        if(CompareID == null || CompareID == "")
+            CompareID = "-";
+
+        this._router.navigate([`/fine/manage/R/${LawsuitID}/${ArrestCode}/${CompareID}`]);
     }
 
     async pageChanges(event) {

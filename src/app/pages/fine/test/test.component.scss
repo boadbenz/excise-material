@@ -37,13 +37,10 @@
     border-color: #ccdeea;
 }
 
-::ng-deep .cdk-overlay-container
-{
-
+::ng-deep .cdk-overlay-container {
+ // position: relative;
 }
 
 ::ng-deep .mat-autocomplete-panel{
-  background-color: white;
-  // top:-2200px;
-  // left:600px;
+    color:red;
 }

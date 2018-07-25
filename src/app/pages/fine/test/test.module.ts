@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ManageComponent } from './manage.component';
+import { TestComponent } from './test.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-// import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
 import { FineService } from '../fine.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,7 +22,7 @@ const routes: Routes = [
       ],
       nextPage: { title: 'ส่งเงินรายได้', url: '/income/manage' }
     },
-    component: ManageComponent
+    component: TestComponent
   }
 ];
 
@@ -45,8 +44,8 @@ const routes: Routes = [
     PrintDocModalModule,
     MatAutocompleteModule
   ],
-  declarations: [ ManageComponent],
+  declarations: [ TestComponent],
   providers: [FineService],
   exports: [MatAutocompleteModule]
 })
-export class ManageModule { }
+export class TestModule { }

@@ -60,6 +60,7 @@ export class CompareDetail {
     public FineType?: string;
     public AdjustReason?: string;
     public Lawbreaker?: string;
+    public LawbreakerID?: string;
     public CompareDetailFine?: CompareDetailFine[];
     public CompareDetailReceipt?: CompareDetailReceipt[];
 }
@@ -144,4 +145,10 @@ export class ICompareDetail
     public CommandDate?: Date;
     
     public CompareReason?: string;
+}
+
+export class CompareStation
+{
+    public OfficeCode?: string;
+    public OfficeName?: string;
 }

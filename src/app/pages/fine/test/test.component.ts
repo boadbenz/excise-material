@@ -18,11 +18,11 @@ import { MatAutocomplete } from '@angular/material';
 import { ArrestIndictment } from '../../arrests/arrest-indictment';
 
 @Component({
-  selector: 'app-manage',
-  templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.scss']
+  selector: 'app-test',
+  templateUrl: './test.component.html',
+  styleUrls: ['./test.component.scss']
 })
-export class ManageComponent implements OnInit {
+export class TestComponent implements OnInit {
 
   viewMode: any;
   sub: any;
@@ -31,7 +31,6 @@ export class ManageComponent implements OnInit {
 
   rawOptions = [];
   options = [];
-  compareStaff = [];
 
   oCompare: Compare[];
   ListCompareDetail: CompareDetail[];
@@ -73,8 +72,6 @@ export class ManageComponent implements OnInit {
   CompareDate: string;
   CompareTime: string;
   Station: string;
-  ReceipStationCode: string;
-  ApproveStationCode: string;
   Staff: string;
   ComparePosition: string;
   CompareDepartment: string;
@@ -129,7 +126,6 @@ export class ManageComponent implements OnInit {
     this.active_Route();
     this.navigate_Service();
     this.getStation();
-    this.getStaff();
 
     this.oCompare = [];
 
@@ -520,20 +516,6 @@ export class ManageComponent implements OnInit {
     });
   }
 
-  getStaff()
-  {
-    this.fineService.getStaff("134194").then(async res => {
-      if (res) {
-        this.compareStaff = res;
-debugger
-        this.Staff = res[0].TitleName + res[0].FirstName + ' ' + res[0].LastName;
-       }
-       debugger
-     }, (err: HttpErrorResponse) => {
-       alert(err.message);
-     });
-  }
-
   onClickEditF3(i: number) {
     debugger
 
@@ -884,15 +866,5 @@ debugger
 
   onAutoSelecteWord(event) {
     this.Station = event.OfficeCode;
-  }
-
-  onAutoSelecteReceip(event)
-  {
-    this.ReceipStationCode = event.OfficeCode;
-  }
-
-  onAutoSelecteApprove(event)
-  {
-    this.ApproveStationCode = event.OfficeCode;
   }
 }
