@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
 import { ArrestLawbreaker } from '../arrest-lawbreaker';
 import { ArrestProduct } from '../arrest-product';
-import { ArrestIndictment } from '../arrest-indictment';
+import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
 import { pagination } from '../../../config/pagination';
 import { ArrestsService } from '../arrests.service';
 import { MasLawGroupSectionModel } from '../../../models';
@@ -38,8 +38,8 @@ export class AllegationModalComponent implements OnInit {
         return this.lawGroupFG.get('LawGroupSection') as FormArray
     }
 
-    get Lawbreaker(): FormArray {
-        return this.lawGroupFG.get('Lawbreaker') as FormArray
+    get IndictmentLawbreaker(): FormArray {
+        return this.lawGroupFG.get('IndictmentLawbreaker') as FormArray
     }
 
     constructor(
@@ -52,15 +52,31 @@ export class AllegationModalComponent implements OnInit {
         this.paginage.TotalItems = 0;
         this.lawGroupFG = this.fb.group({
             LawGroupSection: this.fb.array([]),
-            Lawbreaker: this.fb.array([])
+            IndictmentLawbreaker: this.fb.array([])
         })
 
+        let _indictmentLawbreaker = new Array<IndictmentLawbreaker>()
         await this.lawbreaker.map(item => {
-            item.IsChecked = this.isCheck
-            item.ProductID = null
-            item.ProductName = null
+            _indictmentLawbreaker.push(
+                {
+                    LawbreakerID: item.LawbreakerID.toString(),
+                    LawbreakerFullName: item.LawbreakerFullName,
+                    CompanyFullName: item.CompanyFullName,
+                    EntityType: item.EntityType,
+                    ProductID: null,
+                    ProductName: null,
+                    Qty: null,
+                    QtyUnit: null,
+                    Size: null,
+                    SizeUnit: null,
+                    Weight: null,
+                    WeightUnit: null,
+                    IsChecked: false
+                }
+            )
         })
-        this.setItemFormArray(this.lawbreaker, 'Lawbreaker')
+        
+        this.setItemFormArray(_indictmentLawbreaker, 'IndictmentLawbreaker')
     }
 
     async onSearchByKey(f: any) {
@@ -99,7 +115,7 @@ export class AllegationModalComponent implements OnInit {
 
     selectItemPorduct(e: any, i: number) {
         const _product = this.product.find(item => item.ProductID == e.target.value);
-        this.Lawbreaker.at(i).patchValue({
+        this.IndictmentLawbreaker.at(i).patchValue({
             ProductID: e.target.value,
             ProductName: _product.ProductDesc,
             Qty: _product.Qty,
@@ -122,14 +138,23 @@ export class AllegationModalComponent implements OnInit {
     async close(e: any) {
         let _lawbreaker = []
         let _lawGroup = this.LawGroupSection.value.filter(item => item.IsChecked);
-        await this.Lawbreaker.value
+        await this.IndictmentLawbreaker.value
             .filter(item => item.IsChecked)
             .map(item => {
                 _lawbreaker.push({
                     LawbreakerID: item.LawbreakerID,
-                    LawbreakerName: item.LawbreakerFullName,
+                    LawbreakerFullName: item.LawbreakerFullName,
+                    CompanyFullName: item.CompanyFullName,
+                    EntityType: item.EntityType,
                     ProductID: item.ProductID,
-                    ProductName: item.ProductName
+                    ProductName: item.ProductName,
+                    Qty: item.Qty,
+                    QtyUnit: item.QtyUnit,
+                    Size: item.Size,
+                    SizeUnit: item.SizeUnit,
+                    Weight: item.Weight,
+                    WeightUnit: item.WeightUnit,
+                    IsChecked: false
                 })
             });
 
@@ -146,6 +171,7 @@ export class AllegationModalComponent implements OnInit {
                 Lawbreaker: _lawbreaker,
             })
         })
+        console.log(_indicment);
         
         this.outPutIndicment.emit(_indicment);
         this.c.emit(e);

@@ -10,7 +10,8 @@ class OpsArrestIndicmentDetailCollection {
 
 export class IndictmentLawbreaker {
     LawbreakerID: string;
-    LawbreakerName: string;
+    LawbreakerFullName: string;
+    CompanyFullName: string;
     ProductID: string;
     ProductName: string;
     Qty: string;
@@ -19,6 +20,10 @@ export class IndictmentLawbreaker {
     SizeUnit: string;
     Weight: string;
     WeightUnit: string;
+
+    IsChecked: boolean;
+    EntityType: number;
+
 }
 
 export class ArrestIndictment {
