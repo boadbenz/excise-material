@@ -5,7 +5,7 @@ import { ArrestIndictment } from '../arrest-indictment';
 import { pagination } from '../../../config/pagination';
 import { ArrestsService } from '../arrests.service';
 import { MasLawGroupSectionModel } from '../../../models';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 @Component({
@@ -38,8 +38,8 @@ export class AllegationModalComponent implements OnInit {
         return this.lawGroupFG.get('LawGroupSection') as FormArray
     }
 
-    get Lawbreaker(): FormArray {
-        return this.lawGroupFG.get('Lawbreaker') as FormArray
+    get IndictmentLawbreaker(): FormArray {
+        return this.lawGroupFG.get('IndictmentLawbreaker') as FormArray
     }
 
     constructor(
@@ -52,7 +52,7 @@ export class AllegationModalComponent implements OnInit {
         this.paginage.TotalItems = 0;
         this.lawGroupFG = this.fb.group({
             LawGroupSection: this.fb.array([]),
-            Lawbreaker: this.fb.array([])
+            IndictmentLawbreaker: this.fb.array([this.createIndictLawbreaker])
         })
 
         await this.lawbreaker.map(item => {
@@ -60,7 +60,25 @@ export class AllegationModalComponent implements OnInit {
             item.ProductID = null
             item.ProductName = null
         })
-        this.setItemFormArray(this.lawbreaker, 'Lawbreaker')
+        this.setItemFormArray(this.lawbreaker, 'IndictmentLawbreaker')
+    }
+
+    createIndictLawbreaker(): FormGroup {
+        return this.fb.group({
+            LawbreakerID: new FormControl(),
+            LawbreakerName: new FormControl(),
+            ProductID: new FormControl(),
+            ProductName: new FormControl(),
+            Qty: new FormControl(),
+            QtyUnit: new FormControl(),
+            Size: new FormControl(),
+            SizeUnit: new FormControl(),
+            Weight: new FormControl(),
+            WeightUnit: new FormControl(),
+
+            IsChecked: new FormControl(false),
+            EntityType: new FormControl()
+        })
     }
 
     async onSearchByKey(f: any) {
@@ -99,7 +117,7 @@ export class AllegationModalComponent implements OnInit {
 
     selectItemPorduct(e: any, i: number) {
         const _product = this.product.find(item => item.ProductID == e.target.value);
-        this.Lawbreaker.at(i).patchValue({
+        this.IndictmentLawbreaker.at(i).patchValue({
             ProductID: e.target.value,
             ProductName: _product.ProductDesc,
             Qty: _product.Qty,
@@ -109,6 +127,10 @@ export class AllegationModalComponent implements OnInit {
             Weight: _product.NetVolume,
             WeightUnit: _product.NetVolumeUnit
         })
+
+        console.log('====================================');
+        console.log(this.IndictmentLawbreaker.value);
+        console.log('====================================');
     }
 
     checkAll() {
@@ -122,7 +144,7 @@ export class AllegationModalComponent implements OnInit {
     async close(e: any) {
         let _lawbreaker = []
         let _lawGroup = this.LawGroupSection.value.filter(item => item.IsChecked);
-        await this.Lawbreaker.value
+        await this.IndictmentLawbreaker.value
             .filter(item => item.IsChecked)
             .map(item => {
                 _lawbreaker.push({
@@ -146,7 +168,7 @@ export class AllegationModalComponent implements OnInit {
                 Lawbreaker: _lawbreaker,
             })
         })
-        
+
         this.outPutIndicment.emit(_indicment);
         this.c.emit(e);
     }

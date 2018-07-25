@@ -77,8 +77,8 @@
                         <th>รายละเอียดของกลาง</th>
                     </tr>
                 </thead>
-                <tbody formArrayName="Lawbreaker">
-                    <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
+                <tbody formArrayName="IndictmentLawbreaker">
+                    <tr *ngFor="let item of IndictmentLawbreaker.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
                             <input type="checkbox" formControlName="IsChecked" [id]="'lb' + i" [checked]="isCheckAll"
                             class="filled-in chk-col-indigo">

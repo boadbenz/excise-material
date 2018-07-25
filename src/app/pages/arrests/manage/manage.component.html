@@ -221,7 +221,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">รหัสไปษณีย์ :</label>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">รหัสไปรษณีย์ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
                         <input type="text" formControlName="ZipCode" class="form-control form-control-sm" [readonly]="showEditField">
                     </div>
@@ -439,7 +439,7 @@
                     [mode]="mode"
                     [lawbreaker]="ArrestLawbreaker.value"
                     [product]="ArrestProduct.value"
-                    [indicment]="ArrestIndictment.value"
+                    [indicment]="ArrestIndictment.value"                    
                     ></app-allegation-modal>
                 </ng-template>
             </div>
@@ -455,7 +455,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
-                    <textarea formControlName="Behaviour" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
+                    <textarea formControlName="ArrestDesc" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
                 </div>
             </div>
             <div class="row">

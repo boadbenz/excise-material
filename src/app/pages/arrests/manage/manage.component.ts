@@ -372,70 +372,77 @@ export class ManageComponent implements OnInit, OnDestroy {
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
+
+        console.log('====================================');
         console.log(JSON.stringify(this.arrestFG.value));
+        console.log('====================================');
 
-        let IsSuccess: boolean | true;
+        let IsSuccess: boolean | false;
 
-        // ___1.บันทึกข้อมูลจับกุม
-        this.arrestService.insAll(this.arrestFG.value)
-            .then(async IsSuccess => {
-                if (!IsSuccess) { IsSuccess = false; return false; }
+        // // ___1.บันทึกข้อมูลจับกุม
+        // this.arrestService.insAll(this.arrestFG.value)
+        //     .then(async IsSuccess => {
+        //         if (!IsSuccess) { IsSuccess = false; return false; }
 
-                // ___2. ดึงข้อมูการจับกุม ด้วยเลขที่ ArrestCode
-                await this.arrestService.getByCon(this.arrestCode)
-                    .then(arrestRes => {
-                        if (!arrestRes) { IsSuccess = false; return false; }
-                        // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
-                        arrestRes.ArrestIndictment.map(indictObj => {
-                            // ข้อกล่าวหา
-                            // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
-                            this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
-                                // รายละเอียดข้อกล่าวหา
-                                item1.ArrestIndictmentDetail.map(indictD => {
-                                    // ___5. Set IndictmentID ให้กับ object IndicmentDetail
-                                    indictD.IndictmentID = indictObj.IndictmentID;
-                                    // ___6. บันทึก ArrestIndictmentDetail
-                                    debugger
-                                    this.arrestService.indicmentDetailinsAll(indictD).then(indictDIns => {
-                                        if (!indictDIns) { IsSuccess = false; return false; }
+        //         // ___2. ดึงข้อมูการจับกุม ด้วยเลขที่ ArrestCode
+        //         await this.arrestService.getByCon(this.arrestCode)
+        //             .then(arrestRes => {
+        //                 if (!arrestRes) { IsSuccess = false; return false; }
+        //                 // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
+        //                 arrestRes.ArrestIndictment.map(indictObj => {
+        //                     // ข้อกล่าวหา
+        //                     // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
+        //                     this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
+        //                         // รายละเอียดข้อกล่าวหา
+        //                         item1.ArrestIndictmentDetail.map(indictD => {
+        //                             // ___5. Set IndictmentID ให้กับ object IndicmentDetail
+        //                             indictD.IndictmentID = indictObj.IndictmentID;
+        //                             // ___6. บันทึก ArrestIndictmentDetail
+                                    
+        //                             console.log('====================================');
+        //                             console.log(JSON.stringify(indictD));
+        //                             console.log('====================================');
 
-                                        IsSuccess = true
-                                        // debugger
-                                        // // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
-                                        // this.arrestService
-                                        //     .indicmentgetByCon(res0.IndictmentID.toString())
-                                        //     .then(indictDetailGet => {
-                                        //         debugger
-                                        //         if (!indictDetailGet) return false;
+        //                             this.arrestService.indicmentDetailinsAll(indictD).then(indictDIns => {
+        //                                 if (!indictDIns) { IsSuccess = false; return false; }
 
-                                        //         // รายละเอียดสินค้า
-                                        //         indictD.ArrestProductDetail.map(productD => {
-                                        //             debugger
-                                        //             // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
-                                        //             productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
-                                        //             // ___9.บันทึก ArrestProductDetail
-                                        //             this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
-                                        //         })
-                                        //     });
-                                    }, () => { IsSuccess = false; return false; });
+        //                                 IsSuccess = true
+        //                                 // debugger
+        //                                 // // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
+        //                                 // this.arrestService
+        //                                 //     .indicmentgetByCon(res0.IndictmentID.toString())
+        //                                 //     .then(indictDetailGet => {
+        //                                 //         debugger
+        //                                 //         if (!indictDetailGet) return false;
 
-                                })
-                            })
+        //                                 //         // รายละเอียดสินค้า
+        //                                 //         indictD.ArrestProductDetail.map(productD => {
+        //                                 //             debugger
+        //                                 //             // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
+        //                                 //             productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
+        //                                 //             // ___9.บันทึก ArrestProductDetail
+        //                                 //             this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
+        //                                 //         })
+        //                                 //     });
+        //                             }, () => { IsSuccess = false; return false; });
 
-                        })
+        //                         })
+        //                     })
 
-                    }, () => { IsSuccess = false });
+        //                 })
 
-            }, () => { IsSuccess = false });
+        //             }, () => { IsSuccess = false });
+
+        //     }, () => { IsSuccess = false });
 
 
-        if (IsSuccess) {
-            this.onComplete()
-            alert(Message.saveComplete)
-            this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
-        } else {
-            alert(Message.saveFail)
-        }
+        // if (IsSuccess) {
+        //     this.onComplete()
+        //     alert(Message.saveComplete)
+        //     this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
+        // } else {
+        //     alert(Message.saveFail)
+        // }
 
         this.preloader.setShowPreloader(false);
     }
