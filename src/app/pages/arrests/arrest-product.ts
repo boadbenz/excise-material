@@ -79,6 +79,7 @@ export const ArrestProductFormControl = {
     QtyUnit: new FormControl(null),
     NetVolume: new FormControl(null),
     NetVolumeUnit: new FormControl(null),
-    IsActive: new FormControl(false),
+    IsActive: new FormControl(1),
+    IsNewItem: new FormControl(null),
     ProductFullName: new FormControl(null)
 }

@@ -314,7 +314,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.InformerType = item.InformerType === true ? 1 : 0;
         });
 
-        console.log(JSON.stringify(this.noticeForm.value));
+        console.log(this.noticeForm.value);
 
         await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
             if (isSuccess) { this.onComplete() }
@@ -439,7 +439,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 let r = { ...subdis, ...dis, ...pro }
                                 this.typeheadRegion.push({
                                     SubDistrictCode: r.subdistrictCode,
-                                    SubdistrictNameTH: r.subdistrictNameTH,
+                                    SubDistrictNameTH: r.subdistrictNameTH,
                                     DistrictCode: r.DistrictCode,
                                     DistrictNameTH: r.DistrictNameTH,
                                     ProvinceCode: r.ProvinceCode,
@@ -458,7 +458,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
@@ -492,14 +492,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
 
-    formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
+    formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
+        `${x.SubDistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
     selectItemInformmerRegion(ele: any) {
         ele.item.NoticeCode = this.noticeCode;
         this.NoticeInformer.at(0).patchValue({
-            SubDistrictCode: ele.item.subdistrictCode,
-            SubDistrict: ele.item.SubdistrictNameTH,
+            SubDistrictCode: ele.item.SubDistrictCode,
+            SubDistrict: ele.item.SubDistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,

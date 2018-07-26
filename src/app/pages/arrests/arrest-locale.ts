@@ -21,7 +21,7 @@ export class ArrestLocale {
     public Province: string;
     public ZipCode: string;
     public Policestation: string;
-    public IsActive: string;
+    public IsActive: number;
     public Region: string;
 }
 
@@ -45,5 +45,6 @@ export const ArrestLocaleFormControl = {
     Province: new FormControl(null),
     ZipCode: new FormControl(null),
     Policestation: new FormControl(null),
+    IsActive: new FormControl(1),
     Region: new FormControl(null)
 }

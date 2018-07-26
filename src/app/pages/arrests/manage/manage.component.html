@@ -143,7 +143,7 @@
                                 <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly>
                             </td>
                             <td>
-                                <input type="text" formControlName="ContributorCode" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField">
                                 <!-- <select formControlName="ContributorID" class="form-control form-control-sm" [disabled]="showEditField">
                                 </select> -->
                             </td>
@@ -206,7 +206,7 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                            {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
     
                         <input type="text" class="form-control form-control-sm"
@@ -353,18 +353,18 @@
                                     />
                             </td>
                             <td>
-                                <input type="text" formControlName="Qty" ngModel class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="QtyUnit" ngModel class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField">
                                 <!-- <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
                                 </select> -->
                             </td>
                             <td>
-                                <input type="text" formControlName="NetVolume" ngModel class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="NetVolumeUnit" ngModel class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="NetVolumeUnit" class="form-control form-control-sm" [readonly]="showEditField">
                                 <!-- <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField"></select> -->
                             </td>
                             <td>

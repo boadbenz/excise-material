@@ -302,7 +302,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 let r = { ...subdis, ...dis, ...pro }
                                 this.typeheadRegion.push({
                                     SubDistrictCode: r.subdistrictCode,
-                                    SubdistrictNameTH: r.subdistrictNameTH,
+                                    SubDistrictNameTH: r.subdistrictNameTH,
                                     DistrictCode: r.DistrictCode,
                                     DistrictNameTH: r.DistrictNameTH,
                                     ProvinceCode: r.ProvinceCode,
@@ -344,7 +344,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
 
                 item.IsNewItem = false;
-                item.ContributorCode = item.ContributorCode == null ? item.ContributorID : item.ContributorCode
+                item.ContributorID = item.ContributorID
             });
             await res.ArrestLawbreaker.map(item => {
                 item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
@@ -366,7 +366,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
             });
 
-
+            console.log('====================================');
+            console.log(res.ArrestProduct);
+            console.log('====================================');
 
             await res.ArrestIndictment.map(async item => {
                 item.IsNewItem = false
@@ -412,15 +414,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
 
+        console.log('====================================');
+        console.log(this.arrestFG.value);
+        console.log('====================================');
         let isSuccess: boolean | false;
 
         // ___1.บันทึกข้อมูลจับกุม
-        await this.arrestService.insAll(this.arrestFG.value).then(IsSuccess => isSuccess = IsSuccess
-            , (error) => { isSuccess = false; console.error(error); return false; });
-
-        if (!isSuccess) return false;
-
-        await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
+        await this.arrestService.insAll(this.arrestFG.value).then(async IsSuccess => {
+            if (!IsSuccess) { IsSuccess = false; return false; }
+            await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
+        }, (error) => { isSuccess = false; console.error(error); return false; });
 
         if (isSuccess) {
             this.onComplete()
@@ -492,6 +495,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
+
+        console.log('====================================');
+        console.log(JSON.stringify(this.arrestFG.value));
+        console.log('====================================');
 
         let isSuccess: boolean | false;
 
@@ -622,6 +629,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     addLawbreaker(e: ArrestLawbreaker[]) {
         e.map(item => {
             item.ArrestCode = this.arrestCode
+            item.IsNewItem = true
             this.ArrestLawbreaker.push(this.fb.group(item))
         })
     }
@@ -704,9 +712,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 SectionName: item.SectionName,
                 IndictmentLawbreaker: this.fb.array(item.IndictmentLawbreaker),
                 ArrestIndictmentDetail: this.fb.array(indictDetail),
-                IsNewItem: true
+                IsNewItem: item.IsNewItem == false ? false : true
             })
             this.ArrestIndictment.push(FG);
+            console.log('====================================');
+            console.log(this.ArrestIndictment.value);
+            console.log('====================================');
         })
     }
 
@@ -734,7 +745,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestStaff.removeAt(indexForm);
 
         } else if (this.mode === 'R') {
-            if (confirm(Message.confirmAction)) {
+            const isNewItem = this.ArrestStaff.at(indexForm).value.IsNewItem
+            if (isNewItem) {
+                this.ArrestStaff.removeAt(indexForm)
+            } else if (confirm(Message.confirmAction)) {
                 this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
                     if (IsSuccess)
                         this.ArrestStaff.removeAt(indexForm)
@@ -748,7 +762,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestLawbreaker.removeAt(indexForm);
 
         } else if (this.mode === 'R') {
-            if (confirm(Message.confirmAction)) {
+            const isNewItem = this.ArrestLawbreaker.at(indexForm).value.IsNewItem
+            if (isNewItem) {
+                this.ArrestLawbreaker.removeAt(indexForm)
+            } else if (confirm(Message.confirmAction)) {
                 this.arrestService.lawbreakerupdDelete(lawbreakerId).then(IsSuccess => {
                     if (IsSuccess)
                         this.ArrestLawbreaker.removeAt(indexForm)
@@ -762,7 +779,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestProduct.removeAt(indexForm);
 
         } else if (this.mode === 'R') {
-            if (confirm(Message.confirmAction)) {
+            const isNewItem = this.ArrestProduct.at(indexForm).value.IsNewItem
+            if (isNewItem) {
+                this.ArrestProduct.removeAt(indexForm)
+            } else if (confirm(Message.confirmAction)) {
                 this.arrestService.productupdDelete(productId).then(IsSuccess => {
                     if (IsSuccess)
                         this.ArrestProduct.removeAt(indexForm)
@@ -776,7 +796,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestIndictment.removeAt(indexForm);
 
         } else if (this.mode === 'R') {
-            if (confirm(Message.confirmAction)) {
+
+            const isNewItem = this.ArrestIndictment.at(indexForm).value.IsNewItem
+
+            if (isNewItem) {
+                this.ArrestIndictment.removeAt(indexForm)
+            } else if (confirm(Message.confirmAction)) {
                 this.arrestService.indicmentupdDelete(indicmtmentId).then(IsSuccess => {
                     if (IsSuccess)
                         this.ArrestIndictment.removeAt(indexForm)
@@ -813,7 +838,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
@@ -841,8 +866,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
-    formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
+    formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
+        `${x.SubDistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
     formatterProduct = (x: { SubBrandNameTH: string, BrandNameTH: string, ModelName: string }) =>
         `${x.SubBrandNameTH} ${x.BrandNameTH} ${x.ModelName}`;
@@ -854,8 +879,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     selectItemLocaleRegion(e) {
         this.ArrestLocale.at(0).patchValue({
-            SubDistrictCode: e.item.subdistrictCode,
-            SubDistrict: e.item.SubdistrictNameTH,
+            SubDistrictCode: e.item.SubDistrictCode,
+            SubDistrict: e.item.SubDistrictNameTH,
             DistrictCode: e.item.DistrictCode,
             District: e.item.DistrictNameTH,
             ProvinceCode: e.item.ProvinceCode,
@@ -866,6 +891,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     selectItemProductItem(e, i) {
         this.ArrestProduct.at(i).reset(e.item)
         this.ArrestProduct.at(i).patchValue({
+            IsNewItem: true,
             ArrestCode: this.arrestCode,
             Qty: e.item.Size,
             QtyUnit: e.item.SizeCode,
