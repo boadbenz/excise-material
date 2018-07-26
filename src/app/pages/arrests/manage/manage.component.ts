@@ -367,7 +367,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             });
 
 
-           
+
             await res.ArrestIndictment.map(async item => {
                 item.IsNewItem = false
                 item.SectionName = item.SectionName ? item.SectionName : null;
@@ -401,7 +401,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setItemFormArray(res.ArrestProduct, 'ArrestProduct');
             this.setItemFormArray(res.ArrestDocument, 'ArrestDocument');
 
-            this.addIndictment( res.ArrestIndictment);
+            this.addIndictment(res.ArrestIndictment);
         })
     }
 
@@ -412,62 +412,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
 
-        let IsSuccess: boolean | false;
+        let isSuccess: boolean | false;
 
         // ___1.บันทึกข้อมูลจับกุม
-        await this.arrestService.insAll(this.arrestFG.value).then(async IsSuccess => {
-            if (!IsSuccess) { IsSuccess = false; return false; }
+        await this.arrestService.insAll(this.arrestFG.value).then(IsSuccess => isSuccess = IsSuccess
+            , (error) => { isSuccess = false; console.error(error); return false; });
 
-            // ___2. ดึงข้อมูการจับกุม ด้วยเลขที่ ArrestCode
-            await this.arrestService.getByCon(this.arrestCode).then(arrestRes => {
-                if (!arrestRes) { IsSuccess = false; return false; }
-                // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
-                arrestRes.ArrestIndictment.map(indictObj => {
-                    // ข้อกล่าวหา
-                    // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
-                    this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
-                        // รายละเอียดข้อกล่าวหา
-                        item1.ArrestIndictmentDetail.map(async indictD => {
-                            // ___5. Set IndictmentID ให้กับ object IndicmentDetail
-                            indictD.IndictmentID = indictObj.IndictmentID;
-                            // ___6. บันทึก ArrestIndictmentDetail
-                            await this.arrestService.indicmentDetailinsAll(indictD).then(async indictDIns => {
-                                if (!indictDIns) { IsSuccess = false; return false; }
+        if (!isSuccess) return false;
 
-                                IsSuccess = true
-                                // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
-                                await this.arrestService
-                                    .indicmentgetByCon(indictD.IndictmentID.toString())
-                                    .then(indictDetailGet => {
-                                        debugger
-                                        if (!indictDetailGet.length) return false;
+        await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
 
-                                        console.log(indictDetailGet);
-
-                                        // รายละเอียดสินค้า
-                                        indictD.ArrestProductDetail.map(productD => {
-                                            console.log(productD);
-                                            debugger
-                                            // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
-                                            // productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
-                                            // // ___9.บันทึก ArrestProductDetail
-                                            // this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
-                                        })
-                                    }, (error) => { IsSuccess = false; console.error(error); return false; });
-
-                            }, (error) => { IsSuccess = false; console.error(error); return false; });
-
-                        })
-                    })
-
-                })
-
-            }, (error) => { IsSuccess = false; console.error(error); return false; });
-
-        }, (error) => { IsSuccess = false; console.error(error); return false; });
-
-
-        if (IsSuccess) {
+        if (isSuccess) {
             this.onComplete()
             alert(Message.saveComplete)
             this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
@@ -478,6 +433,59 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(false);
     }
 
+    private async saveIndictmentDetail(): Promise<boolean> {
+
+        let IsSuccess: boolean | false;
+
+        // ___2. ดึงข้อมูการจับกุม ด้วยเลขที่ ArrestCode
+        await this.arrestService.getByCon(this.arrestCode).then(arrestRes => {
+            if (!arrestRes) { IsSuccess = false; return false; }
+            // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
+            arrestRes.ArrestIndictment.map(indictObj => {
+                // ข้อกล่าวหา
+                // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
+                this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
+                    // รายละเอียดข้อกล่าวหา
+                    item1.ArrestIndictmentDetail.map(async indictD => {
+                        // ___5. Set IndictmentID ให้กับ object IndicmentDetail
+                        indictD.IndictmentID = indictObj.IndictmentID;
+                        // ___6. บันทึก ArrestIndictmentDetail
+                        await this.arrestService.indicmentDetailinsAll(indictD).then(async indictDIns => {
+                            if (!indictDIns) { IsSuccess = false; return false; }
+
+                            IsSuccess = true
+                            // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
+                            await this.arrestService
+                                .indicmentgetByCon(indictD.IndictmentID.toString())
+                                .then(indictDetailGet => {
+                                    debugger
+                                    if (!indictDetailGet.length) return false;
+
+                                    console.log(indictDetailGet);
+
+                                    // รายละเอียดสินค้า
+                                    indictD.ArrestProductDetail.map(productD => {
+                                        console.log(productD);
+                                        debugger
+                                        // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
+                                        // productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
+                                        // // ___9.บันทึก ArrestProductDetail
+                                        // this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
+                                    })
+                                }, (error) => { IsSuccess = false; console.error(error); return false; });
+
+                        }, (error) => { IsSuccess = false; console.error(error); return false; });
+
+                    })
+                })
+
+            })
+
+        }, (error) => { IsSuccess = false; console.error(error); return false; });
+
+        return IsSuccess;
+    }
+
     private async onReviced() {
         this.preloader.setShowPreloader(true);
         const arrestDate = new Date(this.arrestFG.value.ArrestDate);
@@ -485,52 +493,83 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
 
+        let isSuccess: boolean | false;
+
         await this.arrestService.updByCon(this.arrestFG.value).then(async IsSuccess => {
-            if (IsSuccess) {
-                await this.arrestService.localeupdByCon(this.ArrestLocale.at(0).value)
-                    .then(IsSuccess => {
-                        if (!IsSuccess) {
-                            alert(Message.saveLocaleFail)
-                            return false
-                        }
-                    });
 
-                const staff = this.ArrestStaff.value;
-                await staff.filter(item => item.IsNewItem === true)
-                    .map(item => {
-                        this.arrestService.staffinsAll(item).then(IsSuccess => {
-                            if (!IsSuccess) return false
-                        });
-                    });
-
-                const lawbreaker = this.ArrestLawbreaker.value;
-                await lawbreaker.filter(item => item.IsNewItem === true)
-                    .map(item => {
-                        this.arrestService.lawbreakerinsAll(item).then(IsSuccess => {
-                            if (!IsSuccess) return false
-                        });
-                    });
-
-                const product = this.ArrestProduct.value;
-                await product.filter(item => item.IsNewItem === true)
-                    .map(item => {
-                        this.arrestService.productinsAll(item).then(IsSuccess => {
-                            if (!IsSuccess) return false
-                        });
-                    });
-
-                const indicment = this.ArrestIndictment.value;
-                await indicment.filter(item => item.IsNewItem === true)
-                    .map(item => {
-                        this.arrestService.indicmentinsAll(item).then(IsSuccess => {
-                            if (!IsSuccess) return false
-                        });
-                    });
+            if (!isSuccess) {
+                isSuccess = false;
+                return false;
             }
-        })
 
-        alert(Message.saveComplete)
-        this.onComplete();
+            await this.arrestService.localeupdByCon(this.ArrestLocale.at(0).value)
+                .then(IsSuccess => isSuccess = IsSuccess,
+                    (error) => { IsSuccess = false; console.error(error); return false; });
+
+            if (!isSuccess) return false;
+
+            const staff = this.ArrestStaff.value;
+            staff.filter(item => item.IsNewItem === true)
+                .map(async item => {
+                    await this.arrestService.staffinsAll(item).then(IsSuccess => {
+                        if (!IsSuccess) {
+                            isSuccess = IsSuccess;
+                            return false;
+                        }
+                    }, (error) => { IsSuccess = false; console.error(error); return false; });
+                });
+
+            if (!isSuccess) return false;
+
+            const lawbreaker = this.ArrestLawbreaker.value;
+            lawbreaker.filter(item => item.IsNewItem === true)
+                .map(async item => {
+                    await this.arrestService.lawbreakerinsAll(item).then(IsSuccess => {
+                        if (!IsSuccess) {
+                            isSuccess = IsSuccess;
+                            return false;
+                        }
+                    }, (error) => { IsSuccess = false; console.error(error); return false; });
+                });
+
+            if (!isSuccess) return false;
+
+            const product = this.ArrestProduct.value;
+            product.filter(item => item.IsNewItem === true)
+                .map(async item => {
+                    await this.arrestService.productinsAll(item).then(IsSuccess => {
+                        if (!IsSuccess) {
+                            isSuccess = IsSuccess;
+                            return false;
+                        }
+                    }, (error) => { IsSuccess = false; console.error(error); return false; });
+                });
+
+            if (!isSuccess) return false;
+
+            const indicment = this.ArrestIndictment.value;
+            indicment.filter(item => item.IsNewItem === true)
+                .map(async item => {
+                    // ___1.บันทึกข้อมูลจับกุม
+                    await this.arrestService.indicmentinsAll(item).then(async IsSuccess => {
+                        if (!IsSuccess) {
+                            isSuccess = IsSuccess;
+                            return false;
+                        }
+
+                        await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
+
+                    }, (error) => { IsSuccess = false; console.error(error); return false; });
+                });
+
+        }, (error) => { isSuccess = false; console.error(error); return false; })
+
+        if (isSuccess) {
+            alert(Message.saveComplete)
+            this.onComplete();
+        } else {
+            alert(Message.saveFail)
+        }
         this.preloader.setShowPreloader(false);
     }
 
@@ -618,10 +657,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addIndictment(e: ArrestIndictment[]) {
-        
+
         e.map(async item => {
             let indictDetail = [];
-            
+
             await item.IndictmentLawbreaker.map(lb => {
                 let productDetail = [];
 
