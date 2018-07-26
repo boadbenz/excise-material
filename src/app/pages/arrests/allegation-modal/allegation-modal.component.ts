@@ -125,10 +125,6 @@ export class AllegationModalComponent implements OnInit {
             Weight: _product.NetVolume,
             WeightUnit: _product.NetVolumeUnit
         })
-
-        console.log('====================================');
-        console.log(this.IndictmentLawbreaker.value);
-        console.log('====================================');
     }
 
     checkAll() {
@@ -140,12 +136,12 @@ export class AllegationModalComponent implements OnInit {
     }
 
     async close(e: any) {
-        let _lawbreaker = []
+        let _indictmentLawbreaker = []
         let _lawGroup = this.LawGroupSection.value.filter(item => item.IsChecked);
         await this.IndictmentLawbreaker.value
             .filter(item => item.IsChecked)
             .map(item => {
-                _lawbreaker.push({
+                _indictmentLawbreaker.push({
                     LawbreakerID: item.LawbreakerID,
                     LawbreakerFullName: item.LawbreakerFullName,
                     CompanyFullName: item.CompanyFullName,
@@ -172,7 +168,7 @@ export class AllegationModalComponent implements OnInit {
                 SectionNo: lg.SectionNo,
                 SectionDesc1: lg.SectionDesc1,
                 SectionName: lg.SectionName,
-                Lawbreaker: _lawbreaker,
+                IndictmentLawbreaker: _indictmentLawbreaker,
             })
         })
         

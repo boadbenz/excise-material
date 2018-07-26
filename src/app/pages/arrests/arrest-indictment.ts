@@ -34,7 +34,7 @@ export class ArrestIndictment {
     SectionNo: string;
     SectionDesc1: string;    
     SectionName: string;
-    Lawbreaker: IndictmentLawbreaker[];
+    IndictmentLawbreaker: IndictmentLawbreaker[];
     ArrestIndictmentDetail: ArrestIndicmentDetail[];
     OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
     IsNewItem: boolean;

@@ -498,8 +498,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     selectItemInformmerRegion(ele: any) {
         ele.item.NoticeCode = this.noticeCode;
         this.NoticeInformer.at(0).patchValue({
-            SubDistrictCode: ele.item.SubDistrictCode,
-            SubDistrict: ele.item.SubDistrictNameTH,
+            SubDistrictCode: ele.item.subdistrictCode,
+            SubDistrict: ele.item.SubdistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,

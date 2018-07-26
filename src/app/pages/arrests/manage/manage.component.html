@@ -411,7 +411,7 @@
                             <td>{{item.get('SectionName').value}}</td>
                             <td>{{item.get('GuiltBaseID').value}}</td>
                             <td>
-                                <div *ngFor="let law of item.value.Lawbreaker;">
+                                <div *ngFor="let law of item.value.IndictmentLawbreaker;">
                                     <div *ngIf="law.EntityType == 0">
                                         {{law.CompanyFullName}}
                                     </div>
@@ -421,7 +421,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div *ngFor="let law of item.value.Lawbreaker;">
+                                <div *ngFor="let law of item.value.IndictmentLawbreaker;">
                                     {{law.ProductName}}
                                 </div>
                             </td>
