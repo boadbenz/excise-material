@@ -33,7 +33,11 @@ import { MasOfficeModel } from '../../../models/mas-office.model';
 })
 export class ManageComponent implements OnInit, OnDestroy {
 
-    private sub: any;
+    private onSaveSubscribe: any;
+    private onDeleSubscribe: any;
+    private onPrintSubscribe: any;
+    private onNextPageSubscribe: any;
+    private onCancelSubscribe: any;
     mode: string;
     showEditField: any;
     modal: any;
@@ -123,7 +127,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private active_route() {
-        this.sub = this.activeRoute.params.subscribe(p => {
+        this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
             if (p['mode'] === 'C') {
                 // set false
@@ -161,41 +165,44 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.showEditField = p;
         });
 
-        this.navService.onCancel.subscribe(async status => {
+        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
                 this.router.navigate(['/notice/list']);
             }
         })
 
-        this.navService.onSave.subscribe(async status => {
+        this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
+
             if (status) {
-                // set action save = false
+
                 await this.navService.setOnSave(false);
+
                 if (this.mode === 'C') {
                     this.onCreate();
 
                 } else if (this.mode === 'R') {
+                    console.log('revice');
                     this.onReviced();
                 }
             }
         });
 
-        this.navService.onDelete.subscribe(async status => {
+        this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
             if (status) {
                 await this.navService.setOnDelete(false);
                 this.onDelete();
             }
         });
 
-        this.navService.onPrint.subscribe(async status => {
+        this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
             if (status) {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
         })
 
-        this.navService.onNextPage.subscribe(async status => {
+        this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
                 this.router.navigate(['/arrest/manage', 'C', 'NEW']);
@@ -411,6 +418,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (suspect.length) {
             suspect.map(item => {
                 item.IsNewItem = true;
+                item.NoticeCode = this.noticeCode;
                 this.NoticeSuspect.push(this.fb.group(item))
             });
         }
@@ -665,7 +673,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.sub.unsubscribe();
+        this.onCancelSubscribe.unsubscribe();
+        this.onSaveSubscribe.unsubscribe();
+        this.onDeleSubscribe.unsubscribe();
+        this.onPrintSubscribe.unsubscribe();
+        this.onNextPageSubscribe.unsubscribe();
     }
 
     openSuspect(e) {
