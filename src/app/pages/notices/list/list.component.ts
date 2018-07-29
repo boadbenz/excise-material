@@ -95,6 +95,7 @@ export class ListComponent implements OnInit {
     async onSearchComplete(list: Notice[]) {
 
         if (!list.length) {
+            alert(Message.noRecord)
             return false;
         }
 

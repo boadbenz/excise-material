@@ -30,7 +30,7 @@ export class NoticeProduct {
     public NetWeight = '';
     public NetWeightUnit = '';
     public Remarks = '';
-    public IsActive = '';
+    public IsActive = 1;
     public BrandFullName = '';
     public IsNewItem: boolean;
 }

@@ -37,6 +37,7 @@ export class ArrestIndictment {
     IndictmentLawbreaker: IndictmentLawbreaker[];
     ArrestIndictmentDetail: ArrestIndicmentDetail[];
     OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
+    
     IsNewItem: boolean;
 }
 

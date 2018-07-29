@@ -95,11 +95,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     constructor(
         private fb: FormBuilder,
         private activeRoute: ActivatedRoute,
-        private suspectModalService: NgbModal,
+        private modelService: NgbModal,
         private navService: NavigationService,
         private ngbModel: NgbModal,
         private arrestService: ArrestsService,
-        private router: Router,
+        public router: Router,
         private sidebarService: SidebarService,
         private preloader: PreloaderService,
         private store: Store<AppState>
@@ -198,7 +198,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.arrestCode = `NT-${(new Date).getTime()}`;
+                this.arrestCode = p['code'] == 'NEW' ? `NT-${(new Date).getTime()}` : p['code'];
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -236,7 +236,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.sub = this.navService.onDelete.subscribe(async status => {
+        this.navService.onDelete.subscribe(async status => {
             if (status) {
                 await this.navService.setOnDelete(false);
                 this.onDelete();
@@ -366,10 +366,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
             });
 
-            console.log('====================================');
-            console.log(res.ArrestProduct);
-            console.log('====================================');
-
             await res.ArrestIndictment.map(async item => {
                 item.IsNewItem = false
                 item.SectionName = item.SectionName ? item.SectionName : null;
@@ -428,7 +424,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (isSuccess) {
             this.onComplete()
             alert(Message.saveComplete)
-            this.router.navigate[`/arrest/manage/R/${this.arrestCode}`]
+            this.router.navigate([`/arrest/manage`, 'R',this.arrestCode])
+            
         } else {
             alert(Message.saveFail)
         }
@@ -583,15 +580,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async onDelete() {
         if (confirm(Message.confirmAction)) {
             this.preloader.setShowPreloader(true);
-            await this.arrestService.updDelete(this.arrestCode)
-                .then(IsSuccess => {
-                    if (IsSuccess) {
-                        alert(Message.delComplete)
-                        this.router.navigate['/arrest/list']
-                    } else {
-                        alert(Message.delFail)
-                    }
-                })
+            await this.arrestService.updDelete(this.arrestCode).then(IsSuccess => {
+                if (IsSuccess) {
+                    alert(Message.delComplete)
+                    this.router.navigate([`/arrest/list`]);
+                } else {
+                    alert(Message.delFail)
+                }
+            })
             this.preloader.setShowPreloader(false);
         }
     }
@@ -623,7 +619,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     openModal(e) {
-        this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
+        this.modal = this.modelService.open(e, { size: 'lg', centered: true });
+        this.isEditIndictment = false;
+    }
+
+    indictmentModal: ArrestIndictment;
+    isEditIndictment: boolean | false;
+    editAllegation(index: number, e: any) {
+        this.modal = this.modelService.open(e, { size: 'lg', centered: true });
+        this.indictmentModal = new ArrestIndictment();
+        this.isEditIndictment = true;
+        this.indictmentModal = this.ArrestIndictment.at(index).value;
     }
 
     addLawbreaker(e: ArrestLawbreaker[]) {
@@ -715,9 +721,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsNewItem: item.IsNewItem == false ? false : true
             })
             this.ArrestIndictment.push(FG);
-            console.log('====================================');
-            console.log(this.ArrestIndictment.value);
-            console.log('====================================');
         })
     }
 
@@ -737,7 +740,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     viewLawbreaker(id: number) {
-        this.router.navigate([`/arrest/lawbreaker/R/${id}`]);
+        this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
     }
 
     deleteStaff(indexForm: number, staffId: string) {

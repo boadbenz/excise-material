@@ -44,8 +44,8 @@ export const NoticeLocaleFormControl = {
     District: new FormControl(null),
     ProvinceCode: new FormControl(null),
     Province: new FormControl(null),
-    ZipCode: new FormControl(null),
-    Policestation: new FormControl('Policestation'),
+    ZipCode: new FormControl('N/A'),
+    Policestation: new FormControl('N/A'),
     IsActive: new FormControl(1),
     Region: new FormControl(null)
 }

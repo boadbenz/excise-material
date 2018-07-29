@@ -11,6 +11,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
 import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
 import { ArrestsService } from '../../arrests/arrests.service';
+import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 
 const routes: Routes = [
     {
@@ -40,6 +41,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         CardActionsModule,
         SuspectModalModule,
+        ModalLawbreakerModule,
         PrintDocModalModule
     ],
     declarations: [

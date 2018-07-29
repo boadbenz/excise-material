@@ -55,12 +55,10 @@ export class SuspectService {
     private async response(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise()
         if (res.IsSuccess === false) {
-            alert(Message.noRecord);
             return [];
         }
 
         if (!res.ResponseData.length) {
-            alert(Message.noRecord);
             return [];
         }
         return res.ResponseData;
@@ -129,6 +127,12 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
     }
 
     async onComplete(res: NoticeSuspect[]) {
+
+        if (!res.length) {
+            alert(Message.noRecord)
+            return false;
+        }
+
         this.suspect = new Array<NoticeSuspect>();
         const list = await res.map((item, i) => {
             item.RowId = i +1;

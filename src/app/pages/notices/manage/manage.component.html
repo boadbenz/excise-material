@@ -18,10 +18,13 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่รับแจ้งความ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" formControlName="NoticeDate" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="date" formControlName="NoticeDate" class="form-control form-control-sm" 
+                    [readonly]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" formControlName="NoticeTime" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="NoticeTime" class="form-control form-control-sm" 
+                    [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
             </div>
 
@@ -29,7 +32,8 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="NoticeDue" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="NoticeDue" class="form-control form-control-sm" 
+                        [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
@@ -38,7 +42,8 @@
                     <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm"[readonly]="showEditField">
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" name="" class="form-control form-control-sm"[readonly]="showEditField">
+                    <input type="text" name="" class="form-control form-control-sm"
+                    [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
             </div>
 
@@ -47,7 +52,8 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="NoticeStation" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="NoticeStation" class="form-control form-control-sm" 
+                        [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
@@ -64,19 +70,36 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">ผู้รับแจ้งความ :
                     </label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [readonly]="showEditField">
+                        <ng-template #rt let-r="result" let-t="term">
+                            {{ r.TitleName == null ? '' : r.TitleName }} 
+                            {{r.FirstName == null ? '' : r.FirstName}} 
+                            {{r.LastName == null ? '' : r.LastName}}
+                        </ng-template>
+    
+                        <input type="text" class="form-control form-control-sm"
+                            [ngbTypeahead]="searchStaff"
+                            [resultTemplate]="rt"
+                            [readOnly]="showEditField"
+                            [inputFormatter]="formatterStaff" 
+                            (selectItem)="selectItemStaff($event, i)"
+                            value="{{item.value.StaffFullName}}"
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required/>
+                        <!-- <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [readonly]="showEditField"> -->
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" 
+                            [readonly]="showEditField"[ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" formControlName="PositionName" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="PositionName" class="form-control form-control-sm" 
+                            [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
 
@@ -309,12 +332,13 @@
                             <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                         </td>
                         <td>
-                            <select formControlName="QtyUnit" class="form-control form-control-sm">
+                            <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField">
+                            <!-- <select formControlName="QtyUnit" class="form-control form-control-sm">
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of dutyUnitModel;"
                                 [disabled]="showEditField" 
                                 [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteProduct(item.get('ProductID').value, i)">
@@ -341,6 +365,7 @@
 
                 <ng-template #suspect let-c="close" let-d="dismiss">
                     <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" (exportSuspectData)="addSuspect($event)"></app-suspect-modal>
+                    <!-- <app-modal-lawbreaker (c)="modal.close()" (d)="modal.dismiss()" (lawbreakerEmit)="addSuspect($event)"></app-modal-lawbreaker> -->
                 </ng-template>
             </div>
             <table class="table table-sm table-striped table-set-border">

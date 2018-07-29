@@ -426,7 +426,7 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-danger" (click)="openModal(allegation)" *ngIf="!showEditField">
+                                <a href="javaScript:void(0)" class="text-danger" (click)="editAllegation(i ,allegation)" *ngIf="!showEditField">
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
                             </td>
@@ -444,7 +444,8 @@
                     [mode]="mode"
                     [lawbreaker]="ArrestLawbreaker.value"
                     [product]="ArrestProduct.value"
-                    [indicment]="ArrestIndictment.value"                    
+                    [indicment]="indictmentModal"  
+                    [isEditIndictment]="isEditIndictment"        
                     ></app-allegation-modal>
                 </ng-template>
             </div>

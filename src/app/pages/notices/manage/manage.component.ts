@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { toLocalNumeric } from '../../../config/dateFormat';
-import { regions, communicate, DutyUnit, RegionModel, MasDistrictModel, MasProvinceModel, MasSubdistrictModel } from '../../../models';
+import { regions, communicate, DutyUnit, RegionModel, MasDistrictModel, MasProvinceModel, MasSubdistrictModel, MasStaffModel } from '../../../models';
 import { MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
@@ -38,6 +38,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     showEditField: any;
     modal: any;
     noticeCode: string;
+    arrestCode: string;
     noticeForm: FormGroup;
     searching = false;
     searchFailed = false;
@@ -57,6 +58,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadRegion = new Array<RegionModel>();
     typeheadProduct = new Array<MasProductModel>();
     typeheadOffice = new Array<MasOfficeModel>();
+    typeheadStaff = new Array<MasStaffModel>();
 
     get NoticeStaff(): FormArray {
         return this.noticeForm.get('NoticeStaff') as FormArray;
@@ -112,11 +114,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-       await this.setRegionStore();
-       await this.setProductStore();
-    //    await this.setOfficeStore();
+        await this.setProductStore();
+        await this.setOfficeStore();
+        await this.setStaffStore();
+        await this.setRegionStore();
 
-       this.preloader.setShowPreloader(false);
+        this.preloader.setShowPreloader(false);
     }
 
     private active_route() {
@@ -127,10 +130,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
+                this.navService.setNextPageButton(false);
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
                 this.noticeCode = `NT-${(new Date).getTime()}`;
+                this.arrestCode = `NT-${(new Date).getTime()}`;
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -141,6 +146,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
+                this.navService.setNextPageButton(true);
 
                 if (p['code']) {
                     this.noticeCode = p['code'];
@@ -192,7 +198,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sub = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/arrest/manage', 'C', this.noticeCode]);
+                this.router.navigate(['/arrest/manage', 'C', this.arrestCode]);
             }
         })
     }
@@ -200,17 +206,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     private createForm() {
         this.noticeForm = this.fb.group({
             NoticeCode: new FormControl(this.noticeCode),
-            NoticeStationCode: new FormControl('Code'),
+            NoticeStationCode: new FormControl('N/A'),
             NoticeStation: [null],
             NoticeDate: [null],
             NoticeTime: [null],
             NoticeDue: [null],
             NoticeDueDate: [null],
-            GroupNameDesc: new FormControl('groupDesc'),
+            GroupNameDesc: new FormControl('N/A'),
             CommunicationChanelID: [null],
             DataSource: [null],
             FilePath: [null],
-            ArrestCode: [null],
+            ArrestCode: new FormControl(this.arrestCode),
+            IsArrest: new FormControl(1),
             IsActive: new FormControl(1),
             NoticeStaff: this.fb.array([this.createStaffForm()]),
             NoticeInformer: this.fb.array([this.createInformerForm()]),
@@ -243,6 +250,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private createDocumentForm(): FormGroup {
+        NoticeDocumentFormControl.IsActive = new FormControl(1);
         return this.fb.group(NoticeDocumentFormControl)
     }
 
@@ -257,6 +265,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private getByCon(code: string) {
         this.noticeService.getByCon(code).then(async res => {
             this.noticeCode = res.NoticeCode;
+            this.arrestCode = res.ArrestCode;
             await this.noticeForm.reset({
                 NoticeCode: res.NoticeCode,
                 NoticeStationCode: res.NoticeStationCode,
@@ -268,12 +277,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 GroupNameDesc: res.GroupNameDesc,
                 CommunicationChanelID: res.CommunicationChanelID,
                 ArrestCode: res.ArrestCode,
-                IsActive: res.IsActive,
+                IsActive: res.IsActive
             });
 
-            await res.NoticeStaff.map(item =>
+            await res.NoticeStaff.map(item => {
                 item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-            );
+            });
 
             await res.NoticeLocale.map(item =>
                 item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
@@ -293,16 +302,20 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.BrandFullName = `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`
             )
 
-            this.setItemFormArray(res.NoticeStaff, 'NoticeStaffForm');
-            this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
-            this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-            this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
-            this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
-            this.setItemFormArray(res.NoticeDocument, 'NoticeDocument')
+           await this.setItemFormArray(res.NoticeStaff, 'NoticeStaff');
+           await this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
+           await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+           await this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
+           await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
+           await this.setItemFormArray(res.NoticeDocument, 'NoticeDocument')
         })
     }
 
     private async onCreate() {
+
+        if(!this.noticeForm.valid) {
+            return false;
+        }
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
@@ -313,11 +326,15 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeInformer.map(item => {
             item.InformerType = item.InformerType === true ? 1 : 0;
         });
-
-        console.log(this.noticeForm.value);
+        console.log(JSON.stringify(this.noticeForm.value));
 
         await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
-            if (isSuccess) { this.onComplete() }
+            if (isSuccess) { 
+                alert(Message.saveComplete)
+                this.router.navigate(['/notice/manage', 'R', this.noticeCode]);
+            } else {
+                alert(Message.saveFail)
+            }
         });
 
         this.preloader.setShowPreloader(false);
@@ -335,10 +352,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.InformerType = item.InformerType === true ? 1 : 0;
         });
 
-        console.log(JSON.stringify(this.noticeForm.value));
+        console.log(this.noticeForm.value);
 
         await this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
-            if (isSuccess) { this.onComplete() }
+            if (isSuccess) { 
+                alert(Message.saveComplete)
+                this.onComplete() 
+            } else {
+                alert(Message.saveFail)
+            }
         })
 
         this.preloader.setShowPreloader(false);
@@ -346,12 +368,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onDelete() {
         // Set Preloader
-        this.preloader.setShowPreloader(true);  
+        this.preloader.setShowPreloader(true);
 
         await this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
             if (IsSuccess) {
+                alert(Message.delComplete)
                 this.router.navigate(['/notice/list']);
-            }
+            } else (
+                alert(Message.delFail)
+            )
         })
     }
 
@@ -361,6 +386,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setEditButton(true);
         await this.navService.setPrintButton(true);
         await this.navService.setDeleteButton(true);
+        await this.navService.setNextPageButton(true);
         // set false
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
@@ -407,6 +433,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     private setOfficeStore() {
         this.arrestService.masOfficegetAll().then(res =>
             this.typeheadOffice = res
+        )
+    }
+
+    private setStaffStore() {
+        this.arrestService.masStaffgetAll().then(res =>
+            this.typeheadStaff = res
         )
     }
 
@@ -475,19 +507,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
-    // searchProduct = (text$: Observable<string>) =>
-    //     text$
-    //         .debounceTime(300)
-    //         .distinctUntilChanged()
-    //         .do(() => this.searching = true)
-    //         .switchMap(term =>
-    //             this.noticeService.productgetByKeyword(term)
-    //                 .do(() => this.searchFailed = false)
-    //                 .catch(() => {
-    //                     this.searchFailed = true;
-    //                     return Observable.of([]);
-    //                 })
-    //         ).do(() => this.searching = false);
+    searchStaff = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.typeheadStaff
+                    .filter(v =>
+                        v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
 
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
@@ -495,8 +525,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubDistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
+    formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
+        `${x.TitleName} ${x.FirstName} ${x.LastName}`
+
     selectItemInformmerRegion(ele: any) {
-        ele.item.NoticeCode = this.noticeCode;
         this.NoticeInformer.at(0).patchValue({
             SubDistrictCode: ele.item.SubDistrictCode,
             SubDistrict: ele.item.SubDistrictNameTH,
@@ -509,9 +541,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemLocaleRegion(ele: any) {
-        ele.item.NoticeCode = this.noticeCode;
         this.NoticeLocale.at(0).patchValue({
-            SubDistrictCode: ele.item.SubDistrictCode,
+            SubdistrictCode: ele.item.SubDistrictCode,
             SubDistrict: ele.item.SubDistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
@@ -523,7 +554,29 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     selectItemProductItem(ele: any, index: number) {
         ele.item.NoticeCode = this.noticeCode;
+        ele.item.IsActive = 1;
         this.NoticeProduct.at(index).reset(ele.item)
+        this.NoticeProduct.at(index).patchValue({
+            IsNewItem: true,
+            NoticeCode: this.noticeCode,
+            Qty: ele.item.Size,
+            QtyUnit: ele.item.SizeCode
+        })
+    }
+
+    selectItemStaff(e, i) {
+        this.NoticeStaff.at(i).reset(e.item);
+        this.NoticeStaff.at(i).patchValue({
+            ProgramCode: 'XCS60-02-02',
+            ProcessCode: '0002',
+            NoticeCode: this.noticeCode,
+            IsActive: 1,
+            PositionCode: e.item.OperationPosCode,
+            PositionName: e.item.OperationPosName,
+            DepartmentCode: e.item.OfficeCode,
+            DepartmentName: e.item.OfficeName,
+            ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode
+        })
     }
 
     async onDeleteProduct(id: string, index: number) {
@@ -542,6 +595,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.noticeService.productupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
                         this.NoticeProduct.removeAt(index);
+                        alert(Message.delProductComplete)
+                    } else {
+                        alert(Message.delProductFail)
                     }
                 })
 
@@ -566,6 +622,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.noticeService.suspectupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
                         this.NoticeSuspect.removeAt(index);
+                        alert(Message.delSuspcetComplete)
+                    } else {
+                        alert(Message.delSuspectFail)
                     }
                 })
 
@@ -590,7 +649,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.noticeService.suspectupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
                         this.NoticeSuspect.removeAt(index);
-                    } 
+                        alert(Message.delDocumentComplete)
+                    } else {
+                        alert(Message.delDocumentFail)
+                    }
                 })
 
                 this.preloader.setShowPreloader(false);

@@ -3,12 +3,13 @@ export function toLocalNumeric(date: string): string {
         return null;
     }
 
-    const dd = new Date(date).getDay();
-    const mm = new Date(date).getMonth() + 1;
-    const yyyy = new Date(date).getFullYear() + 543;
+    const _date = new Date(date)
+    const dd = _date.getDate();
+    const mm = _date.getMonth() + 1;
+    const yyyy = _date.getFullYear() + 543;
 
-    const _dd = (dd < 10 ? '0' + dd : dd);
-    const _mm = (mm < 10 ? '0' + mm : mm);
+    const _dd = dd < 10 ? '0' + dd : dd;
+    const _mm = mm < 10 ? '0' + mm : mm;
 
     return `${yyyy}-${_mm}-${_dd}`;
 }

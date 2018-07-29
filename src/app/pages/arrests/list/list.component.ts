@@ -51,7 +51,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.onSearch('');
 
-        this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
+        this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
@@ -112,6 +112,6 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.subOnSearch.unsubscribe();
+        // this.subOnSearch.unsubscribe();
     }
 }
