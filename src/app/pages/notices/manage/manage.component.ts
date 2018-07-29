@@ -157,18 +157,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private navigate_service() {
-        this.sub = this.navService.showFieldEdit.subscribe(p => {
+        this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
 
-        this.sub = this.navService.onCancel.subscribe(async status => {
+        this.navService.onCancel.subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
                 this.router.navigate(['/notice/list']);
             }
         })
 
-        this.sub = this.navService.onSave.subscribe(async status => {
+        this.navService.onSave.subscribe(async status => {
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
@@ -181,21 +181,21 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.sub = this.navService.onDelete.subscribe(async status => {
+        this.navService.onDelete.subscribe(async status => {
             if (status) {
                 await this.navService.setOnDelete(false);
                 this.onDelete();
             }
         });
 
-        this.sub = this.navService.onPrint.subscribe(async status => {
+        this.navService.onPrint.subscribe(async status => {
             if (status) {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
         })
 
-        this.sub = this.navService.onNextPage.subscribe(async status => {
+        this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
                 this.router.navigate(['/arrest/manage', 'C', 'NEW']);
@@ -301,18 +301,18 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.BrandFullName = `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`
             )
 
-           await this.setItemFormArray(res.NoticeStaff, 'NoticeStaff');
-           await this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
-           await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-           await this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
-           await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
-           await this.setItemFormArray(res.NoticeDocument, 'NoticeDocument')
+            await this.setItemFormArray(res.NoticeStaff, 'NoticeStaff');
+            await this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
+            await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+            await this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
+            await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
+            await this.setItemFormArray(res.NoticeDocument, 'NoticeDocument')
         })
     }
 
     private async onCreate() {
 
-        if(!this.noticeForm.valid) {
+        if (!this.noticeForm.valid) {
             return false;
         }
         // Set Preloader
@@ -328,7 +328,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(JSON.stringify(this.noticeForm.value));
 
         await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
-            if (isSuccess) { 
+            if (isSuccess) {
                 alert(Message.saveComplete)
                 this.router.navigate(['/notice/manage', 'R', this.noticeCode]);
             } else {
@@ -354,9 +354,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(this.noticeForm.value);
 
         await this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
-            if (isSuccess) { 
+            if (isSuccess) {
                 alert(Message.saveComplete)
-                this.onComplete() 
+                this.onComplete()
             } else {
                 alert(Message.saveFail)
             }
@@ -365,18 +365,19 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(false);
     }
 
-    private async onDelete() {
-        // Set Preloader
-        this.preloader.setShowPreloader(true);
-
-        await this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
-            if (IsSuccess) {
-                alert(Message.delComplete)
-                this.router.navigate(['/notice/list']);
-            } else (
-                alert(Message.delFail)
-            )
-        })
+    private onDelete() {
+        if (confirm(Message.confirmAction)) {
+            // Set Preloader
+            this.preloader.setShowPreloader(true);
+            this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
+                if (IsSuccess) {
+                    alert(Message.delComplete)
+                    this.router.navigate(['/notice/list']);
+                } else (
+                    alert(Message.delFail)
+                )
+            })
+        }
     }
 
     private async onComplete() {

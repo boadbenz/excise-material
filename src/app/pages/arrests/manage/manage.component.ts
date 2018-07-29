@@ -219,11 +219,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private navigate_Service() {
-        this.sub = this.navService.showFieldEdit.subscribe(p => {
+        this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
 
-        this.sub = this.navService.onSave.subscribe(async status => {
+       this.navService.onSave.subscribe(async status => {
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
@@ -243,14 +243,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.sub = this.navService.onCancel.subscribe(async status => {
+        this.navService.onCancel.subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
                 this.router.navigate(['/arrest/list']);
             }
         })
 
-        this.sub = this.navService.onPrint.subscribe(async status => {
+        this.navService.onPrint.subscribe(async status => {
             if (status) {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
