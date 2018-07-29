@@ -198,7 +198,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sub = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/arrest/manage', 'C', this.arrestCode]);
+                this.router.navigate(['/arrest/manage', 'C', 'NEW']);
             }
         })
     }
@@ -216,7 +216,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             CommunicationChanelID: [null],
             DataSource: [null],
             FilePath: [null],
-            ArrestCode: new FormControl(this.arrestCode),
+            ArrestCode: [null],
             IsArrest: new FormControl(1),
             IsActive: new FormControl(1),
             NoticeStaff: this.fb.array([this.createStaffForm()]),
@@ -227,7 +227,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeDocument: this.fb.array([this.createDocumentForm()])
         })
     }
-
 
     private createStaffForm(): FormGroup {
         NoticeStaffFormControl.NoticeCode = new FormControl(this.noticeCode);
