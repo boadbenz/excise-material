@@ -107,6 +107,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
+        
         // set true
         this.navService.setNextPageButton(true);
 
@@ -192,6 +193,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.mode = p['mode'];
             if (p['mode'] === 'C') {
                 // set false
+                this.navService.setPrintButton(false);
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);

@@ -46,7 +46,7 @@ export class ListComponent implements OnInit {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('1.01');
+        this.sidebarService.setVersion('1.02');
         this.paginage.TotalItems = 0;
 
         this.preLoaderService.setShowPreloader(true);

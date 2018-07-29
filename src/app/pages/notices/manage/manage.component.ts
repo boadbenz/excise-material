@@ -110,7 +110,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.01');
+        this.sidebarService.setVersion('1.02');
 
         this.active_route();
 
@@ -182,7 +182,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.onCreate();
 
                 } else if (this.mode === 'R') {
-                    console.log('revice');
                     this.onReviced();
                 }
             }
@@ -332,7 +331,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeInformer.map(item => {
             item.InformerType = item.InformerType === true ? 1 : 0;
         });
-        console.log(JSON.stringify(this.noticeForm.value));
+        // console.log(JSON.stringify(this.noticeForm.value));
 
         await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
             if (isSuccess) {
@@ -358,7 +357,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.InformerType = item.InformerType === true ? 1 : 0;
         });
 
-        console.log(this.noticeForm.value);
+        // console.log(this.noticeForm.value);
 
         await this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
             if (isSuccess) {
