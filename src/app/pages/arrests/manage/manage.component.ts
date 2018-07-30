@@ -29,6 +29,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { MasOfficeModel } from '../../../models/mas-office.model';
+import { Notice } from '../../notices/notice';
 
 @Component({
     selector: 'app-manage',
@@ -55,6 +56,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
+
+    private onSaveSubscribe: any;
+    private onDeleSubscribe: any;
+    private onPrintSubscribe: any;
+    private onNextPageSubscribe: any;
+    private onCancelSubscribe: any;
 
     get ArrestStaff(): FormArray {
         return this.arrestFG.get('ArrestStaff') as FormArray;
@@ -90,7 +97,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     @Input() _noticeCode: string;
     @ViewChild('printDocModal') printDocModel: ElementRef;
-    @Input() noticeCode: string;
+    // @Input() inputNotice: Notice;
 
     constructor(
         private fb: FormBuilder,
@@ -107,7 +114,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
-        
+
         // set true
         this.navService.setNextPageButton(true);
 
@@ -134,7 +141,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.sub.unsubscribe();
+        // this.sub.unsubscribe();
+        this.onCancelSubscribe.unsubscribe();
+        this.onSaveSubscribe.unsubscribe();
+        this.onDeleSubscribe.unsubscribe();
+        this.onPrintSubscribe.unsubscribe();
+        this.onNextPageSubscribe.unsubscribe()
     }
 
     private createForm() {
@@ -225,7 +237,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.showEditField = p;
         });
 
-       this.navService.onSave.subscribe(async status => {
+        this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
@@ -238,24 +250,31 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.navService.onDelete.subscribe(async status => {
+        this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
             if (status) {
                 await this.navService.setOnDelete(false);
                 this.onDelete();
             }
         });
 
-        this.navService.onCancel.subscribe(async status => {
+        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
                 this.router.navigate(['/arrest/list']);
             }
         })
 
-        this.navService.onPrint.subscribe(async status => {
+        this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
             if (status) {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+            }
+        })
+
+        this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnNextPage(false);
+                this.router.navigate(['/accusations/manage', 'C', 'NEW']);
             }
         })
     }
@@ -413,7 +432,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
 
         console.log('====================================');
-        console.log(this.arrestFG.value);
+        console.log(JSON.stringify(this.arrestFG.value));
         console.log('====================================');
         let isSuccess: boolean | false;
 
@@ -426,8 +445,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (isSuccess) {
             this.onComplete()
             alert(Message.saveComplete)
-            this.router.navigate([`/arrest/manage`, 'R',this.arrestCode])
-            
+            this.router.navigate([`/arrest/manage`, 'R', this.arrestCode])
+
         } else {
             alert(Message.saveFail)
         }
@@ -443,45 +462,46 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.arrestService.getByCon(this.arrestCode).then(arrestRes => {
             if (!arrestRes) { IsSuccess = false; return false; }
             // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
-            arrestRes.ArrestIndictment.map(indictObj => {
-                // ข้อกล่าวหา
-                // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
-                this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
-                    // รายละเอียดข้อกล่าวหา
-                    item1.ArrestIndictmentDetail.map(async indictD => {
-                        // ___5. Set IndictmentID ให้กับ object IndicmentDetail
-                        indictD.IndictmentID = indictObj.IndictmentID;
-                        // ___6. บันทึก ArrestIndictmentDetail
-                        await this.arrestService.indicmentDetailinsAll(indictD).then(async indictDIns => {
-                            if (!indictDIns) { IsSuccess = false; return false; }
+            IsSuccess = true
+            // arrestRes.ArrestIndictment.map(indictObj => {
+            //     // ข้อกล่าวหา
+            //     // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
+            //     this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
+            //         // รายละเอียดข้อกล่าวหา
+            //         item1.ArrestIndictmentDetail.map(async indictD => {
+            //             // ___5. Set IndictmentID ให้กับ object IndicmentDetail
+            //             indictD.IndictmentID = indictObj.IndictmentID;
+            //             // ___6. บันทึก ArrestIndictmentDetail
+            //             await this.arrestService.indicmentDetailinsAll(indictD).then(async indictDIns => {
+            //                 if (!indictDIns) { IsSuccess = false; return false; }
 
-                            IsSuccess = true
-                            // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
-                            await this.arrestService
-                                .indicmentgetByCon(indictD.IndictmentID.toString())
-                                .then(indictDetailGet => {
-                                    debugger
-                                    if (!indictDetailGet.length) return false;
+            //                 IsSuccess = true
+            //                 // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
+            //                 await this.arrestService
+            //                     .indicmentgetByCon(indictD.IndictmentID.toString())
+            //                     .then(indictDetailGet => {
+            //                         debugger
+            //                         if (!indictDetailGet.length) return false;
 
-                                    console.log(indictDetailGet);
+            //                         console.log(indictDetailGet);
 
-                                    // รายละเอียดสินค้า
-                                    indictD.ArrestProductDetail.map(productD => {
-                                        console.log(productD);
-                                        debugger
-                                        // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
-                                        // productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
-                                        // // ___9.บันทึก ArrestProductDetail
-                                        // this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
-                                    })
-                                }, (error) => { IsSuccess = false; console.error(error); return false; });
+            //                         // รายละเอียดสินค้า
+            //                         indictD.ArrestProductDetail.map(productD => {
+            //                             console.log(productD);
+            //                             debugger
+            //                             // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
+            //                             // productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
+            //                             // // ___9.บันทึก ArrestProductDetail
+            //                             // this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
+            //                         })
+            //                     }, (error) => { IsSuccess = false; console.error(error); return false; });
 
-                        }, (error) => { IsSuccess = false; console.error(error); return false; });
+            //             }, (error) => { IsSuccess = false; console.error(error); return false; });
 
-                    })
-                })
+            //         })
+            //     })
 
-            })
+            // })
 
         }, (error) => { IsSuccess = false; console.error(error); return false; });
 
@@ -616,8 +636,28 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    setNoticeCode(e) {
-        this.arrestFG.patchValue({ NoticeCode: e });
+    setNoticeForm(notice: Notice) {
+        this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
+
+        let locale = notice.NoticeLocale[0];
+        let product = notice.NoticeProduct;
+        let lawbreaker = [];
+        
+        this.ArrestLocale.at(0).reset(locale);
+        this.ArrestLocale.at(0).patchValue({
+            Region: `${locale.SubDistrict} ${locale.District} ${locale.Province}`,
+            ArrestCode: this.arrestCode,
+            IsArrest: 1
+        })
+
+        this.ArrestProduct.reset(product);
+        this.ArrestProduct.value.map(item => {
+            item.ArrestCode = this.arrestCode
+            item.IsNewItem = true;
+            item.ProductFullName = `${item.SubBrandNameTH == null ? '' : item.SubBrandNameTH}`;
+            item.ProductFullName += ` ${item.BrandNameTH == null ? '' : item.BrandNameTH}`;
+            item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
+        })
     }
 
     openModal(e) {

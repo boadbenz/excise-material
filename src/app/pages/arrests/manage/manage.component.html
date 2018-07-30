@@ -1,7 +1,7 @@
 <app-step-wizard [sectionId]="2"></app-step-wizard>
 
 <ng-template #printDocModal let-c="close" let-d="dismiss">
-    <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()" (outputNoticeCode)="noticeCode"></app-print-doc-modal>
+    <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
 </ng-template>
 
 <form action="" [formGroup]="arrestFG">
@@ -20,7 +20,7 @@
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </a>
                     <ng-template #noticelist let-c="close" let-d="dismiss">
-                        <app-modal-notice (c)="modal.close()" (d)="modal.dismiss()" (noticeCode)="setNoticeCode($event)"></app-modal-notice>
+                        <app-modal-notice (c)="modal.close()" (d)="modal.dismiss()" (outputNotice)="setNoticeForm($event)"></app-modal-notice>
                     </ng-template>
                 </div>
 
@@ -506,7 +506,7 @@
                         <tr *ngFor="let item of ArrestDocument.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" formControlName="DocumentID" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
                                 <input type="file" formControlName="FilePath" class="dropify" [readonly]="showEditField">

@@ -103,8 +103,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
-        // set true
-        this.navService.setNextPageButton(true);
     }
 
     async ngOnInit() {
@@ -119,7 +117,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.createForm();
 
         await this.setProductStore();
-        await this.setOfficeStore();
+        // await this.setOfficeStore();
         await this.setStaffStore();
         await this.setRegionStore();
 
@@ -437,11 +435,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private setOfficeStore() {
-        this.arrestService.masOfficegetAll().then(res =>
-            this.typeheadOffice = res
-        )
-    }
+    // private setOfficeStore() {
+    //     this.arrestService.masOfficegetAll().then(res =>
+    //         this.typeheadOffice = res
+    //     )
+    // }
 
     private setStaffStore() {
         this.arrestService.masStaffgetAll().then(res =>
@@ -526,6 +524,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
+    // serachOffice = (text3$: Observable<string>) =>
+    //     text3$
+    //         .debounceTime(200)
+    //         .distinctUntilChanged()
+    //         .map(term => term === '' ? []
+    //             : this.typeheadOffice
+    //                 .filter(v =>
+    //                     v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+    //                     v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1
+    //                 ).slice(0, 10));
+
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
 
@@ -534,6 +543,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName} ${x.FirstName} ${x.LastName}`
+
+    // formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
 
     selectItemInformmerRegion(ele: any) {
         this.NoticeInformer.at(0).patchValue({
@@ -585,6 +596,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode
         })
     }
+
+    // selectItemOffice(e) {
+    //     this.noticeForm.patchValue({
+    //         NoticeStationCode: e.item.OfficeCode,
+    //         NoticeStation: e.item.OfficeShortName
+    //     })
+    // }
 
     async onDeleteProduct(id: string, index: number) {
         if (this.mode === 'C') {

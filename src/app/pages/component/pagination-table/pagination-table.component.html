@@ -1,7 +1,6 @@
 <div class="row justify-content-between m-l-5">
   <div clas="col">
-      <a class="icn-pagination text-secondary" href="javaScript:void(0)" (click)="previousPage(CurrentPage)"> |
-          << </a>
+      <a class="icn-pagination text-secondary" href="javaScript:void(0)" (click)="previousPage(CurrentPage)"> |<< </a>
               <label> หน้าที่
                   <select name="CurrentPage" [(ngModel)]="CurrentPage" (change)="changePage()">
                       <option *ngFor="let page of paginate.pages;" [value]="page">{{page}}</option>

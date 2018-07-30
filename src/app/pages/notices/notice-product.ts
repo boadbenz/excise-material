@@ -31,6 +31,8 @@ export class NoticeProduct {
     public NetWeightUnit = '';
     public Remarks = '';
     public IsActive = 1;
+
+    ProductFullName: string;
     public BrandFullName = '';
     public IsNewItem: boolean;
 }
@@ -65,7 +67,6 @@ export const NoticeProductFormControl = {
     NetWeight: new FormControl(null),
     NetWeightUnit: new FormControl(null),
     Remarks: new FormControl(null),
-
 
     BrandFullName: new FormControl(null),
     IsNewItem: new FormControl(false)
