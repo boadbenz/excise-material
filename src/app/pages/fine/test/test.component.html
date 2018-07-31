@@ -1,0 +1,7 @@
+<input type="text" style="width:93%" [(ngModel)]="StationName" name="StationName" placeholder="Pick one" aria-label="Number"
+    matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)">
+<mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
+        {{ option.OfficeName }}
+    </mat-option>
+</mat-autocomplete>
