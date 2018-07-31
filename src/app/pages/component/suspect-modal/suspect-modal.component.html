@@ -9,9 +9,9 @@
             </h4>
         </div>
         <div class="col-lg-5 col-8">
-            <form class="app-search">
-                <input type="search" name="" id="" class="form-control form-control-sm">
-                <a class="srh-btn">
+            <form class="app-search" #searchForm="ngForm" (ngSubmit)="onSearchByKeyword(searchForm.value)">
+                <input type="search" name="Textsearch" ngModel class="form-control form-control-sm">
+                <a class="srh-btn" (ngSubmit)="onSearchByKeyword(searchForm.value)" href="javaScript:void(0)">
                     <i class="ti-search"></i>
                 </a>
             </form>
@@ -39,7 +39,7 @@
                 <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
             </div>
             <div class="card-body">
-                <form class="form-horizontal">
+                <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onSearchAdv(advForm.value)">
                     <div class="row">
                         <label for="" class="col-lg-2 col-sm-4">ประเภทผู้ต้องหา :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
@@ -51,9 +51,9 @@
 
                         <label for="" class="col-lg-2 col-sm-4">ประเภทบุคคล :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-                            <select name="LawbreakerType" ngModel class="form-control form-control-sm">
+                            <select name="SuspectType" ngModel class="form-control form-control-sm">
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of lawbreakerType" [value]="item.value">{{item.text}}</option>
+                                <option *ngFor="let item of suspectTypes" [value]="item.value">{{item.text}}</option>
                             </select>
                         </div>
                     </div>
@@ -76,6 +76,7 @@
                         </div>
                         <label for="" class="col-lg-2 col-sm-4">ชื่อสถานประกอบการ :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
+                            <input type="hidden" name="CompanyTitleCode" ngModel>
                             <input type="text" name="CompanyName" ngModel class="form-control form-control-sm">
                         </div>
                     </div>
@@ -83,7 +84,9 @@
                     <div class="row">
                         <label for="" class="col-lg-2 col-sm-4">ชื่อผู้ต้องสงสัย :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-                            <input type="text" name="" class="form-control form-control-sm">
+                            <input type="hidden" name="SuspectTitleName" ngModel>
+                            <input type="hidden" name="SuspectLastName" ngModel>
+                            <input type="text" name="SuspectFirstName" ngModel class="form-control form-control-sm">
                         </div>
                     </div>
 
@@ -101,7 +104,7 @@
     <div class="card unset-radius">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table id="suspectModal" #suspectModal class="table table-sm table-striped">
+                <table [formGroup]="suspectFormGroup" id="suspectModal" #suspectModal class="table table-sm table-striped">
                     <thead>
                         <tr>
                             <th class="text-center">
@@ -117,17 +120,38 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody formArrayName="Suspect">
+                        <tr *ngFor="let item of Suspect.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">
-                                <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                <label for="td_1" class="m-0"></label>
+                                <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo" [checked]="isCheckAll">
+                                <label [for]="'td'+i" class="m-0"></label>
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{item.get('RowId').value}}</td>
+                            <td>
+                                <!-- {{item.get('SuspectType').value}} -->
+                            </td>
+                            <td>
+                                <!-- {{item.get('EntityType').value}} -->
+                            </td>
+                            <td>
+                                <!-- <span *ngIf="item.get('EntityType').value == 0">
+                                {{item.get('CompanyRegistrationNo').value}}
+                            </span>
+                            <span *ngIf="item.get('EntityType').value == 1 && item.get('SuspectType').value == 0">
+                                {{item.get('PassportNo').value}}
+                            </span>
+                            <span *ngIf="item.get('EntityType').value == 1 && item.get('SuspectType').value == 1">
+                                {{item.get('Idcard').value}}
+                            </span> -->
+                            </td>
+                            <td>
+                                <!-- <span *ngIf="item.get('EntityType').value == 0">
+                                {{item.get('CompanyFullName').value}}
+                            </span> -->
+                                <!-- <span *ngIf="item.get('EntityType').value == 1"> -->
+                                {{item.get('SuspectFullName').value}}
+                                <!-- </span> -->
+                            </td>
                             <td></td>
                             <td class="text-center">
                                 <a href="javaScript:void(0);" class="text-center text-secondary">
@@ -140,18 +164,14 @@
             </div>
         </div>
         <div class="card-footer card-footer-unset">
-            <app-pagination-table 
-                [TotalItems]="paginage.TotalItems" 
-                [CurrentPage]="paginage.CurrentPage" 
-                [PageSize]="paginage.PageSize"
-                [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
-                (onPageChange)="pageChanges($event)">
+            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
             </app-pagination-table>
         </div>
     </div>
 </div>
 <div class="modal-footer">
     <div class="col-lg-2 col-sm-4">
-        <button type="button" class="btn btn-block btn-themecolor" (click)="close('Save click')">บันทึก</button>
+        <button type="button" class="btn btn-block btn-themecolor" (click)="exportData()">บันทึก</button>
     </div>
 </div>

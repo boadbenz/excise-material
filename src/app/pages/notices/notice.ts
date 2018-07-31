@@ -22,4 +22,11 @@ export class Notice {
     public Noticelocale: Array<NoticeLocale>;
     public NoticeProduct: Array<NoticeProduct>;
     public NoticeSuspect: Array<NoticeSuspect>;
+<<<<<<< HEAD
+=======
+    public NoticeDocument: Array<NoticeDocument>;
+
+    public RowId: number;
+    public IsChecked: boolean;
+>>>>>>> FL_J
 }

@@ -10,18 +10,24 @@
                     <label for="" class="col-lg-2 col-sm-3">เลขที่ใบแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="" name="NoticeCode" ngModel class="form-control form-control-sm" placeholder="">
+                            <input type="text" name="NoticeCode" ngModel class="form-control form-control-sm" 
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required>
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
-                            <input type="date" id="" name="DateStartFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" name="DateStartFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป" 
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required>
 
                             <label for="">&nbsp; ถึง &nbsp;</label>
 
-                            <input type="date" id="" name="DateStartTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" name="DateStartTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"
+                            [ngClass]="{'ng-touched':isRequired}" 
+                            required>
                         </div>
                     </div>
                 </div>
@@ -30,13 +36,17 @@
                     <label for="" class="col-lg-2 col-sm-3">ชื่อผู้รับแจ้ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="" name="StaffName" ngModel class="form-control form-control-sm" placeholder="">
+                            <input type="text" name="StaffName" ngModel class="form-control form-control-sm" placeholder="" 
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required>
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-3">หน่วยงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="" name="DepartmentName" ngModel class="form-control form-control-sm" placeholder="">
+                            <input type="text" name="DepartmentName" ngModel class="form-control form-control-sm" placeholder="" 
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required>
                         </div>
                     </div>
                 </div>
@@ -45,7 +55,9 @@
                     <label for="" class="col-lg-2 col-sm-3">ผู้ต้องสงสัย :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="" name="SuspectName" ngModel class="form-control form-control-sm" placeholder="">
+                            <input type="text" name="SuspectName" ngModel class="form-control form-control-sm" placeholder="" 
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required>
                         </div>
                     </div>
                 </div>
@@ -78,8 +90,13 @@
                     </tr>
                 </thead>
                 <tbody>
+<<<<<<< HEAD
                     <tr *ngFor="let item of notice; let i=index;">
                         <!-- <td class="text-center">{{i+1}}</td>
+=======
+                    <tr *ngFor="let item of noticeList; let i=index;">
+                        <td class="text-center">{{item.RowId}}</td>
+>>>>>>> FL_J
                         <td>{{item.NoticeCode}}</td>
                         <td>{{item.NoticeDate}}</td>
                         <td>{{item.}}</td>
@@ -96,12 +113,8 @@
         </div>
     </div>
     <div class="card-footer card-footer-unset">
-        <app-pagination-table 
-            [TotalItems]="paginage.TotalItems" 
-            [CurrentPage]="paginage.CurrentPage" 
-            [PageSize]="paginage.PageSize"
-            [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
-            (onPageChange)="pageChanges($event)">
+        <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+            [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
         </app-pagination-table>
     </div>
 </div>
