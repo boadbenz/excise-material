@@ -98,7 +98,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     @Input() _noticeCode: string;
     @ViewChild('printDocModal') printDocModel: ElementRef;
-    // @Input() inputNotice: Notice;
 
     constructor(
         private fb: FormBuilder,
@@ -695,7 +694,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsNewItem: true
             })
         }
-        
+
     }
 
     openModal(e) {
@@ -719,7 +718,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestLawbreaker.push(this.fb.group(item))
         })
     }
-        
+
 
     addStaff() {
         const lastIndex = this.ArrestStaff.length - 1;
@@ -825,7 +824,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
     }
 
-    deleteStaff(indexForm: number, staffId: string) {
+    async deleteStaff(indexForm: number, staffId: string) {
         if (this.mode === 'C') {
             this.ArrestStaff.removeAt(indexForm);
 
@@ -835,7 +834,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ArrestStaff.removeAt(indexForm)
             } else if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
-                this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
+                await this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
                     if (IsSuccess) {
                         alert(Message.delStaffComplete)
                         this.ArrestStaff.removeAt(indexForm)
@@ -848,7 +847,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    deleteLawbreaker(indexForm: number, lawbreakerId: string) {
+    async deleteLawbreaker(indexForm: number, lawbreakerId: string) {
         if (this.mode === 'C') {
             this.ArrestLawbreaker.removeAt(indexForm);
 
@@ -858,7 +857,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ArrestLawbreaker.removeAt(indexForm)
             } else if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
-                this.arrestService.lawbreakerupdDelete(lawbreakerId).then(IsSuccess => {
+                await this.arrestService.lawbreakerupdDelete(lawbreakerId).then(IsSuccess => {
                     if (IsSuccess) {
                         alert(Message.delLawbreakerComplete)
                         this.ArrestLawbreaker.removeAt(indexForm)
@@ -871,7 +870,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    deleteProduct(indexForm: number, productId: string) {
+    async deleteProduct(indexForm: number, productId: string) {
         if (this.mode === 'C') {
             this.ArrestProduct.removeAt(indexForm);
 
@@ -881,7 +880,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ArrestProduct.removeAt(indexForm)
             } else if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
-                this.arrestService.productupdDelete(productId).then(IsSuccess => {
+                await this.arrestService.productupdDelete(productId).then(IsSuccess => {
                     if (IsSuccess) {
                         alert(Message.delProductComplete)
                         this.ArrestProduct.removeAt(indexForm)
