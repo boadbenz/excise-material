@@ -16,10 +16,10 @@ import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
-import { ArrestIndictment, IndictmentLawbreaker, ArrestIndictmentFormControl } from '../arrest-indictment';
+import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestLocaleFormControl } from '../arrest-locale';
-import { ArrestLawbreakerFormControl, ArrestLawbreaker, LawbreakerTypes, EntityTypes } from '../arrest-lawbreaker';
+import { ArrestLawbreaker, LawbreakerTypes, EntityTypes } from '../arrest-lawbreaker';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -395,27 +395,27 @@ export class ManageComponent implements OnInit, OnDestroy {
             await res.ArrestIndictment.map(async item => {
                 item.IsNewItem = false
                 item.SectionName = item.SectionName ? item.SectionName : null;
-                let _IndictmentLawbreaker = [];
+                let _IndictmentLawbreaker = new Array<IndictmentLawbreaker>();
 
-                await item.OpsArrestIndicmentDetailCollection.map(a1 => {
-                    let _lawbreaker = res.ArrestLawbreaker.filter(a2 => a2.LawbreakerID == a1.LawbreakerID);
-                    _IndictmentLawbreaker.push({
-                        LawbreakerID: a1.LawbreakerID.toString(),
-                        LawbreakerFullName: _lawbreaker.length ? _lawbreaker[0].LawbreakerFullName : null,
-                        CompanyFullName: _lawbreaker.length ? _lawbreaker[0].CompanyFullName : null,
-                        EntityType: _lawbreaker.length ? _lawbreaker[0].EntityType : null,
+                // await item.OpsArrestIndicmentDetailCollection.map(a1 => {
+                //     let _lawbreaker = res.ArrestLawbreaker.filter(a2 => a2.LawbreakerID == a1.LawbreakerID);
+                //     _IndictmentLawbreaker.push({
+                //         LawbreakerID: a1.LawbreakerID.toString(),
+                //         LawbreakerFullName: _lawbreaker.length ? _lawbreaker[0].LawbreakerFullName : null,
+                //         CompanyFullName: _lawbreaker.length ? _lawbreaker[0].CompanyFullName : null,
+                //         EntityType: _lawbreaker.length ? _lawbreaker[0].EntityType : null,
 
-                        ProductID: null,
-                        ProductName: null,
-                        Qty: null,
-                        QtyUnit: null,
-                        Size: null,
-                        SizeUnit: null,
-                        Weight: null,
-                        WeightUnit: null,
-                        IsChecked: false
-                    })
-                })
+                //         ProductID: null,
+                //         ProductName: null,
+                //         Qty: null,
+                //         QtyUnit: null,
+                //         Size: null,
+                //         SizeUnit: null,
+                //         Weight: null,
+                //         WeightUnit: null,
+                //         IsChecked: false
+                //     })
+                // })
                 item.IndictmentLawbreaker = _IndictmentLawbreaker;
             });
 
@@ -430,7 +430,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onCreate() {
-debugger
+        debugger
         if (!this.arrestFG.valid) {
             this.isRequired = true;
             alert(Message.checkData)
@@ -545,7 +545,7 @@ debugger
     }
 
     private async onReviced() {
-        
+
         if (!this.arrestFG.valid) {
             this.isRequired = true;
             alert(Message.checkData)
@@ -717,14 +717,19 @@ debugger
             IsArrest: 1
         })
 
-        this.ArrestProduct.reset(product);
-        this.ArrestProduct.value.map(item => {
-            item.ArrestCode = this.arrestCode
-            item.IsNewItem = true;
+        product.map(item => {
             item.ProductFullName = `${item.SubBrandNameTH == null ? '' : item.SubBrandNameTH}`;
             item.ProductFullName += ` ${item.BrandNameTH == null ? '' : item.BrandNameTH}`;
             item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
         })
+        this.ArrestProduct.reset(product);
+        for (let i = 0; i < this.ArrestProduct.length; i++) {
+            this.ArrestProduct.at(i).patchValue({
+                ArrestCode: this.arrestCode,
+                IsNewItem: true
+            })
+        }
+        
     }
 
     openModal(e) {
@@ -777,6 +782,7 @@ debugger
                 this.ArrestProduct.push(this.fb.group(item));
             }
         }
+
     }
 
     addIndictment(e: ArrestIndictment[]) {
@@ -818,11 +824,11 @@ debugger
 
             let FG = this.fb.group({
                 ArrestCode: new FormControl(this.arrestCode, Validators.required),
-                IndictmentID: new FormControl(item.IndictmentID, Validators.required),
+                IndictmentID: new FormControl(item.IndictmentID),
                 IsProve: new FormControl(item.IsProve, Validators.required),
                 IsActive: new FormControl(item.IsActive, Validators.required),
                 GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),
-                SectionNo: new FormControl(item.SectionNo, Validators.required),
+                SectionNo: new FormControl(item.SectionNo),
                 SectionDesc1: item.SectionDesc1,
                 SectionName: item.SectionName,
                 IndictmentLawbreaker: this.fb.array(item.IndictmentLawbreaker),

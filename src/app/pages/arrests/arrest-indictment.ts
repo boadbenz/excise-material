@@ -50,19 +50,3 @@ export class ArrestIndicmentDetail{
     LawbreakerID: number;
     ArrestProductDetail: ArrestProductDetail[];
 }
-
-export const ArrestIndictmentFormControl = {
-    ArrestCode: new FormControl(null, Validators.required),
-    IndictmentID: new FormControl(null),
-    IsProve: new FormControl(null),
-    IsActive: new FormControl(null),
-    GuiltBaseID: new FormControl(null, Validators.required),
-    SectionNo: new FormControl(null),
-    SectionDesc1: new FormControl(null),    
-    SectionName: new FormControl(null),
-    IndictmentLawbreaker: new FormControl(null),
-    ArrestIndictmentDetail: new FormControl(null),
-    OpsArrestIndicmentDetailCollection: new FormControl(null),
-    
-    IsNewItem: new FormControl(null),
-}
