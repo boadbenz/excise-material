@@ -1,47 +1,11 @@
-import { Component, OnInit, Output, EventEmitter, Injectable } from '@angular/core';
-import { LawbreakerTypes, EntityTypes, ArrestLawbreaker } from '../arrest-lawbreaker';
-import { pagination } from 'app/config/pagination';
-import { Observable } from 'rxjs/Observable';
-import { appConfig } from 'app/app.config';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-@Injectable()
-export class LawbreakerService {
-    constructor(private http: HttpClient) { }
-
-    // tslint:disable-next-line:member-ordering
-    private httpOptions = {
-        headers: new HttpHeaders(
-            {
-                'Content-Type': 'application/json'
-            })
-    };
-
-    searchByKeyword(Textsearch: string) {
-
-    }
-
-    searchAdv(form: any) {
-        if (form === '') {
-            return Observable.of([]);
-        }
-
-        const params = JSON.stringify(form);
-        const url = `${appConfig.apiUrl}/SuspectgetByConAdv`;
-        return this.http.post<any>(url, params, this.httpOptions)
-            .map(res => {
-                if (res.IsSuccess === false) {
-                    return Observable.of([]);
-                }
-                return res.ResponseData;
-            })
-    }
-}
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { LawbreakerTypes, EntityTypes } from '../arrest-lawbreaker';
+import { pagination } from '../../../config/pagination';
 
 @Component({
     selector: 'app-lawbreaker-modal',
     templateUrl: './lawbreaker-modal.component.html',
-    styleUrls: ['./lawbreaker-modal.component.scss'],
+    styleUrls: ['./lawbreaker-modal.component.scss']
 })
 
 export class LawbreakerModalComponent implements OnInit {
@@ -49,8 +13,6 @@ export class LawbreakerModalComponent implements OnInit {
     isOpen = false;
     isCheckAll = false;
     advSearch = false;
-    lawbreaker = new Array<ArrestLawbreaker>();
-    lawbreakerList = new Array<ArrestLawbreaker>();
 
     lawbreakerType = LawbreakerTypes;
     entityType = EntityTypes;
@@ -60,7 +22,7 @@ export class LawbreakerModalComponent implements OnInit {
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
 
-    constructor(private lawService: LawbreakerService) { }
+    constructor() { }
 
     ngOnInit() {
         this.onDetactTable();
@@ -70,7 +32,7 @@ export class LawbreakerModalComponent implements OnInit {
     }
 
     onSearchAdv(f: any) {
-        this.lawService.searchAdv(f).subscribe(res => this.lawbreaker = res);
+
     }
 
     checkAll() {
@@ -90,7 +52,7 @@ export class LawbreakerModalComponent implements OnInit {
     }
 
     async pageChanges(event: any) {
-        this.lawbreakerList = await this.lawbreaker.slice(event.startIndex - 1, event.endIndex);
+        // this.arrestList = await this.arrest.slice(event.startIndex - 1, event.endIndex);
     }
 
 }

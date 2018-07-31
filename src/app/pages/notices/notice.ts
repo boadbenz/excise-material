@@ -23,4 +23,3 @@ export class Notice {
     public NoticeProduct: Array<NoticeProduct>;
     public NoticeSuspect: Array<NoticeSuspect>;
 }
-

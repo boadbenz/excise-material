@@ -4,9 +4,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { toLocalNumeric } from 'app/config/dateFormat';
+import { toLocalNumeric } from '../../../config/dateFormat';
 import { ArrestStaff, Contributor } from '../arrest-staff';
-import { Message } from 'app/config/message';
+import { Message } from '../../../config/message';
 import { ArrestProduct } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment } from '../arrest-indictment';
@@ -398,6 +398,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestForm.value.ArrestDate = arrestDate.toISOString()
         this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
 
+        console.log(JSON.stringify(this.arrestForm.value));
         this.arrestService.insAll(this.arrestForm.value).then(res => {
             // tslint:disable-next-line:triple-equals
             if (res.IsSuccess == true) {
@@ -409,11 +410,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private onReviced() {
-        const arrestDate = new Date(this.arrestForm.value.ArrestDate);
-        const occurrenceDate = new Date(this.arrestForm.value.OccurrenceDate)
-        this.arrestForm.value.ArrestDate = arrestDate.toISOString()
-        this.arrestForm.value.OccurrenceDate = occurrenceDate.toISOString();
-        
+        console.log(JSON.stringify(this.arrestForm.value));
         this.arrestService.updByCon(this.arrestForm.value).then(async res => {
             if (res.IsSuccess === true) {
                 // this.onComplete();

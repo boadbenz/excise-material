@@ -36,3 +36,14 @@
     background: #ccdeea;
     border-color: #ccdeea;
 }
+
+::ng-deep .cdk-overlay-container
+{
+
+}
+
+::ng-deep .mat-autocomplete-panel{
+  background-color: white;
+  // top:-2200px;
+  // left:600px;
+}

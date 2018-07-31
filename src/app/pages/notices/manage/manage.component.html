@@ -55,15 +55,8 @@
                 </div>
             </div>
 
-            <div formArrayName="NoticeStaff">
-                <div class="row" *ngFor="let item of NoticeStaff.controls; let i=index;" [formGroupName]="i">
-
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ผู้รับแจ้งความ :
-                    </label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
-
+            <div class="row" formArrayName="Noticestaff">
+                <div *ngFor="let item of Noticestaff.controls; let i=index;" [formGroupName]="i">
                     <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
@@ -105,18 +98,7 @@
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">รายละเอียดผู้แจ้งความ</h4>
         </div>
-        <div class="card-body" formArrayName="NoticeInformer">
-            <div *ngFor="let item of NoticeInformer.controls; let i=index;" [formGroupName]="i">
-
-                <div class="row form-group">
-                    <div class="col">
-                        <input *ngIf="showEditField" type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
-                            disabled>
-                        <input *ngIf="!showEditField" type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
-                            (change)="onChangeConceal()">
-                        <label for="md_checkbox_25">สายลับขอปิดนาม</label>
-                    </div>
-                </div>
+        <div class="card-body">
 
             <input type="hidden" formControlName="InformerID">
             <input type="hidden" formControlName="NoticeCode">
@@ -197,20 +179,10 @@
                 </div>
             </div>
 
-                    <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrict }} {{r.District}} {{r.Province}}
-                        </ng-template>
-
-                        <input type="text" class="form-control form-control-sm"
-                            [ngbTypeahead]="searchRegion"
-                            [resultTemplate]="rt"
-                            [readOnly]="isConceal"
-                            [readOnly]="showEditField"
-                            [inputFormatter]="formatterRegion" 
-                            (selectItem)="selectItemInformmerRegion($event)"
-                            />
-                    </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                    <input type="text" class="form-control form-control-sm" formControlName="Road" [disabled]="showEditField">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
@@ -232,10 +204,8 @@
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">รายละเอียดการกระทำความผิด</h4>
         </div>
-        <div class="card-body" formArrayName="NoticeLocale">
-
-            <div *ngFor="let item of NoticeLocale.controls; let i=index;" [formGroupName]="i">
-
+        <div class="card-body" formArrayName="Noticelocale">
+            <div *ngFor="let item of Noticelocale.controls; let i=index;" [formGroupName]="i">
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -282,17 +252,7 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-
-                        <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrict }} {{r.District}} {{r.Province}}
-                        </ng-template>
-                        <input type="text" formControlName="Region" class="form-control form-control-sm"
-                            [ngbTypeahead]="searchRegion"
-                            [readOnly]="isConceal"
-                            [readOnly]="showEditField"
-                            [resultTemplate]="rt"
-                            [inputFormatter]="formatterRegion" 
-                            (selectItem)="selectItemLocaleRegion($event)" />
+                        <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
                     </div>
                 </div>
             </div>
@@ -321,30 +281,20 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody formArrayName="NoticeProduct">
-                    <tr *ngFor="let item of NoticeProduct.controls; let i=index;" [formGroupName]="i">
-                        <td class="text-center">{{i+1}}</td>
-                        <td>
-                            <ng-template #rt let-r="result" let-t="term">
-                                {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}}
-                            </ng-template>
-                            <input type="text" class="form-control form-control-sm"
-                                [readonly]="showEditField"
-                                [ngbTypeahead]="searchProduct"
-                                [resultTemplate]="rt"
-                                [inputFormatter]="formatterProduct"
-                                (selectItem)="selectItemProductItem($event, i)" />
-
-                                <span *ngIf="searching">searching...</span>
-                                <div class="form-control-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            1
                         </td>
                         <td>
                             <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
-                                <option value="" selected disabled></option>
-                                <option *ngFor="let item of dutyUnitModel;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                        </td>
+                        <td>
+                            <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                                <option value=""></option>
                             </select>
                         </td>
                         <td class="text-center">
@@ -386,9 +336,10 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody formArrayName="NoticeSuspect">
-                    <tr *ngFor="let item of NoticeSuspect.controls; let i=index;" [formGroupName]="i">
-                        <td class="text-center">{{i+1}}</td>
+                <tbody>
+                    <tr>
+                        <td class="text-center"></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -451,15 +402,11 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody formArrayName="NoticeDocument">
-                    <tr *ngFor="let item of NoticeDocument.controls; let i=index;" [formGroupName]="i">
-                        <td class="text-center">{{i+1}}</td>
-                        <td>
-                            <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
-                        </td>
-                        <td>
-                            <input type="file" formControlName="FilePath" [readonly]="showEditField">
-                        </td>
+                <tbody>
+                    <tr>
+                        <td class="text-center"></td>
+                        <td></td>
+                        <td></td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
                                 <i class="fa fa-trash-o fa-lg"></i>

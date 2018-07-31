@@ -7,14 +7,14 @@
     </div>
 
     <div class="card-body">
-        <form class="form-horizontal">
+        <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
             <div>
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-3 control-label">เลขที่นำส่งเงิน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" id="" class="form-control" placeholder="">
+                                <input type="text" name="RevenueCode" ngModel class="form-control" placeholder="">
                             </div>
                         </div>
                     </div>
@@ -22,11 +22,11 @@
                     <label for="" class="col-lg-2 col-sm-3 control-label">วันที่นำส่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group form-line">
-                            <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" name="DateStartFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
 
                             <label for="">&nbsp; ถึง &nbsp;</label>
 
-                            <input type="date" id="" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" name="DateStartTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" id="" class="form-control" placeholder="">
+                                <input type="text" name="StaffName" ngModel class="form-control" placeholder="">
                             </div>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" id="" class="form-control" placeholder="">
+                                <input type="text" name="DepartmentName" ngModel class="form-control" placeholder="">
                             </div>
                         </div>
                     </div>
@@ -54,9 +54,16 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" id="" class="form-control" placeholder="">
+                                <input type="text" name="RevenueStatus" ngModel class="form-control" placeholder="">
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-10"></div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
                     </div>
                 </div>
             </div>
@@ -69,7 +76,7 @@
     <div class="card-body">
 
         <div class="table-responsive table-striped ">
-            <table class="table">
+            <table #revenueTable class="table">
                 <thead>
                     <tr>
                         <th style="text-align: center">ลำดับ</th>
@@ -83,72 +90,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td style="text-align: center">1</td>
-                        <td>LC90806026000002</td>
-                        <td>10-พ.ค.-2561</td>
-                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                        <td>สสท.ระนอง สาขาเมืองกระบี่</td>
-                        <td style="text-align: center">5</td>
-                        <td>นำส่งรายได้</td>
+                    <tr *ngFor="let item of RevenueList; let i=index;">
+                        <td style="text-align: center">{{i + 1}}</td>
+                        <td>{{item.RevenueCode}}</td>
+                        <td>{{item.RevenueDate | date:'dd-MM-yyyy'}}</td>
+                        <td>{{item.InformTo}}</td>
+                        <td>{{item.RevenueStaff[0].DepartmentName}}</td>
+                        <td style="text-align: center">???</td>
+                        <td>{{item.RevenueDetail[0].RevenueStatus}}</td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/income/manage/v/xxx-xxx-xxx']">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center">2</td>
-                        <td>LC90806026000002</td>
-                        <td>10-พ.ค.-2561</td>
-                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                        <td>สสท.ระนอง สาขาเมืองกระบี่</td>
-                        <td style="text-align: center">10</td>
-                        <td>รับรายการนำส่งเงินรายได้</td>
-                        <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/income/manage/v/xxx-xxx-xxx']">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center">3</td>
-                        <td>LC90806026000002</td>
-                        <td>10-พ.ค.-2561</td>
-                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                        <td>สสท.ระนอง สาขาเมืองกระบี่</td>
-                        <td style="text-align: center">5</td>
-                        <td>นำส่งรายได้</td>
-                        <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/income/manage/v/xxx-xxx-xxx']">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center">4</td>
-                        <td>LC90806026000002</td>
-                        <td>10-พ.ค.-2561</td>
-                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                        <td>สสท.ระนอง สาขาเมืองกระบี่</td>
-                        <td style="text-align: center">10</td>
-                        <td>รับรายการนำส่งเงินรายได้</td>
-                        <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/income/manage/v/xxx-xxx-xxx']">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center">5</td>
-                        <td>LC90806026000002</td>
-                        <td>10-พ.ค.-2561</td>
-                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                        <td>สสท.ระนอง สาขาเมืองกระบี่</td>
-                        <td style="text-align: center">5</td>
-                        <td>นำส่งรายได้</td>
-                        <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" [routerLink]="['/income/manage/v/xxx-xxx-xxx']">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueCode)">
                                 <i class="mdi mdi-eye fa-lg"></i>
                             </a>
                         </td>
@@ -158,27 +109,13 @@
         </div>
 
         <div class="card-footer card-footer-unset">
-            <div class="row justify-content-between m-l-5">
-                <div clas="col">
-                    <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
-                        << </a>
-                            <label> หน้าที่
-                                <select>
-                                    <option value="1">1</option>
-                                </select> จาก 1 หน้า</label>
-                            <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
-                            รายการที่ 1 - 1 จาก 1 รายการ
-                </div>
-                <div class="col col-lg-3 text-right">
-                    <label>แสดง
-                        <select>
-                            <option (click)="numPage = 5">5</option>
-                            <option (click)="numPage = 10">10</option>
-                            <option (click)="numPage = 15">15</option>
-                            <option (click)="numPage = 20">20</option>
-                        </select> รายการ</label>
-                </div>
-            </div>
+            <app-pagination-table 
+                [TotalItems]="paginage.TotalItems" 
+                [CurrentPage]="paginage.CurrentPage" 
+                [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
+                (onPageChange)="pageChanges($event)">
+            </app-pagination-table>
         </div>
     </div>
 </div>
