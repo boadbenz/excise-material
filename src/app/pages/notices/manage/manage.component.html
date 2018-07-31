@@ -39,7 +39,7 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm"[readonly]="showEditField">
+                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm"[readonly]="showEditField"[ngClass]="{'ng-touched':isRequired}" required>
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" name="" class="form-control form-control-sm"
@@ -228,12 +228,12 @@
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Address" [readonly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Address" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
                 </div>
@@ -242,32 +242,32 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" formControlName="Building" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="Building" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
@@ -282,7 +282,8 @@
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemLocaleRegion($event)" 
-                            value="{{item.get('Region').value}}"/>
+                            value="{{item.get('Region').value}}"
+                            [ngClass]="{'ng-touched':isRequired}" required/>
                     </div>
                 </div>
 
@@ -326,13 +327,14 @@
                                 [resultTemplate]="rt"
                                 [inputFormatter]="formatterProduct"
                                 (selectItem)="selectItemProductItem($event, i)"
-                                value="{{item.get('BrandFullName').value}}"/>
+                                value="{{item.get('BrandFullName').value}}"
+                                [ngClass]="{'ng-touched':isRequired}" required/>
                         </td>
                         <td>
-                            <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
-                            <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                             <!-- <select formControlName="QtyUnit" class="form-control form-control-sm">
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of dutyUnitModel;"
@@ -436,7 +438,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm">
+                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of communicateModel; let i=index;" 
                         [value]="item.CommunicationChanelID"
@@ -447,14 +449,14 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
             </div>
             <div class="row">
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ที่อยู่เอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField">
+                        <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <!-- <div class="custom-file">
                         <input id="communicate-file" type="file" class="custom-file-input" formControlName="FilePath" [readonly]="showEditField">
                         <label for="communicate-file" class="custom-file-label">

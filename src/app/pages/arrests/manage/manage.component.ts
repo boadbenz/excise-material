@@ -19,7 +19,7 @@ import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestLocaleFormControl } from '../arrest-locale';
-import { ArrestLawbreaker, LawbreakerTypes, EntityTypes } from '../arrest-lawbreaker';
+import { ArrestLawbreaker, LawbreakerTypes, EntityTypes, ArrestLawbreakerFormControl } from '../arrest-lawbreaker';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -195,6 +195,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     // private createIndictment(): FormGroup {
     //     return this.fb.group(ArrestIndictmentFormControl)
+    // }
+
+    // private createLawbreaker(): FormGroup {
+    //     return this.fb.group(ArrestLawbreakerFormControl);
     // }
 
     private setItemFormArray(array: any[], formControl: string) {
@@ -430,36 +434,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onCreate() {
-        debugger
+
         if (!this.arrestFG.valid) {
             this.isRequired = true;
             alert(Message.checkData)
             return false;
         }
 
-        // if (!this.ArrestStaff.valid) {
-        //     this.isRequired = true;
-        //     alert(Message.checkData)
-        //     return false;
-        // }
-
-        // if (!this.ArrestLawbreaker.valid) {
-        //     this.isRequired = true;
-        //     alert(Message.checkData)
-        //     return false;
-        // }
-
-        // if (!this.ArrestProduct.valid) {
-        //     this.isRequired = true;
-        //     alert(Message.checkData)
-        //     return false;
-        // }
-
-        // if (!this.ArrestIndictment.valid) {
-        //     this.isRequired = true;
-        //     alert(Message.checkData)
-        //     return false;
-        // }
+        if (!this.ArrestLawbreaker.length) {
+            alert(Message.checkData)
+            return false;
+        }
 
         this.preloader.setShowPreloader(true);
         const arrestDate = new Date(this.arrestFG.value.ArrestDate);
@@ -552,26 +537,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        if (!this.ArrestStaff.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
-
-        if (!this.ArrestLawbreaker.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
-
-        if (!this.ArrestProduct.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
-
-        if (!this.ArrestIndictment.valid) {
-            this.isRequired = true;
+        if (!this.ArrestLawbreaker.length) {
             alert(Message.checkData)
             return false;
         }
@@ -753,6 +719,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestLawbreaker.push(this.fb.group(item))
         })
     }
+        
 
     addStaff() {
         const lastIndex = this.ArrestStaff.length - 1;
@@ -795,14 +762,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 productDetail.push(
                     this.fb.group({
-                        ProductID: lb.ProductID,
+                        ProductID: new FormControl(lb.ProductID, Validators.required),
                         IsProdcutCo: 1,
-                        Qty: lb.Qty,
-                        QtyUnit: lb.QtyUnit,
-                        Size: lb.Size,
-                        SizeUnit: lb.SizeUnit,
-                        Weight: lb.Weight,
-                        WeightUnit: lb.WeightUnit,
+                        Qty: new FormControl(lb.Qty, Validators.required),
+                        QtyUnit: new FormControl(lb.QtyUnit, Validators.required),
+                        Size: new FormControl(lb.Size, Validators.required),
+                        SizeUnit: new FormControl(lb.SizeUnit, Validators.required),
+                        Weight: new FormControl(lb.Weight, Validators.required),
+                        WeightUnit: new FormControl(lb.WeightUnit, Validators.required),
                         MistreatRate: null,
                         Fine: null,
                         IndictmentDetailID: null
@@ -812,9 +779,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 indictDetail.push(
                     this.fb.group({
                         IndictmentID: null,
-                        ArrestCode: this.arrestCode,
-                        LawbreakerID: lb.LawbreakerID,
-                        GuiltBaseID: item.GuiltBaseID,
+                        ArrestCode: new FormControl(this.arrestCode, Validators.required),
+                        LawbreakerID: new FormControl(lb.LawbreakerID, Validators.required),
+                        GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),
                         IsProve: 1,
                         IsActive: 1,
                         ArrestProductDetail: this.fb.array(productDetail)

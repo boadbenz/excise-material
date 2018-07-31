@@ -47,6 +47,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     searching = false;
     searchFailed = false;
     isConceal = false;
+    isRequired: boolean;
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
@@ -317,6 +318,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async onCreate() {
 
         if (!this.noticeForm.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
             return false;
         }
         // Set Preloader
@@ -344,6 +347,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onReviced() {
+        if (!this.noticeForm.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
