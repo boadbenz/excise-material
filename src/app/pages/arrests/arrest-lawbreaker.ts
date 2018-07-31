@@ -86,7 +86,7 @@ export const ArrestLawbreakerFormControl = {
     LawbreakerLastName: new FormControl(null),
     LawbreakerOtherName: new FormControl(null),
     LawbreakerDesc: new FormControl(null),
-    LawbreakerFullName: new FormControl(null, Validators.required),
+    LawbreakerFullName: new FormControl(null),
     IDCard: new FormControl(null),
     PassportNo: new FormControl(null),
     VISAType: new FormControl(null),
@@ -127,7 +127,7 @@ export const ArrestLawbreakerFormControl = {
     Remarks: new FormControl(null),
     LinkPhoto: new FormControl(null),
     PhotoDesc: new FormControl(null),
-    IsActive: new FormControl(null, Validators.required),
+    IsActive: new FormControl(null),
     
     EntityTypeName: new FormControl(null),
     LawbreakerTypeName: new FormControl(null),

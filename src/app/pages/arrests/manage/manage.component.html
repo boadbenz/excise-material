@@ -66,14 +66,16 @@
                         {{ r.OfficeShortName }}
                     </ng-template>
 
-                    <input type="text" class="form-control form-control-sm"
+                    <input type="text" class="form-control form-control-sm "
+                        [ngClass]="{'ng-touched':isRequired}"
+                        required
                         [ngbTypeahead]="serachOffice"
                         [resultTemplate]="rt"
                         [readOnly]="showEditField"
                         [inputFormatter]="formatterOffice" 
                         (selectItem)="selectItemOffice($event)"
                         [value]="arrestFG.get('ArrestStation').value"
-                         [ngClass]="{'ng-touched':isRequired}" required/>
+                         />
                     <!-- <input type="text" formControlName="ArrestStation" class="form-control form-control-sm" [readonly]="showEditField"> -->
                 </div>
             </div>

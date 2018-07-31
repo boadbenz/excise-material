@@ -81,5 +81,5 @@ export const ArrestProductFormControl = {
     NetVolumeUnit: new FormControl(null, Validators.required),
     IsActive: new FormControl(1, Validators.required),
     IsNewItem: new FormControl(null, Validators.required),
-    ProductFullName: new FormControl(null, Validators.required)
+    ProductFullName: new FormControl(null)
 }

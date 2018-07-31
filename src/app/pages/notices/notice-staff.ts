@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 export class NoticeStaff {
    public StaffID: string;
@@ -28,10 +28,10 @@ export const NoticeStaffFormControl = {
     StaffID: new FormControl(null),
     ProgramCode: new FormControl('XCS60-02-02'),
     ProcessCode: new FormControl('0002'),
-    NoticeCode: new FormControl(null),
-    StaffCode: new FormControl(null),
+    NoticeCode: new FormControl(null, Validators.required),
+    StaffCode: new FormControl(null, Validators.required),
     TitleName: new FormControl(null),
-    FirstName: new FormControl(null),
+    FirstName: new FormControl(null, Validators.required),
     LastName: new FormControl(null),
     PositionCode: new FormControl(null),
     PositionName: new FormControl(null),
@@ -44,5 +44,5 @@ export const NoticeStaffFormControl = {
     OfficeName: new FormControl(null),
     OfficeShortName: new FormControl(null),
     ContributorCode: new FormControl(null),
-    StaffFullName: new FormControl(null)
+    StaffFullName: new FormControl(null, Validators.required)
 }

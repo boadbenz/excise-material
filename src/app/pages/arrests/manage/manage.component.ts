@@ -16,7 +16,7 @@ import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
 import { ArrestDocument } from '../arrest-document';
-import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
+import { ArrestIndictment, IndictmentLawbreaker, ArrestIndictmentFormControl } from '../arrest-indictment';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestLocaleFormControl } from '../arrest-locale';
 import { ArrestLawbreakerFormControl, ArrestLawbreaker, LawbreakerTypes, EntityTypes } from '../arrest-lawbreaker';
@@ -164,11 +164,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             Testimony: new FormControl(null, Validators.required),
             Prompt: new FormControl(null, Validators.required),
             IsMatchNotice: new FormControl(null),
-            ArrestDesc: new FormControl('N/A', Validators.required),
+            ArrestDesc: new FormControl('N/A'),
             NoticeCode: new FormControl(null, Validators.required),
-            InvestigationSurveyDocument: new FormControl(null, Validators.required),
+            InvestigationSurveyDocument: new FormControl(null),
             InvestigationCode: new FormControl(null, Validators.required),
-            IsActive: new FormControl(1, Validators.required),
+            IsActive: new FormControl(1),
             ArrestStaff: this.fb.array([this.createStaffForm()]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
             ArrestLawbreaker: this.fb.array([]),
@@ -192,6 +192,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         ArrestProductFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestProductFormControl);
     }
+
+    // private createIndictment(): FormGroup {
+    //     return this.fb.group(ArrestIndictmentFormControl)
+    // }
 
     private setItemFormArray(array: any[], formControl: string) {
         if (array !== undefined && array.length) {
@@ -426,36 +430,36 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onCreate() {
-
+debugger
         if (!this.arrestFG.valid) {
             this.isRequired = true;
             alert(Message.checkData)
             return false;
         }
 
-        if (!this.ArrestStaff.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
+        // if (!this.ArrestStaff.valid) {
+        //     this.isRequired = true;
+        //     alert(Message.checkData)
+        //     return false;
+        // }
 
-        if (!this.ArrestLawbreaker.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
+        // if (!this.ArrestLawbreaker.valid) {
+        //     this.isRequired = true;
+        //     alert(Message.checkData)
+        //     return false;
+        // }
 
-        if (!this.ArrestProduct.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
+        // if (!this.ArrestProduct.valid) {
+        //     this.isRequired = true;
+        //     alert(Message.checkData)
+        //     return false;
+        // }
 
-        if (!this.ArrestIndictment.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
+        // if (!this.ArrestIndictment.valid) {
+        //     this.isRequired = true;
+        //     alert(Message.checkData)
+        //     return false;
+        // }
 
         this.preloader.setShowPreloader(true);
         const arrestDate = new Date(this.arrestFG.value.ArrestDate);
@@ -571,7 +575,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             alert(Message.checkData)
             return false;
         }
-        
+
         this.preloader.setShowPreloader(true);
         const arrestDate = new Date(this.arrestFG.value.ArrestDate);
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
@@ -813,12 +817,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             })
 
             let FG = this.fb.group({
-                ArrestCode: this.arrestCode,
-                IndictmentID: item.IndictmentID,
-                IsProve: item.IsProve,
-                IsActive: item.IsActive,
-                GuiltBaseID: item.GuiltBaseID,
-                SectionNo: item.SectionNo,
+                ArrestCode: new FormControl(this.arrestCode, Validators.required),
+                IndictmentID: new FormControl(item.IndictmentID, Validators.required),
+                IsProve: new FormControl(item.IsProve, Validators.required),
+                IsActive: new FormControl(item.IsActive, Validators.required),
+                GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),
+                SectionNo: new FormControl(item.SectionNo, Validators.required),
                 SectionDesc1: item.SectionDesc1,
                 SectionName: item.SectionName,
                 IndictmentLawbreaker: this.fb.array(item.IndictmentLawbreaker),

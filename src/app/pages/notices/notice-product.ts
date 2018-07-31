@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 export class NoticeProduct {
     public ProductID = '';
@@ -39,17 +39,17 @@ export class NoticeProduct {
 
 export const NoticeProductFormControl = {
     ProductID: new FormControl(null),
-    NoticeCode: new FormControl(null),
+    NoticeCode: new FormControl(null, Validators.required),
     GroupCode: new FormControl(null),
     IsDomestic: new FormControl(null),
-    ProductCode: new FormControl(null),
-    BrandCode: new FormControl(null),
+    ProductCode: new FormControl(null, Validators.required),
+    BrandCode: new FormControl(null, Validators.required),
     BrandNameTH: new FormControl(null),
     BrandNameEN: new FormControl(null),
-    SubBrandCode: new FormControl(null),
+    SubBrandCode: new FormControl(null, Validators.required),
     SubBrandNameTH: new FormControl(null),
     SubBrandNameEN: new FormControl(null),
-    ModelCode: new FormControl(null),
+    ModelCode: new FormControl(null, Validators.required),
     ModelName: new FormControl(null),
     FixNo1: new FormControl(null),
     DegreeCode: new FormControl(null),
@@ -62,8 +62,8 @@ export const NoticeProductFormControl = {
     SequenceNo: new FormControl(null),
     ProductDesc: new FormControl(null),
     CarNo: new FormControl(null),
-    Qty: new FormControl(null),
-    QtyUnit: new FormControl(null),
+    Qty: new FormControl(null, Validators.required),
+    QtyUnit: new FormControl(null, Validators.required),
     NetWeight: new FormControl(null),
     NetWeightUnit: new FormControl(null),
     Remarks: new FormControl(null),

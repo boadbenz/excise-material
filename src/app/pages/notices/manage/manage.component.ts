@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { NoticeService } from '../notice.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -209,15 +209,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.noticeForm = this.fb.group({
-            NoticeCode: new FormControl(this.noticeCode),
+            NoticeCode: new FormControl(this.noticeCode, Validators.required),
             NoticeStationCode: new FormControl('N/A'),
-            NoticeStation: [null],
-            NoticeDate: [null],
-            NoticeTime: [null],
-            NoticeDue: [null],
-            NoticeDueDate: [null],
+            NoticeStation: new FormControl(null, Validators.required),
+            NoticeDate: new FormControl(null, Validators.required),
+            NoticeTime: new FormControl(null, Validators.required),
+            NoticeDue: new FormControl(null, Validators.required),
+            NoticeDueDate: new FormControl(null, Validators.required),
             GroupNameDesc: new FormControl('N/A'),
-            CommunicationChanelID: [null],
+            CommunicationChanelID: new FormControl(null, Validators.required),
             DataSource: [null],
             FilePath: [null],
             ArrestCode: [null],
