@@ -24,6 +24,12 @@ export class ICompareConAdv
     public Department?: string
 }
 
+export class ICompareMistreat
+{
+    public LawbreakerID?: string;
+    public SectionNo?: string
+}
+
 export class ICompareIns
 {
     public CompareID?: string;
