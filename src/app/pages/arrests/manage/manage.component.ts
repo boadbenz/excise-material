@@ -463,45 +463,45 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!arrestRes) { IsSuccess = false; return false; }
             // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
             IsSuccess = true
-            arrestRes.ArrestIndictment.map(indictObj => {
-                // ข้อกล่าวหา
-                // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
-                this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
-                    // รายละเอียดข้อกล่าวหา
-                    item1.ArrestIndictmentDetail.map(async indictD => {
-                        // ___5. Set IndictmentID ให้กับ object IndicmentDetail
-                        indictD.IndictmentID = indictObj.IndictmentID;
-                        // ___6. บันทึก ArrestIndictmentDetail
-                        await this.arrestService.indicmentDetailinsAll(indictD).then(async indictDIns => {
-                            if (!indictDIns) { IsSuccess = false; return false; }
+            // arrestRes.ArrestIndictment.map(indictObj => {
+            //     // ข้อกล่าวหา
+            //     // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
+            //     this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
+            //         // รายละเอียดข้อกล่าวหา
+            //         item1.ArrestIndictmentDetail.map(async indictD => {
+            //             // ___5. Set IndictmentID ให้กับ object IndicmentDetail
+            //             indictD.IndictmentID = indictObj.IndictmentID;
+            //             // ___6. บันทึก ArrestIndictmentDetail
+            //             await this.arrestService.indicmentDetailinsAll(indictD).then(async indictDIns => {
+            //                 if (!indictDIns) { IsSuccess = false; return false; }
 
-                            IsSuccess = true
-                            // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
-                            await this.arrestService
-                                .indicmentgetByCon(indictD.IndictmentID.toString())
-                                .then(indictDetailGet => {
-                                    debugger
-                                    if (!indictDetailGet.length) return false;
+            //                 IsSuccess = true
+            //                 // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
+            //                 await this.arrestService
+            //                     .indicmentgetByCon(indictD.IndictmentID.toString())
+            //                     .then(indictDetailGet => {
+            //                         debugger
+            //                         if (!indictDetailGet.length) return false;
 
-                                    console.log(indictDetailGet);
+            //                         console.log(indictDetailGet);
 
-                                    // รายละเอียดสินค้า
-                                    indictD.ArrestProductDetail.map(productD => {
-                                        console.log(productD);
-                                        debugger
-                                        // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
-                                        // productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
-                                        // ___9.บันทึก ArrestProductDetail
-                                        // this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
-                                    })
-                                }, (error) => { IsSuccess = false; console.error(error); return false; });
+            //                         // รายละเอียดสินค้า
+            //                         indictD.ArrestProductDetail.map(productD => {
+            //                             console.log(productD);
+            //                             debugger
+            //                             // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
+            //                             // productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
+            //                             // ___9.บันทึก ArrestProductDetail
+            //                             // this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
+            //                         })
+            //                     }, (error) => { IsSuccess = false; console.error(error); return false; });
 
-                        }, (error) => { IsSuccess = false; console.error(error); return false; });
+            //             }, (error) => { IsSuccess = false; console.error(error); return false; });
 
-                    })
-                })
+            //         })
+            //     })
 
-            })
+            // })
 
         }, (error) => { IsSuccess = false; console.error(error); return false; });
 
