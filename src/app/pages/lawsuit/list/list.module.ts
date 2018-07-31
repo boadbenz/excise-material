@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { LawsuitService } from "./../lawsuit.service";
+import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 
 const routes: Routes = [
     {
@@ -12,7 +14,7 @@ const routes: Routes = [
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาบันทึกรับคำกล่าวโทษ' }],
             codePage: 'XCS60-04-01-00-00',
             pageType: 'list',
-            nextPage: { title: 'จัดการข้อมูลบันทึกรับคำกล่าวโทษ', url: '/accusations/manage' }
+            nextPage: { title: 'จัดการข้อมูลบันทึกรับคำกล่าวโทษ', url: '/lawsuit/manage' }
         },
         component: ListComponent
     }
@@ -22,9 +24,10 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        PaginationTableModule
     ],
-    providers: [NavigationComponent],
+    providers: [NavigationComponent, LawsuitService],
     declarations: [ListComponent]
 })
 export class ListModule { }

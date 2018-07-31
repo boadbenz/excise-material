@@ -1,6 +1,6 @@
 // import * as $ from 'jquery';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
@@ -15,6 +15,7 @@ import { AppComponent } from './app.component';
 import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -22,6 +23,7 @@ import { NavigationService } from './shared/header-navigation/navigation.service
         BreadcrumbComponent,
         SidebarComponent,
         RightSidebarComponent,
+        
     ],
     imports: [
         BrowserModule,
@@ -29,6 +31,7 @@ import { NavigationService } from './shared/header-navigation/navigation.service
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
+       
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
@@ -36,4 +39,6 @@ import { NavigationService } from './shared/header-navigation/navigation.service
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {}
+

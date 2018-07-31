@@ -1,40 +1,8 @@
-<div class="wizard-content">
-  <div class="wizard-circle wizard clearfix clearfix">
-    <div class="steps tab-wizard">
-      <ul role="tablist">
-        <li role="tab" class="current" aria-disabled="false" aria-selected="true">
-          <a>
-            <span class="current-info audible">current step: </span>
-            <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
-        </li>
-        <li role="tab" class="current" aria-disabled="true">
-          <a>
-            <span class="step"></span> 2. งานจับกุม </a>
-        </li>
-        <li role="tab" class="current" aria-disabled="true">
-          <a>
-            <span class="step"></span> 3. รับคำกล่าวโทษ </a>
-        </li>
-        <li role="tab" class="disabled" aria-disabled="true">
-          <a>
-            <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
-        </li>
-        <li role="tab" class="disabled" aria-disabled="true">
-          <a>
-            <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
-        </li>
-        <li role="tab" class="disabled" aria-disabled="true">
-          <a>
-            <span class="step"></span> 6. นำส่งเงินรายได้ </a>
-        </li>
-        <li role="tab" class="disabled" aria-disabled="true">
-          <a>
-            <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
+<app-step-wizard [sectionId]="3"></app-step-wizard>
+
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+  <app-print-doc-modal (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+</ng-template>
 
 <div class="card card-outline-bluish unset-radius">
   <div class="card-header unset-radius">
@@ -47,16 +15,16 @@
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ฐานความผิดมาตรา : </label>
-            <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="allegationData[0].allegationNo" name="allegationCode" disabled>
+            <div class="col-md-8" *ngFor="let item of masLawGroupSectionList;">
+              <input class="form-control" type="text" [(ngModel)]="item.SectionName" name="SectionName" disabled>
             </div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label text-right col-md-3">ฐานความผิด : </label>
-            <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="allegationData[0].allegationSubject" name="allegationSubject" disabled>
+            <div class="col-md-9" *ngFor="let item of masLawGuitBaseList;">
+              <input class="form-control" type="text" [(ngModel)]="item.GuiltBaseName" name="GuiltBaseName" disabled>
             </div>
           </div>
         </div>
@@ -65,67 +33,20 @@
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">บทกำหนดโทษ : </label>
-            <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="allegationData[0].allegationNo" name="allegationNo" disabled>
+            <div class="col-md-8" *ngFor="let item of masLawGroupSectionList;">
+              <input class="form-control" type="text" [(ngModel)]="item.SectionNo" name="SectionNo" disabled>
             </div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label text-right col-md-3">อัตราโทษ : </label>
-            <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="allegationData[0].allegationPenalty" name="allegationPenalty" disabled>
+            <div class="col-md-9" *ngFor="let item of masLawPenaltyList;">
+              <input class="form-control" type="text" [(ngModel)]="item.PenaltyDesc" name="PenaltyDesc" disabled>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="card card-outline-bluish unset-radius">
-  <div class="card-header unset-radius">
-    <app-card-actions-collapse></app-card-actions-collapse>
-    <h5 class="card-title m-b-0">ของกลาง</h5>
-  </div>
-  <div class="card-body">
-    <div class="table-responsive table-striped no-wrap">
-      <table class="table" *ngIf="!errorShow">
-        <thead>
-          <tr>
-            <th class="footable-sortable text-center">ลำดับ</th>
-            <th class="footable-sortable col-6">ของกลาง</th>
-            <th class="footable-sortable">จำนวน</th>
-            <th class="footable-sortable">หน่วย</th>
-            <th class="footable-sortable">ปริมาณสุทธิ</th>
-            <th class="footable-sortable">หน่วย</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="footable" *ngFor="let item of exhibitData; let i = index;">
-            <td class="text-center">{{i+1}}</td>
-            <td>
-              <input class="form-control" type="text" [(ngModel)]="item.itemName" disabled>
-            </td>
-            <td>
-              <input class="form-control" type="text" [(ngModel)]="item.number" disabled>
-            </td>
-            <td>
-              <select class="custom-select" disabled>
-                <option>{{item.unit}}</option>
-              </select>
-            </td>
-            <td>
-              <input class="form-control" type="text" [(ngModel)]="item.netAmount" disabled>
-            </td>
-            <td>
-              <select class="custom-select" disabled>
-                <option>{{item.unitNet}}</option>
-              </select>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </div>
@@ -135,17 +56,17 @@
     <app-card-actions-collapse></app-card-actions-collapse>
     <h5 class="card-title m-b-0">รับคำกล่าวโทษ</h5>
   </div>
-  <div class="card-body">
-    <div class="form-body">
+  <div class="card-body" *ngIf="lawsuitList">
+    <div class="form-body" *ngFor="let item of lawsuitList;">
       <div class="row">
         <div class="col-md-12">
           <div class="form-group row">
             <div class="custom-control custom-checkbox col-form-label col-md-2">
-              <input class="col-form-label filled-in chk-col-indigo" id="noneCaseBecause" type="checkbox" [disabled]="showField">
-              <label for="noneCaseBecause">ไม่รับเป็นคดีเพราะ :</label>
+              <input class="col-form-label filled-in chk-col-indigo" [checked]="item.IsLawsuit" (change)="isLawSuitChecked(item.IsLawsuit)" id="IsLawsuitCheck" type="checkbox" [disabled]="showEditField">
+              <label for="IsLawsuitCheck">ไม่รับเป็นคดีเพราะ :</label>
             </div>
             <div class="col-md-9">
-              <input class="form-control" type="text" [disabled]="showField">
+              <input class="form-control" type="text" [(ngModel)]="item.ReasonDontLawsuit" [disabled]="showEditField">
             </div>
           </div>
         </div>
@@ -154,8 +75,8 @@
         <div class="col-md-12">
           <div class="form-group row">
             <div class="custom-control custom-checkbox col-form-label col-md-4">
-              <input class="col-form-label filled-in chk-col-indigo" id="outOfCase" type="checkbox" [disabled]="showField">
-              <label for="outOfCase">คดีรับคำกล่าวโทษนอกสถานที่ทำการ</label>
+              <input class="col-form-label filled-in chk-col-indigo" [checked]="item.IsOutside" (change)="isLawSuitChecked(item.IsOutside)" id="IsOutside" type="checkbox" [disabled]="showEditField">
+              <label for="IsOutside">คดีรับคำกล่าวโทษนอกสถานที่ทำการ</label>
             </div>
           </div>
         </div>
@@ -165,30 +86,29 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">เลขคดีรับคำกล่าวโทษ : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" [(ngModel)]="allegationNumber" name="allegationCode" [disabled]="showField">
+              <input class="form-control" type="text" [(ngModel)]="item.LawsuitNo" name="LawsuitNo" [disabled]="showEditField">
             </div>
-            <label class="col-form-label">/{{allegationYear}}</label>
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
             <div class="col-md-4">
-              <input class="form-control" type="text" [(ngModel)]="condemnData.lawsuitDate" name="lawsuitDate" [disabled]="showField">
+              <input class="form-control" type="date" [(ngModel)]="item.LawsuitDate" name="LawsuitDate" [disabled]="showEditField">
             </div>
             <label class="col-form-label text-center col-md-2">เวลา</label>
             <div class="col-md-3">
-              <input class="form-control" type="text" [(ngModel)]="condemnData.lawsuitTime" name="lawsuitTime" [disabled]="showField">
+              <input class="form-control" type="text" [(ngModel)]="item.LawsuitTime" name="LawsuitTime" [disabled]="showEditField">
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngFor="let staff of item.LawsuiteStaff;">
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label col-md-4">ผู้รับคดี : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" [disabled]="showField">
+              <input class="form-control" type="text" [(ngModel)]="staff.FullName" name="FullName" [disabled]="showEditField">
             </div>
           </div>
         </div>
@@ -196,17 +116,17 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="condemnData.positionLawName" name="positionLawName" [disabled]="showField">
+              <input class="form-control" type="text" [(ngModel)]="staff.PositionName" name="PositionName" [disabled]="showEditField">
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngFor="let staff of item.LawsuiteStaff;">
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label col-md-4">หน่วยงาน : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" [(ngModel)]="condemnData.departmentlawName" name="departmentlawName" [disabled]="showField">
+              <input class="form-control" type="text" [(ngModel)]="staff.DepartmentName" name="DepartmentName" [disabled]="showEditField">
             </div>
           </div>
         </div>
@@ -214,7 +134,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-3">เขียนที่ : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="condemnData.departmentlawName" name="localtionName" [disabled]="showField">
+              <input class="form-control" type="text" [(ngModel)]="item.LawsuitStation" name="LawsuitStation" [disabled]="showEditField">
             </div>
           </div>
         </div>
@@ -224,14 +144,14 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">คำให้การของผู้กล่าวโทษ : </label>
             <div class="col-md-10">
-              <textarea class="form-control" rows="3" [disabled]="showField"></textarea>
+              <textarea class="form-control" rows="3" [(ngModel)]="item.AccuserTestimony" name="AccuserTestimony" [disabled]="showEditField"></textarea>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="table-responsive table-striped no-wrap">
-      <table class="table" *ngIf="!errorShow">
+      <table class="table">
         <thead>
           <tr>
             <th class="footable-sortable text-center">ลำดับ</th>
@@ -242,25 +162,25 @@
             <th class="footable-sortable"></th>
           </tr>
         </thead>
-        <tbody>
-          <tr class="footable" *ngFor="let item of accusationsTableData; let i = index;">
+        <tbody *ngIf="lawBreakerList">
+          <tr class="footable" *ngFor="let item of lawBreakerList; let i = index;">
             <td class="text-center">{{i+1}}</td>
             <td>
-              {{item.fullName}}
+              {{item.LawbreakerFullName}}
             </td>
             <td>
-              {{item.type}}
+              <!-- {{item.type}} -->
             </td>
             <td>
-              {{item.caseEnd}}
+              <!-- {{item.caseEnd}} -->
             </td>
-            <td>
-              <p *ngFor="let data of item.descExhibit;">
-                {{data.itemName}}
+            <td *ngFor="let list of arrestList;">
+              <p *ngFor="let item of list.ArrestProduct;">
+                {{ item.ProductDesc }}
               </p>
             </td>
             <td>
-              <i class="ti-pencil-alt btn-action" [hidden]="showField" data-toggle="modal" data-target="#editPopUp"></i>
+              <i class="ti-pencil-alt btn-action" [hidden]="showEditField" data-toggle="modal" data-target="#editPopUp"></i>
             </td>
           </tr>
         </tbody>
@@ -276,8 +196,7 @@
   </div>
   <div class="card-body">
     <div class="text-right">
-      <input type="file" id="btn-browse" [disabled]="showField" (change)="attachFile(file.files)" #file>
-      <label for="btn-browse" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
+      <button type="button" class="btn waves-effect waves-light btn-themecolor" [disabled]="showEditField"> เพิ่มเอกสารแนบ </button>
     </div>
     <div class="table-responsive table-striped no-wrap">
       <table class="table">
@@ -288,20 +207,20 @@
             <th class="footable-sortable">ที่อยู่เอกสารแนบ</th>
           </tr>
         </thead>
-        <tbody>
+        <!-- <tbody>
           <tr class="footable" *ngFor="let item of fileItem; let i = index;">
             <td class="text-center">{{i+1}}</td>
             <td>
-              <input class="form-control" type="text" nmae="fileName" [(ngModel)]="item.fileName" [disabled]="showField">
+              <input class="form-control" type="text" nmae="fileName" [(ngModel)]="item.fileName" [disabled]="showEditField">
             </td>
             <td>
-              <input class="form-control" type="text" name="filePath" [(ngModel)]="item.filePath" [disabled]="showField">
+              <input class="form-control" type="text" name="filePath" [(ngModel)]="item.filePath" [disabled]="showEditField">
             </td>
             <td>
-              <i class="ti-trash btn-action" [hidden]="showField"></i>
+              <i class="ti-trash btn-action" [hidden]="showEditField"></i>
             </td>
           </tr>
-        </tbody>
+        </tbody> -->
       </table>
     </div>
   </div>
