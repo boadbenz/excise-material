@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 export class ArrestStaff {
     public StaffID = '';
@@ -46,25 +46,25 @@ export const ArrestStaffFormControl = {
     StaffID: new FormControl(null),
     ProgramCode: new FormControl('XCS60-02-02'),
     ProcessCode: new FormControl('0001'),
-    ArrestCode: new FormControl(null),
-    StaffCode: new FormControl(null),
+    ArrestCode: new FormControl(null, Validators.required),
+    StaffCode: new FormControl(null, Validators.required),
     TitleName: new FormControl(null),
-    FirstName: new FormControl(null),
+    FirstName: new FormControl(null, Validators.required),
     LastName: new FormControl(null),
-    PositionCode: new FormControl(null),
-    PositionName: new FormControl(null),
+    PositionCode: new FormControl(null, Validators.required),
+    PositionName: new FormControl(null, Validators.required),
     PosLevel: new FormControl(null),
     PosLevelName: new FormControl(null),
     DepartmentCode: new FormControl(null),
     DepartmentName: new FormControl(null),
     DepartmentLevel: new FormControl(null),
-    OfficeCode: new FormControl(null),
-    OfficeName: new FormControl(null),
+    OfficeCode: new FormControl(null, Validators.required),
+    OfficeName: new FormControl(null, Validators.required),
     OfficeShortName: new FormControl(null),
     ContributorCode: new FormControl(null),
-    IsActive: new FormControl(null),
+    IsActive: new FormControl(null, Validators.required),
 
-    ContributorID: new FormControl(null),
-    FullName: new FormControl(null),
+    ContributorID: new FormControl(null, Validators.required),
+    FullName: new FormControl(null, Validators.required),
     IsNewItem: new FormControl(false)
 }

@@ -10,7 +10,7 @@ import * as ProductActions from '../../../actions/arrest/get-mas-productget-all.
 import { Observable } from 'rxjs/Observable';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { toLocalNumeric } from '../../../config/dateFormat';
 import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
@@ -43,6 +43,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     modal: any;
     arrestCode: string;
     showEditField: any;
+    isRequired: boolean | false;
 
     arrestFG: FormGroup;
 
@@ -151,23 +152,23 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.arrestFG = this.fb.group({
-            ArrestCode: new FormControl(this.arrestCode),
-            ArrestDate: new FormControl(null),
-            ArrestTime: new FormControl(null),
-            OccurrenceDate: new FormControl(null),
-            OccurrenceTime: new FormControl(null),
-            ArrestStationCode: new FormControl(null),
-            ArrestStation: new FormControl(null),
+            ArrestCode: new FormControl(this.arrestCode, Validators.required),
+            ArrestDate: new FormControl(null, Validators.required),
+            ArrestTime: new FormControl(null, Validators.required),
+            OccurrenceDate: new FormControl(null, Validators.required),
+            OccurrenceTime: new FormControl(null, Validators.required),
+            ArrestStationCode: new FormControl(null, Validators.required),
+            ArrestStation: new FormControl(null, Validators.required),
             HaveCulprit: new FormControl(0),
-            Behaviour: new FormControl(null),
-            Testimony: new FormControl(null),
-            Prompt: new FormControl(null),
+            Behaviour: new FormControl(null, Validators.required),
+            Testimony: new FormControl(null, Validators.required),
+            Prompt: new FormControl(null, Validators.required),
             IsMatchNotice: new FormControl(null),
-            ArrestDesc: new FormControl('N/A'),
-            NoticeCode: new FormControl(null),
-            InvestigationSurveyDocument: new FormControl(null),
-            InvestigationCode: new FormControl(null),
-            IsActive: new FormControl(1),
+            ArrestDesc: new FormControl('N/A', Validators.required),
+            NoticeCode: new FormControl(null, Validators.required),
+            InvestigationSurveyDocument: new FormControl(null, Validators.required),
+            InvestigationCode: new FormControl(null, Validators.required),
+            IsActive: new FormControl(1, Validators.required),
             ArrestStaff: this.fb.array([this.createStaffForm()]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
             ArrestLawbreaker: this.fb.array([]),
@@ -425,6 +426,37 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onCreate() {
+
+        if (!this.arrestFG.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
+        if (!this.ArrestStaff.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
+        if (!this.ArrestLawbreaker.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
+        if (!this.ArrestProduct.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
+        if (!this.ArrestIndictment.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
         this.preloader.setShowPreloader(true);
         const arrestDate = new Date(this.arrestFG.value.ArrestDate);
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
@@ -509,6 +541,37 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onReviced() {
+        
+        if (!this.arrestFG.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
+        if (!this.ArrestStaff.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
+        if (!this.ArrestLawbreaker.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
+        if (!this.ArrestProduct.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+
+        if (!this.ArrestIndictment.valid) {
+            this.isRequired = true;
+            alert(Message.checkData)
+            return false;
+        }
+        
         this.preloader.setShowPreloader(true);
         const arrestDate = new Date(this.arrestFG.value.ArrestDate);
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
