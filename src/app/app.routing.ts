@@ -53,7 +53,7 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
             { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
-            { path: 'test', loadChildren: './pages/fine/test/test.module#TestModule' }
+           // { path: 'test', loadChildren: './pages/fine/test/test.module#TestModule' }
         ]
     }, {
         path: 'reward',
