@@ -44,6 +44,7 @@
     </div>
   </div>
 </div>
+<<<<<<< HEAD
 
 <!-- [formGroup]="CompareForm" -->
 <form class="form-horizontal">
@@ -163,6 +164,123 @@
               <div class="col-md-8">
                 <input class="form-control" type="text" [(ngModel)]="PenaltyDesc" name="PenaltyDesc" disabled>
               </div>
+=======
+<div class="card ">
+  <div class="card-header  unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">รายละเอียดข้อกล่าวหา</h4>
+  </div>
+  <div class="card-body">
+    <div class="form-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เลขที่ใบงาน : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.ArrestCode}}" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltCode}}" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">ทะเบียนตรวจพิสูจน์ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.ProveReportNo}}" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">วันที่รับทำคดี : </label>
+            <div class="col-md-3">
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+            </div>
+            <label class="col-form-label text-center col-md-2">เวลา</label>
+            <div class="col-md-3">
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltTime}}" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">ผู้กล่าวหา : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.arrest_name}}" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">ตำแหน่ง : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.PositionName}}" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">หน่วยงาน : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.DepartmentName}}" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">สถานที่จับกุม : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.location}}" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">ฐานความผิดมาตรา : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.SectionName}}" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">ฐานความผิด : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.GuiltBaseName}}" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">บทกำหนดโทษ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.SectionNo}}" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">อัตราโทษ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="{{detial_arrest.PenaltyDesc}}" disabled>
+>>>>>>> xcs08
             </div>
           </div>
         </div>
@@ -179,8 +297,8 @@
     <h4 class="card-title m-b-0">รายละเอียดเงินค่าปรับ</h4>
   </div>
   <div class="card-body">
-    <div class="table-responsive">
-      <table class="dataTable table table-sm table-striped table-hover">
+    <div class="table-detial_arrestonsive">
+      <table class="dataTable table table-sm table-striped table-hover" *ngFor="let item of detial_money">
         <thead>
           <tr>
             <th class="footable-sortable">ชื่อผู้ต้องหา</th>
@@ -196,9 +314,15 @@
             <th class="footable-sortable">รวม</th>
           </tr>
         </thead>
+<<<<<<< HEAD
         <tbody>
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
             <td class="">{{item.Lawbreaker}}</td>
+=======
+        <tbody >
+          <tr class="footable" *ngFor="let itemDt of item.CompareDetailFine;">
+            <td>name*</td>
+>>>>>>> xcs08
             <td class="text-center">
               <b>
                 <u>
@@ -206,19 +330,33 @@
                 </u>
               </b>
             </td>
+<<<<<<< HEAD
             <td>{{item.ProductDesc}}</td>
             <td class="text-center">{{item.FineRate}}</td>
             <td class="">{{item.VatValue}}</td>
             <td class="">{{item.FineRate * item.VatValue}}</td>
+=======
+            <td>{{itemDt.ProductDesc}}</td>
+            <td class="text-center">{{itemDt.FineRate}}</td>
+            <td class="">{{itemDt.VatValue}}</td>
+            <td class="">*</td>
+>>>>>>> xcs08
             <td>
-              <input class="form-control" type="text" [disabled]="viewMode" value="800,000.00">
+              <input class="form-control" type="text" [disabled]="viewMode" value="{{itemDt.CompareFine}}">
             </td>
+<<<<<<< HEAD
             <td class="">{{item.BribeMoney}}</td>
             <td class="">{{item.RewardMoney}}</td>
             <td class="">{{item.TreasuryMoney}}</td>
             <td class="">รวม</td>
+=======
+            <td class="">{{itemDt.BribeMoney}}</td>
+            <td class="">{{itemDt.RewardMoney}}</td>
+            <td class="">{{itemDt.TreasuryMoney}}</td>
+>>>>>>> xcs08
           </tr>
         </tbody>
+
       </table>
     </div>
   </div>
@@ -237,11 +375,19 @@
           <div class="form-group row">
             <label class="col-form-label  col-md-3">วันที่จัดทำ : </label>
             <div class="col-md-4">
+<<<<<<< HEAD
               <input class="form-control" type="date" [(ngModel)]="CompareDate" name="CompareDate" [disabled]="viewMode">
             </div>
             <label class="col-form-label text-center col-md-2">เวลา</label>
             <div class="col-md-3">
               <input class="form-control" type="time" [(ngModel)]="CompareTime" name="CompareTime" [disabled]="viewMode">
+=======
+              <input class="form-control" type="text" value="{{detial_Compare_h.CompareDate}}" disabled>
+            </div>
+            <label class="col-form-label text-center col-md-2">เวลา</label>
+            <div class="col-md-3">
+              <input class="form-control" type="text" value="***" disabled>
+>>>>>>> xcs08
             </div>
           </div>
         </div>
@@ -249,6 +395,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">เขียนที่ : </label>
             <div class="col-md-7">
+<<<<<<< HEAD
               <input type="text" class="form-control" [(ngModel)]="StationName" name="StationName" placeholder="พิมพ์ข้อความ" aria-label="Number"
                 matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                 [disabled]="viewMode">
@@ -257,6 +404,9 @@
                   {{ option.OfficeName }}
                 </mat-option>
               </mat-autocomplete>
+=======
+              <input class="form-control" type="text" value="{{detial_Compare_h.Station}}" disabled>
+>>>>>>> xcs08
             </div>
           </div>
         </div>
@@ -267,7 +417,11 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">ชื่อผู้เปรียบเทียบ : </label>
             <div class="col-md-9">
+<<<<<<< HEAD
               <input class="form-control" type="text" [(ngModel)]="Staff" name="Staff" disabled>
+=======
+              <input class="form-control" type="text" value="{{detial_Compare_h.name}}" disabled>
+>>>>>>> xcs08
             </div>
           </div>
         </div>
@@ -275,7 +429,11 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ตำแหน่ง : </label>
             <div class="col-md-7">
+<<<<<<< HEAD
               <input class="form-control" type="text" [(ngModel)]="OperationPosName" name="ComparePosition" disabled>
+=======
+              <input class="form-control" type="text" value="{{detial_Compare_h.PositionName}}" disabled>
+>>>>>>> xcs08
             </div>
           </div>
         </div>
@@ -285,13 +443,17 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">หน่วยงาน : </label>
             <div class="col-md-9">
+<<<<<<< HEAD
               <input class="form-control" type="text" [(ngModel)]="OperationDeptName" name="CompareDepartment" disabled>
+=======
+              <input class="form-control" type="text" value="{{detial_Compare_h.DepartmentName}}" disabled>
+>>>>>>> xcs08
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-detial_arrestonsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -304,6 +466,7 @@
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
             <!-- +' ' + item.IndictmentDetailID-->
@@ -315,6 +478,16 @@
             </td>
             <td class=" text-center">
               <a (click)="onClickEditF3(i)" class="text-secondary" data-toggle="modal" data-target="#testimonyPopup">
+=======
+          <tr class="footable" *ngFor="let tb of detial_Compare; let i = index">
+            <td class="text-center">{{i + 1}}</td>
+            <td>***</td>
+            <td>{{tb.PaymentFineAppointDate}}</td>
+            <td>{{tb.PaymentVatDate}}</td>
+            <td class="text-center">{{tb.IsProvisionalAcquittal}}</td>
+            <td>
+              <a href="javaScript:void(0);" class="text-secondary" data-toggle="modal" data-target="#testimonyPopup">
+>>>>>>> xcs08
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
               <a (click)="onClickEditF3(i)" class="text-secondary" [hidden]="viewMode" data-toggle="modal" data-target="#testimonyPopup">
@@ -353,15 +526,22 @@
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label col-md-4">คดีเปรียบเทียบที่ : </label>
+<<<<<<< HEAD
             <div class="col-md-7">
               <input class="form-control" type="text" [(ngModel)]="oCompareIns.CompareCode" name="CompareCode" [disabled]="viewMode">
             </div>
             <label class="col-form-label">/{{CompareYear}}</label>
+=======
+            <div class="col-md-8">
+              <input class="form-control col-md-7" type="text" value="{{detial_Compare.CompareCode}}" [disabled]="viewMode">
+              <label class="col-form-label">/2560</label>
+            </div>
+>>>>>>> xcs08
           </div>
         </div>
       </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-detial_arrestonsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -377,6 +557,7 @@
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
           <tr *ngFor="let item of ListCompareDetailReceipt; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
             <td>{{item.Lawbreaker}}</td>
@@ -386,6 +567,17 @@
             <td class="text-center">{{item.ReceiptBookNo}}</td>
             <td class="text-center">{{item.ReceiptBookNo}}/{{item.ReceiptNo}}</td>
             <td class="text-center">{{item.RevernueStatus}}</td>
+=======
+          <tr class="footable" *ngFor="let tbr of detial_CompareDetailReceipt; let i=index">
+            <td class="text-center">{{i+1}}</td>
+            <td>***</td>
+            <td>{{tbr.PaymentDate}}</td>
+            <td>***</td>
+            <td>{{tbr.ReceiptChanel}}</td>
+            <td>{{tbr.ReceiptBookNo}}</td>
+            <td>{{tbr.ReceiptNo}}</td>
+            <td>{{tbr.RevenueStatus}}</td>
+>>>>>>> xcs08
             <td>
               <a (click)="onClickEditF4(i)" class="text-secondary" data-toggle="modal" data-target="#payPopup">
                 <i class="mdi mdi-eye fa-lg"></i>
@@ -408,7 +600,7 @@
     <h4 class="card-title m-b-0">รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ</h4>
   </div>
   <div class="card-body">
-    <div class="table-responsive">
+    <div class="table-detial_arrestonsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -420,6 +612,7 @@
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
             <td>{{item.Lawbreaker}}</td>
@@ -427,6 +620,15 @@
             <td>{{item.ApproveReportType}}</td>
             <td>
               <a (click)="onClickEditF5(i)" class="text-secondary" data-toggle="modal" data-target="#approvePopup">
+=======
+          <tr class="footable">
+            <td class="text-center">1</td>
+            <td>***</td>
+            <td>{{detial_Compare.ApproveReportDate}}</td>
+            <td>{{detial_Compare.ApproveReportType}}</td>
+            <td>
+              <a href="javaScript:void(0);" class="text-secondary" data-toggle="modal" data-target="#approvePopup">
+>>>>>>> xcs08
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
               <a (click)="onClickEditF5(i)" class="text-secondary" [hidden]="viewMode" data-toggle="modal" data-target="#approvePopup">
@@ -451,7 +653,7 @@
       <input type="file" id="btn-browse" #file [disabled]="viewMode">
       <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
     </div>
-    <div class="table-responsive">
+    <div class="table-detial_arrestonsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -462,12 +664,12 @@
         </thead>
         <tbody>
           <tr class="footable">
-            <td class="text-center">1</td>
+            <td class="text-center">***</td>
             <td>
-              <input class="form-control" type="text" nmae="fileName" [disabled]="viewMode">
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
             </td>
             <td>
-              <input class="form-control" type="text" name="filePath" [disabled]="viewMode">
+              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
             </td>
             <td>
               <i class="ti-trash btn-action" [hidden]="viewMode"></i>
@@ -497,7 +699,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ชื่อผู้ต้องหา : </label>
                 <div class="col-md-7">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="ArrestName" name="ArrestName" disabled>
+=======
+                  <input class="form-control" type="text" value="***" disabled>
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -505,7 +711,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">วันที่กำหนดชำระค่าปรับ : </label>
                 <div class="col-md-7">
+<<<<<<< HEAD
                   <input class="form-control" type="date" [(ngModel)]="PaymentFineAppointDate" name="PaymentFineAppointDate" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" [disabled]="viewMode" value="{{detial_Compare.PaymentFineDate}}">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -515,7 +725,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">วันที่กำหนดชำระภาษี : </label>
                 <div class="col-md-7">
+<<<<<<< HEAD
                   <input class="form-control" type="date" [(ngModel)]="PaymentVatDate" name="PaymentVatDate" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" [disabled]="viewMode" value="{{detial_Compare.PaymentVatDate}}">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -533,11 +747,19 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-4">
+<<<<<<< HEAD
                   <input class="col-form-label filled-in chk-col-indigo" id="insurance" type="checkbox" [checked]="Bail!='' && Bail!=nul" disabled>
                   <label for="insurance">ประกัน :</label>
                 </div>
                 <div class="col-md-7">
                   <input class="form-control" type="text" [(ngModel)]="Bail" name="Bail" [disabled]="viewMode">
+=======
+                  <input class="col-form-label filled-in chk-col-indigo" id="insurance" type="checkbox" [disabled]="viewMode || detial_Compare.Bail != '' ">
+                  <label for="insurance">ประกัน :</label>
+                </div>
+                <div class="col-md-7">
+                  <input class="form-control" type="text" value="{{detial_Compare.Bail}}">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -547,11 +769,19 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-4">
+<<<<<<< HEAD
                   <input class="col-form-label filled-in chk-col-indigo" id="collateral" type="checkbox" disabled [checked]="Guaruntee!='' && Guaruntee!=nul">
                   <label for="collateral">ประกันและหลักประกัน :</label>
                 </div>
                 <div class="col-md-7">
                   <input class="form-control" type="text" [(ngModel)]="Guaruntee" name="Guaruntee" [disabled]="viewMode">
+=======
+                  <input class="col-form-label filled-in chk-col-indigo" id="collateral" type="checkbox" [disabled]="viewMode || detial_Compare.Guarantee != '' ">
+                  <label for="collateral">ประกันและหลักประกัน :</label>
+                </div>
+                <div class="col-md-7">
+                  <input class="form-control" type="text" value="{{detial_Compare.Guarantee}}">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -568,11 +798,17 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-popup form-group row">
+<<<<<<< HEAD
                 <div class="custom-control custom-radio col-form-label col-md-10">
                   <input name="RequestRadio" id="yRequest" class="col-form-label with-gap radio-col-indigo" type="radio" [disabled]="viewMode"
                     [checked]="oCompareDetail.IsRequest=='1'">
                   <label for="yRequest">ร้องขอ</label>
 
+=======
+                <div class="custom-control custom-checkbox col-form-label col-md-10">
+                  <input class="col-form-label filled-in chk-col-indigo" id="request" type="checkbox" [disabled]="viewMode" ng-checked="detial_Compare.IsRequest">
+                  <label for="request">ร้องขอ</label>
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -580,11 +816,17 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group row">
+<<<<<<< HEAD
                 <div class="custom-control custom-radio col-form-label col-md-10">
                   <input name="RequestRadio" id="nRequest" class="col-form-label with-gap radio-col-indigo" type="radio" [disabled]="viewMode"
                     [checked]="oCompareDetail.IsRequest=='0'">
                   <label for="nRequest">ไม่ร้องขอ</label>
 
+=======
+                <div class="custom-control custom-checkbox col-form-label col-md-10">
+                  <input class="col-form-label filled-in chk-col-indigo" id="noRequest" type="checkbox" [disabled]="viewMode" ng-checked="!detial_Compare.IsRequest">
+                  <label for="noRequest">ไม่ร้องขอ</label>
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -595,7 +837,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-3">คำให้การของผู้ต้องหา : </label>
                 <div class="col-md-9">
+<<<<<<< HEAD
                   <textarea class="form-control" [disabled]="viewMode" rows="5" [(ngModel)]="LawbrakerTestimony" name="LawbrakerTestimony"></textarea>
+=======
+                  <textarea class="form-control" [disabled]="viewMode" rows="5">{{detial_Compare.LawbrakerTestimony}}</textarea>
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -629,7 +875,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ชื่อผู้ต้องหา : </label>
                 <div class="input-group col-md-8">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="ArrestName" name="ArrestName" disabled>
+=======
+                  <input class="form-control" type="text" value="***" disabled>
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -637,7 +887,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ยอดชำระค่าปรับ : </label>
                 <div class="col-md-7">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="TotalFine" name="TotalFine" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.TotalFine}}" disabled>
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -648,11 +902,19 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ชำระค่าปรับ : </label>
                 <div class="col-md-3">
+<<<<<<< HEAD
                   <input class="form-control" type="date" [(ngModel)]="PaymentDate" name="PaymentDate" [disabled]="viewMode">
                 </div>
                 <label class="col-form-label text-center col-md-2">เวลา</label>
                 <div class="col-md-3">
                   <input class="form-control" type="date" [(ngModel)]="PaymentTime" name="PaymentTime" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.PaymentDate}}" [disabled]="viewMode">
+                </div>
+                <label class="col-form-label text-center col-md-2">เวลา</label>
+                <div class="col-md-3">
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.PaymentDate}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -660,6 +922,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">เขียนที่ : </label>
                 <div class="col-md-7">
+<<<<<<< HEAD
                   <input type="text" class="form-control" [(ngModel)]="ReceipStation" name="ReceipStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
                     matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                     [disabled]="viewMode">
@@ -668,6 +931,9 @@
                       {{ option.OfficeName }}
                     </mat-option>
                   </mat-autocomplete>
+=======
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.Station}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -678,7 +944,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้รับชำระค่าปรับ : </label>
                 <div class="input-group col-md-8">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="ReceipStaff" name="ReceipStaff" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" value="{{detial_compare_staff.TitleName+detial_compare_staff.FirstName+' '+detial_compare_staff.LastName}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -686,7 +956,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ตำแหน่ง : </label>
                 <div class="col-md-7">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="ReceipPosition" name="ReceipPosition" disabled>
+=======
+                  <input class="form-control" type="text" value="{{detial_compare_staff.PositionName}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -697,19 +971,31 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="ReceipDepartment" name="ReceipDepartment" disabled>
+=======
+                  <input class="form-control" type="text" value="{{detial_compare_staff.DepartmentName}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-form-label col-md-5">ช่องทางชำระค่าปรับ : </label>
+                <label class="col-form-label col-md-5">ช่องทางชำระค่าปรับ : ***</label>
                 <div class="col-md-7">
+<<<<<<< HEAD
                   <select class="custom-select col-12" [(ngModel)]="ReceiptChanel" name="ReceiptChanel">
                     <option value="1">เงินสด</option>
                     <option value="2">EDC</option>
                     <option value="3">เครดิต</option>
                     <option value="4">เดบิต</option>
+=======
+                  <select class="custom-select col-12">
+                    <option selected="" value="เงินสด">เงินสด</option>
+                    <option value="EDC">EDC</option>
+                    <option value="เครดิต">เครดิต</option>
+                    <option value="เดบิต">เดบิต</option>
+>>>>>>> xcs08
                   </select>
                 </div>
               </div>
@@ -721,7 +1007,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ใบเสร็จเล่มที่ : </label>
                 <div class="input-group col-md-8">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="ReceiptBookNo" name="ReceiptBookNo" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.ReceiptBookNo}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -729,7 +1019,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ใบเสร็จเลขที่ : </label>
                 <div class="col-md-7">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="ReceiptNo" name="ReceiptNo" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.ReceiptNo}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -740,7 +1034,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หมายเลขอ้างอิง : </label>
                 <div class="input-group col-md-8">
+<<<<<<< HEAD
                   <input class="form-control" type="text" [(ngModel)]="ReferenceNo" name="ReferenceNo" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" value="{{detial_CompareDetailReceipt.ReferenceNo}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -775,7 +1073,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ชื่อผู้ต้องหา : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="fullName" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -786,11 +1084,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ชำระค่าปรับ : </label>
                 <div class="col-md-3">
-                  <input class="form-control" type="text" name="payDate" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
                 <label class="col-form-label text-center col-md-2">เวลา</label>
                 <div class="col-md-3">
-                  <input class="form-control" type="text" name="payTime" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -798,7 +1096,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ค่าปรับคดีรวม : </label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" name="payAmount" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -809,6 +1107,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">เขียนที่ : </label>
                 <div class="input-group col-md-8">
+<<<<<<< HEAD
                     <input type="text" class="form-control" [(ngModel)]="ApproveStation" name="ApproveStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
                     matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                     [disabled]="viewMode">
@@ -817,6 +1116,9 @@
                       {{ option.OfficeName }}
                     </mat-option>
                   </mat-autocomplete>
+=======
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>
@@ -861,7 +1163,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="postion" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -872,7 +1174,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="deparment" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -883,7 +1185,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้พิจารณาเห็นชอบ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="reviewer" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -892,7 +1194,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="rank" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -903,7 +1205,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="deparment" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -914,7 +1216,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้มีอำนาจอนุมัติ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="approver" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -923,7 +1225,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="rank" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -933,7 +1235,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="department" disabled>
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
                 </div>
               </div>
             </div>
@@ -941,7 +1243,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">คำสั่งกรมฯ ที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="departOrder" [disabled]="viewMode">
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -952,7 +1254,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ออกคำสั่ง : </label>
                 <div class="input-group col-md-8">
+<<<<<<< HEAD
                   <input class="form-control" type="date" name="dateOfIssue" [disabled]="viewMode">
+=======
+                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
+>>>>>>> xcs08
                 </div>
               </div>
             </div>

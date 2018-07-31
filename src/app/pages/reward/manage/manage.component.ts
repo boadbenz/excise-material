@@ -12,7 +12,8 @@ export class ManageComponent implements OnInit {
   viewMode: any;
   sub: any;
   courtCase: string ="";
-  test:string="ส่งฟ้องศาล";
+  test1:string="ส่งฟ้องศาล";
+  test2:string="เปรียบเทียบคดี";
 
   constructor(private router: Router, private navService: NavigationService) { }
 
@@ -41,13 +42,14 @@ export class ManageComponent implements OnInit {
     });
   }
 
-  changePage(page: string , caseSelect: string) {
+  changePage(page: string , mode: string, caseSelect: string) {
     // console.log(caseSelect)
     if (page == 'bribe'){
-      this.router.navigate(['reward/bribe']);
+      // this.router.navigate(['reward/bribe']);
+      this.router.navigate(['/reward/bribe', mode]);
     }
     else if (page == 'reward'){
-      this.router.navigate(['reward/reward', caseSelect]);
+      this.router.navigate(['reward/reward',mode, caseSelect]);
     }
     
   }

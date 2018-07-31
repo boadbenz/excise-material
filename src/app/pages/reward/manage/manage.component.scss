@@ -23,10 +23,15 @@
     cursor: pointer;
   }
   
-  #btn-browse {
+  #btn-browse , #reward-btn  {
     opacity: 0;
   }
   
+.border-table {
+    border: #a5a7a8 1px;
+    border-style: solid;
+  }
+
   .form-popup {
     margin-bottom: 0;
   }

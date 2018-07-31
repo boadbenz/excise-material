@@ -297,9 +297,9 @@
   </div>
   <div class="card-body">
     <div class="text-right">
-        <!-- addSupport ส่ง id -->
-        <input type="button" id="btn-browse" [disabled]="viewMode" (click)="addSupport(3)">
-      <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> เพิ่มจนท.สนับสนุน </label>
+      <!-- addSupport ส่ง id -->
+      <input type="button" id="btn-browse" [disabled]="viewMode">
+      <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy">เพิ่มจนท.สนับสนุน</label>
     </div>
     <div class="table-responsive">
       <table class="dataTable table table-sm table-striped table-hover">
@@ -308,7 +308,7 @@
             <th class="footable-sortable" colspan="1"></th>
             <th class="footable-sortable" colspan="1">ลำดับ</th>
             <th class="footable-sortable" colspan="1">ยศ</th>
-            <th class="footable-sortable" colspan="1">ชื่อ-นามสกุล</th>
+            <th class="footable-sortable" colspan="1">ชื่อ-สกุล</th>
             <th class="footable-sortable" colspan="1">ตำแหน่ง</th>
             <th class="footable-sortable" colspan="1">ระดับ</th>
             <th class="footable-sortable" colspan="1">ได้ในฐานะ</th>
@@ -409,6 +409,46 @@
               <input class="form-control" type="text" disabled>
             </td>
             <td>
+              <i class="ti-trash btn-action" [hidden]="modeCreate"></i>
+            </td>
+          </tr>
+          <tr [hidden]="!modeCreate">
+            <td>
+              <input type="checkbox" class="filled-in chk-col-indigo" id="crt">
+              <label for="crt"></label>
+            </td>
+            <td class="text-center">$index+1</td>
+            <td>
+              <select class="form-control"></select>
+            </td>
+            <td>
+              <input class="form-control" type="text">
+            </td>
+            <td>
+              <input class="form-control" type="text">
+            </td>
+            <td>
+              <input class="form-control" type="text">
+            </td>
+            <td>
+              <select class="form-control"></select>
+            </td>
+            <td>
+              <input class="form-control" type="text" disabled>
+            </td>
+            <td>
+              <select class="form-control"></select>
+            </td>
+            <td>
+              <input class="form-control" type="text" disabled>
+            </td>
+            <td>
+              <input class="form-control" type="text" disabled>
+            </td>
+            <td>
+              <input class="form-control" type="text" disabled>
+            </td>
+            <td>
               <i class="ti-trash btn-action"></i>
             </td>
           </tr>
@@ -422,7 +462,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td class="text-right">รวมทั้งสิ้น :</td>
+            <td class="text-right">รวมทั้งสิ้น:</td>
             <td>
               <input class="form-control" type="text" disabled>
             </td>
