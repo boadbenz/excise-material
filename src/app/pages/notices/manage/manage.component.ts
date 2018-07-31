@@ -316,7 +316,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onCreate() {
-
+debugger
         if (!this.noticeForm.valid) {
             this.isRequired = true;
             alert(Message.checkData)
@@ -568,13 +568,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     selectItemLocaleRegion(ele: any) {
         this.NoticeLocale.at(0).patchValue({
-            SubdistrictCode: ele.item.SubDistrictCode,
+            SubDistrictCode: ele.item.SubDistrictCode,
             SubDistrict: ele.item.SubDistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,
             Province: ele.item.ProvinceNameTH,
-            ZipCode: ele.item.ZipCode
+            ZipCode: 'N/A'
         });
     }
 
