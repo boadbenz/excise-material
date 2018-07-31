@@ -463,45 +463,45 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!arrestRes) { IsSuccess = false; return false; }
             // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
             IsSuccess = true
-            // arrestRes.ArrestIndictment.map(indictObj => {
-            //     // ข้อกล่าวหา
-            //     // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
-            //     this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
-            //         // รายละเอียดข้อกล่าวหา
-            //         item1.ArrestIndictmentDetail.map(async indictD => {
-            //             // ___5. Set IndictmentID ให้กับ object IndicmentDetail
-            //             indictD.IndictmentID = indictObj.IndictmentID;
-            //             // ___6. บันทึก ArrestIndictmentDetail
-            //             await this.arrestService.indicmentDetailinsAll(indictD).then(async indictDIns => {
-            //                 if (!indictDIns) { IsSuccess = false; return false; }
+            arrestRes.ArrestIndictment.map(indictObj => {
+                // ข้อกล่าวหา
+                // ___4. เปรียบเทียบ รายการข้อกล่าวหาด้วย GuiltBaseID กับ res0.GuiltBaseID
+                this.ArrestIndictment.value.filter(item1 => indictObj.GuiltBaseID == item1.GuiltBaseID).map((item1) => {
+                    // รายละเอียดข้อกล่าวหา
+                    item1.ArrestIndictmentDetail.map(async indictD => {
+                        // ___5. Set IndictmentID ให้กับ object IndicmentDetail
+                        indictD.IndictmentID = indictObj.IndictmentID;
+                        // ___6. บันทึก ArrestIndictmentDetail
+                        await this.arrestService.indicmentDetailinsAll(indictD).then(async indictDIns => {
+                            if (!indictDIns) { IsSuccess = false; return false; }
 
-            //                 IsSuccess = true
-            //                 // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
-            //                 await this.arrestService
-            //                     .indicmentgetByCon(indictD.IndictmentID.toString())
-            //                     .then(indictDetailGet => {
-            //                         debugger
-            //                         if (!indictDetailGet.length) return false;
+                            IsSuccess = true
+                            // ___7. ค้นหา indicmentDetail เพื่อดึงเอา indicmentDetailID มาใช้งาน
+                            await this.arrestService
+                                .indicmentgetByCon(indictD.IndictmentID.toString())
+                                .then(indictDetailGet => {
+                                    debugger
+                                    if (!indictDetailGet.length) return false;
 
-            //                         console.log(indictDetailGet);
+                                    console.log(indictDetailGet);
 
-            //                         // รายละเอียดสินค้า
-            //                         indictD.ArrestProductDetail.map(productD => {
-            //                             console.log(productD);
-            //                             debugger
-            //                             // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
-            //                             // productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
-            //                             // // ___9.บันทึก ArrestProductDetail
-            //                             // this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
-            //                         })
-            //                     }, (error) => { IsSuccess = false; console.error(error); return false; });
+                                    // รายละเอียดสินค้า
+                                    indictD.ArrestProductDetail.map(productD => {
+                                        console.log(productD);
+                                        debugger
+                                        // ___8. set IndictmentDetailID ให้กับ Object ProductDetail
+                                        // productD.IndictmentDetailID = indictDetailGet.IndictmentDetailID
+                                        // ___9.บันทึก ArrestProductDetail
+                                        // this.arrestService.productDetailInsAll(productD).then(productDIns => console.log(productDIns));
+                                    })
+                                }, (error) => { IsSuccess = false; console.error(error); return false; });
 
-            //             }, (error) => { IsSuccess = false; console.error(error); return false; });
+                        }, (error) => { IsSuccess = false; console.error(error); return false; });
 
-            //         })
-            //     })
+                    })
+                })
 
-            // })
+            })
 
         }, (error) => { IsSuccess = false; console.error(error); return false; });
 
@@ -625,16 +625,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setCancelButton(false);
     }
 
-    private deleteTableRow(form: FormArray, indexForm: number) {
-        if (this.mode === 'C') {
-            form.removeAt(indexForm);
+    // private deleteTableRow(form: FormArray, indexForm: number) {
+    //     if (this.mode === 'C') {
+    //         form.removeAt(indexForm);
 
-        } else if (this.mode === 'R') {
-            if (confirm(Message.confirmAction)) {
-                form.removeAt(indexForm);
-            }
-        }
-    }
+    //     } else if (this.mode === 'R') {
+    //         if (confirm(Message.confirmAction)) {
+    //             form.removeAt(indexForm);
+    //         }
+    //     }
+    // }
 
     setNoticeForm(notice: Notice) {
         this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
@@ -642,7 +642,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         let locale = notice.NoticeLocale[0];
         let product = notice.NoticeProduct;
         let lawbreaker = [];
-        
+
         this.ArrestLocale.at(0).reset(locale);
         this.ArrestLocale.at(0).patchValue({
             Region: `${locale.SubDistrict} ${locale.District} ${locale.Province}`,
@@ -794,10 +794,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (isNewItem) {
                 this.ArrestStaff.removeAt(indexForm)
             } else if (confirm(Message.confirmAction)) {
+                this.preloader.setShowPreloader(true);
                 this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
-                    if (IsSuccess)
+                    if (IsSuccess) {
+                        alert(Message.delStaffComplete)
                         this.ArrestStaff.removeAt(indexForm)
+                    } else {
+                        alert(Message.delStaffFail)
+                    }
                 })
+                this.preloader.setShowPreloader(false);
             }
         }
     }
@@ -811,10 +817,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (isNewItem) {
                 this.ArrestLawbreaker.removeAt(indexForm)
             } else if (confirm(Message.confirmAction)) {
+                this.preloader.setShowPreloader(true);
                 this.arrestService.lawbreakerupdDelete(lawbreakerId).then(IsSuccess => {
-                    if (IsSuccess)
+                    if (IsSuccess) {
+                        alert(Message.delLawbreakerComplete)
                         this.ArrestLawbreaker.removeAt(indexForm)
+                    } else {
+                        alert(Message.delLawbreakerFail)
+                    }
                 })
+                this.preloader.setShowPreloader(false);
             }
         }
     }
@@ -828,15 +840,21 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (isNewItem) {
                 this.ArrestProduct.removeAt(indexForm)
             } else if (confirm(Message.confirmAction)) {
+                this.preloader.setShowPreloader(true);
                 this.arrestService.productupdDelete(productId).then(IsSuccess => {
-                    if (IsSuccess)
+                    if (IsSuccess) {
+                        alert(Message.delProductComplete)
                         this.ArrestProduct.removeAt(indexForm)
+                    } else {
+                        alert(Message.delProductFail)
+                    }
                 })
+                this.preloader.setShowPreloader(false);
             }
         }
     }
 
-    deleteIndicment(indexForm: number, indicmtmentId: string) {
+    async deleteIndicment(indexForm: number, indicmtmentId: string) {
         if (this.mode === 'C') {
             this.ArrestIndictment.removeAt(indexForm);
 
@@ -847,16 +865,37 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (isNewItem) {
                 this.ArrestIndictment.removeAt(indexForm)
             } else if (confirm(Message.confirmAction)) {
-                this.arrestService.indicmentupdDelete(indicmtmentId).then(IsSuccess => {
-                    if (IsSuccess)
+                this.preloader.setShowPreloader(true);
+                await this.arrestService.indicmentupdDelete(indicmtmentId).then(IsSuccess => {
+                    if (IsSuccess) {
+                        alert(Message.delIndicmentComplete)
                         this.ArrestIndictment.removeAt(indexForm)
+                    } else {
+                        alert(Message.delIndicmentFail)
+                    }
                 })
+                this.preloader.setShowPreloader(false);
             }
         }
     }
 
     deleteDocument(indexForm: number) {
-        this.deleteTableRow(this.ArrestDocument, indexForm);
+        if (this.mode === 'C') {
+            this.ArrestDocument.removeAt(indexForm);
+
+        } else if (this.mode === 'R') {
+
+            const isNewItem = this.ArrestDocument.at(indexForm).value.IsNewItem
+
+            if (isNewItem) {
+                this.ArrestDocument.removeAt(indexForm)
+            } else if (confirm(Message.confirmAction)) {
+                // this.arrestService.indicmentupdDelete(indicmtmentId).then(IsSuccess => {
+                //     if (IsSuccess)
+                this.ArrestDocument.removeAt(indexForm)
+                // })
+            }
+        }
     }
 
     handleArrestDocInput(file: FileList, indexForm: number) {
