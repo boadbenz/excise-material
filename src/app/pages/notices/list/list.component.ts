@@ -17,7 +17,7 @@ export class ListComponent implements OnInit {
     advSearch: any;
 
     paginage = pagination;
-
+    
     notice = new Array<Notice>();
 
     @ViewChild('noticeTable') noticeTable: ElementRef;

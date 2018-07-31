@@ -41,11 +41,11 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
         ]
     }, {
-        path: 'accusations',
+        path: 'lawsuit',
         children: [
-            { path: 'list', loadChildren: './pages/accusations/list/list.module#ListModule' },
-            { path: 'manage/:mode', loadChildren: './pages/accusations/manage-view/manage-view.module#ManageViewModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/accusations/manage/manage.module#ManageModule' }
+            { path: 'list', loadChildren: './pages/lawsuit/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/lawsuit/manage/manage.module#ManageModule' },
+            { path: 'detail/:mode', loadChildren: './pages/lawsuit/detail/detail.module#DetailModule' }
         ]
     }, {
         path: 'fine',
