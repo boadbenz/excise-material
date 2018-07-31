@@ -193,28 +193,30 @@
             <th class="footable-sortable">สินบน</th>
             <th class="footable-sortable">รางวัล</th>
             <th class="footable-sortable">ส่งคลัง</th>
+            <th class="footable-sortable">รวม</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="footable">
-            <td class="">นายธวัชชัย บิง</td>
+          <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
+            <td class="">{{item.Lawbreaker}}</td>
             <td class="text-center">
               <b>
                 <u>
-                  <a (click)="viewData()">2</a>
+                  <a (click)="viewData()">{{item.MistreatNo}}</a>
                 </u>
               </b>
             </td>
-            <td>Hoegaarden/Wit</td>
-            <td class="text-center">10</td>
-            <td class="">80,000.00</td>
-            <td class="">800,000.00</td>
+            <td>{{item.ProductDesc}}</td>
+            <td class="text-center">{{item.FineRate}}</td>
+            <td class="">{{item.VatValue}}</td>
+            <td class="">{{item.FineRate * item.VatValue}}</td>
             <td>
               <input class="form-control" type="text" [disabled]="viewMode" value="800,000.00">
             </td>
-            <td class="">160,000.00</td>
-            <td class="">160,000.00</td>
-            <td class="">480,000.00</td>
+            <td class="">{{item.BribeMoney}}</td>
+            <td class="">{{item.RewardMoney}}</td>
+            <td class="">{{item.TreasuryMoney}}</td>
+            <td class="">รวม</td>
           </tr>
         </tbody>
       </table>
@@ -273,7 +275,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ตำแหน่ง : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" [(ngModel)]="compareStaff[0].OperationPosName" name="ComparePosition" disabled>
+              <input class="form-control" type="text" [(ngModel)]="OperationPosName" name="ComparePosition" disabled>
             </div>
           </div>
         </div>
@@ -283,7 +285,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">หน่วยงาน : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="compareStaff[0].OperationDeptName" name="CompareDepartment" disabled>
+              <input class="form-control" type="text" [(ngModel)]="OperationDeptName" name="CompareDepartment" disabled>
             </div>
           </div>
         </div>
@@ -304,7 +306,8 @@
         <tbody>
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
-            <td>{{item.Lawbreaker}}</td>
+            <!-- +' ' + item.IndictmentDetailID-->
+            <td>{{item.Lawbreaker}} </td>
             <td class="text-center">{{item.PaymentFineAppointDate | date:'dd/MM/yyyy'}}</td>
             <td class="text-center">{{item.PaymentVatDate | date:'dd/MM/yyyy'}}</td>
             <td class="text-center">
