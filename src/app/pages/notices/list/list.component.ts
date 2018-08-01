@@ -20,10 +20,9 @@ export class ListComponent implements OnInit {
     isRequired = false;
 
     paginage = pagination;
-    
-    notice = new Array<Notice>();
 
-    @ViewChild('noticeTable') noticeTable: ElementRef;
+    notice = new Array<Notice>();
+    noticeList = new Array<Notice>();
 
     constructor(
         private _router: Router,
@@ -93,8 +92,7 @@ export class ListComponent implements OnInit {
         }
     }
 
-    async onSearchComplete(list: any) {
-        this.notice = [];
+    async onSearchComplete(list: Notice[]) {
 
         if (!list.length) {
             alert(Message.noRecord)
@@ -113,16 +111,17 @@ export class ListComponent implements OnInit {
             })
         })
 
+        this.notice = list
         // set total record
-        // this.invesPaginate.TotalItems = this.notice.length;
+        this.paginage.TotalItems = this.notice.length;
     }
 
     view(noticeCode: string) {
-        this._router.navigate([`/notice/manage/v/${noticeCode}`]);
+        this._router.navigate([`/notice/manage/R/${noticeCode}`]);
     }
 
     async pageChanges(event) {
-
+        this.noticeList = await this.notice.slice(event.startIndex - 1, event.endIndex);
     }
 
 }
