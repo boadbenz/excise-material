@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LawbreakerComponent } from './lawbreaker.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { OffenseModalModule } from '../offense-modal/offense-modal.module';
+import { ModalOffenseModule } from '../../component/modal-offense/modal-offense.module';
 
 const routes: Routes = [
     {
@@ -12,11 +12,11 @@ const routes: Routes = [
             // title: 'จัดการข้อมูล',
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหางานจับกุม', url: '/arrest/list' },
-                { title: 'จัดการข้อมูลบันทึกจับกุม', url: '/arrest/manage/c/new' },
+                { title: 'ค้นหาใบแจ้งความ', url: '/arrest/list' },
+                { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/arrest/manage/c/new' },
                 { title: 'จัดการข้อมูลผู้ต้องหา' }
             ],
-            nextPage: { title: 'รับคำกล่าวโทษ', url: '/' }
+            nextPage: { title: 'งานจับกุม', url: '/' }
         },
         component: LawbreakerComponent
     }
@@ -27,7 +27,7 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         CardActionsModule,
-        OffenseModalModule
+        ModalOffenseModule
     ],
     declarations: [LawbreakerComponent]
 })
