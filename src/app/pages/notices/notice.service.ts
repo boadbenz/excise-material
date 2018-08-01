@@ -1,5 +1,5 @@
 import { Injectable, HostListener } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { appConfig } from '../../app.config';
 import { Notice } from './notice';
 import { NoticeProduct } from './notice-product';
@@ -10,7 +10,10 @@ import { Message } from '../../config/message';
 @Injectable()
 export class NoticeService {
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private _http: Http
+    ) { }
 
     // tslint:disable-next-line:member-ordering
     private httpOptions = {

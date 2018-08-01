@@ -6,11 +6,8 @@ import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
 import { toLocalShort } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
-<<<<<<< HEAD
-=======
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
->>>>>>> FL_J
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -69,13 +66,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preLoader.setShowPreloader(false);
     }
 
-<<<<<<< HEAD
-    onAdvSearch(form: any) {
-        debugger
-=======
     async onAdvSearch(form: any) {
         this.paginage.TotalItems = 0;
->>>>>>> FL_J
         const sDateCompare = new Date(form.value.OccurrenceDateFrom);
         const eDateCompare = new Date(form.value.OccurrenceDateTo);
 

@@ -1,17 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
 import { ArrestLawbreaker } from '../arrest-lawbreaker';
 import { ArrestProduct } from '../arrest-product';
-<<<<<<< HEAD
-import { ArrestIndictment } from '../arrest-indictment';
-import { pagination } from '../../../config/pagination';
-=======
 import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
 import { pagination } from '../../../config/pagination';
 import { ArrestsService } from '../arrests.service';
 import { MasLawGroupSectionModel } from '../../../models';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
->>>>>>> FL_J
 
 @Component({
     selector: 'app-allegation-modal',

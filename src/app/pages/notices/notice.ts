@@ -14,13 +14,14 @@ export class Notice {
     public NoticeDue: string;
     public NoticeDueDate: string;
     public GroupNameDesc: string;
-    public CommunicationChannelID: string;
+    public CommunicationChanelID: string;
+    public DataSource: string;
+    public FilePath: string;
     public ArrestCode: string;
-    public StaffFullName: string;
     public IsActive: number;
-    public Noticestaff: Array<NoticeStaff>;
-    public Noticeinformer: Array<NoticeInformer>;
-    public Noticelocale: Array<NoticeLocale>;
+    public NoticeStaff: Array<NoticeStaff>;
+    public NoticeInformer: Array<NoticeInformer>;
+    public NoticeLocale: Array<NoticeLocale>;
     public NoticeProduct: Array<NoticeProduct>;
     public NoticeSuspect: Array<NoticeSuspect>;
     public NoticeDocument: Array<NoticeDocument>;
@@ -28,3 +29,4 @@ export class Notice {
     public RowId: number;
     public IsChecked: boolean;
 }
+
