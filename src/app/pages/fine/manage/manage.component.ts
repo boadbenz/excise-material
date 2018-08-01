@@ -2,7 +2,6 @@ import { Router } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-<<<<<<< HEAD
 import { FineService } from '../fine.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Compare, ICompareDetail, CompareDetail, CompareDetailReceipt } from '../fine-model';
@@ -17,9 +16,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import { MatAutocomplete } from '@angular/material';
 import { ArrestIndictment } from '../../arrests/arrest-indictment';
-=======
-import { HttpClient } from '@angular/common/http';
->>>>>>> xcs08
 
 @Component({
   selector: 'app-manage',
@@ -33,7 +29,6 @@ export class ManageComponent implements OnInit {
   param: any;
   modal: any;
 
-<<<<<<< HEAD
   rawOptions = [];
   options = [];
   compareStaff = [];
@@ -131,16 +126,6 @@ export class ManageComponent implements OnInit {
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
   ) { }
-=======
-  detial_arrest: any = {};
-  detial_money: any = [];
-  detial_Compare: any=[];
-  detial_Compare_h:any = {};
-  detial_CompareDetailReceipt:any = [];
-  detial_compare_staff:any =[];
-
-  constructor(private router: Router, private navService: NavigationService, private httpClient: HttpClient) { }
->>>>>>> xcs08
 
   ngOnInit() {
     this.active_Route();
@@ -187,7 +172,6 @@ export class ManageComponent implements OnInit {
       this.navService.setNextPageButton(true);
     });
 
-<<<<<<< HEAD
 
     this.param = this.activeRoute.params.subscribe(p => {
       if (p['code1']) {
@@ -249,53 +233,6 @@ export class ManageComponent implements OnInit {
         await this.navService.setCancelButton(false);
       }
     })
-=======
-    this.postComparegetByKeyword();
-
-  }
-
-  public postComparegetByKeyword() {
-    this.httpClient.post('http://103.233.193.62:8881/XCS60/ComparegetByKeyword', {
-      textSearch: 'mar'
-    })
-      .subscribe(
-        (respond: any[]) => {
-          //console.log(respond);
-          //this.detial_arrest= respond;
-          //console.log(this.respond[0].CompareStation);
-          this.detial_arrest = {
-            ArrestCode: respond[0].ArrestCode,
-            LawsuiltCode: respond[0].LawsuiltCode,
-            ProveReportNo: respond[0].ProveReportNo,
-            LawsuiltDate: respond[0].LawsuiltDate,
-            LawsuiltTime: respond[0].LawsuiltTime,
-            arrest_name: respond[0].CompareStaff[0].TitleName + respond[0].CompareStaff[0].FirstName + ' ' + respond[0].CompareStaff[0].LastName,
-            PositionName: respond[0].CompareStaff[0].PositionName,
-            DepartmentName: respond[0].CompareStaff[0].DepartmentName,
-            location: respond[0].SubDistrictName + ' ' + respond[0].DistictName + ' ' + respond[0].ProvinceName,
-            SectionName: respond[0].SectionName,
-            GuiltBaseName: respond[0].GuiltBaseName,
-            SectionNo: respond[0].SectionNo,
-            PenaltyDesc: respond[0].PenaltyDesc
-          };
-
-          this.detial_money = respond[0].CompareDetail;
-          this.detial_Compare_h = {
-            CompareDate: respond[0].CompareDate,
-            CompareTime: "Comparetime",
-            Station: respond[0].CompareStation,
-            name: respond[0].CompareStaff[0].TitleName+respond[0].CompareStaff[0].FirstName+' '+respond[0].CompareStaff[0].LastName,
-            PositionName: respond[0].CompareStaff[0].PositionName,
-            DepartmentName: respond[0].CompareStaff[0].DepartmentName
-          }
-          this.detial_Compare = respond[0].CompareDetail;
-          this.detial_CompareDetailReceipt = respond[0].CompareDetail[0].CompareDetailReceipt;
-          this.detial_compare_staff = respond[0].CompareStaff[0];
-          
-        }
-      )
-
->>>>>>> xcs08
   }
 
   viewData() {
