@@ -23,12 +23,7 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-<<<<<<< HEAD
-        RightSidebarComponent,
-        
-=======
         RightSidebarComponent
->>>>>>> FL_J
     ],
     imports: [
         BrowserModule,
@@ -36,11 +31,7 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
-<<<<<<< HEAD
-       
-=======
         PreloaderModule
->>>>>>> FL_J
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
