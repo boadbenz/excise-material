@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
-import { NoticeInformer } from '../notice-informer';
-import { NoticeStaff } from '../notice-staff';
-=======
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -35,7 +26,6 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { MasOfficeModel } from '../../../models/mas-office.model';
->>>>>>> FL_J
 
 @Component({
     selector: 'app-manage',
@@ -49,9 +39,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
     mode: string;
+    showEditField: any;
     modal: any;
-<<<<<<< HEAD
-=======
     noticeCode: string;
     arrestCode: string;
     noticeForm: FormGroup;
@@ -87,26 +76,30 @@ export class ManageComponent implements OnInit, OnDestroy {
     get NoticeLocale(): FormArray {
         return this.noticeForm.get('NoticeLocale') as FormArray;
     }
->>>>>>> FL_J
 
-    noticeForm: FormGroup;
+    get NoticeProduct(): FormArray {
+        return this.noticeForm.get('NoticeProduct') as FormArray;
+    }
 
-    showEditField: any;
+    get NoticeSuspect(): FormArray {
+        return this.noticeForm.get('NoticeSuspect') as FormArray;
+    }
+
+    get NoticeDocument(): FormArray {
+        return this.noticeForm.get('NoticeDocument') as FormArray;
+    }
 
     constructor(
         private activeRoute: ActivatedRoute,
         private suspectModalService: NgbModal,
+        private router: Router,
         private fb: FormBuilder,
-<<<<<<< HEAD
-        private navService: NavigationService
-=======
         private navService: NavigationService,
         private noticeService: NoticeService,
         private ngbModel: NgbModal,
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
         private arrestService: ArrestsService
->>>>>>> FL_J
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -124,26 +117,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        this.setNoticeinFormer(new Array<NoticeInformer>());
-
-        this.setNoticestaff(new Array<NoticeStaff>());
-=======
-       await this.setRegionStore();
-       await this.setProductStore();
-    //    await this.setOfficeStore();
-
-       this.preloader.setShowPreloader(false);
->>>>>>> FL_J
-=======
         await this.setProductStore();
         // await this.setOfficeStore();
         await this.setStaffStore();
         await this.setRegionStore();
 
         this.preloader.setShowPreloader(false);
->>>>>>> FL_J
     }
 
     private active_route() {
@@ -158,11 +137,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-<<<<<<< HEAD
-=======
                 this.noticeCode = `NT-${(new Date).getTime()}`;
                 this.arrestCode = `NT-${(new Date).getTime()}`;
->>>>>>> FL_J
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -173,15 +149,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
-<<<<<<< HEAD
-=======
                 this.navService.setNextPageButton(true);
 
                 if (p['code']) {
                     this.noticeCode = p['code'];
                     this.getByCon(p['code']);
                 }
->>>>>>> FL_J
             }
         });
     }
@@ -191,22 +164,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.showEditField = p;
         });
 
-<<<<<<< HEAD
-        this.navService.onSave.subscribe(status => {
-=======
         this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
->>>>>>> FL_J
             if (status) {
-<<<<<<< HEAD
-                // set true
-                this.navService.setEditField(true);
-                this.navService.setEditButton(true);
-                this.navService.setPrintButton(true);
-                this.navService.setDeleteButton(true);
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-=======
                 await this.navService.setOnCancel(false);
                 this.router.navigate(['/notice/list']);
             }
@@ -224,7 +183,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 } else if (this.mode === 'R') {
                     this.onReviced();
                 }
->>>>>>> FL_J
             }
         });
 
@@ -252,30 +210,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.noticeForm = this.fb.group({
-<<<<<<< HEAD
-            NoticeCode: new FormControl(''),
-            NoticeStationCode: new FormControl(''),
-            NoticeStation: new FormControl(''),
-            NoticeDate: new FormControl(''),
-            NoticeTime: new FormControl(''),
-            NoticeDue: new FormControl(''),
-            NoticeDueDate: new FormControl(''),
-            GroupNameDesc: new FormControl(''),
-            CommunicationChannelID: new FormControl(''),
-            ArrestCode: new FormControl(''),
-            StaffFullName: new FormControl(''),
-            IsActive: new FormControl(''),
-            Noticestaff: this.fb.array([]),
-            Noticeinformer: this.fb.array([]),
-            Noticelocale: this.fb.array([]),
-            NoticeProduct: this.fb.array([]),
-            NoticeSuspect: this.fb.array([])
-        })
-    }
-
-    get Noticestaff(): FormArray {
-        return this.noticeForm.get('Noticestaff') as FormArray;
-=======
             NoticeCode: new FormControl(this.noticeCode, Validators.required),
             NoticeStationCode: new FormControl('N/A'),
             NoticeStation: new FormControl(null, Validators.required),
@@ -312,15 +246,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private createLocaleForm(): FormGroup {
         NoticeLocaleFormControl.NoticeCode = new FormControl(this.noticeCode);
         return this.fb.group(NoticeLocaleFormControl)
->>>>>>> FL_J
     }
 
-<<<<<<< HEAD
-    setNoticestaff(staff: NoticeStaff[]) {
-        if (staff) {
-            // informer.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
-            const itemFGs = staff.map(item => this.fb.group(item));
-=======
     private createProductForm(): FormGroup {
         NoticeProductFormControl.NoticeCode = new FormControl(this.noticeCode);
         return this.fb.group(NoticeProductFormControl)
@@ -334,29 +261,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     private setItemFormArray(array: any[], formControl: string) {
         if (array !== undefined && array.length) {
             const itemFGs = array.map(item => this.fb.group(item));
->>>>>>> FL_J
             const itemFormArray = this.fb.array(itemFGs);
-            this.noticeForm.setControl('Noticestaff', itemFormArray);
+            this.noticeForm.setControl(formControl, itemFormArray);
         }
     }
 
-<<<<<<< HEAD
-    get Noticeinformer(): FormArray {
-        return this.noticeForm.get('Noticeinformer') as FormArray;
-    }
-
-    setNoticeinFormer(informer: NoticeInformer[]) {
-        if (informer) {
-            // informer.map(item => item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`);
-            const itemFGs = informer.map(item => this.fb.group(item));
-            const itemFormArray = this.fb.array(itemFGs);
-            this.noticeForm.setControl('Noticeinformer', itemFormArray);
-        }
-    }
-
-    get Noticelocale(): FormArray {
-        return this.noticeForm.get('Noticelocale') as FormArray;
-=======
     private getByCon(code: string) {
         this.noticeService.getByCon(code).then(async res => {
             this.noticeCode = res.NoticeCode;
@@ -782,7 +691,6 @@ debugger
                 this.preloader.setShowPreloader(false);
             }
         }
->>>>>>> FL_J
     }
 
     onViewSuspect(id: string) {
@@ -801,4 +709,7 @@ debugger
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 
+    onChangeConceal() {
+        this.isConceal = !this.isConceal;
+    }
 }
