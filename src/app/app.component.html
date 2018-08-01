@@ -1,3 +1,10 @@
+<input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let option of options" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+            
 <!-- ============================================================== -->
 <!-- Main wrapper - style you can find in pages.scss -->
 <!-- ============================================================== -->
@@ -30,6 +37,10 @@
             <!-- ============================================================== -->
             <!-- End Start Page Content -->
             <!-- ============================================================== -->
+
+
+            
+
 
             <!-- ============================================================== -->
             <!-- Right sidebar -->
