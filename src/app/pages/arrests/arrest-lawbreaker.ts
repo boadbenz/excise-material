@@ -1,5 +1,5 @@
 import { ArrestLawbreakerAddress } from './arrest-lawbreaker-address';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 export class ArrestLawbreaker {
     public LawbreakerID: number;
@@ -62,9 +62,9 @@ export class ArrestLawbreaker {
 }
 
 export const ArrestLawbreakerFormControl = {
-    LawbreakerID: new FormControl(null),
-    ArrestCode: new FormControl(null),
-    LawbreakerRefID: new FormControl(1),
+    LawbreakerID: new FormControl(null, Validators.required),
+    ArrestCode: new FormControl(null, Validators.required),
+    LawbreakerRefID: new FormControl(null),
     EntityType: new FormControl(null),
     CompanyTitleCode: new FormControl(null),
     CompanyTitle: new FormControl(null),
@@ -133,8 +133,8 @@ export const ArrestLawbreakerFormControl = {
     LawbreakerTypeName: new FormControl(null),
     ProductID: new FormControl(null),
     ProductName: new FormControl(null),
-    IsChecked: new FormControl(false),
-    IsNewItem: new FormControl(false)
+    IsChecked: new FormControl(null),
+    IsNewItem: new FormControl(null)
 }
 
 class Types {

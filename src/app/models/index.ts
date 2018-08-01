@@ -1,11 +1,6 @@
 // export * from './product';
-<<<<<<< HEAD
-// export * from './region';
-// export * from './communicationChanel';
-=======
 export * from './region';
 export * from './communicationChanel';
->>>>>>> FL_J
 export * from './dutyUnit';
 
 export * from './mas-product.model'

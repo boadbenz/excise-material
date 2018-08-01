@@ -18,10 +18,20 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่รับแจ้งความ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
+<<<<<<< HEAD
                     <input type="date" class="form-control form-control-sm" formControlName="NoticeDate" placeholder="วว/ดด/ปปปป" [disabled]="showEditField">
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" formControlName="NoticeTime" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                    <input type="date" formControlName="NoticeDate" class="form-control form-control-sm" 
+                    [readonly]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+
+                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                    <input type="text" formControlName="NoticeTime" class="form-control form-control-sm" 
+                    [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                 </div>
             </div>
 
@@ -29,12 +39,18 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
+<<<<<<< HEAD
                         <input type="text" formControlName="NoticeDue" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                        <input type="text" formControlName="NoticeDue" class="form-control form-control-sm" 
+                        [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
+<<<<<<< HEAD
 <<<<<<< HEAD
                     <input type="date" class="form-control form-control-sm" formControlName="NoticeDueDate" placeholder="วว/ดด/ปปปป" readonly>
 
@@ -46,6 +62,13 @@
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" name="" class="form-control form-control-sm"[readonly]="showEditField">
 >>>>>>> FL_J
+=======
+                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm"[readonly]="showEditField"[ngClass]="{'ng-touched':isRequired}" required>
+
+                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                    <input type="text" name="" class="form-control form-control-sm"
+                    [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                 </div>
             </div>
 
@@ -54,7 +77,12 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
+<<<<<<< HEAD
                         <input type="text" formControlName="NoticeStation" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                        <input type="text" formControlName="NoticeStation" class="form-control form-control-sm" 
+                        [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                     </div>
                 </div>
 
@@ -65,18 +93,55 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <div class="row" formArrayName="Noticestaff">
                 <div *ngFor="let item of Noticestaff.controls; let i=index;" [formGroupName]="i">
                     <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
                             <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" readonly>
+=======
+            <div formArrayName="NoticeStaff">
+                <div class="row" *ngFor="let item of NoticeStaff.controls; let i=index;" [formGroupName]="i">
+
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ผู้รับแจ้งความ :
+                    </label>
+                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                        <ng-template #rt let-r="result" let-t="term">
+                            {{ r.TitleName == null ? '' : r.TitleName }} 
+                            {{r.FirstName == null ? '' : r.FirstName}} 
+                            {{r.LastName == null ? '' : r.LastName}}
+                        </ng-template>
+    
+                        <input type="text" class="form-control form-control-sm"
+                            [ngbTypeahead]="searchStaff"
+                            [resultTemplate]="rt"
+                            [readOnly]="showEditField"
+                            [inputFormatter]="formatterStaff" 
+                            (selectItem)="selectItemStaff($event, i)"
+                            value="{{item.value.StaffFullName}}"
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required/>
+                        <!-- <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [readonly]="showEditField"> -->
+                    </div>
+
+                    <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" 
+                            [readonly]="showEditField"[ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
+<<<<<<< HEAD
                             <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
+=======
+                            <input type="text" formControlName="PositionName" class="form-control form-control-sm" 
+                            [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                         </div>
                     </div>
 
@@ -197,7 +262,7 @@
 =======
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                            {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
 
                         <input type="text" class="form-control form-control-sm"
@@ -237,12 +302,20 @@
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
+<<<<<<< HEAD
                         <input type="text" class="form-control form-control-sm" formControlName="Address" [disabled]="showEditField">
+=======
+                        <input type="text" class="form-control form-control-sm" formControlName="Address" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
+<<<<<<< HEAD
                             <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                            <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                         </div>
                     </div>
                 </div>
@@ -251,32 +324,52 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
+<<<<<<< HEAD
                             <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                            <input type="text" formControlName="Building" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
+<<<<<<< HEAD
                         <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                        <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
+<<<<<<< HEAD
                         <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                        <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+<<<<<<< HEAD
                         <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                        <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+<<<<<<< HEAD
                         <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                        <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
@@ -285,7 +378,7 @@
 =======
 
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                            {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
                         <input type="text" class="form-control form-control-sm"
                             [ngbTypeahead]="searchRegion"
@@ -293,7 +386,12 @@
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemLocaleRegion($event)" 
+<<<<<<< HEAD
                             value="{{item.get('Region').value}}"/>
+>>>>>>> FL_J
+=======
+                            value="{{item.get('Region').value}}"
+                            [ngClass]="{'ng-touched':isRequired}" required/>
 >>>>>>> FL_J
                     </div>
                 </div>
@@ -341,6 +439,7 @@
                                 [resultTemplate]="rt"
                                 [inputFormatter]="formatterProduct"
                                 (selectItem)="selectItemProductItem($event, i)"
+<<<<<<< HEAD
                                 value="{{item.get('BrandFullName').value}}"/>
 >>>>>>> FL_J
                         </td>
@@ -353,12 +452,27 @@
                                 <option value=""></option>
 =======
                             <select formControlName="QtyUnit" class="form-control form-control-sm">
+=======
+                                value="{{item.get('BrandFullName').value}}"
+                                [ngClass]="{'ng-touched':isRequired}" required/>
+                        </td>
+                        <td>
+                            <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        </td>
+                        <td>
+                            <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                            <!-- <select formControlName="QtyUnit" class="form-control form-control-sm">
+>>>>>>> FL_J
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of dutyUnitModel;"
                                 [disabled]="showEditField" 
                                 [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+<<<<<<< HEAD
 >>>>>>> FL_J
                             </select>
+=======
+                            </select> -->
+>>>>>>> FL_J
                         </td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
@@ -385,6 +499,7 @@
 
                 <ng-template #suspect let-c="close" let-d="dismiss">
                     <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" (exportSuspectData)="addSuspect($event)"></app-suspect-modal>
+                    <!-- <app-modal-lawbreaker (c)="modal.close()" (d)="modal.dismiss()" (lawbreakerEmit)="addSuspect($event)"></app-modal-lawbreaker> -->
                 </ng-template>
             </div>
             <table class="table table-sm table-striped table-set-border">
@@ -467,9 +582,13 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
 <<<<<<< HEAD
+<<<<<<< HEAD
                     <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
 =======
                     <select formControlName="CommunicationChanelID" class="form-control form-control-sm">
+=======
+                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of communicateModel; let i=index;" 
                         [value]="item.CommunicationChanelID"
@@ -481,7 +600,11 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+<<<<<<< HEAD
                     <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
+=======
+                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                 </div>
             </div>
             <div class="row">
@@ -489,9 +612,13 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ที่อยู่เอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
 <<<<<<< HEAD
+<<<<<<< HEAD
                     <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
 =======
                         <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField">
+=======
+                        <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+>>>>>>> FL_J
                     <!-- <div class="custom-file">
                         <input id="communicate-file" type="file" class="custom-file-input" formControlName="FilePath" [readonly]="showEditField">
                         <label for="communicate-file" class="custom-file-label">

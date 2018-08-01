@@ -1,4 +1,5 @@
 import { ArrestProductDetail } from "./arrest-product";
+import { FormControl, Validators, FormArray } from "../../../../node_modules/@angular/forms";
 
 class OpsArrestIndicmentDetailCollection {
     IndictmentDetailID: number;
@@ -37,6 +38,7 @@ export class ArrestIndictment {
     IndictmentLawbreaker: IndictmentLawbreaker[];
     ArrestIndictmentDetail: ArrestIndicmentDetail[];
     OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
+    
     IsNewItem: boolean;
 }
 

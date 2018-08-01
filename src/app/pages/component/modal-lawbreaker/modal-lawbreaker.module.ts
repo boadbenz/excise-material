@@ -22,4 +22,4 @@ import { ArrestsService } from '../../arrests/arrests.service';
   ],
   providers: [ArrestsService]
 })
-export class ModalLawbreakerModal { }
+export class ModalLawbreakerModule { }

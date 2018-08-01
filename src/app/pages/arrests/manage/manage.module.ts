@@ -14,7 +14,7 @@ import { StoreModule } from '@ngrx/store';
 import { productReducer } from '../../../reducers/product.reducer';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalNoticeModule } from '../../component/modal-notice/modal-notice.module';
-import { ModalLawbreakerModal } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
+import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 
 const routes: Routes = [
   {
@@ -44,7 +44,7 @@ const routes: Routes = [
       productModule: productReducer
     }),
     RouterModule.forChild(routes),
-    ModalLawbreakerModal,
+    ModalLawbreakerModule,
     CardActionsModule,
     AllegationModalModule,
     ModalNoticeModule,

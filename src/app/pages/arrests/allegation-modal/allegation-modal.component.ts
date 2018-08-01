@@ -34,6 +34,7 @@ export class AllegationModalComponent implements OnInit {
     @Input() lawbreaker = new Array<ArrestLawbreaker>();
     @Input() product = new Array<ArrestProduct>();
     @Input() indicment = new Array<ArrestIndictment>();
+    @Input() isEditIndictment: boolean | false;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
@@ -59,6 +60,9 @@ export class AllegationModalComponent implements OnInit {
             LawGroupSection: this.fb.array([]),
             IndictmentLawbreaker: this.fb.array([])
         })
+
+        console.log(this.isEditIndictment ? this.indicment : null);
+        
 
         let _indictmentLawbreaker = new Array<IndictmentLawbreaker>()
         await this.lawbreaker.map(item => {
@@ -137,6 +141,7 @@ export class AllegationModalComponent implements OnInit {
     }
 
     dismiss(e: any) {
+        this.isEditIndictment = false;
         this.d.emit(e);
     }
 
@@ -178,6 +183,7 @@ export class AllegationModalComponent implements OnInit {
         })
         
         this.outPutIndicment.emit(_indicment);
+        this.isEditIndictment = false;
         this.c.emit(e);
     }
 
