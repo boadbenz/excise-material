@@ -8,9 +8,13 @@ import {
 import { Router } from '@angular/router';
 import { Notice } from '../notice';
 import { NoticeService } from '../notice.service';
+<<<<<<< HEAD
 import { pagination } from 'app/config/pagination';
 import { Message } from 'app/config/message';
 import { toLocalShort } from 'app/config/dateFormat';
+=======
+import { pagination } from '../../../config/pagination';
+>>>>>>> master
 
 @Component({
   selector: 'app-notice-list-modal',

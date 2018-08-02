@@ -1,10 +1,8 @@
-import { FormControl } from '@angular/forms';
-
 export class NoticeLocale {
     public LocaleID: number;
     public NoticeCode: string;
-    public CoordinateX: string;
-    public CoordinateY: string;
+    // public CoordinateX: string;
+    // public CoordinateY: string;
     public Location: string;
     public Address: string;
     public Village: string;
@@ -22,13 +20,16 @@ export class NoticeLocale {
     public ZipCode: string;
     public Policestation: string;
     public IsActive: number;
+<<<<<<< HEAD
+=======
+    public Region: string;
 }
 
 export const NoticeLocaleFormControl = {
     LocaleID: new FormControl(null),
     NoticeCode: new FormControl(null),
-    CoordinateX: new FormControl('CoordinateX'),
-    CoordinateY: new FormControl('CoordinateY'),
+    // CoordinateX: new FormControl('CoordinateX'),
+    // CoordinateY: new FormControl('CoordinateY'),
     Location: new FormControl(null),
     Address: new FormControl(null),
     Village: new FormControl(null),
@@ -47,4 +48,5 @@ export const NoticeLocaleFormControl = {
     Policestation: new FormControl('Policestation'),
     IsActive: new FormControl(1),
     Region: new FormControl(null)
+>>>>>>> FL_J
 }

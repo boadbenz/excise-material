@@ -1,3 +1,6 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+    <app-print-doc-modal [NoticeCode]="noticeCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+</ng-template>
 <form class="form-horizontal" [formGroup]="noticeForm">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">
@@ -32,10 +35,17 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
+<<<<<<< HEAD
                     <input type="date" class="form-control form-control-sm" formControlName="NoticeDueDate" placeholder="วว/ดด/ปปปป" readonly>
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" name="" class="form-control form-control-sm" readonly>
+=======
+                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm"[readonly]="showEditField">
+
+                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                    <input type="text" name="" class="form-control form-control-sm"[readonly]="showEditField">
+>>>>>>> FL_J
                 </div>
             </div>
 
@@ -55,15 +65,8 @@
                 </div>
             </div>
 
-            <div formArrayName="NoticeStaff">
-                <div class="row" *ngFor="let item of NoticeStaff.controls; let i=index;" [formGroupName]="i">
-
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ผู้รับแจ้งความ :
-                    </label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
-
+            <div class="row" formArrayName="Noticestaff">
+                <div *ngFor="let item of Noticestaff.controls; let i=index;" [formGroupName]="i">
                     <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
@@ -105,18 +108,7 @@
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">รายละเอียดผู้แจ้งความ</h4>
         </div>
-        <div class="card-body" formArrayName="NoticeInformer">
-            <div *ngFor="let item of NoticeInformer.controls; let i=index;" [formGroupName]="i">
-
-                <div class="row form-group">
-                    <div class="col">
-                        <input *ngIf="showEditField" type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
-                            disabled>
-                        <input *ngIf="!showEditField" type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
-                            (change)="onChangeConceal()">
-                        <label for="md_checkbox_25">สายลับขอปิดนาม</label>
-                    </div>
-                </div>
+        <div class="card-body">
 
             <input type="hidden" formControlName="InformerID">
             <input type="hidden" formControlName="NoticeCode">
@@ -197,9 +189,15 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+                    <input type="text" class="form-control form-control-sm" formControlName="Road" [disabled]="showEditField">
+=======
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrict }} {{r.District}} {{r.Province}}
+                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
 
                         <input type="text" class="form-control form-control-sm"
@@ -209,8 +207,10 @@
                             [readOnly]="showEditField"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemInformmerRegion($event)"
+                            value="{{item.get('Region').value}}"
                             />
                     </div>
+>>>>>>> FL_J
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
@@ -230,12 +230,10 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
-            <h4 class="card-title m-b-0">รายละเอียดการกระทำความผิด</h4>
+            <h4 class="card-title m-b-0">สถานที่เกิดเหตุ</h4>
         </div>
-        <div class="card-body" formArrayName="NoticeLocale">
-
-            <div *ngFor="let item of NoticeLocale.controls; let i=index;" [formGroupName]="i">
-
+        <div class="card-body" formArrayName="Noticelocale">
+            <div *ngFor="let item of Noticelocale.controls; let i=index;" [formGroupName]="i">
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -282,17 +280,21 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+<<<<<<< HEAD
+                        <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
+=======
 
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrict }} {{r.District}} {{r.Province}}
+                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
-                        <input type="text" formControlName="Region" class="form-control form-control-sm"
+                        <input type="text" class="form-control form-control-sm"
                             [ngbTypeahead]="searchRegion"
-                            [readOnly]="isConceal"
                             [readOnly]="showEditField"
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
-                            (selectItem)="selectItemLocaleRegion($event)" />
+                            (selectItem)="selectItemLocaleRegion($event)" 
+                            value="{{item.get('Region').value}}"/>
+>>>>>>> FL_J
                     </div>
                 </div>
             </div>
@@ -321,10 +323,15 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody formArrayName="NoticeProduct">
-                    <tr *ngFor="let item of NoticeProduct.controls; let i=index;" [formGroupName]="i">
-                        <td class="text-center">{{i+1}}</td>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            1
+                        </td>
                         <td>
+<<<<<<< HEAD
+                            <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+=======
                             <ng-template #rt let-r="result" let-t="term">
                                 {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}}
                             </ng-template>
@@ -333,18 +340,24 @@
                                 [ngbTypeahead]="searchProduct"
                                 [resultTemplate]="rt"
                                 [inputFormatter]="formatterProduct"
-                                (selectItem)="selectItemProductItem($event, i)" />
-
-                                <span *ngIf="searching">searching...</span>
-                                <div class="form-control-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+                                (selectItem)="selectItemProductItem($event, i)"
+                                value="{{item.get('BrandFullName').value}}"/>
+>>>>>>> FL_J
                         </td>
                         <td>
                             <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
                         </td>
                         <td>
-                            <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+<<<<<<< HEAD
+                            <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                                <option value=""></option>
+=======
+                            <select formControlName="QtyUnit" class="form-control form-control-sm">
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of dutyUnitModel;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                                <option *ngFor="let item of dutyUnitModel;"
+                                [disabled]="showEditField" 
+                                [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+>>>>>>> FL_J
                             </select>
                         </td>
                         <td class="text-center">
@@ -371,7 +384,7 @@
                 </div>
 
                 <ng-template #suspect let-c="close" let-d="dismiss">
-                    <app-lawbreaker-modal (c)="modal.close()" (d)="modal.dismiss()"></app-lawbreaker-modal>
+                    <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" (exportSuspectData)="addSuspect($event)"></app-suspect-modal>
                 </ng-template>
             </div>
             <table class="table table-sm table-striped table-set-border">
@@ -384,15 +397,55 @@
                         <th>ชื่อ</th>
                         <th>จำนวนครั้งการกระทำผิด</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
+<<<<<<< HEAD
+                <tbody>
+                    <tr>
+                        <td class="text-center"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+=======
                 <tbody formArrayName="NoticeSuspect">
                     <tr *ngFor="let item of NoticeSuspect.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
+                        <td>
+                            <!-- {{item.get('SuspectType').value}} -->
+                        </td>
+                        <td>
+                            <!-- {{item.get('EntityType').value}} -->
+                        </td>
+                        <td>
+                            <!-- <span *ngIf="item.get('EntityType').value == 0">
+                                {{item.get('CompanyRegistrationNo').value}}
+                            </span>
+                            <span *ngIf="item.get('EntityType').value == 1 && item.get('SuspectType').value == 0">
+                                {{item.get('PassportNo').value}}
+                            </span>
+                            <span *ngIf="item.get('EntityType').value == 1 && item.get('SuspectType').value == 1">
+                                {{item.get('Idcard').value}}
+                            </span> -->
+                        </td>
+                        <td>
+                            <!-- <span *ngIf="item.get('EntityType').value == 0">
+                                {{item.get('CompanyFullName').value}}
+                            </span>
+                            <span *ngIf="item.get('EntityType').value == 1">
+                                {{item.get('SuspectFullName').value}}
+                            </span> -->
+                            {{item.get('SuspectFullName').value}}
+                        </td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="onViewSuspect(item.get('SuspectID').value)">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+>>>>>>> FL_J
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
                                 <i class="fa fa-trash-o fa-lg"></i>
@@ -413,7 +466,18 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+<<<<<<< HEAD
                     <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+=======
+                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm">
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of communicateModel; let i=index;" 
+                        [value]="item.CommunicationChanelID"
+                        [disabled]="showEditField">
+                            {{item.CommunicationChanelName}}
+                        </option>
+                    </select>
+>>>>>>> FL_J
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
@@ -424,7 +488,21 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ที่อยู่เอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
+<<<<<<< HEAD
                     <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField"></select>
+=======
+                        <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField">
+                    <!-- <div class="custom-file">
+                        <input id="communicate-file" type="file" class="custom-file-input" formControlName="FilePath" [readonly]="showEditField">
+                        <label for="communicate-file" class="custom-file-label">
+                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        </label>
+                    </div> -->
+                    <!-- <label for="communicate-file">
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                    </label> -->
+                    
+>>>>>>> FL_J
                 </div>
             </div>
         </div>
@@ -451,15 +529,11 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody formArrayName="NoticeDocument">
-                    <tr *ngFor="let item of NoticeDocument.controls; let i=index;" [formGroupName]="i">
-                        <td class="text-center">{{i+1}}</td>
-                        <td>
-                            <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
-                        </td>
-                        <td>
-                            <input type="file" formControlName="FilePath" [readonly]="showEditField">
-                        </td>
+                <tbody>
+                    <tr>
+                        <td class="text-center"></td>
+                        <td></td>
+                        <td></td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField">
                                 <i class="fa fa-trash-o fa-lg"></i>

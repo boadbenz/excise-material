@@ -1,6 +1,5 @@
-import { FormControl } from '@angular/forms';
-
 export class NoticeProduct {
+<<<<<<< HEAD
     public ProductID: number;
     public NoticeCode: string;
     public GroupCode: string;
@@ -31,6 +30,39 @@ export class NoticeProduct {
     public NetWeightUnit: string;
     public Remarks: string;
     public IsActive: number;
+=======
+    public ProductID = '';
+    public NoticeCode = '';
+    public GroupCode = '';
+    public IsDomestic = '';
+    public ProductCode = '';
+    public BrandCode = '';
+    public BrandNameTH = '';
+    public BrandNameEN = '';
+    public SubBrandCode = '';
+    public SubBrandNameTH = '';
+    public SubBrandNameEN = '';
+    public ModelCode = '';
+    public ModelName = '';
+    public FixNo1 = '';
+    public DegreeCode = '';
+    public Degree = '';
+    public SizeCode = '';
+    public Size = '';
+    public SizeUnitCode = '';
+    public SizeUnitName = '';
+    public FixNo2 = '';
+    public SequenceNo = '';
+    public ProductDesc = '';
+    public CarNo = '';
+    public Qty = '';
+    public QtyUnit = '';
+    public NetWeight = '';
+    public NetWeightUnit = '';
+    public Remarks = '';
+    public IsActive = '';
+    public BrandFullName = '';
+    public IsNewItem: boolean;
 }
 
 export const NoticeProductFormControl = {
@@ -62,5 +94,10 @@ export const NoticeProductFormControl = {
     QtyUnit: new FormControl(null),
     NetWeight: new FormControl(null),
     NetWeightUnit: new FormControl(null),
-    Remarks: new FormControl(null)
+    Remarks: new FormControl(null),
+
+
+    BrandFullName: new FormControl(null),
+    IsNewItem: new FormControl(false)
+>>>>>>> FL_J
 }

@@ -1,0 +1,116 @@
+<div class="row m-t-10">
+  <div class="col-12">
+    <div class="card card-outline-bluish unset-radius" *ngIf="advSearch | async">
+      <div class="card-header unset-radius">
+        ค้นหาขั้นสูง
+        <div class="card-actions">
+          <a (click)="closeAdvSearch()">
+            <i class="ti-close"></i>
+          </a>
+        </div>
+      </div>
+      <div class="card-body">
+        <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="advSearchForm(advForm)">
+          <div class="form-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-right col-md-3">เลขที่ใบงาน : </label>
+                  <div class="col-md-9">
+                    <input class="form-control" type="text" ngModel name="ArrestCode">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group has-danger row">
+                  <label class="col-form-label text-right col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
+                  <div class="col-md-8">
+                    <input class="form-control" type="text" ngModel name="LawsuitNo">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
+                  <div class="col-md-4">
+                    <input class="form-control" type="date" ngModel name="LawsuitDateFrom">
+                  </div>
+                  <label class="col-form-label">ถึง</label>
+                  <div class="col-md-4">
+                    <input class="form-control" type="date" ngModel name="LawsuitDateTo">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-right col-md-4">ชื่อผู้รับคดี : </label>
+                  <div class="col-md-8">
+                    <input class="form-control" type="text" ngModel name="StaffName">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
+                  <div class="col-md-9">
+                    <input class="form-control" type="text" ngModel name="OfficeName">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <button type="submit" class="btn waves-effect waves-light text-white btn-themecolor">ค้นข้อมูล</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive table-striped">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="footable-sortable text-center">ลำดับ</th>
+                <th class="footable-sortable">เลขที่ใบงาน</th>
+                <th class="footable-sortable ">เลขที่คดีรับคำกล่าวโทษ</th>
+                <th class="footable-sortable">วันที่รับคดี</th>
+                <th class="footable-sortable">ชื่อผู้รับคดี</th>
+                <th class="footable-sortable">หน่วยงาน</th>
+                <th class="footable-sortable"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="footable" *ngFor="let item of lawsuitList; let i = index;">
+                <td class="text-center">{{item.RowsId}}</td>
+                <td>{{item.ArrestCode}}</td>
+                <td>{{item.LawsuitNo}}</td>
+                <td>{{item.LawsuitDate}}</td>
+                <td>
+                  <div *ngFor="let staff of item.LawsuiteStaff;">{{staff.FullName}}</div>
+                </td>
+                <td>
+                  <div *ngFor="let staff of item.LawsuiteStaff;">{{staff.DepartmentName}}</div>
+                </td>
+                <td>
+                  <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)">
+                    <i class="mdi mdi-eye fa-lg"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer card-footer-unset">
+          <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+            [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+          </app-pagination-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

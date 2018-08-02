@@ -1,3 +1,5 @@
+import { FormControl } from "@angular/forms";
+
 export class ArrestLocale {
     public LocaleID: string;
     public IsArrest: string;
@@ -21,4 +23,27 @@ export class ArrestLocale {
     public Policestation: string;
     public IsActive: string;
     public Region: string;
+}
+
+export const ArrestLocaleFormControl = {
+    IsArrest: new FormControl(null),
+    ArrestCode: new FormControl(null),
+    GPS: new FormControl(null),
+    Location: new FormControl("N/A"),
+    Address: new FormControl(null),
+    Village: new FormControl(null),
+    Building: new FormControl(null),
+    Floor: new FormControl(null),
+    Room: new FormControl(null),
+    Alley: new FormControl(null),
+    Road: new FormControl(null),
+    SubDistrictCode: new FormControl(null),
+    SubDistrict: new FormControl(null),
+    DistrictCode: new FormControl(null),
+    District: new FormControl(null),
+    ProvinceCode: new FormControl(null),
+    Province: new FormControl(null),
+    ZipCode: new FormControl(null),
+    Policestation: new FormControl(null),
+    Region: new FormControl(null)
 }

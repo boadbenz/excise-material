@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, Input, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NavigationService } from './navigation.service';
+import { NgForm } from '@angular/forms';
 
 // declare var jQuery: any;
 
@@ -78,8 +79,9 @@ export class NavigationComponent implements OnInit {
         this.navService.setAdvSearch();
     }
 
-    clickSearch(textSearch: any) {
-        this.navService.setOnSearch(textSearch);
+    clickSearch(formSearch: NgForm) {
+        this.navService.setOnSearch(formSearch.value);
+        formSearch.reset();
     }
 
     clickNew() {
@@ -87,7 +89,7 @@ export class NavigationComponent implements OnInit {
     }
 
     clickNextPage() {
-        this.router.navigate([`${this.nextPage}`, 'C', 'NEW']);
+        this.navService.setOnNextPage(true);
     }
 
     clickPrint() {

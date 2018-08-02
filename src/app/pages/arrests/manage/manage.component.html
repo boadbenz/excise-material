@@ -1,10 +1,10 @@
 <app-step-wizard [sectionId]="2"></app-step-wizard>
 
 <ng-template #printDocModal let-c="close" let-d="dismiss">
-    <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+    <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()" (outputNoticeCode)="noticeCode"></app-print-doc-modal>
 </ng-template>
 
-<form action="" [formGroup]="arrestForm">
+<form action="" [formGroup]="arrestFG">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -14,13 +14,13 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใบแจ้งความนำจับ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="NoticeCode" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="NoticeCode"
+                    class="form-control form-control-sm" [readonly]="showEditField">
                     <a href="javaScript:void(0);" class="more text-secondary" (click)="openModal(noticelist)">
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </a>
-
                     <ng-template #noticelist let-c="close" let-d="dismiss">
-                        <app-notice-list-modal (c)="modal.close()" (d)="modal.dismiss()"></app-notice-list-modal>
+                        <app-modal-notice (c)="modal.close()" (d)="modal.dismiss()" (noticeCode)="setNoticeCode($event)"></app-modal-notice>
                     </ng-template>
                 </div>
 
@@ -55,13 +55,25 @@
                     <div class="form-group input-group">
                         <input type="date" formControlName="ArrestDate" class="form-control form-control-sm" [readonly]="showEditField">
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
-                        <input type="text" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="date" formControlName="ArrestTime" class="form-control form-control-sm" [readonly]="showEditField">
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">เขียนที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="ArrestStation" class="form-control form-control-sm" [readonly]="showEditField">
+                    <ng-template #rt let-r="result" let-t="term">
+                        {{ r.OfficeShortName }}
+                    </ng-template>
+
+                    <input type="text" class="form-control form-control-sm"
+                        [ngbTypeahead]="serachOffice"
+                        [resultTemplate]="rt"
+                        [readOnly]="showEditField"
+                        [inputFormatter]="formatterOffice" 
+                        (selectItem)="selectItemOffice($event)"
+                        [value]="arrestFG.get('ArrestStation').value"
+                        />
+                    <!-- <input type="text" formControlName="ArrestStation" class="form-control form-control-sm" [readonly]="showEditField"> -->
                 </div>
             </div>
             <div class="row">
@@ -76,6 +88,9 @@
             </div>
         </div>
     </div>
+
+
+        
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
@@ -106,7 +121,20 @@
                         <tr *ngFor="let item of ArrestStaff.controls; let i = index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" formControlName="FullName" class="form-control form-control-sm" [readonly]="showEditField">
+                                <ng-template #rt let-r="result" let-t="term">
+                                    {{ r.TitleName == null ? '' : r.TitleName }} 
+                                    {{r.FirstName == null ? '' : r.FirstName}} 
+                                    {{r.LastName == null ? '' : r.LastName}}
+                                </ng-template>
+            
+                                <input type="text" class="form-control form-control-sm"
+                                    [ngbTypeahead]="searchStaff"
+                                    [resultTemplate]="rt"
+                                    [readOnly]="showEditField"
+                                    [inputFormatter]="formatterStaff" 
+                                    (selectItem)="selectItemStaff($event, i)"
+                                    value="{{item.value.FullName}}"
+                                    />
                             </td>
                             <td>
                                 <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
@@ -115,7 +143,7 @@
                                 <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly>
                             </td>
                             <td>
-                                <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="ContributorCode" class="form-control form-control-sm" [readonly]="showEditField">
                                 <!-- <select formControlName="ContributorID" class="form-control form-control-sm" [disabled]="showEditField">
                                 </select> -->
                             </td>
@@ -177,11 +205,23 @@
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Region" class="form-control form-control-sm" [readonly]="showEditField">
+                        <ng-template #rt let-r="result" let-t="term">
+                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                        </ng-template>
+    
+                        <input type="text" class="form-control form-control-sm"
+                            [ngbTypeahead]="searchRegion"
+                            [resultTemplate]="rt"
+                            [readOnly]="showEditField"
+                            [inputFormatter]="formatterRegion" 
+                            (selectItem)="selectItemLocaleRegion($event)"
+                            value="{{item.value.Region}}"
+                            />
+                        <!-- <input type="text" formControlName="Region" class="form-control form-control-sm" [readonly]="showEditField"> -->
                     </div>
                 </div>
                 <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">รหัสไปษณีย์ :</label>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">รหัสไปรษณีย์ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
                         <input type="text" formControlName="ZipCode" class="form-control form-control-sm" [readonly]="showEditField">
                     </div>
@@ -207,7 +247,9 @@
                 </div>
 
                 <ng-template #lawbreaker let-c="close" let-d="dismiss">
-                    <app-lawbreaker-modal (c)="modal.close()" (d)="modal.dismiss()"></app-lawbreaker-modal>
+                    <app-modal-lawbreaker (c)="modal.close()" (d)="modal.dismiss()" (lawbreakerEmit)="addLawbreaker($event)">
+                        
+                    </app-modal-lawbreaker>
                 </ng-template>
             </div>
 
@@ -227,9 +269,9 @@
                     </thead>
                     <tbody formArrayName="ArrestLawbreaker">
                         <tr *ngFor="let item of ArrestLawbreaker.controls; let i=index;" [formGroupName]="i">
-                            <td class="text-center"></td>
-                            <td>{{item.get('EntityType').value}}</td>
-                            <td>{{item.get('LawbreakerType').value}}</td>
+                            <td class="text-center">{{i+1}}</td>
+                            <td>{{item.get('EntityTypeName').value}}</td>
+                            <td>{{item.get('LawbreakerTypeName').value}}</td>
                             <td>
                                 <span *ngIf="item.get('EntityType').value == 0">
                                     {{item.get('CompanyRegistrationNo').value}}
@@ -298,21 +340,31 @@
                         <tr *ngFor="let item of ArrestProduct.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" formControlName="ProductDesc" class="form-control form-control-sm" [readonly]="showEditField">
+                                <ng-template #rt let-r="result" let-t="term">
+                                    {{ r.SubBrandNameTH }} {{r.BrandNameTH}} {{r.ModelName}}
+                                </ng-template>
+                                <input type="text" class="form-control form-control-sm"
+                                    [readonly]="showEditField"
+                                    [ngbTypeahead]="searchProduct"
+                                    [resultTemplate]="rt"
+                                    [inputFormatter]="formatterProduct"
+                                    (selectItem)="selectItemProductItem($event, i)" 
+                                    value="{{item.value.ProductFullName}}"
+                                    />
                             </td>
                             <td>
-                                <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="Qty" ngModel class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="QtyUnit" ngModel class="form-control form-control-sm" [readonly]="showEditField">
                                 <!-- <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
                                 </select> -->
                             </td>
                             <td>
-                                <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="NetVolume" ngModel class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="NetVolumeUnit" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="NetVolumeUnit" ngModel class="form-control form-control-sm" [readonly]="showEditField">
                                 <!-- <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField"></select> -->
                             </td>
                             <td>
@@ -356,15 +408,27 @@
                     <tbody formArrayName="ArrestIndictment">
                         <tr *ngFor="let item of ArrestIndictment.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
-                            <td></td>
+                            <td>{{item.get('SectionName').value}}</td>
                             <td>{{item.get('GuiltBaseID').value}}</td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                <div *ngFor="let law of item.value.IndictmentLawbreaker;">
+                                    <div *ngIf="law.EntityType == 0">
+                                        {{law.CompanyFullName}}
+                                    </div>
+                                    <div *ngIf="law.EntityType == 1">
+                                        {{law.LawbreakerFullName}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div *ngFor="let law of item.value.IndictmentLawbreaker;">
+                                    {{law.ProductName}}
+                                </div>
+                            </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-danger" (click)="openModal(allegation)" *ngIf="!showEditField">
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
-
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(i, item.get('IndictmentID').value)">
@@ -376,8 +440,17 @@
                 </table>
 
                 <ng-template #allegation let-c="close" let-d="dismiss">
+<<<<<<< HEAD
                     <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" [mode]="mode" [lawbreaker]="ArrestLawbreaker.value" [product]="ArrestProduct.value"
                         [indicment]="ArrestIndictment.value"></app-allegation-modal>
+=======
+                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" (outPutIndicment)="addIndictment($event)"
+                    [mode]="mode"
+                    [lawbreaker]="ArrestLawbreaker.value"
+                    [product]="ArrestProduct.value"
+                    [indicment]="ArrestIndictment.value"                    
+                    ></app-allegation-modal>
+>>>>>>> master
                 </ng-template>
             </div>
         </div>
@@ -392,7 +465,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
-                    <textarea formControlName="Behaviour" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
+                    <textarea formControlName="ArrestDesc" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
                 </div>
             </div>
             <div class="row">
@@ -441,9 +514,6 @@
                             </td>
                             <td>
                                 <input type="file" formControlName="FilePath" class="dropify" [readonly]="showEditField">
-                                <!-- <a href="javaScript:void(0)" class="text-secondary" style="position: absolute;right: 100px;bottom: 36px;">
-                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                                </a> -->
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteDocument(i)">

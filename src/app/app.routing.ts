@@ -41,26 +41,27 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
         ]
     }, {
-        path: 'accusations',
+        path: 'lawsuit',
         children: [
-            { path: 'list', loadChildren: './pages/accusations/list/list.module#ListModule' },
-            { path: 'manage/:mode', loadChildren: './pages/accusations/manage-view/manage-view.module#ManageViewModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/accusations/manage/manage.module#ManageModule' }
+            { path: 'list', loadChildren: './pages/lawsuit/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/lawsuit/manage/manage.module#ManageModule' },
+            { path: 'detail/:mode', loadChildren: './pages/lawsuit/detail/detail.module#DetailModule' }
         ]
     }, {
         path: 'fine',
         children: [
             { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
-            { path: 'manage/:mode', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
-            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' }
+            { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
+            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
+            { path: 'test', loadChildren: './pages/fine/test/test.module#TestModule' }
         ]
     }, {
         path: 'reward',
         children: [
             { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
-            { path: 'bribe', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
-            { path: 'reward/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
+            { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
+            { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
         ]
     }, {
         path: 'reduction',

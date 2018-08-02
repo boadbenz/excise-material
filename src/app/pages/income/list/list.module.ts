@@ -4,6 +4,10 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
+import { IncomeService } from '../income.service';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
+import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 
 const routes: Routes = [
     {
@@ -19,13 +23,15 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
-        FormsModule,
-        CommonModule,
-        RouterModule.forChild(routes),
-        CardActionsModule
+      CommonModule,
+      HttpModule,
+      HttpClientModule,
+      FormsModule,
+      RouterModule.forChild(routes),
+      CardActionsModule,
+      PaginationTableModule
     ],
-    declarations: [
-        ListComponent,
-    ]
-})
-export class ListModule { }
+    declarations: [ListComponent],
+    providers: [IncomeService]
+  })
+  export class ListModule { }
