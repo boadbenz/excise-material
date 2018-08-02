@@ -12,8 +12,8 @@ const routes: Routes = [
             // title: 'จัดการข้อมูล',
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหาใบแจ้งความ', url: '/arrest/list' },
-                { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/arrest/manage/c/new' },
+                { title: 'ค้นหาใบแจ้งความ', url: '/notice/list' },
+                { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/notice/manage/C/NEW' },
                 { title: 'จัดการข้อมูลผู้ต้องหา' }
             ],
             nextPage: { title: 'งานจับกุม', url: '/' }

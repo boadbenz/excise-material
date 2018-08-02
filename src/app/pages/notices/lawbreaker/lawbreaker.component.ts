@@ -12,7 +12,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     modal: any;
     private mode: any;
-    private sub: any;
+    private subActivatedRoute: any;
     showEditField: any;
 
     constructor(
@@ -27,7 +27,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.sub = this.activatedRoute.params.subscribe(p => {
+        this.subActivatedRoute = this.activatedRoute.params.subscribe(p => {
             this.mode = p['mode'];
             if (p['mode'] === 'c' || p['mode'] === 'u') {
                 // set false
@@ -55,7 +55,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.sub = this.navService.showFieldEdit.subscribe(status => {
+        this.navService.showFieldEdit.subscribe(status => {
             this.showEditField = status;
         });
 
@@ -68,7 +68,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.sub.unsubscribe();
+        this.subActivatedRoute.unsubscribe();
     }
 
     openOffenseDetailModal(e: any) {

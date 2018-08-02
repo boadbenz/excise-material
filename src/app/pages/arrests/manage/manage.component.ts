@@ -192,6 +192,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.fb.group(ArrestProductFormControl);
     }
 
+    // private createIndictment(): FormGroup {
+    //     return this.fb.group(ArrestIndictmentFormControl)
+    // }
+
+    // private createLawbreaker(): FormGroup {
+    //     return this.fb.group(ArrestLawbreakerFormControl);
+    // }
+
     private setItemFormArray(array: any[], formControl: string) {
         if (array !== undefined && array.length) {
             const itemFGs = array.map(item => this.fb.group(item));
