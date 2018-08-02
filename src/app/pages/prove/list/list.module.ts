@@ -4,6 +4,9 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
+import { ProveService } from '../prove.service';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
     {
@@ -11,7 +14,7 @@ const routes: Routes = [
         data: {
             // title: 'ค้นหาข้อมูล',
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง' }],
-            nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/proof/manage' }
+            nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/prove/manage' }
         },
         component: ListComponent
     }
@@ -21,11 +24,12 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
+        HttpModule,
+        HttpClientModule,
         RouterModule.forChild(routes),
         CardActionsModule
     ],
-    declarations: [
-        ListComponent,
-    ]
+    declarations: [ListComponent],
+    providers: [ProveService]
 })
 export class ListModule { }
