@@ -694,7 +694,7 @@ debugger
     }
 
     onViewSuspect(id: string) {
-        this.router.navigate(['/arrest/lawbreaker', 'R', id])
+        this.router.navigate(['/notice/suspect', 'R', id])
     }
 
     ngOnDestroy(): void {

@@ -22,7 +22,10 @@ export class SuspectComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private preloader: PreloaderService,
     private navService: NavigationService
-  ) { }
+  ) {
+    this.navService.setPrintButton(false);
+    this.navService.setDeleteButton(false);
+  }
 
   ngOnInit() {
     this.preloader.setShowPreloader(true);
@@ -44,7 +47,6 @@ export class SuspectComponent implements OnInit, OnDestroy {
       if (p['mode'] === 'C') {
         // set false
         this.navService.setEditButton(false);
-        this.navService.setDeleteButton(false);
         this.navService.setEditField(false);
         this.navService.setNextPageButton(false);
         // set true
@@ -56,11 +58,10 @@ export class SuspectComponent implements OnInit, OnDestroy {
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
         // set true
-        this.navService.setPrintButton(true);
+        // this.navService.setPrintButton(true);
+        this.navService.setNextPageButton(false);
         this.navService.setEditButton(true);
-        this.navService.setDeleteButton(true);
         this.navService.setEditField(true);
-        this.navService.setNextPageButton(true);
 
         if (p['code']) {
           // this.noticeCode = p['code'];

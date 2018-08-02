@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SuspectComponent } from './suspect.component';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
   {
@@ -16,7 +17,7 @@ const routes: Routes = [
               { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/notice/manage/C/NEW' },
               { title: 'จัดการข้อมูลผู้ต้องสงสัย' }
           ],
-          nextPage: { title: '', url: '/' }
+          nextPage: { title: 'งานแจ้งความ', url: '/' }
       },
       component: SuspectComponent
   }
@@ -26,6 +27,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule.forChild(routes),
+    NgbModule.forRoot(),
     ReactiveFormsModule,
     CardActionsModule
   ],
