@@ -6,7 +6,7 @@ import { Message } from '../../../config/message';
 import { Notice } from '../../notices/notice';
 import { toLocalShort } from '../../../config/dateFormat';
 import { ArrestsService } from '../../arrests/arrests.service';
-import { FormGroup, FormArray, FormBuilder } from '../../../../../node_modules/@angular/forms';
+import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { NoticeService } from '../../notices/notice.service';
 
 @Component({

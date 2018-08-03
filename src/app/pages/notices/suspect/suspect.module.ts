@@ -1,10 +1,13 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SuspectComponent } from './suspect.component';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ArrestsService } from '../../arrests/arrests.service';
+import { HttpModule } from '../../../../../node_modules/@angular/http';
+import { HttpClientModule } from '../../../../../node_modules/@angular/common/http';
 
 const routes: Routes = [
   {
@@ -27,12 +30,16 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    HttpModule,
+    HttpClientModule,
     RouterModule.forChild(routes),
     NgbModule.forRoot(),
     ReactiveFormsModule,
     CardActionsModule
   ],
   declarations: [SuspectComponent],
-  exports: [SuspectComponent]
+  exports: [SuspectComponent],
+  providers: [ArrestsService],
+  schemas: [NO_ERRORS_SCHEMA]
 })
 export class SuspectModule { }
