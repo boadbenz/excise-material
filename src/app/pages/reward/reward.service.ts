@@ -24,4 +24,16 @@ export class RewardService {
     getArrestRequestgetByConAdv(reward: Reward) {
         return this.httpClient.post(`${HOSTNAME}/MasDepartmentRequestgetByKeyword`, reward)
     }
+
+    getArrestRequestgetByCon(arrestCode: string) {
+        return this.httpClient.post(`${HOSTNAME}/ArrestRequestgetByCon`, arrestCode)
+    }
+
+    getRequestbribegetByKeyword(textSearch: string) {
+        return this.httpClient.post(`${HOSTNAME}/RequestbribegetByKeyword`, textSearch)
+    }
+
+    getRequestbribegetByCon(requestBribeCode: string) {
+        return this.httpClient.post(`${HOSTNAME}/RequestbribegetByCon`, requestBribeCode)
+    }
 }
