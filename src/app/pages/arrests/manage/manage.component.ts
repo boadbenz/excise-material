@@ -768,8 +768,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         IsProdcutCo: 1,
                         Qty: new FormControl(lb.Qty, Validators.required),
                         QtyUnit: new FormControl(lb.QtyUnit, Validators.required),
-                        Size: new FormControl(lb.Size, Validators.required),
-                        SizeUnit: new FormControl(lb.SizeUnit, Validators.required),
+                        Size: new FormControl(lb.Size),
+                        SizeUnit: new FormControl(lb.SizeUnit),
                         Weight: new FormControl(lb.Weight, Validators.required),
                         WeightUnit: new FormControl(lb.WeightUnit, Validators.required),
                         MistreatRate: null,
@@ -804,6 +804,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 ArrestIndictmentDetail: this.fb.array(indictDetail),
                 IsNewItem: item.IsNewItem == false ? false : true
             })
+
+            console.log(FG);
+            
             this.ArrestIndictment.push(FG);
         })
     }
