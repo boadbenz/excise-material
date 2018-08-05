@@ -96,17 +96,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let item of response">
-                                <td class="text-center">{{item.no}}</td>
-                                <td>{{item.work_no}}</td>
-                                <td>{{item.case_no}}</td>
-                                <td>{{item.arrest_day}}</td>
-                                <td>{{item.court_date}}</td>
+                            <tr *ngFor="let item of response; let i = index;">
+                                <td class="text-center">{{i + 1}}</td>
+                                <td>{{item.ArrestCode}}</td>
+                                <td>{{item.NoticeCode}}</td>
+                                <td>{{item.ArrestDate}}</td>
+                                <td>{{item.OccurrenceDate}}</td>
                                 <td>{{item.lawyer}}</td>
-                                <td>{{item.department}}</td>
+                                <td>{{item.ArrestStation}}</td>
                                 <td>
                                     <!-- ... -->
-                                    <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.no)">
+                                    <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.ArrestCode)">
                                         <i class="mdi mdi-eye fa-lg"></i>
                                     </a>
                                 </td>

@@ -12,9 +12,7 @@ export class RewardService {
 
     constructor(private httpClient: HttpClient) { }
 
-    getArrestRequestgetByKeyword(text: string) {
-        const textSearch = new TextSearch();
-        textSearch.Textsearch = text;
+    getArrestRequestgetByKeyword(textSearch: string) {
         return this.httpClient.post(`${HOSTNAME}/ArrestRequestgetByKeyword`, textSearch)
     }
 

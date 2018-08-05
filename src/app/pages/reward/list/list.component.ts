@@ -29,19 +29,6 @@ export class ListComponent implements OnInit, AfterViewInit {
     staffs: any[] = [];
     departments: any[] = [];
 
-
-    searchingAutoCompleteStaffSearching = {
-        searching: false,
-        searchingFailed: false
-    };
-    // staffModel: any;
-    // staffSearching = false;
-    // staffSearchFailed = false;
-
-    departmentModel: any;
-    departmentSearching = false;
-    departmentSearchFailed = false;
-
     constructor(
         private router: Router,
         private activeRoute: ActivatedRoute,
@@ -59,12 +46,6 @@ export class ListComponent implements OnInit, AfterViewInit {
         this.navservice.setNewButton(true);
         this.navservice.setSearchBar(true);
         this.advSearch = this.navservice.showAdvSearch;
-
-
-        this.response = [
-            { 'no': 1, 'work_no': 'TN90806026000002', 'case_no': '001/2561' , 'arrest_day': '10-ม.ค.-2560', 'court_date': '10-ม.ค.-2560 ', 'lawyer': 'นายธวัชชัย บิง ', 'department': 'สสท.ระนอง สาขาเมือง' },
-            { 'no': 2, 'work_no': 'TN90806026000002', 'case_no': '001/2561' , 'arrest_day': '10-ม.ค.-2560', 'court_date': '10-ม.ค.-2560 ', 'lawyer': 'นายธวัชชัย บิง ', 'department': 'สสท.ระนอง สาขาเมือง' },
-            { 'no': 3, 'work_no': 'TN90806026000002', 'case_no': '001/2561' , 'arrest_day': '10-ม.ค.-2560', 'court_date': '10-ม.ค.-2560 ', 'lawyer': 'นายธวัชชัย บิง ', 'department': 'สสท.ระนอง สาขาเมือง' }];
     }
 
     ngOnInit() {
@@ -72,7 +53,7 @@ export class ListComponent implements OnInit, AfterViewInit {
             // if (status) {
             //   this.newButton();
             // }
-        })
+        });
 
         this.initialSearchByKeyword();
     }
@@ -135,6 +116,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         const reward = new Reward();
         reward.ArrestCode = form.value.ArrestCode;
         reward.LawsuitID = form.value.LawsuitID;
+        console.log(new Date(form.value.sArrestDate));
         // reward.OccurrenceDateFrom = new Date(form.value.sArrestDate);
         // reward.OccurrenceDateTo = new Date(form.value.eArrestDate);
         // reward.LawsuitDateFrom = new Date(form.value.sLawsuitDate);
