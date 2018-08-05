@@ -3,9 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import {NgForm} from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-
-import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap} from 'rxjs/operators';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
 import {Reward} from '../reward';
 import {RewardCommon} from '../reward-common';
 import {RewordMessages} from '../reward-message';
@@ -19,13 +24,19 @@ import {RewardService} from '../reward.service';
 })
 export class ListComponent implements OnInit, AfterViewInit {
     private sub: any;
-    response: object;
+    response: any;
     advSearch: any;
-    staff = [];
+    staffs: any[] = [];
+    departments: any[] = [];
 
-    staffModel: any;
-    staffSearching = false;
-    staffSearchFailed = false;
+
+    searchingAutoCompleteStaffSearching = {
+        searching: false,
+        searchingFailed: false
+    };
+    // staffModel: any;
+    // staffSearching = false;
+    // staffSearchFailed = false;
 
     departmentModel: any;
     departmentSearching = false;
@@ -89,66 +100,70 @@ export class ListComponent implements OnInit, AfterViewInit {
     // }
 
     autoCompleteStaff(term: string) {
-        return this.rewardService.getMasStaffRequestgetByKeyword(term).pipe(map(response => response[1]))
+        this.rewardService.getMasStaffRequestgetByKeyword(term).subscribe(response => {
+            this.staffs = response;
+        });
     }
 
-    onAutoCompleteStaff = (text$: Observable<string>) =>
-        text$.pipe(
-            debounceTime(200),
-            distinctUntilChanged(),
-            tap(() => this.staffSearching = true),
-            switchMap(term =>
-                this.autoCompleteStaff(term).pipe(
-                    tap(() => this.staffSearchFailed = false),
-                    catchError(() => {
-                        this.staffSearchFailed = true;
-                        return of([]);
-                    }))),
-            tap(() => this.staffSearching = false)
-        );
+    onAutoCompleteStaff = (text$: Observable<string>) => {
+        return text$.debounceTime(200).distinctUntilChanged().do(term => {
+            if (term.length > 2) {
+                this.autoCompleteStaff(term)
+            }
+        }).map(term => term.length < 2 ? []
+            : this.staffs.map((value, index, array) => value.TitleName + value.FirstName + ' ' + value.LastName));
+    };
 
     autoCompleteDepartment(term: string) {
-        return this.rewardService.getMasDepartmentRequestgetByKeyword(term).pipe(map(response => response[1]))
+        return this.rewardService.getMasDepartmentRequestgetByKeyword(term).subscribe(response => {
+            console.log(response);
+            this.departments = response;
+        });
     }
 
-    onAutoCompleteDepartment = (text$: Observable<string>) =>
-        text$.pipe(
-            debounceTime(200),
-            distinctUntilChanged(),
-            tap(() => this.departmentSearching = true),
-            switchMap(term =>
-                this.autoCompleteDepartment(term).pipe(
-                    tap(() => this.departmentSearchFailed = false),
-                    catchError(() => {
-                        this.departmentSearchFailed = true;
-                        return of([]);
-                    }))),
-            tap(() => this.departmentSearching = false)
-        );
+    onAutoCompleteDepartment = (text$: Observable<string>) => {
+        return text$.debounceTime(200).distinctUntilChanged().do(term => {
+            if (term.length > 2) {
+                this.autoCompleteDepartment(term)
+            }
+        }).map(term => term.length < 2 ? []
+            : this.departments.map((value, index, array) => value.DepartmentNameTH));
+    };
 
 
     onAdvanceSearchByKeyword(form: NgForm) {
         const reward = new Reward();
         reward.ArrestCode = form.value.ArrestCode;
         reward.LawsuitID = form.value.LawsuitID;
-        reward.OccurrenceDateFrom = new Date(form.value.sArrestDate);
-        reward.OccurrenceDateTo = new Date(form.value.eArrestDate);
-        reward.LawsuitDateFrom = new Date(form.value.sLawsuitDate);
-        reward.LawsuitDateTo = new Date(form.value.eLawsuitDate);
-        reward.StaffName = form.value.MasStaff;
+        // reward.OccurrenceDateFrom = new Date(form.value.sArrestDate);
+        // reward.OccurrenceDateTo = new Date(form.value.eArrestDate);
+        // reward.LawsuitDateFrom = new Date(form.value.sLawsuitDate);
+        // reward.LawsuitDateTo = new Date(form.value.eLawsuitDate);
+        reward.LastName = form.value.MasStaff;
         reward.DepartmentName = form.value.DepartmentName;
+        reward.OccurrenceDateFrom = '';
+        reward.OccurrenceDateTo = '';
+        reward.LawsuitDateFrom = '';
+        reward.LawsuitDateTo = '';
 
-        if (RewardCommon.isDate(reward.OccurrenceDateFrom) || RewardCommon.isDate(reward.OccurrenceDateTo) ||
-            RewardCommon.isDate(reward.LawsuitDateFrom) || RewardCommon.isDate(reward.LawsuitDateTo)) {
+        if (false) {
+            // if (RewardCommon.isDate(reward.OccurrenceDateFrom) || RewardCommon.isDate(reward.OccurrenceDateTo) ||
+            //     RewardCommon.isDate(reward.LawsuitDateFrom) || RewardCommon.isDate(reward.LawsuitDateTo)) {
+            reward.OccurrenceDateFrom = '';
+            reward.OccurrenceDateTo = '';
+            reward.LawsuitDateFrom = '';
+            reward.LawsuitDateTo = '';
 
-            alert(RewordMessages.verifyDateFiled)
         } else {
-            if (RewardCommon.isVerifyDate(reward.OccurrenceDateFrom, reward.OccurrenceDateTo) ||
-                RewardCommon.isVerifyDate(reward.LawsuitDateFrom, reward.LawsuitDateFrom)) {
+            if (false) {
+            // if (RewardCommon.isVerifyDate(reward.OccurrenceDateFrom, reward.OccurrenceDateTo) ||
+            //     RewardCommon.isVerifyDate(reward.LawsuitDateFrom, reward.LawsuitDateFrom)) {
 
                 alert(RewordMessages.compareDateFailed);
             } else {
+                console.log(reward)
                 this.rewardService.getArrestRequestgetByConAdv(reward).subscribe(response => {
+                    console.log(response)
                     if (response) {
                         this.response = response;
                     } else {
@@ -165,18 +180,20 @@ export class ListComponent implements OnInit, AfterViewInit {
     onSearchByKeyword(text: any) {
         this.rewardService.getArrestRequestgetByKeyword(text).subscribe(response => {
             if (response) {
-                this.response = response;
+                if (Array.isArray(response)) {
+                    this.response = response;
+                } else {
+                    console.log(response)
+                    alert(RewordMessages.notFoundData);
+                }
+
             } else {
-                alert(RewordMessages.notFoundData)
+                alert(RewordMessages.notFoundData);
             }
         }, error => {
-            alert(error.message)
+            alert(error.message);
         })
     }
-
-    // private newButton() {
-    //   this.router.navigate(['/reward/manage', 'R']);
-    // }
 
     viewData(arrestCode: string) {
         this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { arrestCode: arrestCode } });

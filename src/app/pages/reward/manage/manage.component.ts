@@ -6,6 +6,7 @@ import {RewardService} from '../reward.service';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
+import {RewardArrest} from "../reward-arrest";
 
 @Component({
     selector: 'app-manage',
@@ -19,6 +20,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     sub: any;
     courtCase = '';
     test = 'ส่งฟ้องศาล';
+    arrest: RewardArrest = new RewardArrest();
+
     showEditField: any;
     queryParam: any;
     searchingAutoCompleteAllegation = {
@@ -82,7 +85,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.activeRoute.params.subscribe(param => {
-            this.rewardService.getArrestRequestgetByCon(this.queryParam).subscribe(response => {
+            this.rewardService.getArrestRequestgetByCon(this.queryParam.arrestCode).subscribe(response => {
+                this.arrest = response;
             });
             this.rewardService.getRequestbribegetByCon(this.queryParam).subscribe(response => {
             });
@@ -169,5 +173,5 @@ export class ManageComponent implements OnInit, OnDestroy {
             tap(() => this.searchingAutoCompleteAllegation.searching = false)
         );
 
-    get
+
 }

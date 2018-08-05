@@ -48,7 +48,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">เลขที่ใบงาน : </label>
                         <div class="col-md-8">
-                            <input class="form-control" type="text" name="allegationCode" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.ArrestCode" name="allegationCode" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -56,11 +56,11 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">วันที่จับกุม : </label>
                         <div class="col-md-3">
-                            <input class="form-control" type="text" name="lawsuitDate" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.ArrestDate" name="lawsuitDate" [disabled]="showEditField">
                         </div>
                         <label class="col-form-label text-center col-md-2">เวลา</label>
                         <div class="col-md-3">
-                            <input class="form-control" type="text" name="lawsuitTime" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.ArrestTime" name="lawsuitTime" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">ผู้กล่าวหา : </label>
                         <div class="col-md-8">
-                            <input class="form-control" type="text" name="allegationNo" [disabled]="showEditField">
+                            <input class="form-control" [(ngModel)]="arrest.ArrestCode" type="text" name="allegationNo" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                         <div class="col-md-8">
-                            <input class="form-control" type="text" name="allegationNo" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.PositionName"  name="allegationNo" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">หน่วยงาน : </label>
                         <div class="col-md-8">
-                            <input class="form-control" type="text" name="allegationCode" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.DepartmentName" name="allegationCode" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
                         <div class="col-md-8">
-                            <input class="form-control" type="text" name="allegationCode" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.LawsuitID" name="allegationCode" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">วันที่รับคดี : </label>
                         <div class="col-md-3">
-                            <input class="form-control" type="text" name="lawsuitDate" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.LawsuitDate" name="lawsuitDate" [disabled]="showEditField">
                         </div>
                         <label class="col-form-label text-center col-md-2">เวลา</label>
                         <div class="col-md-3">

@@ -1,9 +1,12 @@
 export class RewardResponse {
-    // ArrestRequestgetByCon: string;
-    // LawsuitRequestgetByCon: string;
-    // ArrestRequestgetByCon: string;
-    // LawsuitRequestgetByCon: string;
-    // LawsuitRequestgetByCon: string;
-    // LawsuitRequestgetByCon: string;
-    // ArrestRequestgetByCon: string
+    // IsActive: number;
+    // ArrestCode
+    // LawsuitID
+    // ArrestDate
+    // LawsuitDate
+    // TitleName
+    // FirstName
+    // LastName
+    // DepartmentName
+    // DepartmentLevel
 }

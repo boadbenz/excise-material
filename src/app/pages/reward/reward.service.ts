@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Reward } from './reward';
+import { environment } from '../../../environments/environment';
+import {TextSearch} from './reward-search';
+import {RewardArrest} from './reward-arrest';
 
-const HOSTNAME = '';
+const HOSTNAME = environment.hostXCS60;
 
 @Injectable()
 export class RewardService {
@@ -10,26 +13,37 @@ export class RewardService {
     constructor(private httpClient: HttpClient) { }
 
     getArrestRequestgetByKeyword(text: string) {
-        return this.httpClient.post(`${HOSTNAME}/ArrestRequestgetByKeyword`, text)
+        const textSearch = new TextSearch();
+        textSearch.Textsearch = text;
+        return this.httpClient.post(`${HOSTNAME}/ArrestRequestgetByKeyword`, textSearch)
     }
 
     getMasStaffRequestgetByKeyword(text: string) {
-        return this.httpClient.post(`${HOSTNAME}/MasStaffRequestgetByKeyword`, text)
+        const textSearch = new TextSearch();
+        textSearch.Textsearch = text;
+        return this.httpClient.post<any[]>(`${HOSTNAME}/MasStaffRequestgetByKeyword`, textSearch)
     }
 
     getMasDepartmentRequestgetByKeyword(text: string) {
-        return this.httpClient.post(`${HOSTNAME}/MasDepartmentRequestgetByKeyword`, text)
+        const textSearch = new TextSearch();
+        textSearch.Textsearch = text;
+        return this.httpClient.post<any[]>(`${HOSTNAME}/MasDepartmentRequestgetByKeyword`, textSearch)
     }
 
     getArrestRequestgetByConAdv(reward: Reward) {
-        return this.httpClient.post(`${HOSTNAME}/MasDepartmentRequestgetByKeyword`, reward)
+        return this.httpClient.post(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
     }
 
     getArrestRequestgetByCon(arrestCode: string) {
-        return this.httpClient.post(`${HOSTNAME}/ArrestRequestgetByCon`, arrestCode)
+        const params = {
+            ArrestCode: arrestCode
+        };
+        return this.httpClient.post<RewardArrest>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
     }
 
-    getRequestbribegetByKeyword(textSearch: string) {
+    getRequestbribegetByKeyword(text: string) {
+        const textSearch = new TextSearch();
+        textSearch.Textsearch = text;
         return this.httpClient.post(`${HOSTNAME}/RequestbribegetByKeyword`, textSearch)
     }
 
