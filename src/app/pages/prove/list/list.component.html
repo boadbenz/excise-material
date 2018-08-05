@@ -97,6 +97,14 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row form-group">
+          
+                    <div class="col-10"></div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -140,7 +148,7 @@
                             <div *ngFor="let staff of item.ProveStaff;">{{staff.DepartmentName}}</div>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.ProveID)">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitID,item.ArrestCode,item.ProveID)">
                                 <i class="mdi mdi-eye fa-lg"></i>
                             </a>
                         </td>

@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FineService } from '../fine.service';
 import { ICompareCon } from '../condition-model';
-import { Arrest } from '../arrest';
+import { Arrest } from '../../model/arrest';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 

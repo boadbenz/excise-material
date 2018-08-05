@@ -5,10 +5,10 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { FineService } from '../fine.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Compare, ICompareDetail, CompareDetail, CompareDetailReceipt } from '../fine-model';
-import { Lawsuit } from '../lawsuit-model';
-import { Arrest } from '../arrest';
+import { Lawsuit } from '../../model/lawsuit-model';
+import { Arrest } from '../../model/arrest';
 import { ICompareCon, ICompareConAdv, ICompareIns, ICompareMistreat, IRateMistreat } from '../condition-model';
-import { GuiltBase } from '../guiltBase-model';
+import { GuiltBase } from '../../model/guiltBase-model';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray, FormsModule } from '@angular/forms';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';

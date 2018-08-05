@@ -17,8 +17,8 @@ export class ListComponent implements OnInit {
     dataTable: any;
     advSearch: any;
     paginage = pagination;
-    Prove: Prove[];
-    ListProve: Prove[];
+    Prove = new Array<Prove>();
+    ListProve = new Array<Prove>();
 
     constructor(
         private _router: Router,
@@ -52,7 +52,7 @@ export class ListComponent implements OnInit {
     }
 
     onSearch(Textsearch: any) {
-        this.proveService.getByKeyword(Textsearch).then(list => {
+        this.proveService.getByKeyword(Textsearch).subscribe(list => {
             debugger
             this.onSearchComplete(list)
 
@@ -97,6 +97,8 @@ export class ListComponent implements OnInit {
     }
 
     onSearchComplete(list: any) {
+        this.Prove = [];
+
         if (!list.length) {
             alert(Message.noRecord);
             return false;
@@ -116,8 +118,8 @@ export class ListComponent implements OnInit {
         this.ListProve = await this.Prove.slice(event.startIndex - 1, event.endIndex);
     }
 
-    clickView(ProveID: string) {
-        this._router.navigate([`/prove/manage/R/${ProveID}`]);
+    clickView(LawsuitID: string,ArrestCode: string, ProveID: string) {
+        this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${ProveID}`]);
     }
 
 }

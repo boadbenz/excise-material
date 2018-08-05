@@ -5,7 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { EvidenceModalModule } from '../evidence-modal/evidence-modal.module';
-//import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
+import { ProveService } from '../prove.service';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
+import { ArrestService } from '../../model/arrest.service';
+import { LawsuitService } from '../../model/lawsuit.service';
+import { MasterService }  from '../../model/master.service';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const routes: Routes = [
     {
@@ -28,12 +34,19 @@ const routes: Routes = [
         FormsModule,
         CommonModule,
         RouterModule.forChild(routes),
+        HttpModule,
+        HttpClientModule,
         CardActionsModule,
         EvidenceModalModule,
+        MatAutocompleteModule
         //PrintDocModalModule
     ],
-    declarations: [
-        ManageComponent
-    ]
+    providers: [ProveService,
+        ArrestService,
+        LawsuitService,
+        MasterService
+    ],
+    declarations: [ManageComponent],
+    exports: [MatAutocompleteModule]
 })
 export class ManageModule { }
