@@ -51,11 +51,7 @@
 
                         <label for="" class="col-lg-2 col-sm-4">ประเภทบุคคล :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-<<<<<<< HEAD:src/app/pages/arrests/lawbreaker-modal/lawbreaker-modal.component.html
                             <select name="LawbreakerType" ngModel class="form-control form-control-sm">
-=======
-                            <select name="lawbreakerType" ngModel class="form-control form-control-sm">
->>>>>>> FL_J:src/app/pages/component/modal-lawbreaker/modal-lawbreaker.component.html
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of lawbreakerType" [value]="item.value">{{item.text}}</option>
                             </select>
@@ -121,19 +117,6 @@
                             <th></th>
                         </tr>
                     </thead>
-<<<<<<< HEAD:src/app/pages/arrests/lawbreaker-modal/lawbreaker-modal.component.html
-                    <tbody>
-                        <tr>
-                            <td class="text-center">
-                                <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                <label for="td_1" class="m-0"></label>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-=======
                     <tbody formArrayName="Lawbreaker">
                         <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">
@@ -163,7 +146,6 @@
                                     {{item.get('LawbreakerFullName').value}}
                                 </span>
                             </td>
->>>>>>> FL_J:src/app/pages/component/modal-lawbreaker/modal-lawbreaker.component.html
                             <td></td>
                             <td class="text-center">
                                 <a href="javaScript:void(0);" class="text-center text-secondary" (click)="view(item.value.LawbreakerID)">

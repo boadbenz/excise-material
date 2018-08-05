@@ -437,6 +437,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onCreate() {
 
+        console.log('====================================');
+        console.log(JSON.stringify(this.arrestFG.value));
+        console.log('====================================');
+
         if (!this.arrestFG.valid) {
             this.isRequired = true;
             alert(Message.checkData)
@@ -453,10 +457,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
-
-        console.log('====================================');
-        console.log(JSON.stringify(this.arrestFG.value));
-        console.log('====================================');
         let isSuccess: boolean | false;
 
         // ___1.บันทึกข้อมูลจับกุม
