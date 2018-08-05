@@ -13,7 +13,6 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { toLocalNumeric } from '../../../config/dateFormat';
-import { regions, communicate, DutyUnit, RegionModel, MasDistrictModel, MasProvinceModel, MasSubdistrictModel, MasStaffModel } from '../../../models';
 import { MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
@@ -26,6 +25,14 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { MasOfficeModel } from '../../../models/mas-office.model';
+import { 
+    communicate, 
+    RegionModel, 
+    MasDistrictModel, 
+    MasProvinceModel, 
+    MasSubdistrictModel, 
+    MasStaffModel 
+} from '../../../models';
 
 @Component({
     selector: 'app-manage',
@@ -51,11 +58,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
-    // importSuspectData = new Array<Suspect>();
-
-    regionModel = regions;
     communicateModel = communicate;
-    dutyUnitModel = DutyUnit;
 
     subdistrict = new Array<MasSubdistrictModel>();
     district = new Array<MasDistrictModel>();
@@ -694,7 +697,7 @@ debugger
     }
 
     onViewSuspect(id: string) {
-        this.router.navigate(['/arrest/lawbreaker', 'R', id])
+        this.router.navigate(['/notice/suspect', 'R', id])
     }
 
     ngOnDestroy(): void {

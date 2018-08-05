@@ -1,12 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../app.state';
-import {
-    MasProductModel, MasProvinceModel, MasDistrictModel, MasSubdistrictModel, RegionModel, MasStaffModel
-} from '../../../models'
-import * as ProductActions from '../../../actions/arrest/get-mas-productget-all.action';
 import { Observable } from 'rxjs/Observable';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
@@ -19,7 +13,7 @@ import { ArrestDocument } from '../arrest-document';
 import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestLocaleFormControl } from '../arrest-locale';
-import { ArrestLawbreaker, LawbreakerTypes, EntityTypes, ArrestLawbreakerFormControl } from '../arrest-lawbreaker';
+import { ArrestLawbreaker } from '../arrest-lawbreaker';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -30,6 +24,16 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { MasOfficeModel } from '../../../models/mas-office.model';
 import { Notice } from '../../notices/notice';
+import {
+    MasProductModel, 
+    MasProvinceModel, 
+    MasDistrictModel, 
+    MasSubdistrictModel, 
+    RegionModel, 
+    MasStaffModel, 
+    LawbreakerTypes, 
+    EntityTypes
+} from '../../../models'
 
 @Component({
     selector: 'app-manage',
@@ -108,8 +112,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private arrestService: ArrestsService,
         public router: Router,
         private sidebarService: SidebarService,
-        private preloader: PreloaderService,
-        private store: Store<AppState>
+        private preloader: PreloaderService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -191,6 +194,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         ArrestProductFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestProductFormControl);
     }
+
+    // private createIndictment(): FormGroup {
+    //     return this.fb.group(ArrestIndictmentFormControl)
+    // }
+
+    // private createLawbreaker(): FormGroup {
+    //     return this.fb.group(ArrestLawbreakerFormControl);
+    // }
 
     private setItemFormArray(array: any[], formControl: string) {
         if (array !== undefined && array.length) {

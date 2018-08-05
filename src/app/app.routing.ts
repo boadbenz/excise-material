@@ -8,14 +8,15 @@ export const routes: Routes = [
         path: 'notice',
         children: [
             { path: 'list', loadChildren: './pages/notices/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/notices/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code', loadChildren: './pages/notices/manage/manage.module#ManageModule' },
+            { path: 'lawbreaker/:mode/:code', loadChildren: './pages/notices/lawbreaker/lawbreaker.module#LawbreakerModule' },
+            { path: 'suspect/:mode/:code', loadChildren: './pages/notices/suspect/suspect.module#SuspectModule' }
         ]
     }, {
         path: 'arrest',
         children: [
             { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' },
-            { path: 'lawbreaker/:mode/:code', loadChildren: './pages/arrests/lawbreaker/lawbreaker.module#LawbreakerModule' }
+            { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' }
         ]
     }, {
         path: 'investigation',

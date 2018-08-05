@@ -1,5 +1,5 @@
 import { ArrestProductDetail } from "./arrest-product";
-import { FormControl, Validators, FormArray } from "../../../../node_modules/@angular/forms";
+import { FormControl, Validators, FormArray } from "@angular/forms";
 
 class OpsArrestIndicmentDetailCollection {
     IndictmentDetailID: number;

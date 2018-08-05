@@ -7,9 +7,11 @@ export class NoticeSuspect {
     CompanyTitleName: string;
     CompanyName: string;
     CompanyOtherName: string;
-    IsActive: number;
     NoticeCode: string;
 
+    IsActive: number;
+
+    //--- Custom ---//
     CompanyFullName: string;
     SuspectFullName: string;
     RowId: number;
