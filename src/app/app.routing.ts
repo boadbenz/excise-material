@@ -29,10 +29,10 @@ export const routes: Routes = [
             }
         ]
     }, {
-        path: 'proof',
+        path: 'prove',
         children: [
-            { path: 'list', loadChildren: './pages/proof/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/proof/manage/manage.module#ManageModule' }
+            { path: 'list', loadChildren: './pages/prove/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/prove/manage/manage.module#ManageModule' }
         ]
     },
     {

@@ -183,17 +183,17 @@
       <table class="dataTable table table-sm table-striped table-hover" *ngFor="let item of detial_money">
         <thead>
           <tr>
-            <th class="footable-sortable">ชื่อผู้ต้องหา</th>
-            <th class="footable-sortable">จำนวนครั้ง</th>
-            <th class="footable-sortable">ของกลาง</th>
-            <th class="footable-sortable">จำนวนเท่า</th>
-            <th class="footable-sortable">มูลค่าภาษี</th>
-            <th class="footable-sortable">ค่าปรับสุทธิ</th>
-            <th class="footable-sortable">ยอดชำระ</th>
-            <th class="footable-sortable">สินบน</th>
-            <th class="footable-sortable">รางวัล</th>
-            <th class="footable-sortable">ส่งคลัง</th>
-            <th class="footable-sortable">รวม</th>
+            <th class="footable-sortable" style="width:15%">ชื่อผู้ต้องหา</th>
+            <th class="footable-sortable" style="width:7%;">จำนวนครั้ง</th>
+            <th class="footable-sortable" style="width:10%">ของกลาง</th>
+            <th class="footable-sortable" style="width:7%">จำนวนเท่า</th>
+            <th class="footable-sortable" style="width:7%">มูลค่าภาษี</th>
+            <th class="footable-sortable" style="width:7%">ค่าปรับสุทธิ</th>
+            <th class="footable-sortable" style="width:7%">ยอดชำระ</th>
+            <th class="footable-sortable" style="width:7%">สินบน</th>
+            <th class="footable-sortable" style="width:7%">รางวัล</th>
+            <th class="footable-sortable" style="width:7%">ส่งคลัง</th>
+            <th class="footable-sortable" style="width:7%">รวม</th>
           </tr>
         </thead>
         <tbody>
@@ -207,15 +207,24 @@
               </b>
             </td>
             <td>{{item.ProductDesc}}</td>
-            <td class="text-center">{{item.FineRate}}</td>
-            <td class="">{{item.VatValue}}</td>
+            <!-- <td class="text-center">{{item.FineRate}}</td> -->
+            <td>
+              <input class="form-control" type="text" [(ngModel)]="item.FineRate" [disabled]="viewMode" value="">
+            </td>
+            <!-- <td class="">{{item.VatValue}}</td> -->
+            <td>
+              <input class="form-control" type="text" [(ngModel)]="item.VatValue" [disabled]="viewMode" value="">
+            </td>
             <td class="">{{item.FineRate * item.VatValue}}</td>
             <td>
-              <input class="form-control" type="text" [disabled]="viewMode" value="{{itemDt.CompareFine}}">
+              <input class="form-control" type="text" [(ngModel)]="item.CompareFine" [disabled]="viewMode" value="">
             </td>
-            <td class="">{{item.BribeMoney}}</td>
-            <td class="">{{item.RewardMoney}}</td>
-            <td class="">{{item.TreasuryMoney}}</td>
+            <!-- <td class="">{{item.BribeMoney}}</td> -->
+            <td>
+              <input class="form-control" type="text" [(ngModel)]="item.BribeMoney"  [disabled]="viewMode" value="">
+            </td>
+            <td class="">{{item.CompareFine * item.RewardRate}}</td>
+            <td class="">{{item.CompareFine - (item.BribeMoney + item.RewardMoney  | number) }}</td>
             <td class="">รวม</td>
           </tr>
         </tbody>
@@ -308,7 +317,7 @@
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
             <!-- +' ' + item.IndictmentDetailID-->
-            <td>{{item.Lawbreaker}} </td>
+            <td>{{item.Lawbreaker +' ' + item.LawbreakerID}} </td>
             <td class="text-center">{{item.PaymentFineAppointDate | date:'dd/MM/yyyy'}}</td>
             <td class="text-center">{{item.PaymentVatDate | date:'dd/MM/yyyy'}}</td>
             <td class="text-center">

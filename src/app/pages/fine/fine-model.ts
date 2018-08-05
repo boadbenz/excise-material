@@ -61,9 +61,10 @@ export class CompareDetail {
     public AdjustReason?: string;
     public Lawbreaker?: string;
     public LawbreakerID?: string;
-    public FineRate?: number;
-    public VatValue?: number;
+    public FineRate?: string;
+    public VatValue?: string;
     public ProductDesc?: string;
+    public RewardRate?: string;
     public CompareDetailFine?: CompareDetailFine[];
     public CompareDetailReceipt?: CompareDetailReceipt[];
 }

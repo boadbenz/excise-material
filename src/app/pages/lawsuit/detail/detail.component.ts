@@ -80,7 +80,7 @@ export class DetailComponent implements OnInit {
             this.navService.setEditField(true);
             alert(Message.saveComplete);
           } else {
-            alert(Message.saveError);
+            alert(Message.saveFail);
           }
         })
 

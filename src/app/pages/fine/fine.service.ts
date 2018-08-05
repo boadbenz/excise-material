@@ -5,7 +5,7 @@ import { appConfig } from '../../app.config';
 import { Arrest } from './arrest';
 import { Lawsuit } from './lawsuit-model';
 import { GuiltBase } from './guiltBase-model';
-import { ICompareIns, ICompareMistreat } from './condition-model';
+import { ICompareIns, ICompareMistreat, IRateMistreat } from './condition-model';
 
 @Injectable()
 export class FineService {
@@ -118,6 +118,31 @@ export class FineService {
         }
     }
 
+    async RateMistreatgetByCon(Misterat: IRateMistreat): Promise<any> {
+        const params = JSON.stringify(Misterat);
+        const url = `${appConfig.api8881}/CompareCountRateMistreatgetByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    
+    async DivisionRategetByCon(): Promise<any> {
+        const params = {};
+        const url = `${appConfig.api8881}/CompareMasDivisionRategetByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
     async insAll(Compare: ICompareIns): Promise<any> {
         const params = Compare;
         const url = `${appConfig.api8881}/CompareinsAll`;
@@ -190,6 +215,22 @@ export class FineService {
         } catch (error) {
             await alert(error);
         }
+    }
+
+    masOfficegetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasOfficegetAll`;
+        return this.resposePromisGetList('{}', url);
+    }
+
+    private async resposePromisGetList(params: string, url: string) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (res.IsSuccess === false) {
+            return [];
+        }
+        if (!res.ResponseData.length) {
+            return []
+        }
+        return res.ResponseData
     }
 
 }
