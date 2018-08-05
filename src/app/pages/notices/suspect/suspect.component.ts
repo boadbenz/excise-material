@@ -21,7 +21,7 @@ import { ArrestsService } from '../../arrests/arrests.service';
     templateUrl: './suspect.component.html',
     styleUrls: ['./suspect.component.scss']
 })
-export class SuspectComponent implements OnInit, OnDestroy {
+export class SuspectComponent implements ISuspect, OnInit, OnDestroy {
 
     constructor(
         private ngModalService: NgbModal,
@@ -67,32 +67,32 @@ export class SuspectComponent implements OnInit, OnDestroy {
         PassportDateIn: new FormControl(null),
         PassportDateOut: new FormControl(null),
         BirthDate: new FormControl(null),
-        GenderType: new FormControl(null, Validators.required),
-        BloodType: new FormControl(null, Validators.required),
-        NationalityCode: new FormControl(null, Validators.required),
-        NationalityNameTH: new FormControl(null, Validators.required),
-        RaceCode: new FormControl(null, Validators.required),
-        RaceName: new FormControl(null, Validators.required),
-        ReligionCode: new FormControl(null, Validators.required),
-        ReligionName: new FormControl(null, Validators.required),
+        GenderType: new FormControl(null),
+        BloodType: new FormControl(null),
+        NationalityCode: new FormControl(null),
+        NationalityNameTH: new FormControl(null),
+        RaceCode: new FormControl(null),
+        RaceName: new FormControl(null),
+        ReligionCode: new FormControl(null),
+        ReligionName: new FormControl(null),
         MaritalStatus: new FormControl(null),
         Career: new FormControl(null),
         GPS: new FormControl(null),
         Location: new FormControl(null),
-        Address: new FormControl(null, Validators.required),
-        Village: new FormControl(null, Validators.required),
+        Address: new FormControl(null),
+        Village: new FormControl(null),
         Building: new FormControl(null),
         Floor: new FormControl(null),
         Room: new FormControl(null),
         Alley: new FormControl(null),
-        Road: new FormControl(null, Validators.required),
-        SubDistrictCode: new FormControl(null, Validators.required),
-        SubDistrict: new FormControl(null, Validators.required),
-        DistrictCode: new FormControl(null, Validators.required),
-        District: new FormControl(null, Validators.required),
-        ProvinceCode: new FormControl(null, Validators.required),
-        Province: new FormControl(null, Validators.required),
-        ZipCode: new FormControl(null, Validators.required),
+        Road: new FormControl(null),
+        SubDistrictCode: new FormControl(null),
+        SubDistrict: new FormControl(null),
+        DistrictCode: new FormControl(null),
+        District: new FormControl(null),
+        ProvinceCode: new FormControl(null),
+        Province: new FormControl(null),
+        ZipCode: new FormControl(null),
         TelephoneNo: new FormControl(null),
         Email: new FormControl(null),
         FatherName: new FormControl(null),
@@ -166,7 +166,9 @@ export class SuspectComponent implements OnInit, OnDestroy {
     }
 
     private navigate_service() {
-
+        this.navService.showFieldEdit.subscribe(p => {
+            this.showEditField = p;
+        });
     }
 
     GetByCon(SuspectID: string) {
