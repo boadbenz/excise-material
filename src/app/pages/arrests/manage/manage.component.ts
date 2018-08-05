@@ -130,10 +130,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sidebarService.setVersion('1.00');
 
         this.active_route();
-
         this.navigate_Service();
-
         this.createForm();
+
+        console.log(this.arrestFG);
+        
 
         await this.setStaffStore()
         await this.setOfficeStore()
@@ -223,7 +224,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.arrestCode = p['code'] == 'NEW' ? `NT-${(new Date).getTime()}` : p['code'];
+                this.arrestCode = p['code'] == 'NEW' ? `TN-${(new Date).getTime()}` : p['code'];
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -344,11 +345,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                             })
                     )
             )
-
-
     }
 
     private getByCon(code: string) {
+
         this.arrestService.getByCon(code).then(async res => {
             await this.arrestFG.reset({
                 ArrestCode: res.ArrestCode,
@@ -432,6 +432,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setItemFormArray(res.ArrestDocument, 'ArrestDocument');
 
             this.addIndictment(res.ArrestIndictment);
+            console.log(res.ArrestIndictment);
+            
         })
     }
 

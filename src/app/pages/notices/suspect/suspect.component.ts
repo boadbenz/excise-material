@@ -123,11 +123,10 @@ export class SuspectComponent implements ISuspect, OnInit, OnDestroy {
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
-        // await this.setRegionStore();
+        await this.setRegionStore();
         
         this.active_route();
         this.navigate_service();
-        // this.createForm();
         this.preloader.setShowPreloader(false);
     }
 

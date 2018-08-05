@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LawbreakerComponent } from './lawbreaker.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { ModalOffenseModule } from '../../component/modal-offense/modal-offense.module';
+import { LawbreakerComponent } from './lawbreaker.component';
 
 const routes: Routes = [
     {

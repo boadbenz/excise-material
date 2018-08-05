@@ -140,8 +140,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.noticeCode = `NT-${(new Date).getTime()}`;
-                this.arrestCode = `NT-${(new Date).getTime()}`;
+                this.noticeCode = `LS-${(new Date).getTime()}`;
+                this.arrestCode = `LS-${(new Date).getTime()}`;
 
             } else if (p['mode'] === 'R') {
                 // set false

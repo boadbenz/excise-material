@@ -4,7 +4,7 @@
     top: 2px;
 }
 
-a.find-img {
+label.find-img {
     span {
         position: absolute;
         left: 65px;
@@ -15,7 +15,7 @@ a.find-img {
     
 }
 
-a.find-img::after {
+label.find-img::after {
     content: '';
     position: absolute;
     width: 180px;
