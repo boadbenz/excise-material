@@ -32,7 +32,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="NoticeDue" class="form-control form-control-sm" 
+                        <input type="text" formControlName="NoticeDue" class="form-control form-control-sm number" 
                         [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">อายุผู้แจ้ง (ปี) :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Age" [readOnly]="isConceal" [readonly]="showEditField">
+                        <input type="text" class="form-control form-control-sm number" formControlName="Age" [readOnly]="isConceal" [readonly]="showEditField">
                     </div>
                 </div>
 
@@ -331,7 +331,7 @@
                                 [ngClass]="{'ng-touched':isRequired}" required/>
                         </td>
                         <td>
-                            <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                            <input type="text" formControlName="Qty" class="form-control form-control-sm number" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
                             <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>

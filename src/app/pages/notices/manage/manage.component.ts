@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -38,7 +38,7 @@ import {
     selector: 'app-manage',
     templateUrl: './manage.component.html'
 })
-export class ManageComponent implements OnInit, OnDestroy {
+export class ManageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private onSaveSubscribe: any;
     private onDeleSubscribe: any;
@@ -128,6 +128,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(false);
     }
 
+    ngAfterViewInit() {
+
+    }
+
     private active_route() {
         this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
@@ -136,12 +140,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
-                this.navService.setNextPageButton(false);
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
+                this.navService.setNextPageButton(true);
                 this.noticeCode = `LS-${(new Date).getTime()}`;
-                this.arrestCode = `LS-${(new Date).getTime()}`;
+                this.arrestCode = `TN-${(new Date).getTime()}`;
 
             } else if (p['mode'] === 'R') {
                 // set false
