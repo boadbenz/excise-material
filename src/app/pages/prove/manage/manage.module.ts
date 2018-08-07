@@ -4,7 +4,6 @@ import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { EvidenceModalModule } from '../evidence-modal/evidence-modal.module';
 import { ProveService } from '../prove.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
@@ -37,7 +36,6 @@ const routes: Routes = [
         HttpModule,
         HttpClientModule,
         CardActionsModule,
-        EvidenceModalModule,
         MatAutocompleteModule
         //PrintDocModalModule
     ],

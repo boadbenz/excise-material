@@ -29,7 +29,6 @@ export class MasterService {
   }
 
   async getStaff(): Promise<any> {
-    debugger
     const params = {};
     const url = `${appConfig.api8881}/CompareMasStaffgetByKeyword`;
 

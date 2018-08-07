@@ -20,7 +20,7 @@ export class ProveService {
     const params = Textsearch;
     const url = `${appConfig.api8882}/ProvegetByKeyword`;
     return this.http.post<Prove[]>(url, params, this.httpOptions);
-}
+  }
 
   // async getByKeyword(Textsearch: string): Promise<any> {
   //   debugger
@@ -38,6 +38,18 @@ export class ProveService {
   async getByConAdv(form: any): Promise<any> {
     const params = JSON.stringify(form);
     const url = `${appConfig.api8882}/ProvegetByConAdv`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async getProveProductUnit(Textsearch: string): Promise<any> {
+    const params = {Textsearch};
+    const url = `${appConfig.api8882}/ProveMasProductUnitgetByKeyword`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
