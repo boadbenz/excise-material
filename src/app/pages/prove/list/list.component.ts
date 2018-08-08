@@ -6,6 +6,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { HttpErrorResponse } from '@angular/common/http';
 import { Message } from '../../../config/message';
 import { pagination } from '../../../config/pagination';
+import { NgForm, FormBuilder } from '../../../../../node_modules/@angular/forms';
 
 @Component({
     selector: 'app-list',
@@ -19,6 +20,13 @@ export class ListComponent implements OnInit {
     paginage = pagination;
     Prove = new Array<Prove>();
     ListProve = new Array<Prove>();
+
+    @ViewChild('advForm') advForm: NgForm;
+
+    DeliveryDateFrom = this.getCurrentDate();
+    DeliveryDateTo = this.getCurrentDate();
+    ProveDateFrom = this.getCurrentDate();
+    ProveDateTo = this.getCurrentDate();
 
     constructor(
         private _router: Router,
@@ -39,12 +47,19 @@ export class ListComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.onSearch({Textsearch: ""});
+        
+        
+
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
+            debugger
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
             }
         })
+
+        
     }
 
     ngOnDestroy(): void {
@@ -69,10 +84,10 @@ export class ListComponent implements OnInit {
         const eDateProve = new Date(form.value.ProveDateTo);
 
         if (sDateDelivery.getTime() > eDateDelivery.getTime()) {
-            alert(Message.checkRevenueDate);
+            alert(Message.checkReceiveDate);
         }
         else if (sDateProve.getTime() > eDateProve.getTime()) {
-            alert(Message.checkRevenueDate);
+            alert(Message.checkScienceDate);
         }
         else {
             form.value.DeliveryDateFrom = sDateDelivery.getTime();
@@ -122,4 +137,8 @@ export class ListComponent implements OnInit {
         this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${ProveID}`]);
     }
 
+    getCurrentDate() {
+        let date = new Date();
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
+    }
 }
