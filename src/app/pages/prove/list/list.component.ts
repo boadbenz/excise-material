@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Message } from '../../../config/message';
 import { pagination } from '../../../config/pagination';
 import { NgForm, FormBuilder } from '../../../../../node_modules/@angular/forms';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 @Component({
     selector: 'app-list',
@@ -31,7 +32,8 @@ export class ListComponent implements OnInit {
     constructor(
         private _router: Router,
         private navService: NavigationService,
-        private proveService: ProveService
+        private proveService: ProveService,
+        private preLoader: PreloaderService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -49,17 +51,12 @@ export class ListComponent implements OnInit {
     ngOnInit() {
         this.onSearch({Textsearch: ""});
         
-        
-
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
-            debugger
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
             }
-        })
-
-        
+        }) 
     }
 
     ngOnDestroy(): void {
@@ -70,7 +67,6 @@ export class ListComponent implements OnInit {
         this.proveService.getByKeyword(Textsearch).subscribe(list => {
             debugger
             this.onSearchComplete(list)
-
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
@@ -90,6 +86,7 @@ export class ListComponent implements OnInit {
             alert(Message.checkScienceDate);
         }
         else {
+            this.preLoader.setShowPreloader(true);
             form.value.DeliveryDateFrom = sDateDelivery.getTime();
             form.value.DeliveryDateTo = eDateDelivery.getTime();
 
@@ -108,6 +105,7 @@ export class ListComponent implements OnInit {
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
             });
+            this.preLoader.setShowPreloader(false);
         }
     }
 
@@ -127,6 +125,7 @@ export class ListComponent implements OnInit {
 
         // set total record
         this.paginage.TotalItems = this.Prove.length;
+        this.ListProve = this.Prove.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
     async pageChanges(event) {

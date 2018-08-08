@@ -8,6 +8,7 @@ import { ProveService } from '../prove.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 const routes: Routes = [
     {
@@ -32,6 +33,6 @@ const routes: Routes = [
         PaginationTableModule
     ],
     declarations: [ListComponent],
-    providers: [ProveService]
+    providers: [ProveService,PreloaderService]
 })
 export class ListModule { }

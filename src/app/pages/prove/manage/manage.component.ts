@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy, Input, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,10 +13,12 @@ import { MatAutocomplete } from '@angular/material';
 import { ProveStaff } from '../proveStaff';
 import { ProveScience } from '../proveScience';
 import { ProveProduct } from '../proveProduct';
+import { Message } from 'app/config/message';
 
 @Component({
     selector: 'app-manage',
-    templateUrl: './manage.component.html'
+    templateUrl: './manage.component.html',
+
 })
 export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
@@ -41,7 +43,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     Scienceoptions = [];
     UnitOption = [];
     ArrestProduct = [];
-    tempArrestProduct = [];
 
     // ---- Varible ---
     LawsuiltCode: string;
@@ -67,6 +68,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     iPopup: number;
     modePopup: string = 'I';
+    ProductID: string;
 
     // --- Object ---
     oArrest: Arrest;
@@ -76,11 +78,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     oProveScience: ProveScience;
     oProveProduct: ProveProduct;
 
-
-
-
     // ----- Model ------ //
-    // @Input() suspectComponent: SuspectModalComponent;
+    @ViewChild('printDocModal') printDocModel: ElementRef;
 
     constructor(
         private navService: NavigationService,
@@ -89,7 +88,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private proveService: ProveService,
         private ArrestSV: ArrestService,
         private LawsuitSV: LawsuitService,
-        private MasterSV: MasterService
+        private MasterSV: MasterService,
+        private router: Router
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -187,22 +187,19 @@ export class ManageComponent implements OnInit, OnDestroy {
         //     }
         // });
 
-        // this.sub = this.navService.onPrint.subscribe(async status => {
-        //   if (status) {
-        //     await this.navService.setOnPrint(false);
-        //     this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-        //   }
-        // })
+        this.sub = this.navService.onPrint.subscribe(async status => {
+          if (status) {
+            await this.navService.setOnPrint(false);
+            this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+          }
+        })
 
         this.sub = this.navService.onCancel.subscribe(async status => {
             if (status) {
-                await this.navService.setOnCancel(true);
-                await this.navService.setEditButton(true);
-                await this.navService.setPrintButton(true);
-                await this.navService.setDeleteButton(true);
-                // set true
-                await this.navService.setSaveButton(false);
-                await this.navService.setCancelButton(false);
+                if (confirm(Message.confirmAction)) {
+                    await this.navService.setOnCancel(false);
+                    this.router.navigate(['/prove/list']);
+                }
             }
         })
     }
@@ -217,7 +214,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve.ProveStaff = [];
         this.oProve.ProveStaff.push(this.oProveStaff);
         this.oProve.ProveStaff.push(this.oProveScienceStaff);
-        // debugger
+
+        debugger
     }
 
     ngOnDestroy(): void {
@@ -246,6 +244,75 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    CreateProduct() {
+        this.oProveProduct = {};
+
+        this.oProveProduct = {
+            ProductID: "",
+            ProductType: "",
+            ProveID: "",
+            ProductRefID: "",
+            GroupCode: "",
+            IsDomestic: "",
+            ProductCode: "",
+            BrandCode: "",
+            BrandNameTH: "",
+            BrandNameEN: "",
+            SubBrandCode: "",
+            SubBrandNameTH: "",
+            SubBrandNameEN: "",
+            ModelCode: "",
+            ModelName: "",
+            FixNo1: "",
+            DegreeCode: "",
+            Degree: "",
+            SizeCode: "",
+            Size: "",
+            SizeUnitCode: "",
+            SizeUnitName: "",
+            FixNo2: "",
+            SequenceNo: "",
+            ProductDesc: "",
+            CarNo: "",
+            Qty: "",
+            QtyUnit: "",
+            NetVolume: "",
+            NetVolumeUnit: "",
+            ProveScienceID: "",
+            ProveScienceResult: "",
+            IsActive: "1",
+            ReferenceRetailPrice: "",
+            ReferenceVatRate: "",
+            ReferenceVatQty: "",
+            ReferenceRetailUnit: "",
+            ReferenceVatValue: "",
+            ReferenceVatUnit: "",
+            ReferenceDate: "",
+            IsStatusExhibit: "",
+            Remarks: "",
+            IsAction: "I"
+        }
+    }
+
+    CreateScience() {
+        this.oProveScience = {};
+
+        this.oProveScience = {
+            ProveScienceID: "",
+            ProveID: "",
+            ProveScienceDate: "",
+            ProveScienceTime: "",
+            RequestNo: "",
+            ReportNo: "",
+            DeliveryDocNo: "",
+            ProveScienceResult: "",
+            ProveResult: "",
+            IsProveScience: "",
+            IsActive: 1,
+            IsAction: "I"
+        }
+    }
+
     getLawsuitByID(LawsuitID: string) {
         this.LawsuitSV.LawsuitegetByCon(LawsuitID).then(async res => {
             // --- รายละเอียดคดี ----
@@ -271,7 +338,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oArrest = res;
 
             this.ArrestProduct = res.ArrestProduct;
-            this.tempArrestProduct = res.ArrestProduct;
 
             // debugger
             this.getProveProduct();
@@ -364,7 +430,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         ReferenceVatUnit: "",
                         ReferenceDate: "",
                         IsStatusExhibit: "",
-                        Remarks: ""
+                        Remarks: "",
+                        IsAction: "U"
                     }
 
                     this.oProve.ProveProduct.push(this.oProveProduct);
@@ -380,7 +447,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         ProveScienceResult: "",
                         ProveResult: "",
                         IsProveScience: "",
-                        IsActive: 1
+                        IsActive: 1,
+                        IsAction: "U"
                     }
 
                     this.oProve.ProveScience.push(this.oProveScience);
@@ -571,45 +639,57 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProveProduct = this.oProve.ProveProduct[i];
         this.oProveScience = this.oProve.ProveScience[i];
 
+        this.ProductID = this.oProve.ProveProduct[i].ProductID;
         this.iPopup = i;
         this.modePopup = "U";
     }
 
-    ClosePopupProduct()
-    {
-        if(this.modePopup == "I")
-        {
+    ClosePopupProduct() {
+        this.oProveProduct.ProductID = this.ProductID;
+        this.oProveScience.ProveScienceDate = this.ProveScienceDate;
+        this.oProveScience.ProveScienceTime = this.ProveScienceTime;
+
+        if (this.modePopup == "I") {
             this.oProve.ProveProduct.push(this.oProveProduct);
             this.oProve.ProveScience.push(this.oProveScience);
         }
-        else if(this.modePopup == 'U')
-        {
+        else if (this.modePopup == 'U') {
             this.oProve.ProveProduct[this.iPopup] = this.oProveProduct;
             this.oProve.ProveScience[this.iPopup] = this.oProveScience;
         }
-        
+
     }
 
-    AddProduct()
-    {
+    AddProduct() {
         this.modePopup = "I";
 
-        this.oProveProduct = {};
-        this.oProveScience = {};
+        this.ProductID = "";
+
+        this.CreateProduct();
+        this.CreateScience();
     }
 
-    SelecteArrestProduct(event)
-    {
+    SelecteArrestProduct(event) {
         debugger
-        // let aIndex;  
-        // aIndex = this.getIndexOf(this.tempArrestProduct, this.oProveProduct.ProductID, "ProductID");
-        
-        // if(aIndex != false)
-        // {
-        //     this.oProveProduct = {};
+        let aIndex;
+        aIndex = this.getIndexOf(this.ArrestProduct, this.ProductID, "ProductID");
 
-        //     this.oProveProduct = this.tempArrestProduct[aIndex];
-        // }
+        if (aIndex != "false") {
+            this.oProveProduct = this.ArrestProduct[aIndex];
+
+            this.oProveProduct.IsAction = "I";
+        }
     }
     // ----- End Popup -----
+
+    private onDeleteProduct(i: number) {
+        if (confirm(Message.confirmDeleteProduct)) {
+            if (this.oProve.ProveProduct[i].IsAction == "U") {
+                this.oProve.ProveProduct[i].IsAction = "D";
+            }
+            else {
+                this.oProve.ProveProduct.splice(i, 1);
+            }
+        }
+    }
 }

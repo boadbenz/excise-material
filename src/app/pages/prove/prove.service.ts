@@ -17,7 +17,6 @@ export class ProveService {
 
 
   getByKeyword(Textsearch: string) {
-    debugger
     const params = Textsearch;
     const url = `${appConfig.api8882}/ProvegetByKeyword`;
     return this.http.post<Prove[]>(url, params, this.httpOptions);
@@ -37,6 +36,7 @@ export class ProveService {
   // }
 
   async getByConAdv(form: any): Promise<any> {
+    debugger
     const params = JSON.stringify(form);
     const url = `${appConfig.api8882}/ProvegetByConAdv`;
 

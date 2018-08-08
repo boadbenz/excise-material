@@ -11,6 +11,7 @@ import { ArrestService } from '../../model/arrest.service';
 import { LawsuitService } from '../../model/lawsuit.service';
 import { MasterService }  from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 
 const routes: Routes = [
     {
@@ -36,8 +37,8 @@ const routes: Routes = [
         HttpModule,
         HttpClientModule,
         CardActionsModule,
-        MatAutocompleteModule
-        //PrintDocModalModule
+        MatAutocompleteModule,
+        PrintDocModalModule
     ],
     providers: [ProveService,
         ArrestService,

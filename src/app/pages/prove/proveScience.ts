@@ -10,4 +10,5 @@ export class ProveScience {
     public ProveResult?: string;
     public IsProveScience?: string;
     public IsActive?: number;
+    public IsAction?: string;
 }
