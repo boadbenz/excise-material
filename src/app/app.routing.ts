@@ -2,8 +2,14 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './shared/layout/layout.component';
 
 export const routes: Routes = [
-    {
-        path: '', loadChildren: './pages/login/login.module#LoginModule'
+    { 
+        path: '**', redirectTo: 'home' 
+    }, { 
+        path: '', redirectTo: 'home', pathMatch: 'full' 
+    }, {
+        path: 'login', loadChildren: './pages/login/login.module#LoginModule'
+    }, {
+        path: 'home', loadChildren: './pages/starter/starter.module#StarterModule', component: LayoutComponent
     }, {
         path: 'notice', component: LayoutComponent,
         children: [
