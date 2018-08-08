@@ -21,6 +21,9 @@
                     <input type="date" formControlName="NoticeDate" class="form-control form-control-sm" 
                     [readonly]="showEditField"
                     [ngClass]="{'ng-touched':isRequired}" required>
+                    <!-- <input class="form-control form-control-sm" placeholder="ปปปป-ดด-วว" 
+                    formControlName="NoticeDate" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()"
+                    [ngClass]="{'ng-touched':isRequired}" required> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" formControlName="NoticeTime" class="form-control form-control-sm" 
@@ -32,7 +35,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="NoticeDue" class="form-control form-control-sm" 
+                        <input type="number" min="0" formControlName="NoticeDue" class="form-control form-control-sm" 
                         [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
@@ -132,25 +135,29 @@
                     </label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" class="form-control form-control-sm" formControlName="FullName" [readOnly]="isConceal" [readonly]="showEditField">
+                            <input type="text" class="form-control form-control-sm" formControlName="FullName" 
+                            [attr.disabled]="isConceal ? '' : null" [readonly]="showEditField">
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">อายุผู้แจ้ง (ปี) :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Age" [readOnly]="isConceal" [readonly]="showEditField">
+                        <input type="number" min="0" class="form-control form-control-sm number" formControlName="Age" 
+                        [attr.disabled]="isConceal ? '' : null" [readonly]="showEditField">
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Address" [readOnly]="isConceal" [readonly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Address" 
+                        [attr.disabled]="isConceal ? '' : null" [readonly]="showEditField">
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" class="form-control form-control-sm" formControlName="Village" [readOnly]="isConceal" [readonly]="showEditField">
+                            <input type="text" class="form-control form-control-sm" formControlName="Village" 
+                            [attr.disabled]="isConceal ? '' : null" [readonly]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -159,32 +166,37 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" class="form-control form-control-sm" formControlName="Building" [readOnly]="isConceal" [readonly]="showEditField">
+                            <input type="text" class="form-control form-control-sm" formControlName="Building" 
+                            [attr.disabled]="isConceal ? '' : null" [readonly]="showEditField">
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Room" [readOnly]="isConceal" [readonly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Room" 
+                        [attr.disabled]="isConceal ? '' : null" [readonly]="showEditField">
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Floor" [readOnly]="isConceal" [readonly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Floor" 
+                        [attr.disabled]="isConceal ? '' : null" [readonly]="showEditField">
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" class="form-control form-control-sm" formControlName="Alley" [readOnly]="isConceal" [readOnly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Alley" 
+                        [attr.disabled]="isConceal ? '' : null" [readOnly]="showEditField">
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" class="form-control form-control-sm" formControlName="Road" [readOnly]="isConceal" [readOnly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Road" 
+                        [attr.disabled]="isConceal ? '' : null" [readOnly]="showEditField">
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
 
@@ -196,7 +208,7 @@
                         <input type="text" class="form-control form-control-sm"
                             [ngbTypeahead]="searchRegion"
                             [resultTemplate]="rt"
-                            [readOnly]="isConceal"
+                            [attr.disabled]="isConceal ? '' : null" 
                             [readOnly]="showEditField"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemInformmerRegion($event)"
@@ -207,8 +219,8 @@
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียดแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" [readOnly]="isConceal"
-                            [readOnly]="showEditField"></textarea>
+                        <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" 
+                        [attr.disabled]="isConceal ? '' : null" [readOnly]="showEditField"></textarea>
                     </div>
                 </div>
 
@@ -331,7 +343,7 @@
                                 [ngClass]="{'ng-touched':isRequired}" required/>
                         </td>
                         <td>
-                            <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                            <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
                             <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
@@ -449,24 +461,14 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
             </div>
             <div class="row">
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ที่อยู่เอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                    <!-- <div class="custom-file">
-                        <input id="communicate-file" type="file" class="custom-file-input" formControlName="FilePath" [readonly]="showEditField">
-                        <label for="communicate-file" class="custom-file-label">
-                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                        </label>
-                    </div> -->
-                    <!-- <label for="communicate-file">
-                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                    </label> -->
-                    
+                    <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField">
                 </div>
             </div>
         </div>

@@ -108,6 +108,7 @@ export class NavigationService {
     setOnNextPage(status: boolean) {
         this.onNextPage.next(status);
     }
+
     // -- End Set Event
 
 }

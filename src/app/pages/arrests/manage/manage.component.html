@@ -414,18 +414,22 @@
                             <td>{{item.get('SectionName').value}}</td>
                             <td>{{item.get('GuiltBaseID').value}}</td>
                             <td>
-                                <div *ngFor="let law of item.value.IndictmentLawbreaker;">
-                                    <!-- <div *ngIf="law.EntityType == 0">
-                                        {{law.CompanyFullName}}
-                                    </div> -->
-                                    <!-- <div *ngIf="law.EntityType == 1"> -->
-                                        {{law.LawbreakerFullName}}
-                                    <!-- </div> -->
-                                </div>
+                               <div *ngIf="item.value.IndictmentLawbreaker.length">
+                                    <div *ngFor="let law of item.value.IndictmentLawbreaker;">
+                                        <!-- <div *ngIf="law.EntityType == 0">
+                                            {{law.CompanyFullName}}
+                                        </div> -->
+                                        <!-- <div *ngIf="law.EntityType == 1"> -->
+                                            {{law.LawbreakerFullName}}
+                                        <!-- </div> -->
+                                    </div>
+                               </div>
                             </td>
                             <td>
-                                <div *ngFor="let law of item.value.IndictmentLawbreaker;">
-                                    {{law.ProductName}}
+                                <div *ngIf="item.value.IndictmentLawbreaker.length">
+                                    <div *ngFor="let law of item.value.IndictmentLawbreaker;">
+                                        {{law.ProductName}}
+                                    </div>
                                 </div>
                             </td>
                             <td>
