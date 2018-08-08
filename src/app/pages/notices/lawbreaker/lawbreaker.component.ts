@@ -50,7 +50,7 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
     religions: DropDown[] = Religions;
     materialStatus: DropDown[] = MaritalStatus;
 
-    typeheadRegion: RegionModel[]
+    typeheadRegion: RegionModel[] = [];
 
     constructor(
         private ngModalService: NgbModal,

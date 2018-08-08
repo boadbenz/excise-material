@@ -286,7 +286,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/accusations/manage', 'C', 'NEW']);
+                this.router.navigate(['/lawsuit/manage', 'C']);
             }
         })
     }
@@ -829,7 +829,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     viewLawbreaker(id: number) {
-        this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
+        this.router.navigate([`/notice/lawbreaker`, 'R', id]);
     }
 
     async deleteStaff(indexForm: number, staffId: string) {
