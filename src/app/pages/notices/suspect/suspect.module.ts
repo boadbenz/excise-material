@@ -6,8 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ArrestsService } from '../../arrests/arrests.service';
-import { HttpModule } from '../../../../../node_modules/@angular/http';
-import { HttpClientModule } from '../../../../../node_modules/@angular/common/http';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   {

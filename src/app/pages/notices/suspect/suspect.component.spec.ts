@@ -3,9 +3,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { SuspectComponent } from './suspect.component';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '../../../../../node_modules/@angular/http';
-import { HttpClientModule } from '../../../../../node_modules/@angular/common/http';
-import { NgbModule } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { RouterModule, Routes, Router } from '@angular/router';
 import { ArrestsService } from '../../arrests/arrests.service';
