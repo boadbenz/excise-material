@@ -15,10 +15,10 @@ import { AppComponent } from './app.component';
 import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
 import { PreloaderModule } from './shared/preloader/preloader.module';
-import { LoginModule } from './pages/login/login.module';
 
 import { MatAutocompleteModule } from '@angular/material';
 import { LayoutComponent } from './shared/layout/layout.component';
+import { AuthGuard } from './pages/login/auth.guard';
 
 @NgModule({
     declarations: [
@@ -42,6 +42,7 @@ import { LayoutComponent } from './shared/layout/layout.component';
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
+        AuthGuard,
         NavigationService,
         SidebarService
     ],

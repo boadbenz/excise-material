@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './shared/layout/layout.component';
+import { AuthGuard } from './pages/login/auth.guard';
 
 export const routes: Routes = [
     {
@@ -7,9 +8,9 @@ export const routes: Routes = [
     }, {
         path: 'login', loadChildren: './pages/login/login.module#LoginModule'
     }, {
-        path: 'home', loadChildren: './pages/starter/starter.module#StarterModule', component: LayoutComponent
+        path: 'home', loadChildren: './pages/starter/starter.module#StarterModule', component: LayoutComponent, canActivate: [AuthGuard]
     }, {
-        path: 'notice', component: LayoutComponent,
+        path: 'notice', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/notices/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/notices/manage/manage.module#ManageModule' },
@@ -17,7 +18,7 @@ export const routes: Routes = [
             { path: 'suspect/:mode/:code', loadChildren: './pages/notices/suspect/suspect.module#SuspectModule' }
         ]
     }, {
-        path: 'arrest', component: LayoutComponent,
+        path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' }
