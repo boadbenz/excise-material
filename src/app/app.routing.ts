@@ -2,10 +2,8 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './shared/layout/layout.component';
 
 export const routes: Routes = [
-    { 
-        path: '**', redirectTo: 'home' 
-    }, { 
-        path: '', redirectTo: 'home', pathMatch: 'full' 
+    {
+        path: '', redirectTo: 'home', pathMatch: 'full'
     }, {
         path: 'login', loadChildren: './pages/login/login.module#LoginModule'
     }, {
