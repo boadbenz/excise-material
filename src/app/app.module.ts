@@ -17,6 +17,7 @@ import { NavigationService } from './shared/header-navigation/navigation.service
 import { PreloaderModule } from './shared/preloader/preloader.module';
 
 import { MatAutocompleteModule } from '@angular/material';
+import { LayoutComponent } from './shared/layout/layout.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import { MatAutocompleteModule } from '@angular/material';
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-        RightSidebarComponent
+        RightSidebarComponent,
+        LayoutComponent
     ],
     imports: [
         CommonModule, 
