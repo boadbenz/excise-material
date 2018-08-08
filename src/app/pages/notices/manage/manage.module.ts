@@ -7,11 +7,12 @@ import { CardActionsModule } from '../../component/card-actions/card-actions.mod
 import { NoticeService } from '../notice.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDatepickerI18n } from '@ng-bootstrap/ng-bootstrap';
 import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
 import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
+import { DatepickerI18nService } from '../../../services/datepicker-i18n.service';
 
 const routes: Routes = [
     {
@@ -46,6 +47,10 @@ const routes: Routes = [
     ],
     declarations: [
         ManageComponent
-    ], providers: [NoticeService, ArrestsService]
+    ], providers: [
+        { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },
+        NoticeService,
+        ArrestsService
+    ]
 })
 export class ManageModule { }

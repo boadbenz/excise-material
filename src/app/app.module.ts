@@ -15,6 +15,7 @@ import { AppComponent } from './app.component';
 import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
 import { PreloaderModule } from './shared/preloader/preloader.module';
+import { LoginModule } from './pages/login/login.module';
 
 @NgModule({
     declarations: [
@@ -30,7 +31,8 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
-        PreloaderModule
+        PreloaderModule,
+        LoginModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

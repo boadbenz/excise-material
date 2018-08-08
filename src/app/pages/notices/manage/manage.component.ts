@@ -38,7 +38,7 @@ import {
     selector: 'app-manage',
     templateUrl: './manage.component.html'
 })
-export class ManageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ManageComponent implements OnInit, OnDestroy {
 
     private onSaveSubscribe: any;
     private onDeleSubscribe: any;
@@ -126,10 +126,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy {
         await this.setRegionStore();
 
         this.preloader.setShowPreloader(false);
-    }
-
-    ngAfterViewInit() {
-
     }
 
     private active_route() {
