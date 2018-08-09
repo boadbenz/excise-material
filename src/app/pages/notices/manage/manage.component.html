@@ -461,14 +461,22 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
             </div>
             <div class="row">
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">ที่อยู่เอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input id="communicate-file" type="file" class="" formControlName="FilePath" [readonly]="showEditField">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
+                        <div class="input-group-append">
+                            <input id="communicateAttach" type="file" (change)="changeComunicateFile($event)" hidden [readonly]="showEditField">
+                            <label for="communicateAttach" class="input-group-text custom-file-upload text-secondary">
+                                <i class="ti-more-alt"></i>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -477,7 +485,7 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
-            <h4 class="card-title m-b-0">เอสารแนบภายใน</h4>
+            <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
         </div>
         <div class="card-body">
             <div class="row form-group">
@@ -499,31 +507,18 @@
                     <tr *ngFor="let item of NoticeDocument.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
                         <td>
-                            <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="DocumentName" class="form-control form-control-sm" [readonly]="showEditField">
                         </td>
                         <td>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control form-control-sm" >
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
                                 <div class="input-group-append">
-                                    <label for="noticeAttach" class="input-group-text" style="
-                                    display: -ms-flexbox;
-                                    display: flex;
-                                    -ms-flex-align: center;
-                                    align-items: center;
-                                    padding: .375rem .75rem;
-                                    margin-bottom: 0;
-                                    font-size: 1rem;
-                                    font-weight: 400;
-                                    line-height: 1.5;
-                                    color: #495057;
-                                    text-align: center;
-                                    white-space: nowrap;
-                                    border: 1px solid #ced4da;
-                                    border-radius: .25rem;">...</label>
-                                    <input id="noticeAttach" type="file" formControlName="FilePath" hidden>
+                                    <input id="noticeAttach" type="file" (change)="changeNoticeDoc($event, i)" hidden>
+                                    <label for="noticeAttach" class="input-group-text custom-file-upload text-secondary">
+                                        <i class="ti-more-alt"></i>
+                                    </label>
                                 </div>
                             </div>
-                            
                         </td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteDocument(item.get('DocumentID').value, i)">

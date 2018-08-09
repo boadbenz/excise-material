@@ -5,6 +5,8 @@ export class NoticeDocument {
     public ReferenceCode = '';
     public FilePath = '';
     public DataSource = '';
+    DocumentType = '';
+    DocumentName = '';
     public IsActive = '';
     public IsNewItem: boolean;
 }
@@ -14,6 +16,8 @@ export const NoticeDocumentFormControl = {
     ReferenceCode: new FormControl(null),
     FilePath: new FormControl(null),
     DataSource: new FormControl(null),
-    IsActive: new FormControl(1),
+    DocumentType: new FormControl(null),
+    DocumentName: new FormControl(null),
+    IsActive: new FormControl(null),
     IsNewItem: new FormControl(null)
 }

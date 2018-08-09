@@ -33,6 +33,7 @@ import {
     MasSubdistrictModel,
     MasStaffModel
 } from '../../../models';
+import { DataSource } from '../../../../../node_modules/@angular/cdk/table';
 
 @Component({
     selector: 'app-manage',
@@ -260,6 +261,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createDocumentForm(): FormGroup {
         NoticeDocumentFormControl.IsActive = new FormControl(1);
+        NoticeDocumentFormControl.IsNewItem = new FormControl(true);
         return this.fb.group(NoticeDocumentFormControl)
     }
 
@@ -730,5 +732,44 @@ export class ManageComponent implements OnInit, OnDestroy {
             FullName: !this.isConceal ? null : informName,
             FirstName: !this.isConceal ? null : informName
         })
+    }
+
+    changeComunicateFile(e: any) {
+        let reader = new FileReader();
+        let file = e.target.files[0];
+        let fileName: string = file.name;
+        let fileType: string = file.type;
+
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            let dataSource = reader.result.split(',')[1];
+            if (dataSource && dataSource !== undefined) {
+                this.noticeForm.patchValue({
+                    FilePath: 'D:\\XCS\\03. Design\\03. Program Spec\\Program Specxxxxxx'
+                })
+            }
+        };
+    }
+
+    changeNoticeDoc(e: any, index: number) {
+        let reader = new FileReader();
+        let file = e.target.files[0];
+        let fileName: string = file.name;
+        let fileType: string = file.type;
+
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            let dataSource = reader.result.split(',')[1];
+            if (dataSource && dataSource !== undefined) {
+                this.NoticeDocument.at(index).patchValue({
+                    ReferenceCode: this.noticeCode,
+                    FilePath: 'D:\\XCS\\03. Design\\03. Program Spec\\Program Specxxxxxx',
+                    DataSource: dataSource,
+                    DocumentType: fileType,
+                    DocumentName: fileName,
+                    IsActive: 1
+                })
+            }
+        };
     }
 }
