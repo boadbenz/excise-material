@@ -43,18 +43,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.nextPageButton = this.navService.showNextPageButton;
     }
 
-    async ngOnInit(): Promise<void> {
-       this.routingSub = await this.router.events
-            .filter(event => event instanceof NavigationEnd)
-            .map(() => this.activatedRoute)
-            .map(route => {
-                // tslint:disable-next-line:curly
-                while (route.firstChild) route = route.firstChild;
-                return route;
-            })
+    ngOnInit() {
+        this.activatedRoute.firstChild.snapshot.children
             .filter(route => route.outlet === 'primary')
-            .mergeMap(route => route.data)
-            .subscribe((event) => {
+            .map(route => route.data)
+            .map(event => {
                 if (event['nextPage']) {
                     const next = event['nextPage'];
                     this.nextPage = next['url'];
@@ -64,7 +57,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
                 if (!(event instanceof NavigationEnd)) {
                     return;
                 }
-    
+
                 const scrollToTop = window.setInterval(function () {
                     const pos = window.pageYOffset;
                     if (pos > 0) {
@@ -73,12 +66,41 @@ export class NavigationComponent implements OnInit, OnDestroy {
                         window.clearInterval(scrollToTop);
                     }
                 }, 16); // how fast to scroll (this equals roughly 60 fps)
-            });
-            
+            })
+        //    this.router.events
+        //         .filter(event => event instanceof NavigationEnd)
+        //         .map(() => this.activatedRoute)
+        //         .map(route => {
+        //             // tslint:disable-next-line:curly
+        //             while (route.firstChild) route = route.firstChild;
+        //             return route;
+        //         })
+        //         .filter(route => route.outlet === 'primary')
+        //         .mergeMap(route => route.data)
+        //         .subscribe((event) => {
+        //             if (event['nextPage']) {
+        //                 const next = event['nextPage'];
+        //                 this.nextPage = next['url'];
+        //                 this.nextPageTitle = next['title'];
+        //             }
+
+        //             if (!(event instanceof NavigationEnd)) {
+        //                 return;
+        //             }
+
+        //             const scrollToTop = window.setInterval(function () {
+        //                 const pos = window.pageYOffset;
+        //                 if (pos > 0) {
+        //                     window.scrollTo(0, pos - 20); // how far to scroll on each step
+        //                 } else {
+        //                     window.clearInterval(scrollToTop);
+        //                 }
+        //             }, 16); // how fast to scroll (this equals roughly 60 fps)
+        //         });
+
     }
 
     ngOnDestroy(): void {
-        this.routingSub.unsubscribe();
     }
 
     clickAdvSearch() {
