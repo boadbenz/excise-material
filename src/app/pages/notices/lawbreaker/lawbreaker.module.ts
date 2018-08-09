@@ -4,6 +4,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { ModalOffenseModule } from '../../component/modal-offense/modal-offense.module';
 import { LawbreakerComponent } from './lawbreaker.component';
+import { ArrestsService } from '../../arrests/arrests.service';
+import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 
 const routes: Routes = [
     {
@@ -25,10 +31,19 @@ const routes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
+        HttpModule,
+        HttpClientModule,
         RouterModule.forChild(routes),
+        NgbModule.forRoot(),
+        ReactiveFormsModule,
         CardActionsModule,
         ModalOffenseModule
     ],
-    declarations: [LawbreakerComponent]
+    declarations: [LawbreakerComponent],
+    providers: [
+        ArrestsService
+
+    ]
 })
 export class LawbreakerModule { }

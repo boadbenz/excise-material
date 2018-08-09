@@ -5,6 +5,7 @@ export const Message = {
     delFail: 'ลบข้อมูลไม่สำเร็จ',
     delComplete: 'ลบข้อมูลสำเร็จ',
     checkDate: 'กรุณาตราวจสอบวันที่สิ้นสุด ต้องไม่น้อยกว่า วันที่เริ่มสืบสวน',
+    checkRevenueDate: '',
     checkData: 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ่วน!',
     cannotDelete: 'ไม่สามารถลบข้อมูลได้',
     confirmAction: 'ยืนยันการทำรายการหรือไม่',

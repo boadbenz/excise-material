@@ -1,6 +1,7 @@
-import { Component, OnInit, HostListener, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, HostListener, Input, ElementRef, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NavigationService } from './navigation.service';
+import { NgForm } from '@angular/forms';
 
 // declare var jQuery: any;
 
@@ -11,7 +12,8 @@ import { NavigationService } from './navigation.service';
     styleUrls: ['./navigation.component.scss']
 
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
+
     newButton: any;
     printButton: any;
     editButton: any;
@@ -21,8 +23,10 @@ export class NavigationComponent implements OnInit {
     searchBar: any;
     nextPageButton: any;
 
-    nextPage: string;
-    nextPageTitle: string;
+    nextPage: string = '';
+    nextPageTitle: string = '';
+
+    private routingSub: any;
 
     constructor(
         private router: Router,
@@ -39,8 +43,8 @@ export class NavigationComponent implements OnInit {
         this.nextPageButton = this.navService.showNextPageButton;
     }
 
-    ngOnInit(): void {
-        this.router.events
+    async ngOnInit(): Promise<void> {
+       this.routingSub = await this.router.events
             .filter(event => event instanceof NavigationEnd)
             .map(() => this.activatedRoute)
             .map(route => {
@@ -56,30 +60,34 @@ export class NavigationComponent implements OnInit {
                     this.nextPage = next['url'];
                     this.nextPageTitle = next['title'];
                 }
-            });
 
-        this.router.events.subscribe((evt) => {
-            if (!(evt instanceof NavigationEnd)) {
-                return;
-            }
-
-            const scrollToTop = window.setInterval(function () {
-                const pos = window.pageYOffset;
-                if (pos > 0) {
-                    window.scrollTo(0, pos - 20); // how far to scroll on each step
-                } else {
-                    window.clearInterval(scrollToTop);
+                if (!(event instanceof NavigationEnd)) {
+                    return;
                 }
-            }, 16); // how fast to scroll (this equals roughly 60 fps)
-        });
+    
+                const scrollToTop = window.setInterval(function () {
+                    const pos = window.pageYOffset;
+                    if (pos > 0) {
+                        window.scrollTo(0, pos - 20); // how far to scroll on each step
+                    } else {
+                        window.clearInterval(scrollToTop);
+                    }
+                }, 16); // how fast to scroll (this equals roughly 60 fps)
+            });
+            
+    }
+
+    ngOnDestroy(): void {
+        this.routingSub.unsubscribe();
     }
 
     clickAdvSearch() {
         this.navService.setAdvSearch();
     }
 
-    clickSearch(textSearch: any) {
-        this.navService.setOnSearch(textSearch);
+    clickSearch(formSearch: NgForm) {
+        this.navService.setOnSearch(formSearch.value);
+        formSearch.reset();
     }
 
     clickNew() {

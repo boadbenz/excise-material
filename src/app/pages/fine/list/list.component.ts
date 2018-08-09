@@ -1,51 +1,118 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { FineService } from '../fine.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Compare } from '../fine-model';
+import { pagination } from '../../../config/pagination';
+import { Message } from '../../../config/message';
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+    selector: 'app-list',
+    templateUrl: './list.component.html'
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
 
-  response: object;
-  advSearch: any;
+    advSearch: any;
+    Compare = new Array<Compare>();
+    CompareList = new Array<Compare>();
+    paginage = pagination;
+    private subOnSearch: any;
 
-  constructor(private router: Router, private navservice: NavigationService) {
+    @ViewChild('fineTable') fineTable: ElementRef;
 
-     // set false
-     this.navservice.setEditButton(false);
-     this.navservice.setDeleteButton(false);
-     this.navservice.setPrintButton(false);
-     this.navservice.setSaveButton(false);
-     this.navservice.setCancelButton(false);
-     this.navservice.setNextPageButton(false);
-     this.navservice.setNewButton(false);
-     // set true
-     this.navservice.setSearchBar(true);
-     this.advSearch = this.navservice.showAdvSearch;
+    constructor(
+        private _router: Router,
+        private navService: NavigationService,
+        private fineService: FineService
+    ) {
+        // set false
+        this.navService.setEditButton(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setPrintButton(false);
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
+        this.navService.setNextPageButton(false);
+        // set true
+        this.navService.setSearchBar(true);
+        this.navService.setNewButton(false);
+        this.advSearch = this.navService.showAdvSearch;
+    }
 
-    this.response = [{ "no": 1, "work_no": "TN90806026000002", "case_no": "001/2561" , "checklist": "001/2561", "compare_no": "001/2561", "lawyer": "นายธวัชชัย บิง ", "compare_day": "10-ม.ค.-2560 ", "department": "สสท.ระนอง สาขาเมือง" },
-    { "no": 2, "work_no": "TN90806026000002", "case_no": "001/2561" , "checklist": "001/2561", "compare_no": "001/2561", "lawyer": "นายธวัชชัย บิง ", "compare_day": "10-ม.ค.-2560 ", "department": "สสท.ระนอง สาขาเมือง" },
-    { "no": 3, "work_no": "TN90806026000002", "case_no": "001/2561" , "checklist": "001/2561", "compare_no": "001/2561", "lawyer": "นายธวัชชัย บิง ", "compare_day": "10-ม.ค.-2560 ", "department": "สสท.ระนอง สาขาเมือง" },
-    { "no": 4, "work_no": "TN90806026000002", "case_no": "001/2561" , "checklist": "001/2561", "compare_no": "001/2561", "lawyer": "นายธวัชชัย บิง ", "compare_day": "10-ม.ค.-2560 ", "department": "สสท.ระนอง สาขาเมือง" },
-    { "no": 5, "work_no": "TN90806026000002", "case_no": "001/2561" , "checklist": "001/2561", "compare_no": "001/2561", "lawyer": "นายธวัชชัย บิง ", "compare_day": "10-ม.ค.-2560 ", "department": "สสท.ระนอง สาขาเมือง" },
-    { "no": 6, "work_no": "TN90806026000002", "case_no": "001/2561" , "checklist": "001/2561", "compare_no": "001/2561", "lawyer": "นายธวัชชัย บิง ", "compare_day": "10-ม.ค.-2560 ", "department": "สสท.ระนอง สาขาเมือง" },
-    { "no": 7, "work_no": "TN90806026000002", "case_no": "001/2561" , "checklist": "001/2561", "compare_no": "001/2561", "lawyer": "นายธวัชชัย บิง ", "compare_day": "10-ม.ค.-2560 ", "department": "สสท.ระนอง สาขาเมือง" }];
-  }
+    ngOnInit() {
+        this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
+            if (Textsearch) {
+                await this.navService.setOnSearch('');
+                this.onSearch(Textsearch);
+            }
+        })
+    }
 
-  
-  
+    ngOnDestroy(): void {
+        this.subOnSearch.unsubscribe();
+    }
+
+    onSearch(Textsearch: any) {
+        this.fineService.getByKeyword(Textsearch).subscribe(list => {
+        debugger
+            this.onSearchComplete(list)
+
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
+    }
+
+    onAdvSearch(form: any) {
+        
+        const sDateCompare = new Date(form.value.CompareDateFrom );
+        const eDateCompare = new Date(form.value.CompareDateTo);
+
+        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+            alert(Message.checkRevenueDate);
+        } else {
+            form.value.CompareDateFrom  = sDateCompare.getTime();
+            form.value.CompareDateTo = eDateCompare.getTime();
+
+            form.value.ProgramCode = "XCS06";
+            form.value.ProcessCode = "01";
 
 
+            this.fineService.getByConAdv(form.value).then(async list => {
+debugger
+                this.onSearchComplete(list)
 
-  ngOnInit() {
-  }
+            }, (err: HttpErrorResponse) => {
+                alert(err.message);
+            });
+        }
+    }
 
-  viewData(arrestCode:string){
-    
-    this.router.navigate(['/fine/manage', 'R'], { queryParams: {  arrestCode: arrestCode} });
-  }
+    onSearchComplete(list: any) {
+        this.Compare = [];
+debugger
+        if (!list.length) {
+            alert(Message.noRecord);
+            return false;
+        }
 
+        if (Array.isArray(list)) {
+            this.Compare = list;
+        } else {
+            this.Compare.push(list);
+        }
+
+        // set total record
+        this.paginage.TotalItems = this.Compare.length;
+    }
+
+    clickView(LawsuitID: string,ArrestCode: string, CompareID:string) {
+        if(CompareID == null || CompareID == "")
+            CompareID = "-";
+
+        this._router.navigate([`/fine/manage/R/${LawsuitID}/${ArrestCode}/${CompareID}`]);
+    }
+
+    async pageChanges(event) {
+        this.CompareList = await this.Compare.slice(event.startIndex - 1, event.endIndex);
+    }
 }

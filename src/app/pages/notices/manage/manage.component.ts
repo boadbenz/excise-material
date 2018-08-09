@@ -25,13 +25,13 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { MasOfficeModel } from '../../../models/mas-office.model';
-import { 
-    communicate, 
-    RegionModel, 
-    MasDistrictModel, 
-    MasProvinceModel, 
-    MasSubdistrictModel, 
-    MasStaffModel 
+import {
+    communicate,
+    RegionModel,
+    MasDistrictModel,
+    MasProvinceModel,
+    MasSubdistrictModel,
+    MasStaffModel
 } from '../../../models';
 
 @Component({
@@ -214,7 +214,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private createForm() {
         this.noticeForm = this.fb.group({
             NoticeCode: new FormControl(this.noticeCode, Validators.required),
-            NoticeStationCode: new FormControl('N/A'),
+            NoticeStationCode: new FormControl(null, Validators.required),
             NoticeStation: new FormControl(null, Validators.required),
             NoticeDate: new FormControl(null, Validators.required),
             NoticeTime: new FormControl(null, Validators.required),
@@ -222,9 +222,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeDueDate: new FormControl(null, Validators.required),
             GroupNameDesc: new FormControl('N/A'),
             CommunicationChanelID: new FormControl(null, Validators.required),
-            DataSource: [null],
-            FilePath: [null],
-            ArrestCode: [null],
+            DataSource: new FormControl(null),
+            FilePath: new FormControl(null),
+            ArrestCode: new FormControl(null),
             IsArrest: new FormControl(1),
             IsActive: new FormControl(1),
             NoticeStaff: this.fb.array([this.createStaffForm()]),
@@ -297,7 +297,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             await res.NoticeInformer.map(item => {
                 this.isConceal = item.InformerType === 1 ? true : false;
-                item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`;
+                item.FullName = item.TitleName == null ? '' : `${item.TitleName}`;
+                item.FullName += item.FirstName == null ? '' : ` ${item.FirstName}`;
+                item.FullName += item.LastName == null ? '' : ` ${item.LastName}`;
                 item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
             });
 
@@ -319,7 +321,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onCreate() {
-debugger
+        debugger
         if (!this.noticeForm.valid) {
             this.isRequired = true;
             alert(Message.checkData)
@@ -588,23 +590,28 @@ debugger
         this.NoticeProduct.at(index).patchValue({
             IsNewItem: true,
             NoticeCode: this.noticeCode,
-            Qty: ele.item.Size,
-            QtyUnit: ele.item.SizeCode
+            // Qty: ele.item.Size,
+            // QtyUnit: ele.item.SizeCode
         })
     }
 
     selectItemStaff(e, i) {
         this.NoticeStaff.at(i).reset(e.item);
         this.NoticeStaff.at(i).patchValue({
-            ProgramCode: 'XCS60-02-02',
+            ProgramCode: 'ILG60-02-02-00',
             ProcessCode: '0002',
             NoticeCode: this.noticeCode,
             IsActive: 1,
-            PositionCode: e.item.OperationPosCode,
-            PositionName: e.item.OperationPosName,
+            PositionCode: e.item.ManagementPosCode,
+            PositionName: e.item.ManagementPosName,
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
             ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode
+        })
+
+        this.noticeForm.patchValue({
+            NoticeStationCode: e.item.OperationPosCode,
+            NoticeStation: e.item.OperationPosName,
         })
     }
 
@@ -714,5 +721,10 @@ debugger
 
     onChangeConceal() {
         this.isConceal = !this.isConceal;
+        const informName = 'สายลับขอปิดนาม';
+        this.NoticeInformer.at(0).patchValue({
+            FullName: !this.isConceal ? null : informName,
+            FirstName: !this.isConceal ? null : informName
+        })
     }
 }

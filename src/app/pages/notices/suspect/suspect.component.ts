@@ -119,7 +119,7 @@ export class SuspectComponent implements ISuspect, OnInit, OnDestroy {
     religions: DropDown[] = Religions;
     materialStatus: DropDown[] = MaritalStatus;
 
-    typeheadRegion: RegionModel[]
+    typeheadRegion: RegionModel[] = []
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);

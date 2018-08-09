@@ -1,12 +1,16 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
+import { LayoutComponent } from './shared/layout/layout.component';
+import { AuthGuard } from './pages/login/auth.guard';
 
 export const routes: Routes = [
     {
-        path: '', component: LoginComponent
-        // loadChildren: './pages/starter/starter.module#StarterModule'
+        path: '', redirectTo: 'home', pathMatch: 'full'
     }, {
-        path: 'notice',
+        path: 'login', loadChildren: './pages/login/login.module#LoginModule'
+    }, {
+        path: 'home', loadChildren: './pages/starter/starter.module#StarterModule', component: LayoutComponent, canActivate: [AuthGuard]
+    }, {
+        path: 'notice', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/notices/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/notices/manage/manage.module#ManageModule' },
@@ -14,13 +18,13 @@ export const routes: Routes = [
             { path: 'suspect/:mode/:code', loadChildren: './pages/notices/suspect/suspect.module#SuspectModule' }
         ]
     }, {
-        path: 'arrest',
+        path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' }
         ]
     }, {
-        path: 'investigation',
+        path: 'investigation', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/investigation/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/investigation/manage/manage.module#ManageModule' },
@@ -30,42 +34,43 @@ export const routes: Routes = [
             }
         ]
     }, {
-        path: 'proof',
+        path: 'prove', component: LayoutComponent,
         children: [
-            { path: 'list', loadChildren: './pages/proof/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/proof/manage/manage.module#ManageModule' }
+            { path: 'list', loadChildren: './pages/prove/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/prove/manage/manage.module#ManageModule' }
         ]
     },
     {
-        path: 'income',
+        path: 'income', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/income/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
         ]
     }, {
-        path: 'accusations',
+        path: 'lawsuit', component: LayoutComponent,
         children: [
-            { path: 'list', loadChildren: './pages/accusations/list/list.module#ListModule' },
-            { path: 'manage/:mode', loadChildren: './pages/accusations/manage-view/manage-view.module#ManageViewModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/accusations/manage/manage.module#ManageModule' }
+            { path: 'list', loadChildren: './pages/lawsuit/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/lawsuit/manage/manage.module#ManageModule' },
+            { path: 'detail/:mode', loadChildren: './pages/lawsuit/detail/detail.module#DetailModule' }
         ]
     }, {
-        path: 'fine',
+        path: 'fine', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
-            { path: 'manage/:mode', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
-            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' }
+            { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
+            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
+            // { path: 'test', loadChildren: './pages/fine/test/test.module#TestModule' }
         ]
     }, {
-        path: 'reward',
+        path: 'reward', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
-            { path: 'bribe', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
-            { path: 'reward/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
+            { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
+            { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
         ]
     }, {
-        path: 'reduction',
+        path: 'reduction', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
@@ -74,52 +79,52 @@ export const routes: Routes = [
     },
 
     {
-        path: 'accordion',
+        path: 'accordion', component: LayoutComponent,
         loadChildren: './pages/component/accordion/accordion.module#AccordionModule'
     }, {
-        path: 'alert',
+        path: 'alert', component: LayoutComponent,
         loadChildren: './pages/component/alert/alert.module#NgAlertModule'
     }, {
-        path: 'carousel',
+        path: 'carousel', component: LayoutComponent,
         loadChildren: './pages/component/carousel/carousel.module#ButtonsModule'
     }, {
-        path: 'datepicker',
+        path: 'datepicker', component: LayoutComponent,
         loadChildren: './pages/component/datepicker/datepicker.module#DatepickerModule'
     }, {
-        path: 'dropdown',
+        path: 'dropdown', component: LayoutComponent,
         loadChildren: './pages/component/dropdown-collapse/dropdown-collapse.module#DropdownModule'
     }, {
-        path: 'modal',
+        path: 'modal', component: LayoutComponent,
         loadChildren: './pages/component/modal/modal.module#ModalModule'
     }, {
-        path: 'pagination',
+        path: 'pagination', component: LayoutComponent,
         loadChildren: './pages/component/pagination/pagination.module#paginationModule'
     }, {
-        path: 'Popovertooltip',
+        path: 'Popovertooltip', component: LayoutComponent,
         loadChildren: './pages/component/popover-tooltip/popover-tooltip.module#PopoverTooltipModule'
     }, {
-        path: 'progressbar',
+        path: 'progressbar', component: LayoutComponent,
         loadChildren: './pages/component/progressbar/progressbar.module#progressbarModule'
     }, {
-        path: 'rating',
+        path: 'rating', component: LayoutComponent,
         loadChildren: './pages/component/rating/rating.module#RatingModule'
     }, {
-        path: 'tabs',
+        path: 'tabs', component: LayoutComponent,
         loadChildren: './pages/component/tabs/tabs.module#TabsModule'
     }, {
-        path: 'timepicker',
+        path: 'timepicker', component: LayoutComponent,
         loadChildren: './pages/component/timepicker/timepicker.module#TimepickerModule'
     }, {
-        path: 'typehead',
+        path: 'typehead', component: LayoutComponent,
         loadChildren: './pages/component/typehead/typehead.module#TypeheadModule'
     }, {
-        path: 'fontawesome',
+        path: 'fontawesome', component: LayoutComponent,
         loadChildren: './pages/icons/fontawesome/fontawesome.module#FontawesomeModule'
     }, {
-        path: 'simpleline',
+        path: 'simpleline', component: LayoutComponent,
         loadChildren: './pages/icons/simpleline/simpleline.module#SimplelineIconModule'
     }, {
-        path: 'material',
+        path: 'material', component: LayoutComponent,
         loadChildren: './pages/icons/material/material.module#MaterialComponentModule'
     }
 ];

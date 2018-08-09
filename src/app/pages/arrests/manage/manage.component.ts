@@ -286,7 +286,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/accusations/manage', 'C', 'NEW']);
+                this.router.navigate(['/lawsuit/manage', 'C']);
             }
         })
     }
@@ -439,6 +439,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onCreate() {
 
+        console.log('====================================');
+        console.log(JSON.stringify(this.arrestFG.value));
+        console.log('====================================');
+
         if (!this.arrestFG.valid) {
             this.isRequired = true;
             alert(Message.checkData)
@@ -455,10 +459,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
         this.arrestFG.value.ArrestDate = arrestDate.toISOString()
         this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
-
-        console.log('====================================');
-        console.log(JSON.stringify(this.arrestFG.value));
-        console.log('====================================');
         let isSuccess: boolean | false;
 
         // ___1.บันทึกข้อมูลจับกุม
@@ -829,7 +829,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     viewLawbreaker(id: number) {
-        this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
+        this.router.navigate([`/notice/lawbreaker`, 'R', id]);
     }
 
     async deleteStaff(indexForm: number, staffId: string) {

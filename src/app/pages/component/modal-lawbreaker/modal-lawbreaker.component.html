@@ -39,7 +39,7 @@
                 <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
             </div>
             <div class="card-body">
-                <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onSearchAdv(advForm.value)">
+                <form class="form-horizontal">
                     <div class="row">
                         <label for="" class="col-lg-2 col-sm-4">ประเภทผู้ต้องหา :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
@@ -51,7 +51,7 @@
 
                         <label for="" class="col-lg-2 col-sm-4">ประเภทบุคคล :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-                            <select name="lawbreakerType" ngModel class="form-control form-control-sm">
+                            <select name="LawbreakerType" ngModel class="form-control form-control-sm">
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of lawbreakerType" [value]="item.value">{{item.text}}</option>
                             </select>
@@ -83,7 +83,7 @@
                     <div class="row">
                         <label for="" class="col-lg-2 col-sm-4">ชื่อผู้ต้องสงสัย :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-                            <input type="text" name="SuspectFirstName" ngModel class="form-control form-control-sm">
+                            <input type="text" name="" class="form-control form-control-sm">
                         </div>
                     </div>
 

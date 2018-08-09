@@ -1,3 +1,10 @@
-<p>
+<h4 class="text-center m-t-20">
   login works!
-</p>
+</h4>
+<form action="" #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+  <label for="userName">ชื่อผู้ใช้:</label>
+  <input type="text" name="userName" id="userName" ngModel required>
+  <label for="password">รหัสผ่าน:</label>
+  <input type="password" name="password" id="password" ngModel required>
+  <button type="submit" [disabled]="!form.valid">เข้าสู่ระบบ</button>
+</form>
