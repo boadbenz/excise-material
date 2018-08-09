@@ -18,33 +18,29 @@ export class BreadcrumbComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private titleService: Title
     ) { }
-    ngOnInit(): void {
+    ngOnInit() {
 
         this.activatedRoute.firstChild.snapshot.children
             .filter(route => route.outlet === 'primary')
             .map(route => route.data)
             .map(event => {
-                console.log('====================================');
-                console.log(event);
-                console.log('====================================');
                 this.titleService.setTitle(event['title']);
                 this.pageInfo = event;
             })
 
-        // this
-        // .router.events
-        // .filter(event => event instanceof NavigationEnd)
-        // .map(() => this.activatedRoute)
-        // .map(route => {
-        //     while (route.firstChild) route = route.firstChild;
-        //     return route;
-        // })
-        // .filter(route => route.outlet === 'primary')
-        // .mergeMap(route => route.data)
-        // .subscribe((event) => {
-        //     this.titleService.setTitle(event['title']);
-        //     this.pageInfo = event;
-        // });
+        this.router.events
+            .filter((event) => event instanceof NavigationEnd)
+            .map(() => this.activatedRoute)
+            .map((route) => {
+                while (route.firstChild) route = route.firstChild;
+                return route;
+            })
+            .filter((route) => route.outlet === 'primary')
+            .mergeMap((route) => route.data)
+            .subscribe((event) => {
+                this.pageInfo = event;
+                this.titleService.setTitle(event['title'])
+            });
     }
 
 }

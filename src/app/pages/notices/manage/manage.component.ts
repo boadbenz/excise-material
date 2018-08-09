@@ -45,6 +45,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onPrintSubscribe: any;
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
+    private setInnerTextNextPageSub: any;
     mode: string;
     showEditField: any;
     modal: any;
@@ -107,6 +108,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
+        this.navService.setInnerTextNextPageButton('งานจับกุม')
     }
 
     async ngOnInit() {
@@ -394,6 +396,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.delFail)
                 )
             })
+        } else {
+            this.router.navigate(['/notice/list']);
         }
     }
 

@@ -120,21 +120,17 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         // set true
         this.navService.setNextPageButton(true);
-
-        // this.productModel = store.select('productModel');
+        this.navService.setInnerTextNextPageButton("รับคำกล่าวโทษ")
     }
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.00');
+        this.sidebarService.setVersion('1.02');
 
         this.active_route();
         this.navigate_Service();
-        this.createForm();
-
-        console.log(this.arrestFG);
-        
+        this.createForm();        
 
         await this.setStaffStore()
         await this.setOfficeStore()

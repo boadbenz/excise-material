@@ -24,9 +24,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     nextPageButton: any;
 
     nextPage: string = '';
-    nextPageTitle: string = '';
-
-    private routingSub: any;
+    nextPageTitle: any;
 
     constructor(
         private router: Router,
@@ -41,63 +39,25 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.saveButton = this.navService.showSaveButton;
         this.searchBar = this.navService.showSearchBar;
         this.nextPageButton = this.navService.showNextPageButton;
+        this.nextPageTitle = this.navService.innerTextNextPageButton;
     }
 
     ngOnInit() {
-        this.activatedRoute.firstChild.snapshot.children
-            .filter(route => route.outlet === 'primary')
-            .map(route => route.data)
-            .map(event => {
-                if (event['nextPage']) {
-                    const next = event['nextPage'];
-                    this.nextPage = next['url'];
-                    this.nextPageTitle = next['title'];
+
+        this.router.events.subscribe((evt) => {
+            if (!(evt instanceof NavigationEnd)) {
+                return;
+            }
+
+            const scrollToTop = window.setInterval(function () {
+                const pos = window.pageYOffset;
+                if (pos > 0) {
+                    window.scrollTo(0, pos - 20); // how far to scroll on each step
+                } else {
+                    window.clearInterval(scrollToTop);
                 }
-
-                if (!(event instanceof NavigationEnd)) {
-                    return;
-                }
-
-                const scrollToTop = window.setInterval(function () {
-                    const pos = window.pageYOffset;
-                    if (pos > 0) {
-                        window.scrollTo(0, pos - 20); // how far to scroll on each step
-                    } else {
-                        window.clearInterval(scrollToTop);
-                    }
-                }, 16); // how fast to scroll (this equals roughly 60 fps)
-            })
-        //    this.router.events
-        //         .filter(event => event instanceof NavigationEnd)
-        //         .map(() => this.activatedRoute)
-        //         .map(route => {
-        //             // tslint:disable-next-line:curly
-        //             while (route.firstChild) route = route.firstChild;
-        //             return route;
-        //         })
-        //         .filter(route => route.outlet === 'primary')
-        //         .mergeMap(route => route.data)
-        //         .subscribe((event) => {
-        //             if (event['nextPage']) {
-        //                 const next = event['nextPage'];
-        //                 this.nextPage = next['url'];
-        //                 this.nextPageTitle = next['title'];
-        //             }
-
-        //             if (!(event instanceof NavigationEnd)) {
-        //                 return;
-        //             }
-
-        //             const scrollToTop = window.setInterval(function () {
-        //                 const pos = window.pageYOffset;
-        //                 if (pos > 0) {
-        //                     window.scrollTo(0, pos - 20); // how far to scroll on each step
-        //                 } else {
-        //                     window.clearInterval(scrollToTop);
-        //                 }
-        //             }, 16); // how fast to scroll (this equals roughly 60 fps)
-        //         });
-
+            }, 16); // how fast to scroll (this equals roughly 60 fps)
+        });
     }
 
     ngOnDestroy(): void {
@@ -113,7 +73,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     clickNew() {
-        this.router.navigate([`${this.nextPage}`, 'C', 'NEW']);
+        this.navService.setOnNextPage(true);
     }
 
     clickNextPage() {
@@ -138,15 +98,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     clickCancel() {
-        // // set true
-        // this.navService.setEditField(true);
-        // this.navService.setEditButton(true);
-        // this.navService.setPrintButton(true);
-        // this.navService.setDeleteButton(true);
-        // // set false
-        // this.navService.setSaveButton(false);
-        // this.navService.setCancelButton(false);
-        // set event click cancel
         this.navService.setOnCancel(true);
     }
 

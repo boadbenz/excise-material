@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
@@ -13,9 +13,8 @@ import { SidebarService } from '../../../shared/sidebar/sidebar.component';
     selector: 'app-list',
     templateUrl: './list.component.html'
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
 
-    private subOnSearch: any;
     advSearch: any;
     isRequired = false;
 
@@ -23,6 +22,9 @@ export class ListComponent implements OnInit {
 
     notice = new Array<Notice>();
     noticeList = new Array<Notice>();
+
+    private subOnsearchByKeyword: any;
+    private subSetNextPage: any;
 
     constructor(
         private _router: Router,
@@ -51,16 +53,27 @@ export class ListComponent implements OnInit {
 
         this.preLoaderService.setShowPreloader(true);
         await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
-        this.preLoaderService.setShowPreloader(false);
 
-        this.navservice.searchByKeyword.subscribe(async Textsearch => {
+        this.subOnsearchByKeyword = this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navservice.setOnSearch(null);
                 this.onSearch(Textsearch);
             }
         })
 
+        this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navservice.setOnNextPage(false);
+                this._router.navigate(['/notice/manage', 'C', 'NEW']);
+            }
+        })
+
         this.preLoaderService.setShowPreloader(false);
+    }
+
+    ngOnDestroy(): void {
+        this.subOnsearchByKeyword.unsubscribe();
+        this.subSetNextPage.unsubscribe();
     }
 
     async onSearch(Textsearch: any) {
@@ -79,7 +92,7 @@ export class ListComponent implements OnInit {
         const sDateCompare = new Date(form.value.DateStartFrom);
         const eDateCompare = new Date(form.value.DateStartTo);
 
-        if (sDateCompare.valueOf() <= eDateCompare.valueOf()) {
+        if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
             alert(Message.checkDate);
         } else {
             this.preLoaderService.setShowPreloader(true);

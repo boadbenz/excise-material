@@ -15,6 +15,7 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 export class ListComponent implements OnInit, OnDestroy {
 
     private subOnSearch: any;
+    private subSetNextPage: any;
     paginage = pagination;
     dataTable: any;
     advSearch: any;
@@ -51,10 +52,17 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.onSearch('');
 
-        this.navService.searchByKeyword.subscribe(async Textsearch => {
+        this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
+            }
+        })
+
+        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnNextPage(false);
+                this.router.navigate(['/arrest/manage', 'C', 'NEW']);
             }
         })
     }
@@ -112,6 +120,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        // this.subOnSearch.unsubscribe();
+        this.subOnSearch.unsubscribe();
+        this.subSetNextPage.unsubscribe();
     }
 }
