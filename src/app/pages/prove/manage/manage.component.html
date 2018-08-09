@@ -294,8 +294,8 @@
                             </thead>
                             <tbody>
                                 <!-- *ngIf="lsPD.IsAction!='D'" -->
-                                <!-- | callback: filterProductDel -->
-                                <tr *ngFor="let lsPD of oProve.ProveProduct; let i=index;">
+                                <!-- | callback: filterProductDel let i=index;-->
+                                <tr *ngFor="let lsPD of oProve.ProveProduct | IsActivePipe; let i=index;">
                                     <td style="text-align: center">{{i+1}}</td>
                                     <td>{{lsPD.ProductDesc}}</td>
                                     <td style="text-align: center">{{lsPD.ReferenceVatRate == '1' ?'/':'X'}}</td>

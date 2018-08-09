@@ -12,6 +12,7 @@ import { LawsuitService } from '../../model/lawsuit.service';
 import { MasterService }  from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
+import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
 
 const routes: Routes = [
     {
@@ -45,7 +46,7 @@ const routes: Routes = [
         LawsuitService,
         MasterService
     ],
-    declarations: [ManageComponent],
+    declarations: [ManageComponent,IsActivePipe],
     exports: [MatAutocompleteModule]
 })
 export class ManageModule { }
