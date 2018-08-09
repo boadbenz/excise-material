@@ -5,10 +5,7 @@ export class ProveScience {
     public ProveScienceTime?: string;
     public RequestNo?: string;
     public ReportNo?: string;
-    public DeliveryDocNo?: string;
-    public ProveScienceResult?: string;
-    public ProveResult?: string;
     public IsProveScience?: string;
+    public DeliveryDocNo?: string;
     public IsActive?: number;
-    public IsAction?: string;
 }

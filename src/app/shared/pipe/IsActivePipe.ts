@@ -7,6 +7,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 export class IsActivePipe implements PipeTransform {
     transform(items: any[]): any {
-        return items.filter(item => item.IsAction != 'D');
+        return items.filter(item => item.IsAction != 'D' && item.IsAction != 'DI');
     }
 }

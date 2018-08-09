@@ -59,4 +59,16 @@ export class ProveService {
       await alert(error);
     }
   }
+
+  async insAll(oProve: Prove): Promise<any> {
+    const params = JSON.stringify(oProve);
+    const url = `${appConfig.api8882}/ProveinsAll`;
+
+    try {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        return res;
+    } catch (error) {
+        await alert(error);
+    }
+}
 }

@@ -51,11 +51,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     SectionNo: string;
     PenaltyDesc: string;
     IndictmentID: string;
-    ReportNo: string;       // เลขทะเบียนตรวจพิสูจน์  (ไม่รวม /ปี พ.ศ.)
+    ReportNo: string = "";       // เลขทะเบียนตรวจพิสูจน์  (ไม่รวม /ปี พ.ศ.)
     ProveYear: string;      // ปี พ.ศ.
     ProveDate: string;      // วันที่ตรวจรับ
     ProveTime: string;      // เวลาตรวจรับ
-    DeliveryDocNo: string;  // เลขที่หนังสือนำส่ง
+    DeliveryDocNo: string = "";  // เลขที่หนังสือนำส่ง
     DeliveryDate: string;   // วันที่นำส่ง
     DeliveryTime: string;   // เวลานำส่ง
     PosExaminer: string;    // ตำแหน่งผู้ตรวจรับ
@@ -188,10 +188,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         // });
 
         this.sub = this.navService.onPrint.subscribe(async status => {
-          if (status) {
-            await this.navService.setOnPrint(false);
-            this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-          }
+            if (status) {
+                await this.navService.setOnPrint(false);
+                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+            }
         })
 
         this.sub = this.navService.onCancel.subscribe(async status => {
@@ -212,10 +212,29 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve.IndictmentID = this.IndictmentID;
 
         this.oProve.ProveStaff = [];
-        this.oProve.ProveStaff.push(this.oProveStaff);
-        this.oProve.ProveStaff.push(this.oProveScienceStaff);
 
         debugger
+        
+        if(this.oProveStaff != 'nulll' && this.oProveStaff != undefined)
+        {
+            this.oProve.ProveStaff.push(this.oProveStaff);
+        }
+        
+        if(this.oProveScienceStaff != 'nulll' && this.oProveScienceStaff != undefined)
+        {
+            this.oProve.ProveStaff.push(this.oProveScienceStaff);
+        }
+        
+
+        this.proveService.insAll(this.oProve).then(async res => {
+            if (res.IsSuccess == "True") {
+                alert(Message.saveComplete);
+            } else {
+                alert(Message.saveError);
+            }
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
     }
 
     ngOnDestroy(): void {
@@ -304,12 +323,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             ProveScienceTime: "",
             RequestNo: "",
             ReportNo: "",
-            DeliveryDocNo: "",
-            ProveScienceResult: "",
-            ProveResult: "",
             IsProveScience: "",
+            DeliveryDocNo: "",
             IsActive: 1,
-            IsAction: "I"
         }
     }
 
@@ -387,6 +403,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.oProve.ProveProduct = [];
                 this.oProve.ProveScience = [];
 
+                this.oProveScience = {
+                    ProveScienceID: "",
+                    ProveID: "",
+                    ProveScienceDate: "",
+                    ProveScienceTime: "",
+                    RequestNo: "",
+                    ReportNo: "",
+                    DeliveryDocNo: "",
+                    IsActive: 1,
+                }
+
+                this.oProve.ProveScience.push(this.oProveScience);
+
                 for (var i = 0; i < this.oArrest.ArrestProduct.length; i += 1) {
                     this.oProveProduct = {
                         ProductID: this.oArrest.ArrestProduct[i].ProductID,
@@ -431,27 +460,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                         ReferenceDate: "",
                         IsStatusExhibit: "",
                         Remarks: "",
+                        ProveResult: "",
                         IsAction: "U"
                     }
 
                     this.oProve.ProveProduct.push(this.oProveProduct);
-
-                    this.oProveScience = {
-                        ProveScienceID: "",
-                        ProveID: "",
-                        ProveScienceDate: "",
-                        ProveScienceTime: "",
-                        RequestNo: "",
-                        ReportNo: "",
-                        DeliveryDocNo: "",
-                        ProveScienceResult: "",
-                        ProveResult: "",
-                        IsProveScience: "",
-                        IsActive: 1,
-                        IsAction: "U"
-                    }
-
-                    this.oProve.ProveScience.push(this.oProveScience);
                 }
             }
         }
@@ -637,7 +650,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ----- Popup -----
     OpenPopupProduct(i: number) {
         this.oProveProduct = this.oProve.ProveProduct[i];
-        this.oProveScience = this.oProve.ProveScience[i];
+        this.oProveScience = this.oProve.ProveScience[0];
 
         this.ProductID = this.oProve.ProveProduct[i].ProductID;
         this.iPopup = i;
@@ -646,7 +659,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ClosePopupProduct() {
         this.oProveProduct.ProductID = this.ProductID;
-        this.oProveScience.ProveScienceDate = this.ProveScienceDate;
+        this.oProveScience.ProveScienceDate = this.ProveScienceDate + ' ' + this.ProveScienceTime;
         this.oProveScience.ProveScienceTime = this.ProveScienceTime;
 
         if (this.modePopup == "I") {
@@ -655,7 +668,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
         else if (this.modePopup == 'U') {
             this.oProve.ProveProduct[this.iPopup] = this.oProveProduct;
-            this.oProve.ProveScience[this.iPopup] = this.oProveScience;
+            this.oProve.ProveScience[0] = this.oProveScience;
         }
 
     }

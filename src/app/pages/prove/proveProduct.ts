@@ -53,5 +53,6 @@ export class ProveProduct {
     public VatProve?: string;
     public IsStatusExhibit?: string;
     public Remarks?: string;
+    public ProveResult?: string;
     public IsAction?: string;
 }

@@ -287,7 +287,7 @@
                                     <th>ของกลาง</th>
                                     <th style="text-align: center">ตามปริมาณ</th>
                                     <th style="text-align: center">ตามมูลค่า</th>
-                                    <th>พิสูจน์ทางเคมีหรือวิทยาศาสตร์</th>
+                                    <th style="text-align: center">พิสูจน์ทางเคมีหรือวิทยาศาสตร์</th>
                                     <th>มูลค่าภาษีพิสูจน์</th>
                                     <th></th>
                                 </tr>
@@ -300,7 +300,7 @@
                                     <td>{{lsPD.ProductDesc}}</td>
                                     <td style="text-align: center">{{lsPD.ReferenceVatRate == '1' ?'/':'X'}}</td>
                                     <td style="text-align: center">{{lsPD.ReferenceVatQty == '1' ?'/':'X'}}</td>
-                                    <td>{{oProve.ProveScience[i].ProveScienceResult}}</td>
+                                    <td style="text-align: center">{{oProve.ProveProduct[i].ProveScienceResult != '' ?'/':'X'}}</td>
                                     <td>{{lsPD.VatProve}}</td>
                                     <td>
                                         <a *ngIf="showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" data-toggle="modal" data-target="#SciencePopup">
@@ -646,7 +646,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <input type="checkbox" [(ngModel)]="oProveScience.IsProveScience" name="oProveScience.IsProveScience" class="filled-in chk-col-indigo"
+                                    <input type="checkbox" [(ngModel)]="IsProveScience" name="IsProveScience" class="filled-in chk-col-indigo"
                                         [disabled]="showEditField">
                                     <label for="md_checkbox_7">ส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ </label>&nbsp;&nbsp;
                                 </div>
@@ -656,7 +656,7 @@
                                 <label for="" class="col-lg-3 col-md-6 control-label">รายงานผลทางเคมีหรือวิทยาศาสตร์ :</label>
                                 <div class="col-lg-9 col-md-6">
                                     <div class="form-group ">
-                                        <input type="text" [(ngModel)]="oProveScience.ProveScienceResult" name="oProveScience.ProveScienceResult" class="form-control form-control-sm"
+                                        <input type="text" [(ngModel)]="oProveProduct.ProveScienceResult" name="oProveProduct.ProveScienceResult" class="form-control form-control-sm"
                                             [disabled]="showEditField">
                                     </div>
                                 </div>
@@ -666,7 +666,7 @@
                                 <label for="" class="col-lg-3 col-md-6 control-label">รายงานการตรวจพิสูจน์ของกลาง :</label>
                                 <div class="col-lg-9 col-md-6">
                                     <div class="form-group ">
-                                        <textarea [(ngModel)]="oProveScience.ProveResult" name="oProveScience.ProveResult" cols="" rows="5" class="form-control form-control-sm"
+                                        <textarea [(ngModel)]="oProveProduct.ProveResult" name="oProveProduct.ProveResult" cols="" rows="5" class="form-control form-control-sm"
                                             [disabled]="showEditField"></textarea>
                                     </div>
                                 </div>
