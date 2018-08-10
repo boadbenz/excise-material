@@ -10,8 +10,6 @@ export class AppComponent implements OnInit {
 
   title = 'app';
 
-  isPreloader: any;
-
   constructor() {
   }
 

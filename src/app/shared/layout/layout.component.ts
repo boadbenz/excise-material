@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PreloaderService } from '../preloader/preloader.component';
+import * as custom from 'assets/js/_custom';
 
 @Component({
   selector: 'app-layout',
@@ -14,6 +15,7 @@ export class LayoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    custom.detectChange();
     this.isPreloader = this.preloader.showPreloader;
   }
 
