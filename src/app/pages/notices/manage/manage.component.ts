@@ -33,7 +33,6 @@ import {
     MasSubdistrictModel,
     MasStaffModel
 } from '../../../models';
-import { DataSource } from '../../../../../node_modules/@angular/cdk/table';
 
 @Component({
     selector: 'app-manage',
@@ -47,6 +46,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
     private setInnerTextNextPageSub: any;
+
+    programSpect: 'ILG60-02-02-00';
     mode: string;
     showEditField: any;
     modal: any;
@@ -604,7 +605,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     selectItemStaff(e, i) {
         this.NoticeStaff.at(i).reset(e.item);
         this.NoticeStaff.at(i).patchValue({
-            ProgramCode: 'ILG60-02-02-00',
+            ProgramCode: this.programSpect,
             ProcessCode: '0002',
             NoticeCode: this.noticeCode,
             IsActive: 1,
@@ -745,7 +746,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
-                    FilePath: 'D:\\XCS\\03. Design\\03. Program Spec\\Program Specxxxxxx'
+                    FilePath: `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`
                 })
             }
         };
@@ -763,7 +764,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (dataSource && dataSource !== undefined) {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,
-                    FilePath: 'D:\\XCS\\03. Design\\03. Program Spec\\Program Specxxxxxx',
+                    FilePath: `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`,
                     DataSource: dataSource,
                     DocumentType: fileType,
                     DocumentName: fileName,

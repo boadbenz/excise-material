@@ -43,6 +43,7 @@ import {
 export class ManageComponent implements OnInit, OnDestroy {
 
     private sub: any;
+    programSpect = 'ILG60-03-02-00'
     mode: string;
     modal: any;
     arrestCode: string;
@@ -812,7 +813,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     addDocument() {
         const lastIndex = this.ArrestDocument.length - 1;
         let item = new ArrestDocument();
-        item.ArrestCode = this.arrestCode;
+        item.ReferenceCode = this.arrestCode;
         item.IsNewItem = true;
         if (lastIndex < 0) {
             this.ArrestDocument.push(this.fb.group(item));
@@ -1030,7 +1031,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     selectItemStaff(e, i) {
         this.ArrestStaff.at(i).reset(e.item);
         this.ArrestStaff.at(i).patchValue({
-            ProgramCode: 'XCS60-02-02',
+            ProgramCode: this.programSpect,
             ProcessCode: '0002',
             ArrestCode: this.arrestCode,
             PositionCode: e.item.OperationPosCode,
@@ -1043,8 +1044,27 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestStationCode: e.item.OfficeCode,
             ArrestStation: e.item.OfficeShortName
         })
-
     }
 
+    changeArrestDoc(e: any, index: number) {
+        let reader = new FileReader();
+        let file = e.target.files[0];
+        let fileName: string = file.name;
+        let fileType: string = file.type;
 
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            let dataSource = reader.result.split(',')[1];
+            if (dataSource && dataSource !== undefined) {
+                this.ArrestDocument.at(index).patchValue({
+                    ReferenceCode: this.arrestCode,
+                    FilePath: `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`,
+                    DataSource: dataSource,
+                    DocumentType: fileType,
+                    DocumentName: fileName,
+                    IsActive: 1
+                })
+            }
+        };
+    }
 }
