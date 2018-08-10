@@ -49,7 +49,7 @@ export class ProveService {
   }
 
   async getProveProductUnit(Textsearch: string): Promise<any> {
-    const params = {Textsearch};
+    const params = { Textsearch };
     const url = `${appConfig.api8882}/ProveMasProductUnitgetByKeyword`;
 
     try {
@@ -65,10 +65,23 @@ export class ProveService {
     const url = `${appConfig.api8882}/ProveinsAll`;
 
     try {
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        return res;
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
     } catch (error) {
-        await alert(error);
+      await alert(error);
     }
-}
+  }
+
+  async ProvegetByCon(ProveID: string): Promise<any> {
+    const params = { ProveID };
+    const url = `${appConfig.api8882}/ProvegetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+  
 }

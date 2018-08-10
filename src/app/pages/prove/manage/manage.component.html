@@ -182,7 +182,14 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานนำส่ง :</label>
                 <div class="form-group col-lg-4 col-md-7">
-                    <input type="text" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="text" class="form-control" [(ngModel)]="ProveDelivery" name="ProveDelivery" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                        matInput [matAutocomplete]="auto4" (input)="DeliveryOnAutoChange($event.target.value)" (focus)="DeliveryOnAutoFocus($event.target.value)"
+                        [disabled]="viewMode">
+                    <mat-autocomplete #auto4="matAutocomplete">
+                        <mat-option *ngFor="let optionD of Deliveryoptions" [value]="optionD.OfficeName" (click)="DeliveryOnAutoSelecteWord(optionD)">
+                            {{ optionD.OfficeName }}
+                        </mat-option>
+                    </mat-autocomplete>
                 </div>
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้ตรวจรับ :</label>
                 <div class="col-lg-4 col-md-7">
@@ -310,7 +317,7 @@
                                             <i class="ti-pencil-alt btn-action"></i>
                                         </a>
                                         &nbsp;
-                                        <a class="text-secondary" (click)="onDeleteProduct(i)">
+                                        <a class="text-secondary" (click)="onDeleteProduct(i)" [hidden]="viewMode">
                                             <i class="fa fa-trash-o fa-xl"></i>
                                         </a>
                                     </td>
@@ -406,7 +413,7 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label">ของกลางจากจับกลุ่ม :</label>
                                 <div class="col-lg-10 col-md-7">
                                     <div class="form-group ">
-                                        <select [(ngModel)]="ProductID" name="ProductID" class="form-control form-control-sm" [disabled]="oProveProduct.IsAction == 'I' ?false:'true'"
+                                        <select [(ngModel)]="ProductID" name="ProductID" class="form-control form-control-sm" [disabled]="oProveProduct.IsAction == 'I'?false:'true'"
                                             (change)="SelecteArrestProduct($event)">
                                             <option *ngFor="let opt of ArrestProduct" value={{opt.ProductID}}>{{opt.ProductDesc}}
                                             </option>

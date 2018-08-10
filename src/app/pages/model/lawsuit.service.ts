@@ -17,6 +17,7 @@ export class LawsuitService {
   };
 
   async LawsuitegetByCon(LawsuitID: string): Promise<Lawsuit> {
+    debugger
     const params = { LawsuitID };
     const url = `${appConfig.api8083}/LawsuitgetByCon`;
 
