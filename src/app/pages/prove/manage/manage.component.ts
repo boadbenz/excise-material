@@ -187,10 +187,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.onInsProve();
 
                     } else {
-                        //   this.onUpdCompare();
+                        this.onUpdProve();
                         //   this.onComplete();
                     }
                 }
+
+                this.router.navigate(['/prove/list']);
             }
         });
 
@@ -239,6 +241,40 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
         this.proveService.insAll(this.oProve).then(async res => {
+            if (res.IsSuccess == "True") {
+                this.oProve = {};
+
+                alert(Message.saveComplete);
+            } else {
+                alert(Message.saveError);
+            }
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
+    }
+
+    onUpdProve() {
+        this.oProve.DeliveryDocNo = this.DeliveryDocNo;
+        this.oProve.DeliveryDate = this.DeliveryDate + ' ' + this.DeliveryTime;
+        this.oProve.ProveReportNo = this.ReportNo + "/" + this.ProveYear;
+        this.oProve.ProveDate = this.ProveDate + ' ' + this.ProveTime;
+        this.oProve.IndictmentID = this.IndictmentID;
+
+        // this.oProve.ProveStaff = [];
+
+
+
+        // if (this.oProveStaff != 'nulll' && this.oProveStaff != undefined) {
+        //     this.oProve.ProveStaff.push(this.oProveStaff);
+        // }
+
+        // if (this.oProveScienceStaff != 'nulll' && this.oProveScienceStaff != undefined) {
+        //     this.oProve.ProveStaff.push(this.oProveScienceStaff);
+        // }
+
+        debugger
+        this.proveService.ProveupdByCon(this.oProve).then(async res => {
+            debugger
             if (res.IsSuccess == "True") {
                 this.oProve = {};
 
@@ -508,6 +544,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 var PDate = this.oProve.ProveDate.split(" ");
                 this.ProveDate = PDate[0];
                 this.ProveTime = PDate[1];
+
+                var PSDate = this.oProve.DeliveryDate.split(" ");
+                this.DeliveryDate = PSDate[0];
+                this.DeliveryTime = PSDate[1];
 
                 var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
                 this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
