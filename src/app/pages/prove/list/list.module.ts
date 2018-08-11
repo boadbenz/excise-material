@@ -15,7 +15,7 @@ const routes: Routes = [
         path: '',
         data: {
             // title: 'ค้นหาข้อมูล',
-            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง' }],
+            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง Lastupdate 11/08/2561' }],
             nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/prove/manage' }
         },
         component: ListComponent

@@ -21,10 +21,10 @@ const routes: Routes = [
             // title: 'จัดการข้อมูล',
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง', url: '/proof/list' },
+                { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง', url: '/prove/list' },  
                 { title: 'จัดการข้อมูลงานตรวจรับและพิสูจน์ของกลาง' }
             ],
-            nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/proof/manage' }
+            nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/prove/manage' }
         },
         component: ManageComponent
     }

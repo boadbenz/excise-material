@@ -505,6 +505,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ProveDelivery =  this.oProve.DeliveryStation;
                 this.DeliveryDocNo = this.oProve.DeliveryDocNo;
 
+                var PDate = this.oProve.ProveDate.split(" ");
+                this.ProveDate = PDate[0];
+                this.ProveTime = PDate[1];
+
                 var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
                 this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
                 this.PosExaminer = PStaff[0].PositionName;
