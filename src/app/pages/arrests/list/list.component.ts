@@ -79,7 +79,7 @@ export class ListComponent implements OnInit, OnDestroy {
         const sDateCompare = new Date(form.value.OccurrenceDateFrom);
         const eDateCompare = new Date(form.value.OccurrenceDateTo);
 
-        if (sDateCompare.getTime() <= eDateCompare.getTime()) {
+        if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkDate);
         } else {
             this.preLoader.setShowPreloader(true);
