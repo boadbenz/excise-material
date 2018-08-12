@@ -193,7 +193,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         //             alert(Message.saveComplete);
         //         // tslint:disable-next-line:triple-equals
         //         } else if (result.IsSuccess == 'False') {
-        //             alert(Message.saveFail);
+        //             alert(Message.saveError);
         //         }
         //     }, (err: HttpErrorResponse) => {
         //         alert(err.message);

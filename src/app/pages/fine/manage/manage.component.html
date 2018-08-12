@@ -179,8 +179,8 @@
     <h4 class="card-title m-b-0">รายละเอียดเงินค่าปรับ</h4>
   </div>
   <div class="card-body">
-    <div class="table-detial_arrestonsive">
-      <table class="dataTable table table-sm table-striped table-hover" *ngFor="let item of detial_money">
+    <div class="table-responsive">
+      <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
             <th class="footable-sortable" style="width:15%">ชื่อผู้ต้องหา</th>
@@ -228,7 +228,6 @@
             <td class="">รวม</td>
           </tr>
         </tbody>
-
       </table>
     </div>
   </div>
@@ -301,7 +300,7 @@
         </div>
       </div>
     </div>
-    <div class="table-detial_arrestonsive">
+    <div class="table-responsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -371,7 +370,7 @@
         </div>
       </div>
     </div>
-    <div class="table-detial_arrestonsive">
+    <div class="table-responsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -418,7 +417,7 @@
     <h4 class="card-title m-b-0">รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ</h4>
   </div>
   <div class="card-body">
-    <div class="table-detial_arrestonsive">
+    <div class="table-responsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -461,7 +460,7 @@
       <input type="file" id="btn-browse" #file [disabled]="viewMode">
       <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
     </div>
-    <div class="table-detial_arrestonsive">
+    <div class="table-responsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -472,12 +471,12 @@
         </thead>
         <tbody>
           <tr class="footable">
-            <td class="text-center">***</td>
+            <td class="text-center">1</td>
             <td>
-              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
+              <input class="form-control" type="text" nmae="fileName" [disabled]="viewMode">
             </td>
             <td>
-              <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
+              <input class="form-control" type="text" name="filePath" [disabled]="viewMode">
             </td>
             <td>
               <i class="ti-trash btn-action" [hidden]="viewMode"></i>
@@ -543,7 +542,7 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-4">
-                  <input class="col-form-label filled-in chk-col-indigo" id="insurance" type="checkbox" [checked]="Bail!='' && Bail!=nul" disabled>
+                  <input class="col-form-label filled-in chk-col-indigo" id="insurance" type="checkbox" [checked]="Bail!='' && Bail!=null" disabled>
                   <label for="insurance">ประกัน :</label>
                 </div>
                 <div class="col-md-7">
@@ -557,7 +556,7 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-4">
-                  <input class="col-form-label filled-in chk-col-indigo" id="collateral" type="checkbox" disabled [checked]="Guaruntee!='' && Guaruntee!=nul">
+                  <input class="col-form-label filled-in chk-col-indigo" id="collateral" type="checkbox" disabled [checked]="Guaruntee!='' && Guaruntee!=null">
                   <label for="collateral">ประกันและหลักประกัน :</label>
                 </div>
                 <div class="col-md-7">
@@ -713,7 +712,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-form-label col-md-5">ช่องทางชำระค่าปรับ : ***</label>
+                <label class="col-form-label col-md-5">ช่องทางชำระค่าปรับ : </label>
                 <div class="col-md-7">
                   <select class="custom-select col-12" [(ngModel)]="ReceiptChanel" name="ReceiptChanel">
                     <option value="1">เงินสด</option>
@@ -785,7 +784,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ชื่อผู้ต้องหา : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="fullName" disabled>
                 </div>
               </div>
             </div>
@@ -796,11 +795,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ชำระค่าปรับ : </label>
                 <div class="col-md-3">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="payDate" disabled>
                 </div>
                 <label class="col-form-label text-center col-md-2">เวลา</label>
                 <div class="col-md-3">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="payTime" disabled>
                 </div>
               </div>
             </div>
@@ -808,7 +807,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ค่าปรับคดีรวม : </label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="payAmount" disabled>
                 </div>
               </div>
             </div>
@@ -871,7 +870,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="postion" disabled>
                 </div>
               </div>
             </div>
@@ -882,7 +881,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="deparment" disabled>
                 </div>
               </div>
             </div>
@@ -893,7 +892,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้พิจารณาเห็นชอบ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
+                  <input class="form-control" type="text" name="reviewer" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -902,7 +901,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="rank" disabled>
                 </div>
               </div>
             </div>
@@ -913,7 +912,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="deparment" disabled>
                 </div>
               </div>
             </div>
@@ -924,7 +923,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้มีอำนาจอนุมัติ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
+                  <input class="form-control" type="text" name="approver" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -933,7 +932,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="rank" disabled>
                 </div>
               </div>
             </div>
@@ -943,7 +942,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" disabled>
+                  <input class="form-control" type="text" name="department" disabled>
                 </div>
               </div>
             </div>
@@ -951,7 +950,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">คำสั่งกรมฯ ที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" value="{{detial_arrest.LawsuiltDate}}" [disabled]="viewMode">
+                  <input class="form-control" type="text" name="departOrder" [disabled]="viewMode">
                 </div>
               </div>
             </div>
