@@ -3,7 +3,9 @@ export class ProveStaff {
     public ProgramCode?: string;
     public ProcessCode?: string;
     public ProveID?: string;
+    public LawsuitID?: string;
     public StaffCode?: string;
+    public TitleName?: string;
     public FirstName?: string;
     public LastName?: string;
     public PositionCode?: string;

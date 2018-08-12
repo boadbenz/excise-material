@@ -1,11 +1,11 @@
 export class ProveScience {
-    public ProveScienceID?: number;
-    public ProveID?: number;
-    public ProveScienceDate?: Date;
+    public ProveScienceID?: string;
+    public ProveID?: string;
+    public ProveScienceDate?: string;
     public ProveScienceTime?: string;
     public RequestNo?: string;
     public ReportNo?: string;
+    public IsProveScience?: string;
     public DeliveryDocNo?: string;
-    public ProveScienceResult?: string;
     public IsActive?: number;
 }

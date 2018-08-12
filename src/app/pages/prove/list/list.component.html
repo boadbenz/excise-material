@@ -41,11 +41,11 @@
                     <label for="" class="col-lg-2 col-sm-3 control-label">วันที่ตรวจรับ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group form-line">
-                            <input type="date" name="DeliveryDateFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" [(ngModel)]="DeliveryDateFrom" name="DeliveryDateFrom" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
 
                             <label for="">&nbsp; ถึง &nbsp;</label>
 
-                            <input type="date" name="DeliveryDateTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" [(ngModel)]="DeliveryDateTo" name="DeliveryDateTo" class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
                         </div>
                     </div>
                 </div>
@@ -68,11 +68,11 @@
                     <label for="" class="col-lg-2 col-sm-3 control-label">วันที่ตรวจพิสูจน์ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group form-line">
-                            <input type="date" name="ProveDateFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" [(ngModel)]="ProveDateFrom" name="ProveDateFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
 
                             <label for="">&nbsp; ถึง &nbsp;</label>
 
-                            <input type="date" name="ProveDateTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" [(ngModel)]="ProveDateTo" name="ProveDateTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
                         </div>
                     </div>
                 </div>
@@ -95,6 +95,14 @@
                                 <input type="text" name="DeliveryDepartmentName" ngModel class="form-control" placeholder="">
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+          
+                    <div class="col-10"></div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
                     </div>
                 </div>
             </div>
@@ -140,7 +148,7 @@
                             <div *ngFor="let staff of item.ProveStaff;">{{staff.DepartmentName}}</div>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.ProveID)">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitID,item.ArrestCode,item.ProveID)">
                                 <i class="mdi mdi-eye fa-lg"></i>
                             </a>
                         </td>

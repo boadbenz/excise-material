@@ -1,5 +1,5 @@
-import { ArrestLawbreaker } from './arrest-lawbreaker';
-import { Time } from '../../../../node_modules/@angular/common';
+import { ArrestLawbreaker } from '../model/arrest-lawbreaker';
+import { Time } from '@angular/common';
 
 export class Compare {
     public CompareID: number;

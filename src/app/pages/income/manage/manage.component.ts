@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { IncomeService } from '../income.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Revenue } from '../revenue';
+import { Revenue } from '../Revenue';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
