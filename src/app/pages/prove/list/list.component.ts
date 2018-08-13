@@ -33,7 +33,7 @@ export class ListComponent implements OnInit {
         private _router: Router,
         private navService: NavigationService,
         private proveService: ProveService,
-        private preLoader: PreloaderService
+        private preLoaderService: PreloaderService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -51,12 +51,15 @@ export class ListComponent implements OnInit {
     ngOnInit() {
         this.onSearch({Textsearch: ""});
         
+        this.preLoaderService.setShowPreloader(true);
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
             }
         }) 
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
@@ -86,7 +89,6 @@ export class ListComponent implements OnInit {
             alert(Message.checkScienceDate);
         }
         else {
-            this.preLoader.setShowPreloader(true);
             form.value.DeliveryDateFrom = sDateDelivery.getTime();
             form.value.DeliveryDateTo = eDateDelivery.getTime();
 
@@ -105,7 +107,6 @@ export class ListComponent implements OnInit {
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
             });
-            this.preLoader.setShowPreloader(false);
         }
     }
 

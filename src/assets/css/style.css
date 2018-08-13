@@ -2830,6 +2830,38 @@ Widget-data
 /*============================================================== 
 File upload
  ============================================================== */
+
+.input-group-append {
+  margin-left: -1px;
+  display: flex;
+}
+
+.input-group-text {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: .375rem .75rem;
+  /* padding: .7rem .4rem .0rem .0rem; */
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.custom-file-upload {
+  padding: .7rem .4rem .0rem .4rem !important;
+  cursor: pointer !important;
+ }
+
 .btn-file {
   overflow: hidden;
   position: relative;
@@ -3123,10 +3155,56 @@ Form Material page
 
 .form-group.error input, .form-group.error select, .form-group.error textarea {
   border: 1px solid #fc4b6c; }
-
-.ng-invalid:not(form)  {
+.custom-file{
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: calc(2.25rem + 2px);
+  margin-bottom: 0;
+}
+/* .custom-file-label{
+  padding: .5rem .75rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: calc(2.25rem + 2px);
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+    border-radius: .25rem;
+} */
+.custom-file-input{
+  position: relative;
+    z-index: 2;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    margin: 0;
+    opacity: 0;
+}
+.custom-file-label::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: block;
+  height: calc(calc(2.25rem + 2px) - 1px * 2);
+  padding: .375rem .75rem;
+  line-height: 1.5;
+  color: #495057;
+  content: "Browse";
+  background-color: #e9ecef;
+  border-left: 1px solid #ced4da;
+  border-radius: 0 .25rem .25rem 0;
+}
+/* .ng-invalid:not(form)  {
   border: 1px solid #fc4b6c;
-  /* border-left: 5px solid #fc4b6c; */
+} */
+.form-control.ng-invalid.ng-touched:not(:focus) {
+  border: 1px solid #fc4b6c;
 }
 
 .form-group.validate input, .form-group.validate select, .form-group.validate textarea {

@@ -4,7 +4,11 @@ Author: Themedesigner
 Email: niravjoshi87@gmail.com
 File: js
 */
-$(function () {
+
+declare var $:any;
+declare var jQuery: any;
+
+export function detectChange() {
     "use strict";
     $(function () {
         $(".preloader").fadeOut();
@@ -231,4 +235,4 @@ $(function () {
  
         
     
-});
+};

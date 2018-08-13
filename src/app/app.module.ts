@@ -15,6 +15,7 @@ import { AppComponent } from './app.component';
 import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
 import { MatAutocompleteModule } from '@angular/material';
+import { PreloaderModule } from './shared/preloader/preloader.module';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import { MatAutocompleteModule } from '@angular/material';
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        PreloaderModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

@@ -14,6 +14,8 @@ import { ProveStaff } from '../proveStaff';
 import { ProveScience } from '../proveScience';
 import { ProveProduct } from '../proveProduct';
 import { Message } from 'app/config/message';
+import { ProveDocument } from '../proveDoc';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 @Component({
     selector: 'app-manage',
@@ -26,6 +28,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     mode: string;
     modal: any;
     param: any;
+    programSpect = 'ILG60-05-02-00'
 
     // --------
     showEditField: any;
@@ -44,6 +47,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     Deliveryoptions = [];
     UnitOption = [];
     ArrestProduct = [];
+    ListProveDoc = [];
+    ListProduct = [];
 
     // ---- Varible ---
     LawsuiltCode: string;
@@ -70,6 +75,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     ProveDelivery: string;  // หน่วยงานที่นำส่ง
     ProveStaffName: string; // ผู้ตรวจรับ
     ScienceStaffName: string;   // ผู้พิสูจน์
+    StaffID: string;        // รหัสผู้ตรวจรับ
+    StaffScienceID: string;   // รหัสผู้ตรวจพิสูจน์
 
     iPopup: number;
     modePopup: string = 'I';
@@ -82,6 +89,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     oProveScienceStaff: ProveStaff;
     oProveScience: ProveScience;
     oProveProduct: ProveProduct;
+    oProveDocument: ProveDocument;
 
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -94,7 +102,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ArrestSV: ArrestService,
         private LawsuitSV: LawsuitService,
         private MasterSV: MasterService,
-        private router: Router
+        private router: Router,
+        private preLoaderService: PreloaderService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -104,6 +113,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.preLoaderService.setShowPreloader(true);
+
         this.active_Route();
         this.navigate_Service();
 
@@ -113,6 +124,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.CreateObject();
         this.CreateProduct();
         this.CreateScience();
+        this.CreateDocuement();
 
         this.ArrestCode = this.ArrestCode;
 
@@ -130,6 +142,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.DeliveryTime = this.getCurrentTime();
         this.ProveScienceDate = this.getCurrentDate();
         this.ProveScienceTime = this.getCurrentTime();
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
     private active_Route() {
@@ -244,7 +258,18 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (res.IsSuccess == "True") {
                 this.oProve = {};
 
-                alert(Message.saveComplete);
+                if (this.ListProveDoc.length > 0) {
+                    for (let i = 0; i < this.ListProveDoc.length; i++) {
+                        this.proveService.DocumentinsAll(this.ListProveDoc[i]).then(async res => {
+                            if (res.IsSuccess == "True") {
+                                alert(Message.saveComplete);
+                            }
+                            else {
+                                alert(Message.saveError);
+                            }
+                        });
+                    }
+                }
             } else {
                 alert(Message.saveError);
             }
@@ -260,17 +285,22 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve.ProveDate = this.ProveDate + ' ' + this.ProveTime;
         this.oProve.IndictmentID = this.IndictmentID;
 
-        // this.oProve.ProveStaff = [];
+        var aIndex;
+        aIndex = this.getIndexOf(this.oProve.ProveStaff, "14", "ContributorCode");
+        this.oProve.ProveStaff[aIndex] = this.oProveStaff;
 
+        var sIndex;
+        sIndex = this.getIndexOf(this.oProve.ProveStaff, "15", "ContributorCode");
+        this.oProve.ProveStaff[sIndex] = this.oProveScienceStaff;
 
+        this.ListProduct = this.oProve.ProveProduct;
+        this.oProve.ProveProduct = [];
 
-        // if (this.oProveStaff != 'nulll' && this.oProveStaff != undefined) {
-        //     this.oProve.ProveStaff.push(this.oProveStaff);
-        // }
-
-        // if (this.oProveScienceStaff != 'nulll' && this.oProveScienceStaff != undefined) {
-        //     this.oProve.ProveStaff.push(this.oProveScienceStaff);
-        // }
+        if(this.oProve.ProveScience[0].ProveScienceDate == null)
+        {
+            this.oProve.ProveScience[0].ProveScienceDate = this.oProve.ProveDate;
+            this.oProve.ProveScience[0].ProveScienceTime = this.oProve.ProveDate.split(" ")[1];
+        }
 
         debugger
         this.proveService.ProveupdByCon(this.oProve).then(async res => {
@@ -381,9 +411,23 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    CreateDocuement() {
+        this.oProveDocument = {};
+
+        this.oProveDocument = {
+            DocumentID: "",
+            ReferenceCode: "",
+            FilePath: "",
+            DataSource: "",
+            DocumentType: "",
+            DocumentName: "",
+            IsActive: "1"
+        }
+    }
+
     getProveByID() {
         this.proveService.ProvegetByCon(this.ProveID).then(async res => {
-           this.oProve = res;
+            this.oProve = res;
 
         }, (err: HttpErrorResponse) => {
             alert(err.message);
@@ -533,31 +577,35 @@ export class ManageComponent implements OnInit, OnDestroy {
         {
             var PRN = this.oProve.ProveReportNo.split('/');
 
-            if(PRN.length > 1)
-            {
+            if (PRN.length > 1) {
                 this.ReportNo = PRN[0];
                 this.ProveYear = PRN[1];
-                this.ProveStation =  this.oProve.ProveStation;
-                this.ProveDelivery =  this.oProve.DeliveryStation;
+                this.ProveStation = this.oProve.ProveStation;
+                this.ProveDelivery = this.oProve.DeliveryStation;
                 this.DeliveryDocNo = this.oProve.DeliveryDocNo;
 
                 var PDate = this.oProve.ProveDate.split(" ");
                 this.ProveDate = PDate[0];
-                this.ProveTime = PDate[1];
+                this.ProveTime = PDate[1] + ".000";
 
                 var PSDate = this.oProve.DeliveryDate.split(" ");
                 this.DeliveryDate = PSDate[0];
-                this.DeliveryTime = PSDate[1];
+                this.DeliveryTime = PSDate[1] + ".000";
 
+                debugger
                 var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
                 this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
                 this.PosExaminer = PStaff[0].PositionName;
-                this.DeptExaminer =  PStaff[0].DepartmentName;
+                this.DeptExaminer = PStaff[0].DepartmentName;
+                this.StaffID = PStaff[0].StaffID.toString();
+                this.oProveStaff = PStaff[0];
 
                 var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "15");
                 this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
                 this.PosScience = PScienceStaff[0].PositionName;
-                this.DeptScience =  PScienceStaff[0].DepartmentName;
+                this.DeptScience = PScienceStaff[0].DepartmentName;
+                this.StaffScienceID = PScienceStaff[0].StaffID.toString();
+                this.oProveScienceStaff = PScienceStaff[0];
 
                 for (var i = 0; i < this.oProve.ProveProduct.length; i += 1) {
                     this.oProve.ProveProduct[i].IsAction = 'U';
@@ -627,8 +675,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     // --- ผู้ตรวจรับ ---
     getProveStaff() {
         this.MasterSV.getStaff().then(async res => {
-            // 
-
             if (res) {
                 this.rawStaffOptions = res;
             }
@@ -641,17 +687,21 @@ export class ManageComponent implements OnInit, OnDestroy {
         // 
         if (value == '') {
             this.Staffoptions = [];
-            this.PosExaminer = "";
-            this.DeptExaminer = "";
+            this.ClearStaffData();
         } else {
-
+            if(this.rawStaffOptions.length == 0)
+            {
+                this.getProveStaff();
+            }
             this.Staffoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        
         }
     }
 
     StaffonAutoFocus(value: string) {
         if (value == '') {
             this.Staffoptions = [];
+            this.ClearStaffData();
         }
     }
 
@@ -682,15 +732,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     // ----- End ผู้ตรวจรับ ---
 
-
     // --- ผู้พิสูจน์ ---
     ScienceStaffonAutoChange(value: string) {
         // 
         if (value == '') {
             this.Scienceoptions = [];
-            this.PosScience = "";
-            this.DeptScience = "";
+            this.ClearStaffScience();
         } else {
+            if(this.rawStaffOptions.length == 0)
+            {
+                this.getProveStaff();
+            }
 
             this.Scienceoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
@@ -699,6 +751,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ScienceStaffonAutoFocus(value: string) {
         if (value == '') {
             this.Scienceoptions = [];
+            this.ClearStaffScience();
         }
     }
 
@@ -762,7 +815,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ----- End Unit -----
 
 
-    // ----- Popup -----
+    // ----- Popup Product-----
     OpenPopupProduct(i: number) {
         this.oProveProduct = this.oProve.ProveProduct[i];
         this.oProveScience = this.oProve.ProveScience[0];
@@ -805,7 +858,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oProveProduct.IsAction = "I";
         }
     }
-    // ----- End Popup -----
 
     private onDeleteProduct(i: number) {
         if (confirm(Message.confirmDeleteProduct)) {
@@ -817,4 +869,96 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         }
     }
+    // ----- End Popup Product -----
+
+
+    // ----- Clear -----
+    ClearStaffData() {
+        this.PosExaminer = "";
+        this.DeptExaminer = "";
+
+        this.oProveStaff = {
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            StaffID: +this.StaffID,
+            LawsuitID: this.LawsuitID,
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorCode: "14"
+        }
+    }
+
+    ClearStaffScience() {
+        this.PosScience = "";
+        this.DeptScience = "";
+
+        this.oProveScienceStaff = {
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            StaffID: +this.StaffScienceID,
+            LawsuitID: this.LawsuitID,
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorCode: "15"
+        }
+    }
+    // ----- End Clear -----
+
+    // ----- Document -----
+    AddDocument() {
+        this.oProveDocument.ReferenceCode = "";
+
+        this.ListProveDoc.push(this.oProveDocument);
+    }
+
+    changeComunicateFile(e: any, i: number) {
+        let reader = new FileReader();
+        let file = e.target.files[0];
+        let fileName: string = file.name;
+        let fileType: string = file.type;
+
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            let dataSource = reader.result.split(',')[1];
+            if (dataSource && dataSource !== undefined) {
+                this.ListProveDoc[i] = {
+                    ReferenceCode: this.oProve.ProveReportNo,
+                    FilePath: `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`,
+                    dataSource: dataSource,
+                    DocumentType: fileType,
+                    DocumentName: fileName,
+                    IsActive: 1
+                }
+            }
+        };
+    }
+
+    DelDocument(i: number) {
+        alert(i);
+    }
+    // ----- End Document -----
 }
