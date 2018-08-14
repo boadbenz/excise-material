@@ -224,7 +224,7 @@
               <input class="form-control" type="text" [(ngModel)]="item.BribeMoney"  [disabled]="viewMode" value="">
             </td>
             <td class="">{{item.CompareFine * item.RewardRate}}</td>
-            <td class="">{{item.CompareFine - (item.BribeMoney + item.RewardMoney  | number) }}</td>
+            <td class="">{{item.CompareFine - (item.BribeMoney + item.RewardMoney) }}</td>
             <td class="">รวม</td>
           </tr>
         </tbody>

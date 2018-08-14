@@ -152,7 +152,7 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
         this.Suspect.value.map(item => item.IsChecked = true);
     }
 
-    toggle(e) {
+    toggle() {
         this.advSearch = !this.advSearch;
     }
 

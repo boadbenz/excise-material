@@ -29,13 +29,19 @@ export class ManageComponent implements OnInit {
   param: any;
   modal: any;
 
+  OperationPosName: any;
+  OperationDeptName: any;
+  IsProvisionalAcquittal: any;
+  ApproveStation: any;
+  StationName: any;
+
   rawOptions = [];
   options = [];
   compareStaff = [];
 
   oCompare: Compare[];
   ListCompareDetail: CompareDetail[];
-  oCompareDetail: CompareDetail = {};
+  oCompareDetail: CompareDetail;
 
   ListCompareDetailReceipt: CompareDetailReceipt[];
   oCompareDetailReceipt: CompareDetailReceipt = {};
@@ -482,7 +488,7 @@ export class ManageComponent implements OnInit {
       alert(err.message);
     });
 
-    return "0";
+    return 0;
   }
 
   getGuiltBaseByID() {
@@ -506,7 +512,7 @@ export class ManageComponent implements OnInit {
           for (var i = 0; i < this.oArrest.ArrestIndictment[aIndex].OpsArrestIndicmentDetailCollection.length; i += 1) {
             arrestIndex = this.getIndexOf(this.oArrest.ArrestLawbreaker, this.oArrest.ArrestIndictment[aIndex].OpsArrestIndicmentDetailCollection[i].LawbreakerID, "LawbreakerID");
 
-            this.oCompareDetail = {};
+            // this.oCompareDetail = {};
 
             if (this.oArrest.ArrestLawbreaker[arrestIndex].EntityType == 0) {
               this.ArrestName = this.oArrest.ArrestLawbreaker[arrestIndex].CompanyTitle + this.oArrest.ArrestLawbreaker[arrestIndex].CompanyName;
@@ -526,7 +532,7 @@ export class ManageComponent implements OnInit {
             //                               , "");
             // var VatValue = 20000;
 
-            var RewardRate = "0";
+            var RewardRate = 0;
 
             if (this.oArrest.NoticeCode != "" && this.oArrest.NoticeCode != null) {
               RewardRate = this.getRewardRate();
@@ -547,13 +553,13 @@ export class ManageComponent implements OnInit {
               IsProvisionalAcquittal: "",
               Bail: null,
               Guaruntee: null,
-              CompareFine: "",
+              CompareFine: null,
               PaymentFineDate: "",
               PaymentFineAppointDate: "",
               PaymentVatDate: "",
               TreasuryMoney: "",
-              BribeMoney: "",
-              RewardMoney: "",
+              BribeMoney: null,
+              RewardMoney: null,
               ApproveStationCode: "",
               ApproveStation: "",
               ApproveReportDate: "",
@@ -567,8 +573,8 @@ export class ManageComponent implements OnInit {
               Lawbreaker: this.ArrestName,
               LawbreakerID: this.oArrest.ArrestLawbreaker[arrestIndex].LawbreakerID.toString(),
               ProductDesc: "",
-              FineRate: "",
-              VatValue: "",
+              FineRate: null,
+              VatValue: null,
               RewardRate: RewardRate,
               CompareDetailFine: [],
               CompareDetailReceipt: [],

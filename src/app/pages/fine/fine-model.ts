@@ -42,13 +42,13 @@ export class CompareDetail {
     public IsProvisionalAcquittal?: string;
     public Bail?: string;
     public Guaruntee?: string;
-    public CompareFine?: string;
+    public CompareFine: number;
     public PaymentFineDate?: string;
     public PaymentFineAppointDate?: string;
     public PaymentVatDate?: string;
     public TreasuryMoney?: string;
-    public BribeMoney?: string;
-    public RewardMoney?: string;
+    public BribeMoney: number;
+    public RewardMoney: number;
     public ApproveStationCode?: string;
     public ApproveStation?: string;
     public ApproveReportDate?: string;
@@ -61,10 +61,10 @@ export class CompareDetail {
     public AdjustReason?: string;
     public Lawbreaker?: string;
     public LawbreakerID?: string;
-    public FineRate?: string;
-    public VatValue?: string;
+    public FineRate: number;
+    public VatValue: number;
     public ProductDesc?: string;
-    public RewardRate?: string;
+    public RewardRate: number;
     public CompareDetailFine?: CompareDetailFine[];
     public CompareDetailReceipt?: CompareDetailReceipt[];
 }

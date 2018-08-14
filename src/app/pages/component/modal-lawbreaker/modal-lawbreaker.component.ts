@@ -95,7 +95,7 @@ export class ModalLawbreakerComponent implements OnInit {
         this.Lawbreaker.value.map(item => item.IsChecked = true);
     }
 
-    toggle(e) {
+    toggle() {
         this.advSearch = !this.advSearch;
     }
 
