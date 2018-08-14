@@ -45,7 +45,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onPrintSubscribe: any;
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
-    private setInnerTextNextPageSub: any;
 
     programSpect: 'ILG60-02-02-00';
     mode: string;
