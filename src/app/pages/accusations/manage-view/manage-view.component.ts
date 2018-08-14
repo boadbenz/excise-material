@@ -86,6 +86,7 @@ export class ManageViewComponent implements OnInit {
   }]
   fullName: any;
   detailData: any;
+  errorShow: any;
   private getDataFromListPage: any;
 
   constructor(private router: Router, private activeRoute: ActivatedRoute, private navService: NavigationService) { }
