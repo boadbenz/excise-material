@@ -467,7 +467,7 @@
                             <div class="row">
                                 <label for="" class="col-lg-2 col-sm-4 control-label">อัตราภาษี :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <input type="checkbox" class="filled-in chk-col-indigo" [disabled]="showEditField" [checked]="C1_ReferenceVatRate!='' && C1_ReferenceVatRate!=nul">
+                                    <input type="checkbox" class="filled-in chk-col-indigo" [disabled]="showEditField" [checked]="C1_ReferenceVatRate!='' && C1_ReferenceVatRate!=null">
                                     <label for="md_checkbox_5">ตามมูลค่าร้อยละ </label>&nbsp;&nbsp;
                                     <input type="text" [(ngModel)]="oProveProduct.ReferenceVatRate" name="oProveProduct.ReferenceVatRate" class="form-control form-control-sm"
                                         readonly>
@@ -477,7 +477,7 @@
                             <div class="row">
                                 <label for="" class="col-lg-2 col-md-4 control-label"></label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <input type="checkbox" class="filled-in chk-col-indigo" [disabled]="showEditField" [checked]="C1_ReferenceVatQty!='' && C1_ReferenceVatQty!=nul">
+                                    <input type="checkbox" class="filled-in chk-col-indigo" [disabled]="showEditField" [checked]="C1_ReferenceVatQty!='' && C1_ReferenceVatQty!=null">
                                     <label for="md_checkbox_5">ตามปริมาณต่อ </label>&nbsp;&nbsp;
                                     <input type="text" [(ngModel)]="oProveProduct.ReferenceVatQty" name="oProveProduct.ReferenceVatQty" class="form-control form-control-sm"
                                         readonly>

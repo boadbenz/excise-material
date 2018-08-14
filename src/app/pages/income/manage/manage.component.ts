@@ -19,6 +19,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     mode: string;
     modal: any;
     revenueCode: string;
+    isCheckAll: any;
     // rawOptions = [];
     // options = [];
 
@@ -204,6 +205,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
+
 
     // onAutoChange(value: string) {
     //     if (value == '') {

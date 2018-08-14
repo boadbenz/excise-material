@@ -27,6 +27,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     modal: any;
     param: any;
 
+    C1_ReferenceVatRate: any;
+    C1_ReferenceVatQty: any;
+    IsProveScience: any;
     // --------
     showEditField: any;
 

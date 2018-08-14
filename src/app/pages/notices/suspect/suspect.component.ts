@@ -108,6 +108,7 @@ export class SuspectComponent implements ISuspect, OnInit, OnDestroy {
 
     modal: any;
     showEditField: any;
+    isRequired: boolean | false;
     visaTypes: DropDown[] = VISATypes;
     bloodTypes: DropDown[] = BloodTypes;
     entityTypes: DropDown[] = EntityTypes;

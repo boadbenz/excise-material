@@ -73,7 +73,9 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="RevenueCode" class="form-control form-control-sm" [readOnly]="showEditField" *ngIf="isNumber(obj[key])">
+                        <!-- ไม่เจอ function ! -->
+                        <!-- *ngIf="isNumber(obj[key])" -->
+                        <input type="text" formControlName="RevenueCode" class="form-control form-control-sm" [readOnly]="showEditField" >
                     </div>
                 </div>
 
@@ -274,8 +276,7 @@
                         <div class="card-footer card-footer-unset">
                             <div class="row justify-content-between m-l-5">
                                 <div clas="col">
-                                    <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
-                                        << </a>
+                                    <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |<< </a>
                                             <label> หน้าที่
                                                 <select>
                                                     <option value="1">1</option>
@@ -286,10 +287,10 @@
                                 <div class="col col-lg-3 text-right">
                                     <label>แสดง
                                         <select>
-                                            <option (click)="numPage = 5">5</option>
-                                            <option (click)="numPage = 10">10</option>
-                                            <option (click)="numPage = 15">15</option>
-                                            <option (click)="numPage = 20">20</option>
+                                            <option>5</option>
+                                            <option>10</option>
+                                            <option>15</option>
+                                            <option>20</option>
                                         </select> รายการ</label>
                                 </div>
                             </div>

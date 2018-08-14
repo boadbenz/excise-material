@@ -17,6 +17,7 @@ export class ManageComponent implements OnInit {
   masLawGroupSectionList = new Array<MasLawGroupSection>();
   masLawGuitBaseList = new Array<MasLawGuitBase>();
   arrestList = new Array<Arrest>();
+  errorShow: any;
   private getDataFromListPage: any;
 
   constructor(

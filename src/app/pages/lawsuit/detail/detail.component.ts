@@ -22,6 +22,7 @@ export class DetailComponent implements OnInit {
 
   showEditField: any;
   modal: any;
+  fullName: any;
   masLawGroupSectionList = new Array<MasLawGroupSection>();
   masLawGuitBaseList = new Array<MasLawGuitBase>();
   masLawPenaltyList = new Array<MasLawPenalty>();
