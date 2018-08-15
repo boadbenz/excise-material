@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {HttpClientModule} from '@angular/common/http';
 
 const routes: Routes = [
     {
@@ -20,6 +22,8 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
+        NgbModule,
+        HttpClientModule,
         RouterModule.forChild(routes)
     ],
     declarations: [ListComponent]
