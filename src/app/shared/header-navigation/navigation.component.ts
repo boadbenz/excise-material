@@ -111,14 +111,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     clickSave() {
-        // set true
-        this.navService.setEditField(true);
-        this.navService.setEditButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        // set false
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
         // set event click save
         this.navService.setOnSave(true);
     }

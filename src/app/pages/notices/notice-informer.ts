@@ -36,7 +36,7 @@ export class NoticeInformer {
 
 export const NoticeInformerFormControl = {
     InformerID: new FormControl('22'),
-    InformerType: new FormControl(0),
+    InformerType: new FormControl(null),
     NoticeCode: new FormControl(null, Validators.required),
     TitleCode: new FormControl(null),
     TitleName: new FormControl(null),

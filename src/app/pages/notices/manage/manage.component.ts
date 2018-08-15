@@ -123,10 +123,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        await this.setProductStore();
-        // await this.setOfficeStore();
-        await this.setStaffStore();
-        await this.setRegionStore();
+        // await this.setProductStore();
+        // // await this.setOfficeStore();
+        // await this.setStaffStore();
+        // await this.setRegionStore();
 
         this.preloader.setShowPreloader(false);
     }
@@ -223,6 +223,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeTime: new FormControl(null, Validators.required),
             NoticeDue: new FormControl(null, Validators.required),
             NoticeDueDate: new FormControl(null, Validators.required),
+            NoticeDueTime: new FormControl(null),
             GroupNameDesc: new FormControl('N/A'),
             CommunicationChanelID: new FormControl(null, Validators.required),
             DataSource: new FormControl(null),
@@ -301,10 +302,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             await res.NoticeInformer.map(item => {
                 this.isConceal = item.InformerType === 1 ? true : false;
-                item.FullName = item.TitleName == null ? '' : `${item.TitleName}`;
-                item.FullName += item.FirstName == null ? '' : ` ${item.FirstName}`;
-                item.FullName += item.LastName == null ? '' : ` ${item.LastName}`;
-                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
+                item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
+                item.Region += item.District == null ? '' : `${item.District}`;
+                item.Region += item.Province == null ? '' : `${item.Province}`;
             });
 
             await res.NoticeSuspect.map(item =>
@@ -325,7 +325,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onCreate() {
-        debugger
+
         if (!this.noticeForm.valid) {
             this.isRequired = true;
             alert(Message.checkData)
@@ -341,6 +341,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeInformer.map(item => {
             item.InformerType = item.InformerType === true ? 1 : 0;
         });
+
         // console.log(JSON.stringify(this.noticeForm.value));
 
         await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
@@ -507,6 +508,22 @@ export class ManageComponent implements OnInit, OnDestroy {
             )
     }
 
+    addNoticeDueDate(e: any) {
+        if (!this.noticeForm.value.NoticeDate) {
+            this.noticeForm.patchValue({
+                NoticeDate: toLocalNumeric((new Date()).toISOString())
+            })
+        }
+        let noticeDate = new Date(this.noticeForm.value.NoticeDate)
+        let noticeTime = this.noticeForm.value.NoticeTime;
+        let dueDate = e.value == '' ? 0 : e.value;
+        noticeDate.setDate(noticeDate.getDate() + parseInt(dueDate));
+        this.noticeForm.patchValue({
+            NoticeDueDate: toLocalNumeric(noticeDate.toISOString()),
+            NoticeDueTime: noticeTime
+        })
+    }
+
     searchRegion = (text3$: Observable<string>) =>
         text3$
             .debounceTime(300)
@@ -542,17 +559,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
-
-    // serachOffice = (text3$: Observable<string>) =>
-    //     text3$
-    //         .debounceTime(200)
-    //         .distinctUntilChanged()
-    //         .map(term => term === '' ? []
-    //             : this.typeheadOffice
-    //                 .filter(v =>
-    //                     v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-    //                     v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1
-    //                 ).slice(0, 10));
 
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
