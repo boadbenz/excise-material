@@ -758,6 +758,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     changeNoticeDoc(e: any, index: number) {
+        debugger
         let reader = new FileReader();
         let file = e.target.files[0];
         let fileName: string = file.name;

@@ -460,7 +460,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
                         <div class="input-group-append">
-                            <input id="communicateAttach" type="file" (change)="changeComunicateFile($event)" hidden [readonly]="showEditField">
+                            <input id="communicateAttach" type="file" (change)="changeComunicateFile($event)" hidden [attr.disabled]="showEditField ? '' : null">
                             <label for="communicateAttach" class="input-group-text custom-file-upload text-secondary">
                                 <i class="ti-more-alt"></i>
                             </label>
@@ -493,8 +493,8 @@
                     </tr>
                 </thead>
                 <tbody formArrayName="NoticeDocument">
-                    <tr *ngFor="let item of NoticeDocument.controls; let i=index;" [formGroupName]="i">
-                        <td class="text-center">{{i+1}}</td>
+                    <tr *ngFor="let item of NoticeDocument.controls; let j=index;" [formGroupName]="j">
+                        <td class="text-center">{{j+1}}</td>
                         <td>
                             <input type="text" formControlName="DocumentName" class="form-control form-control-sm" [readonly]="showEditField">
                         </td>
@@ -502,15 +502,15 @@
                             <div class="input-group">
                                 <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
                                 <div class="input-group-append">
-                                    <input id="noticeAttach" type="file" (change)="changeNoticeDoc($event, i)" hidden>
-                                    <label for="noticeAttach" class="input-group-text custom-file-upload text-secondary">
+                                    <input [id]="'noticeAttach'+j" type="file" (input)="changeNoticeDoc($event, j)" hidden [attr.disabled]="showEditField ? '' : null">
+                                    <label [for]="'noticeAttach'+j" class="input-group-text custom-file-upload text-secondary">
                                         <i class="ti-more-alt"></i>
                                     </label>
                                 </div>
                             </div>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteDocument(item.get('DocumentID').value, i)">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteDocument(item.get('DocumentID').value, j)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>

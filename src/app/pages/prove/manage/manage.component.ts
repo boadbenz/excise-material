@@ -13,7 +13,7 @@ import { MatAutocomplete } from '@angular/material';
 import { ProveStaff } from '../proveStaff';
 import { ProveScience } from '../proveScience';
 import { ProveProduct } from '../proveProduct';
-import { Message } from 'app/config/message';
+import { Message } from '../../../config/message';
 
 @Component({
     selector: 'app-manage',

@@ -1,12 +1,12 @@
-import { pagination } from "app/config/pagination";
+import { pagination } from "../../../config/pagination";
 import { NgForm } from "@angular/forms";
-import { Message } from "app/config/message";
-import { LawsuitService } from "./../lawsuit.service";
-import { NavigationService } from "./../../../shared/header-navigation/navigation.service";
+import { Message } from "../../../config/message";
+import { LawsuitService } from "../lawsuit.service";
+import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { Router } from "@angular/router";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
-import { toLocalShort } from "app/config/dateFormat";
+import { toLocalShort } from "../../../config/dateFormat";
 
 @Component({
   selector: "app-list",
