@@ -3,6 +3,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { appConfig } from '../../app.config';
 import { Prove } from './prove';
 import { ProveDocument } from './proveDoc';
+import { ProveProduct } from './proveProduct';
 
 @Injectable()
 export class ProveService {
@@ -73,6 +74,55 @@ export class ProveService {
     }
   }
 
+  async ProveProductinsAll(oProduct: ProveProduct): Promise<any> {
+    debugger
+    const params = JSON.stringify(oProduct);
+    const url = `${appConfig.api8882}/ProveProductinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async ProveProductupdByCon(oProduct: ProveProduct): Promise<any> {
+    const params = JSON.stringify(oProduct);
+    const url = `${appConfig.api8882}/ProveProductupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async ProveProductupdDelete(oProduct: ProveProduct): Promise<any> {
+    const params = JSON.stringify(oProduct);
+    const url = `${appConfig.api8882}/ProveProductupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async ProveupdDelete(ProveID: string): Promise<any> {
+    const params = { ProveID };
+    const url = `${appConfig.api8882}/ProveupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
   async ProveupdByCon(oProve: Prove): Promise<any> {
     const params = JSON.stringify(oProve);
     const url = `${appConfig.api8882}/ProveupdByCon`;
@@ -84,6 +134,7 @@ export class ProveService {
       await alert(error);
     }
   }
+  
 
   async ProvegetByCon(ProveID: string): Promise<any> {
     const params = { ProveID };
@@ -98,8 +149,21 @@ export class ProveService {
   }
 
   async DocumentinsAll(oPD: ProveDocument): Promise<any> {
+    debugger
     const params = JSON.stringify(oPD);
     const url = `${appConfig.api8882}/DocumentinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async DocumentgetByCon(ReferenceCode: string): Promise<any> {
+    const params = { ReferenceCode };
+    const url = `${appConfig.api8882}/DocumentgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
