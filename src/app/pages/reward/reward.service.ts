@@ -36,7 +36,7 @@ export class RewardService {
         const params = {
             ArrestCode: arrestCode
         };
-        return this.httpClient.post<RewardArrest>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
+        return this.httpClient.post<any>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
     }
 
     getRequestbribegetByKeyword(text: string) {

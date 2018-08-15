@@ -6,7 +6,7 @@ import {RewardService} from '../reward.service';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
-import {RewardArrest} from "../reward-arrest";
+import {RewardArrest} from '../reward-arrest';
 
 @Component({
     selector: 'app-manage',
@@ -20,7 +20,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     sub: any;
     courtCase = '';
     test = 'ส่งฟ้องศาล';
-    arrest: RewardArrest = new RewardArrest();
+    arrest: any = {};
 
     showEditField: any;
     queryParam: any;
@@ -86,6 +86,31 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.activeRoute.params.subscribe(param => {
             this.rewardService.getArrestRequestgetByCon(this.queryParam.arrestCode).subscribe(response => {
+                console.log(response);
+
+                // ArrestLocale
+                if (response.ArrestLocale.length !== 0) {
+                    response.ArresLocaltion = (response.ArrestLocale[0].SubDistrict + ' ' +
+                        response.ArrestLocale[0].District + ' ' + response.ArrestLocale[0].Province)
+                } else {
+                    response.ArresLocaltion = '';
+                }
+
+                // Lawsuit
+                if (response.ArrestIndicment.length !== 0) {
+                    if (response.ArrestIndicment[0].Lawsuit.length !== 0) {
+                        response.LawsuitCode = (response.ArrestIndicment[0].Lawsuit[0].LawsuitNo);
+                        const dateSplit = response.ArrestIndicment[0].Lawsuit[0].LawsuitDate.split(' ');
+                        response.LawsuitDate = (dateSplit[0]);
+                        response.LawsuitTime = (dateSplit[1]);
+                    }
+                } else {
+                    response.LawsuitCode = '';
+                    response.LawsuitDate = '';
+                    response.LawsuitTime = '';
+                }
+
+
                 this.arrest = response;
             });
             this.rewardService.getRequestbribegetByCon(this.queryParam).subscribe(response => {

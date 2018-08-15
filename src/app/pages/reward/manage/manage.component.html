@@ -96,7 +96,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">สถานที่จับกุม : </label>
                         <div class="col-md-8">
-                            <input class="form-control" type="text" name="allegationSubject" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.ArresLocaltion" name="allegationSubject" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
                         <div class="col-md-8">
-                            <input class="form-control" type="text" [(ngModel)]="arrest.LawsuitID" name="allegationCode" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.LawsuitCode" name="allegationCode" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                         </div>
                         <label class="col-form-label text-center col-md-2">เวลา</label>
                         <div class="col-md-3">
-                            <input class="form-control" type="text" name="lawsuitTime" [disabled]="showEditField">
+                            <input class="form-control" type="text" [(ngModel)]="arrest.LawsuitTime" name="lawsuitTime" [disabled]="showEditField">
                         </div>
                     </div>
                 </div>
