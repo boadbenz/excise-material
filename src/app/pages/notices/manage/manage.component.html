@@ -22,9 +22,6 @@
                     [readonly]="showEditField"                    
                     (change)="addNoticeDueDate(noticeDue)"
                     [ngClass]="{'ng-touched':isRequired}" required>
-                    <!-- <input class="form-control form-control-sm" placeholder="ปปปป-ดด-วว" 
-                    formControlName="NoticeDate" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()"
-                    [ngClass]="{'ng-touched':isRequired}" required> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input #noticeTime type="text" formControlName="NoticeTime" class="form-control form-control-sm" 
@@ -35,8 +32,6 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
-                    
-                        <!--  -->
                     <div class="form-group ">
                         <input #noticeDue type="number" min="0" formControlName="NoticeDue" class="form-control form-control-sm" 
                         (keyup)="addNoticeDueDate(noticeDue)"
@@ -134,7 +129,8 @@
                     </label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" class="form-control form-control-sm" formControlName="FirstName" [readonly]="showEditField">
+                            <input type="text" class="form-control form-control-sm" formControlName="FirstName" [attr.disabled]="isConceal ? '' : null"
+                            [readonly]="showEditField">
                         </div>
                     </div>
 
@@ -209,7 +205,7 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียดแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" 
-                        [attr.disabled]="isConceal ? '' : null" [readOnly]="showEditField"></textarea>
+                        [readOnly]="showEditField"></textarea>
                     </div>
                 </div>
 
@@ -335,13 +331,13 @@
                             <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
-                            <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                            <!-- <select formControlName="QtyUnit" class="form-control form-control-sm">
+                            <!-- <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required> -->
+                            <select formControlName="QtyUnit" class="form-control form-control-sm">
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of dutyUnitModel;"
+                                <option *ngFor="let item of typeheadProductUnit;"
                                 [disabled]="showEditField" 
-                                [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
-                            </select> -->
+                                [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                            </select>
                         </td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteProduct(item.get('ProductID').value, i)">

@@ -33,6 +33,8 @@ import {
     MasSubdistrictModel,
     MasStaffModel
 } from '../../../models';
+import { ProveService } from '../../prove/prove.service';
+import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
 
 @Component({
     selector: 'app-manage',
@@ -69,6 +71,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadProduct = new Array<MasProductModel>();
     typeheadOffice = new Array<MasOfficeModel>();
     typeheadStaff = new Array<MasStaffModel>();
+    typeheadProductUnit = new Array<MasDutyProductUnitModel>();
 
     get NoticeStaff(): FormArray {
         return this.noticeForm.get('NoticeStaff') as FormArray;
@@ -104,7 +107,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ngbModel: NgbModal,
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
-        private arrestService: ArrestsService
+        private arrestService: ArrestsService,
+        private proveService: ProveService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -123,10 +127,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        // await this.setProductStore();
-        // // await this.setOfficeStore();
-        // await this.setStaffStore();
-        // await this.setRegionStore();
+        await this.setProductStore();
+        await this.setStaffStore();
+        await this.setRegionStore();
+        await this.setProductUnitStore();
 
         this.preloader.setShowPreloader(false);
     }
@@ -303,8 +307,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             await res.NoticeInformer.map(item => {
                 this.isConceal = item.InformerType === 1 ? true : false;
                 item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
-                item.Region += item.District == null ? '' : `${item.District}`;
-                item.Region += item.Province == null ? '' : `${item.Province}`;
+                item.Region += item.District == null ? '' : ` ${item.District}`;
+                item.Region += item.Province == null ? '' : ` ${item.Province}`;
             });
 
             await res.NoticeSuspect.map(item =>
@@ -455,21 +459,21 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    // private setOfficeStore() {
-    //     this.arrestService.masOfficegetAll().then(res =>
-    //         this.typeheadOffice = res
-    //     )
-    // }
-
-    private setStaffStore() {
-        this.arrestService.masStaffgetAll().then(res =>
+    private async setStaffStore() {
+        await this.arrestService.masStaffgetAll().then(res =>
             this.typeheadStaff = res
         )
     }
 
-    private setProductStore() {
-        this.arrestService.masProductgetAll().then(res => {
+    private async setProductStore() {
+        await this.arrestService.masProductgetAll().then(res => {
             this.typeheadProduct = res;
+        })
+    }
+
+    private async setProductUnitStore() {
+        await this.proveService.getProveProductUnit('').then(res => {
+            this.typeheadProductUnit = res;
         })
     }
 
@@ -511,7 +515,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     addNoticeDueDate(e: any) {
         if (!this.noticeForm.value.NoticeDate) {
             this.noticeForm.patchValue({
-                NoticeDate: toLocalNumeric((new Date()).toISOString())
+                NoticeDate: toLocalNumeric((new Date()).toISOString()),
+                NoticeTime: `${(new Date).getHours()}.${(new Date).getMinutes()} น.`
             })
         }
         let noticeDate = new Date(this.noticeForm.value.NoticeDate)
@@ -758,7 +763,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     changeNoticeDoc(e: any, index: number) {
-        debugger
         let reader = new FileReader();
         let file = e.target.files[0];
         let fileName: string = file.name;
