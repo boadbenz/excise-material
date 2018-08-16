@@ -305,10 +305,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             )
 
             await res.NoticeInformer.map(item => {
-                this.isConceal = item.InformerType === 1 ? true : false;
+                this.isConceal = item.InformerType == 1 ? true : false;
                 item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
                 item.Region += item.District == null ? '' : ` ${item.District}`;
                 item.Region += item.Province == null ? '' : ` ${item.Province}`;
+                console.log(item.InformerType);
+                
             });
 
             await res.NoticeSuspect.map(item =>
@@ -326,10 +328,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
         })
 
-        await this.noticeService.getDocument(code).then(async res => {
-            res.map(item => item.IsNewItem = false)
-            await this.setItemFormArray(res, 'NoticeDocument')
-        })
+        // await this.noticeService.getDocument(code).then(async res => {
+        //     res.map(item => item.IsNewItem = false)
+        //     await this.setItemFormArray(res, 'NoticeDocument')
+        // })
     }
 
     private async onCreate() {
@@ -348,7 +350,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeDate = noticeDate.toISOString();
         this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
         this.noticeForm.value.NoticeInformer.map(item => {
-            item.InformerType = item.InformerType === true ? 1 : 0;
+            item.InformerType = item.InformerType == true ? 1 : 0;
         });
 
         // console.log(JSON.stringify(this.noticeForm.value));
@@ -393,7 +395,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeDate = noticeDate.toISOString();
         this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
         this.noticeForm.value.NoticeInformer.map(item => {
-            item.InformerType = item.InformerType === true ? 1 : 0;
+            console.log(item.InformerType);
+            
+            item.InformerType = item.InformerType == true ? 1 : 0;
         });
 
         // console.log(this.noticeForm.value);

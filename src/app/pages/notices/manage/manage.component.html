@@ -115,9 +115,8 @@
 
                 <div class="row form-group">
                     <div class="col">
-                        <input *ngIf="showEditField" type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
-                            disabled>
-                        <input *ngIf="!showEditField" type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
+                        <input [attr.disabled]="showEditField ? '' : null" 
+                        type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
                             (change)="onChangeConceal()">
                         <label for="md_checkbox_25">สายลับขอปิดนาม</label>
                     </div>
