@@ -278,8 +278,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getByCon(code: string) {
-        this.noticeService.getByCon(code).then(async res => {
+    private async getByCon(code: string) {
+        await this.noticeService.getByCon(code).then(async res => {
             this.noticeCode = res.NoticeCode;
             this.arrestCode = res.ArrestCode;
             await this.noticeForm.reset({
@@ -324,7 +324,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
             await this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
             await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
-            await this.setItemFormArray(res.NoticeDocument, 'NoticeDocument')
+        })
+
+        await this.noticeService.getDocument(code).then(async res => {
+            res.map(item => item.IsNewItem = false)
+            await this.setItemFormArray(res, 'NoticeDocument')
         })
     }
 
@@ -335,6 +339,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             alert(Message.checkData)
             return false;
         }
+
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
@@ -348,14 +353,28 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         // console.log(JSON.stringify(this.noticeForm.value));
 
+        let IsSuccess: boolean | false;
         await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
-            if (isSuccess) {
-                alert(Message.saveComplete)
-                this.router.navigate(['/notice/manage', 'R', this.noticeCode]);
-            } else {
-                alert(Message.saveFail)
-            }
+            IsSuccess = isSuccess;
+            if (!isSuccess)
+                return;
+
+            this.NoticeDocument.value.map(async doc => {
+                // insert Document
+                await this.noticeService.insDocument(doc).then(docIsSuccess => {
+                    IsSuccess = docIsSuccess;
+                    if (!docIsSuccess)
+                        return;
+                })
+            })
         });
+
+        if (IsSuccess) {
+            alert(Message.saveComplete)
+            this.router.navigate(['/notice/manage', 'R', this.noticeCode]);
+        } else {
+            alert(Message.saveFail)
+        }
 
         this.preloader.setShowPreloader(false);
     }
@@ -378,15 +397,29 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         // console.log(this.noticeForm.value);
-
+        let IsSuccess: boolean | false;
         await this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
-            if (isSuccess) {
-                alert(Message.saveComplete)
-                this.onComplete()
-            } else {
-                alert(Message.saveFail)
-            }
+            IsSuccess = isSuccess;
+            if (!isSuccess)
+                return;
+
+            this.NoticeDocument.value
+                .filter((item: NoticeDocument) => item.IsNewItem = true)
+                .map((item: NoticeDocument) => {
+                    this.noticeService.updDocument(item).then(docIsSuccess => {
+                        IsSuccess = docIsSuccess
+                        if (!docIsSuccess)
+                            return;
+                    })
+                })
         })
+
+        if (IsSuccess) {
+            alert(Message.saveComplete)
+            this.onComplete()
+        } else {
+            alert(Message.saveFail)
+        }
 
         this.preloader.setShowPreloader(false);
     }
@@ -590,7 +623,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     selectItemLocaleRegion(ele: any) {
         this.NoticeLocale.at(0).patchValue({
-            SubDistrictCode: ele.item.SubDistrictCode,
+            SubdistrictCode: ele.item.SubDistrictCode,
             SubDistrict: ele.item.SubDistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
@@ -706,7 +739,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
 
-                await this.noticeService.suspectupdDelete(id).then(isSuccess => {
+                await this.noticeService.documentUpDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
                         this.NoticeSuspect.removeAt(index);
                         alert(Message.delDocumentComplete)

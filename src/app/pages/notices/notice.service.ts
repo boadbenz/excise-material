@@ -76,7 +76,7 @@ export class NoticeService {
         return res.ResponseData
     }
 
-    async getDocument(ReferenceCode: string): Promise<any> {
+    async getDocument(ReferenceCode: string): Promise<NoticeDocument[]> {
         const params = { ReferenceCode };
         const url = `${appConfig.api8882}/DocumentgetByCon`;
         return this.resposePromisGet(JSON.stringify(params), url)
