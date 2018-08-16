@@ -29,14 +29,14 @@ export class RewardService {
     }
 
     getArrestRequestgetByConAdv(reward: Reward) {
-        return this.httpClient.post(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
+        return this.httpClient.post<any[]>(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
     }
 
     getArrestRequestgetByCon(arrestCode: string) {
         const params = {
             ArrestCode: arrestCode
         };
-        return this.httpClient.post<RewardArrest>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
+        return this.httpClient.post<any>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
     }
 
     getRequestbribegetByKeyword(text: string) {
