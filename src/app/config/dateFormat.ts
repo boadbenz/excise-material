@@ -6,7 +6,7 @@ export function toLocalNumeric(date: string): string {
     const _date = new Date(date)
     const dd = _date.getDate();
     const mm = _date.getMonth() + 1;
-    const yyyy = _date.getFullYear() + 543;
+    const yyyy = _date.getFullYear();
 
     const _dd = dd < 10 ? '0' + dd : dd;
     const _mm = mm < 10 ? '0' + mm : mm;

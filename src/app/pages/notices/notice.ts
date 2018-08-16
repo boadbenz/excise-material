@@ -13,6 +13,7 @@ export class Notice {
     public NoticeTime: string;
     public NoticeDue: string;
     public NoticeDueDate: string;
+    public NoticeDueTime: string;
     public GroupNameDesc: string;
     public CommunicationChanelID: string;
     public DataSource: string;

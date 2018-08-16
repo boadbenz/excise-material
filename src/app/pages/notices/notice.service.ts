@@ -6,6 +6,7 @@ import { NoticeProduct } from './notice-product';
 import { Observable } from 'rxjs/Observable';
 import { Http, } from '@angular/http';
 import { Message } from '../../config/message';
+import { NoticeDocument } from './notice-document';
 
 @Injectable()
 export class NoticeService {
@@ -75,15 +76,33 @@ export class NoticeService {
         return res.ResponseData
     }
 
+    async getDocument(ReferenceCode: string): Promise<NoticeDocument[]> {
+        const params = { ReferenceCode };
+        const url = `${appConfig.api8882}/DocumentgetByCon`;
+        return this.resposePromisGet(JSON.stringify(params), url)
+    }
+
     insAll(Notice: Notice): Promise<any> {
         const params = Notice;
         const url = `${appConfig.api8082}/NoticeinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
+    insDocument(document: NoticeDocument[]): Promise<any> {
+        const params = document;
+        const url = `${appConfig.api8882}/DocumentinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
     updByCon(Notice: Notice): Promise<any> {
         const params = Notice;
         const url = `${appConfig.api8082}/NoticeupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    updDocument(document: NoticeDocument): Promise<any> {
+        const params = document;
+        const url = `${appConfig.api8882}/DocumentupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
@@ -147,4 +166,13 @@ export class NoticeService {
         return res.IsSuccess
     }
 
+    async documentUpDelete(DocumentID: string): Promise<any> {
+        const params = { DocumentID };
+        const url = `${appConfig.api8882}/DocumentupdDelete`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
+            return false;
+        }
+        return res.IsSuccess
+    }
 }

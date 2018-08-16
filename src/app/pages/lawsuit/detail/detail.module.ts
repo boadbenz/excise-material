@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Routes, RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import { LawsuitService } from "./../lawsuit.service";
+import { LawsuitService } from "../lawsuit.service";
 import { PaginationTableModule } from "../../component/pagination-table/pagination-table.module";
 import { DetailComponent } from "./detail.component";
 import { CardActionsModule } from "../../component/card-actions/card-actions.module";

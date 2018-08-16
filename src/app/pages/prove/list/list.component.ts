@@ -6,7 +6,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { HttpErrorResponse } from '@angular/common/http';
 import { Message } from '../../../config/message';
 import { pagination } from '../../../config/pagination';
-import { NgForm, FormBuilder } from '../../../../../node_modules/@angular/forms';
+import { NgForm, FormBuilder } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 @Component({

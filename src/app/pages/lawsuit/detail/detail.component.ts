@@ -1,17 +1,17 @@
-import { Message } from './../../../config/message';
-import { toLocalNumeric } from 'app/config/dateFormat';
-import { MasLawGroupSection } from './../models/mas_law_group_section';
-import { ArrestLawbreaker } from "./../../arrests/arrest-lawbreaker";
-import { MasLawPenalty } from "./../models/mas_law_penalty";
-import { Arrest } from "./../../arrests/arrest";
-import { MasLawGuitBase } from "./../models/mas_law_guitbase";
-import { LawsuitService } from "./../lawsuit.service";
+import { Message } from '../../../config/message';
+import { toLocalNumeric } from '../../../config/dateFormat';
+import { MasLawGroupSection } from '../models/mas_law_group_section';
+import { ArrestLawbreaker } from "../../arrests/arrest-lawbreaker";
+import { MasLawPenalty } from "../models/mas_law_penalty";
+import { Arrest } from "../../arrests/arrest";
+import { MasLawGuitBase } from "../models/mas_law_guitbase";
+import { LawsuitService } from "../lawsuit.service";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Lawsuit } from "../models/lawsuit";
 import { LawsuitDocument } from "../models/lawsuit_document";
-import { NgbModal } from "../../../../../node_modules/@ng-bootstrap/ng-bootstrap";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-detail",

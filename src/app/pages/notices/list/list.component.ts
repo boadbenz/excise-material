@@ -84,25 +84,24 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async onAdvSearch(form: any) {
 
-        if (!form.valid) {
-            this.isRequired = true;
-            return false;
-        }
+        if (form.value.DateStartFrom && form.value.DateStartTo) {
+            const sDateCompare = new Date(form.value.DateStartFrom);
+            const eDateCompare = new Date(form.value.DateStartTo);
 
-        const sDateCompare = new Date(form.value.DateStartFrom);
-        const eDateCompare = new Date(form.value.DateStartTo);
-
-        if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-            alert(Message.checkDate);
-        } else {
-            this.preLoaderService.setShowPreloader(true);
+            if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+                alert(Message.checkDate);
+                return false;
+            }
 
             form.value.DateStartFrom = sDateCompare.toISOString();
             form.value.DateStartTo = eDateCompare.toISOString();
-            await this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
-
-            this.preLoaderService.setShowPreloader(false);
         }
+
+        this.preLoaderService.setShowPreloader(true);
+
+        await this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
     async onSearchComplete(list: Notice[]) {

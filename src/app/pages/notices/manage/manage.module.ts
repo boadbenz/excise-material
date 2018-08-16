@@ -13,6 +13,7 @@ import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 import { DatepickerI18nService } from '../../../services/datepicker-i18n.service';
+import { ProveService } from '../../prove/prove.service';
 
 const routes: Routes = [
     {
@@ -48,7 +49,8 @@ const routes: Routes = [
     ], providers: [
         { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },
         NoticeService,
-        ArrestsService
+        ArrestsService,
+        ProveService
     ]
 })
 export class ManageModule { }

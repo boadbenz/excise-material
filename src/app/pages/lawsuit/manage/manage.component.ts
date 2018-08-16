@@ -1,5 +1,5 @@
-import { MasLawGuitBase } from "./../models/mas_law_guitbase";
-import { MasLawGroupSection } from "./../models/mas_law_group_section";
+import { MasLawGuitBase } from "../models/mas_law_guitbase";
+import { MasLawGroupSection } from "../models/mas_law_group_section";
 import { toLocalShort } from "../../../config/dateFormat";
 import { LawsuitService } from "../lawsuit.service";
 import { Lawsuit } from "../models/lawsuit";
