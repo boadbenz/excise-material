@@ -29,11 +29,13 @@ export class AllegationModalComponent implements OnInit {
     @Input() lawbreaker = new Array<ArrestLawbreaker>();
     @Input() product = new Array<ArrestProduct>();
     @Input() indicment = new Array<ArrestIndictment>();
-    @Input() isEditIndictment: boolean | false;
+    @Input() isEditIndicment: boolean | false;
+    @Input() indicmentIndex: number;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
-    @Output() outPutIndicment = new EventEmitter<ArrestIndictment[]>();
+    @Output() setIndicment = new EventEmitter<ArrestIndictment[]>();
+    @Output() patchIndicment = new EventEmitter<ArrestIndictment>();
 
     get LawGroupSection(): FormArray {
         return this.lawGroupFG.get('LawGroupSection') as FormArray
@@ -56,7 +58,7 @@ export class AllegationModalComponent implements OnInit {
             IndictmentLawbreaker: this.fb.array([])
         })
 
-        console.log(this.isEditIndictment ? this.indicment : null);
+        // console.log(this.isEditIndictment ? this.indicment : null);
         
 
         let _indictmentLawbreaker = new Array<IndictmentLawbreaker>()
@@ -136,7 +138,7 @@ export class AllegationModalComponent implements OnInit {
     }
 
     dismiss(e: any) {
-        this.isEditIndictment = false;
+        this.isEditIndicment = false;
         this.d.emit(e);
     }
 
@@ -177,8 +179,8 @@ export class AllegationModalComponent implements OnInit {
             })
         })
         
-        this.outPutIndicment.emit(_indicment);
-        this.isEditIndictment = false;
+        this.setIndicment.emit(_indicment);
+        this.isEditIndicment = false;
         this.c.emit(e);
     }
 

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { toLocalNumeric } from '../../../config/dateFormat';
+import { toLocalNumeric, setZero, resetLocalNumeric } from '../../../config/dateFormat';
 import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
@@ -25,15 +25,17 @@ import 'rxjs/add/operator/switchMap';
 import { MasOfficeModel } from '../../../models/mas-office.model';
 import { Notice } from '../../notices/notice';
 import {
-    MasProductModel, 
-    MasProvinceModel, 
-    MasDistrictModel, 
-    MasSubdistrictModel, 
-    RegionModel, 
-    MasStaffModel, 
-    LawbreakerTypes, 
+    MasProductModel,
+    MasProvinceModel,
+    MasDistrictModel,
+    MasSubdistrictModel,
+    RegionModel,
+    MasStaffModel,
+    LawbreakerTypes,
     EntityTypes
 } from '../../../models'
+import { ProveService } from '../../prove/prove.service';
+import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
 
 @Component({
     selector: 'app-manage',
@@ -59,6 +61,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadStaff = new Array<MasStaffModel>();
     typeheadRegion = new Array<RegionModel>();
     typeheadProduct = new Array<MasProductModel>();
+    typeheadQtyUnit = new Array<MasDutyProductUnitModel>();
+    typeheadNetVolumeUnit = new Array<MasDutyProductUnitModel>();
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
@@ -111,6 +115,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private ngbModel: NgbModal,
         private arrestService: ArrestsService,
+        private proveService: ProveService,
         public router: Router,
         private sidebarService: SidebarService,
         private preloader: PreloaderService
@@ -131,11 +136,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.active_route();
         this.navigate_Service();
-        this.createForm();        
+        this.createForm();
 
         await this.setStaffStore()
         await this.setOfficeStore()
         await this.setProductStore()
+        await this.setProductUnitStore()
         await this.setRegionStore()
 
         this.preloader.setShowPreloader(false);
@@ -151,12 +157,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private createForm() {
+        let ArrestDate = this.mode == 'C' ? toLocalNumeric((new Date()).toISOString()) : null;
+        let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
+        // let OccurrenceDate = ArrestDate;
         this.arrestFG = this.fb.group({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
-            ArrestDate: new FormControl(null, Validators.required),
-            ArrestTime: new FormControl(null, Validators.required),
-            OccurrenceDate: new FormControl(null, Validators.required),
-            OccurrenceTime: new FormControl(null, Validators.required),
+            ArrestDate: new FormControl(ArrestDate, Validators.required),
+            ArrestTime: new FormControl(ArrestTime, Validators.required),
+            OccurrenceDate: new FormControl(ArrestDate, Validators.required),
+            OccurrenceTime: new FormControl(ArrestTime, Validators.required),
             ArrestStationCode: new FormControl(null, Validators.required),
             ArrestStation: new FormControl(null, Validators.required),
             HaveCulprit: new FormControl(0),
@@ -250,6 +259,29 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
+
+                if (!this.arrestFG.valid) {
+                    this.isRequired = true;
+                    alert(Message.checkData)
+                    return false;
+                }
+        
+                if (!this.ArrestLawbreaker.length) {
+                    alert(Message.checkData)
+                    return false;
+                }
+
+                const sDateCompare = new Date(resetLocalNumeric(this.arrestFG.value.ArrestDate));
+                const eDateCompare = new Date(resetLocalNumeric(this.arrestFG.value.OccurrenceDate));
+
+                if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+                    alert(Message.checkDate);
+                    return false;
+                }
+        
+                this.arrestFG.value.ArrestDate = sDateCompare.toISOString()
+                this.arrestFG.value.OccurrenceDate = eDateCompare.toISOString();
+
                 if (this.mode === 'C') {
                     this.onCreate();
 
@@ -288,23 +320,27 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private setOfficeStore() {
-        this.arrestService.masOfficegetAll().then(res =>
+    private async setOfficeStore() {
+        await this.arrestService.masOfficegetAll().then(res =>
             this.typeheadOffice = res
         )
     }
 
-    private setProductStore() {
-        this.arrestService.masProductgetAll().then(res => {
+    private async setProductStore() {
+        await this.arrestService.masProductgetAll().then(res => {
             this.typeheadProduct = res;
-            // res.map(item => {
-            //     this.store.dispatch(new ProductActions.AddProduct(item))
-            // })
         })
     }
 
-    private setStaffStore() {
-        this.arrestService.masStaffgetAll().then(res =>
+    private async setProductUnitStore() {
+        await this.proveService.getProveProductUnit('').then(res => {
+            this.typeheadQtyUnit = res;
+            this.typeheadNetVolumeUnit = res;
+        })
+    }
+
+    private async setStaffStore() {
+        await this.arrestService.masStaffgetAll().then(res =>
             this.typeheadStaff = res
         )
     }
@@ -350,7 +386,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.arrestFG.reset({
                 ArrestCode: res.ArrestCode,
                 ArrestDate: toLocalNumeric(res.ArrestDate),
-                ArrestTime: toLocalNumeric(res.ArrestTime),
+                ArrestTime: res.ArrestTime,
                 OccurrenceDate: toLocalNumeric(res.OccurrenceDate),
                 OccurrenceTime: res.OccurrenceTime,
                 ArrestStationCode: res.ArrestStationCode,
@@ -428,34 +464,19 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setItemFormArray(res.ArrestProduct, 'ArrestProduct');
             this.setItemFormArray(res.ArrestDocument, 'ArrestDocument');
 
-            this.addIndictment(res.ArrestIndictment);
+            this.addIndicment(res.ArrestIndictment);
             console.log(res.ArrestIndictment);
-            
+
         })
     }
 
     private async onCreate() {
 
+        this.preloader.setShowPreloader(true);
+
         console.log('====================================');
         console.log(JSON.stringify(this.arrestFG.value));
         console.log('====================================');
-
-        if (!this.arrestFG.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
-
-        if (!this.ArrestLawbreaker.length) {
-            alert(Message.checkData)
-            return false;
-        }
-
-        this.preloader.setShowPreloader(true);
-        const arrestDate = new Date(this.arrestFG.value.ArrestDate);
-        const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
-        this.arrestFG.value.ArrestDate = arrestDate.toISOString()
-        this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
         let isSuccess: boolean | false;
 
         // ___1.บันทึกข้อมูลจับกุม
@@ -532,22 +553,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onReviced() {
 
-        if (!this.arrestFG.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
-
-        if (!this.ArrestLawbreaker.length) {
-            alert(Message.checkData)
-            return false;
-        }
-
         this.preloader.setShowPreloader(true);
-        const arrestDate = new Date(this.arrestFG.value.ArrestDate);
-        const occurrenceDate = new Date(this.arrestFG.value.OccurrenceDate)
-        this.arrestFG.value.ArrestDate = arrestDate.toISOString()
-        this.arrestFG.value.OccurrenceDate = occurrenceDate.toISOString();
 
         console.log('====================================');
         console.log(JSON.stringify(this.arrestFG.value));
@@ -659,17 +665,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setCancelButton(false);
     }
 
-    // private deleteTableRow(form: FormArray, indexForm: number) {
-    //     if (this.mode === 'C') {
-    //         form.removeAt(indexForm);
-
-    //     } else if (this.mode === 'R') {
-    //         if (confirm(Message.confirmAction)) {
-    //             form.removeAt(indexForm);
-    //         }
-    //     }
-    // }
-
     setNoticeForm(notice: Notice) {
         this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
 
@@ -701,16 +696,19 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     openModal(e) {
         this.modal = this.modelService.open(e, { size: 'lg', centered: true });
-        this.isEditIndictment = false;
+        this.isEditIndicment = false;
+        this.indicmentIndex = null;
     }
 
     indictmentModal: ArrestIndictment;
-    isEditIndictment: boolean | false;
+    isEditIndicment: boolean | false;
+    indicmentIndex: number | null;
     editAllegation(index: number, e: any) {
         this.modal = this.modelService.open(e, { size: 'lg', centered: true });
         this.indictmentModal = new ArrestIndictment();
-        this.isEditIndictment = true;
-        this.indictmentModal = this.ArrestIndictment.at(index).value;
+        this.isEditIndicment = true;
+        this.indicmentIndex = index;
+        // this.indictmentModal = this.ArrestIndictment.at(index).value;
     }
 
     addLawbreaker(e: ArrestLawbreaker[]) {
@@ -753,7 +751,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     }
 
-    addIndictment(e: ArrestIndictment[]) {
+    addIndicment(e: ArrestIndictment[]) {
 
         e.map(async item => {
             let indictDetail = [];
@@ -805,9 +803,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             })
 
             console.log(FG);
-            
+
             this.ArrestIndictment.push(FG);
         })
+    }
+
+    patchIndicment(e: ArrestIndictment) {
+
     }
 
     addDocument() {
@@ -1021,10 +1023,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ArrestProduct.at(i).patchValue({
             IsNewItem: true,
             ArrestCode: this.arrestCode,
-            Qty: e.item.Size,
-            QtyUnit: e.item.SizeCode,
-            NetVolume: null,
-            NetVolumeUnit: e.item.SizeUnitCode
+            // Qty: e.item.Size,
+            // QtyUnit: e.item.SizeCode,
+            // NetVolume: null,
+            // NetVolumeUnit: e.item.SizeUnitCode
         })
     }
 
