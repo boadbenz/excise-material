@@ -15,6 +15,7 @@ import { productReducer } from '../../../reducers/product.reducer';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalNoticeModule } from '../../component/modal-notice/modal-notice.module';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
+import { ProveService } from '../../prove/prove.service';
 
 const routes: Routes = [
   {
@@ -54,6 +55,6 @@ const routes: Routes = [
   declarations: [
     ManageComponent
   ],
-  providers: [ArrestsService]
+  providers: [ArrestsService, ProveService]
 })
 export class ManageModule { }

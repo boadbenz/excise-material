@@ -15,6 +15,7 @@ import 'rxjs/add/operator/switchMap';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { ILawbreaker, Lawbreaker } from './lawbreaker.interface';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { NoticeService } from '../notice.service';
 
 
 @Component({
@@ -30,78 +31,15 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
         private preloader: PreloaderService,
         private navService: NavigationService,
         private fb: FormBuilder,
-        private arrestService: ArrestsService
+        private arrestService: ArrestsService,
+        private noticeService: NoticeService
     ) {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
     }
 
     LawbreakerItem: Lawbreaker;
-    LawbreakerFG: FormGroup = this.fb.group({
-        LawbreakerID: new FormControl(null),
-        EntityType: new FormControl(null),
-        CompanyTitleCode: new FormControl(null),
-        CompanyTitle: new FormControl(null),
-        CompanyName: new FormControl(null),
-        CompanyOtherName: new FormControl(null),
-        CompanyRegistrationNo: new FormControl(null),
-        CompanyLicenseNo: new FormControl(null),
-        FoundedDate: new FormControl(null),
-        LicenseDateForm: new FormControl(null),
-        LicenseDateTo: new FormControl(null),
-        TaxID: new FormControl(null),
-        ExciseRegNo: new FormControl(null),
-        LawbreakerType: new FormControl(null),
-        LawbreakerTitleCode: new FormControl(null),
-        LawbreakerTitleName: new FormControl(null),
-        LawbreakerFirstName: new FormControl(null),
-        LawbreakerMiddleName: new FormControl(null),
-        LawbreakerLastName: new FormControl(null),
-        LawbreakerOtherName: new FormControl(null),
-        LawbreakerDesc: new FormControl(null),
-        IDCard: new FormControl(null),
-        PassportNo: new FormControl(null),
-        VISAType: new FormControl(null),
-        PassportCountryCode: new FormControl(null),
-        PassportCountryName: new FormControl(null),
-        PassportDateIn: new FormControl(null),
-        PassportDateOut: new FormControl(null),
-        BirthDate: new FormControl(null),
-        GenderType: new FormControl(null),
-        BloodType: new FormControl(null),
-        NationalityCode: new FormControl(null),
-        NationalityNameTH: new FormControl(null),
-        RaceCode: new FormControl(null),
-        RaceName: new FormControl(null),
-        ReligionCode: new FormControl(null),
-        ReligionName: new FormControl(null),
-        MaritalStatus: new FormControl(null),
-        Career: new FormControl(null),
-        GPS: new FormControl(null),
-        Location: new FormControl(null),
-        Address: new FormControl(null),
-        Village: new FormControl(null),
-        Building: new FormControl(null),
-        Floor: new FormControl(null),
-        Room: new FormControl(null),
-        Alley: new FormControl(null),
-        Road: new FormControl(null),
-        SubDistrictCode: new FormControl(null),
-        SubDistrict: new FormControl(null),
-        DistrictCode: new FormControl(null),
-        District: new FormControl(null),
-        ProvinceCode: new FormControl(null),
-        Province: new FormControl(null),
-        ZipCode: new FormControl(null),
-        TelephoneNo: new FormControl(null),
-        Email: new FormControl(null),
-        FatherName: new FormControl(null),
-        MotherName: new FormControl(null),
-        Remarks: new FormControl(null),
-        LinkPhoto: new FormControl(null),
-        PhotoDesc: new FormControl(null),
-        IsActive: new FormControl(null),
-    });
+    LawbreakerFG: FormGroup;
 
     private subActivedRoute: any;
     private mode: any;
@@ -124,8 +62,10 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
-        await this.setRegionStore();
 
+        this.LawbreakerFG = this.createForm();
+
+        // await this.setRegionStore();
         this.active_route();
         this.navigate_service();
         this.preloader.setShowPreloader(false);
@@ -133,6 +73,74 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subActivedRoute.unsubscribe();
+    }
+
+    private createForm(): FormGroup {
+        return new FormGroup({
+            LawbreakerID: new FormControl(null),
+            EntityType: new FormControl(null),
+            CompanyTitleCode: new FormControl(null),
+            CompanyTitle: new FormControl(null),
+            CompanyName: new FormControl(null),
+            CompanyOtherName: new FormControl(null),
+            CompanyRegistrationNo: new FormControl(null),
+            CompanyLicenseNo: new FormControl(null),
+            FoundedDate: new FormControl(null),
+            LicenseDateForm: new FormControl(null),
+            LicenseDateTo: new FormControl(null),
+            TaxID: new FormControl(null),
+            ExciseRegNo: new FormControl(null),
+            LawbreakerType: new FormControl(null),
+            LawbreakerTitleCode: new FormControl(null),
+            LawbreakerTitleName: new FormControl(null),
+            LawbreakerFirstName: new FormControl(null),
+            LawbreakerMiddleName: new FormControl(null),
+            LawbreakerLastName: new FormControl(null),
+            LawbreakerOtherName: new FormControl(null),
+            LawbreakerDesc: new FormControl(null),
+            IDCard: new FormControl(null),
+            PassportNo: new FormControl(null),
+            VISAType: new FormControl(null),
+            PassportCountryCode: new FormControl(null),
+            PassportCountryName: new FormControl(null),
+            PassportDateIn: new FormControl(null),
+            PassportDateOut: new FormControl(null),
+            BirthDate: new FormControl(null),
+            GenderType: new FormControl(null),
+            BloodType: new FormControl(null),
+            NationalityCode: new FormControl(null),
+            NationalityNameTH: new FormControl(null),
+            RaceCode: new FormControl(null),
+            RaceName: new FormControl(null),
+            ReligionCode: new FormControl(null),
+            ReligionName: new FormControl(null),
+            MaritalStatus: new FormControl(null),
+            Career: new FormControl(null),
+            GPS: new FormControl(null),
+            Location: new FormControl(null),
+            Address: new FormControl(null),
+            Village: new FormControl(null),
+            Building: new FormControl(null),
+            Floor: new FormControl(null),
+            Room: new FormControl(null),
+            Alley: new FormControl(null),
+            Road: new FormControl(null),
+            SubDistrictCode: new FormControl(null),
+            SubDistrict: new FormControl(null),
+            DistrictCode: new FormControl(null),
+            District: new FormControl(null),
+            ProvinceCode: new FormControl(null),
+            Province: new FormControl(null),
+            ZipCode: new FormControl(null),
+            TelephoneNo: new FormControl(null),
+            Email: new FormControl(null),
+            FatherName: new FormControl(null),
+            MotherName: new FormControl(null),
+            Remarks: new FormControl(null),
+            LinkPhoto: new FormControl(null),
+            PhotoDesc: new FormControl(null),
+            IsActive: new FormControl(null)
+        });
     }
 
     private active_route() {
@@ -172,7 +180,11 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
     }
 
     GetByCon(LawbreakerID: string) {
-        throw new Error("Method not implemented.");
+        this.noticeService.getLawbreakerByCon(LawbreakerID).then(res => {
+            console.log(res);
+
+            // this.LawbreakerFG = res.map(item => this.fb.group(item));
+        })
     }
 
     OnCreate(value: Lawbreaker) {
@@ -218,7 +230,7 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
             )
     }
 
-    openOffenseDetailModal(e: any){
+    openOffenseDetailModal(e: any) {
         this.modal = this.ngModalService.open(e, { size: 'lg', centered: true });
     }
 

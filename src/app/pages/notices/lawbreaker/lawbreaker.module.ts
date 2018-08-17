@@ -10,6 +10,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+import { NoticeService } from '../notice.service';
 
 const routes: Routes = [
     {
@@ -32,18 +33,18 @@ const routes: Routes = [
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
         HttpClientModule,
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
-        ReactiveFormsModule,
         CardActionsModule,
         ModalOffenseModule
     ],
     declarations: [LawbreakerComponent],
     providers: [
-        ArrestsService
-
+        ArrestsService,
+        NoticeService
     ]
 })
 export class LawbreakerModule { }

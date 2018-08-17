@@ -4,7 +4,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
-import { toLocalShort } from '../../../config/dateFormat';
+import { toLocalShort, toLocalNumeric, resetLocalNumeric } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
@@ -19,6 +19,8 @@ export class ListComponent implements OnInit, OnDestroy {
     paginage = pagination;
     dataTable: any;
     advSearch: any;
+    OccurrenceDateForm: string;
+    OccurrenceDateTo: string
 
     arrestList = new Array<Arrest>();
     arrest = new Array<Arrest>();
@@ -48,7 +50,10 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('1.00');
+        this.sidebarService.setVersion('1.02');
+
+        this.OccurrenceDateForm = toLocalNumeric((new Date()).toISOString())
+        this.OccurrenceDateTo = toLocalNumeric((new Date()).toISOString())
 
         this.onSearch('');
 
@@ -76,15 +81,15 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async onAdvSearch(form: any) {
         this.paginage.TotalItems = 0;
-        const sDateCompare = new Date(form.value.OccurrenceDateFrom);
-        const eDateCompare = new Date(form.value.OccurrenceDateTo);
+        const sDateCompare =  new Date(resetLocalNumeric(form.value.OccurrenceDateFrom));
+        const eDateCompare = new Date(resetLocalNumeric(form.value.OccurrenceDateTo));
 
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+        if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
             alert(Message.checkDate);
         } else {
             this.preLoader.setShowPreloader(true);
-            form.value.DateStartFrom = sDateCompare.getTime();
-            form.value.DateStartTo = eDateCompare.getTime();
+            form.value.DateStartFrom = sDateCompare;
+            form.value.DateStartTo = eDateCompare;
             await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
             this.preLoader.setShowPreloader(false);
         }

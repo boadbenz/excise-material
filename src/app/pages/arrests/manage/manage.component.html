@@ -359,16 +359,23 @@
                                 <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField">
-                                <!-- <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
-                                </select> -->
+                                <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                    <option value="" disabled selected></option>
+                                    <option *ngFor="let item of typeheadQtyUnit"
+                                    [disabled]="showEditField" 
+                                    [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                </select>
                             </td>
                             <td>
                                 <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="NetVolumeUnit" class="form-control form-control-sm" [readonly]="showEditField">
-                                <!-- <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField"></select> -->
+                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                    <option value=""></option>
+                                    <option *ngFor="let item of typeheadNetVolumeUnit"
+                                    [disabled]="showEditField" 
+                                    [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                </select>
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i, item.get('ProductID').value)">
@@ -447,12 +454,15 @@
                 </table>
 
                 <ng-template #allegation let-c="close" let-d="dismiss">
-                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" (outPutIndicment)="addIndictment($event)"
+                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" 
+                    (patchIndicment)="patchIndicment($event)"
+                    (setIndicment)="addIndicment($event)"
                     [mode]="mode"
                     [lawbreaker]="ArrestLawbreaker.value"
                     [product]="ArrestProduct.value"
                     [indicment]="indictmentModal"  
-                    [isEditIndictment]="isEditIndictment"        
+                    [isEditIndicment]="isEditIndicment"   
+                    [indicmentIndex]="indicmentIndex"     
                     ></app-allegation-modal>
                 </ng-template>
             </div>
@@ -519,8 +529,8 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
                                     <div class="input-group-append">
-                                        <input id="arrestAttach" type="file" (change)="changeArrestDoc($event, i)" hidden>
-                                        <label for="arrestAttach" class="input-group-text custom-file-upload text-secondary">
+                                        <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)" hidden>
+                                        <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
                                             <i class="ti-more-alt"></i>
                                         </label>
                                     </div>
