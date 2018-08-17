@@ -30,7 +30,6 @@ export class AllegationModalComponent implements OnInit {
     @Input() product = new Array<ArrestProduct>();
     @Input() indicment = new Array<ArrestIndictment>();
     @Input() isEditIndicment: boolean | false;
-    @Input() indicmentIndex: number;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
@@ -59,7 +58,7 @@ export class AllegationModalComponent implements OnInit {
         })
 
         // console.log(this.isEditIndictment ? this.indicment : null);
-        
+
 
         let _indictmentLawbreaker = new Array<IndictmentLawbreaker>()
         await this.lawbreaker.map(item => {
@@ -81,7 +80,7 @@ export class AllegationModalComponent implements OnInit {
                 }
             )
         })
-        
+
         this.setItemFormArray(_indictmentLawbreaker, 'IndictmentLawbreaker')
     }
 
@@ -145,6 +144,10 @@ export class AllegationModalComponent implements OnInit {
     async close(e: any) {
         let _indictmentLawbreaker = []
         let _lawGroup = this.LawGroupSection.value.filter(item => item.IsChecked);
+
+        if (!_lawGroup.length)
+            return;
+
         await this.IndictmentLawbreaker.value
             .filter(item => item.IsChecked)
             .map(item => {
@@ -165,9 +168,9 @@ export class AllegationModalComponent implements OnInit {
                 })
             });
 
-        let _indicment = []
-        await _lawGroup.map((lg, i) => {
-            _indicment.push({
+        let _indicmentArr = []
+        await _lawGroup.map((lg) => {
+            _indicmentArr.push({
                 IndictmentID: lg.IndictmentID,
                 IsProve: 1,
                 IsActive: 1,
@@ -178,9 +181,13 @@ export class AllegationModalComponent implements OnInit {
                 IndictmentLawbreaker: _indictmentLawbreaker,
             })
         })
-        
-        this.setIndicment.emit(_indicment);
-        this.isEditIndicment = false;
+
+        if (this.isEditIndicment) {
+            this.patchIndicment.emit(..._indicmentArr);
+            this.isEditIndicment = false;
+        } else {
+            this.setIndicment.emit(_indicmentArr);
+        }
         this.c.emit(e);
     }
 

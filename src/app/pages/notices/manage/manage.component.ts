@@ -12,7 +12,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { toLocalNumeric, resetLocalNumeric, setZero } from '../../../config/dateFormat';
+import { toLocalNumeric, resetLocalNumeric, setZero, compareDate } from '../../../config/dateFormat';
 import { MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
@@ -61,6 +61,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     isRequired: boolean;
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
+    @ViewChild('noticeDate') noticeDate: ElementRef;
+    @ViewChild('noticeDueDate') noticeDueDate: ElementRef;
 
     communicateModel = communicate;
 
@@ -119,7 +121,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.03');
+        this.sidebarService.setVersion('1.04');
 
         this.active_route();
 
@@ -454,6 +456,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
 
+    }
+
+    checkDate() {
+        if (!compareDate(this.noticeDate.nativeElement.value, this.noticeDueDate.nativeElement.value)) {
+            alert(Message.checkDate)
+            this.noticeDueDate.nativeElement.value = this.noticeDate.nativeElement.value;
+        }
     }
 
     addProduct() {
@@ -791,7 +800,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
-                    FilePath: `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`
+                    FilePath: fileName
                 })
             }
         };
@@ -809,10 +818,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (dataSource && dataSource !== undefined) {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,
-                    FilePath: `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`,
+                    FilePath: fileName,
                     DataSource: dataSource,
                     DocumentType: fileType,
-                    DocumentName: fileName,
+                    DocumentName: null,
                     IsActive: 1
                 })
             }

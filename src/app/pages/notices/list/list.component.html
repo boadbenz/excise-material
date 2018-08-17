@@ -17,11 +17,15 @@
                     <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
-                            <input type="date" name="DateStartFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" #dateStartFrom name="DateStartFrom" [ngModel]="setDefaultDate" 
+                            class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"
+                            (change)="checkDate()">
 
                             <label for="">&nbsp; ถึง &nbsp;</label>
 
-                            <input type="date" name="DateStartTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <input type="date" #dateStartTo name="DateStartTo" [ngModel]="setDefaultDate"
+                            class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"
+                            (change)="checkDate()">
                         </div>
                     </div>
                 </div>

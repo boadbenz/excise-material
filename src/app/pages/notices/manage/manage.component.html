@@ -18,9 +18,9 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่รับแจ้งความ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" formControlName="NoticeDate" class="form-control form-control-sm" 
+                    <input type="date" #noticeDate formControlName="NoticeDate" class="form-control form-control-sm" 
                     [readonly]="showEditField"                    
-                    (change)="addNoticeDueDate(noticeDue)"
+                    (change)="addNoticeDueDate(noticeDue); checkDate()"
                     [ngClass]="{'ng-touched':isRequired}" required>
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
@@ -41,9 +41,10 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" formControlName="NoticeDueDate" class="form-control form-control-sm" 
+                    <input type="date" #noticeDueDate formControlName="NoticeDueDate" class="form-control form-control-sm" 
                     [readonly]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                    [ngClass]="{'ng-touched':isRequired}" required
+                    (change)="checkDate()">
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
@@ -83,7 +84,6 @@
                             value="{{item.value.StaffFullName}}"
                             [ngClass]="{'ng-touched':isRequired}"
                             required/>
-                        <!-- <input type="text" formControlName="StaffFullName" class="form-control form-control-sm" [readonly]="showEditField"> -->
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
