@@ -38,7 +38,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ArrestCode: string;
     ProveID: string;
 
-    // --- Autocomplate ---
+    // --- Array ---
     rawOptions = [];
     options = [];
     rawStaffOptions = [];

@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Compare } from '../fine-model';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 @Component({
     selector: 'app-list',
@@ -21,10 +22,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
     @ViewChild('fineTable') fineTable: ElementRef;
 
+    CompareDateFrom = "";
+    CompareDateTo = "";
+
     constructor(
         private _router: Router,
         private navService: NavigationService,
-        private fineService: FineService
+        private fineService: FineService,
+        private preLoaderService: PreloaderService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -40,12 +45,17 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.onSearch({ Textsearch: "" });
+        
+        this.preLoaderService.setShowPreloader(true);
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
             }
-        })
+        });
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
@@ -54,9 +64,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onSearch(Textsearch: any) {
         this.fineService.getByKeyword(Textsearch).subscribe(list => {
-        debugger
             this.onSearchComplete(list)
-
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
@@ -78,9 +86,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
             this.fineService.getByConAdv(form.value).then(async list => {
-debugger
                 this.onSearchComplete(list)
-
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
             });
@@ -89,7 +95,7 @@ debugger
 
     onSearchComplete(list: any) {
         this.Compare = [];
-debugger
+
         if (!list.length) {
             alert(Message.noRecord);
             return false;
@@ -103,6 +109,7 @@ debugger
 
         // set total record
         this.paginage.TotalItems = this.Compare.length;
+        this.CompareList = this.Compare.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
     clickView(LawsuitID: string,ArrestCode: string, CompareID:string) {
@@ -114,5 +121,25 @@ debugger
 
     async pageChanges(event) {
         this.CompareList = await this.Compare.slice(event.startIndex - 1, event.endIndex);
+    }
+
+    varidateCDF(form: any) {
+        const sDateCompare = new Date(form.value.CompareDateFrom);
+        const eDateCompare = new Date(form.value.CompareDateTo);
+
+        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+            alert(Message.checkReceiveDate);
+            this.CompareDateFrom = "";
+        }
+    }
+
+    varidateCDE(form: any) {
+        const sDateCompare = new Date(form.value.CompareDateFrom);
+        const eDateCompare = new Date(form.value.CompareDateTo);
+
+        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+            alert(Message.checkReceiveDate);
+            this.CompareDateTo = "";
+        }
     }
 }

@@ -7,6 +7,7 @@ import { CardActionsModule } from '../../component/card-actions/card-actions.mod
 import { FineService } from '../fine.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 
 const routes: Routes = [
@@ -33,6 +34,6 @@ const routes: Routes = [
       PaginationTableModule
     ],
     declarations: [ListComponent],
-    providers: [FineService]
+    providers: [FineService,PreloaderService]
 })
 export class ListModule { }

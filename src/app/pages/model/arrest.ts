@@ -24,6 +24,7 @@ export class Arrest {
     public InvestigationSurveyDocument: string;
     public InvestigationCode: string;
     public IsActive: string;
+    public ArrestName: string;
     public ArrestStaff: Array<ArrestStaff>;
     public ArrestLocale: Array<ArrestLocale>;
     public ArrestIndictment: Array<ArrestIndictment>;

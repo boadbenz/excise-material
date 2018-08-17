@@ -8,6 +8,7 @@ import { Message } from '../../../config/message';
 import { pagination } from '../../../config/pagination';
 import { NgForm, FormBuilder } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-list',
@@ -37,6 +38,7 @@ export class ListComponent implements OnInit {
         private _router: Router,
         private navService: NavigationService,
         private proveService: ProveService,
+        private sidebarService: SidebarService,
         private preLoaderService: PreloaderService
     ) {
         // set false
@@ -53,6 +55,8 @@ export class ListComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.sidebarService.setVersion('1.0.0');
+
         this.onSearch({ Textsearch: "" });
 
         this.preLoaderService.setShowPreloader(true);
@@ -72,7 +76,6 @@ export class ListComponent implements OnInit {
 
     onSearch(Textsearch: any) {
         this.proveService.getByKeyword(Textsearch).subscribe(list => {
-            debugger
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
             alert(err.message);

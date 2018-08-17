@@ -8,14 +8,17 @@ import { LocationStrategy, HashLocationStrategy, CommonModule } from '@angular/c
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NavigationComponent } from './shared/header-navigation/navigation.component';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
+import { SidebarComponent, SidebarService } from './shared/sidebar/sidebar.component';
 import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { RightSidebarComponent } from './shared/right-sidebar/rightsidebar.component';
 import { AppComponent } from './app.component';
 import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
-import { MatAutocompleteModule } from '@angular/material';
 import { PreloaderModule } from './shared/preloader/preloader.module';
+
+import { MatAutocompleteModule } from '@angular/material';
+import { LayoutComponent } from './shared/layout/layout.component';
+import { AuthGuard } from './pages/login/auth.guard';
 
 @NgModule({
     declarations: [
@@ -24,6 +27,7 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
         BreadcrumbComponent,
         SidebarComponent,
         RightSidebarComponent,
+        LayoutComponent
     ],
     imports: [
         CommonModule, 
@@ -33,14 +37,18 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
-        MatAutocompleteModule,
-        PreloaderModule
+        PreloaderModule,
+        MatAutocompleteModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        NavigationService
+        AuthGuard,
+        NavigationService,
+        SidebarService
     ],
     exports: [MatAutocompleteModule],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {}
+

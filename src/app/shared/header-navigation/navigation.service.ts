@@ -23,10 +23,16 @@ export class NavigationService {
     onCancel = new BehaviorSubject<Boolean>(false);
     onSearch = new BehaviorSubject<Boolean>(false);
     onPrint = new BehaviorSubject<Boolean>(false);
+    onNextPage = new BehaviorSubject<Boolean>(false);
 
-    searchByKeyword = new BehaviorSubject<string>('');
+    innerTextNextPageButton = new BehaviorSubject<string>(null);
+    searchByKeyword = new BehaviorSubject<string>(null);
 
     constructor() { }
+
+    setInnerTextNextPageButton(text: string) {
+        this.innerTextNextPageButton.next(text);
+    }
 
     // -- Set Element --
     setAdvSearch() {
@@ -103,6 +109,11 @@ export class NavigationService {
     setOnPrint(status: boolean) {
         this.onPrint.next(status);
     }
+
+    setOnNextPage(status: boolean) {
+        this.onNextPage.next(status);
+    }
+
     // -- End Set Event
 
 }

@@ -125,7 +125,7 @@
             <div class="form-group row">
               <label class="col-form-label col-md-4">สถานที่จับกุม : </label>
               <div class="col-md-8">
-                <input class="form-control" type="text" [(ngModel)]="ArrestLocal" name="ArrestLocal" disabled>
+                <input class="form-control" type="text" [(ngModel)]="ArrestLocation" name="ArrestLocation" disabled>
               </div>
             </div>
           </div>
@@ -246,11 +246,11 @@
           <div class="form-group row">
             <label class="col-form-label  col-md-3">วันที่จัดทำ : </label>
             <div class="col-md-4">
-              <input class="form-control" type="date" [(ngModel)]="CompareDate" name="CompareDate" [disabled]="viewMode">
+              <input class="form-control" type="date" [(ngModel)]="CompareDate" name="CompareDate" [disabled]="showEditField">
             </div>
             <label class="col-form-label text-center col-md-2">เวลา</label>
             <div class="col-md-3">
-              <input class="form-control" type="time" [(ngModel)]="CompareTime" name="CompareTime" [disabled]="viewMode">
+              <input class="form-control" type="time" [(ngModel)]="CompareTime" name="CompareTime" [disabled]="showEditField">
             </div>
           </div>
         </div>
@@ -260,7 +260,7 @@
             <div class="col-md-7">
               <input type="text" class="form-control" [(ngModel)]="StationName" name="StationName" placeholder="พิมพ์ข้อความ" aria-label="Number"
                 matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
-                [disabled]="viewMode">
+                [disabled]="showEditField">
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
                   {{ option.OfficeName }}
@@ -363,7 +363,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">คดีเปรียบเทียบที่ : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" [(ngModel)]="oCompareIns.CompareCode" name="CompareCode" [disabled]="viewMode">
+              <input class="form-control" type="text" [(ngModel)]="d" name="d" [disabled]="viewMode">
             </div>
             <label class="col-form-label">/{{CompareYear}}</label>
           </div>
@@ -579,7 +579,8 @@
               <div class="form-popup form-group row">
                 <div class="custom-control custom-radio col-form-label col-md-10">
                   <input name="RequestRadio" id="yRequest" class="col-form-label with-gap radio-col-indigo" type="radio" [disabled]="viewMode"
-                    [checked]="oCompareDetail.IsRequest=='1'">
+                    >
+                    <!-- [checked]="oCompareDetail.IsRequest=='1'" -->
                   <label for="yRequest">ร้องขอ</label>
 
                 </div>
@@ -591,7 +592,8 @@
               <div class="form-group row">
                 <div class="custom-control custom-radio col-form-label col-md-10">
                   <input name="RequestRadio" id="nRequest" class="col-form-label with-gap radio-col-indigo" type="radio" [disabled]="viewMode"
-                    [checked]="oCompareDetail.IsRequest=='0'">
+                    >
+                    <!-- [checked]="oCompareDetail.IsRequest=='0'" -->
                   <label for="nRequest">ไม่ร้องขอ</label>
 
                 </div>

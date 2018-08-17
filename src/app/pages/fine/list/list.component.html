@@ -49,9 +49,9 @@
           <label for="" class="col-md-2 control-label padding-adv-search">วันที่เปรียบเทียบคดี :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group input-group form-line">
-              <input type="date" name="CompareDateFrom" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
+              <input type="date"  [(ngModel)]="CompareDateFrom" name="CompareDateFrom"  (blur)="varidateCDF(advForm,$event)"  ngModel class="form-control " placeholder="วว/ดด/ปปปป">
               <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
-              <input type="date" name="CompareDateTo" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
+              <input type="date" [(ngModel)]="CompareDateTo" name="CompareDateTo"  (blur)="varidateCDE(advForm,$event)" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
             </div>
           </div>
 

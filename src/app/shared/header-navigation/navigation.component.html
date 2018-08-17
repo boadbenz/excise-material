@@ -104,9 +104,9 @@
             <!-- ============================================================== -->
             <ul *ngIf="searchBar | async" class="navbar-nav my-lg-0">
                 <li class="nav-item col-8">
-                    <form autocomplete="off" class="app-search" #formSearch="ngForm" (ngSubmit)="clickSearch(formSearch.value)">
+                    <form autocomplete="off" class="app-search" #formSearch="ngForm" (ngSubmit)="clickSearch(formSearch)">
                         <input type="search" name="Textsearch" id="" ngModel class="form-control" >
-                        <a href="javaScript:void(0);" (click)="clickSearch(formSearch.value)" class="srh-btn">
+                        <a href="javaScript:void(0);" (click)="clickSearch(formSearch)" class="srh-btn">
                             <i class="ti-search"></i>
                         </a>
                     </form>
@@ -120,7 +120,7 @@
             <div *ngIf="nextPageButton | async" class="navbar-nav my-lg-0">
                 <div class="nav-link text-muted waves-effect waves-dark">
                     <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickNextPage()">
-                        {{nextPageTitle}} >>
+                        {{nextPageTitle | async}} >>
                     </a>
                 </div>
             </div>
