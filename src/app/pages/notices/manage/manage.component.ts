@@ -12,7 +12,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { toLocalNumeric } from '../../../config/dateFormat';
+import { toLocalNumeric, resetLocalNumeric, setZero } from '../../../config/dateFormat';
 import { MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
@@ -119,7 +119,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.02');
+        this.sidebarService.setVersion('1.03');
 
         this.active_route();
 
@@ -187,6 +187,26 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 await this.navService.setOnSave(false);
 
+                if (!this.noticeForm.valid) {
+                    this.isRequired = true;
+                    alert(Message.checkData)
+                    return false;
+                }
+
+                const sDateCompare = new Date(resetLocalNumeric(this.noticeForm.value.NoticeDate));
+                const eDateCompare = new Date(resetLocalNumeric(this.noticeForm.value.NoticeDueDate));
+
+                if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+                    alert(Message.checkDate);
+                    return false;
+                }
+        
+                this.noticeForm.value.NoticeDate = sDateCompare.toISOString();
+                this.noticeForm.value.NoticeDueDate = eDateCompare.toISOString();
+                this.noticeForm.value.NoticeInformer.map(item => {
+                    item.InformerType = item.InformerType == true ? 1 : 0;
+                });
+
                 if (this.mode === 'C') {
                     this.onCreate();
 
@@ -213,20 +233,23 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/arrest/manage', 'C', 'NEW']);
+                this.router.navigate(['/arrest/list']);
             }
         })
     }
 
     private createForm() {
+        let noticeDate = this.mode == 'C' ? toLocalNumeric((new Date()).toISOString()) : null;
+        let noticeTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
+        let noticeDueDate = noticeDate;
         this.noticeForm = this.fb.group({
             NoticeCode: new FormControl(this.noticeCode, Validators.required),
             NoticeStationCode: new FormControl(null, Validators.required),
             NoticeStation: new FormControl(null, Validators.required),
-            NoticeDate: new FormControl(null, Validators.required),
-            NoticeTime: new FormControl(null, Validators.required),
+            NoticeDate: new FormControl(noticeDate, Validators.required),
+            NoticeTime: new FormControl(noticeTime, Validators.required),
             NoticeDue: new FormControl(null, Validators.required),
-            NoticeDueDate: new FormControl(null, Validators.required),
+            NoticeDueDate: new FormControl(noticeDueDate, Validators.required),
             NoticeDueTime: new FormControl(null),
             GroupNameDesc: new FormControl('N/A'),
             CommunicationChanelID: new FormControl(null, Validators.required),
@@ -309,8 +332,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
                 item.Region += item.District == null ? '' : ` ${item.District}`;
                 item.Region += item.Province == null ? '' : ` ${item.Province}`;
-                console.log(item.InformerType);
-                
             });
 
             await res.NoticeSuspect.map(item =>
@@ -336,24 +357,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onCreate() {
 
-        if (!this.noticeForm.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
-
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
-        const noticeDate = new Date(this.noticeForm.value.NoticeDate);
-        const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
-        this.noticeForm.value.NoticeDate = noticeDate.toISOString();
-        this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
-        this.noticeForm.value.NoticeInformer.map(item => {
-            item.InformerType = item.InformerType == true ? 1 : 0;
-        });
-
-        // console.log(JSON.stringify(this.noticeForm.value));
+        console.log('===================');
+        console.log('Create : ', JSON.stringify(this.noticeForm.value));
+        console.log('===================');
 
         let IsSuccess: boolean | false;
         await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
@@ -382,25 +391,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onReviced() {
-        if (!this.noticeForm.valid) {
-            this.isRequired = true;
-            alert(Message.checkData)
-            return false;
-        }
+        
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
-        const noticeDate = new Date(this.noticeForm.value.NoticeDate);
-        const noticeDueDate = new Date(this.noticeForm.value.NoticeDueDate);
-        this.noticeForm.value.NoticeDate = noticeDate.toISOString();
-        this.noticeForm.value.NoticeDueDate = noticeDueDate.toISOString();
-        this.noticeForm.value.NoticeInformer.map(item => {
-            console.log(item.InformerType);
-            
-            item.InformerType = item.InformerType == true ? 1 : 0;
-        });
+        console.log('===================');
+        console.log('Update : ', JSON.stringify(this.noticeForm.value));
+        console.log('===================');
 
-        // console.log(this.noticeForm.value);
         let IsSuccess: boolean | false;
         await this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
             IsSuccess = isSuccess;
@@ -553,10 +551,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (!this.noticeForm.value.NoticeDate) {
             this.noticeForm.patchValue({
                 NoticeDate: toLocalNumeric((new Date()).toISOString()),
-                NoticeTime: `${(new Date).getHours()}.${(new Date).getMinutes()} น.`
+                NoticeTime: `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`
             })
         }
-        let noticeDate = new Date(this.noticeForm.value.NoticeDate)
+        let noticeDate = new Date(resetLocalNumeric(this.noticeForm.value.NoticeDate))
         let noticeTime = this.noticeForm.value.NoticeTime;
         let dueDate = e.value == '' ? 0 : e.value;
         noticeDate.setDate(noticeDate.getDate() + parseInt(dueDate));
@@ -688,6 +686,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
+                console.log('===================');
+                console.log('ProductDel : ', id);
+                console.log('===================');
 
                 await this.noticeService.productupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
@@ -708,13 +709,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.NoticeSuspect.removeAt(index);
 
         } else if (this.mode === 'R') {
-            if (!this.NoticeSuspect.at(index).get('SuspectID').value) {
-                this.NoticeSuspect.removeAt(index);
-                return false;
-            }
 
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
+                console.log('===================');
+                console.log('SuspectDel : ', id);
+                console.log('===================');
 
                 await this.noticeService.suspectupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
@@ -735,13 +735,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.NoticeDocument.removeAt(index);
 
         } else if (this.mode === 'R') {
-            if (!this.NoticeDocument.at(index).get('DocumentID').value) {
-                this.NoticeDocument.removeAt(index);
-                return false;
-            }
-
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
+                console.log('===================');
+                console.log('NoticeDel : ', id);
+                console.log('===================');
 
                 await this.noticeService.documentUpDelete(id).then(isSuccess => {
                     if (isSuccess === true) {

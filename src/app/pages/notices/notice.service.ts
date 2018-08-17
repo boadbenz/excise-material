@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Http, } from '@angular/http';
 import { Message } from '../../config/message';
 import { NoticeDocument } from './notice-document';
+import { Lawbreaker } from './lawbreaker/lawbreaker.interface';
 
 @Injectable()
 export class NoticeService {
@@ -79,6 +80,12 @@ export class NoticeService {
     async getDocument(ReferenceCode: string): Promise<NoticeDocument[]> {
         const params = { ReferenceCode };
         const url = `${appConfig.api8882}/DocumentgetByCon`;
+        return this.resposePromisGet(JSON.stringify(params), url)
+    }
+
+    getLawbreakerByCon(LawbreakerId: string): Promise<any> {
+        const params = { LawbreakerId };
+        const url = `${appConfig.api8082}/LawbreakergetByCon`;
         return this.resposePromisGet(JSON.stringify(params), url)
     }
 
