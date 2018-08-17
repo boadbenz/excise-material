@@ -233,7 +233,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/arrest/list']);
+                this.router.navigate(['/arrest/manage', 'C', 'NEW']);
             }
         })
     }
