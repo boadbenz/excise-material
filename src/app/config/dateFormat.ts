@@ -34,3 +34,14 @@ export function toLocalShort(date: string): string {
     return dd.toLocaleString('th-TH', options);
 }
 
+export function compareDate(sDate: string, eDate: string): boolean {
+    if (!sDate && !eDate) return true;
+
+    const sDateCompare = new Date(sDate);
+    const eDateCompare = new Date(eDate);
+
+    if (sDateCompare.valueOf() > eDateCompare.valueOf()) return false;
+
+    return true;
+}
+

@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
 import { Message } from '../../../config/message';
 import { Notice } from '../notice';
 import { pagination } from '../../../config/pagination';
-import { toLocalShort } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, toLocalNumeric } from '../../../config/dateFormat';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
@@ -17,11 +17,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
     advSearch: any;
     isRequired = false;
-
+    setDefaultDate: string;
     paginage = pagination;
 
     notice = new Array<Notice>();
     noticeList = new Array<Notice>();
+
+    @ViewChild('dateStartFrom') dateStartFrom: ElementRef;
+    @ViewChild('dateStartTo') dateStartTo: ElementRef;
 
     private subOnsearchByKeyword: any;
     private subSetNextPage: any;
@@ -50,6 +53,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.sidebarService.setVersion('1.04');
         this.paginage.TotalItems = 0;
+        this.setDefaultDate = toLocalNumeric((new Date()).toISOString());
 
         this.preLoaderService.setShowPreloader(true);
         await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
@@ -126,6 +130,13 @@ export class ListComponent implements OnInit, OnDestroy {
         this.notice = list
         // set total record
         this.paginage.TotalItems = this.notice.length;
+    }
+
+    checkDate() {
+        if (!compareDate(this.dateStartFrom.nativeElement.value, this.dateStartTo.nativeElement.value)) {
+            alert(Message.checkDate)
+            this.dateStartTo.nativeElement.value = this.dateStartFrom.nativeElement.value;
+        }
     }
 
     view(noticeCode: string) {
