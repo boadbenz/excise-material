@@ -790,7 +790,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             let FG = this.fb.group({
                 ArrestCode: new FormControl(this.arrestCode, Validators.required),
-                IndictmentID: new FormControl(item.IndictmentID),
+                IndictmentID: new FormControl(1),
                 IsProve: new FormControl(item.IsProve, Validators.required),
                 IsActive: new FormControl(item.IsActive, Validators.required),
                 GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),
@@ -802,14 +802,23 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsNewItem: item.IsNewItem == false ? false : true
             })
 
-            console.log(FG);
-
             this.ArrestIndictment.push(FG);
         })
     }
 
     patchIndicment(e: ArrestIndictment) {
+        this.ArrestIndictment.at(this.indicmentIndex).reset({
+            IsProve: 1,
+            IsActive: 1,
+            GuiltBaseID: e.GuiltBaseID,
+            SectionNo: e.SectionNo,
+            SectionDesc1: e.SectionDesc1,
+            SectionName: e.SectionName,
+            IndictmentLawbreaker: e.IndictmentLawbreaker,
+        });
 
+        console.log(this.ArrestIndictment.value);
+        
     }
 
     addDocument() {
