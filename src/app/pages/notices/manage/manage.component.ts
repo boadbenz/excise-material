@@ -119,7 +119,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.03');
+        this.sidebarService.setVersion('1.04');
 
         this.active_route();
 
@@ -233,7 +233,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/arrest/list']);
+                this.router.navigate(['/arrest/manage', 'C', 'NEW']);
             }
         })
     }
