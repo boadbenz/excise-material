@@ -23,8 +23,8 @@ export class ListComponent implements OnInit, OnDestroy {
     notice = new Array<Notice>();
     noticeList = new Array<Notice>();
 
-    @ViewChild('dateStartFrom') dateStartFrom: ElementRef;
-    @ViewChild('dateStartTo') dateStartTo: ElementRef;
+    dateStartFrom: string;
+    dateStartTo: string;
 
     private subOnsearchByKeyword: any;
     private subSetNextPage: any;
@@ -53,7 +53,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.sidebarService.setVersion('1.04');
         this.paginage.TotalItems = 0;
-        this.setDefaultDate = toLocalNumeric((new Date()).toISOString());
+        this.dateStartFrom = toLocalNumeric((new Date()).toISOString());
+        this.dateStartTo = this.dateStartFrom;
 
         this.preLoaderService.setShowPreloader(true);
         await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
@@ -133,9 +134,9 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     checkDate() {
-        if (!compareDate(this.dateStartFrom.nativeElement.value, this.dateStartTo.nativeElement.value)) {
+        if (!compareDate(this.dateStartFrom, this.dateStartTo)) {
             alert(Message.checkDate)
-            this.dateStartTo.nativeElement.value = this.dateStartFrom.nativeElement.value;
+            this.dateStartTo = this.dateStartFrom;
         }
     }
 
