@@ -38,7 +38,7 @@ export class ListComponent implements OnInit {
         private _router: Router,
         private navService: NavigationService,
         private proveService: ProveService,
-        private sidebarService: SidebarService,
+         private sidebarService: SidebarService,
         private preLoaderService: PreloaderService
     ) {
         // set false

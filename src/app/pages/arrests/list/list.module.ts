@@ -14,8 +14,7 @@ const routes: Routes = [
       path: '',
       data: {
           // title: 'ค้นหาข้อมูล',
-          urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานจับกุม' }],
-          nextPage: { title: 'งานจับกุม', url: '/arrest/manage' }
+          urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานจับกุม' }]
       },
       component: ListComponent
   }

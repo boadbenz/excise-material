@@ -1,0 +1,428 @@
+<app-step-wizard [sectionId]="3"></app-step-wizard>
+
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+  <app-print-doc-modal (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+</ng-template>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">ข้อกล่าวหา</h5>
+  </div>
+  <div class="card-body">
+    <div class="form-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">ฐานความผิดมาตรา : </label>
+            <div class="col-md-8" *ngFor="let item of masLawGroupSectionList;">
+              <input class="form-control" type="text" [(ngModel)]="item.SectionName" name="SectionName" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">ฐานความผิด : </label>
+            <div class="col-md-9" *ngFor="let item of masLawGuitBaseList;">
+              <input class="form-control" type="text" [(ngModel)]="item.GuiltBaseName" name="GuiltBaseName" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-4">บทกำหนดโทษ : </label>
+            <div class="col-md-8" *ngFor="let item of masLawGroupSectionList;">
+              <input class="form-control" type="text" [(ngModel)]="item.SectionNo" name="SectionNo" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">อัตราโทษ : </label>
+            <div class="col-md-9" *ngFor="let item of masLawPenaltyList;">
+              <input class="form-control" type="text" [(ngModel)]="item.PenaltyDesc" name="PenaltyDesc" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">รับคำกล่าวโทษ</h5>
+  </div>
+  <div class="card-body" *ngIf="lawsuitList">
+    <div class="form-body" *ngFor="let item of lawsuitList;">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group row">
+            <div class="custom-control custom-checkbox col-form-label col-md-2">
+              <input class="col-form-label filled-in chk-col-indigo" [checked]="item.IsLawsuit" (change)="isLawSuitChecked(item.IsLawsuit)" id="IsLawsuitCheck" type="checkbox" [disabled]="showEditField">
+              <label for="IsLawsuitCheck">ไม่รับเป็นคดีเพราะ :</label>
+            </div>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="item.ReasonDontLawsuit" [disabled]="showEditField">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group row">
+            <div class="custom-control custom-checkbox col-form-label col-md-4">
+              <input class="col-form-label filled-in chk-col-indigo" [checked]="item.IsOutside" (change)="isLawSuitChecked(item.IsOutside)" id="IsOutside" type="checkbox" [disabled]="showEditField">
+              <label for="IsOutside">คดีรับคำกล่าวโทษนอกสถานที่ทำการ</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เลขคดีรับคำกล่าวโทษ : </label>
+            <div class="col-md-7">
+              <input class="form-control" type="text" [(ngModel)]="item.LawsuitNo" name="LawsuitNo" [disabled]="showEditField">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
+            <div class="col-md-4">
+              <input class="form-control" type="date" [(ngModel)]="item.LawsuitDate" name="LawsuitDate" [disabled]="showEditField">
+            </div>
+            <label class="col-form-label text-center col-md-2">เวลา</label>
+            <div class="col-md-3">
+              <input class="form-control" type="text" [(ngModel)]="item.LawsuitTime" name="LawsuitTime" [disabled]="showEditField">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngFor="let staff of item.LawsuiteStaff;">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">ผู้รับคดี : </label>
+            <div class="col-md-7">
+              <input class="form-control" type="text" [(ngModel)]="staff.FullName" name="FullName" [disabled]="showEditField">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="staff.PositionName" name="PositionName" [disabled]="showEditField">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngFor="let staff of item.LawsuiteStaff;">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">หน่วยงาน : </label>
+            <div class="col-md-7">
+              <input class="form-control" type="text" [(ngModel)]="staff.DepartmentName" name="DepartmentName" [disabled]="showEditField">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">เขียนที่ : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="item.LawsuitStation" name="LawsuitStation" [disabled]="showEditField">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">คำให้การของผู้กล่าวโทษ : </label>
+            <div class="col-md-10">
+              <textarea class="form-control" rows="3" [(ngModel)]="item.AccuserTestimony" name="AccuserTestimony" [disabled]="showEditField"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive table-striped no-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="footable-sortable text-center">ลำดับ</th>
+            <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+            <th class="footable-sortable">ลักษณะคดี</th>
+            <th class="footable-sortable">คดีสิ้นสุดชั้น</th>
+            <th class="footable-sortable col-6">รายละเอียดของกลาง</th>
+            <th class="footable-sortable"></th>
+          </tr>
+        </thead>
+        <tbody *ngIf="lawBreakerList">
+          <tr class="footable" *ngFor="let item of lawBreakerList; let i = index;">
+            <td class="text-center">{{i+1}}</td>
+            <td>
+              {{item.LawbreakerFullName}}
+            </td>
+            <td>
+              <!-- {{item.type}} -->
+            </td>
+            <td>
+              <!-- {{item.caseEnd}} -->
+            </td>
+            <td *ngFor="let list of arrestList;">
+              <p *ngFor="let item of list.ArrestProduct;">
+                {{ item.ProductName }}
+              </p>
+            </td>
+            <td>
+              <i class="ti-pencil-alt btn-action" [hidden]="showEditField" data-toggle="modal" data-target="#editPopUp"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">เอกสารแนบภายใน</h5>
+  </div>
+  <div class="card-body">
+    <div class="text-right">
+      <button type="button" class="btn waves-effect waves-light btn-themecolor" [disabled]="showEditField"> เพิ่มเอกสารแนบ </button>
+    </div>
+    <div class="table-responsive table-striped no-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="footable-sortable text-center col-1">ลำดับ</th>
+            <th class="footable-sortable">ชื่อเอกสารแนบ</th>
+            <th class="footable-sortable">ที่อยู่เอกสารแนบ</th>
+          </tr>
+        </thead>
+        <!-- <tbody>
+          <tr class="footable" *ngFor="let item of fileItem; let i = index;">
+            <td class="text-center">{{i+1}}</td>
+            <td>
+              <input class="form-control" type="text" nmae="fileName" [(ngModel)]="item.fileName" [disabled]="showEditField">
+            </td>
+            <td>
+              <input class="form-control" type="text" name="filePath" [(ngModel)]="item.filePath" [disabled]="showEditField">
+            </td>
+            <td>
+              <i class="ti-trash btn-action" [hidden]="showEditField"></i>
+            </td>
+          </tr>
+        </tbody> -->
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editPopUp" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header top-navbar text-white">
+        ลักษณะคดีรายผู้ต้องหา
+        <div class="card-actions">
+          <a data-toggle="modal" data-target="#editPopUp">
+            <i class="ti-close"></i>
+          </a>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="text-right"> XCS60-04-03-00-00 </div>
+        <div class="form-body m-t-10">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label col-md-3">ชื่อผู้ต้องหา : </label>
+                <div class="input-group col-md-9">
+                  <input class="form-control" type="text" name="fullName" [(ngModel)]="fullName" disabled>
+                  <span class="input-group-addon">
+                    <i class="mdi mdi-eye" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label col-md-3">ลักษณะคดี : </label>
+                <div class="col-md-9">
+                  <select class="custom-select col-12">
+                    <option selected="">เปรียบเทียบปรับ</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label col-md-3">คดีสิ้นสุดชั้น : </label>
+                <div class="col-md-9">
+                  <select class="custom-select col-12">
+                    <option selected="">กรมสรรพสามิต</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-outline-bluish unset-radius">
+          <div class="card-header unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h5 class="card-title m-b-0">คำพิพากษาของศาล</h5>
+          </div>
+          <div class="card-body card-overflow">
+            <div class="form-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-md-4">หมายเลขคดีดำ : </label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-md-4">หมายเลขคดีแดง : </label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label class="col-form-label">คำพิพากษาของศาล </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-popup row m-l-5">
+                    <div class="custom-control custom-checkbox col-form-label col-md-6">
+                      <input class="col-form-label filled-in chk-col-indigo" id="pay" type="checkbox">
+                      <label for="pay">สั่งปรับเป็นจำนวน (บาท) :</label>
+                    </div>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row m-l-5">
+                    <div class="custom-control custom-checkbox col-form-label col-md-6">
+                      <input class="col-form-label filled-in chk-col-indigo" id="prison" type="checkbox">
+                      <label for="prison">สั่งจำคุกเป็นเวลา :</label>
+                    </div>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-md-4">หน่วย : </label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label class="col-form-label">วิธีชำระค่าปรับ </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-popup row m-l-5">
+                    <div class="custom-control custom-radio col-form-label col-md-5">
+                      <input name="group5" id="oneTime" class="col-form-label with-gap radio-col-indigo" type="radio">
+                      <label for="oneTime">ชำระครั้งเดียว</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-popup row m-l-5">
+                    <label class="col-form-label col-md-6">วันที่กำหนดชำระค่าปรับ : </label>
+                    <div class="col-md-6">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-popup row m-l-5">
+                    <div class="custom-control custom-radio col-form-label col-md-6">
+                      <input name="group5" id="perTime" class="col-form-label with-gap radio-col-indigo" type="radio">
+                      <label for="perTime">แบ่งชำระเป็นงวด</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-popup row m-l-5">
+                    <label class="col-form-label col-md-6">จำนวนงวด : </label>
+                    <div class="col-md-6">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-md-5">วันที่เริ่มชำระค่าปรับ : </label>
+                    <div class="col-md-7">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row m-l-5">
+                    <label class="col-form-label col-md-6">รอบชำระค่าปรับ : </label>
+                    <div class="col-md-6">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-md-5">หน่วย : </label>
+                    <div class="col-md-7">
+                      <input class="form-control" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#editPopUp">บันทึก</button>
+      </div>
+    </div>
+  </div>
+</div>

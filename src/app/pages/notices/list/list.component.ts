@@ -1,31 +1,40 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { NoticeService } from '../notice.service';
 import { Message } from '../../../config/message';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Notice } from '../notice';
 import { pagination } from '../../../config/pagination';
+import { toLocalShort, compareDate, toLocalNumeric } from '../../../config/dateFormat';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
 
-    private subOnSearch: any;
     advSearch: any;
-
+    isRequired = false;
+    setDefaultDate: string;
     paginage = pagination;
 
     notice = new Array<Notice>();
+    noticeList = new Array<Notice>();
 
-    @ViewChild('noticeTable') noticeTable: ElementRef;
+    dateStartFrom: string;
+    dateStartTo: string;
+
+    private subOnsearchByKeyword: any;
+    private subSetNextPage: any;
 
     constructor(
         private _router: Router,
         private navservice: NavigationService,
-        private noticeService: NoticeService
+        private noticeService: NoticeService,
+        private preLoaderService: PreloaderService,
+        private sidebarService: SidebarService
     ) {
         // set false
         this.navservice.setEditButton(false);
@@ -40,67 +49,103 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navservice.showAdvSearch;
     }
 
-    ngOnInit() {
-        this.subOnSearch = this.navservice.searchByKeyword.subscribe(async Textsearch => {
+    async ngOnInit() {
+
+        this.sidebarService.setVersion('1.04');
+        this.paginage.TotalItems = 0;
+        this.dateStartFrom = toLocalNumeric((new Date()).toISOString());
+        this.dateStartTo = this.dateStartFrom;
+
+        this.preLoaderService.setShowPreloader(true);
+        await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+
+        this.subOnsearchByKeyword = this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
-                await this.navservice.setOnSearch('');
+                await this.navservice.setOnSearch(null);
                 this.onSearch(Textsearch);
             }
         })
+
+        this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navservice.setOnNextPage(false);
+                this._router.navigate(['/notice/manage', 'C', 'NEW']);
+            }
+        })
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
-    onSearch(Textsearch: any) {
-        this.noticeService.getByKeyword(Textsearch).subscribe(list => {
-            this.onSearchComplete(list)
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
+    ngOnDestroy(): void {
+        this.subOnsearchByKeyword.unsubscribe();
+        this.subSetNextPage.unsubscribe();
     }
 
-    onAdvSearch(form: any) {
+    async onSearch(Textsearch: any) {
+        this.preLoaderService.setShowPreloader(true);
+        await this.noticeService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+        this.preLoaderService.setShowPreloader(false);
+    }
 
-        const sDateCompare = new Date(form.value.DateStartFrom);
-        const eDateCompare = new Date(form.value.DateStartTo);
+    async onAdvSearch(form: any) {
 
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
-            alert(Message.checkDate);
-        } else {
-            form.value.DateStartFrom = sDateCompare.getTime();
-            form.value.DateStartTo = eDateCompare.getTime();
-            this.noticeService.getByConAdv(form.value).subscribe(list => {
+        if (form.value.DateStartFrom && form.value.DateStartTo) {
+            const sDateCompare = new Date(form.value.DateStartFrom);
+            const eDateCompare = new Date(form.value.DateStartTo);
 
-                this.onSearchComplete(list)
+            if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+                alert(Message.checkDate);
+                return false;
+            }
 
-            }, (err: HttpErrorResponse) => {
-                alert(err.message);
-            });
+            form.value.DateStartFrom = sDateCompare.toISOString();
+            form.value.DateStartTo = eDateCompare.toISOString();
         }
+
+        this.preLoaderService.setShowPreloader(true);
+
+        await this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
-    onSearchComplete(list: any) {
-        this.notice = [];
+    async onSearchComplete(list: Notice[]) {
 
-        if (!list) {
-            alert(Message.noRecord);
+        if (!list.length) {
+            alert(Message.noRecord)
             return false;
         }
 
-        if (Array.isArray(list)) {
-            this.notice = list;
-        } else {
-            this.notice.push(list);
-        }
+        this.notice = [];
+        await list.map((item, i) => {
+            item.RowId = i + 1;
+            item.NoticeDate = toLocalShort(item.NoticeDate);
+            item.NoticeStaff.map(s => {
+                s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+            });
+            item.NoticeSuspect.map(s => {
+                s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+            })
+        })
 
+        this.notice = list
         // set total record
-        // this.invesPaginate.TotalItems = this.notice.length;
+        this.paginage.TotalItems = this.notice.length;
+    }
+
+    checkDate() {
+        if (!compareDate(this.dateStartFrom, this.dateStartTo)) {
+            alert(Message.checkDate)
+            this.dateStartTo = this.dateStartFrom;
+        }
     }
 
     view(noticeCode: string) {
-        this._router.navigate([`/notice/manage/v/${noticeCode}`]);
+        this._router.navigate([`/notice/manage/R/${noticeCode}`]);
     }
 
     async pageChanges(event) {
-
+        this.noticeList = await this.notice.slice(event.startIndex - 1, event.endIndex);
     }
 
 }

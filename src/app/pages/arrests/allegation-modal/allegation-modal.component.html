@@ -4,9 +4,10 @@
             <h4 class="modal-title text-white">รายละเอียดข้อกล่าวหา</h4>
         </div>
         <div class="col-lg-5 col-8">
-            <form class="app-search">
-                <input type="search" name="" id="" class="form-control form-control-sm" placeholder="ค้นหาฐานความผิดมาตรา/ฐานความผิด">
-                <a class="srh-btn">
+            <form class="app-search" #searchFrom="ngForm" (ngSubmit)="onSearchByKey(searchFrom.value)">
+                <input type="search" name="Textsearch" ngModel class="form-control form-control-sm" 
+                placeholder="ค้นหาฐานความผิดมาตรา/ฐานความผิด">
+                <a class="srh-btn" (click)="onSearchByKey(searchFrom.value)" href="javaScript:void(0)">
                     <i class="ti-search"></i>
                 </a>
             </form>
@@ -22,7 +23,7 @@
         </a>
     </div>
 </div>
-<div class="modal-body font-14">
+<div class="modal-body font-14" [formGroup]="lawGroupFG">
     <div class="card unset-radius">
         <div class="card-body p-0">
             <table id="allegation" class="table table-striped table-sm">
@@ -36,18 +37,19 @@
                         <th>อัตราโทษ</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let indic of indicment; let i=index;">
+                <tbody formArrayName="LawGroupSection">
+                    <tr *ngFor="let item of LawGroupSection.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
-                            <input name="indicRadio" type="radio" [id]="'indic'+i" class="with-gap radio-col-indigo">
-                            <label [for]="'indic'+i" class="m-0"></label>
+                            <input name="noticeRadio" name="IsChecked" 
+                            formControlName="IsChecked" type="radio" id="td{{i}}"  
+                            (change)="setIsChecked(i)"
+                            class="with-gap radio-col-indigo">
+                            <label for="td{{i}}" class="m-0"></label>
                         </td>
-                        <td class="text-center">{{i+1}}</td>
-                        <td>
-                            <span></span>
-                        </td>
-                        <td></td>
-                        <td></td>
+                        <td class="text-center">{{item.get('RowId').value}}</td>
+                        <td>{{item.get('SectionName').value}}</td>
+                        <td style="width: 430px">{{item.get('SectionDesc1').value}}</td>
+                        <td>{{item.get('SectionName').value}}</td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -75,18 +77,25 @@
                         <th>รายละเอียดของกลาง</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let item of lawbreaker; let i=index;">
+                <tbody formArrayName="IndictmentLawbreaker">
+                    <tr *ngFor="let item of IndictmentLawbreaker.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
-                            <input type="checkbox" [id]="'lb' + i" class="filled-in chk-col-indigo">
+                            <input type="checkbox" formControlName="IsChecked" [id]="'lb' + i" [checked]="isCheckAll"
+                            class="filled-in chk-col-indigo">
                             <label [for]="'lb' + i" class="m-0"></label>
                         </td>
                         <td class="text-center">{{i+1}}</td>
                         <td>
-                            {{item.LawbreakerFullName}}
+                            <span *ngIf="item.get('EntityType').value == 0">
+                                {{item.get('CompanyFullName').value}}
+                            </span>
+                            <span *ngIf="item.get('EntityType').value == 1">
+                                {{item.get('LawbreakerFullName').value}}
+                            </span>
                         </td>
                         <td>
-                            <select name="" id="" class="form-control form-control-sm">
+                            <select formControlName="ProductID" class="form-control form-control-sm"
+                            (change)="selectItemPorduct($event, i)">
                                 <option value="" disabled selected></option>
                                 <option *ngFor="let p of product" [value]="p.ProductID">{{p.ProductDesc}}</option>
                             </select>

@@ -4,8 +4,12 @@ import { appConfig } from '../../app.config';
 import { Arrest } from './arrest';
 import { ArrestStaff } from './arrest-staff';
 import { ArrestLawbreaker } from './arrest-lawbreaker';
-import { ArrestProduct } from './arrest-product';
-import { ArrestIndictment } from './arrest-indictment';
+import { ArrestProduct, ArrestProductDetail } from './arrest-product';
+import { ArrestIndictment, ArrestIndicmentDetail } from './arrest-indictment';
+// import { ProductModel } from '../../models/product.model';
+import { Message } from '../../config/message';
+import { ArrestLocale } from './arrest-locale';
+// import { Observable } from 'rxjs/Observable';
 
 // const options = { year: 'numeric', month: 'short', day: 'numeric' };
 
@@ -22,169 +26,219 @@ export class ArrestsService {
             })
     };
 
-    async getByKeyword(Textsearch: string): Promise<Arrest[]> {
-        const params = Textsearch;
+    private async responsePromisModify(params: string, url: string) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        return res.IsSuccess ? true : false;
+    }
+
+    private async resposePromisGet(params: string, url: string) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (res.IsSuccess === false) {
+            return {};
+        }
+        if (!res.ResponseData) {
+            return {}
+        }
+        return res.ResponseData
+    }
+
+    private async resposePromisGetList(params: string, url: string) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (res.IsSuccess === false) {
+            return [];
+        }
+        if (!res.ResponseData.length) {
+            return []
+        }
+        return res.ResponseData
+    }
+
+    async getByKeywordOnInit(): Promise<any[]> {
+        const params = { 'Textsearch': '' };
         const url = `${appConfig.api7788}/ArrestgetByKeyword`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData as Arrest[];
-        } catch (error) {
-            await alert(error);
+        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+        if (res.IsSuccess) {
+            return res.ResponseData
         }
     }
 
-    async getByConAdv(form: any): Promise<Arrest[]> {
-        const params = JSON.stringify(form);
+    getByKeyword(Textsearch: string): Promise<Arrest[]> {
+        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
+        const url = `${appConfig.api7788}/ArrestgetByKeyword`;
+        return this.resposePromisGetList(JSON.stringify(params), url)
+    }
+
+    getByConAdv(form: any): Promise<Arrest[]> {
+        const params = form;
         const url = `${appConfig.api7788}/ArrestgetByConAdv`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData as Arrest[];
-        } catch (error) {
-            await alert(error);
-        }
+        return this.resposePromisGetList(JSON.stringify(params), url)
     }
 
-    async getByCon(ArrestCode: string): Promise<Arrest> {
+    getByCon(ArrestCode: string): Promise<Arrest> {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestgetByCon`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData as Arrest;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.resposePromisGet(JSON.stringify(params), url)
     }
 
-    async updDelete(ArrestCode: string): Promise<any> {
+    updDelete(ArrestCode: string): Promise<any> {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.resposePromisGet(JSON.stringify(params), url)
     }
 
-    async staffupdDelete(StaffID: string): Promise<any> {
+    staffupdDelete(StaffID: string): Promise<any> {
         const params = { StaffID };
         const url = `${appConfig.api7788}/ArrestStaffupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async lawbreakerupdDelete(LawbreakerID: string): Promise<any> {
+    lawbreakerupdDelete(LawbreakerID: string): Promise<any> {
         const params = { LawbreakerID };
         const url = `${appConfig.api7788}/ArrestLawbreakerupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async productupdDelete(ProductID: string): Promise<any> {
+    productupdDelete(ProductID: string): Promise<any> {
         const params = { ProductID };
         const url = `${appConfig.api7788}/ArrestProductupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async indicmentupdDelete(IndicmentID: string): Promise<any> {
+    indicmentupdDelete(IndicmentID: string): Promise<any> {
         const params = { IndicmentID };
         const url = `${appConfig.api7788}/ArrestIndicmentupdDelete`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async insAll(Arrest: Arrest): Promise<any> {
+    insAll(Arrest: Arrest): Promise<boolean> {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestinsAll`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async staffinsAll(Staff: ArrestStaff): Promise<any> {
-        const params = Arrest;
+    staffinsAll(ArrestStaff: ArrestStaff): Promise<boolean> {
+        const params = ArrestStaff;
         const url = `${appConfig.api7788}/ArrestStaffinsAll`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async lawbreakerinsAll(lawbreaker: ArrestLawbreaker): Promise<any> {
+    localeinsAll(ArrestLocale: ArrestLocale): Promise<boolean> {
+        const params = ArrestLocale;
+        const url = `${appConfig.api7788}/ArrestLocaleinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url)
+    }
+
+    lawbreakerinsAll(lawbreaker: ArrestLawbreaker): Promise<boolean> {
         const params = lawbreaker;
         const url = `${appConfig.api7788}/ArrestLawbreakerinsAll`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async productinsAll(product: ArrestProduct): Promise<any> {
+    productinsAll(product: ArrestProduct): Promise<boolean> {
         const params = product;
         const url = `${appConfig.api7788}/ArrestProductinsAll`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async indicmentinsAll(indicment: ArrestIndictment): Promise<any> {
+    productDetailInsAll(productDetail: ArrestProductDetail): Promise<boolean> {
+        const params = productDetail;
+        const url = `${appConfig.api7788}/ArrestProductDetailinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url)
+    }
+
+    indicmentinsAll(indicment: ArrestIndictment): Promise<boolean> {
         const params = indicment;
         const url = `${appConfig.api7788}/ArrestIndicmentinsAll`;
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    async updByCon(Arrest: Arrest): Promise<any> {
+    indicmentgetByCon(IndicmentID: string): Promise<ArrestIndictment[]> {
+        const params = {IndicmentID};
+        const url = `${appConfig.api7788}/ArrestIndicmentgetByCon`;
+        return this.resposePromisGetList(JSON.stringify(params), url)
+    }
+
+    indicmentDetailinsAll(indictment: ArrestIndicmentDetail): Promise<boolean> {
+        const params = indictment;
+        const url = `${appConfig.api7788}/ArrestIndicmentDetailinsAll`
+        return this.responsePromisModify(JSON.stringify(params), url)
+    }
+
+    indicmentDetailgetByCon(IndicmentDetailID: string): Promise<ArrestIndicmentDetail> {
+        const params = { IndicmentDetailID };
+        const url = `${appConfig.api7788}/ArrestIndicmentDetailgetByCon`
+        return this.resposePromisGet(JSON.stringify(params), url)
+    }
+
+    updByCon(Arrest: Arrest): Promise<any> {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestupdByCon`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res.ResponseData;
-        } catch (error) {
-            await alert(error);
-        }
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
+
+    localeupdByCon(Locale: ArrestLocale): Promise<any> {
+        const params = Locale;
+        const url = `${appConfig.api7788}/ArrestLocaleupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url)
+    }
+
+    //-- Arrest Notice --//
+    noticegetByConAdv(form: any): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestNoticegetByConAdv`;
+        return this.resposePromisGetList(JSON.stringify(form), url);
+    }
+
+    noticegetByKeyword(Textsearch: any): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestNoticegetByKeyword`;
+        return this.resposePromisGetList(Textsearch, url);
+    }
+    //-- Arrest Notice --//
+
+    //-- Mas --//
+    masLawbreakergetByConAdv(Textsearch: any): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByKeyword`;
+        return this.resposePromisGetList(Textsearch, url);
+    }
+
+    masLawbreakergetByKeyword(Textsearch: any): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByKeyword`;
+        return this.resposePromisGetList(Textsearch, url);
+    }
+
+    masLawGroupSectiongetByKeyword(Textsearch: any): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestMasLawGroupSectiongetByKeyword`;
+        return this.resposePromisGetList(Textsearch, url);
+    }
+
+    masOfficegetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasOfficegetAll`;
+        return this.resposePromisGetList('{}', url);
+    }
+
+    masStaffgetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasStaffgetAll`;
+        return this.resposePromisGetList('{}', url);
+    }
+
+    masSubdistrictgetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasSubdistricgetAll`;
+        return this.resposePromisGetList('{}', url);
+    }
+
+    masDistrictgetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasDistricgetAll`;
+        return this.resposePromisGetList('{}', url);
+    }
+
+    masProvincegetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasProvincegetAll`;
+        return this.resposePromisGetList('{}', url);
+    }
+
+    masProductgetAll(): Promise<any[]> {
+        const url = `${appConfig.api7788}/ArrestgetMasProductgetAll`;
+        return this.resposePromisGetList('{}', url);
+    }
+    //-- Mas --//
 
 }

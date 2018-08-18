@@ -4,7 +4,7 @@
     <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
 </ng-template>
 
-<form action="" [formGroup]="arrestForm">
+<form action="" [formGroup]="arrestFG">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -14,38 +14,39 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใบแจ้งความนำจับ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="NoticeCode" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="NoticeCode"
+                    class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     <a href="javaScript:void(0);" class="more text-secondary" (click)="openModal(noticelist)">
-                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        <i class="ti-more-alt" aria-hidden="true"></i>
                     </a>
-
                     <ng-template #noticelist let-c="close" let-d="dismiss">
-                        <app-notice-list-modal (c)="modal.close()" (d)="modal.dismiss()"></app-notice-list-modal>
+                        <app-modal-notice (c)="modal.close()" (d)="modal.dismiss()" (outputNotice)="setNoticeForm($event)"></app-modal-notice>
                     </ng-template>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">หมายค้น :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="InvestigationSurveyDocument" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="InvestigationSurveyDocument" class="form-control form-control-sm" 
+                    [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     <a href="javaScript:void(0);" class="more text-secondary">
-                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        <i class="ti-more-alt" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ส.ส.2/27 :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="InvestigationCode" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="InvestigationCode" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     <a href="javaScript:void(0);" class="more text-secondary">
-                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        <i class="ti-more-alt" aria-hidden="true"></i>
                     </a>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่ใบงาน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="ArrestCode" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="ArrestCode" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     <a href="javaScript:void(0);" class="more text-secondary">
-                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        <i class="ti-more-alt" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
@@ -53,29 +54,46 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เขียน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group input-group">
-                        <input type="date" formControlName="ArrestDate" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="date" formControlName="ArrestDate" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
-                        <input type="text" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="ArrestTime" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">เขียนที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="ArrestStation" class="form-control form-control-sm" [readonly]="showEditField">
+                    <ng-template #rt let-r="result" let-t="term">
+                        {{ r.OfficeShortName }}
+                    </ng-template>
+
+                    <input type="text" class="form-control form-control-sm "
+                        [ngClass]="{'ng-touched':isRequired}"
+                        required
+                        [ngbTypeahead]="serachOffice"
+                        [resultTemplate]="rt"
+                        [readOnly]="showEditField"
+                        [inputFormatter]="formatterOffice" 
+                        (selectItem)="selectItemOffice($event)"
+                        [value]="arrestFG.get('ArrestStation').value"
+                         />
+                    <!-- <input type="text" formControlName="ArrestStation" class="form-control form-control-sm" [readonly]="showEditField"> -->
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เกิดเหตุ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group input-group">
-                        <input type="date" formControlName="OccurrenceDate" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="date" formControlName="OccurrenceDate" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
-                        <input type="text" formControlName="OccurrenceTime" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="OccurrenceTime" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+        
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
@@ -106,16 +124,29 @@
                         <tr *ngFor="let item of ArrestStaff.controls; let i = index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" formControlName="FullName" class="form-control form-control-sm" [readonly]="showEditField">
+                                <ng-template #rt let-r="result" let-t="term">
+                                    {{ r.TitleName == null ? '' : r.TitleName }} 
+                                    {{r.FirstName == null ? '' : r.FirstName}} 
+                                    {{r.LastName == null ? '' : r.LastName}}
+                                </ng-template>
+            
+                                <input type="text" class="form-control form-control-sm"
+                                    [ngbTypeahead]="searchStaff"
+                                    [resultTemplate]="rt"
+                                    [readOnly]="showEditField"
+                                    [inputFormatter]="formatterStaff" 
+                                    (selectItem)="selectItemStaff($event, i)"
+                                    value="{{item.value.FullName}}"
+                                    />
                             </td>
                             <td>
-                                <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
+                                <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly >
                             </td>
                             <td>
-                                <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly>
+                                <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly >
                             </td>
                             <td>
-                                <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField" >
                                 <!-- <select formControlName="ContributorID" class="form-control form-control-sm" [disabled]="showEditField">
                                 </select> -->
                             </td>
@@ -143,51 +174,63 @@
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Address" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Address" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Building" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Building" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Region" class="form-control form-control-sm" [readonly]="showEditField">
+                        <ng-template #rt let-r="result" let-t="term">
+                            {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                        </ng-template>
+    
+                        <input type="text" class="form-control form-control-sm"
+                            [ngbTypeahead]="searchRegion"
+                            [resultTemplate]="rt"
+                            [readOnly]="showEditField"
+                            [inputFormatter]="formatterRegion" 
+                            (selectItem)="selectItemLocaleRegion($event)"
+                            value="{{item.value.Region}}"
+                             [ngClass]="{'ng-touched':isRequired}" required/>
+                        <!-- <input type="text" formControlName="Region" class="form-control form-control-sm" [readonly]="showEditField"> -->
                     </div>
                 </div>
                 <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">รหัสไปษณีย์ :</label>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">รหัสไปรษณีย์ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="ZipCode" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="ZipCode" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">สน.ท้องที่เกิดเหตุ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-                        <input type="text" formControlName="Policestation" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Policestation" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
             </div>
@@ -207,7 +250,9 @@
                 </div>
 
                 <ng-template #lawbreaker let-c="close" let-d="dismiss">
-                    <app-lawbreaker-modal (c)="modal.close()" (d)="modal.dismiss()"></app-lawbreaker-modal>
+                    <app-modal-lawbreaker (c)="modal.close()" (d)="modal.dismiss()" (lawbreakerEmit)="addLawbreaker($event)">
+                        
+                    </app-modal-lawbreaker>
                 </ng-template>
             </div>
 
@@ -227,9 +272,9 @@
                     </thead>
                     <tbody formArrayName="ArrestLawbreaker">
                         <tr *ngFor="let item of ArrestLawbreaker.controls; let i=index;" [formGroupName]="i">
-                            <td class="text-center"></td>
-                            <td>{{item.get('EntityType').value}}</td>
-                            <td>{{item.get('LawbreakerType').value}}</td>
+                            <td class="text-center">{{i+1}}</td>
+                            <td>{{item.get('EntityTypeName').value}}</td>
+                            <td>{{item.get('LawbreakerTypeName').value}}</td>
                             <td>
                                 <span *ngIf="item.get('EntityType').value == 0">
                                     {{item.get('CompanyRegistrationNo').value}}
@@ -298,22 +343,39 @@
                         <tr *ngFor="let item of ArrestProduct.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" formControlName="ProductDesc" class="form-control form-control-sm" [readonly]="showEditField">
+                                <ng-template #rt let-r="result" let-t="term">
+                                    {{ r.SubBrandNameTH }} {{r.BrandNameTH}} {{r.ModelName}}
+                                </ng-template>
+                                <input type="text" class="form-control form-control-sm"
+                                    [readonly]="showEditField"
+                                    [ngbTypeahead]="searchProduct"
+                                    [resultTemplate]="rt"
+                                    [inputFormatter]="formatterProduct"
+                                    (selectItem)="selectItemProductItem($event, i)" 
+                                    value="{{item.value.ProductFullName}}"
+                                    />
                             </td>
                             <td>
                                 <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField">
-                                <!-- <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
-                                </select> -->
+                                <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                    <option value="" disabled selected></option>
+                                    <option *ngFor="let item of typeheadQtyUnit"
+                                    [disabled]="showEditField" 
+                                    [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                </select>
                             </td>
                             <td>
                                 <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="text" formControlName="NetVolumeUnit" class="form-control form-control-sm" [readonly]="showEditField">
-                                <!-- <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField"></select> -->
+                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                    <option value=""></option>
+                                    <option *ngFor="let item of typeheadNetVolumeUnit"
+                                    [disabled]="showEditField" 
+                                    [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                </select>
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i, item.get('ProductID').value)">
@@ -356,15 +418,31 @@
                     <tbody formArrayName="ArrestIndictment">
                         <tr *ngFor="let item of ArrestIndictment.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
-                            <td></td>
+                            <td>{{item.get('SectionName').value}}</td>
                             <td>{{item.get('GuiltBaseID').value}}</td>
-                            <td></td>
-                            <td></td>
                             <td>
-                                <a href="javaScript:void(0)" class="text-danger" (click)="openModal(allegation)" *ngIf="!showEditField">
+                               <div *ngIf="item.value.IndictmentLawbreaker.length">
+                                    <div *ngFor="let law of item.value.IndictmentLawbreaker;">
+                                        <!-- <div *ngIf="law.EntityType == 0">
+                                            {{law.CompanyFullName}}
+                                        </div> -->
+                                        <!-- <div *ngIf="law.EntityType == 1"> -->
+                                            {{law.LawbreakerFullName}}
+                                        <!-- </div> -->
+                                    </div>
+                               </div>
+                            </td>
+                            <td>
+                                <div *ngIf="item.value.IndictmentLawbreaker.length">
+                                    <div *ngFor="let law of item.value.IndictmentLawbreaker;">
+                                        {{law.ProductName}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="javaScript:void(0)" class="text-danger" (click)="editAllegation(i ,allegation)" *ngIf="!showEditField">
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
-
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(i, item.get('IndictmentID').value)">
@@ -376,11 +454,14 @@
                 </table>
 
                 <ng-template #allegation let-c="close" let-d="dismiss">
-                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()"
+                    <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" 
+                    (patchIndicment)="patchIndicment($event)"
+                    (setIndicment)="addIndicment($event)"
                     [mode]="mode"
                     [lawbreaker]="ArrestLawbreaker.value"
                     [product]="ArrestProduct.value"
-                    [indicment]="ArrestIndictment.value"
+                    [indicment]="indictmentModal"  
+                    [isEditIndicment]="isEditIndicment" 
                     ></app-allegation-modal>
                 </ng-template>
             </div>
@@ -396,19 +477,19 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
-                    <textarea formControlName="Behaviour" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
+                    <textarea formControlName="Behaviour" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required></textarea>
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">คำให้การของผู้ต้องหา :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
-                    <textarea formControlName="Testimony" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
+                    <textarea formControlName="Testimony" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required></textarea>
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">การแจ้งสิทธิ :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
-                    <textarea formControlName="Prompt" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"></textarea>
+                    <textarea formControlName="Prompt" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required></textarea>
                 </div>
             </div>
         </div>
@@ -441,13 +522,18 @@
                         <tr *ngFor="let item of ArrestDocument.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">{{i+1}}</td>
                             <td>
-                                <input type="text" formControlName="DocumentID" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="text" formControlName="DocumentName" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <input type="file" formControlName="FilePath" class="dropify" [readonly]="showEditField">
-                                <!-- <a href="javaScript:void(0)" class="text-secondary" style="position: absolute;right: 100px;bottom: 36px;">
-                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                                </a> -->
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
+                                    <div class="input-group-append">
+                                        <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)" hidden>
+                                        <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
+                                            <i class="ti-more-alt"></i>
+                                        </label>
+                                    </div>
+                                </div>
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteDocument(i)">

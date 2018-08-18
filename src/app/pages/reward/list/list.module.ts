@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {HttpClientModule} from '@angular/common/http';
+import {PaginationTableModule} from '../../component/pagination-table/pagination-table.module';
 const routes: Routes = [
     {
       path: '',
@@ -20,6 +22,10 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
+        NgbModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        PaginationTableModule,
         RouterModule.forChild(routes)
     ],
     declarations: [ListComponent]

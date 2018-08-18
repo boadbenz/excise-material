@@ -199,21 +199,22 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sub = this.navService.onSave.subscribe(async status => {
             if (status) {
                 debugger
-                 // set action save = false
-                 await this.navService.setOnSave(false);
+                // set action save = false
+                await this.navService.setOnSave(false);
 
                 if (this.oProve) {
                     if (this.ProveID == '0') {
                         await this.onInsProve();
-                    } else {                      
+                        this.router.navigate(['/prove/list']);
+                    } else {
                         await this.onUpdProve();
-                        //   this.onComplete();
+                        await this.onComplete();
                     }
                 }
             }
         });
 
-        this.sub =  this.navService.onDelete.subscribe(async status => {
+        this.sub = this.navService.onDelete.subscribe(async status => {
             if (status) {
                 await this.navService.setOnDelete(false);
                 this.onDelete();
@@ -302,7 +303,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oProve = {};
             this.router.navigate(['/prove/list']);
         } else {
-            alert(Message.saveError);
+            alert(Message.saveFail);
         }
 
         this.preloader.setShowPreloader(false);
@@ -416,7 +417,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (isSuccess) {
             alert(Message.saveComplete);
         } else {
-            alert(Message.saveError);
+            alert(Message.saveFail);
         }
 
         this.preloader.setShowPreloader(false);
@@ -430,7 +431,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.saveComplete);
                     this.router.navigate(['/prove/list']);
                 } else {
-                    alert(Message.saveError);
+                    alert(Message.saveFail);
                 }
             }, (error) => { console.error(error); return false; });
         }
@@ -441,6 +442,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.param.unsubscribe();
     }
 
+    onComplete() {
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setSearchBar(false);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+
+        this.showEditField = true;
+    }
     // openSuspect(e) {
     //     this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     // }

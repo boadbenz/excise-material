@@ -4,8 +4,10 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
-import { toLocalShort } from '../../../config/dateFormat';
+import { toLocalShort, toLocalNumeric, resetLocalNumeric } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -13,9 +15,12 @@ import { pagination } from '../../../config/pagination';
 export class ListComponent implements OnInit, OnDestroy {
 
     private subOnSearch: any;
+    private subSetNextPage: any;
     paginage = pagination;
     dataTable: any;
     advSearch: any;
+    OccurrenceDateForm: string;
+    OccurrenceDateTo: string
 
     arrestList = new Array<Arrest>();
     arrest = new Array<Arrest>();
@@ -27,7 +32,8 @@ export class ListComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private arrestService: ArrestsService,
         private router: Router,
-        private chRef: ChangeDetectorRef
+        private sidebarService: SidebarService,
+        private preLoader: PreloaderService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -43,30 +49,49 @@ export class ListComponent implements OnInit, OnDestroy {
 
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+        this.sidebarService.setVersion('1.02');
+
+        this.OccurrenceDateForm = toLocalNumeric((new Date()).toISOString())
+        this.OccurrenceDateTo = toLocalNumeric((new Date()).toISOString())
+
+        this.onSearch('');
+
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
             }
         })
+
+        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnNextPage(false);
+                this.router.navigate(['/arrest/manage', 'C', 'NEW']);
+            }
+        })
     }
 
-    onSearch(Textsearch: any) {
-        this.arrestService.getByKeyword(Textsearch).then(res => this.onSearchComplete(res));
+    async onSearch(Textsearch: any) {
+        this.paginage.TotalItems = 0;
+        this.preLoader.setShowPreloader(true);
+        await this.arrestService.getByKeyword(Textsearch).then(res => this.onSearchComplete(res));
+        this.preLoader.setShowPreloader(false);
     }
 
-    onAdvSearch(form: any) {
-        debugger
-        const sDateCompare = new Date(form.value.OccurrenceDateFrom);
-        const eDateCompare = new Date(form.value.OccurrenceDateTo);
+    async onAdvSearch(form: any) {
+        this.paginage.TotalItems = 0;
+        const sDateCompare =  new Date(resetLocalNumeric(form.value.OccurrenceDateFrom));
+        const eDateCompare = new Date(resetLocalNumeric(form.value.OccurrenceDateTo));
 
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+        if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
             alert(Message.checkDate);
         } else {
-            form.value.DateStartFrom = sDateCompare.getTime();
-            form.value.DateStartTo = eDateCompare.getTime();
-            this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
+            this.preLoader.setShowPreloader(true);
+            form.value.DateStartFrom = sDateCompare;
+            form.value.DateStartTo = eDateCompare;
+            await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
+            this.preLoader.setShowPreloader(false);
         }
     }
 
@@ -101,5 +126,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subOnSearch.unsubscribe();
+        this.subSetNextPage.unsubscribe();
     }
 }

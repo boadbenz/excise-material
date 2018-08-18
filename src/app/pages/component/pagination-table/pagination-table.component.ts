@@ -9,10 +9,10 @@ export class PaginationTableComponent implements OnInit, OnChanges {
 
     paginate: any;
 
-    @Input() TotalItems: number;
-    @Input() CurrentPage: number;
-    @Input() PageSize: number;
-    @Input() RowsPerPageOptions: any[];
+    @Input() TotalItems = 0;
+    @Input() CurrentPage = 0;
+    @Input() PageSize = 0;
+    @Input() RowsPerPageOptions = [];
 
     @Output() onPageChange = new EventEmitter(this.paginate);
 
@@ -43,6 +43,11 @@ export class PaginationTableComponent implements OnInit, OnChanges {
     changePage() {
         this.paginate = this.getPageItems();
         this.onPageChange.emit(this.paginate);
+    }
+
+    changePageSize() {
+        this.CurrentPage = 1;
+        this.changePage();
     }
 
     getPageItems() {

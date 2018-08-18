@@ -156,7 +156,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.incomeService.InsAll(this.revenueForm.value).subscribe(p => {
                 this.onComplete();
             }, (err: HttpErrorResponse) => {
-                alert(Message.saveError);
+                alert(Message.saveFail);
             });
         }
     }
@@ -167,7 +167,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.incomeService.updByCon(this.revenueForm.value).subscribe(p => {
                 this.onComplete();
             }, (err: HttpErrorResponse) => {
-                alert(Message.saveError);
+                alert(Message.saveFail);
             });
         }
     }
