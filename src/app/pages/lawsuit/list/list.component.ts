@@ -8,6 +8,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
 import { toLocalShort } from "../../../config/dateFormat";
 import { Notice } from "../../notices/notice";
+import {PreloaderService} from "../../../shared/preloader/preloader.component";
 
 @Component({
   selector: "app-list",
@@ -27,6 +28,7 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(
     private navService: NavigationService,
     private router: Router,
+    private preLoaderService: PreloaderService,
     private lawsuitService: LawsuitService
   ) {
     /* Initial Adv.Search */
@@ -52,13 +54,6 @@ export class ListComponent implements OnInit, OnDestroy {
       alert(Message.noRecord);
       return false;
     }
-
-    // await this.results.map(x => {
-    //   x.servicePlanNotBillingSize = (x.servicePlans || []).filter(data=> {
-    //     return !data.billing;
-    //   }).length;
-    //   return x;
-    // });
 
     // await list.map((item, i) => {
     //   item.rowId = i + 1;
@@ -89,6 +84,22 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setSaveButton(false);
   }
 
+  async onAdvSearch(form: any) {
+    if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
+      const sDateCompare = new Date(form.value.LawsuitDateFrom);
+      const eDateCompare = new Date(form.value.LawsuitDateTo);
+      if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+        alert(Message.checkDate);
+        return false;
+      }
+      form.value.LawsuitDateFrom = sDateCompare.toISOString();
+      form.value.LawsuitDateTo = eDateCompare.toISOString();
+    }
+    this.preLoaderService.setShowPreloader(true);
+    await this.lawsuitService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
+    this.preLoaderService.setShowPreloader(false);
+  }
+
   // private getSearchComplete(res: any) {
   //   console.log(res);
   //   if (res.IsSuccess) {
@@ -111,19 +122,18 @@ export class ListComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  advSearchForm(advForm: NgForm) {
-    const DateFrom = new Date(advForm.value.LawsuitDateFrom);
-    const DateTo = new Date(advForm.value.LawsuitDateTo);
-    // Compare Date
-    if (DateFrom.getTime() > DateTo.getTime()) {
-      alert(Message.checkDate);
-    } else {
-      this.lawsuitService
-        .getByKeyword(advForm.value)
-        .then(res => this.getSearchComplete(res));
-    }
-    advForm.reset();
-  }
+  // advSearchForm(advForm: NgForm) {
+  //   const DateFrom = new Date(advForm.value.LawsuitDateFrom);
+  //   const DateTo = new Date(advForm.value.LawsuitDateTo);
+  //   // Compare Date
+  //   if (DateFrom.getTime() > DateTo.getTime()) {
+  //     alert(Message.checkDate);
+  //   } else {
+  //     this.lawsuitService.getByKeyword(advForm.value)
+  //       .then(res => this.onSearchComplete(res));
+  //   }
+  //   advForm.reset();
+  // }
 
   viewData(item) {
     this.router.navigate(["/lawsuit/manage", "R"], {

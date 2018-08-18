@@ -3,6 +3,7 @@ import { Http, Headers } from "@angular/http";
 import { appConfig } from "../../app.config";
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Lawsuit } from "./models/lawsuit";
+import {Notice} from "../notices/notice";
 
 @Injectable()
 export class LawsuitService {
@@ -32,6 +33,19 @@ export class LawsuitService {
     return this.responsePromiseGet(JSON.stringify(params), url)
   }
 
+  getByConAdv(form: any): Promise<Lawsuit[]> {
+    const url = `${appConfig.api8083}/LawsuitgetByConAdv`;
+    return this.responsePromiseGet(JSON.stringify(form), url)
+  }
+
+
+
+
+
+
+
+
+
   // async getByKeyword(filterValue) {
   //   const params = JSON.stringify(filterValue);
   //   const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
@@ -48,16 +62,6 @@ export class LawsuitService {
   //   //   await alert(error);
   //   // }
   // }
-
-
-
-
-
-
-
-
-
-
   //
   // async LawSuitgetByConAdv(advForm) {
   //   const params = JSON.stringify({ advForm });
