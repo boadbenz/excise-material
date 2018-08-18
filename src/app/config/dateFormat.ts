@@ -4,8 +4,8 @@ export function toLocalNumeric(date: string): string {
     }
 
     const _date = new Date(date)
-    const dd = this.setZero(_date.getDate());
-    const mm = this.setZero(_date.getMonth() + 1);
+    const dd = setZero(_date.getDate());
+    const mm = setZero(_date.getMonth() + 1);
     const yyyy = _date.getFullYear() + 543;
 
     return `${yyyy}-${mm}-${dd}`;
@@ -17,8 +17,8 @@ export function resetLocalNumeric(date: string): string {
     }
 
     const _date = new Date(date)
-    const dd = this.setZero(_date.getDate());
-    const mm = this.setZero(_date.getMonth() + 1);
+    const dd = setZero(_date.getDate());
+    const mm = setZero(_date.getMonth() + 1);
     const yyyy = _date.getFullYear() - 543;
 
     return `${yyyy}-${mm}-${dd}`;
