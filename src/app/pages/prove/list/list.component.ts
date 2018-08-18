@@ -55,7 +55,7 @@ export class ListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.sidebarService.setVersion('1.0.0');
+        this.sidebarService.setVersion('Prove 1.0.0');
 
         this.onSearch({ Textsearch: "" });
 
