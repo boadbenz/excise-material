@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
 import { toLocalShort } from "../../../config/dateFormat";
+import { Notice } from "../../notices/notice";
 
 @Component({
   selector: "app-list",
@@ -15,9 +16,10 @@ import { toLocalShort } from "../../../config/dateFormat";
 })
 export class ListComponent implements OnInit, OnDestroy {
 
+  results: Lawsuit[] = [];
+  resultsPerPage: Lawsuit[] = [];
+
   advSearch: any;
-  lawsuitList = new Array<Lawsuit>();
-  lawsuitListforPage = new Array<Lawsuit>();
   paginage = pagination;
 
   private advSearchSub: any;
@@ -27,20 +29,51 @@ export class ListComponent implements OnInit, OnDestroy {
     private router: Router,
     private lawsuitService: LawsuitService
   ) {
-    this.advSearch = this.navService.showAdvSearch;
-    this.advSearchSub = this.navService.searchByKeyword.subscribe(
-      Textsearch => {
-        if (Textsearch) {
-          this.lawsuitService
-            .getByKeyword(Textsearch)
-            .then(res => this.getSearchComplete(res));
-        }
-      }
-    );
+    // this.advSearch = this.navService.showAdvSearch;
+    // this.advSearchSub = this.navService.searchByKeyword.subscribe(
+    //   Textsearch => {
+    //     if (Textsearch) {
+    //       this.lawsuitService
+    //         .getByKeyword(Textsearch)
+    //         .then(res => this.getSearchComplete(res));
+    //     }
+    //   }
+    // );
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    /* Display Button */
     this.setShowButton();
+    /* Load Data*/
+    await this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+  }
+
+  async onSearchComplete(list: Lawsuit[]) {
+
+    if (!list.length) {
+      alert(Message.noRecord);
+      return false;
+    }
+
+    this.results = [];
+    // await list.map((item, i) => {
+    //   item.RowId = i + 1;
+    //   item.NoticeDate = toLocalShort(item.NoticeDate);
+    //   item.NoticeStaff.map(s => {
+    //     s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+    //   });
+    //   item.NoticeSuspect.map(s => {
+    //     s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+    //   })
+    // })
+    //
+    // this.notice = list
+    // // set total record
+    // this.paginage.TotalItems = this.notice.length;
+
+    this.results = list;
+    // set total record
+    this.paginage.TotalItems = this.results.length;
   }
 
   private setShowButton() {
@@ -54,8 +87,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private getSearchComplete(res: any) {
     if (res.IsSuccess) {
-      this.lawsuitList = res.ResponseData;
-      this.lawsuitList.map((data, index) => {
+      this.results = res.ResponseData;
+      this.results.map((data, index) => {
         data.RowsId = index + 1;
         data.LawsuitDate = toLocalShort(data.LawsuitDate);
         data.LawsuiteStaff.map(staff => {
@@ -65,8 +98,8 @@ export class ListComponent implements OnInit, OnDestroy {
         });
       });
 
-      this.lawsuitListforPage = this.lawsuitList;
-      this.paginage.TotalItems = this.lawsuitList.length;
+      this.resultsPerPage = this.results;
+      this.paginage.TotalItems = this.results.length;
     } else {
       alert(Message.noRecord);
       return false;
@@ -97,11 +130,15 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.showAdvSearch.next(false);
   }
 
-  async pageChanges(event: any) {
-    this.lawsuitList = await this.lawsuitListforPage.slice(
-      event.startIndex - 1,
-      event.endIndex
-    );
+  // async pageChanges(event: any) {
+  //   this.results = await this.resultsPerPage.slice(
+  //     event.startIndex - 1,
+  //     event.endIndex
+  //   );
+  // }
+
+  async pageChanges(event) {
+    this.results = await this.results.slice(event.startIndex - 1, event.endIndex);
   }
 
   ngOnDestroy() {

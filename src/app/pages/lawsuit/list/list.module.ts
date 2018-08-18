@@ -6,6 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LawsuitService } from "../lawsuit.service";
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { HttpModule } from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
+import { CardActionsModule } from "../../component/card-actions/card-actions.module";
 
 const routes: Routes = [
     {
@@ -22,10 +25,13 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
-        FormsModule,
-        CommonModule,
-        RouterModule.forChild(routes),
-        PaginationTableModule
+      FormsModule,
+      CommonModule,
+      HttpModule,
+      HttpClientModule,
+      RouterModule.forChild(routes),
+      CardActionsModule,
+      PaginationTableModule
     ],
     providers: [NavigationComponent, LawsuitService],
     declarations: [ListComponent]
