@@ -55,9 +55,15 @@ export class ListComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    this.results = [];
+    // await this.results.map(x => {
+    //   x.servicePlanNotBillingSize = (x.servicePlans || []).filter(data=> {
+    //     return !data.billing;
+    //   }).length;
+    //   return x;
+    // });
+
     // await list.map((item, i) => {
-    //   item.RowId = i + 1;
+    //   item.rowId = i + 1;
     //   item.NoticeDate = toLocalShort(item.NoticeDate);
     //   item.NoticeStaff.map(s => {
     //     s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
@@ -65,14 +71,14 @@ export class ListComponent implements OnInit, OnDestroy {
     //   item.NoticeSuspect.map(s => {
     //     s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
     //   })
-    // })
-    //
-    // this.notice = list
-    // // set total record
-    // this.paginage.TotalItems = this.notice.length;
+    // });
 
-    this.results = list;
-    // set total record
+    this.results = list.map((item, i) => {
+      item.RowId = i + 1;
+      return item;
+    });
+
+    /* Set Total Record */
     this.paginage.TotalItems = this.results.length;
   }
 
