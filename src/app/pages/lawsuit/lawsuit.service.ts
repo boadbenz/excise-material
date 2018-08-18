@@ -11,6 +11,12 @@ export class LawsuitService {
 
   constructor(private http: HttpClient) { }
 
+  private async responsePromiseGet(params: string, url: string) {
+    const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+    if (!res.IsSuccess || !(res.ResponseData || []).length) { return []; }
+    return res.ResponseData
+  }
+
   async getByKeywordOnInt(): Promise<Lawsuit[]> {
     const params = { 'Textsearch': '' };
     const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
@@ -20,26 +26,38 @@ export class LawsuitService {
     }
   }
 
+  getByKeyword(filterValue: any): Promise<Lawsuit[]> {
+    const params = filterValue === '' ? { 'Textsearch': '' } : filterValue;
+    const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
+    return this.responsePromiseGet(JSON.stringify(params), url)
+  }
 
-
-
-
-
-
-
-
-  // async getByKeyword(textSearch) {
-  //   const params = JSON.stringify(textSearch);
+  // async getByKeyword(filterValue) {
+  //   const params = JSON.stringify(filterValue);
   //   const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
-  //   try {
-  //     const res = await this.http
-  //       .post(url, params, this.httpOptions)
-  //       .toPromise();
-  //     return res.json();
-  //   } catch (error) {
-  //     await alert(error);
+  //   const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  //   if (res.IsSuccess) {
+  //     return res.ResponseData
   //   }
+  //   // try {
+  //   //   const res = await this.http
+  //   //     .post(url, params, this.httpOptions)
+  //   //     .toPromise();
+  //   //   return res.json();
+  //   // } catch (error) {
+  //   //   await alert(error);
+  //   // }
   // }
+
+
+
+
+
+
+
+
+
+
   //
   // async LawSuitgetByConAdv(advForm) {
   //   const params = JSON.stringify({ advForm });

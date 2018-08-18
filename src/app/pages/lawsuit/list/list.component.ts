@@ -29,16 +29,14 @@ export class ListComponent implements OnInit, OnDestroy {
     private router: Router,
     private lawsuitService: LawsuitService
   ) {
-    // this.advSearch = this.navService.showAdvSearch;
-    // this.advSearchSub = this.navService.searchByKeyword.subscribe(
-    //   Textsearch => {
-    //     if (Textsearch) {
-    //       this.lawsuitService
-    //         .getByKeyword(Textsearch)
-    //         .then(res => this.getSearchComplete(res));
-    //     }
-    //   }
-    // );
+    /* Initial Adv.Search */
+    this.advSearch = this.navService.showAdvSearch;
+    this.advSearchSub = this.navService.searchByKeyword.subscribe(filterValue => {
+      if (filterValue) {
+        this.lawsuitService.getByKeyword(filterValue)
+          .then(res => this.onSearchComplete(res));
+      }
+    });
   }
 
   async ngOnInit() {
@@ -74,7 +72,7 @@ export class ListComponent implements OnInit, OnDestroy {
     // });
 
     this.results = list.map((item, i) => {
-      item.RowId = i + 1;
+      item.RowsId = i + 1;
       return item;
     });
 
@@ -91,26 +89,27 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setSaveButton(false);
   }
 
-  private getSearchComplete(res: any) {
-    if (res.IsSuccess) {
-      this.results = res.ResponseData;
-      this.results.map((data, index) => {
-        data.RowsId = index + 1;
-        data.LawsuitDate = toLocalShort(data.LawsuitDate);
-        data.LawsuiteStaff.map(staff => {
-          staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
-            staff.LastName
-            }`;
-        });
-      });
-
-      this.resultsPerPage = this.results;
-      this.paginage.TotalItems = this.results.length;
-    } else {
-      alert(Message.noRecord);
-      return false;
-    }
-  }
+  // private getSearchComplete(res: any) {
+  //   console.log(res);
+  //   if (res.IsSuccess) {
+  //     this.results = res.ResponseData;
+  //     this.results.map((data, index) => {
+  //       data.RowsId = index + 1;
+  //       data.LawsuitDate = toLocalShort(data.LawsuitDate);
+  //       data.LawsuiteStaff.map(staff => {
+  //         staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
+  //           staff.LastName
+  //           }`;
+  //       });
+  //     });
+  //
+  //     this.resultsPerPage = this.results;
+  //     this.paginage.TotalItems = this.results.length;
+  //   } else {
+  //     alert(Message.noRecord);
+  //     return false;
+  //   }
+  // }
 
   advSearchForm(advForm: NgForm) {
     const DateFrom = new Date(advForm.value.LawsuitDateFrom);
@@ -128,7 +127,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   viewData(item) {
     this.router.navigate(["/lawsuit/manage", "R"], {
-      queryParams: { id: item.LawsuitID, code: "050100020" }
+      queryParams: { id: item.LawsuitID, code: item.ArrestCode }
     });
   }
 
