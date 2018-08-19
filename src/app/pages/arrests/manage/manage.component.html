@@ -54,7 +54,8 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เขียน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group input-group">
-                        <input type="date" formControlName="ArrestDate" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
+                        <input type="date" formControlName="ArrestDate" 
+                        #arrestDate class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
                         <input type="text" formControlName="ArrestTime" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
