@@ -7,6 +7,13 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { Arrest } from "../../arrests/arrest";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {FormBuilder} from "@angular/forms";
+import {NoticeService} from "../../notices/notice.service";
+import {PreloaderService} from "../../../shared/preloader/preloader.component";
+import {SidebarService} from "../../../shared/sidebar/sidebar.component";
+import {ArrestsService} from "../../arrests/arrests.service";
+import {ProveService} from "../../prove/prove.service";
 
 @Component({
   selector: "app-manage",
@@ -21,15 +28,35 @@ export class ManageComponent implements OnInit {
   private getDataFromListPage: any;
 
   constructor(
-    private router: Router,
     private activeRoute: ActivatedRoute,
+    private suspectModalService: NgbModal,
+    private router: Router,
+    private fb: FormBuilder,
     private navService: NavigationService,
+    // private noticeService: NoticeService,
+    private ngbModel: NgbModal,
+    private preloader: PreloaderService,
+    private sidebarService: SidebarService,
+    private arrestService: ArrestsService,
+    private proveService: ProveService,
+
+
+    // private router: Router,
+    // private activeRoute: ActivatedRoute,
+    // private navService: NavigationService,
     private lawsuitService: LawsuitService
-  ) { }
+  ) {
+    console.log('manage page constructor');
+    this.navService.setNewButton(false);
+    this.navService.setSearchBar(false);
+    this.navService.setInnerTextNextPageButton('งานจับกุม')
+  }
 
   ngOnInit() {
+    console.log('manage page init');
     this.setShowButton();
-    this.getParamFromActiveRoute();
+    this.active_route();
+    // this.getParamFromActiveRoute();
   }
 
   private setShowButton() {
@@ -42,81 +69,115 @@ export class ManageComponent implements OnInit {
     this.navService.setSaveButton(false);
   }
 
-  private getParamFromActiveRoute() {
-    this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
-      async params => {
-        // ArrestgetByCon
-        await this.lawsuitService.ArrestgetByCon(params.code).then(res => {
-          if (res.IsSuccess) {
-            this.arrestList.push(res.ResponseData);
-            this.arrestList.map(p => {
-              p.ArrestDate = toLocalShort(p.ArrestDate);
-              p.ArrestStaff.map(staff => {
-                staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
-                  staff.LastName
-                  }`;
-              });
-            });
-          }
-        });
-
-        // LawsuitgetByCon
-        await this.lawsuitService.LawsuitgetByCon(params.id).then(res => {
-          if (res.IsSuccess) {
-            this.lawsuitList.push(res.ResponseData);
-            this.lawsuitList.map((data, index) => {
-              data.RowsId = index + 1;
-            });
-
-            // Check IsOutSide
-            if (
-              res.ResponseData.IsOutside == 1 &&
-              res.ResponseData.LawsuitNo != null
-            ) {
-              this.lawsuitList.map(law => {
-                law.LawsuitNo = `น ${law.LawsuitNo}`;
-              });
-            }
-
-            // Check status IsLawsuit
-            if (res.ResponseData.IsLawsuit == 0) {
-              this.lawsuitList.map(law => {
-                law.IsLawsuitStatus = "ไม่รับคดี";
-              });
-            } else if (res.ResponseData.IsLawsuit == 1) {
-              this.lawsuitList.map(law => {
-                law.IsLawsuitStatus = "ดำเนินการรับคดีแล้ว";
-              });
-            } else {
-              this.lawsuitList.map(law => {
-                law.IsLawsuitStatus = "ยังไม่ดำเนินกำรรับคดี";
-              });
-            }
-          }
-        });
-
-        // Find guiltbaseID with IndictmentID from Lawsuit
-        this.arrestList[0].ArrestIndictment.forEach(value => {
-          if (value.IndictmentID == this.lawsuitList[0].IndictmentID) {
-            this.lawsuitService
-              .CompareMasLawgetByCon(value.GuiltBaseID)
-              .then(res => {
-                if (res) {
-                  for (let key in res) {
-                    if (key == "CompareMasLawSection") {
-                      this.masLawGroupSectionList.push(res[key]);
-                    }
-                    if (key == "CompareMasLawGuiltBase") {
-                      this.masLawGuitBaseList.push(res[key]);
-                    }
-                  }
-                }
-              });
-          }
-        });
-      }
-    );
+  private active_route() {
+    // this.activeRoute.params.subscribe(p => {
+    //   this.mode = p['mode'];
+    //   if (p['mode'] === 'C') {
+    //     // set false
+    //     this.navService.setEditButton(false);
+    //     this.navService.setDeleteButton(false);
+    //     this.navService.setEditField(false);
+    //     // set true
+    //     this.navService.setSaveButton(true);
+    //     this.navService.setCancelButton(true);
+    //     this.navService.setNextPageButton(true);
+    //     this.noticeCode = `LS-${(new Date).getTime()}`;
+    //     this.arrestCode = `TN-${(new Date).getTime()}`;
+    //
+    //   } else if (p['mode'] === 'R') {
+    //     // set false
+    //     this.navService.setSaveButton(false);
+    //     this.navService.setCancelButton(false);
+    //     // set true
+    //     this.navService.setPrintButton(true);
+    //     this.navService.setEditButton(true);
+    //     this.navService.setDeleteButton(true);
+    //     this.navService.setEditField(true);
+    //     this.navService.setNextPageButton(true);
+    //
+    //     if (p['code']) {
+    //       this.noticeCode = p['code'];
+    //       this.getByCon(p['code']);
+    //     }
+    //   }
+    // });
   }
+
+  // private getParamFromActiveRoute() {
+  //   this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
+  //     async params => {
+  //       // ArrestgetByCon
+  //       await this.lawsuitService.ArrestgetByCon(params.code).then(res => {
+  //         if (res.IsSuccess) {
+  //           this.arrestList.push(res.ResponseData);
+  //           this.arrestList.map(p => {
+  //             p.ArrestDate = toLocalShort(p.ArrestDate);
+  //             p.ArrestStaff.map(staff => {
+  //               staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
+  //                 staff.LastName
+  //                 }`;
+  //             });
+  //           });
+  //         }
+  //       });
+  //
+  //       // LawsuitgetByCon
+  //       await this.lawsuitService.LawsuitgetByCon(params.id).then(res => {
+  //         if (res.IsSuccess) {
+  //           this.lawsuitList.push(res.ResponseData);
+  //           this.lawsuitList.map((data, index) => {
+  //             data.RowsId = index + 1;
+  //           });
+  //
+  //           // Check IsOutSide
+  //           if (
+  //             res.ResponseData.IsOutside == 1 &&
+  //             res.ResponseData.LawsuitNo != null
+  //           ) {
+  //             this.lawsuitList.map(law => {
+  //               law.LawsuitNo = `น ${law.LawsuitNo}`;
+  //             });
+  //           }
+  //
+  //           // Check status IsLawsuit
+  //           if (res.ResponseData.IsLawsuit == 0) {
+  //             this.lawsuitList.map(law => {
+  //               law.IsLawsuitStatus = "ไม่รับคดี";
+  //             });
+  //           } else if (res.ResponseData.IsLawsuit == 1) {
+  //             this.lawsuitList.map(law => {
+  //               law.IsLawsuitStatus = "ดำเนินการรับคดีแล้ว";
+  //             });
+  //           } else {
+  //             this.lawsuitList.map(law => {
+  //               law.IsLawsuitStatus = "ยังไม่ดำเนินกำรรับคดี";
+  //             });
+  //           }
+  //         }
+  //       });
+  //
+  //       // Find guiltbaseID with IndictmentID from Lawsuit
+  //       this.arrestList[0].ArrestIndictment.forEach(value => {
+  //         if (value.IndictmentID == this.lawsuitList[0].IndictmentID) {
+  //           this.lawsuitService
+  //             .CompareMasLawgetByCon(value.GuiltBaseID)
+  //             .then(res => {
+  //               if (res) {
+  //                 for (let key in res) {
+  //                   if (key == "CompareMasLawSection") {
+  //                     this.masLawGroupSectionList.push(res[key]);
+  //                   }
+  //                   if (key == "CompareMasLawGuiltBase") {
+  //                     this.masLawGuitBaseList.push(res[key]);
+  //                   }
+  //                 }
+  //               }
+  //             });
+  //         }
+  //       });
+  //     }
+  //   );
+  // }
 
   viewData(item) {
     if (item.LawsuitNo) {

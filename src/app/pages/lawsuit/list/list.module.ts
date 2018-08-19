@@ -9,6 +9,7 @@ import { PaginationTableModule } from '../../component/pagination-table/paginati
 import { HttpModule } from "@angular/http";
 import { HttpClientModule } from "@angular/common/http";
 import { CardActionsModule } from "../../component/card-actions/card-actions.module";
+import {NoticeService} from "../../notices/notice.service";
 
 const routes: Routes = [
     {
@@ -21,19 +22,23 @@ const routes: Routes = [
         },
         component: ListComponent
     }
-]
+];
 
 @NgModule({
-    imports: [
-      FormsModule,
-      CommonModule,
-      HttpModule,
-      HttpClientModule,
-      RouterModule.forChild(routes),
-      CardActionsModule,
-      PaginationTableModule
-    ],
-    providers: [NavigationComponent, LawsuitService],
-    declarations: [ListComponent]
+  imports: [
+    FormsModule,
+    CommonModule,
+    HttpModule,
+    HttpClientModule,
+    RouterModule.forChild(routes),
+    CardActionsModule,
+    PaginationTableModule
+  ],
+  declarations: [
+    ListComponent,
+  ],
+  providers: [
+    NavigationComponent, LawsuitService
+  ]
 })
 export class ListModule { }

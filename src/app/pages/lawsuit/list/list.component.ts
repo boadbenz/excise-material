@@ -3,7 +3,7 @@ import { NgForm } from "@angular/forms";
 import { Message } from "../../../config/message";
 import { LawsuitService } from "../lawsuit.service";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
 import { toLocalShort } from "../../../config/dateFormat";
@@ -136,9 +136,13 @@ export class ListComponent implements OnInit, OnDestroy {
   // }
 
   viewData(item) {
-    this.router.navigate(["/lawsuit/manage", "R"], {
+    console.log('going to detail page');
+    console.log(item);
+    this.router.navigate(['/lawsuit/manage', 'R'], {
       queryParams: { id: item.LawsuitID, code: item.ArrestCode }
     });
+    // this.router.navigate(['/lawsuit/manage', 'R']);
+    console.log('gone to detail page');
   }
 
   closeAdvSearch() {
