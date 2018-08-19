@@ -21,7 +21,8 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">คดีสืบสวนที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="InvestigateNo" class="form-control form-control-sm" [readOnly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" formControlName="InvestigateNo" class="form-control form-control-sm" [readOnly]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                        required>
                 </div>
             </div>
 
@@ -76,7 +77,46 @@
                             <th></th>
                         </tr>
                     </thead>
-                   -->
+                    <tbody formArrayName="InvestigationTeam">
+                        <tr *ngFor="let team of InvestigationTeam.controls; let i=index;" [formGroupName]="i">
+
+                            <input type="hidden" formControlName="StaffID">
+                            <input type="hidden" formControlName="ProgramCode">
+                            <input type="hidden" formControlName="ProcessCode">
+                            <input type="hidden" formControlName="InvestigateCode">
+                            <input type="hidden" formControlName="StaffCode">
+                            <input type="hidden" formControlName="TitleName">
+                            <input type="hidden" formControlName="FirstName">
+                            <input type="hidden" formControlName="LastName">
+                            <input type="hidden" formControlName="PositionCode">
+                            <input type="hidden" formControlName="PosLevel">
+                            <input type="hidden" formControlName="PosLevelName">
+                            <input type="hidden" formControlName="DepartmentCode">
+                            <input type="hidden" formControlName="DepartmentLevel">
+                            <input type="hidden" formControlName="OfficeCode">
+                            <input type="hidden" formControlName="OfficeName">
+                            <input type="hidden" formControlName="OfficeShortName">
+                            <input type="hidden" formControlName="ContributorID">
+                            <input type="hidden" formControlName="IsActive">
+
+                            <td class="text-center">{{i + 1}}</td>
+                            <td>
+                                <input type="text" formControlName="FullName" class="form-control form-control-sm" [readOnly]="showEditField"
+                                    required/>
+                            </td>
+                            <td>
+                                <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly required>
+                            </td>
+                            <td>
+                                <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" readonly required>
+                            </td>
+                            <td class="text-center">
+                                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteStaff(i, team.value.InvestigateCode)">
+                                    <i class="fa fa-trash-o fa-lg"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
 
