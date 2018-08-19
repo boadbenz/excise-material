@@ -130,10 +130,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        await this.setProductStore();
-        await this.setStaffStore();
-        await this.setRegionStore();
-        await this.setProductUnitStore();
+        // await this.setProductStore();
+        // await this.setStaffStore();
+        // await this.setRegionStore();
+        // await this.setProductUnitStore();
 
         this.preloader.setShowPreloader(false);
     }
@@ -834,7 +834,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
-                    FilePath: fileName
+                    FilePath: e.target.value
                 })
             }
         };
@@ -852,7 +852,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (dataSource && dataSource !== undefined) {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,
-                    FilePath: fileName,
+                    FilePath: e.target.value,
                     IsActive: 1
                 })
             }
