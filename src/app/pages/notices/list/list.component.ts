@@ -59,7 +59,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('1.06');
+        this.sidebarService.setVersion('0.0.0.6');
         this.paginage.TotalItems = 0;
         // this.dateStartFrom = toLocalNumeric((new Date()).toISOString());
         // this.dateStartTo = this.dateStartFrom;

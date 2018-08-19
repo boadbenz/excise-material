@@ -35,7 +35,7 @@ import {
 } from '../../../models';
 import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
-import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
+import { IMyDateModel } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-manage',
@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.06');
+        this.sidebarService.setVersion('0.0.0.6');
 
         this.active_route();
 
