@@ -3,10 +3,12 @@ import { NgForm } from "@angular/forms";
 import { Message } from "../../../config/message";
 import { LawsuitService } from "../lawsuit.service";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
 import { toLocalShort } from "../../../config/dateFormat";
+import { Notice } from "../../notices/notice";
+import {PreloaderService} from "../../../shared/preloader/preloader.component";
 
 @Component({
   selector: "app-list",
@@ -15,33 +17,13 @@ import { toLocalShort } from "../../../config/dateFormat";
 })
 export class ListComponent implements OnInit, OnDestroy {
 
+  results: Lawsuit[] = [];
+  resultsPerPage: Lawsuit[] = [];
+
   advSearch: any;
-  lawsuitList = new Array<Lawsuit>();
-  lawsuitListforPage = new Array<Lawsuit>();
+  advSearchSub: any;
+
   paginage = pagination;
-
-  private advSearchSub: any;
-
-  constructor(
-    private navService: NavigationService,
-    private router: Router,
-    private lawsuitService: LawsuitService
-  ) {
-    this.advSearch = this.navService.showAdvSearch;
-    this.advSearchSub = this.navService.searchByKeyword.subscribe(
-      Textsearch => {
-        if (Textsearch) {
-          this.lawsuitService
-            .getByKeyword(Textsearch)
-            .then(res => this.getSearchComplete(res));
-        }
-      }
-    );
-  }
-
-  ngOnInit() {
-    this.setShowButton();
-  }
 
   private setShowButton() {
     this.navService.setSearchBar(true);
@@ -52,44 +34,66 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setSaveButton(false);
   }
 
-  private getSearchComplete(res: any) {
-    if (res.IsSuccess) {
-      this.lawsuitList = res.ResponseData;
-      this.lawsuitList.map((data, index) => {
-        data.RowsId = index + 1;
-        data.LawsuitDate = toLocalShort(data.LawsuitDate);
-        data.LawsuiteStaff.map(staff => {
-          staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
-            staff.LastName
-            }`;
-        });
-      });
+  constructor(
+    private navService: NavigationService,
+    private router: Router,
+    private preLoaderService: PreloaderService,
+    private lawsuitService: LawsuitService
+  ) {
+    /* Initial Adv.Search */
+    this.advSearch = this.navService.showAdvSearch;
+    this.advSearchSub = this.navService.searchByKeyword.subscribe(filterValue => {
+      if (filterValue) {
+        this.lawsuitService.getByKeyword(filterValue)
+          .then(res => this.onSearchComplete(res));
+      }
+    });
+  }
 
-      this.lawsuitListforPage = this.lawsuitList;
-      this.paginage.TotalItems = this.lawsuitList.length;
-    } else {
+  async ngOnInit() {
+    /* Display Button */
+    this.setShowButton();
+    /* Load Data*/
+    this.preLoaderService.setShowPreloader(true);
+    await this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+    this.preLoaderService.setShowPreloader(false);
+  }
+
+  async onSearchComplete(list: Lawsuit[]) {
+    /* Alert When No Data To Show */
+    if (!list.length) {
       alert(Message.noRecord);
       return false;
     }
+    /* Adjust Another Column */
+    this.results = list.map((item, i) => {
+      item.RowsId = i + 1;
+      item.LawsuitDate = toLocalShort(item.LawsuitDate);
+      return item;
+    });
+    /* Set Total Record */
+    this.paginage.TotalItems = this.results.length;
   }
 
-  advSearchForm(advForm: NgForm) {
-    const DateFrom = new Date(advForm.value.LawsuitDateFrom);
-    const DateTo = new Date(advForm.value.LawsuitDateTo);
-    // Compare Date
-    if (DateFrom.getTime() > DateTo.getTime()) {
-      alert(Message.checkDate);
-    } else {
-      this.lawsuitService
-        .getByKeyword(advForm.value)
-        .then(res => this.getSearchComplete(res));
+  async onAdvSearch(form: any) {
+    if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
+      const sDateCompare = new Date(form.value.LawsuitDateFrom);
+      const eDateCompare = new Date(form.value.LawsuitDateTo);
+      if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+        alert(Message.checkDate);
+        return false;
+      }
+      form.value.LawsuitDateFrom = sDateCompare.toISOString();
+      form.value.LawsuitDateTo = eDateCompare.toISOString();
     }
-    advForm.reset();
+    this.preLoaderService.setShowPreloader(true);
+    await this.lawsuitService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
+    this.preLoaderService.setShowPreloader(false);
   }
 
   viewData(item) {
-    this.router.navigate(["/lawsuit/manage", "R"], {
-      queryParams: { id: item.LawsuitID, code: "050100020" }
+    this.router.navigate(['/lawsuit/manage', 'R'], {
+      queryParams: { id: item.LawsuitID, code: '050100020'/*item.ArrestCode*/ }
     });
   }
 
@@ -97,11 +101,8 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.showAdvSearch.next(false);
   }
 
-  async pageChanges(event: any) {
-    this.lawsuitList = await this.lawsuitListforPage.slice(
-      event.startIndex - 1,
-      event.endIndex
-    );
+  async pageChanges(event) {
+    this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
   }
 
   ngOnDestroy() {

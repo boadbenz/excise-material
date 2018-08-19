@@ -45,3 +45,8 @@ export function compareDate(sDate: string, eDate: string): boolean {
     return true;
 }
 
+export function toTimeShort(date: string): string {
+  var options = { hour: 'numeric', minute: 'numeric' };
+  return new Date(date).toLocaleTimeString('th-TH', options);
+}
+
