@@ -1,4 +1,5 @@
 export class ProveProduct {
+    public ProductSeq?: number;
     public ProductID?: string;
     public ProductType?: string;
     public ProveID?: string;
@@ -54,5 +55,6 @@ export class ProveProduct {
     public IsStatusExhibit?: string;
     public Remarks?: string;
     public ProveResult?: string;
-    public IsAction?: string;
+    public IsNewItem?: boolean;
+    public IsDelItem?: boolean;
 }

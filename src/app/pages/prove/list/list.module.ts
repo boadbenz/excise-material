@@ -9,13 +9,14 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { ContributorPipe } from '../../../shared/pipe/ContributorPipe';
 
 const routes: Routes = [
     {
         path: '',
         data: {
             // title: 'ค้นหาข้อมูล',
-            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง Lastupdate 11/08/2561' }],
+            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง Lastupdate 16/08/2561' }],
             nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/prove/manage' }
         },
         component: ListComponent
@@ -32,7 +33,7 @@ const routes: Routes = [
         CardActionsModule,
         PaginationTableModule
     ],
-    declarations: [ListComponent],
+    declarations: [ListComponent,ContributorPipe],
     providers: [ProveService,PreloaderService]
 })
 export class ListModule { }
