@@ -845,8 +845,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
-                    FilePath: fileName,
-                    DataSource: dataSource
+                    FilePath: fileName
                 })
             }
         };
@@ -865,7 +864,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,
                     FilePath: fileName,
-                    DataSource: dataSource,
                     IsActive: 1
                 })
             }
