@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -136,10 +136,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        // await this.setProductStore();
-        // await this.setStaffStore();
-        // await this.setRegionStore();
-        // await this.setProductUnitStore();
+        await this.setProductStore();
+        await this.setStaffStore();
+        await this.setRegionStore();
+        await this.setProductUnitStore();
 
         this.preloader.setShowPreloader(false);
     }
