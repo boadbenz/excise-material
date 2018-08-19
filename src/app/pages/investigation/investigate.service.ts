@@ -19,6 +19,11 @@ export class InvestigateService {
             })
     };
 
+    private async resposePromiseArray(params: string, url: string) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        return res[0];
+    }
+
     getByKeyword(Textsearch: string) {
         const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.apiUrl}/InvestigategetByKeyword`;
@@ -40,7 +45,7 @@ export class InvestigateService {
     detailGetByCon(InvestigateCode: string) {
         const params = { InvestigateCode };
         const url = `${appConfig.apiUrl}/InvestigateDetailgetByCon`;
-        return this.http.post<InvestigateDetail[]>(url, params, this.httpOptions);
+        return this.resposePromiseArray(JSON.stringify(params), url)
     }
 
     updByCon(investigate: Investigate) {
@@ -56,7 +61,7 @@ export class InvestigateService {
     }
 
     teamudpDelete(StaffId: string) {
-        const params = StaffId;
+        const params = { StaffId }
         const url = `${appConfig.apiUrl}/InvestigateTeamupdDelete`;
         return this.http.post<any>(url, params, this.httpOptions);
     }
@@ -86,10 +91,10 @@ export class InvestigateService {
     }
 
     teamgetByCon(InvestigateCode: string) {
-        InvestigateCode = "AI000000004";
         const params = { InvestigateCode };
         const url = `${appConfig.apiUrl}/InvestigateTeamgetByCon`;
         return this.http.post<any>(url, params, this.httpOptions);
     }
+
 
 }

@@ -4,7 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { InvestigateService } from '../investigate.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { toLocalNumeric, setZero, resetLocalNumeric } from '../../../config/dateFormat';
 import { InvestigateTeam, InvestigateTeamFormControl } from '../investigate-team';
+import { InvestigateDetail } from '../investigate-detail';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
@@ -22,12 +24,17 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private mode: string;
     showEditField: any;
     investCode: string;
-    myGroup: FormGroup;
-    investigateForm: FormGroup;
-    typeheadStaff = new Array<InvestigateTeam>();
 
-    get InvestigationTeam(): FormArray {
-        return this.investigateForm.get('InvestigationTeam') as FormArray;
+    investigateFG: FormGroup;
+    typeheadStaff = new Array<InvestigateTeam>();
+    investigateDetail = new Array<InvestigateDetail>();
+
+    get InvestigateTeam(): FormArray {
+        return this.investigateFG.get('InvestigateTeam') as FormArray;
+    }
+
+    get InvestigateDetail(): FormArray {
+        return this.investigateFG.get('InvestigateDetail') as FormArray;
     }
 
     constructor(
@@ -58,9 +65,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
 
-                this.getByCon(p['code']);
-                this.createForm();
-                this.setStaffStore(p['code'])
+               
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -71,7 +76,12 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
+
+                this.detailGetByCon(p['code']);
             }
+       
+            this.createForm();
+            this.setStaffStore(p['code'])
 
         });
         this.sub = this.navService.showFieldEdit.subscribe(status => {
@@ -101,31 +111,56 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
 
-    private setStaffStore(InvestigateCode: string) {
-        this.invesService.teamgetByCon(InvestigateCode).subscribe(res =>
+    private async setStaffStore(InvestigateCode: string) {
+        await this.invesService.teamgetByCon(InvestigateCode).subscribe(res =>
             this.typeheadStaff = res
         )
     }
 
-    private getByCon(InvestigateCode: string) {
-        // this.sub = this.invesService.teamgetByCon(InvestigateCode).subscribe(item => {
-        //     this.setInvestTeam(item);
-        // }, (err: HttpErrorResponse) => {
-        //     alert(err.message);
-        // });
+    private detailGetByCon(InvestigateCode: string) {
+        this.sub = this.invesService.detailGetByCon(InvestigateCode).then(item => {
+            console.log(item);
+            this.investigateFG.reset({
+                InvestigateCode: item.InvestigateCode,
+                InvestigateSeq:item.InvestigateSeq,
+                StationCode: item.StationCode,
+                StationName: item.StationName,
+                InvestigateDetail: item.InvestigateDetail,
+                InvestigateDateStart: toLocalNumeric(item.InvestigateDateStart),
+                InvestigateDateEnd: toLocalNumeric(item.InvestigateDateEnd),
+                ConfidenceOfNews:  item.ConfidenceOfNews,
+                ValueOfNews:  item.ValueOfNews,
+            });
+            this.investigateDetail = item;
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
     }
     setInvestTeam(investTeam: InvestigateTeam[]) {
         if (investTeam) {
             investTeam.map(team => team.FullName = `${team.TitleName} ${team.FirstName} ${team.LastName}`);
             const teamFGs = investTeam.map(team => this.fb.group(team));
             const teamFormArray = this.fb.array(teamFGs);
-            this.investigateForm.setControl('InvestigationTeam', teamFormArray);
+            this.investigateFG.setControl('InvestigateTeam', teamFormArray);
         }
     }
 
     private createForm() {
-        this.investigateForm = this.fb.group({
-            InvestigationTeam: this.fb.array([this.createTeam()])
+        this.investigateFG = this.fb.group({
+            InvestigateCode: new FormControl(this.investCode, Validators.required),
+            InvestigateSeq: new FormControl(null),
+            StationCode: new FormControl(null),
+            StationName: new FormControl(null),
+            InvestigateDateStart: new FormControl(null),
+            InvestigateDateEnd: new FormControl(null),
+            ConfidenceOfNews: new FormControl(null),
+            ValueOfNews: new FormControl(null),
+            InvestigateDetail: new FormControl(null),
+            InvestigateTeam: this.fb.array([this.createTeam()]),
+            InvestigateDetailStaff: this.fb.array([]),
+            InvestigateDetailProduct: this.fb.array([]),
+            InvestigateDetailLocal: this.fb.array([]),
+            InvestigateDetailSuspect: this.fb.array([])
         });
     }
 
@@ -134,7 +169,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         return this.fb.group(InvestigateTeamFormControl)
     }
 
-    searchStaff = (text$: Observable<string>) => {
+    searchStaff = (text$: Observable<string>) =>
         text$
             .debounceTime(200)
             .distinctUntilChanged()
@@ -145,14 +180,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
-    }
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName} ${x.FirstName} ${x.LastName}`
 
     selectItemStaff(e, i) {
-        this.InvestigationTeam.at(i).reset(e.item);
-        this.InvestigationTeam.at(i).patchValue({
+        this.InvestigateTeam.at(i).reset(e.item);
+        this.InvestigateTeam.at(i).patchValue({
             DepartmentName: e.item.DepartmentName,
             PositionName: e.item.PositionName.trim(),
         })

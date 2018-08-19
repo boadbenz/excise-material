@@ -77,8 +77,8 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody formArrayName="InvestigationTeam">
-                        <tr *ngFor="let team of InvestigationTeam.controls; let i=index;" [formGroupName]="i">
+                    <tbody formArrayName="InvestigateTeam">
+                        <tr *ngFor="let team of InvestigateTeam.controls; let i=index;" [formGroupName]="i">
 
                             <input type="hidden" formControlName="StaffID">
                             <input type="hidden" formControlName="ProgramCode">
@@ -108,10 +108,10 @@
                                 <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly required>
                             </td>
                             <td>
-                                <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" readonly required>
+                                <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" readonly>
                             </td>
                             <td class="text-center">
-                                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteStaff(i, team.value.InvestigateCode)">
+                                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteStaff(i, team.value.StaffID)">
                                     <i class="fa fa-trash-o fa-lg"></i>
                                 </a>
                             </td>

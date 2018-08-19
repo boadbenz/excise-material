@@ -52,8 +52,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
-    get InvestigationTeam(): FormArray {
-        return this.investigateForm.get('InvestigationTeam') as FormArray;
+    get InvestigateTeam(): FormArray {
+        return this.investigateForm.get('InvestigateTeam') as FormArray;
     }
 
     constructor(
@@ -91,7 +91,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             DateStart: new FormControl(null),
             DateEnd: new FormControl(null),
             Subject: new FormControl(null),
-            InvestigationTeam: this.fb.array([this.createTeam()])
+            InvestigateTeam: this.fb.array([this.createTeam()])
         });
     }
 
@@ -156,10 +156,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                 const sDateCompare = new Date(resetLocalNumeric(this.investigateForm.value.DateStart));
                 const eDateCompare = new Date(resetLocalNumeric(this.investigateForm.value.DateEnd));
 
-                if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-                    alert(Message.checkDate);
-                    return false;
-                }
+                // if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+                //     alert(Message.checkDate);
+                //     return false;
+                // }
+                // Can't send ISO String Date
+                //this.investigateForm.value.DateStart = sDateCompare.toISOString()
+                //this.investigateForm.value.DateEnd = eDateCompare.toISOString();
+                this.investigateForm.value.DateStart = "2017-12-29 00:00:00.0000000 +12:15";
+                this.investigateForm.value.DateEnd =  "2017-12-29 00:00:00.0000000 +12:15";
 
                 if (this.mode === 'C') {
                     this.onCreate();
@@ -201,8 +206,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 DateEnd: toLocalNumeric(item.DateEnd),
                 Subject: item.Subject
             });
-            this.setInvestTeam(item.InvestigationTeam);
-            this.investigateDetail = item.InvestigationDetail;
+            this.setInvestTeam(item['InvestigateTeam']);
+            this.investigateDetail = item['InvestigateDetail'];
 
         }, (err: HttpErrorResponse) => {
             alert(err.message);
@@ -211,21 +216,20 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private onCreate() {
         if (this.investigateForm.valid) {
-
             this.invesService.updByCon(this.investigateForm.value).subscribe(p => {
-                this.onComplete();
+                //this.onComplete();
             }, (err: HttpErrorResponse) => {
                 alert(Message.saveFail);
             });
 
-            this.invesService.teaminsAll(this.investigateForm.value.InvestigationTeam).subscribe(p => {
-                this.onComplete();
+            this.invesService.teaminsAll(this.investigateForm.value.InvestigateTeam).subscribe(p => {
+                //this.onComplete();
             }, (err: HttpErrorResponse) => {
                 alert(Message.saveFail);
             });
 
             this.invesService.teamudpDelete(this.StaffId).subscribe(p => {
-                this.onComplete();
+                //this.onComplete();
             }, (err: HttpErrorResponse) => {
                 alert(Message.saveFail);
             });
@@ -235,24 +239,24 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private onReviced() {
         if (this.investigateForm.valid) {
-
             this.invesService.updByCon(this.investigateForm.value).subscribe(p => {
+                console.log(p);
                 this.onComplete();
             }, (err: HttpErrorResponse) => {
                 alert(Message.saveFail);
             });
 
-            this.invesService.teaminsAll(this.investigateForm.value.InvestigationTeam).subscribe(p => {
-                this.onComplete();
-            }, (err: HttpErrorResponse) => {
-                alert(Message.saveFail);
-            });
+            // this.invesService.teaminsAll(this.investigateForm.value.InvestigateTeam).subscribe(p => {
+            //     //this.onComplete();
+            // }, (err: HttpErrorResponse) => {
+            //     alert(Message.saveFail);
+            // });
 
-            this.invesService.teamudpDelete(this.StaffId).subscribe(p => {
-                this.onComplete();
-            }, (err: HttpErrorResponse) => {
-                alert(Message.saveFail);
-            });
+            // this.invesService.teamudpDelete(this.StaffId).subscribe(p => {
+            //     //this.onComplete();
+            // }, (err: HttpErrorResponse) => {
+            //     alert(Message.saveFail);
+            // });
 
         }
     }
@@ -287,12 +291,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    onDeleteStaff(indexForm: number, invesCode: string) {
-        this.invesService.detailGetByCon(invesCode).subscribe(result => {
+    onDeleteStaff(indexForm: number, StaffId: string) {
+        console.log(StaffId);
+        this.invesService.teamudpDelete(StaffId).subscribe(result => {
             if (result.length) {
                 alert(Message.cannotDelete);
             } else {
-                this.InvestigationTeam.removeAt(indexForm);
+                this.InvestigateTeam.removeAt(indexForm);
             }
         })
     }
@@ -302,12 +307,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             investTeam.map(team => team.FullName = `${team.TitleName} ${team.FirstName} ${team.LastName}`);
             const teamFGs = investTeam.map(team => this.fb.group(team));
             const teamFormArray = this.fb.array(teamFGs);
-            this.investigateForm.setControl('InvestigationTeam', teamFormArray);
+            this.investigateForm.setControl('InvestigateTeam', teamFormArray);
         }
     }
 
     addTeam() {
-        this.InvestigationTeam.push(this.fb.group(new InvestigateTeam()));
+        this.InvestigateTeam.push(this.fb.group(new InvestigateTeam()));
     }
 
     //waiting service InvestigateMasStaffgetByKeyword for typeahead
@@ -328,8 +333,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     //     `${x.TitleName} ${x.FirstName} ${x.LastName}`
 
     // selectItemStaff(e, i) {
-    //     this.InvestigationTeam.at(i).reset(e.item);
-    //     this.InvestigationTeam.at(i).patchValue({
+    //     this.InvestigateTeam.at(i).reset(e.item);
+    //     this.InvestigateTeam.at(i).patchValue({
     //         ProgramCode: this.programSpect,
     //         ProcessCode: '0002',
     //         PositionCode: e.item.OperationPosCode,
@@ -348,7 +353,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 alert(Message.saveFail);
             });
         }
-        this.router.navigate([`/investigation/detail-manage/C/NEW`]);
     }
 
     onViewInvesDetail(invesCode: string) {
