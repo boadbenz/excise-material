@@ -3,7 +3,7 @@
         <app-card-actions-collapse></app-card-actions-collapse>
         <h4 class="card-title m-b-0">รายงานการสืบสวน</h4>
     </div>
-    <div class="card-body">
+    <div class="card-body" id="0">
         <form class="form-horizontal">
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ครั้งที่สืบสวน :
@@ -79,12 +79,12 @@
 </div>
 
 <div class="card card-outline-bluish unset-radius">
-    <div class="card-header  unset-radius">
+    <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
         <h4 class="card-title m-b-0">ผู้ร่วมทำการสืบสวน</h4>
     </div>
     <div class="card-body">
-        <form class="form-horizontal">
+        <form class="form-horizontal" [formGroup]="investigateForm">
             <table class="table table-sm table-striped table-set-border">
                 <thead>
                     <tr>
@@ -95,16 +95,33 @@
                         <th>ตำแหน่ง</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody formArrayName="InvestigationTeam">
+                    <tr *ngFor="let item of InvestigationTeam.controls; let i = index;" [formGroupName]="i">
                         <td class="text-center">
                             <input type="checkbox" id="staff_td1" class="filled-in chk-col-indigo" [disabled]="showEditField">
                             <label for="staff_td1" class="m-0"></label>
                         </td>
-                        <td class="text-center">1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td class="text-center">{{i+1}}</td>
+                        <td>
+                            <ng-template #rt let-r="result" let-t="term">
+                                {{ r.TitleName == null ? '' : r.TitleName }} {{r.FirstName == null ? '' : r.FirstName}} {{r.LastName == null ? '' : r.LastName}}
+                            </ng-template>
+
+                            <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff" [resultTemplate]="rt" [readOnly]="showEditField"
+                                [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)" value="{{item.value.FullName}}"
+                            />
+                        </td>
+                        <td>
+                            <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" readonly>
+                        </td>
+                        <td>
+                            <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
+                        </td>
+                        <!-- <td>
+                            <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField" (click)="deleteStaff(i, item.get('StaffID').value)">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td> -->
                     </tr>
                 </tbody>
             </table>
