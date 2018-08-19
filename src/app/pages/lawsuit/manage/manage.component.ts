@@ -20,6 +20,7 @@ import { ProveService } from "../../prove/prove.service";
   templateUrl: "./manage.component.html"
 })
 export class ManageComponent implements OnInit {
+
   lawsuitList: Lawsuit[] = [];
   masLawGroupSectionList: MasLawGroupSection[] = [];
   masLawGuitBaseList: MasLawGuitBase[] = [];
@@ -33,27 +34,20 @@ export class ManageComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private navService: NavigationService,
-    // private noticeService: NoticeService,
     private ngbModel: NgbModal,
-    private preloader: PreloaderService,
     private sidebarService: SidebarService,
     private arrestService: ArrestsService,
     private proveService: ProveService,
-
-
-    // private router: Router,
-    // private activeRoute: ActivatedRoute,
-    // private navService: NavigationService,
+    private preLoaderService: PreloaderService,
     private lawsuitService: LawsuitService
   ) {
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
-    this.navService.setInnerTextNextPageButton('งานจับกุม')
+    // this.navService.setInnerTextNextPageButton('งานจับกุม')
   }
 
   ngOnInit() {
     this.setShowButton();
-    // this.active_route();
     this.getParamFromActiveRoute();
   }
 
@@ -67,43 +61,11 @@ export class ManageComponent implements OnInit {
     this.navService.setSaveButton(false);
   }
 
-  private active_route() {
-    // this.activeRoute.params.subscribe(p => {
-    //   this.mode = p['mode'];
-    //   if (p['mode'] === 'C') {
-    //     // set false
-    //     this.navService.setEditButton(false);
-    //     this.navService.setDeleteButton(false);
-    //     this.navService.setEditField(false);
-    //     // set true
-    //     this.navService.setSaveButton(true);
-    //     this.navService.setCancelButton(true);
-    //     this.navService.setNextPageButton(true);
-    //     this.noticeCode = `LS-${(new Date).getTime()}`;
-    //     this.arrestCode = `TN-${(new Date).getTime()}`;
-    //
-    //   } else if (p['mode'] === 'R') {
-    //     // set false
-    //     this.navService.setSaveButton(false);
-    //     this.navService.setCancelButton(false);
-    //     // set true
-    //     this.navService.setPrintButton(true);
-    //     this.navService.setEditButton(true);
-    //     this.navService.setDeleteButton(true);
-    //     this.navService.setEditField(true);
-    //     this.navService.setNextPageButton(true);
-    //
-    //     if (p['code']) {
-    //       this.noticeCode = p['code'];
-    //       this.getByCon(p['code']);
-    //     }
-    //   }
-    // });
-  }
-
   private getParamFromActiveRoute() {
     this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
       async params => {
+        this.preLoaderService.setShowPreloader(true);
+
         // ArrestgetByCon
         await this.lawsuitService.ArrestgetByCon(params.code).then(res => {
           this.arrestList.push(res);
@@ -167,6 +129,8 @@ export class ManageComponent implements OnInit {
               });
           }
         });
+
+        this.preLoaderService.setShowPreloader(false);
       }
     );
   }
