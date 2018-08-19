@@ -832,7 +832,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestDocument.push(this.fb.group(item));
         } else {
             const lastItem = this.ArrestDocument.at(lastIndex).value;
-            if (lastItem.DataSource && lastItem.FilePath) {
+            if (lastItem.DocumentName && lastItem.FilePath) {
                 this.ArrestDocument.push(this.fb.group(item));
             }
         }
