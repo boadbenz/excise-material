@@ -54,13 +54,13 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navService.showAdvSearch;
     }
 
-    ngOnInit() {
-        this.sidebarService.setVersion('Prove 1.0.0');
+    async ngOnInit() {
+        this.sidebarService.setVersion('Prove 0.0.0.1');
 
         this.onSearch({ Textsearch: "" });
 
         this.preLoaderService.setShowPreloader(true);
-        this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
@@ -74,15 +74,15 @@ export class ListComponent implements OnInit {
         this.subOnSearch.unsubscribe();
     }
 
-    onSearch(Textsearch: any) {
-        this.proveService.getByKeyword(Textsearch).subscribe(list => {
+    async onSearch(Textsearch: any) {
+        await this.proveService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
     }
 
-    onAdvSearch(form: any) {
+    async onAdvSearch(form: any) {
 
         const sDateDelivery = new Date(form.value.DeliveryDateFrom);
         const eDateDelivery = new Date(form.value.DeliveryDateTo);
@@ -101,7 +101,7 @@ export class ListComponent implements OnInit {
         form.value.ProveProcessCode = "01";
 
 
-        this.proveService.getByConAdv(form.value).then(async list => {
+        await this.proveService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list)
 
         }, (err: HttpErrorResponse) => {

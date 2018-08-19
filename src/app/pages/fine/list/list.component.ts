@@ -44,14 +44,15 @@ export class ListComponent implements OnInit, OnDestroy {
         this.advSearch = this.navService.showAdvSearch;
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.onSearch({ Textsearch: "" });
         
         this.preLoaderService.setShowPreloader(true);
-        this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
+
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
-                this.onSearch(Textsearch);
+                await  this.onSearch(Textsearch);
             }
         });
 
@@ -62,15 +63,15 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subOnSearch.unsubscribe();
     }
 
-    onSearch(Textsearch: any) {
-        this.fineService.getByKeyword(Textsearch).subscribe(list => {
+    async onSearch(Textsearch: any) {
+        await this.fineService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
     }
 
-    onAdvSearch(form: any) {
+    async onAdvSearch(form: any) {
         
         const sDateCompare = new Date(form.value.CompareDateFrom );
         const eDateCompare = new Date(form.value.CompareDateTo);
@@ -85,7 +86,7 @@ export class ListComponent implements OnInit, OnDestroy {
             form.value.ProcessCode = "01";
 
 
-            this.fineService.getByConAdv(form.value).then(async list => {
+           await this.fineService.getByConAdv(form.value).then(async list => {
                 this.onSearchComplete(list)
             }, (err: HttpErrorResponse) => {
                 alert(err.message);

@@ -13,7 +13,6 @@ import { MasterService }  from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
-import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 const routes: Routes = [
     {
@@ -45,8 +44,7 @@ const routes: Routes = [
     providers: [ProveService,
         ArrestService,
         LawsuitService,
-        MasterService,
-        PreloaderService
+        MasterService
     ],
     declarations: [ManageComponent,IsActivePipe],
     exports: [MatAutocompleteModule]

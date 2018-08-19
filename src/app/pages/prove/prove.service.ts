@@ -161,6 +161,32 @@ export class ProveService {
     }
   }
 
+  async DocumentupdByCon(oPD: ProveDocument): Promise<any> {
+    debugger
+    const params = JSON.stringify(oPD);
+    const url = `${appConfig.api8882}/DocumentupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async DocumentupdDelete(oPD: ProveDocument): Promise<any> {
+    debugger
+    const params = JSON.stringify(oPD);
+    const url = `${appConfig.api8882}/DocumentupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
   async DocumentgetByCon(ReferenceCode: string): Promise<any> {
     const params = { ReferenceCode };
     const url = `${appConfig.api8882}/DocumentgetByCon`;

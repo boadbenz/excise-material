@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
-// import { ProveService } from '../prove.service';
+import { FineService } from '../fine.service';
 import { ArrestService } from '../../model/arrest.service';
 import { LawsuitService } from '../../model/lawsuit.service';
 import { MasterService } from '../../model/master.service';
@@ -25,7 +25,6 @@ import { ArrestStaff } from '../../model/arrest-staff';
 })
 export class ManageComponent implements OnInit {
   private sub: any;
-  viewMode: any;
   mode: string;
   modal: any;
   param: any;
@@ -43,6 +42,7 @@ export class ManageComponent implements OnInit {
   // --- Array ---
   rawOptions = [];
   options = [];
+  ReportOptions = [];
   ListCompareDetail = [];
 
   // ---- Varible ---
@@ -58,18 +58,20 @@ export class ManageComponent implements OnInit {
   PositionName: string;     // ตำแหน่ง
   DepartmentName: string;   // หน่วยงาน
   ArrestLocation: string;   // สถานที่จับกุม
+  CompareDate: string;      // วันที่จัดทำ
+  CompareTime: string;      // เวลาจัดทำ
 
   // --- Object ---
   oArrest: Arrest;
   oCompareDetail: CompareDetail = {};
 
   // ----- Model ------ //
-  // @ViewChild('printDocModal') printDocModel: ElementRef;
+   @ViewChild('printDocModal') printDocModel: ElementRef;
 
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
-    // private proveService: ProveService,
+    private fineService: FineService,
     private ArrestSV: ArrestService,
     private LawsuitSV: LawsuitService,
     private MasterSV: MasterService,
@@ -90,18 +92,21 @@ export class ManageComponent implements OnInit {
     this.navigate_Service();
 
     await this.getStation();
-
     await this.getLawsuitByID(this.LawsuitID);
 
-    this.preloader.setShowPreloader(true);
+    let date = new Date();
+    //this.ProveYear = (date.getFullYear() + 543).toString();
+    this.CompareDate = this.getCurrentDate();
+    this.CompareTime = this.getCurrentTime();
+
+    this.preloader.setShowPreloader(false);
 
   }
 
 
   private active_Route() {
     this.sub = this.navService.showFieldEdit.subscribe(status => {
-      this.viewMode = status;
-      if (!this.viewMode) {
+      if (!status) {
         this.navService.setCancelButton(true);
         this.navService.setSaveButton(true);
         this.navService.setPrintButton(false);
@@ -166,12 +171,12 @@ export class ManageComponent implements OnInit {
     //     }
     // });
 
-    // this.sub = this.navService.onPrint.subscribe(async status => {
-    //     if (status) {
-    //         await this.navService.setOnPrint(false);
-    //         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-    //     }
-    // })
+    this.sub = this.navService.onPrint.subscribe(async status => {
+        if (status) {
+            await this.navService.setOnPrint(false);
+            this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        }
+    })
 
     // this.sub = this.navService.onCancel.subscribe(async status => {
     //     if (status) {
@@ -286,54 +291,69 @@ export class ManageComponent implements OnInit {
 
           for (var i = 0; i < ArrestIndictment[0].OpsArrestIndicmentDetailCollection.length; i += 1) {
             let ArrestList = [];
+            let Product = "";
+
             ArrestList = ArrestLawbreaker.filter(item => item.LawbreakerID === ArrestIndictment[0].OpsArrestIndicmentDetailCollection[i].LawbreakerID);
 
-            // ----- คำให้การผู้ต้องหา && รายงานการอนุมัติ ---//
-            this.oCompareDetail = {
-              CompareDetailID: "",
-              CompareID: this.CompareID,
-              IndictmentDetailID: ArrestIndictment[0].OpsArrestIndicmentDetailCollection[i].IndictmentDetailID.toString(),
-              CompareAction: "",
-              LawbrakerTestimony: "",
-              Fact: "",
-              IsRequest: "0",
-              RequestForAction: "",
-              CompareReason: "",
-              IsProvisionalAcquittal: "",
-              Bail: null,
-              Guaruntee: null,
-              CompareFine: "",
-              PaymentFineDate: "",
-              PaymentFineAppointDate: "",
-              PaymentVatDate: "",
-              TreasuryMoney: "",
-              BribeMoney: "",
-              RewardMoney: "",
-              ApproveStationCode: "",
-              ApproveStation: "",
-              ApproveReportDate: "",
-              CommandNo: "",
-              CommandDate: "",
-              CompareAuthority: "",
-              ApproveReportType: "",
-              MistreatNo: "", //+ MistreatNo
-              FineType: "",
-              AdjustReason: "",
-              Lawbreaker: ArrestList[0].ArrestName,
-              LawbreakerID: ArrestList[0].LawbreakerID,
-              ProductDesc: "",
-              FineRate: "",
-              VatValue: "",
-              RewardRate: "", //RewardRate
-              CompareDetailFine: [],
-              CompareDetailReceipt: [],
+            if (ArrestList.length > 0) {
+              for (var j = 0; j < this.oArrest.ArrestProduct.length; j++) {
+                if (Product == "") {
+                  Product += this.oArrest.ArrestProduct[j].ProductDesc;
+                }
+                else {
+                  Product += "<br>" + this.oArrest.ArrestProduct[j].ProductDesc;
+                }
+              }
+
+              // ----- คำให้การผู้ต้องหา && รายงานการอนุมัติ ---//
+              this.oCompareDetail = {
+                CompareDetailID: "",
+                CompareID: this.CompareID,
+                IndictmentDetailID: ArrestIndictment[0].OpsArrestIndicmentDetailCollection[i].IndictmentDetailID.toString(),
+                CompareAction: "",
+                LawbrakerTestimony: "",
+                Fact: "",
+                IsRequest: "0",
+                RequestForAction: "",
+                CompareReason: "",
+                IsProvisionalAcquittal: "",
+                Bail: null,
+                Guaruntee: null,
+                CompareFine: "",
+                PaymentFineDate: "",
+                PaymentFineAppointDate: "",
+                PaymentVatDate: "",
+                TreasuryMoney: "",
+                BribeMoney: "",
+                RewardMoney: "",
+                ApproveStationCode: "",
+                ApproveStation: "",
+                ApproveReportDate: "",
+                CommandNo: "",
+                CommandDate: "",
+                CompareAuthority: "",
+                ApproveReportType: "",
+                MistreatNo: "", //+ MistreatNo
+                FineType: "",
+                AdjustReason: "",
+                Lawbreaker: ArrestList[0].ArrestName,
+                LawbreakerID: ArrestList[0].LawbreakerID,
+                ProductDesc: Product,
+                FineRate: "",
+                VatValue: "",
+                RewardRate: "", //RewardRate
+                CompareDetailFine: [],
+                CompareDetailReceipt: [],
+              }
+
+              this.ListCompareDetail.push(this.oCompareDetail);
             }
 
-            this.ListCompareDetail.push(this.oCompareDetail);
           }
         }
       }, (err: HttpErrorResponse) => {
         alert(err.message);
+        this.preloader.setShowPreloader(false);
       });
     }
 
@@ -353,7 +373,7 @@ export class ManageComponent implements OnInit {
 
 
 
-  // --- เขียนที่ ---
+  // --- เขียนที่ (คำให้การของผู้ต้องหา) ---
   getStation() {
     // this.preloader.setShowPreloader(true);
     this.MasterSV.getStation().then(async res => {
@@ -387,6 +407,42 @@ export class ManageComponent implements OnInit {
     // this.oProve.ProveStationCode = event.OfficeCode;
     // this.oProve.ProveStation = event.OfficeName;
   }
-  // ----- End เขียนที่ ---
+  // ----- End เขียนที่ (คำให้การของผู้ต้องหา) ---
 
+
+  // --- เขียนที่ (รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ) ---
+  ReportonAutoChange(value: string) {
+    // 
+    if (value == '') {
+      this.ReportOptions = [];
+    } else {
+      this.ReportOptions = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+    }
+  }
+
+  ReportonAutoFocus(value: string) {
+    if (value == '') {
+      this.ReportOptions = [];
+    }
+  }
+
+  ReportonAutoSelecteWord(event) {
+    // this.oProve.ProveStationCode = event.OfficeCode;
+    // this.oProve.ProveStation = event.OfficeName;
+  }
+  // ----- End เขียนที่ (รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ) ---
+
+
+  // ----- Format Datetime ---
+  getCurrentDate() {
+    let date = new Date();
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
+  }
+
+  getCurrentTime() {
+    let date = new Date();
+    // 
+    return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+  }
+  // ----- End DateTime -----
 }

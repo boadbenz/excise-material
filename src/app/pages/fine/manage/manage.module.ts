@@ -4,7 +4,7 @@ import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-// import { ProveService } from '../prove.service';
+import { FineService } from '../fine.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ArrestService } from '../../model/arrest.service';
@@ -13,7 +13,6 @@ import { MasterService }  from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
-import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 const routes: Routes = [
   {
@@ -41,11 +40,10 @@ const routes: Routes = [
       MatAutocompleteModule,
       PrintDocModalModule
   ],
-  providers: [//ProveService,
+  providers: [FineService,
       ArrestService,
       LawsuitService,
-      MasterService,
-      PreloaderService
+      MasterService
   ],
   declarations: [ManageComponent,IsActivePipe],
   exports: [MatAutocompleteModule]

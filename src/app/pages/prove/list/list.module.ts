@@ -8,7 +8,6 @@ import { ProveService } from '../prove.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
-import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { ContributorPipe } from '../../../shared/pipe/ContributorPipe';
 
 const routes: Routes = [
@@ -16,7 +15,7 @@ const routes: Routes = [
         path: '',
         data: {
             // title: 'ค้นหาข้อมูล',
-            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง Lastupdate 16/08/2561' }],
+            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง' }],
             nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/prove/manage' }
         },
         component: ListComponent
@@ -34,6 +33,6 @@ const routes: Routes = [
         PaginationTableModule
     ],
     declarations: [ListComponent,ContributorPipe],
-    providers: [ProveService,PreloaderService]
+    providers: [ProveService]
 })
 export class ListModule { }
