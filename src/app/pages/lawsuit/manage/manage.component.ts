@@ -1,19 +1,19 @@
 import { MasLawGuitBase } from "../models/mas_law_guitbase";
 import { MasLawGroupSection } from "../models/mas_law_group_section";
-import { toLocalShort } from "../../../config/dateFormat";
+import { toLocalShort, toTimeShort } from "../../../config/dateFormat";
 import { LawsuitService } from "../lawsuit.service";
 import { Lawsuit } from "../models/lawsuit";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { Arrest } from "../../arrests/arrest";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {FormBuilder} from "@angular/forms";
-import {NoticeService} from "../../notices/notice.service";
-import {PreloaderService} from "../../../shared/preloader/preloader.component";
-import {SidebarService} from "../../../shared/sidebar/sidebar.component";
-import {ArrestsService} from "../../arrests/arrests.service";
-import {ProveService} from "../../prove/prove.service";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { FormBuilder } from "@angular/forms";
+import { NoticeService } from "../../notices/notice.service";
+import { PreloaderService } from "../../../shared/preloader/preloader.component";
+import { SidebarService } from "../../../shared/sidebar/sidebar.component";
+import { ArrestsService } from "../../arrests/arrests.service";
+import { ProveService } from "../../prove/prove.service";
 
 @Component({
   selector: "app-manage",
@@ -46,7 +46,6 @@ export class ManageComponent implements OnInit {
     // private navService: NavigationService,
     private lawsuitService: LawsuitService
   ) {
-    console.log('manage page constructor');
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
     this.navService.setInnerTextNextPageButton('งานจับกุม')
@@ -109,11 +108,10 @@ export class ManageComponent implements OnInit {
         await this.lawsuitService.ArrestgetByCon('050100020'/*params.code*/).then(res => {
           this.arrestList.push(res);
           this.arrestList.map(p => {
-            p.ArrestDate = toLocalShort(p.ArrestDate);
+            p.OccurrenceDate = toLocalShort(p.OccurrenceDate);
+            p.OccurrenceTime = toTimeShort(p.OccurrenceTime);
             p.ArrestStaff.map(staff => {
-              staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
-                staff.LastName
-                }`;
+              staff.FullName = `${staff.TitleName}${staff.FirstName} ${staff.LastName}`;
             });
           });
         });
@@ -152,20 +150,19 @@ export class ManageComponent implements OnInit {
         });
 
         // Find guiltbaseID with IndictmentID from Lawsuit
-        this.arrestList[0].ArrestIndictment.forEach(value => {
+        await this.arrestList[0].ArrestIndictment.forEach(value => {
           if (value.IndictmentID == this.lawsuitList[0].IndictmentID) {
             this.lawsuitService
-              .CompareMasLawgetByCon(value.GuiltBaseID)
-              .then(res => {
-                if (res) {
-                  for (let key in res) {
-                    if (key == "CompareMasLawSection") {
-                      this.masLawGroupSectionList.push(res[key]);
-                    }
-                    if (key == "CompareMasLawGuiltBase") {
-                      this.masLawGuitBaseList.push(res[key]);
-                    }
+              .CompareMasLawgetByCon(value.GuiltBaseID).then(res => {
+              if (res) {
+                for (let key in res) {
+                  if (key == "CompareMasLawSection") {
+                    this.masLawGroupSectionList.push(res[key]);
                   }
+                  if (key == "CompareMasLawGuiltBase") {
+                    this.masLawGuitBaseList.push(res[key]);
+                  }
+                }
                 }
               });
           }

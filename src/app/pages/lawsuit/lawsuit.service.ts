@@ -60,9 +60,10 @@ export class LawsuitService {
     const params = { GuiltBaseID: GuiltBaseID };
     const url = `${appConfig.api8881}/CompareMasLawgetByCon`;
     const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-    if (res.IsSuccess) {
-      return res.ResponseData
-    }
+    // if (res.IsSuccess) {
+    //   return res.ResponseData
+    // }
+    return res
   }
 
 

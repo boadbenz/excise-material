@@ -37,3 +37,8 @@ export function toLocalShort(date: string): string {
     return dd.toLocaleString('th-TH', options);
 }
 
+export function toTimeShort(date: string): string {
+  var options = { hour: 'numeric', minute: 'numeric' };
+  return new Date(date).toLocaleTimeString('th-TH', options);
+}
+
