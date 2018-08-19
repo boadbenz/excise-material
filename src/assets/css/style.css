@@ -42,6 +42,7 @@ File: scss
 @import url(../css/animate.css);
 @import url(../css/steps.css);
 @import url(../css/modal.css);
+@import url(../css/mydatepicker-th.css);
 .preloader {
   width: 100%;
   height: 100%;

@@ -79,7 +79,7 @@ export class NoticeService {
 
     async getDocument(ReferenceCode: string): Promise<NoticeDocument[]> {
         const params = { ReferenceCode };
-        const url = `${appConfig.api8882}/DocumentgetByCon`;
+        const url = `${appConfig.api8883}/DocumentRequestgetByCon`;
         return this.resposePromisGet(JSON.stringify(params), url)
     }
 
@@ -95,9 +95,9 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    insDocument(document: NoticeDocument[]): Promise<any> {
+    insDocument(document: NoticeDocument): Promise<any> {
         const params = document;
-        const url = `${appConfig.api8882}/DocumentinsAll`;
+        const url = `${appConfig.api8883}/DocumentRequestinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
@@ -109,7 +109,7 @@ export class NoticeService {
 
     updDocument(document: NoticeDocument): Promise<any> {
         const params = document;
-        const url = `${appConfig.api8882}/DocumentupdByCon`;
+        const url = `${appConfig.api8883}/DocumentRequestupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
@@ -175,7 +175,7 @@ export class NoticeService {
 
     async documentUpDelete(DocumentID: string): Promise<any> {
         const params = { DocumentID };
-        const url = `${appConfig.api8882}/DocumentupdDelete`;
+        const url = `${appConfig.api8883}/DocumentRequestupdDelete`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         if (!res.IsSuccess) {
             return false;

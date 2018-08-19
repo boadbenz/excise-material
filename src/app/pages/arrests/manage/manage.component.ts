@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { toLocalNumeric, setZero, resetLocalNumeric } from '../../../config/dateFormat';
+import { toLocalNumeric, setZero, resetLocalNumeric, compareDate } from '../../../config/dateFormat';
 import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
@@ -132,7 +132,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.02');
+        this.sidebarService.setVersion('1.03');
 
         this.active_route();
         this.navigate_Service();
@@ -1069,10 +1069,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (dataSource && dataSource !== undefined) {
                 this.ArrestDocument.at(index).patchValue({
                     ReferenceCode: this.arrestCode,
-                    FilePath: `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`,
+                    FilePath: fileName,
                     DataSource: dataSource,
                     DocumentType: fileType,
-                    DocumentName: fileName,
+                    DocumentName: null,
                     IsActive: 1
                 })
             }
