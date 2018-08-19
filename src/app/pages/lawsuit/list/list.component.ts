@@ -21,9 +21,18 @@ export class ListComponent implements OnInit, OnDestroy {
   resultsPerPage: Lawsuit[] = [];
 
   advSearch: any;
+  advSearchSub: any;
+
   paginage = pagination;
 
-  private advSearchSub: any;
+  private setShowButton() {
+    this.navService.setSearchBar(true);
+    this.navService.setPrintButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setSaveButton(false);
+  }
 
   constructor(
     private navService: NavigationService,
@@ -45,43 +54,25 @@ export class ListComponent implements OnInit, OnDestroy {
     /* Display Button */
     this.setShowButton();
     /* Load Data*/
+    this.preLoaderService.setShowPreloader(true);
     await this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+    this.preLoaderService.setShowPreloader(false);
   }
 
   async onSearchComplete(list: Lawsuit[]) {
-
+    /* Alert When No Data To Show */
     if (!list.length) {
       alert(Message.noRecord);
       return false;
     }
-
-    // await list.map((item, i) => {
-    //   item.rowId = i + 1;
-    //   item.NoticeDate = toLocalShort(item.NoticeDate);
-    //   item.NoticeStaff.map(s => {
-    //     s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
-    //   });
-    //   item.NoticeSuspect.map(s => {
-    //     s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
-    //   })
-    // });
-
+    /* Adjust Another Column */
     this.results = list.map((item, i) => {
       item.RowsId = i + 1;
+      item.LawsuitDate = toLocalShort(item.LawsuitDate);
       return item;
     });
-
     /* Set Total Record */
     this.paginage.TotalItems = this.results.length;
-  }
-
-  private setShowButton() {
-    this.navService.setSearchBar(true);
-    this.navService.setPrintButton(false);
-    this.navService.setDeleteButton(false);
-    this.navService.setCancelButton(false);
-    this.navService.setEditButton(false);
-    this.navService.setSaveButton(false);
   }
 
   async onAdvSearch(form: any) {
@@ -100,64 +91,18 @@ export class ListComponent implements OnInit, OnDestroy {
     this.preLoaderService.setShowPreloader(false);
   }
 
-  // private getSearchComplete(res: any) {
-  //   console.log(res);
-  //   if (res.IsSuccess) {
-  //     this.results = res.ResponseData;
-  //     this.results.map((data, index) => {
-  //       data.RowsId = index + 1;
-  //       data.LawsuitDate = toLocalShort(data.LawsuitDate);
-  //       data.LawsuiteStaff.map(staff => {
-  //         staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
-  //           staff.LastName
-  //           }`;
-  //       });
-  //     });
-  //
-  //     this.resultsPerPage = this.results;
-  //     this.paginage.TotalItems = this.results.length;
-  //   } else {
-  //     alert(Message.noRecord);
-  //     return false;
-  //   }
-  // }
-
-  // advSearchForm(advForm: NgForm) {
-  //   const DateFrom = new Date(advForm.value.LawsuitDateFrom);
-  //   const DateTo = new Date(advForm.value.LawsuitDateTo);
-  //   // Compare Date
-  //   if (DateFrom.getTime() > DateTo.getTime()) {
-  //     alert(Message.checkDate);
-  //   } else {
-  //     this.lawsuitService.getByKeyword(advForm.value)
-  //       .then(res => this.onSearchComplete(res));
-  //   }
-  //   advForm.reset();
-  // }
-
   viewData(item) {
-    console.log('going to detail page');
-    console.log(item);
     this.router.navigate(['/lawsuit/manage', 'R'], {
-      queryParams: { id: item.LawsuitID, code: item.ArrestCode }
+      queryParams: { id: item.LawsuitID, code: '050100020'/*item.ArrestCode*/ }
     });
-    // this.router.navigate(['/lawsuit/manage', 'R']);
-    console.log('gone to detail page');
   }
 
   closeAdvSearch() {
     this.navService.showAdvSearch.next(false);
   }
 
-  // async pageChanges(event: any) {
-  //   this.results = await this.resultsPerPage.slice(
-  //     event.startIndex - 1,
-  //     event.endIndex
-  //   );
-  // }
-
   async pageChanges(event) {
-    this.results = await this.results.slice(event.startIndex - 1, event.endIndex);
+    this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
   }
 
   ngOnDestroy() {

@@ -105,7 +105,7 @@ export class ManageComponent implements OnInit {
     this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
       async params => {
         // ArrestgetByCon
-        await this.lawsuitService.ArrestgetByCon('050100020'/*params.code*/).then(res => {
+        await this.lawsuitService.ArrestgetByCon(params.code).then(res => {
           this.arrestList.push(res);
           this.arrestList.map(p => {
             p.OccurrenceDate = toLocalShort(p.OccurrenceDate);

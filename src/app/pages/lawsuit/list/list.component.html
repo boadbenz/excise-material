@@ -37,7 +37,7 @@
                   <div class="col-md-4">
                     <input class="form-control" type="date" ngModel name="LawsuitDateFrom">
                   </div>
-                  <label class="col-form-label">ถึง</label>
+                  <label class="col-form-label text-right col-md-1 px-0">ถึง : </label>
                   <div class="col-md-4">
                     <input class="form-control" type="date" ngModel name="LawsuitDateTo">
                   </div>
@@ -85,11 +85,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="footable" *ngFor="let item of results; let i = index;">
+              <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
                 <td class="text-center">{{ item.RowsId || '' }}</td>
                 <td>{{ item.ArrestCode || '-' }}</td>
                 <td>{{ item.LawsuitNo || '-' }}</td>
-                <td>{{ (item.LawsuitDate | date: 'dd/MM/yyyy') || '-' }}</td>
+                <td>{{ item.LawsuitDate || '-' }}</td>
                 <td>
                   <div *ngFor="let staff of item.LawsuiteStaff;">{{ (staff.TitleName || '') + (staff.FullName || '') + ' ' + (staff.LastName || '')}}</div>
                 </td>

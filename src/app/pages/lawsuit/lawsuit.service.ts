@@ -4,6 +4,7 @@ import { appConfig } from "../../app.config";
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Lawsuit } from "./models/lawsuit";
 import {Notice} from "../notices/notice";
+import {Arrest} from "../model/arrest";
 
 @Injectable()
 export class LawsuitService {
@@ -25,6 +26,8 @@ export class LawsuitService {
     if (res.IsSuccess) {
       return res.ResponseData
     }
+    // const url = `${appConfig.api8083}/LawsuitgetByConAdv`;
+    // return this.responsePromiseGet(JSON.stringify({}), url)
   }
 
   getByKeyword(filterValue: any): Promise<Lawsuit[]> {
@@ -66,6 +69,18 @@ export class LawsuitService {
     return res
   }
 
+  async getByArrestCon(ArrestCode: string): Promise<Arrest> {
+    const params = { ArrestCode };
+    const url = `${appConfig.api7788}/ArrestgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res.ResponseData as Arrest;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
 
 
 
@@ -77,17 +92,14 @@ export class LawsuitService {
   //   const params = JSON.stringify(filterValue);
   //   const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
   //   const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-  //   if (res.IsSuccess) {
-  //     return res.ResponseData
+  //   try {
+  //     const res = await this.http
+  //       .post(url, params, this.httpOptions)
+  //       .toPromise();
+  //     return res.json();
+  //   } catch (error) {
+  //     await alert(error);
   //   }
-  //   // try {
-  //   //   const res = await this.http
-  //   //     .post(url, params, this.httpOptions)
-  //   //     .toPromise();
-  //   //   return res.json();
-  //   // } catch (error) {
-  //   //   await alert(error);
-  //   // }
   // }
   //
   // async LawSuitgetByConAdv(advForm) {
