@@ -38,7 +38,7 @@
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <input #noticeDue type="number" min="0" formControlName="NoticeDue" class="form-control form-control-sm" 
-                        (keyup)="addNoticeDueDate(noticeDue)"
+                        (keyup)="addNoticeDueDate(noticeDue)" 
                         [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
     
                         <label for="" class="">&nbsp;เวลา :&nbsp;</label>
                         <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
-                        [readOnly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required
+                        [readOnly]="showEditField"
                         [value]="noticeTime.value">
                     </div>
                     <!-- <input type="date" #noticeDueDate formControlName="NoticeDueDate" class="form-control form-control-sm" 
@@ -140,7 +140,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
                             <input type="text" class="form-control form-control-sm" formControlName="FirstName" [attr.disabled]="isConceal ? '' : null"
-                            [readonly]="showEditField" required>
+                            [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
 

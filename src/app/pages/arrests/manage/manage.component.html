@@ -16,7 +16,7 @@
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" formControlName="NoticeCode"
                     class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
-                    <a href="javaScript:void(0);" class="more text-secondary" (click)="openModal(noticelist)">
+                    <a href="javaScript:void(0);" class="more text-secondary" (click)="!showEditField && openModal(noticelist)" disabled>
                         <i class="ti-more-alt" aria-hidden="true"></i>
                     </a>
                     <ng-template #noticelist let-c="close" let-d="dismiss">
@@ -53,9 +53,11 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เขียน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group input-group">
-                        <input type="date" formControlName="ArrestDate" 
-                        #arrestDate class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
+                    <div class="form-group input-group" style="z-index: 1;">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" 
+                            [options]="myDatePickerOptions" [disabled]="showEditField" 
+                            [ngClass]="{'ng-touched':isRequired}" required
+                            formControlName="ArrestDate"></my-date-picker-th>
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
                         <input type="text" formControlName="ArrestTime" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
@@ -83,8 +85,11 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เกิดเหตุ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group input-group">
-                        <input type="date" formControlName="OccurrenceDate" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
+                    <div class="form-group input-group" style="z-index: 1;">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" 
+                            [options]="myDatePickerOptions" [disabled]="showEditField" 
+                            [ngClass]="{'ng-touched':isRequired}" required
+                            formControlName="OccurrenceDate"></my-date-picker-th>
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
                         <input type="text" formControlName="OccurrenceTime" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
@@ -529,7 +534,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
                                     <div class="input-group-append">
-                                        <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)" hidden>
+                                        <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)"  [attr.disabled]="showEditField ? '' : null">
                                         <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
                                             <i class="ti-more-alt"></i>
                                         </label>

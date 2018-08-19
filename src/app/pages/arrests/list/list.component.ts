@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('1.03');
+        this.sidebarService.setVersion('1.04');
 
         this.onSearch('');
 
@@ -104,6 +104,9 @@ export class ListComponent implements OnInit, OnDestroy {
         this.paginage.TotalItems = 0;        
 
         this.preLoader.setShowPreloader(true);
+        console.log('===================');
+        console.log(form.value);
+        console.log('===================');
         await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
         this.preLoader.setShowPreloader(false);
 

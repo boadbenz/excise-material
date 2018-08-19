@@ -16,6 +16,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalNoticeModule } from '../../component/modal-notice/modal-notice.module';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 import { ProveService } from '../../prove/prove.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
   {
@@ -50,7 +51,8 @@ const routes: Routes = [
     AllegationModalModule,
     ModalNoticeModule,
     StepWizardModule,
-    PrintDocModalModule
+    PrintDocModalModule,
+    MyDatePickerTHModule
   ],
   declarations: [
     ManageComponent

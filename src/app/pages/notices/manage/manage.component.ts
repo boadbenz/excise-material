@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -12,7 +12,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { toLocalNumeric, resetLocalNumeric, setZero, compareDate } from '../../../config/dateFormat';
+import { setZero, compareDate, setDateMyDatepicker, getDateMyDatepicker, MyDatePickerOptions } from '../../../config/dateFormat';
 import { MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
@@ -61,13 +61,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     isConceal = false;
     isRequired: boolean;
 
-
-    myDatePickerOptions: IMyOptions = {
-        dateFormat: 'dd mmm yyyy',
-        showClearDateBtn: false,
-        height: '30px'
-    };
-
+    myDatePickerOptions = MyDatePickerOptions;
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
@@ -128,7 +122,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.05');
+        this.sidebarService.setVersion('1.06');
 
         this.active_route();
 
@@ -202,8 +196,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                const sDateCompare = this.getDateMyDatepicker(this.noticeForm.value.NoticeDate.date);
-                const eDateCompare = this.getDateMyDatepicker(this.noticeForm.value.NoticeDueDate.date);
+                const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate.date);
+                const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate.date);
 
                 if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
                     alert(Message.checkDate);
@@ -247,13 +241,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/arrest/manage', 'C', 'NEW']);
+                this.router.navigate(['/arrest/list']);
             }
         })
     }
 
     private createForm() {
-        let noticeDate = this.mode == 'C' ? this.setDateMyDatepicker(new Date()) : null;
+        let noticeDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
         let noticeTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
         let noticeDueDate = noticeDate;
         this.noticeForm = this.fb.group({
@@ -323,10 +317,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 NoticeCode: res.NoticeCode,
                 NoticeStationCode: res.NoticeStationCode,
                 NoticeStation: res.NoticeStation,
-                NoticeDate: this.setDateMyDatepicker(new Date(res.NoticeDate)),
+                NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
                 NoticeTime: res.NoticeTime,
                 NoticeDue: res.NoticeDue,
-                NoticeDueDate: this.setDateMyDatepicker(new Date(res.NoticeDueDate)),
+                NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
                 GroupNameDesc: res.GroupNameDesc,
                 CommunicationChanelID: res.CommunicationChanelID,
                 ArrestCode: res.ArrestCode,
@@ -379,12 +373,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log('===================');
 
         let IsSuccess: boolean | false;
-        await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
+        await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
             IsSuccess = isSuccess;
             if (!isSuccess)
                 return false;
 
-            this.NoticeDocument.value.map(async doc => {
+            await this.NoticeDocument.value.map(async doc => {
                 console.log('===================');
                 console.log('Create Document : ', JSON.stringify(doc));
                 console.log('===================');
@@ -417,12 +411,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log('===================');
 
         let IsSuccess: boolean | false;
-        await this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
+        await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
             IsSuccess = isSuccess;
             if (!isSuccess)
                 return false;
 
-            this.NoticeDocument.value
+            await this.NoticeDocument.value
                 .filter((item: NoticeDocument) => item.IsNewItem = true)
                 .map((item: NoticeDocument) => {
                     this.noticeService.updDocument(item).then(docIsSuccess => {
@@ -486,15 +480,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     checkDate() {
-        if (this._noticeDate && this._noticeDueDate) {
-            const sdate = `${this._noticeDate.year}-${this._noticeDate.month}-${this._noticeDate.day}`;
-            const edate = `${this._noticeDueDate.year}-${this._noticeDueDate.month}-${this._noticeDueDate.day}`;
+        const _noticeDate = this._noticeDate ? this._noticeDate : this.noticeForm.value.NoticeDate.date;
+        const _noticeDueDate = this._noticeDueDate ? this._noticeDueDate : this.noticeForm.value.NoticeDueDate.date;
+        
+        if (_noticeDate && _noticeDueDate) {
+            const sdate = `${_noticeDate.year}-${_noticeDate.month}-${_noticeDate.day}`;
+            const edate = `${_noticeDueDate.year}-${_noticeDueDate.month}-${_noticeDueDate.day}`;
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.noticeForm.patchValue({
-                        NoticeDueDate: { date: this._noticeDate }
+                        NoticeDueDate: { date: _noticeDate }
                     });
                 }, 0);
             }
@@ -596,27 +593,19 @@ export class ManageComponent implements OnInit, OnDestroy {
         const _date = new Date();
         if (!this.noticeForm.value.NoticeDate) {
             this.noticeForm.patchValue({
-                NoticeDate: this.setDateMyDatepicker(_date),
+                NoticeDate: setDateMyDatepicker(_date),
                 NoticeTime: `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`
             })
         }
 
         const noticeTime = this.noticeForm.value.NoticeTime;
         const dueDate = e.value == '' ? 0 : e.value;
-        let noticeDate = this.getDateMyDatepicker(this.noticeForm.value.NoticeDate.date);
+        let noticeDate = getDateMyDatepicker(this.noticeForm.value.NoticeDate.date);
         noticeDate.setDate(noticeDate.getDate() + parseInt(dueDate));
         this.noticeForm.patchValue({
-            NoticeDueDate: this.setDateMyDatepicker(noticeDate),
+            NoticeDueDate: setDateMyDatepicker(noticeDate),
             NoticeDueTime: noticeTime
         })
-    }
-
-    private setDateMyDatepicker(date: Date) {
-        return { date: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } }
-    }
-
-    private getDateMyDatepicker(date: any) {
-        return new Date(`${date.year}-${date.month}-${date.day}`);
     }
 
     searchRegion = (text3$: Observable<string>) =>
