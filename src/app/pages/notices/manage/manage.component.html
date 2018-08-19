@@ -17,17 +17,21 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่รับแจ้งความ :
                 </label>
-                <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" #noticeDate formControlName="NoticeDate" class="form-control form-control-sm" 
-                    [readonly]="showEditField"                    
-                    (change)="addNoticeDueDate(noticeDue); checkDate()"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group input-group">
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" 
+                            [options]="myDatePickerOptions" [disabled]="showEditField" 
+                            [ngClass]="{'ng-touched':isRequired}" required
+                            (dateChanged)="onNoticeDateChange($event)" formControlName="NoticeDate"></my-date-picker-th>
 
-                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input #noticeTime type="text" formControlName="NoticeTime" class="form-control form-control-sm" 
-                    [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                </div>
+                            <label for="OccurrenceDateTo">&nbsp;เวลา :&nbsp;</label>
+
+                            <input #noticeTime type="text" formControlName="NoticeTime" class="form-control form-control-sm" 
+                            [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        </div>
+                    </div>
             </div>
+            
 
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
@@ -40,15 +44,21 @@
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
-                <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" #noticeDueDate formControlName="NoticeDueDate" class="form-control form-control-sm" 
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" 
+                        [options]="myDatePickerOptions" [disabled]="showEditField"
+                        (dateChanged)="onNoticeDueDateChange($event)" formControlName="NoticeDueDate"></my-date-picker-th>
+    
+                        <label for="" class="">&nbsp;เวลา :&nbsp;</label>
+                        <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
+                        [readOnly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required
+                        [value]="noticeTime.value">
+                    </div>
+                    <!-- <input type="date" #noticeDueDate formControlName="NoticeDueDate" class="form-control form-control-sm" 
                     [readonly]="showEditField"
                     [ngClass]="{'ng-touched':isRequired}" required
-                    (change)="checkDate()">
-
-                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
-                    [readonly]="showEditField" [value]="noticeTime.value">
+                    (change)="checkDate()"> -->
                 </div>
             </div>
 
@@ -130,7 +140,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
                             <input type="text" class="form-control form-control-sm" formControlName="FirstName" [attr.disabled]="isConceal ? '' : null"
-                            [readonly]="showEditField">
+                            [readonly]="showEditField" required>
                         </div>
                     </div>
 

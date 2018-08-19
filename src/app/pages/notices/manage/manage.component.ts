@@ -35,6 +35,7 @@ import {
 } from '../../../models';
 import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
+import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-manage',
@@ -50,7 +51,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     programSpect: 'ILG60-02-02-00';
     mode: string;
-    showEditField: any;
+    showEditField: Boolean;
     modal: any;
     noticeCode: string;
     arrestCode: string;
@@ -60,9 +61,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     isConceal = false;
     isRequired: boolean;
 
+
+    myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd mmm yyyy',
+        showClearDateBtn: false,
+        height: '30px'
+    };
+
+
     @ViewChild('printDocModal') printDocModel: ElementRef;
-    @ViewChild('noticeDate') noticeDate: ElementRef;
-    @ViewChild('noticeDueDate') noticeDueDate: ElementRef;
 
     communicateModel = communicate;
 
@@ -121,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.04');
+        this.sidebarService.setVersion('1.05');
 
         this.active_route();
 
@@ -172,7 +179,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private navigate_service() {
-        this.navService.showFieldEdit.subscribe(p => {
+        this.navService.showFieldEdit.subscribe(async p => {
             this.showEditField = p;
         });
 
@@ -195,14 +202,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                const sDateCompare = new Date(resetLocalNumeric(this.noticeForm.value.NoticeDate));
-                const eDateCompare = new Date(resetLocalNumeric(this.noticeForm.value.NoticeDueDate));
+                const sDateCompare = this.getDateMyDatepicker(this.noticeForm.value.NoticeDate.date);
+                const eDateCompare = this.getDateMyDatepicker(this.noticeForm.value.NoticeDueDate.date);
 
                 if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
                     alert(Message.checkDate);
-                    return false;
+                    return;
                 }
-        
+
+                if (!this.NoticeSuspect.value.length) {
+                    alert(Message.checkData);
+                    return;
+                }
+
                 this.noticeForm.value.NoticeDate = sDateCompare.toISOString();
                 this.noticeForm.value.NoticeDueDate = eDateCompare.toISOString();
                 this.noticeForm.value.NoticeInformer.map(item => {
@@ -241,7 +253,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private createForm() {
-        let noticeDate = this.mode == 'C' ? toLocalNumeric((new Date()).toISOString()) : null;
+        let noticeDate = this.mode == 'C' ? this.setDateMyDatepicker(new Date()) : null;
         let noticeTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
         let noticeDueDate = noticeDate;
         this.noticeForm = this.fb.group({
@@ -265,7 +277,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeLocale: this.fb.array([this.createLocaleForm()]),
             NoticeProduct: this.fb.array([this.createProductForm()]),
             NoticeSuspect: this.fb.array([]),
-            NoticeDocument: this.fb.array([this.createDocumentForm()])
+            NoticeDocument: this.fb.array([])
         })
     }
 
@@ -311,10 +323,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 NoticeCode: res.NoticeCode,
                 NoticeStationCode: res.NoticeStationCode,
                 NoticeStation: res.NoticeStation,
-                NoticeDate: toLocalNumeric(res.NoticeDate),
+                NoticeDate: this.setDateMyDatepicker(new Date(res.NoticeDate)),
                 NoticeTime: res.NoticeTime,
                 NoticeDue: res.NoticeDue,
-                NoticeDueDate: toLocalNumeric(res.NoticeDueDate),
+                NoticeDueDate: this.setDateMyDatepicker(new Date(res.NoticeDueDate)),
                 GroupNameDesc: res.GroupNameDesc,
                 CommunicationChanelID: res.CommunicationChanelID,
                 ArrestCode: res.ArrestCode,
@@ -363,24 +375,27 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
 
         console.log('===================');
-        console.log('Create : ', JSON.stringify(this.noticeForm.value));
+        console.log('Create Notice : ', JSON.stringify(this.noticeForm.value));
         console.log('===================');
 
         let IsSuccess: boolean | false;
         await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
             IsSuccess = isSuccess;
             if (!isSuccess)
-                return;
+                return false;
 
             this.NoticeDocument.value.map(async doc => {
+                console.log('===================');
+                console.log('Create Document : ', JSON.stringify(doc));
+                console.log('===================');
                 // insert Document
                 await this.noticeService.insDocument(doc).then(docIsSuccess => {
                     IsSuccess = docIsSuccess;
                     if (!docIsSuccess)
-                        return;
-                })
+                        return false;
+                }, (error) => { IsSuccess = false; console.error(error); return false; });
             })
-        });
+        }, (error) => { IsSuccess = false; console.error(error); return false; });
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -393,19 +408,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onReviced() {
-        
+
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
         console.log('===================');
-        console.log('Update : ', JSON.stringify(this.noticeForm.value));
+        console.log('Update Notice : ', JSON.stringify(this.noticeForm.value));
         console.log('===================');
 
         let IsSuccess: boolean | false;
         await this.noticeService.updByCon(this.noticeForm.value).then(isSuccess => {
             IsSuccess = isSuccess;
             if (!isSuccess)
-                return;
+                return false;
 
             this.NoticeDocument.value
                 .filter((item: NoticeDocument) => item.IsNewItem = true)
@@ -413,10 +428,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.noticeService.updDocument(item).then(docIsSuccess => {
                         IsSuccess = docIsSuccess
                         if (!docIsSuccess)
-                            return;
-                    })
+                            return false;
+                    }, (error) => { IsSuccess = false; console.error(error); return false; })
                 })
-        })
+        }, (error) => { IsSuccess = false; console.error(error); return false; })
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -458,10 +473,31 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     }
 
+    _noticeDate: any;
+    _noticeDueDate: any;
+    onNoticeDateChange(event: IMyDateModel) {
+        this._noticeDate = event.date;
+        this.checkDate();
+    }
+
+    onNoticeDueDateChange(event: IMyDateModel) {
+        this._noticeDueDate = event.date;
+        this.checkDate();
+    }
+
     checkDate() {
-        if (!compareDate(this.noticeDate.nativeElement.value, this.noticeDueDate.nativeElement.value)) {
-            alert(Message.checkDate)
-            this.noticeDueDate.nativeElement.value = this.noticeDate.nativeElement.value;
+        if (this._noticeDate && this._noticeDueDate) {
+            const sdate = `${this._noticeDate.year}-${this._noticeDate.month}-${this._noticeDate.day}`;
+            const edate = `${this._noticeDueDate.year}-${this._noticeDueDate.month}-${this._noticeDueDate.day}`;
+
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.noticeForm.patchValue({
+                        NoticeDueDate: { date: this._noticeDate }
+                    });
+                }, 0);
+            }
         }
     }
 
@@ -557,20 +593,30 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addNoticeDueDate(e: any) {
+        const _date = new Date();
         if (!this.noticeForm.value.NoticeDate) {
             this.noticeForm.patchValue({
-                NoticeDate: toLocalNumeric((new Date()).toISOString()),
+                NoticeDate: this.setDateMyDatepicker(_date),
                 NoticeTime: `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`
             })
         }
-        let noticeDate = new Date(resetLocalNumeric(this.noticeForm.value.NoticeDate))
-        let noticeTime = this.noticeForm.value.NoticeTime;
-        let dueDate = e.value == '' ? 0 : e.value;
+
+        const noticeTime = this.noticeForm.value.NoticeTime;
+        const dueDate = e.value == '' ? 0 : e.value;
+        let noticeDate = this.getDateMyDatepicker(this.noticeForm.value.NoticeDate.date);
         noticeDate.setDate(noticeDate.getDate() + parseInt(dueDate));
         this.noticeForm.patchValue({
-            NoticeDueDate: toLocalNumeric(noticeDate.toISOString()),
+            NoticeDueDate: this.setDateMyDatepicker(noticeDate),
             NoticeDueTime: noticeTime
         })
+    }
+
+    private setDateMyDatepicker(date: Date) {
+        return { date: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } }
+    }
+
+    private getDateMyDatepicker(date: any) {
+        return new Date(`${date.year}-${date.month}-${date.day}`);
     }
 
     searchRegion = (text3$: Observable<string>) =>
@@ -793,14 +839,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         let reader = new FileReader();
         let file = e.target.files[0];
         let fileName: string = file.name;
-        let fileType: string = file.type;
 
         reader.readAsDataURL(file);
         reader.onload = () => {
             let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
-                    FilePath: fileName
+                    FilePath: fileName,
+                    DataSource: dataSource
                 })
             }
         };
@@ -820,8 +866,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     ReferenceCode: this.noticeCode,
                     FilePath: fileName,
                     DataSource: dataSource,
-                    DocumentType: fileType,
-                    DocumentName: null,
                     IsActive: 1
                 })
             }
