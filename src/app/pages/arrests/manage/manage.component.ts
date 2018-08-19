@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { toLocalNumeric, setZero, resetLocalNumeric, compareDate } from '../../../config/dateFormat';
+import { toLocalNumeric, setZero, resetLocalNumeric, MyDatePickerOptions, setDateMyDatepicker } from '../../../config/dateFormat';
 import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
@@ -49,8 +49,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     mode: string;
     modal: any;
     arrestCode: string;
-    showEditField: any;
+    showEditField: boolean;
     isRequired: boolean | false;
+
+    myDatePickerOptions = MyDatePickerOptions;
 
     arrestFG: FormGroup;
 
@@ -132,7 +134,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('1.03');
+        this.sidebarService.setVersion('1.04');
 
         this.active_route();
         this.navigate_Service();
@@ -157,7 +159,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private createForm() {
-        let ArrestDate = this.mode == 'C' ? toLocalNumeric((new Date()).toISOString()) : null;
+        let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
         let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
         // let OccurrenceDate = ArrestDate;
         this.arrestFG = this.fb.group({
@@ -252,7 +254,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private navigate_Service() {
         this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p;
+            this.showEditField = p.valueOf();
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
@@ -385,9 +387,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestService.getByCon(code).then(async res => {
             await this.arrestFG.reset({
                 ArrestCode: res.ArrestCode,
-                ArrestDate: toLocalNumeric(res.ArrestDate),
+                ArrestDate: setDateMyDatepicker(new Date(res.ArrestDate)),
                 ArrestTime: res.ArrestTime,
-                OccurrenceDate: toLocalNumeric(res.OccurrenceDate),
+                OccurrenceDate: setDateMyDatepicker(new Date(res.OccurrenceDate)),
                 OccurrenceTime: res.OccurrenceTime,
                 ArrestStationCode: res.ArrestStationCode,
                 ArrestStation: res.ArrestStation,
