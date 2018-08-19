@@ -20,10 +20,10 @@ import {ProveService} from "../../prove/prove.service";
   templateUrl: "./manage.component.html"
 })
 export class ManageComponent implements OnInit {
-  lawsuitList = new Array<Lawsuit>();
-  masLawGroupSectionList = new Array<MasLawGroupSection>();
-  masLawGuitBaseList = new Array<MasLawGuitBase>();
-  arrestList = new Array<Arrest>();
+  lawsuitList: Lawsuit[] = [];
+  masLawGroupSectionList: MasLawGroupSection[] = [];
+  masLawGuitBaseList: MasLawGuitBase[] = [];
+  arrestList: Arrest[] = [];
   errorShow: any;
   private getDataFromListPage: any;
 
@@ -53,10 +53,9 @@ export class ManageComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('manage page init');
     this.setShowButton();
-    this.active_route();
-    // this.getParamFromActiveRoute();
+    // this.active_route();
+    this.getParamFromActiveRoute();
   }
 
   private setShowButton() {
@@ -103,81 +102,77 @@ export class ManageComponent implements OnInit {
     // });
   }
 
-  // private getParamFromActiveRoute() {
-  //   this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
-  //     async params => {
-  //       // ArrestgetByCon
-  //       await this.lawsuitService.ArrestgetByCon(params.code).then(res => {
-  //         if (res.IsSuccess) {
-  //           this.arrestList.push(res.ResponseData);
-  //           this.arrestList.map(p => {
-  //             p.ArrestDate = toLocalShort(p.ArrestDate);
-  //             p.ArrestStaff.map(staff => {
-  //               staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
-  //                 staff.LastName
-  //                 }`;
-  //             });
-  //           });
-  //         }
-  //       });
-  //
-  //       // LawsuitgetByCon
-  //       await this.lawsuitService.LawsuitgetByCon(params.id).then(res => {
-  //         if (res.IsSuccess) {
-  //           this.lawsuitList.push(res.ResponseData);
-  //           this.lawsuitList.map((data, index) => {
-  //             data.RowsId = index + 1;
-  //           });
-  //
-  //           // Check IsOutSide
-  //           if (
-  //             res.ResponseData.IsOutside == 1 &&
-  //             res.ResponseData.LawsuitNo != null
-  //           ) {
-  //             this.lawsuitList.map(law => {
-  //               law.LawsuitNo = `น ${law.LawsuitNo}`;
-  //             });
-  //           }
-  //
-  //           // Check status IsLawsuit
-  //           if (res.ResponseData.IsLawsuit == 0) {
-  //             this.lawsuitList.map(law => {
-  //               law.IsLawsuitStatus = "ไม่รับคดี";
-  //             });
-  //           } else if (res.ResponseData.IsLawsuit == 1) {
-  //             this.lawsuitList.map(law => {
-  //               law.IsLawsuitStatus = "ดำเนินการรับคดีแล้ว";
-  //             });
-  //           } else {
-  //             this.lawsuitList.map(law => {
-  //               law.IsLawsuitStatus = "ยังไม่ดำเนินกำรรับคดี";
-  //             });
-  //           }
-  //         }
-  //       });
-  //
-  //       // Find guiltbaseID with IndictmentID from Lawsuit
-  //       this.arrestList[0].ArrestIndictment.forEach(value => {
-  //         if (value.IndictmentID == this.lawsuitList[0].IndictmentID) {
-  //           this.lawsuitService
-  //             .CompareMasLawgetByCon(value.GuiltBaseID)
-  //             .then(res => {
-  //               if (res) {
-  //                 for (let key in res) {
-  //                   if (key == "CompareMasLawSection") {
-  //                     this.masLawGroupSectionList.push(res[key]);
-  //                   }
-  //                   if (key == "CompareMasLawGuiltBase") {
-  //                     this.masLawGuitBaseList.push(res[key]);
-  //                   }
-  //                 }
-  //               }
-  //             });
-  //         }
-  //       });
-  //     }
-  //   );
-  // }
+  private getParamFromActiveRoute() {
+    this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
+      async params => {
+        // ArrestgetByCon
+        await this.lawsuitService.ArrestgetByCon('050100020'/*params.code*/).then(res => {
+          this.arrestList.push(res);
+          this.arrestList.map(p => {
+            p.ArrestDate = toLocalShort(p.ArrestDate);
+            p.ArrestStaff.map(staff => {
+              staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
+                staff.LastName
+                }`;
+            });
+          });
+        });
+
+        // LawsuitgetByCon
+        await this.lawsuitService.LawsuitgetByCon(params.id).then(res => {
+          this.lawsuitList.push(res);
+          this.lawsuitList.map((data, index) => {
+            data.RowsId = index + 1;
+          });
+
+          // Check IsOutSide
+          if (
+            res.IsOutside == 1 &&
+            res.LawsuitNo != null
+          ) {
+            this.lawsuitList.map(law => {
+              law.LawsuitNo = `น ${law.LawsuitNo}`;
+            });
+          }
+
+          // Check status IsLawsuit
+          if (res.IsLawsuit == 0) {
+            this.lawsuitList.map(law => {
+              law.IsLawsuitStatus = "ไม่รับคดี";
+            });
+          } else if (res.IsLawsuit == 1) {
+            this.lawsuitList.map(law => {
+              law.IsLawsuitStatus = "ดำเนินการรับคดีแล้ว";
+            });
+          } else {
+            this.lawsuitList.map(law => {
+              law.IsLawsuitStatus = "ยังไม่ดำเนินกำรรับคดี";
+            });
+          }
+        });
+
+        // Find guiltbaseID with IndictmentID from Lawsuit
+        this.arrestList[0].ArrestIndictment.forEach(value => {
+          if (value.IndictmentID == this.lawsuitList[0].IndictmentID) {
+            this.lawsuitService
+              .CompareMasLawgetByCon(value.GuiltBaseID)
+              .then(res => {
+                if (res) {
+                  for (let key in res) {
+                    if (key == "CompareMasLawSection") {
+                      this.masLawGroupSectionList.push(res[key]);
+                    }
+                    if (key == "CompareMasLawGuiltBase") {
+                      this.masLawGuitBaseList.push(res[key]);
+                    }
+                  }
+                }
+              });
+          }
+        });
+      }
+    );
+  }
 
   viewData(item) {
     if (item.LawsuitNo) {

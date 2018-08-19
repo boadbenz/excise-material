@@ -38,6 +38,32 @@ export class LawsuitService {
     return this.responsePromiseGet(JSON.stringify(form), url)
   }
 
+  async ArrestgetByCon(ArrestCode) {
+    const params = { ArrestCode: ArrestCode };
+    const url = `${appConfig.api7788}/ArrestgetByCon`;
+    const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+    if (res.IsSuccess) {
+      return res.ResponseData
+    }
+  }
+
+  async LawsuitgetByCon(LawsuitID) {
+    const params = { LawsuitID: LawsuitID };
+    const url = `${appConfig.api8083}/LawsuitgetByCon`;
+    const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+    if (res.IsSuccess) {
+      return res.ResponseData
+    }
+  }
+
+  async CompareMasLawgetByCon(GuiltBaseID) {
+    const params = { GuiltBaseID: GuiltBaseID };
+    const url = `${appConfig.api8881}/CompareMasLawgetByCon`;
+    const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+    if (res.IsSuccess) {
+      return res.ResponseData
+    }
+  }
 
 
 
