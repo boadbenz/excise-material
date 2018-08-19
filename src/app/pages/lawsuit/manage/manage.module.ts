@@ -22,7 +22,7 @@ const routes: Routes = [
     path: "",
     data: {
       urls: [
-        { title: "หน้าหลัก", url: "" },
+        { title: "หน้าหลัก", url: "/" },
         { title: "ค้นหาบันทึกรับคำกล่าวโทษ", url: "/lawsuit/list" },
         { title: "จัดการข้อมูลบันทึกรับคำกล่าวโทษ" }
       ],

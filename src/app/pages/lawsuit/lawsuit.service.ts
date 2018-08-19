@@ -154,7 +154,10 @@ export class LawsuitService {
   //     await alert(error);
   //   }
   // }
-  //
+
+
+
+
   // async ArrestLawbreakergetByCon(LawbreakerID) {
   //   const params = JSON.stringify({ LawbreakerID: LawbreakerID });
   //   const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
