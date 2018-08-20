@@ -1,10 +1,18 @@
-<h4 class="text-center m-t-20">
-  login works!
-</h4>
+<style>
+  div {
+      border: double;
+      max-width:500px;
+      margin: auto;
+  }
+  </style>
+
 <form action="" #form="ngForm" (ngSubmit)="onSubmit(form.value)">
-  <label for="userName">ชื่อผู้ใช้:</label>
-  <input type="text" name="userName" id="userName" ngModel required>
-  <label for="password">รหัสผ่าน:</label>
-  <input type="password" name="password" id="password" ngModel required>
-  <button type="submit" [disabled]="!form.valid">เข้าสู่ระบบ</button>
+<div class="text-center m-t-20" style="border-block-end-color: #000000" ><br><br>
+    <img _ngcontent-c2="" alt="homepage" class="light-logo" src="assets/images/logo-excise.png" style="height: 60px;"><br><br>
+  <label for="userName">ชื่อผู้ใช้&nbsp;&nbsp;&nbsp;:</label>
+  <input type="text" name="userName" id="userName" ngModel required><br>
+  <label for="password">รหัสผ่าน&nbsp;:</label>
+  <input type="password" name="password" id="password" ngModel required><br><br>
+  <button type="submit" [disabled]="!form.valid">เข้าสู่ระบบ</button><br><br><br>
+</div>
 </form>
