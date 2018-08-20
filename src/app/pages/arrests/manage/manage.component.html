@@ -364,22 +364,18 @@
                                 <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                     <option value="" disabled selected></option>
-                                    <option *ngFor="let item of typeheadQtyUnit"
-                                    [disabled]="showEditField" 
-                                    [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                    <option *ngFor="let item of typeheadQtyUnit" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
                                 </select>
                             </td>
                             <td>
                                 <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                     <option value=""></option>
-                                    <option *ngFor="let item of typeheadNetVolumeUnit"
-                                    [disabled]="showEditField" 
-                                    [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                    <option *ngFor="let item of typeheadNetVolumeUnit" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
                                 </select>
                             </td>
                             <td>
