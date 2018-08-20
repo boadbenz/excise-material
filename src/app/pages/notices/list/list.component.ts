@@ -5,7 +5,7 @@ import { NoticeService } from '../notice.service';
 import { Message } from '../../../config/message';
 import { Notice } from '../notice';
 import { pagination } from '../../../config/pagination';
-import { toLocalShort, compareDate, toLocalNumeric } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, toLocalNumeric, setZeroHours } from '../../../config/dateFormat';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
@@ -59,10 +59,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('0.0.0.6');
+        this.sidebarService.setVersion('0.0.0.7');
         this.paginage.TotalItems = 0;
-        // this.dateStartFrom = toLocalNumeric((new Date()).toISOString());
-        // this.dateStartTo = this.dateStartFrom;
 
         this.preLoaderService.setShowPreloader(true);
         await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
@@ -108,8 +106,8 @@ export class ListComponent implements OnInit, OnDestroy {
                 return false;
             }
 
-            form.value.DateStartFrom = sDateCompare.toISOString();
-            form.value.DateStartTo = eDateCompare.toISOString();
+            form.value.DateStartFrom = setZeroHours(sDateCompare);
+            form.value.DateStartTo = setZeroHours(eDateCompare);
         }
 
         this.preLoaderService.setShowPreloader(true);

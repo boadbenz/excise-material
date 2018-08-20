@@ -4,7 +4,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
-import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate } from '../../../config/dateFormat';
+import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate, setZeroHours } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.4');
+        this.sidebarService.setVersion('0.0.0.5');
 
         this.onSearch('');
 
@@ -97,8 +97,8 @@ export class ListComponent implements OnInit, OnDestroy {
                 return
             }
 
-            form.value.OccurrenceDateFrom = sDateCompare.toISOString();
-            form.value.OccurrenceDateTo = eDateCompare.toISOString();
+            form.value.OccurrenceDateFrom = setZeroHours(sDateCompare);
+            form.value.OccurrenceDateTo = setZeroHours(eDateCompare);
         }
 
         this.paginage.TotalItems = 0;        

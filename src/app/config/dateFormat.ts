@@ -48,8 +48,8 @@ export function compareDate(sDate: string, eDate: string): boolean {
 }
 
 export function toTimeShort(date: string): string {
-  var options = { hour: 'numeric', minute: 'numeric' };
-  return new Date(date).toLocaleTimeString('th-TH', options);
+    var options = { hour: 'numeric', minute: 'numeric' };
+    return new Date(date).toLocaleTimeString('th-TH', options);
 }
 
 export const MyDatePickerOptions: IMyOptions = {
@@ -64,5 +64,10 @@ export function setDateMyDatepicker(date: Date) {
 
 export function getDateMyDatepicker(date: any) {
     return new Date(`${date.year}-${date.month}-${date.day}`);
+}
+
+export function setZeroHours(date: Date): string {
+    date.setHours(0, -date.getTimezoneOffset(), 0, 0);
+    return date.toISOString();
 }
 

@@ -12,7 +12,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { setZero, compareDate, setDateMyDatepicker, getDateMyDatepicker, MyDatePickerOptions } from '../../../config/dateFormat';
+import { setZero, compareDate, setDateMyDatepicker, getDateMyDatepicker, MyDatePickerOptions, setZeroHours } from '../../../config/dateFormat';
 import { MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.6');
+        this.sidebarService.setVersion('0.0.0.7');
 
         this.active_route();
 
@@ -130,10 +130,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        // await this.setProductStore();
-        // await this.setStaffStore();
-        // await this.setRegionStore();
-        // await this.setProductUnitStore();
+        await this.setProductStore();
+        await this.setStaffStore();
+        await this.setRegionStore();
+        await this.setProductUnitStore();
 
         this.preloader.setShowPreloader(false);
     }
@@ -208,9 +208,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.checkData);
                     return;
                 }
-
-                this.noticeForm.value.NoticeDate = sDateCompare.toISOString();
-                this.noticeForm.value.NoticeDueDate = eDateCompare.toISOString();
+                
+                this.noticeForm.value.NoticeDate = setZeroHours(sDateCompare);
+                this.noticeForm.value.NoticeDueDate = setZeroHours(eDateCompare);
                 this.noticeForm.value.NoticeInformer.map(item => {
                     item.InformerType = item.InformerType == true ? 1 : 0;
                 });
