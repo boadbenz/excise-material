@@ -79,7 +79,6 @@
                         (selectItem)="selectItemOffice($event)"
                         [value]="arrestFG.get('ArrestStation').value"
                          />
-                    <!-- <input type="text" formControlName="ArrestStation" class="form-control form-control-sm" [readonly]="showEditField"> -->
                 </div>
             </div>
             <div class="row">
@@ -534,7 +533,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
                                     <div class="input-group-append">
-                                        <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)"  [attr.disabled]="showEditField ? '' : null">
+                                        <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)" hidden [attr.disabled]="showEditField ? '' : null">
                                         <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
                                             <i class="ti-more-alt"></i>
                                         </label>

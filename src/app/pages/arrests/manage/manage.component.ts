@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { toLocalNumeric, setZero, resetLocalNumeric, MyDatePickerOptions, setDateMyDatepicker } from '../../../config/dateFormat';
+import { setZero, MyDatePickerOptions, setDateMyDatepicker, getDateMyDatepicker, setZeroHours } from '../../../config/dateFormat';
 import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
@@ -273,16 +273,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                const sDateCompare = new Date(resetLocalNumeric(this.arrestFG.value.ArrestDate));
-                const eDateCompare = new Date(resetLocalNumeric(this.arrestFG.value.OccurrenceDate));
+                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate.date);
+                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate.date);
 
                 if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
                     alert(Message.checkDate);
                     return false;
                 }
-        
-                this.arrestFG.value.ArrestDate = sDateCompare.toISOString()
-                this.arrestFG.value.OccurrenceDate = eDateCompare.toISOString();
+                
+                this.arrestFG.value.ArrestDate = setZeroHours(sDateCompare);
+                this.arrestFG.value.OccurrenceDate = setZeroHours(eDateCompare);
 
                 if (this.mode === 'C') {
                     this.onCreate();
@@ -548,7 +548,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             // })
 
-        }, (error) => { IsSuccess = false; console.error(error); return false; });
+        }, (error) => { IsSuccess = false; return false; });
 
         return IsSuccess;
     }
@@ -572,7 +572,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             await this.arrestService.localeupdByCon(this.ArrestLocale.at(0).value)
                 .then(IsSuccess => isSuccess = IsSuccess,
-                    (error) => { IsSuccess = false; console.error(error); return false; });
+                    (error) => { IsSuccess = false; return false; });
 
             if (!isSuccess) return false;
 
@@ -584,7 +584,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                             isSuccess = IsSuccess;
                             return false;
                         }
-                    }, (error) => { IsSuccess = false; console.error(error); return false; });
+                    }, (error) => { IsSuccess = false; return false; });
                 });
 
             if (!isSuccess) return false;
@@ -597,7 +597,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                             isSuccess = IsSuccess;
                             return false;
                         }
-                    }, (error) => { IsSuccess = false; console.error(error); return false; });
+                    }, (error) => { IsSuccess = false; return false; });
                 });
 
             if (!isSuccess) return false;
@@ -610,7 +610,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                             isSuccess = IsSuccess;
                             return false;
                         }
-                    }, (error) => { IsSuccess = false; console.error(error); return false; });
+                    }, (error) => { IsSuccess = false; return false; });
                 });
 
             if (!isSuccess) return false;
@@ -627,10 +627,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                         await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
 
-                    }, (error) => { IsSuccess = false; console.error(error); return false; });
+                    }, (error) => { IsSuccess = false; return false; });
                 });
 
-        }, (error) => { isSuccess = false; console.error(error); return false; })
+        }, (error) => { isSuccess = false; return false; })
 
         if (isSuccess) {
             alert(Message.saveComplete)
@@ -669,13 +669,19 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     setNoticeForm(notice: Notice) {
         this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
-
+debugger
         let locale = notice.NoticeLocale[0];
         let product = notice.NoticeProduct;
         let lawbreaker = [];
 
         this.ArrestLocale.at(0).reset(locale);
         this.ArrestLocale.at(0).patchValue({
+            SubDistrictCode: locale.SubdistrictCode,
+            SubDistrict: locale.SubDistrict,
+            DistrictCode: locale.DistrictCode,
+            District: locale.District,
+            ProvinceCode: locale.ProvinceCode,
+            Province: locale.Province,
             Region: `${locale.SubDistrict} ${locale.District} ${locale.Province}`,
             ArrestCode: this.arrestCode,
             IsArrest: 1
@@ -769,8 +775,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         QtyUnit: new FormControl(lb.QtyUnit, Validators.required),
                         Size: new FormControl(lb.Size),
                         SizeUnit: new FormControl(lb.SizeUnit),
-                        Weight: new FormControl(lb.Weight, Validators.required),
-                        WeightUnit: new FormControl(lb.WeightUnit, Validators.required),
+                        Weight: new FormControl(lb.Weight),
+                        WeightUnit: new FormControl(lb.WeightUnit),
                         MistreatRate: null,
                         Fine: null,
                         IndictmentDetailID: null
@@ -1071,10 +1077,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (dataSource && dataSource !== undefined) {
                 this.ArrestDocument.at(index).patchValue({
                     ReferenceCode: this.arrestCode,
-                    FilePath: fileName,
-                    DataSource: dataSource,
-                    DocumentType: fileType,
-                    DocumentName: null,
+                    FilePath: e.target.value,
                     IsActive: 1
                 })
             }
