@@ -125,8 +125,8 @@ export class AllegationModalComponent implements OnInit {
             ProductName: _product.ProductDesc,
             Qty: _product.Qty,
             QtyUnit: _product.QtyUnit,
-            Size: '',
-            SizeUnit: '',
+            Size: null,
+            SizeUnit: null,
             Weight: _product.NetVolume,
             WeightUnit: _product.NetVolumeUnit
         })
