@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Compare, ICompareDetail, CompareDetail, CompareStation } from './fine-model';
+import { ICompareDetail, CompareStation } from './fine-model';
+import { Compare } from './compare';
+import { CompareDetail } from './compareDetail';
 import { appConfig } from '../../app.config';
 import { Arrest } from '../model/arrest';
 import { Lawsuit } from '../model/lawsuit-model';
@@ -10,14 +12,14 @@ import { ICompareIns, ICompareMistreat, IRateMistreat } from './condition-model'
 @Injectable()
 export class FineService {
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { }
 
-  private httpOptions = {
-    headers: new HttpHeaders(
-      {
-        'Content-Type': 'application/json'
-      })
-  };
+    private httpOptions = {
+        headers: new HttpHeaders(
+            {
+                'Content-Type': 'application/json'
+            })
+    };
 
 
     getByKeyword(Textsearch: string) {
@@ -32,13 +34,13 @@ export class FineService {
     //     return this.http.post<Compare[]>(url, params, this.httpOptions);
     // }
 
-    async getByCon(form: any): Promise<Compare[]> {
-        const params = JSON.stringify(form);
+    async getByCon(CompareID: string): Promise<any> {
+        const params = { CompareID };
         const url = `${appConfig.api8881}/ComparegetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res as Compare[];
+            return res;
         } catch (error) {
             await alert(error);
         }
@@ -94,18 +96,6 @@ export class FineService {
         }
     }
 
-    async getGuiltBaseByCon(GuiltBaseID: string): Promise<GuiltBase> {
-        const params = { GuiltBaseID };
-        const url = `${appConfig.api8881}/CompareMasLawgetByCon`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res as GuiltBase;
-        } catch (error) {
-            await alert(error);
-        }
-    }
-
     async MistreatgetByCon(Misterat: ICompareMistreat): Promise<any> {
         const params = JSON.stringify(Misterat);
         const url = `${appConfig.api8881}/CompareCountMistreatgetByCon`;
@@ -130,7 +120,7 @@ export class FineService {
         }
     }
 
-    
+
     async DivisionRategetByCon(): Promise<any> {
         const params = {};
         const url = `${appConfig.api8881}/CompareMasDivisionRategetByCon`;
@@ -155,8 +145,8 @@ export class FineService {
         }
     }
 
-    async updByCon(Compare: ICompareIns): Promise<any> {
-        const params = JSON.stringify(Compare);
+    async CompareupdByCon(oCompare: Compare): Promise<any> {
+        const params = JSON.stringify(oCompare);
         const url = `${appConfig.api8881}/CompareupdByCon`;
 
         try {

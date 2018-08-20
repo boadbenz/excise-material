@@ -829,45 +829,46 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (PRN.length > 1) {
                 this.ReportNo = PRN[0];
                 this.ProveYear = PRN[1];
-                this.ProveStation = this.oProve.ProveStation;
-                this.ProveDelivery = this.oProve.DeliveryStation;
-                this.DeliveryDocNo = this.oProve.DeliveryDocNo;
+            }
+            
+            this.ProveStation = this.oProve.ProveStation;
+            this.ProveDelivery = this.oProve.DeliveryStation;
+            this.DeliveryDocNo = this.oProve.DeliveryDocNo;
 
-                var PDate = this.oProve.ProveDate.split(" ");
-                this.ProveDate = PDate[0];
-                this.ProveTime = PDate[1] + ".000";
+            var PDate = this.oProve.ProveDate.split(" ");
+            this.ProveDate = PDate[0];
+            this.ProveTime = PDate[1] + ".000";
 
-                var PSDate = this.oProve.DeliveryDate.split(" ");
-                this.DeliveryDate = PSDate[0];
-                this.DeliveryTime = PSDate[1] + ".000";
+            var PSDate = this.oProve.DeliveryDate.split(" ");
+            this.DeliveryDate = PSDate[0];
+            this.DeliveryTime = PSDate[1] + ".000";
 
-                var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
-                if (PStaff.length > 0) {
-                    this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
-                    this.PosExaminer = PStaff[0].PositionName;
-                    this.DeptExaminer = PStaff[0].DepartmentName;
-                    this.StaffID = PStaff[0].StaffID;
-                    this.oProveStaff = PStaff[0];
-                }
+            var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
+            if (PStaff.length > 0) {
+                this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
+                this.PosExaminer = PStaff[0].PositionName;
+                this.DeptExaminer = PStaff[0].DepartmentName;
+                this.StaffID = PStaff[0].StaffID;
+                this.oProveStaff = PStaff[0];
+            }
 
 
-                var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "15");
-                if (PScienceStaff.length) {
-                    this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
-                    this.PosScience = PScienceStaff[0].PositionName;
-                    this.DeptScience = PScienceStaff[0].DepartmentName;
-                    this.StaffScienceID = PScienceStaff[0].StaffID;
-                    this.oProveScienceStaff = PScienceStaff[0];
-                }
+            var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "15");
+            if (PScienceStaff.length) {
+                this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
+                this.PosScience = PScienceStaff[0].PositionName;
+                this.DeptScience = PScienceStaff[0].DepartmentName;
+                this.StaffScienceID = PScienceStaff[0].StaffID;
+                this.oProveScienceStaff = PScienceStaff[0];
+            }
 
-                this.oProve.ProveProduct.map(item => {
-                    item.IsNewItem = false;
-                    item.IsDelItem = false;
-                });
+            this.oProve.ProveProduct.map(item => {
+                item.IsNewItem = false;
+                item.IsDelItem = false;
+            });
 
-                for (var i = 0; i < this.oProve.ProveProduct.length; i += 1) {
-                    this.oProve.ProveProduct[i].ProductSeq = i;
-                }
+            for (var i = 0; i < this.oProve.ProveProduct.length; i += 1) {
+                this.oProve.ProveProduct[i].ProductSeq = i;
             }
         }
 
@@ -892,6 +893,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         // 
         if (value == '') {
             this.options = [];
+
+            this.oProve.ProveStationCode = "";
+            this.oProve.ProveStation = "";
         } else {
 
             this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
@@ -915,6 +919,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     DeliveryOnAutoChange(value: string) {
         if (value == '') {
             this.Deliveryoptions = [];
+
+            this.oProve.DeliveryStationCode = "";
+            this.oProve.DeliveryStation = "";
         } else {
 
             this.Deliveryoptions = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);

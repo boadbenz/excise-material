@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Reward } from './reward';
-import { environment } from '../../../environments/environment';
+import { environment } from 'environments/environment';
 import {TextSearch} from './reward-search';
 import {RewardArrest} from './reward-arrest';
 

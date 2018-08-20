@@ -198,7 +198,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
-            <td class="">{{item.Lawbreaker}}</td>
+            <td class="">{{item.LawBrakerName}}</td>
             <td class="text-center">
               <b>
                 <u>
@@ -221,10 +221,10 @@
             </td>
             <!-- <td class="">{{item.BribeMoney}}</td> -->
             <td>
-              <input class="form-control" type="text" [(ngModel)]="item.BribeMoney"  [disabled]="showEditField" value="">
+              <input class="form-control" type="text" [(ngModel)]="item.BribeMoney" [disabled]="showEditField" value="">
             </td>
             <td class="">{{item.CompareFine * item.RewardRate}}</td>
-            <td class="">{{item.CompareFine - (item.BribeMoney + item.RewardMoney  | number) }}</td>
+            <td class="">{{item.CompareFine - (item.BribeMoney + item.RewardMoney | number) }}</td>
             <td class="">รวม</td>
           </tr>
         </tbody>
@@ -276,7 +276,15 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">ชื่อผู้เปรียบเทียบ : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="Staff" name="Staff" disabled>
+              <input type="text" class="form-control" [(ngModel)]="CompareStaffName" name="CompareStaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                matInput [matAutocomplete]="auto3" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
+                [disabled]="showEditField">
+              <mat-autocomplete #auto3="matAutocomplete">
+                <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                  (click)="StaffonAutoSelecteWord(sOption)">
+                  {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                </mat-option>
+              </mat-autocomplete>
             </div>
           </div>
         </div>
@@ -284,7 +292,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">ตำแหน่ง : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" [(ngModel)]="OperationPosName" name="ComparePosition" disabled>
+              <input class="form-control" type="text" [(ngModel)]="OperationPosName" name="OperationPosName" disabled>
             </div>
           </div>
         </div>
@@ -294,7 +302,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">หน่วยงาน : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="OperationDeptName" name="CompareDepartment" disabled>
+              <input class="form-control" type="text" [(ngModel)]="OperationDeptName" name="OperationDeptName" disabled>
             </div>
           </div>
         </div>
@@ -315,8 +323,7 @@
         <tbody>
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
-            <!-- +' ' + item.IndictmentDetailID-->
-            <td>{{item.Lawbreaker +' ' + item.LawbreakerID}} </td>
+            <td>{{item.LawBrakerName }} </td>
             <td class="text-center">{{item.PaymentFineAppointDate | date:'dd/MM/yyyy'}}</td>
             <td class="text-center">{{item.PaymentVatDate | date:'dd/MM/yyyy'}}</td>
             <td class="text-center">
@@ -352,7 +359,7 @@
           <div class="form-group row">
             <div class="custom-control custom-checkbox col-form-label col-md-4">
               <input class="col-form-label filled-in chk-col-indigo" id="IsOutside" type="checkbox" [(ngModel)]="IsOutside" name="IsOutside"
-                [disabled]="showEditField">
+                [disabled]="showEditField" (checked)="IsOutside=='1'">
               <label for="IsOutside">คดีเปรียบเทียบนอกสถานที่ทำการ</label>
             </div>
           </div>
@@ -363,7 +370,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">คดีเปรียบเทียบที่ : </label>
             <div class="col-md-7">
-              <input class="form-control" type="text" [(ngModel)]="d" name="d" [disabled]="showEditField">
+              <input class="form-control" type="text" [(ngModel)]="CompareNo" name="CompareNo" [disabled]="showEditField">
             </div>
             <label class="col-form-label">/{{CompareYear}}</label>
           </div>
@@ -388,7 +395,7 @@
         <tbody>
           <tr *ngFor="let item of ListCompareDetailReceipt; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
-            <td>{{item.Lawbreaker}}</td>
+            <td>{{item.LawBrakerName}}</td>
             <td class="text-center">{{item.PaymentDate | date:'dd/MM/yyyy'}}</td>
             <td>{{item.ReceipStaff}}</td>
             <td class="text-center">{{item.ReceiptChanel}}</td>
@@ -431,7 +438,7 @@
         <tbody>
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
-            <td>{{item.Lawbreaker}}</td>
+            <td>{{item.LawBrakerName}}</td>
             <td class="text-center">{{item.ApproveReportDate | date:'dd/MM/yyyy'}}</td>
             <td>{{item.ApproveReportType}}</td>
             <td>
@@ -578,9 +585,8 @@
             <div class="col-md-12">
               <div class="form-popup form-group row">
                 <div class="custom-control custom-radio col-form-label col-md-10">
-                  <input name="RequestRadio" id="yRequest" class="col-form-label with-gap radio-col-indigo" type="radio" [disabled]="showEditField"
-                    >
-                    <!-- [checked]="oCompareDetail.IsRequest=='1'" -->
+                  <input name="RequestRadio" id="yRequest" class="col-form-label with-gap radio-col-indigo" type="radio" [disabled]="showEditField">
+                  <!-- [checked]="oCompareDetail.IsRequest=='1'" -->
                   <label for="yRequest">ร้องขอ</label>
 
                 </div>
@@ -591,9 +597,8 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-radio col-form-label col-md-10">
-                  <input name="RequestRadio" id="nRequest" class="col-form-label with-gap radio-col-indigo" type="radio" [disabled]="showEditField"
-                    >
-                    <!-- [checked]="oCompareDetail.IsRequest=='0'" -->
+                  <input name="RequestRadio" id="nRequest" class="col-form-label with-gap radio-col-indigo" type="radio" [disabled]="showEditField">
+                  <!-- [checked]="oCompareDetail.IsRequest=='0'" -->
                   <label for="nRequest">ไม่ร้องขอ</label>
 
                 </div>
@@ -675,7 +680,7 @@
                     matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                     [disabled]="showEditField">
                   <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteReceip(option)">
+                    <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
                       {{ option.OfficeName }}
                     </mat-option>
                   </mat-autocomplete>
@@ -820,7 +825,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">เขียนที่ : </label>
                 <div class="input-group col-md-8">
-                    <input type="text" class="form-control" [(ngModel)]="ApproveStation" name="ApproveStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                  <input type="text" class="form-control" [(ngModel)]="ApproveStation" name="ApproveStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
                     matInput [matAutocomplete]="auto2" (input)="ReportonAutoChange($event.target.value)" (focus)="ReportonAutoFocus($event.target.value)"
                     [disabled]="showEditField">
                   <mat-autocomplete #auto2="matAutocomplete">
