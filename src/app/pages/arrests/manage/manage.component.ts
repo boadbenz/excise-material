@@ -134,7 +134,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.5');
+        this.sidebarService.setVersion('0.0.0.6');
 
         this.active_route();
         this.navigate_Service();
@@ -283,6 +283,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 
                 this.arrestFG.value.ArrestDate = setZeroHours(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = setZeroHours(eDateCompare);
+
+                this.arrestFG.value.ArrestTime = (new Date()).toISOString();
 
                 if (this.mode === 'C') {
                     this.onCreate();

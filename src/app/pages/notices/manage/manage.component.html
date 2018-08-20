@@ -342,11 +342,9 @@
                         </td>
                         <td>
                             <!-- <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required> -->
-                            <select formControlName="QtyUnit" class="form-control form-control-sm">
+                            <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of typeheadProductUnit;"
-                                [disabled]="showEditField" 
-                                [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                <option *ngFor="let item of typeheadProductUnit;" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
                             </select>
                         </td>
                         <td class="text-center">
@@ -445,11 +443,9 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
+                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                         <option value="" selected disabled></option>
-                        <option *ngFor="let item of communicateModel; let i=index;" 
-                        [value]="item.CommunicationChanelID"
-                        [disabled]="showEditField">
+                        <option *ngFor="let item of communicateModel; let i=index;" [value]="item.CommunicationChanelID">
                             {{item.CommunicationChanelName}}
                         </option>
                     </select>
