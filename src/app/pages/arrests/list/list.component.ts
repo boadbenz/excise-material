@@ -105,7 +105,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.preLoader.setShowPreloader(true);
         console.log('===================');
-        console.log(form.value);
+        console.log(JSON.stringify(form.value));
         console.log('===================');
         await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
         this.preLoader.setShowPreloader(false);
