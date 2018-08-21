@@ -24,8 +24,7 @@ export class ListComponent implements OnInit, OnDestroy {
     notice = new Array<Notice>();
     noticeList = new Array<Notice>();
 
-    _dateStartFrom: any;
-    _dateStartTo: any;
+    dateStartFrom: any;
     dateStartTo: any;
 
     myDatePickerOptions: IMyOptions = {
@@ -59,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('0.0.0.7');
+        this.sidebarService.setVersion('0.0.0.8');
         this.paginage.TotalItems = 0;
 
         this.preLoaderService.setShowPreloader(true);
@@ -142,24 +141,28 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSDateChange(event: IMyDateModel){
-        this._dateStartFrom = event.date;
+        this.dateStartFrom = event;
         this.checkDate();
     }
 
     onEDateChange(event: IMyDateModel){
-        this._dateStartTo = event.date;
+        this.dateStartTo = event;
         this.checkDate();
     }
 
     checkDate() {
-        if (this._dateStartFrom && this._dateStartTo) {
-            const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
-            const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
+        if (this.dateStartFrom && this.dateStartTo) {
+            
+            const _sdate = this.dateStartFrom.date;
+            const _edate = this.dateStartTo.date;
+
+            const sdate = `${_sdate.year}-${_sdate.month}-${_sdate.day}`;
+            const edate = `${_edate.year}-${_edate.month}-${_edate.day}`;
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.dateStartTo = { date: this._dateStartFrom };
+                    this.dateStartTo = { date: _sdate };
                 }, 0);
             }
         }

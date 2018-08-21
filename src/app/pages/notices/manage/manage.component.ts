@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.7');
+        this.sidebarService.setVersion('0.0.0.8');
 
         this.active_route();
 
@@ -134,6 +134,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.setStaffStore();
         await this.setRegionStore();
         await this.setProductUnitStore();
+        await this.setOfficeStore();
 
         this.preloader.setShowPreloader(false);
     }
@@ -470,28 +471,28 @@ export class ManageComponent implements OnInit, OnDestroy {
     _noticeDate: any;
     _noticeDueDate: any;
     onNoticeDateChange(event: IMyDateModel) {
-        this._noticeDate = event.date;
+        this._noticeDate = event;
         this.checkDate();
     }
 
     onNoticeDueDateChange(event: IMyDateModel) {
-        this._noticeDueDate = event.date;
+        this._noticeDueDate = event;
         this.checkDate();
     }
 
     checkDate() {
-        const _noticeDate = this._noticeDate ? this._noticeDate : this.noticeForm.value.NoticeDate.date;
-        const _noticeDueDate = this._noticeDueDate ? this._noticeDueDate : this.noticeForm.value.NoticeDueDate.date;
+        const _sdate = this._noticeDate ? this._noticeDate.date : this.noticeForm.value.NoticeDate.date;
+        const _edate = this._noticeDueDate ? this._noticeDueDate.date : this.noticeForm.value.NoticeDueDate.date;
         
-        if (_noticeDate && _noticeDueDate) {
-            const sdate = `${_noticeDate.year}-${_noticeDate.month}-${_noticeDate.day}`;
-            const edate = `${_noticeDueDate.year}-${_noticeDueDate.month}-${_noticeDueDate.day}`;
+        if (_sdate && _edate) {
+            const sdate = `${_sdate.year}-${_sdate.month}-${_sdate.day}`;
+            const edate = `${_edate.year}-${_edate.month}-${_edate.day}`;
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.noticeForm.patchValue({
-                        NoticeDueDate: { date: _noticeDate }
+                        NoticeDueDate: { date: _sdate }
                     });
                 }, 0);
             }
@@ -534,6 +535,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.NoticeDocument.push(this.fb.group(document));
             }
         }
+    }
+
+    private async setOfficeStore() {
+        await this.arrestService.masOfficegetAll().then(res =>
+            this.typeheadOffice = res
+        )
     }
 
     private async setStaffStore() {
@@ -628,8 +635,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 : this.typeheadProduct
                     .filter(v =>
                         v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -644,6 +650,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                         v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
+    serachOffice = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.typeheadOffice
+                    .filter(v =>
+                        v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
+
     formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
         `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
 
@@ -653,7 +670,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName} ${x.FirstName} ${x.LastName}`
 
-    // formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
+    formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
 
     selectItemInformmerRegion(ele: any) {
         this.NoticeInformer.at(0).patchValue({
@@ -711,12 +728,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    // selectItemOffice(e) {
-    //     this.noticeForm.patchValue({
-    //         NoticeStationCode: e.item.OfficeCode,
-    //         NoticeStation: e.item.OfficeShortName
-    //     })
-    // }
+    selectItemOffice(e) {
+        this.noticeForm.patchValue({
+            NoticeStationCode: e.item.OfficeCode,
+            NoticeStation: e.item.OfficeShortName
+        })
+    }
 
     async onDeleteProduct(id: string, index: number) {
         if (this.mode === 'C') {

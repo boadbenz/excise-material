@@ -138,7 +138,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.active_route();
         this.navigate_Service();
-        this.createForm();
+        this.arrestFG = this.createForm();
 
         await this.setStaffStore()
         await this.setOfficeStore()
@@ -158,11 +158,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe.unsubscribe()
     }
 
-    private createForm() {
+    private createForm(): FormGroup {
         let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
         let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
         // let OccurrenceDate = ArrestDate;
-        this.arrestFG = this.fb.group({
+        return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
             ArrestDate: new FormControl(ArrestDate, Validators.required),
             ArrestTime: new FormControl(ArrestTime, Validators.required),
@@ -469,8 +469,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setItemFormArray(res.ArrestDocument, 'ArrestDocument');
 
             this.addIndicment(res.ArrestIndictment);
-            console.log(res.ArrestIndictment);
-
         })
     }
 
