@@ -53,7 +53,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เขียน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group input-group" style="z-index: 1;">
+                    <div class="form-group input-group">
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" 
                             [options]="myDatePickerOptions" [disabled]="showEditField" 
                             [ngClass]="{'ng-touched':isRequired}" required
@@ -364,22 +364,18 @@
                                 <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <select formControlName="QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                     <option value="" disabled selected></option>
-                                    <option *ngFor="let item of typeheadQtyUnit"
-                                    [disabled]="showEditField" 
-                                    [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                    <option *ngFor="let item of typeheadQtyUnit" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
                                 </select>
                             </td>
                             <td>
                                 <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                     <option value=""></option>
-                                    <option *ngFor="let item of typeheadNetVolumeUnit"
-                                    [disabled]="showEditField" 
-                                    [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                    <option *ngFor="let item of typeheadNetVolumeUnit" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
                                 </select>
                             </td>
                             <td>
