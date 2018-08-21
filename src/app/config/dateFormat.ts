@@ -1,3 +1,5 @@
+import { IMyOptions } from "mydatepicker-th";
+
 export function toLocalNumeric(date: string): string {
     if (date === '' || date == null) {
         return null;
@@ -45,3 +47,26 @@ export function compareDate(sDate: string, eDate: string): boolean {
     return true;
 }
 
+export function toTimeShort(date: string): string {
+    var options = { hour: 'numeric', minute: 'numeric' };
+    return new Date(date).toLocaleTimeString('th-TH', options);
+}
+
+export const MyDatePickerOptions: IMyOptions = {
+    dateFormat: 'dd mmm yyyy',
+    showClearDateBtn: false,
+    height: '30px'
+};
+
+export function setDateMyDatepicker(date: Date) {
+    return { date: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } }
+}
+
+export function getDateMyDatepicker(date: any) {
+    return new Date(`${date.year}-${date.month}-${date.day}`);
+}
+
+export function setZeroHours(date: Date): string {
+    date.setHours(0, -date.getTimezoneOffset(), 0, 0);
+    return date.toISOString();
+}
