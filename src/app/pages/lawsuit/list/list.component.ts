@@ -93,7 +93,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   viewData(item) {
     this.router.navigate(['/lawsuit/manage', 'R'], {
-      queryParams: { id: item.LawsuitID, code: '050100020'/*item.ArrestCode*/ }
+      queryParams: { id: item.LawsuitID, code: item.ArrestCode }
     });
   }
 
