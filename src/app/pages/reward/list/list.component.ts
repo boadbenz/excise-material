@@ -17,6 +17,7 @@ import {RewardService} from '../reward.service';
 import {pagination} from '../../../config/pagination';
 import {Message} from '../../../config/message';
 import {toLocalShort} from '../../../config/dateFormat';
+import {PreloaderService} from "../../../shared/preloader/preloader.component";
 
 @Component({
     selector: 'app-list',
@@ -24,67 +25,164 @@ import {toLocalShort} from '../../../config/dateFormat';
     styleUrls: ['./list.component.scss'],
     providers: [ RewardService ]
 })
-export class ListComponent implements OnInit, AfterViewInit {
-    private sub: any;
+export class ListComponent implements OnInit {
+
+  results: Reward[] = [];
+  resultsPerPage: Reward[] = [];
+
+  advSearch: any;
+  advSearchSub: any;
+
+  paginage = pagination;
+
+  constructor(
+    private router: Router,
+    private activeRoute: ActivatedRoute,
+    private navService: NavigationService,
+    private preLoaderService: PreloaderService,
+    private rewardService: RewardService
+  ) {
+    /* Initial Adv.Search */
+    this.advSearch = this.navService.showAdvSearch;
+    this.advSearchSub = this.navService.searchByKeyword.subscribe(filterValue => {
+      if (filterValue) {
+        this.rewardService.getByKeyword(filterValue)
+          .then(res => this.onSearchComplete(res));
+      }
+    });
+  }
+
+  private setShowButton() {
+    this.navService.setEditButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setPrintButton(false);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setNewButton(true);
+    this.navService.setSearchBar(true);
+  }
+
+  async ngOnInit() {
+    /* Display Button */
+    this.setShowButton();
+    /* Load Data*/
+    this.preLoaderService.setShowPreloader(true);
+    await this.rewardService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+    this.preLoaderService.setShowPreloader(false);
+  }
+
+  async onSearchComplete(list: Reward[]) {
+    /* Alert When No Data To Show */
+    if (!list.length) {
+      alert(Message.noRecord);
+      return false;
+    }
+    /* Adjust Another Column */
+    this.results = list.map((item, i) => {
+      item.RowsId = i + 1;
+      item.ArrestDate = toLocalShort(item.ArrestDate);
+      item.LawsuitDate = toLocalShort(item.LawsuitDate);
+      item.Lawbreaker = (item.ArrestLawbreaker || []).length > 0? (item.ArrestLawbreaker[0].LawbreakerTitleName +
+        item.ArrestLawbreaker[0].LawbreakerFirstName + ' ' + item.ArrestLawbreaker[0].LawbreakerLastName): '';
+      return item;
+    });
+    /* Set Total Record */
+    this.paginage.TotalItems = this.results.length;
+  }
+
+  async onAdvSearch(form: any) {
+    // if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
+    //   const sDateCompare = new Date(form.value.LawsuitDateFrom);
+    //   const eDateCompare = new Date(form.value.LawsuitDateTo);
+    //   if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+    //     alert(Message.checkDate);
+    //     return false;
+    //   }
+    //   form.value.LawsuitDateFrom = sDateCompare.toISOString();
+    //   form.value.LawsuitDateTo = eDateCompare.toISOString();
+    // }
+    this.preLoaderService.setShowPreloader(true);
+    await this.rewardService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
+    this.preLoaderService.setShowPreloader(false);
+  }
+
+  // onAdvanceSearchByKeyword(form: NgForm) {
+  //   const reward = new Reward();
+  //   reward.ArrestCode = form.value.ArrestCode;
+  //   reward.LawsuitID = form.value.LawsuitID;
+  //   console.log(new Date(form.value.sArrestDate));
+  //   // reward.OccurrenceDateFrom = new Date(form.value.sArrestDate);
+  //   // reward.OccurrenceDateTo = new Date(form.value.eArrestDate);
+  //   // reward.LawsuitDateFrom = new Date(form.value.sLawsuitDate);
+  //   // reward.LawsuitDateTo = new Date(form.value.eLawsuitDate);
+  //   reward.LastName = form.value.MasStaff;
+  //   reward.DepartmentName = form.value.DepartmentName;
+  //   reward.OccurrenceDateFrom = '';
+  //   reward.OccurrenceDateTo = '';
+  //   reward.LawsuitDateFrom = '';
+  //   reward.LawsuitDateTo = '';
+  //
+  //   if (false) {
+  //     // if (RewardCommon.isDate(reward.OccurrenceDateFrom) || RewardCommon.isDate(reward.OccurrenceDateTo) ||
+  //     //     RewardCommon.isDate(reward.LawsuitDateFrom) || RewardCommon.isDate(reward.LawsuitDateTo)) {
+  //     reward.OccurrenceDateFrom = '';
+  //     reward.OccurrenceDateTo = '';
+  //     reward.LawsuitDateFrom = '';
+  //     reward.LawsuitDateTo = '';
+  //
+  //   } else {
+  //     if (false) {
+  //       // if (RewardCommon.isVerifyDate(reward.OccurrenceDateFrom, reward.OccurrenceDateTo) ||
+  //       //     RewardCommon.isVerifyDate(reward.LawsuitDateFrom, reward.LawsuitDateFrom)) {
+  //
+  //       alert(RewordMessages.compareDateFailed);
+  //     } else {
+  //       console.log(reward);
+  //       this.rewardService.getArrestRequestgetByConAdv(reward).subscribe(response => {
+  //         console.log(response);
+  //         this.onSearchComplete(response)
+  //       }, error => {
+  //         alert(error.message)
+  //       })
+  //     }
+  //
+  //   }
+  // }
+
+  closeAdvSearch() {
+    this.navService.showAdvSearch.next(false);
+  }
+
+  async pageChanges(event) {
+    this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
+  }
+
+  ngOnDestroy() {
+    this.advSearchSub.unsubscribe();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  private sub: any;
     rewardList: any[] = [];
     reward: any[] = [];
 
-    advSearch: any;
     staffs: any[] = [];
     departments: any[] = [];
-    paginage = pagination;
 
     @ViewChild('rewardTable') rewardTable: ElementRef;
-
-    constructor(
-        private router: Router,
-        private activeRoute: ActivatedRoute,
-        private navservice: NavigationService,
-        private rewardService: RewardService) {
-
-        // set false
-        this.navservice.setEditButton(false);
-        this.navservice.setDeleteButton(false);
-        this.navservice.setPrintButton(false);
-        this.navservice.setSaveButton(false);
-        this.navservice.setCancelButton(false);
-        this.navservice.setNextPageButton(false);
-        // set true
-        this.navservice.setNewButton(true);
-        this.navservice.setSearchBar(true);
-        this.advSearch = this.navservice.showAdvSearch;
-    }
-
-    ngOnInit() {
-        this.sub = this.navservice.showNewButton.subscribe(status => {
-            // if (status) {
-            //   this.newButton();
-            // }
-        });
-        this.initialSearchByKeyword();
-    }
-
-    initialSearchByKeyword() {
-        this.navservice.searchByKeyword.subscribe(async textSearch => {
-            console.log(textSearch);
-            if (textSearch) {
-                await this.navservice.setOnSearch('');
-                this.onSearchByKeyword(textSearch);
-            }
-        })
-    }
-
-    // onSearchByKeyword() {
-    //     this.rewardService.getArrestRequestgetByKeyword('').subscribe(rewardList => {
-    //         if (rewardList) {
-    //             this.rewardList = rewardList;
-    //         } else {
-    //             alert(RewordMessages.notFoundData)
-    //         }
-    //     }, error => {
-    //         alert(error.message)
-    //     })
-    // }
 
     autoCompleteStaff(term: string) {
         this.rewardService.getMasStaffRequestgetByKeyword(term).subscribe(response => {
@@ -117,101 +215,8 @@ export class ListComponent implements OnInit, AfterViewInit {
             : this.departments.map((value, index, array) => value.DepartmentNameTH));
     };
 
-
-    onAdvanceSearchByKeyword(form: NgForm) {
-        const reward = new Reward();
-        reward.ArrestCode = form.value.ArrestCode;
-        reward.LawsuitID = form.value.LawsuitID;
-        console.log(new Date(form.value.sArrestDate));
-        // reward.OccurrenceDateFrom = new Date(form.value.sArrestDate);
-        // reward.OccurrenceDateTo = new Date(form.value.eArrestDate);
-        // reward.LawsuitDateFrom = new Date(form.value.sLawsuitDate);
-        // reward.LawsuitDateTo = new Date(form.value.eLawsuitDate);
-        reward.LastName = form.value.MasStaff;
-        reward.DepartmentName = form.value.DepartmentName;
-        reward.OccurrenceDateFrom = '';
-        reward.OccurrenceDateTo = '';
-        reward.LawsuitDateFrom = '';
-        reward.LawsuitDateTo = '';
-
-        if (false) {
-            // if (RewardCommon.isDate(reward.OccurrenceDateFrom) || RewardCommon.isDate(reward.OccurrenceDateTo) ||
-            //     RewardCommon.isDate(reward.LawsuitDateFrom) || RewardCommon.isDate(reward.LawsuitDateTo)) {
-            reward.OccurrenceDateFrom = '';
-            reward.OccurrenceDateTo = '';
-            reward.LawsuitDateFrom = '';
-            reward.LawsuitDateTo = '';
-
-        } else {
-            if (false) {
-                // if (RewardCommon.isVerifyDate(reward.OccurrenceDateFrom, reward.OccurrenceDateTo) ||
-                //     RewardCommon.isVerifyDate(reward.LawsuitDateFrom, reward.LawsuitDateFrom)) {
-
-                alert(RewordMessages.compareDateFailed);
-            } else {
-                console.log(reward);
-                this.rewardService.getArrestRequestgetByConAdv(reward).subscribe(response => {
-                    console.log(response);
-                    this.onSearchComplete(response)
-                }, error => {
-                    alert(error.message)
-                })
-            }
-
-        }
-    }
-
-    onSearchComplete(list: any) {
-        if (!list.length) {
-            alert(Message.noRecord);
-            return false;
-        }
-
-        if (Array.isArray(list)) {
-            this.reward = list;
-        } else {
-            this.reward.push(list);
-        }
-
-        list.map((p, i) => {
-            p.RowsId = i + 1;
-            if (p.ArrestLawbreaker.length !== 0) {
-                p.Lawbreaker = (p.ArrestLawbreaker[0].LawbreakerTitleName +
-                    p.ArrestLawbreaker[0].LawbreakerFirstName + ' ' + p.ArrestLawbreaker[0].LawbreakerLastName)
-            } else {
-                p.Lawbreaker = '';
-            }
-
-        });
-
-        this.reward = list;
-
-        // set total record
-        this.paginage.TotalItems = this.reward.length;
-    }
-
-
-    onSearchByKeyword(text: any) {
-
-        this.rewardService.getArrestRequestgetByKeyword(text).subscribe(response => {
-            if (response) {
-                this.onSearchComplete(response);
-            } else {
-                alert(RewordMessages.notFoundData);
-            }
-        }, error => {
-            alert(error.message);
-        })
-    }
-
     viewData(arrestCode: string) {
         this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { arrestCode: arrestCode } });
     }
 
-    async pageChanges(event) {
-        this.rewardList = await this.reward.slice(event.startIndex - 1, event.endIndex);
-    }
-
-    ngAfterViewInit(): void {
-    }
 }
