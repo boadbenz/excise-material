@@ -30,6 +30,9 @@ export class ListComponent implements OnInit {
   results: Reward[] = [];
   resultsPerPage: Reward[] = [];
 
+  staffs: any[] = [];
+  departments: any[] = [];
+
   advSearch: any;
   advSearchSub: any;
 
@@ -101,8 +104,7 @@ export class ListComponent implements OnInit {
       }
       form.value.sArrestDate = sDateCompare.toISOString();
       form.value.eArrestDate = eDateCompare.toISOString();
-    }
-    if (form.value.sLawsuitDate && form.value.eLawsuitDate) {
+    } else if (form.value.sLawsuitDate && form.value.eLawsuitDate) {
       const sDateCompare = new Date(form.value.sLawsuitDate);
       const eDateCompare = new Date(form.value.eLawsuitDate);
       if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
@@ -116,49 +118,6 @@ export class ListComponent implements OnInit {
     await this.rewardService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
-
-  // onAdvanceSearchByKeyword(form: NgForm) {
-  //   const reward = new Reward();
-  //   reward.ArrestCode = form.value.ArrestCode;
-  //   reward.LawsuitID = form.value.LawsuitID;
-  //   console.log(new Date(form.value.sArrestDate));
-  //   // reward.OccurrenceDateFrom = new Date(form.value.sArrestDate);
-  //   // reward.OccurrenceDateTo = new Date(form.value.eArrestDate);
-  //   // reward.LawsuitDateFrom = new Date(form.value.sLawsuitDate);
-  //   // reward.LawsuitDateTo = new Date(form.value.eLawsuitDate);
-  //   reward.LastName = form.value.MasStaff;
-  //   reward.DepartmentName = form.value.DepartmentName;
-  //   reward.OccurrenceDateFrom = '';
-  //   reward.OccurrenceDateTo = '';
-  //   reward.LawsuitDateFrom = '';
-  //   reward.LawsuitDateTo = '';
-  //
-  //   if (false) {
-  //     // if (RewardCommon.isDate(reward.OccurrenceDateFrom) || RewardCommon.isDate(reward.OccurrenceDateTo) ||
-  //     //     RewardCommon.isDate(reward.LawsuitDateFrom) || RewardCommon.isDate(reward.LawsuitDateTo)) {
-  //     reward.OccurrenceDateFrom = '';
-  //     reward.OccurrenceDateTo = '';
-  //     reward.LawsuitDateFrom = '';
-  //     reward.LawsuitDateTo = '';
-  //
-  //   } else {
-  //     if (false) {
-  //       // if (RewardCommon.isVerifyDate(reward.OccurrenceDateFrom, reward.OccurrenceDateTo) ||
-  //       //     RewardCommon.isVerifyDate(reward.LawsuitDateFrom, reward.LawsuitDateFrom)) {
-  //
-  //       alert(RewordMessages.compareDateFailed);
-  //     } else {
-  //       console.log(reward);
-  //       this.rewardService.getArrestRequestgetByConAdv(reward).subscribe(response => {
-  //         console.log(response);
-  //         this.onSearchComplete(response)
-  //       }, error => {
-  //         alert(error.message)
-  //       })
-  //     }
-  //
-  //   }
-  // }
 
   closeAdvSearch() {
     this.navService.showAdvSearch.next(false);
@@ -203,34 +162,8 @@ export class ListComponent implements OnInit {
       : this.departments.map((value, index, array) => value.DepartmentNameTH));
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  private sub: any;
-    rewardList: any[] = [];
-    reward: any[] = [];
-
-    staffs: any[] = [];
-    departments: any[] = [];
-
-    @ViewChild('rewardTable') rewardTable: ElementRef;
-
-  
-
-
-
-    viewData(arrestCode: string) {
-        this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { arrestCode: arrestCode } });
-    }
+  viewData(arrestCode: string) {
+    this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { arrestCode: arrestCode } });
+  }
 
 }

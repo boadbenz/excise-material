@@ -51,37 +51,25 @@ export class RewardService {
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
+  getArrestRequestgetByConAdv(reward: Reward) {
+    return this.http.post<any[]>(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
+  }
 
+  getArrestRequestgetByCon(arrestCode: string) {
+    const params = {
+      ArrestCode: arrestCode
+    };
+    return this.http.post<any>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
+  }
 
+  getRequestbribegetByKeyword(text: string) {
+    const textSearch = new TextSearch();
+    textSearch.Textsearch = text;
+    return this.http.post(`${HOSTNAME}/RequestbribegetByKeyword`, textSearch)
+  }
 
+  getRequestbribegetByCon(requestBribeCode: string) {
+    return this.http.post(`${HOSTNAME}/RequestbribegetByCon`, requestBribeCode)
+  }
 
-
-
-
-
-
-    // getArrestRequestgetByKeyword(textSearch: string) {
-    //     return this.http.post(`${HOSTNAME}/ArrestRequestgetByKeyword`, textSearch)
-    // }
-
-    getArrestRequestgetByConAdv(reward: Reward) {
-        return this.http.post<any[]>(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
-    }
-
-    getArrestRequestgetByCon(arrestCode: string) {
-        const params = {
-            ArrestCode: arrestCode
-        };
-        return this.http.post<any>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
-    }
-
-    getRequestbribegetByKeyword(text: string) {
-        const textSearch = new TextSearch();
-        textSearch.Textsearch = text;
-        return this.http.post(`${HOSTNAME}/RequestbribegetByKeyword`, textSearch)
-    }
-
-    getRequestbribegetByCon(requestBribeCode: string) {
-        return this.http.post(`${HOSTNAME}/RequestbribegetByCon`, requestBribeCode)
-    }
 }
