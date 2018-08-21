@@ -134,7 +134,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.5');
+        this.sidebarService.setVersion('0.0.0.6');
 
         this.active_route();
         this.navigate_Service();
@@ -283,6 +283,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 
                 this.arrestFG.value.ArrestDate = setZeroHours(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = setZeroHours(eDateCompare);
+
+                this.arrestFG.value.ArrestTime = (new Date()).toISOString();
 
                 if (this.mode === 'C') {
                     this.onCreate();
@@ -816,6 +818,7 @@ debugger
 
     patchIndicment(e: ArrestIndictment) {
         this.ArrestIndictment.at(this.indicmentIndex).reset({
+            ArrestCode: this.arrestCode,
             IsProve: 1,
             IsActive: 1,
             GuiltBaseID: e.GuiltBaseID,
@@ -824,8 +827,6 @@ debugger
             SectionName: e.SectionName,
             IndictmentLawbreaker: e.IndictmentLawbreaker,
         });
-
-        console.log(this.ArrestIndictment.value);
         
     }
 
@@ -974,8 +975,7 @@ debugger
                 : this.typeheadProduct
                     .filter(v =>
                         v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
