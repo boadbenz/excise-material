@@ -39,6 +39,17 @@ export class RewardService {
     return this.responsePromiseGet(JSON.stringify(form), url)
   }
 
+  async getMasStaffRequestGetByKeyword(filterValue: string) {
+    const params = { 'Textsearch': (filterValue || '') };
+    const url = `${appConfig.api8883}/MasStaffRequestgetByKeyword`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+
+  async getMasDepartmentRequestGetByKeyword(filterValue: string) {
+    const params = { 'Textsearch': (filterValue || '') };
+    const url = `${appConfig.api8883}/MasDepartmentRequestgetByKeyword`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
 
 
 
@@ -48,21 +59,10 @@ export class RewardService {
 
 
 
-    getArrestRequestgetByKeyword(textSearch: string) {
-        return this.http.post(`${HOSTNAME}/ArrestRequestgetByKeyword`, textSearch)
-    }
 
-    getMasStaffRequestgetByKeyword(text: string) {
-        const textSearch = new TextSearch();
-        textSearch.Textsearch = text;
-        return this.http.post<any[]>(`${HOSTNAME}/MasStaffRequestgetByKeyword`, textSearch)
-    }
-
-    getMasDepartmentRequestgetByKeyword(text: string) {
-        const textSearch = new TextSearch();
-        textSearch.Textsearch = text;
-        return this.http.post<any[]>(`${HOSTNAME}/MasDepartmentRequestgetByKeyword`, textSearch)
-    }
+    // getArrestRequestgetByKeyword(textSearch: string) {
+    //     return this.http.post(`${HOSTNAME}/ArrestRequestgetByKeyword`, textSearch)
+    // }
 
     getArrestRequestgetByConAdv(reward: Reward) {
         return this.http.post<any[]>(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
