@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { FineService } from '../fine.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Compare } from '../fine-model';
+import { Compare } from '../compare';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 
@@ -107,7 +107,7 @@ debugger
 
     clickView(LawsuitID: string,ArrestCode: string, CompareID:string) {
         if(CompareID == null || CompareID == "")
-            CompareID = "-";
+            CompareID = "0";
 
         this._router.navigate([`/fine/manage/R/${LawsuitID}/${ArrestCode}/${CompareID}`]);
     }
