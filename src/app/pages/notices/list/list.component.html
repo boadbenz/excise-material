@@ -18,7 +18,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
                             <my-date-picker-th name="DateStartFrom" [options]="myDatePickerOptions"
-                            (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
+                            (dateChanged)="onSDateChange($event)" [(ngModel)]="dateStartFrom"></my-date-picker-th>
                             <!-- <input type="date" name="DateStartFrom" [(ngModel)]="dateStartFrom" 
                             class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"
                             (change)="checkDate()"> -->
