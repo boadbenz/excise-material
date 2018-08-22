@@ -46,7 +46,7 @@
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group input-group">
+                    <div class="form-group input-group" style="z-index: 1;">
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" 
                         [options]="myDatePickerOptions" [disabled]="showEditField"
                         (dateChanged)="onNoticeDueDateChange($event)" formControlName="NoticeDueDate"></my-date-picker-th>

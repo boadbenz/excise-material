@@ -124,11 +124,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.sidebarService.setVersion('0.0.0.9');
 
-        this.active_route();
-
         this.navigate_service();
 
         this.createForm();
+
+        this.active_route();
 
         await this.setProductStore();
         await this.setStaffStore();
