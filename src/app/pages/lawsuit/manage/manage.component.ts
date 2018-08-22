@@ -139,9 +139,9 @@ export class ManageComponent implements OnInit {
     if (item.LawsuitNo) {
       this.router.navigate(["/lawsuit/detail", "R"], {
         queryParams: {
-          code: this.arrestList[0].ArrestCode,
-          id: item.IndictmentID,
-          no: item.LawsuitID
+          ArrestCode: this.arrestList[0].ArrestCode,
+          IndictmentID: item.IndictmentID,
+          LawsuitID: item.LawsuitID
         }
       });
     }

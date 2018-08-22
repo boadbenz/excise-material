@@ -1,9 +1,7 @@
-import { Injectable } from "@angular/core";
-import { Http, Headers } from "@angular/http";
-import { appConfig } from "../../app.config";
-import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Lawsuit } from "./models/lawsuit";
-import {Notice} from "../notices/notice";
+import {Injectable} from "@angular/core";
+import {appConfig} from "../../app.config";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Lawsuit} from "./models/lawsuit";
 import {Arrest} from "../model/arrest";
 
 @Injectable()
@@ -50,6 +48,15 @@ export class LawsuitService {
     }
   }
 
+  async LawsuitArrestgetByCon(ArrestCode: string) {
+    const params = { ArrestCode: ArrestCode };
+    const url = `${appConfig.api8083}/LawsuitArrestgetByCon`;
+    const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+    if (res.IsSuccess) {
+      return res.ResponseData
+    }
+  }
+
   async LawsuitgetByCon(LawsuitID) {
     const params = { LawsuitID: LawsuitID };
     const url = `${appConfig.api8083}/LawsuitgetByCon`;
@@ -79,6 +86,22 @@ export class LawsuitService {
     } catch (error) {
       await alert(error);
     }
+  }
+
+  async ArrestLawbreakergetByCon(LawbreakerID) {
+    // const params = JSON.stringify({ LawbreakerID: LawbreakerID });
+    // const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
+    // try {
+    //   const res = await this.http
+    //     .post(url, params, this.httpOptions)
+    //     .toPromise();
+    //   return res.json();
+    // } catch (error) {
+    //   await alert(error);
+    // }
+    const params = { LawbreakerID: LawbreakerID };
+    const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise()
   }
 
 
@@ -170,18 +193,7 @@ export class LawsuitService {
 
 
 
-  // async ArrestLawbreakergetByCon(LawbreakerID) {
-  //   const params = JSON.stringify({ LawbreakerID: LawbreakerID });
-  //   const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
-  //   try {
-  //     const res = await this.http
-  //       .post(url, params, this.httpOptions)
-  //       .toPromise();
-  //     return res.json();
-  //   } catch (error) {
-  //     await alert(error);
-  //   }
-  // }
+
   //
   // async LawsuitupdByCon(LawsuitList) {
   //   const params = JSON.stringify(LawsuitList);
