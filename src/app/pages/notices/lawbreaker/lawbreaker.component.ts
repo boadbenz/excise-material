@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -16,6 +16,15 @@ import { ArrestsService } from '../../arrests/arrests.service';
 import { ILawbreaker, Lawbreaker } from './lawbreaker.interface';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { NoticeService } from '../notice.service';
+<<<<<<< HEAD
+=======
+import { Message } from 'app/config/message';
+import { MyDatePickerOptions, getDateMyDatepicker, setZeroHours, setDateMyDatepicker } from '../../../config/dateFormat';
+import { ImageType } from '../../../config/imageType';
+<<<<<<< HEAD
+>>>>>>> FL_J
+=======
+>>>>>>> 6c326f1ff943403a020f7421a5e1104c1ffd27a4
 
 
 @Component({
@@ -37,6 +46,8 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
     }
+
+    @ViewChild('imgNobody') imgNobody: ElementRef;
 
     LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
@@ -65,9 +76,19 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
 
         this.LawbreakerFG = this.createForm();
 
+<<<<<<< HEAD
+<<<<<<< HEAD
         // await this.setRegionStore();
         this.active_route();
         this.navigate_service();
+=======
+=======
+>>>>>>> 6c326f1ff943403a020f7421a5e1104c1ffd27a4
+        await this.active_route();
+        await this.navigate_service();
+        await this.setRegionStore();
+
+>>>>>>> FL_J
         this.preloader.setShowPreloader(false);
     }
 
@@ -177,13 +198,118 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
         this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
+<<<<<<< HEAD
+=======
+
+        this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnSave(false);
+
+                const birthDay = getDateMyDatepicker(this.LawbreakerFG.value.BirthDate);
+                const passportDateIn = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateIn);
+                const passportDateOut = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut);
+
+                this.LawbreakerFG.value.BirthDate = setZeroHours(birthDay);
+                this.LawbreakerFG.value.PassportDateIn = setZeroHours(passportDateIn);
+                this.LawbreakerFG.value.passportDateOut = setZeroHours(passportDateOut);
+
+                if (this.mode === 'C') {
+                    this.OnCreate();
+
+                } else if (this.mode === 'R') {
+                    this.OnRevice();
+                }
+            }
+        })
+>>>>>>> FL_J
     }
 
     GetByCon(LawbreakerID: string) {
         this.noticeService.getLawbreakerByCon(LawbreakerID).then(res => {
             console.log(res);
 
+<<<<<<< HEAD
             // this.LawbreakerFG = res.map(item => this.fb.group(item));
+=======
+        await this.noticeService.getLawbreakerByCon(LawbreakerID).then(res => {
+            this.LawbreakerFG.reset({
+                LawbreakerID: res.LawbreakerID,
+                EntityType: res.EntityType,
+                CompanyTitleCode: res.CompanyTitleCode,
+                CompanyTitle: res.CompanyTitle,
+                CompanyName: res.CompanyName,
+                CompanyOtherName: res.CompanyOtherName,
+                CompanyRegistrationNo: res.CompanyRegistrationNo,
+                CompanyLicenseNo: res.CompanyLicenseNo,
+                FoundedDate: res.FoundedDate,
+                LicenseDateForm: res.LicenseDateForm,
+                LicenseDateTo: res.LicenseDateTo,
+                TaxID: res.TaxID,
+                ExciseRegNo: res.ExciseRegNo,
+                LawbreakerType: res.LawbreakerType,
+                LawbreakerTitleCode: res.LawbreakerTitleCode,
+                LawbreakerTitleName: res.LawbreakerTitleName,
+                LawbreakerFirstName: res.LawbreakerFirstName,
+                LawbreakerMiddleName: res.LawbreakerMiddleName,
+                LawbreakerLastName: res.LawbreakerLastName,
+                LawbreakerOtherName: res.LawbreakerOtherName,
+                LawbreakerDesc: res.LawbreakerDesc,
+                IDCard: res.IDCard,
+                PassportNo: res.PassportNo,
+                VISAType: res.VISAType,
+                PassportCountryCode: res.PassportCountryCode,
+                PassportCountryName: res.PassportCountryName,
+                PassportDateIn: setDateMyDatepicker(res.PassportDateIn),
+                PassportDateOut: setDateMyDatepicker(res.PassportDateOut),
+                BirthDate: setDateMyDatepicker(res.BirthDate),
+                GenderType: res.GenderType,
+                BloodType: res.BloodType,
+                NationalityCode: res.NationalityCode,
+                NationalityNameTH: res.NationalityNameTH,
+                RaceCode: res.RaceCode,
+                RaceName: res.RaceName,
+                ReligionCode: res.ReligionCode,
+                ReligionName: res.ReligionName,
+                MaritalStatus: res.MaritalStatus,
+                Career: res.Career,
+                GPS: res.GPS,
+                Location: res.Location,
+                Address: res.Address,
+                Village: res.Village,
+                Building: res.Building,
+                Floor: res.Floor,
+                Room: res.Room,
+                Alley: res.Alley,
+                Road: res.Road,
+                SubDistrictCode: res.SubDistrictCode,
+                SubDistrict: res.SubDistrict,
+                DistrictCode: res.DistrictCode,
+                District: res.District,
+                ProvinceCode: res.ProvinceCode,
+                Province: res.Province,
+                ZipCode: res.ZipCode,
+                TelephoneNo: res.TelephoneNo,
+                Email: res.Email,
+                FatherName: res.FatherName,
+                MotherName: res.MotherName,
+                Remarks: res.Remarks,
+                LinkPhoto: res.LinkPhoto,
+                PhotoDesc: res.PhotoDesc,
+                IsActive: res.IsActive
+            })
+<<<<<<< HEAD
+=======
+
+            if (res.LinkPhoto) {
+                this.imgNobody.nativeElement.src = res.LinkPhoto;
+            }
+        })
+>>>>>>> 6c326f1ff943403a020f7421a5e1104c1ffd27a4
+
+            if (res.LinkPhoto) {
+                this.imgNobody.nativeElement.src = res.LinkPhoto;
+            }
+>>>>>>> FL_J
         })
     }
 
@@ -191,8 +317,29 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
 
     }
 
+<<<<<<< HEAD
     OnRevice(value: Lawbreaker) {
+=======
+    async OnRevice() {
+        // Set Preloader
+        this.preloader.setShowPreloader(true);
+<<<<<<< HEAD
+>>>>>>> FL_J
+=======
+>>>>>>> 6c326f1ff943403a020f7421a5e1104c1ffd27a4
 
+        let IsSuccess: boolean | false;
+        await this.noticeService.updLawbreaker(this.LawbreakerFG.value).then(isSuccess => {
+            IsSuccess = isSuccess;
+        }, (error) => { IsSuccess = false; })
+
+        if (IsSuccess) {
+            alert(Message.saveComplete)
+        } else {
+            alert(Message.saveFail)
+        }
+        // Set Preloader
+        this.preloader.setShowPreloader(false);
     }
 
     private async setRegionStore() {
@@ -258,5 +405,29 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
             ProvinceCode: ele.item.ProvinceCode,
             Province: ele.item.ProvinceNameTH
         });
+    }
+
+    changeImage(e: any, img: any) {
+
+        let file = e.target.files[0];
+        let isMatch: boolean | false;
+        
+        ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
+
+        if (!isMatch) {
+            alert(Message.checkImageType)
+            return
+        }
+
+        let reader = new FileReader();
+        reader.onload = () => {
+            img.src = reader.result;
+            this.LawbreakerFG.patchValue({
+                LinkPhoto: reader.result,
+                PhotoDesc: file.name
+            })
+        };
+
+        reader.readAsDataURL(file);
     }
 }
