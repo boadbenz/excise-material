@@ -36,7 +36,7 @@ export function toLocalShort(date: string): string {
     return dd.toLocaleString('th-TH', options);
 }
 
-export function compareDate(sDate: string, eDate: string): boolean {
+export function compareDate(sDate: Date, eDate: Date): boolean {
     if (!sDate && !eDate) return true;
 
     const sDateCompare = new Date(sDate);
@@ -70,4 +70,3 @@ export function setZeroHours(date: Date): string {
     date.setHours(0, -date.getTimezoneOffset(), 0, 0);
     return date.toISOString();
 }
-

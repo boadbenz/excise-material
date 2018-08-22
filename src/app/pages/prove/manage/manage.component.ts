@@ -16,6 +16,8 @@ import { ProveProduct } from '../proveProduct';
 import { Message } from '../../../config/message';
 import { ProveDocument } from '../proveDoc';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker,getDateMyDatepicker } from '../../../config/dateFormat';
+import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-manage',
@@ -59,16 +61,16 @@ export class ManageComponent implements OnInit, OnDestroy {
     IndictmentID: string;
     ReportNo: string = "";       // เลขทะเบียนตรวจพิสูจน์  (ไม่รวม /ปี พ.ศ.)
     ProveYear: string;      // ปี พ.ศ.
-    ProveDate: string;      // วันที่ตรวจรับ
+    ProveDate: any;      // วันที่ตรวจรับ
     ProveTime: string;      // เวลาตรวจรับ
     DeliveryDocNo: string = "";  // เลขที่หนังสือนำส่ง
-    DeliveryDate: string;   // วันที่นำส่ง
+    DeliveryDate: any;   // วันที่นำส่ง
     DeliveryTime: string;   // เวลานำส่ง
     PosExaminer: string;    // ตำแหน่งผู้ตรวจรับ
     DeptExaminer: string;   // หน่วยงานผู้ตรวจรับ
     PosScience: string;     // ตำแหน่งผู้พิสูจน์
     DeptScience: string;    // หน่วยงานผู้พิสูจน์
-    ProveScienceDate: string;   // วันที่พิสูจน์
+    ProveScienceDate: any;   // วันที่พิสูจน์
     ProveScienceTime: string;   // เวลาที่พิสูจน์
     Command: string         // คำสั่ง
     ProveStation: string;   // เขียนที่
@@ -136,12 +138,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         let date = new Date();
         this.ProveYear = (date.getFullYear() + 543).toString();
-        this.ProveDate = this.getCurrentDate();
-        this.ProveTime = this.getCurrentTime();
-        this.DeliveryDate = this.getCurrentDate();
-        this.DeliveryTime = this.getCurrentTime();
-        this.ProveScienceDate = this.getCurrentDate();
-        this.ProveScienceTime = this.getCurrentTime();
+        this.ProveDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.ProveTime = await this.getCurrentTime();
+        this.DeliveryDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.DeliveryTime = await this.getCurrentTime();
+        this.ProveScienceDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.ProveScienceTime = await this.getCurrentTime();
 
         if (this.ProveID != '0') {
             await this.getProveByID();
@@ -202,6 +204,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set action save = false
                 await this.navService.setOnSave(false);
 
+                if (this.ReportNo == "" || this.ProveStaffName == "" || this.ScienceStaffName == "" 
+                    || this.ProveStation == "" || this.ProveDate == null || this.DeliveryDate == null) {
+                    this.isRequired = true;
+                    alert(Message.checkData);
+
+                    // this.showEditField = false;
+
+                    return false;
+                }
+
                 if (this.oProve) {
                     if (this.ProveID == '0') {
                         await this.onInsProve();
@@ -258,9 +270,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
 
         this.oProve.DeliveryDocNo = this.DeliveryDocNo;
-        this.oProve.DeliveryDate = this.DeliveryDate + ' ' + this.DeliveryTime;
+        // this.oProve.DeliveryDate = this.DeliveryDate + ' ' + this.DeliveryTime;
         this.oProve.ProveReportNo = this.ReportNo + "/" + this.ProveYear;
-        this.oProve.ProveDate = this.ProveDate + ' ' + this.ProveTime;
+        // this.oProve.ProveDate = this.ProveDate + ' ' + this.ProveTime;
         this.oProve.IndictmentID = this.IndictmentID;
 
         this.oProve.ProveStaff = [];
@@ -329,11 +341,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
         this.preloader.setShowPreloader(true);
-
+        debugger
         this.oProve.DeliveryDocNo = this.DeliveryDocNo;
-        this.oProve.DeliveryDate = this.DeliveryDate + ' ' + this.DeliveryTime;
+        this.oProve.DeliveryDate = new Date(getDateMyDatepicker(this.DeliveryDate.date) + ' ' + this.DeliveryTime);
         this.oProve.ProveReportNo = this.ReportNo + "/" + this.ProveYear;
-        this.oProve.ProveDate = this.ProveDate + ' ' + this.ProveTime;
+        this.oProve.ProveDate = new Date(getDateMyDatepicker(this.ProveDate.date) + ' ' + this.ProveTime);
         this.oProve.IndictmentID = this.IndictmentID;
 
         var aIndex;
@@ -351,12 +363,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (this.oProve.ProveScience[0].ProveScienceDate == null) {
             this.oProve.ProveScience[0].ProveScienceDate = this.oProve.ProveDate + ".000";
-            this.oProve.ProveScience[0].ProveScienceTime = this.oProve.ProveDate.split(" ")[1];
+            this.oProve.ProveScience[0].ProveScienceTime = this.oProve.ProveDate.toString().split(" ")[1];
         }
         else {
             this.oProve.ProveScience[0].ProveScienceDate = this.oProve.ProveScience[0].ProveScienceDate + ".000";
         }
 
+        
         let isSuccess: boolean = true;
         // Update Prove
         await this.proveService.ProveupdByCon(this.oProve).then(IsSuccess => {
@@ -461,9 +474,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve = {
             ProveID: "",
             DeliveryDocNo: "",
-            DeliveryDate: "",
+            DeliveryDate: null,
             ProveReportNo: "",
-            ProveDate: "",
+            ProveDate: null,
             ProveStationCode: "",
             ProveStation: "",
             IndictmentID: "",
@@ -792,17 +805,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ReportNo = PRN[0];
                 this.ProveYear = PRN[1];
             }
-            
+
             this.ProveStation = this.oProve.ProveStation;
             this.ProveDelivery = this.oProve.DeliveryStation;
             this.DeliveryDocNo = this.oProve.DeliveryDocNo;
 
-            var PDate = this.oProve.ProveDate.split(" ");
-            this.ProveDate = PDate[0];
+            var PDate = this.oProve.ProveDate.toString().split(" ");
+            this.ProveDate = setDateMyDatepicker(new Date(PDate[0]));
             this.ProveTime = PDate[1] + ".000";
 
-            var PSDate = this.oProve.DeliveryDate.split(" ");
-            this.DeliveryDate = PSDate[0];
+            var PSDate = this.oProve.DeliveryDate.toString().split(" ");
+            this.DeliveryDate = setDateMyDatepicker(new Date(PSDate[0]));
             this.DeliveryTime = PSDate[1] + ".000";
 
             var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
@@ -1052,6 +1065,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     OpenPopupProduct(i: number) {
         this.oProveProduct = this.oProve.ProveProduct[i];
         this.oProveScience = this.oProve.ProveScience[0];
+
+        this.ProveScienceDate = setDateMyDatepicker(new Date(this.oProveScience.ProveScienceDate));
+        this.ProveScienceTime = this.oProveScience.ProveScienceTime;
 
         this.ProductID = this.oProve.ProveProduct[i].ProductID;
         this.iPopup = i;

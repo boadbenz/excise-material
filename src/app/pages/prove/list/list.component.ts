@@ -9,6 +9,8 @@ import { pagination } from '../../../config/pagination';
 import { NgForm, FormBuilder } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
+import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-list',
@@ -19,6 +21,11 @@ export class ListComponent implements OnInit {
     private subOnSearch: any;
     dataTable: any;
     advSearch: any;
+    _dateDeliveryStartFrom: any;
+    _dateDeliveryStartTo: any;
+    _dateProveStartFrom: any;
+    _dateProveStartTo: any;
+
     paginage = pagination;
     Prove = new Array<Prove>();
     ListProve = new Array<Prove>();
@@ -30,15 +37,15 @@ export class ListComponent implements OnInit {
     // ProveDateFrom = this.getCurrentDate();
     // ProveDateTo = this.getCurrentDate();
     DeliveryDateFrom = "";
-    DeliveryDateTo = "";
+    DeliveryDateTo: any;
     ProveDateFrom = "";
-    ProveDateTo = "";
+    ProveDateTo: any;
 
     constructor(
         private _router: Router,
         private navService: NavigationService,
         private proveService: ProveService,
-         private sidebarService: SidebarService,
+        private sidebarService: SidebarService,
         private preLoaderService: PreloaderService
     ) {
         // set false
@@ -54,16 +61,25 @@ export class ListComponent implements OnInit {
         this.advSearch = this.navService.showAdvSearch;
     }
 
-    ngOnInit() {
-        this.sidebarService.setVersion('Prove 1.0.0');
+    async ngOnInit() {
+        this.DeliveryDateTo = null;
+        this.ProveDateTo = null;
+
+        this.sidebarService.setVersion('Prove 0.0.0.2');
 
         this.onSearch({ Textsearch: "" });
 
         this.preLoaderService.setShowPreloader(true);
-        this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
-                this.onSearch(Textsearch);
+
+                let ts;
+                ts = { Textsearch: "" }
+                ts = Textsearch;
+
+                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
+                else { this.onSearch(Textsearch); }
             }
         })
 
@@ -74,26 +90,57 @@ export class ListComponent implements OnInit {
         this.subOnSearch.unsubscribe();
     }
 
-    onSearch(Textsearch: any) {
-        this.proveService.getByKeyword(Textsearch).subscribe(list => {
+    async onSearch(Textsearch: any) {
+        this.preLoaderService.setShowPreloader(true);
+        await this.proveService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
+        this.preLoaderService.setShowPreloader(false);
     }
 
-    onAdvSearch(form: any) {
+    async onAdvSearch(form: any) {
+        debugger
+        let sDate, eDate, sDateDelivery, eDateDelivery, sDateProve, eDateProve;
 
-        const sDateDelivery = new Date(form.value.DeliveryDateFrom);
-        const eDateDelivery = new Date(form.value.DeliveryDateTo);
-        const sDateProve = new Date(form.value.ProveDateFrom);
-        const eDateProve = new Date(form.value.ProveDateTo);
+        if (form.value.DeliveryDateFrom) {
+            sDate = form.value.DeliveryDateFrom.date;
 
-        form.value.DeliveryDateFrom = sDateDelivery.getTime();
-        form.value.DeliveryDateTo = eDateDelivery.getTime();
+            if (sDate != undefined) {
+                sDateDelivery = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
+                form.value.DeliveryDateFrom = setZeroHours(sDateDelivery);
+            }
+        }
 
-        form.value.sDateProve = sDateProve.getTime();
-        form.value.eDateProve = eDateProve.getTime();
+        if (form.value.DeliveryDateTo) {
+            eDate = form.value.DeliveryDateTo.date;
+
+            if (sDate != undefined) {
+                eDateDelivery = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
+                form.value.DeliveryDateTo = setZeroHours(eDateDelivery);
+            }
+        }
+
+        if (form.value.ProveDateFrom) {
+            sDate = form.value.ProveDateFrom.date;
+
+            if (sDate != undefined) {
+                {
+                    sDateProve = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
+                    form.value.ProveDateFrom = setZeroHours(sDateProve);
+                }
+            }
+        }
+
+        if (form.value.ProveDateTo) {
+            eDate = form.value.ProveDateTo.date;
+
+            if (sDate != undefined) {
+                eDateProve = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
+                form.value.ProveDateTo = setZeroHours(eDateProve);
+            }
+        }
 
         form.value.DeliveryProgramCode = "XCS05";
         form.value.DeliveryProcessCode = "01";
@@ -101,21 +148,29 @@ export class ListComponent implements OnInit {
         form.value.ProveProcessCode = "01";
 
 
-        this.proveService.getByConAdv(form.value).then(async list => {
-            this.onSearchComplete(list)
+        this.preLoaderService.setShowPreloader(true);
 
+        await this.proveService.getByConAdv(form.value).then(async list => {
+            this.onSearchComplete(list);
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
-    onSearchComplete(list: any) {
+    async onSearchComplete(list: any) {
         this.Prove = [];
 
         if (!list.length) {
             alert(Message.noRecord);
             return false;
         }
+
+        await list.map((item) => {
+            item.DeliveryDate = toLocalShort(item.DeliveryDate);
+            item.ProveDate = toLocalShort(item.ProveDate);
+        })
 
         if (Array.isArray(list)) {
             this.Prove = list;
@@ -141,45 +196,55 @@ export class ListComponent implements OnInit {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
     }
 
-    
-    varidateDDF(form: any) {
-        const sDateDelivery = new Date(form.value.DeliveryDateFrom);
-        const eDateDelivery = new Date(form.value.DeliveryDateTo);
+    onSDeliveryDateChange(event: IMyDateModel) {
+        this._dateDeliveryStartFrom = event.date;
+        this.checkDateDelivery();
+    }
 
-        if (sDateDelivery.getTime() > eDateDelivery.getTime()) {
-            alert(Message.checkReceiveDate);
-            this.DeliveryDateFrom = "";
+    onEDeliveryDateChange(event: IMyDateModel) {
+        this._dateDeliveryStartTo = event.date;
+        if (this.checkDateDelivery()) {
+
         }
     }
 
-    varidateDDE(form: any) {
-        const sDateDelivery = new Date(form.value.DeliveryDateFrom);
-        const eDateDelivery = new Date(form.value.DeliveryDateTo);
+    checkDateDelivery() {
+        if (this._dateDeliveryStartFrom && this._dateDeliveryStartTo) {
+            const sdate = `${this._dateDeliveryStartFrom.year}-${this._dateDeliveryStartFrom.month}-${this._dateDeliveryStartFrom.day}`;
+            const edate = `${this._dateDeliveryStartTo.year}-${this._dateDeliveryStartTo.month}-${this._dateDeliveryStartTo.day}`;
 
-        if (sDateDelivery.getTime() > eDateDelivery.getTime()) {
-            alert(Message.checkReceiveDate);
-            this.DeliveryDateTo = "";
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.DeliveryDateTo = { date: this._dateDeliveryStartFrom };
+                }, 0);
+            }
         }
     }
 
-    varidatePDF(form: any) {
-        const sDateProve = new Date(form.value.ProveDateFrom);
-        const eDateProve = new Date(form.value.ProveDateTo);
+    onSProveDateChange(event: IMyDateModel) {
+        this._dateProveStartFrom = event.date;
+        this.checkDateProve();
+    }
 
-        if (sDateProve.getTime() > eDateProve.getTime()) {
-            alert(Message.checkScienceDate);
-            this.ProveDateFrom = "";
+    onEProveDateChange(event: IMyDateModel) {
+        this._dateProveStartTo = event.date;
+        if (this.checkDateProve()) {
+
         }
     }
 
-    varidatePDE(form: any) {
-        const sDateProve = new Date(form.value.ProveDateFrom);
-        const eDateProve = new Date(form.value.ProveDateTo);
+    checkDateProve() {
+        if (this._dateProveStartFrom && this._dateProveStartTo) {
+            const sPdate = `${this._dateProveStartFrom.year}-${this._dateProveStartFrom.month}-${this._dateProveStartFrom.day}`;
+            const ePdate = `${this._dateProveStartTo.year}-${this._dateProveStartTo.month}-${this._dateProveStartTo.day}`;
 
-        if (sDateProve.getTime() > eDateProve.getTime()) {
-            alert(Message.checkScienceDate);
-            this.ProveDateTo = "";
+            if (!compareDate(sPdate, ePdate)) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.ProveDateTo = { date: this._dateProveStartFrom };
+                }, 0);
+            }
         }
     }
-    
 }

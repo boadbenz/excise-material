@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { ContributorPipe } from '../../../shared/pipe/ContributorPipe';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
     {
@@ -31,7 +32,8 @@ const routes: Routes = [
         HttpClientModule,
         RouterModule.forChild(routes),
         CardActionsModule,
-        PaginationTableModule
+        PaginationTableModule,
+        MyDatePickerTHModule
     ],
     declarations: [ListComponent,ContributorPipe],
     providers: [ProveService,PreloaderService]

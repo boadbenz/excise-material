@@ -193,7 +193,10 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่ตรวจรับ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField">
+                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"  [(ngModel)]="ProveDate"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+
+                    <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="time" [(ngModel)]="ProveTime" name="ProveTime" class="form-control form-control-sm" [disabled]="showEditField">
@@ -210,7 +213,9 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="date" class="form-control form-control-sm" [(ngModel)]="DeliveryDate" name="DeliveryDate" [disabled]="showEditField">
+                    <my-date-picker-th name="DeliveryDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control" [(ngModel)]="DeliveryDate"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="DeliveryDate" name="DeliveryDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="time" [(ngModel)]="DeliveryTime" name="DeliveryTime" class="form-control form-control-sm" [disabled]="showEditField">
@@ -275,7 +280,9 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่พิสูจน์ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField">
+                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control" [(ngModel)]="ProveDate"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="time" [(ngModel)]="ProveTime" name="ProveTime" class="form-control form-control-sm" [disabled]="showEditField">
@@ -355,8 +362,8 @@
                                             <i class="ti-pencil-alt btn-action"></i>
                                         </a>
                                         &nbsp;
-                                        <a class="text-secondary" (click)="onDeleteProduct(lsPD.ProductSeq)" [hidden]="viewMode">
-                                            <i class="fa fa-trash-o fa-xl"></i>
+                                        <a class="text-warning" (click)="onDeleteProduct(lsPD.ProductSeq)" [hidden]="showEditField">
+                                            <i class="fa fa-trash-o fa-lg"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -414,8 +421,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="javaScript:void(0);" class="text-danger">
-                                        <i class="fa fa-trash-o fa-xl" (click)="DelDocument(lsDoc.DocumentSeq)" [hidden]="showEditField"></i>
+                                    <a href="javaScript:void(0);" class="text-warning">
+                                        <i class="fa fa-trash-o fa-lg" (click)="DelDocument(lsDoc.DocumentSeq)" [hidden]="showEditField"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -516,8 +523,8 @@
                                 <div class="form-group input-group  col-lg-4 col-md-7">
                                     <input type="checkbox" class="filled-in chk-col-indigo" [disabled]="showEditField" [checked]="C1_ReferenceVatRate!='' && C1_ReferenceVatRate!=nul">
                                     <label for="md_checkbox_5">ตามมูลค่าร้อยละ </label>&nbsp;&nbsp;
-                                    <input type="text" [(ngModel)]="oProveProduct.ReferenceVatRate" name="oProveProduct.ReferenceVatRate" class="form-control form-control-sm"
-                                        readonly>
+                                    <input type="number" [(ngModel)]="oProveProduct.ReferenceVatRate" name="oProveProduct.ReferenceVatRate" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
                                 </div>
                             </div>
 
@@ -526,8 +533,8 @@
                                 <div class="form-group input-group  col-lg-4 col-md-7">
                                     <input type="checkbox" class="filled-in chk-col-indigo" [disabled]="showEditField" [checked]="C1_ReferenceVatQty!='' && C1_ReferenceVatQty!=nul">
                                     <label for="md_checkbox_5">ตามปริมาณต่อ </label>&nbsp;&nbsp;
-                                    <input type="text" [(ngModel)]="oProveProduct.ReferenceVatQty" name="oProveProduct.ReferenceVatQty" class="form-control form-control-sm"
-                                        readonly>
+                                    <input type="number" [(ngModel)]="oProveProduct.ReferenceVatQty" name="oProveProduct.ReferenceVatQty" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
                                 </div>
                             </div>
 
@@ -536,7 +543,7 @@
                                 <div class="form-group input-group  col-lg-4 col-md-7">
                                     <label for="">หน่วย </label>&nbsp;&nbsp;
                                     <select [(ngModel)]="oProveProduct.ReferenceVatUnit" name="oProveProduct.ReferenceVatUnit" class="form-control form-control-sm"
-                                        readonly>
+                                        [disabled]="showEditField">
                                         <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
                                         </option>
                                     </select>
@@ -547,8 +554,8 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label"></label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
                                     <label for="">หน่วยละ (บาท) </label>&nbsp;&nbsp;
-                                    <input type="text" [(ngModel)]="oProveProduct.ReferenceVatValue" name="oProveProduct.ReferenceVatValue" class="form-control form-control-sm"
-                                        readonly>
+                                    <input type="number" [(ngModel)]="oProveProduct.ReferenceVatValue" name="oProveProduct.ReferenceVatValue" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
                                 </div>
                             </div>
 
@@ -557,15 +564,15 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label">ราคาขายปลีกแนะนำ :</label>
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
-                                        <input type="text" [(ngModel)]="oProveProduct.ReferenceRetailPrice" name="oProveProduct.ReferenceRetailPrice" class="form-control form-control-sm"
-                                            readonly>
+                                        <input type="number" [(ngModel)]="oProveProduct.ReferenceRetailPrice" name="oProveProduct.ReferenceRetailPrice" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
                                     </div>
                                 </div>
 
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
                                 <div class="form-group col-lg-4 col-md-7">
                                     <select [(ngModel)]="oProveProduct.ReferenceRetailUnit" name="oProveProduct.ReferenceRetailUnit" class="form-control form-control-sm"
-                                        readonly>
+                                        [disabled]="showEditField">
                                         <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
                                         </option>
                                     </select>
@@ -677,7 +684,10 @@
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :</label>
                                 <div class="form-group input-group  col-lg-5 col-md-8">
-                                    <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveScienceDate" name="ProveScienceDate" [disabled]="showEditField">
+                                    <div style="width:50%">
+                                        <my-date-picker-th name="ProveScienceDate" [options]="myDatePickerOptions" [(ngModel)]="ProveScienceDate" [disabled]="showEditField"></my-date-picker-th>
+                                    </div>
+                                    <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveScienceDate" name="ProveScienceDate" [disabled]="showEditField"> -->
 
                                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                                     <input type="time" [(ngModel)]="ProveScienceTime" name="ProveScienceTime" class="form-control form-control-sm" [disabled]="showEditField">

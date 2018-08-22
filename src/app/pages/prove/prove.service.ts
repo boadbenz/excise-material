@@ -46,7 +46,8 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res as any;
     } catch (error) {
-      await alert(error);
+      // await alert(error);
+      return [];
     }
   }
 
@@ -58,7 +59,8 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res as any;
     } catch (error) {
-      await alert(error);
+      // await alert(error);
+      return [];
     }
   }
 
@@ -70,7 +72,7 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
     }
   }
 
@@ -83,7 +85,7 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
     }
   }
 
@@ -95,7 +97,7 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
     }
   }
 
@@ -107,7 +109,7 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
     }
   }
 
@@ -119,7 +121,7 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
     }
   }
 
@@ -131,7 +133,7 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
     }
   }
   
@@ -144,7 +146,7 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
     }
   }
 
@@ -157,7 +159,33 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
+    }
+  }
+
+  async DocumentupdByCon(oPD: ProveDocument): Promise<any> {
+    debugger
+    const params = JSON.stringify(oPD);
+    const url = `${appConfig.api8882}/DocumentupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async DocumentupdDelete(oPD: ProveDocument): Promise<any> {
+    debugger
+    const params = JSON.stringify(oPD);
+    const url = `${appConfig.api8882}/DocumentupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
     }
   }
 
@@ -169,7 +197,7 @@ export class ProveService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      return [];
     }
   }
   
