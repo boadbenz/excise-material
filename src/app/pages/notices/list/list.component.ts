@@ -66,7 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.subOnsearchByKeyword = this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
-                await this.navservice.setOnSearch(null);
+                await this.navservice.setOnSearch('');
                 this.onSearch(Textsearch);
             }
         })
@@ -110,7 +110,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         this.preLoaderService.setShowPreloader(true);
-
+        console.log(JSON.stringify(form.value))
         await this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
 
         this.preLoaderService.setShowPreloader(false);
