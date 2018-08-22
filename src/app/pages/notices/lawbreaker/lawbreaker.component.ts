@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -18,7 +18,6 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { NoticeService } from '../notice.service';
 import { Message } from 'app/config/message';
 import { MyDatePickerOptions, getDateMyDatepicker, setZeroHours, setDateMyDatepicker } from '../../../config/dateFormat';
-import { ImageType } from '../../../config/imageType';
 
 
 @Component({
@@ -40,8 +39,6 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
     }
-
-    @ViewChild('imgNobody') imgNobody: ElementRef;
 
     LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
@@ -194,7 +191,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
                 const birthDay = getDateMyDatepicker(this.LawbreakerFG.value.BirthDate);
                 const passportDateIn = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateIn);
-                const passportDateOut = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut);
+                const passportDateOut =  getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut);
 
                 this.LawbreakerFG.value.BirthDate = setZeroHours(birthDay);
                 this.LawbreakerFG.value.PassportDateIn = setZeroHours(passportDateIn);
@@ -278,10 +275,6 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 PhotoDesc: res.PhotoDesc,
                 IsActive: res.IsActive
             })
-
-            if (res.LinkPhoto) {
-                this.imgNobody.nativeElement.src = res.LinkPhoto;
-            }
         })
 
     }
@@ -371,29 +364,5 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             ProvinceCode: ele.item.ProvinceCode,
             Province: ele.item.ProvinceNameTH
         });
-    }
-
-    changeImage(e: any, img: any) {
-
-        let file = e.target.files[0];
-        let isMatch: boolean | false;
-        
-        ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
-
-        if (!isMatch) {
-            alert(Message.checkImageType)
-            return
-        }
-
-        let reader = new FileReader();
-        reader.onload = () => {
-            img.src = reader.result;
-            this.LawbreakerFG.patchValue({
-                LinkPhoto: reader.result,
-                PhotoDesc: file.name
-            })
-        };
-
-        reader.readAsDataURL(file);
     }
 }
