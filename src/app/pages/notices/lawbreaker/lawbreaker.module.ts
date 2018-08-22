@@ -11,6 +11,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { NoticeService } from '../notice.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
     {
@@ -39,7 +40,8 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
         CardActionsModule,
-        ModalOffenseModule
+        ModalOffenseModule,
+        MyDatePickerTHModule
     ],
     declarations: [LawbreakerComponent],
     providers: [

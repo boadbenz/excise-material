@@ -36,7 +36,7 @@ export function toLocalShort(date: string): string {
     return dd.toLocaleString('th-TH', options);
 }
 
-export function compareDate(sDate: string, eDate: string): boolean {
+export function compareDate(sDate: Date, eDate: Date): boolean {
     if (!sDate && !eDate) return true;
 
     const sDateCompare = new Date(sDate);
@@ -59,14 +59,26 @@ export const MyDatePickerOptions: IMyOptions = {
 };
 
 export function setDateMyDatepicker(date: Date) {
+    if(!date) 
+        return null;
+
+    date = new Date(date);
     return { date: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } }
 }
 
 export function getDateMyDatepicker(date: any) {
+    if(!date)
+        return null;
+    
+    date = date.date
     return new Date(`${date.year}-${date.month}-${date.day}`);
 }
 
 export function setZeroHours(date: Date): string {
+    if(!date)
+        return null;
+
+    date = new Date(date);
     date.setHours(0, -date.getTimezoneOffset(), 0, 0);
     return date.toISOString();
 }

@@ -83,10 +83,14 @@ export class NoticeService {
         return this.resposePromisGet(JSON.stringify(params), url)
     }
 
-    getLawbreakerByCon(LawbreakerId: string): Promise<any> {
-        const params = { LawbreakerId };
+    async getLawbreakerByCon(LawbreakerID: string): Promise<Lawbreaker> {
+        const params = { LawbreakerID };
         const url = `${appConfig.api8082}/LawbreakergetByCon`;
-        return this.resposePromisGet(JSON.stringify(params), url)
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (res.IsSuccess === false || !res.ResponseData) {
+            return new Lawbreaker();
+        }
+        return res.ResponseData;
     }
 
     insAll(Notice: Notice): Promise<any> {
@@ -98,6 +102,12 @@ export class NoticeService {
     insDocument(document: NoticeDocument): Promise<any> {
         const params = document;
         const url = `${appConfig.api8883}/DocumentRequestinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    updLawbreaker(lawbreaker: Lawbreaker): Promise<boolean> {
+        const params = lawbreaker;
+        const url = `${appConfig.api8082}/LawbreakerupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 

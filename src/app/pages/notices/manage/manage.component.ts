@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.8');
+        this.sidebarService.setVersion('0.0.0.9');
 
         this.active_route();
 
@@ -197,8 +197,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate.date);
-                const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate.date);
+                const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
+                const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
 
                 if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
                     alert(Message.checkDate);
@@ -481,18 +481,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     checkDate() {
-        const _sdate = this._noticeDate ? this._noticeDate.date : this.noticeForm.value.NoticeDate.date;
-        const _edate = this._noticeDueDate ? this._noticeDueDate.date : this.noticeForm.value.NoticeDueDate.date;
+        const _sdate = this._noticeDate ? this._noticeDate : this.noticeForm.value.NoticeDate;
+        const _edate = this._noticeDueDate ? this._noticeDueDate : this.noticeForm.value.NoticeDueDate;
         
         if (_sdate && _edate) {
-            const sdate = `${_sdate.year}-${_sdate.month}-${_sdate.day}`;
-            const edate = `${_edate.year}-${_edate.month}-${_edate.day}`;
+            const sdate = getDateMyDatepicker(_sdate);
+            const edate = getDateMyDatepicker(_edate);
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.noticeForm.patchValue({
-                        NoticeDueDate: { date: _sdate }
+                        NoticeDueDate: { date: _sdate.date }
                     });
                 }, 0);
             }
@@ -607,7 +607,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         const noticeTime = this.noticeForm.value.NoticeTime;
         const dueDate = e.value == '' ? 0 : e.value;
-        let noticeDate = getDateMyDatepicker(this.noticeForm.value.NoticeDate.date);
+        let noticeDate = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
         noticeDate.setDate(noticeDate.getDate() + parseInt(dueDate));
         this.noticeForm.patchValue({
             NoticeDueDate: setDateMyDatepicker(noticeDate),

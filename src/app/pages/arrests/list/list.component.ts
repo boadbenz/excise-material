@@ -4,7 +4,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
-import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate, setZeroHours } from '../../../config/dateFormat';
+import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate, setZeroHours, getDateMyDatepicker } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.7');
+        this.sidebarService.setVersion('0.0.0.8');
 
         this.onSearch('');
 
@@ -87,18 +87,16 @@ export class ListComponent implements OnInit, OnDestroy {
     async onAdvSearch(form: any) {
 
         if (form.value.OccurrenceDateFrom && form.value.OccurrenceDateTo) {
-            const sDate = form.value.OccurrenceDateFrom.date;
-            const eDate = form.value.OccurrenceDateTo.date;
-            const sDateCompare = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
-            const eDateCompare = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
+            const sdate = getDateMyDatepicker(form.value.OccurrenceDateFrom);
+            const edate = getDateMyDatepicker(form.value.OccurrenceDateTo);
 
-            if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+            if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate);
                 return
             }
 
-            form.value.OccurrenceDateFrom = setZeroHours(sDateCompare);
-            form.value.OccurrenceDateTo = setZeroHours(eDateCompare);
+            form.value.OccurrenceDateFrom = setZeroHours(sdate);
+            form.value.OccurrenceDateTo = setZeroHours(edate);
         }
 
         this.paginage.TotalItems = 0;        
@@ -134,24 +132,25 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSDateChange(event: IMyDateModel) {
-        this.dateStartFrom = event.date
+        this.dateStartFrom = event
         this.checkDate();
     }
 
     onEDateChange(event: IMyDateModel) {
-        this.dateStartTo = event.date
+        this.dateStartTo = event
         this.checkDate()
     }
 
     checkDate() {
         if (this.dateStartFrom && this.dateStartTo) {
-            const sdate = `${this.dateStartFrom.year}-${this.dateStartFrom.month}-${this.dateStartFrom.day}`;
-            const edate = `${this.dateStartTo.year}-${this.dateStartTo.month}-${this.dateStartTo.day}`;
+
+            const sdate = getDateMyDatepicker(this.dateStartFrom);
+            const edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.OccurrenceDateTo = { date: this.dateStartFrom };
+                    this.OccurrenceDateTo = { date: this.dateStartFrom.date };
                 }, 0);
             }
         }
