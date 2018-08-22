@@ -16,8 +16,6 @@ import { ArrestsService } from '../../arrests/arrests.service';
 import { ILawbreaker, Lawbreaker } from './lawbreaker.interface';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { NoticeService } from '../notice.service';
-import { Message } from 'app/config/message';
-import { MyDatePickerOptions, getDateMyDatepicker, setZeroHours, setDateMyDatepicker } from '../../../config/dateFormat';
 
 
 @Component({
@@ -25,7 +23,7 @@ import { MyDatePickerOptions, getDateMyDatepicker, setZeroHours, setDateMyDatepi
     templateUrl: './lawbreaker.component.html',
     styleUrls: ['./lawbreaker.component.scss']
 })
-export class LawbreakerComponent implements OnInit, OnDestroy {
+export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
     constructor(
         private ngModalService: NgbModal,
         private router: Router,
@@ -44,11 +42,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     LawbreakerFG: FormGroup;
 
     private subActivedRoute: any;
-    private onSaveSubscribe: any;
     private mode: any;
-    private lawbreakerId: number;
 
-    myDatePickerOptions = MyDatePickerOptions;
     modal: any;
     showEditField: any;
     isRequired: boolean | false;
@@ -70,16 +65,14 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
         this.LawbreakerFG = this.createForm();
 
-        await this.setRegionStore();
-        await this.active_route();
-        await this.navigate_service();
-
+        // await this.setRegionStore();
+        this.active_route();
+        this.navigate_service();
         this.preloader.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
         this.subActivedRoute.unsubscribe();
-        this.onSaveSubscribe.unsubscribe();
     }
 
     private createForm(): FormGroup {
@@ -173,8 +166,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 this.navService.setEditField(true);
 
                 if (p['code']) {
-                    this.lawbreakerId = p['code'];
-                    this.GetByCon(p['code']);
+                    // this.noticeCode = p['code'];
+                    // this.getByCon(p['code']);
                 }
             }
         });
@@ -182,124 +175,23 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     private navigate_service() {
         this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p.valueOf();
+            this.showEditField = p;
         });
+    }
 
-        this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnSave(false);
+    GetByCon(LawbreakerID: string) {
+        this.noticeService.getLawbreakerByCon(LawbreakerID).then(res => {
+            console.log(res);
 
-                const birthDay = getDateMyDatepicker(this.LawbreakerFG.value.BirthDate);
-                const passportDateIn = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateIn);
-                const passportDateOut =  getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut);
-
-                this.LawbreakerFG.value.BirthDate = setZeroHours(birthDay);
-                this.LawbreakerFG.value.PassportDateIn = setZeroHours(passportDateIn);
-                this.LawbreakerFG.value.passportDateOut = setZeroHours(passportDateOut);
-
-                if (this.mode === 'C') {
-                    this.OnCreate();
-
-                } else if (this.mode === 'R') {
-                    this.OnRevice();
-                }
-            }
+            // this.LawbreakerFG = res.map(item => this.fb.group(item));
         })
     }
 
-    async GetByCon(LawbreakerID: string) {
-
-        await this.noticeService.getLawbreakerByCon(LawbreakerID).then(res => {
-            this.LawbreakerFG.reset({
-                LawbreakerID: res.LawbreakerID,
-                EntityType: res.EntityType,
-                CompanyTitleCode: res.CompanyTitleCode,
-                CompanyTitle: res.CompanyTitle,
-                CompanyName: res.CompanyName,
-                CompanyOtherName: res.CompanyOtherName,
-                CompanyRegistrationNo: res.CompanyRegistrationNo,
-                CompanyLicenseNo: res.CompanyLicenseNo,
-                FoundedDate: res.FoundedDate,
-                LicenseDateForm: res.LicenseDateForm,
-                LicenseDateTo: res.LicenseDateTo,
-                TaxID: res.TaxID,
-                ExciseRegNo: res.ExciseRegNo,
-                LawbreakerType: res.LawbreakerType,
-                LawbreakerTitleCode: res.LawbreakerTitleCode,
-                LawbreakerTitleName: res.LawbreakerTitleName,
-                LawbreakerFirstName: res.LawbreakerFirstName,
-                LawbreakerMiddleName: res.LawbreakerMiddleName,
-                LawbreakerLastName: res.LawbreakerLastName,
-                LawbreakerOtherName: res.LawbreakerOtherName,
-                LawbreakerDesc: res.LawbreakerDesc,
-                IDCard: res.IDCard,
-                PassportNo: res.PassportNo,
-                VISAType: res.VISAType,
-                PassportCountryCode: res.PassportCountryCode,
-                PassportCountryName: res.PassportCountryName,
-                PassportDateIn: setDateMyDatepicker(res.PassportDateIn),
-                PassportDateOut: setDateMyDatepicker(res.PassportDateOut),
-                BirthDate: setDateMyDatepicker(res.BirthDate),
-                GenderType: res.GenderType,
-                BloodType: res.BloodType,
-                NationalityCode: res.NationalityCode,
-                NationalityNameTH: res.NationalityNameTH,
-                RaceCode: res.RaceCode,
-                RaceName: res.RaceName,
-                ReligionCode: res.ReligionCode,
-                ReligionName: res.ReligionName,
-                MaritalStatus: res.MaritalStatus,
-                Career: res.Career,
-                GPS: res.GPS,
-                Location: res.Location,
-                Address: res.Address,
-                Village: res.Village,
-                Building: res.Building,
-                Floor: res.Floor,
-                Room: res.Room,
-                Alley: res.Alley,
-                Road: res.Road,
-                SubDistrictCode: res.SubDistrictCode,
-                SubDistrict: res.SubDistrict,
-                DistrictCode: res.DistrictCode,
-                District: res.District,
-                ProvinceCode: res.ProvinceCode,
-                Province: res.Province,
-                ZipCode: res.ZipCode,
-                TelephoneNo: res.TelephoneNo,
-                Email: res.Email,
-                FatherName: res.FatherName,
-                MotherName: res.MotherName,
-                Remarks: res.Remarks,
-                LinkPhoto: res.LinkPhoto,
-                PhotoDesc: res.PhotoDesc,
-                IsActive: res.IsActive
-            })
-        })
+    OnCreate(value: Lawbreaker) {
 
     }
 
-    OnCreate() {
-
-    }
-
-    async OnRevice() {
-        // // Set Preloader
-        // this.preloader.setShowPreloader(true);
-
-        // let IsSuccess: boolean | false;
-        // await this.noticeService.updLawbreaker(this.LawbreakerFG.value).then(isSuccess => {
-        //     IsSuccess = isSuccess;
-        // })
-
-        // if (IsSuccess) {
-        //     alert(Message.saveComplete)
-        // } else {
-        //     alert(Message.saveFail)
-        // }
-        // // Set Preloader
-        // this.preloader.setShowPreloader(false);
-        console.log(this.LawbreakerFG.value);
+    OnRevice(value: Lawbreaker) {
 
     }
 

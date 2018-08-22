@@ -134,7 +134,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.8');
+        this.sidebarService.setVersion('0.0.0.7');
 
         this.active_route();
         this.navigate_Service();
@@ -273,8 +273,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
-                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
+                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate.date);
+                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate.date);
 
                 if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
                     alert(Message.checkDate);

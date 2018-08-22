@@ -39,7 +39,6 @@
                     <div class="form-group ">
                         <input #noticeDue type="number" min="0" formControlName="NoticeDue" class="form-control form-control-sm" 
                         (keyup)="addNoticeDueDate(noticeDue)" 
-                        (change)="addNoticeDueDate(noticeDue)" 
                         [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>

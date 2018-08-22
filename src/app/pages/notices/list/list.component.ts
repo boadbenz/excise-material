@@ -5,7 +5,7 @@ import { NoticeService } from '../notice.service';
 import { Message } from '../../../config/message';
 import { Notice } from '../notice';
 import { pagination } from '../../../config/pagination';
-import { toLocalShort, compareDate, toLocalNumeric, setZeroHours, getDateMyDatepicker, setDateMyDatepicker } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, toLocalNumeric, setZeroHours } from '../../../config/dateFormat';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('0.0.0.9');
+        this.sidebarService.setVersion('0.0.0.8');
         this.paginage.TotalItems = 0;
 
         this.preLoaderService.setShowPreloader(true);
@@ -95,17 +95,18 @@ export class ListComponent implements OnInit, OnDestroy {
     async onAdvSearch(form: any) {
 
         if (form.value.DateStartFrom && form.value.DateStartTo) {
-            
-            const sdate = getDateMyDatepicker(form.value.dateStartFrom);
-            const edate = getDateMyDatepicker(form.value.dateStartTo);
+            const sDate = form.value.DateStartFrom.date;
+            const eDate = form.value.DateStartTo.date;
+            const sDateCompare = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
+            const eDateCompare = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
 
-            if (!compareDate(sdate, edate)) {
+            if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
                 alert(Message.checkDate);
                 return false;
             }
 
-            form.value.DateStartFrom = setZeroHours(sdate);
-            form.value.DateStartTo = setZeroHours(edate);
+            form.value.DateStartFrom = setZeroHours(sDateCompare);
+            form.value.DateStartTo = setZeroHours(eDateCompare);
         }
 
         this.preLoaderService.setShowPreloader(true);
@@ -152,14 +153,16 @@ export class ListComponent implements OnInit, OnDestroy {
     checkDate() {
         if (this.dateStartFrom && this.dateStartTo) {
             
-            const _sdate = this.dateStartFrom;
-            const sdate = getDateMyDatepicker(this.dateStartFrom);
-            const edate = getDateMyDatepicker(this.dateStartTo);
+            const _sdate = this.dateStartFrom.date;
+            const _edate = this.dateStartTo.date;
+
+            const sdate = `${_sdate.year}-${_sdate.month}-${_sdate.day}`;
+            const edate = `${_edate.year}-${_edate.month}-${_edate.day}`;
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.dateStartTo = { date: _sdate.date };
+                    this.dateStartTo = { date: _sdate };
                 }, 0);
             }
         }
