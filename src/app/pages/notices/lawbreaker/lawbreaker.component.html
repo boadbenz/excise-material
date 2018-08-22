@@ -132,10 +132,10 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">รูปถ่ายผู้ต้องสงสัย :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <label for="fileImg" class="find-img">
-                        <img src="assets/images/users/nobody.jpg" alt="" height="180px" width="180px">
+                        <img #imgNobody src="assets/images/users/nobody.jpg" alt="" height="180px" width="180px">
                         <span>เลือกรูปภาพ</span>
                     </label>
-                    <input id='fileImg' type="file" hidden [attr.disabled]="showEditField ? '' : null">
+                    <input id='fileImg' (change)="changeImage($event, imgNobody)" type="file" hidden [attr.disabled]="showEditField ? '' : null">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">จำนวนครั้งกระทำผิด :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
