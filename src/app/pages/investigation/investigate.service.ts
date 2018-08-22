@@ -96,5 +96,11 @@ export class InvestigateService {
         return this.http.post<any>(url, params, this.httpOptions);
     }
 
+    localgetByCon(InvestigateCode: string) {
+        const params = { InvestigateCode };
+        const url = `${appConfig.apiUrl}/InvestigateLocalgetByCon`;
+        return this.http.post<any>(url, params, this.httpOptions);
+    }
+
 
 }
