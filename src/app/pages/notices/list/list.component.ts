@@ -5,7 +5,7 @@ import { NoticeService } from '../notice.service';
 import { Message } from '../../../config/message';
 import { Notice } from '../notice';
 import { pagination } from '../../../config/pagination';
-import { toLocalShort, compareDate, toLocalNumeric, setZeroHours } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, toLocalNumeric, setZeroHours, getDateMyDatepicker, setDateMyDatepicker } from '../../../config/dateFormat';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
@@ -24,8 +24,7 @@ export class ListComponent implements OnInit, OnDestroy {
     notice = new Array<Notice>();
     noticeList = new Array<Notice>();
 
-    _dateStartFrom: any;
-    _dateStartTo: any;
+    dateStartFrom: any;
     dateStartTo: any;
 
     myDatePickerOptions: IMyOptions = {
@@ -59,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('0.0.0.7');
+        this.sidebarService.setVersion('0.0.0.9');
         this.paginage.TotalItems = 0;
 
         this.preLoaderService.setShowPreloader(true);
@@ -96,18 +95,17 @@ export class ListComponent implements OnInit, OnDestroy {
     async onAdvSearch(form: any) {
 
         if (form.value.DateStartFrom && form.value.DateStartTo) {
-            const sDate = form.value.DateStartFrom.date;
-            const eDate = form.value.DateStartTo.date;
-            const sDateCompare = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
-            const eDateCompare = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
+            
+            const sdate = getDateMyDatepicker(form.value.dateStartFrom);
+            const edate = getDateMyDatepicker(form.value.dateStartTo);
 
-            if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+            if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate);
                 return false;
             }
 
-            form.value.DateStartFrom = setZeroHours(sDateCompare);
-            form.value.DateStartTo = setZeroHours(eDateCompare);
+            form.value.DateStartFrom = setZeroHours(sdate);
+            form.value.DateStartTo = setZeroHours(edate);
         }
 
         this.preLoaderService.setShowPreloader(true);
@@ -142,24 +140,26 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSDateChange(event: IMyDateModel){
-        this._dateStartFrom = event.date;
+        this.dateStartFrom = event;
         this.checkDate();
     }
 
     onEDateChange(event: IMyDateModel){
-        this._dateStartTo = event.date;
+        this.dateStartTo = event;
         this.checkDate();
     }
 
     checkDate() {
-        if (this._dateStartFrom && this._dateStartTo) {
-            const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
-            const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
+        if (this.dateStartFrom && this.dateStartTo) {
+            
+            const _sdate = this.dateStartFrom;
+            const sdate = getDateMyDatepicker(this.dateStartFrom);
+            const edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.dateStartTo = { date: this._dateStartFrom };
+                    this.dateStartTo = { date: _sdate.date };
                 }, 0);
             }
         }

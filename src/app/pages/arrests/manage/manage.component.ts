@@ -134,11 +134,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.6');
+        this.sidebarService.setVersion('0.0.0.8');
 
         this.active_route();
         this.navigate_Service();
-        this.createForm();
+        this.arrestFG = this.createForm();
 
         await this.setStaffStore()
         await this.setOfficeStore()
@@ -158,11 +158,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe.unsubscribe()
     }
 
-    private createForm() {
+    private createForm(): FormGroup {
         let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
         let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
         // let OccurrenceDate = ArrestDate;
-        this.arrestFG = this.fb.group({
+        return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
             ArrestDate: new FormControl(ArrestDate, Validators.required),
             ArrestTime: new FormControl(ArrestTime, Validators.required),
@@ -273,8 +273,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate.date);
-                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate.date);
+                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
+                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
 
                 if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
                     alert(Message.checkDate);
@@ -469,8 +469,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setItemFormArray(res.ArrestDocument, 'ArrestDocument');
 
             this.addIndicment(res.ArrestIndictment);
-            console.log(res.ArrestIndictment);
-
         })
     }
 
