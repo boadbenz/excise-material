@@ -16,15 +16,9 @@ import { ArrestsService } from '../../arrests/arrests.service';
 import { ILawbreaker, Lawbreaker } from './lawbreaker.interface';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { NoticeService } from '../notice.service';
-<<<<<<< HEAD
-=======
 import { Message } from 'app/config/message';
 import { MyDatePickerOptions, getDateMyDatepicker, setZeroHours, setDateMyDatepicker } from '../../../config/dateFormat';
 import { ImageType } from '../../../config/imageType';
-<<<<<<< HEAD
->>>>>>> FL_J
-=======
->>>>>>> 6c326f1ff943403a020f7421a5e1104c1ffd27a4
 
 
 @Component({
@@ -32,7 +26,7 @@ import { ImageType } from '../../../config/imageType';
     templateUrl: './lawbreaker.component.html',
     styleUrls: ['./lawbreaker.component.scss']
 })
-export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
+export class LawbreakerComponent implements OnInit, OnDestroy {
     constructor(
         private ngModalService: NgbModal,
         private router: Router,
@@ -53,8 +47,11 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
     LawbreakerFG: FormGroup;
 
     private subActivedRoute: any;
+    private onSaveSubscribe: any;
     private mode: any;
+    private lawbreakerId: number;
 
+    myDatePickerOptions = MyDatePickerOptions;
     modal: any;
     showEditField: any;
     isRequired: boolean | false;
@@ -76,24 +73,16 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
 
         this.LawbreakerFG = this.createForm();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        // await this.setRegionStore();
-        this.active_route();
-        this.navigate_service();
-=======
-=======
->>>>>>> 6c326f1ff943403a020f7421a5e1104c1ffd27a4
         await this.active_route();
         await this.navigate_service();
         await this.setRegionStore();
 
->>>>>>> FL_J
         this.preloader.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
         this.subActivedRoute.unsubscribe();
+        this.onSaveSubscribe.unsubscribe();
     }
 
     private createForm(): FormGroup {
@@ -187,8 +176,8 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
                 this.navService.setEditField(true);
 
                 if (p['code']) {
-                    // this.noticeCode = p['code'];
-                    // this.getByCon(p['code']);
+                    this.lawbreakerId = p['code'];
+                    this.GetByCon(p['code']);
                 }
             }
         });
@@ -196,10 +185,8 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
 
     private navigate_service() {
         this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p;
+            this.showEditField = p.valueOf();
         });
-<<<<<<< HEAD
-=======
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
             if (status) {
@@ -221,16 +208,10 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
                 }
             }
         })
->>>>>>> FL_J
     }
 
-    GetByCon(LawbreakerID: string) {
-        this.noticeService.getLawbreakerByCon(LawbreakerID).then(res => {
-            console.log(res);
+    async GetByCon(LawbreakerID: string) {
 
-<<<<<<< HEAD
-            // this.LawbreakerFG = res.map(item => this.fb.group(item));
-=======
         await this.noticeService.getLawbreakerByCon(LawbreakerID).then(res => {
             this.LawbreakerFG.reset({
                 LawbreakerID: res.LawbreakerID,
@@ -297,36 +278,21 @@ export class LawbreakerComponent implements ILawbreaker, OnInit, OnDestroy {
                 PhotoDesc: res.PhotoDesc,
                 IsActive: res.IsActive
             })
-<<<<<<< HEAD
-=======
 
             if (res.LinkPhoto) {
                 this.imgNobody.nativeElement.src = res.LinkPhoto;
             }
         })
->>>>>>> 6c326f1ff943403a020f7421a5e1104c1ffd27a4
-
-            if (res.LinkPhoto) {
-                this.imgNobody.nativeElement.src = res.LinkPhoto;
-            }
->>>>>>> FL_J
-        })
-    }
-
-    OnCreate(value: Lawbreaker) {
 
     }
 
-<<<<<<< HEAD
-    OnRevice(value: Lawbreaker) {
-=======
+    OnCreate() {
+
+    }
+
     async OnRevice() {
         // Set Preloader
         this.preloader.setShowPreloader(true);
-<<<<<<< HEAD
->>>>>>> FL_J
-=======
->>>>>>> 6c326f1ff943403a020f7421a5e1104c1ffd27a4
 
         let IsSuccess: boolean | false;
         await this.noticeService.updLawbreaker(this.LawbreakerFG.value).then(isSuccess => {
