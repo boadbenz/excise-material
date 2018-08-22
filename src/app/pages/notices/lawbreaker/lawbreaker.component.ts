@@ -70,9 +70,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
         this.LawbreakerFG = this.createForm();
 
-        await this.setRegionStore();
         await this.active_route();
         await this.navigate_service();
+        await this.setRegionStore();
 
         this.preloader.setShowPreloader(false);
     }
@@ -284,23 +284,21 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     async OnRevice() {
-        // // Set Preloader
-        // this.preloader.setShowPreloader(true);
+        // Set Preloader
+        this.preloader.setShowPreloader(true);
 
-        // let IsSuccess: boolean | false;
-        // await this.noticeService.updLawbreaker(this.LawbreakerFG.value).then(isSuccess => {
-        //     IsSuccess = isSuccess;
-        // })
+        let IsSuccess: boolean | false;
+        await this.noticeService.updLawbreaker(this.LawbreakerFG.value).then(isSuccess => {
+            IsSuccess = isSuccess;
+        }, (error) => { IsSuccess = false; })
 
-        // if (IsSuccess) {
-        //     alert(Message.saveComplete)
-        // } else {
-        //     alert(Message.saveFail)
-        // }
-        // // Set Preloader
-        // this.preloader.setShowPreloader(false);
-        console.log(this.LawbreakerFG.value);
-
+        if (IsSuccess) {
+            alert(Message.saveComplete)
+        } else {
+            alert(Message.saveFail)
+        }
+        // Set Preloader
+        this.preloader.setShowPreloader(false);
     }
 
     private async setRegionStore() {
