@@ -36,6 +36,7 @@ import {
 import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
 import { IMyDateModel } from 'mydatepicker-th';
+import { replaceFakePath } from 'app/config/dataString';
 
 @Component({
     selector: 'app-manage',
@@ -126,9 +127,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.navigate_service();
 
-        this.createForm();
-
         this.active_route();
+
+        this.createForm();
 
         await this.setProductStore();
         await this.setStaffStore();
@@ -209,7 +210,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.checkData);
                     return;
                 }
-                
+
                 this.noticeForm.value.NoticeDate = setZeroHours(sDateCompare);
                 this.noticeForm.value.NoticeDueDate = setZeroHours(eDateCompare);
                 this.noticeForm.value.NoticeInformer.map(item => {
@@ -309,7 +310,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.noticeForm.setControl(formControl, itemFormArray);
         }
     }
-
+    
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
             this.noticeCode = res.NoticeCode;
@@ -343,12 +344,18 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.Region += item.Province == null ? '' : ` ${item.Province}`;
             });
 
-            await res.NoticeSuspect.map(item =>
-                item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`
+            await res.NoticeSuspect.map(item => {
+                item.SuspectFullName = item.SuspectTitleName == null ? '' : item.SuspectTitleName;
+                item.SuspectFullName += item.SuspectFirstName == null ? '' : ` ${item.SuspectFirstName}`;
+                item.SuspectFullName += item.SuspectFirstName == null ? '' : ` ${item.SuspectFirstName}`;
+            }
             )
 
-            await res.NoticeProduct.map(item =>
-                item.BrandFullName = `${item.BrandNameTH} ${item.SubBrandNameTH} ${item.ModelName}`
+            await res.NoticeProduct.map(item => {
+                item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
+                item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
+                item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
+            }
             )
 
             await this.setItemFormArray(res.NoticeStaff, 'NoticeStaff');
@@ -483,7 +490,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     checkDate() {
         const _sdate = this._noticeDate ? this._noticeDate : this.noticeForm.value.NoticeDate;
         const _edate = this._noticeDueDate ? this._noticeDueDate : this.noticeForm.value.NoticeDueDate;
-        
+
         if (_sdate && _edate) {
             const sdate = getDateMyDatepicker(_sdate);
             const edate = getDateMyDatepicker(_edate);
@@ -622,9 +629,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (v.SubDistrictNameTH && v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     searchProduct = (text$: Observable<string>) =>
@@ -634,8 +641,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadProduct
                     .filter(v =>
-                        v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -645,9 +653,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadStaff
                     .filter(v =>
-                        v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>
@@ -657,18 +665,18 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadOffice
                     .filter(v =>
-                        v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
-    formatterProduct = (x: { BrandNameTH: string, SubBrandNameTH: string, ModelName: string }) =>
-        `${x.BrandNameTH} ${x.SubBrandNameTH} ${x.ModelName}`;
+    formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
+        `${x.BrandNameTH || ''} ${x.SubBrandNameTH || ''} ${x.ModelName || ''}`;
 
     formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubDistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
+        `${x.SubDistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
-        `${x.TitleName} ${x.FirstName} ${x.LastName}`
+        `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
 
     formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
 
@@ -703,6 +711,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.NoticeProduct.at(index).patchValue({
             IsNewItem: true,
             NoticeCode: this.noticeCode,
+            GroupCode: ele.item.GroupCode || '1',
+            IsDomestic: ele.item.IsDomestic || '1'
             // Qty: ele.item.Size,
             // QtyUnit: ele.item.SizeCode
         })
@@ -719,13 +729,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             PositionName: e.item.ManagementPosName,
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
+            DepartmentLevel: e.item.DeptLevel,
             ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode
         })
 
-        this.noticeForm.patchValue({
-            NoticeStationCode: e.item.OperationPosCode,
-            NoticeStation: e.item.OperationPosName,
-        })
+        // this.noticeForm.patchValue({
+        //     NoticeStationCode: e.item.OperationPosCode,
+        //     NoticeStation: e.item.OperationPosName,
+        // })
     }
 
     selectItemOffice(e) {
@@ -747,9 +758,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
-                console.log('===================');
-                console.log('ProductDel : ', id);
-                console.log('===================');
 
                 await this.noticeService.productupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
@@ -773,9 +781,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
-                console.log('===================');
-                console.log('SuspectDel : ', id);
-                console.log('===================');
 
                 await this.noticeService.suspectupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
@@ -798,9 +803,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         } else if (this.mode === 'R') {
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
-                console.log('===================');
-                console.log('NoticeDel : ', id);
-                console.log('===================');
 
                 await this.noticeService.documentUpDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
@@ -851,7 +853,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
-                    FilePath: e.target.value
+                    FilePath: replaceFakePath(e.target.value)
                 })
             }
         };
@@ -869,7 +871,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (dataSource && dataSource !== undefined) {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,
-                    FilePath: e.target.value,
+                    FilePath: replaceFakePath(e.target.value),
                     IsActive: 1
                 })
             }

@@ -5,131 +5,131 @@
             <h4 class="card-title m-b-0">ข้อมูลส่วนต้ว</h4>
         </div>
         <div class="card-body">
-            
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทผู้ต้องสงสัย :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <select formControlName="SuspectType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                            <option value="" selected disabled></option>
-                            <option *ngFor="let item of suspectTypes; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
-                        </select>
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทบุคคล :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <select formControlName="EntityType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                            <option value="" selected disabled></option>
-                            <option *ngFor="let item of entityTypes; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
-                        </select>
-                    </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทผู้ต้องสงสัย :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <select formControlName="SuspectType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of suspectTypes; let i=index;" [value]="item.value">{{item.text}}</option>
+                    </select>
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">เลขบัตรประชาชน :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="IDCard" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">คำนำหน้าชื่อ :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <select formControlName="SuspectTitleName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                            <option value="" selected disabled></option>
-                            <option *ngFor="let item of titleNames; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
-                        </select>
-                    </div>
+                <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทบุคคล :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <select formControlName="EntityType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of entityTypes; let i=index;" [value]="item.value">{{item.text}}</option>
+                    </select>
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อจริง :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="SuspectFirstName" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">นามสกุล :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="SuspectLastName" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">เลขบัตรประชาชน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="IDCard" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ชื่ออื่น :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="SuspectOtherName" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">วันเกิด :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="date" formControlName="BirthDate" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
+                <label for="" class="col-lg-2 col-sm-4 control-label">คำนำหน้าชื่อ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <select formControlName="SuspectTitleName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of titleNames; let i=index;" [value]="item.value">{{item.text}}</option>
+                    </select>
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">กรุ๊ปเลือด :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <select formControlName="BloodType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                            <option value="" selected disabled></option>
-                            <option *ngFor="let item of bloodTypes; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
-                        </select>
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">สัญชาติ :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <select formControlName="NationalityNameTH" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                            <option value="" selected disabled></option>
-                            <option *ngFor="let item of nationnalitys; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อจริง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="SuspectFirstName" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">เชื่อชาติ :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <select formControlName="RaceName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                            <option value="" selected disabled></option>
-                            <option *ngFor="let item of races; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
-                        </select>
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ศาสนา :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <select formControlName="ReligionName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                            <option value="" selected disabled></option>
-                            <option *ngFor="let item of religions; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
-                        </select>
-                    </div>
+                <label for="" class="col-lg-2 col-sm-4 control-label">นามสกุล :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="SuspectLastName" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">สถานะภาพ :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <select formControlName="MaritalStatus" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                            <option value="" selected disabled></option>
-                            <option *ngFor="let item of materialStatus; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
-                        </select>
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">อาชีพ :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="Career" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ชื่ออื่น :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="SuspectOtherName" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อบิดา :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="FatherName" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อมารดา :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="MotherName" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
+                <label for="" class="col-lg-2 col-sm-4 control-label">วันเกิด :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <my-date-picker-th formControlName="BirthDate" [options]="myDatePickerOptions" [disabled]="showEditField"></my-date-picker-th>
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">เบอร์โทรศัพท์ :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="TelephoneNo" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">อีเมล์ :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="Email" class="form-control form-control-sm" [readonly]="showEditField">
-                    </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">กรุ๊ปเลือด :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <select formControlName="BloodType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of bloodTypes; let i=index;" [value]="item.value">{{item.text}}</option>
+                    </select>
                 </div>
-                <div class="row">
-                    <label for="" class="col-lg-2 col-sm-4 control-label">รูปถ่ายผู้ต้องสงสัย :</label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <label for="fileImg" class="find-img">
-                            <img src="assets/images/users/nobody.jpg" alt="" height="180px" width="180px">
-                            <span>เลือกรูปภาพ</span>
-                        </label>
-                        <input id='fileImg' type="file" formControlName="LinkPhoto" hidden [readonly]="showEditField">
-                    </div>
-                    <!-- <label for="" class="col-lg-2 col-sm-4 control-label">จำนวนครั้งกระทำผิด :</label>
+                <label for="" class="col-lg-2 col-sm-4 control-label">สัญชาติ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <select formControlName="NationalityNameTH" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of nationnalitys; let i=index;" [value]="item.value">{{item.text}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">เชื่อชาติ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <select formControlName="RaceName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of races; let i=index;" [value]="item.value">{{item.text}}</option>
+                    </select>
+                </div>
+                <label for="" class="col-lg-2 col-sm-4 control-label">ศาสนา :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <select formControlName="ReligionName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of religions; let i=index;" [value]="item.value">{{item.text}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">สถานะภาพ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <select formControlName="MaritalStatus" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of materialStatus; let i=index;" [value]="item.value">{{item.text}}</option>
+                    </select>
+                </div>
+                <label for="" class="col-lg-2 col-sm-4 control-label">อาชีพ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="Career" class="form-control form-control-sm" [readonly]="showEditField">
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อบิดา :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="FatherName" class="form-control form-control-sm" [readonly]="showEditField">
+                </div>
+                <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อมารดา :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="MotherName" class="form-control form-control-sm" [readonly]="showEditField">
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">เบอร์โทรศัพท์ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="TelephoneNo" class="form-control form-control-sm" [readonly]="showEditField">
+                </div>
+                <label for="" class="col-lg-2 col-sm-4 control-label">อีเมล์ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" formControlName="Email" class="form-control form-control-sm" [readonly]="showEditField">
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">รูปถ่ายผู้ต้องสงสัย :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <label for="fileImg" class="find-img">
+                        <img #imgNobody src="assets/images/users/nobody.jpg" alt="" height="180px" width="180px">
+                        <span>เลือกรูปภาพ</span>
+                    </label>
+                    <input id='fileImg' (change)="changeImage($event, imgNobody)" type="file" formControlName="LinkPhoto" hidden [attr.disabled]="showEditField ? '' : null">
+                </div>
+                <!-- <label for="" class="col-lg-2 col-sm-4 control-label">จำนวนครั้งกระทำผิด :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" formControlName="" class="form-control form-control-sm" readonly>
                     <a class="viewOffense text-secondary" href="javaScript:void(0);" (click)="openOffenseDetailModal(offens)">
@@ -140,7 +140,7 @@
                         <app-modal-offense (c)="modal.close()" (d)="modal.dismiss()"></app-modal-offense>
                     </ng-template>
                 </div> -->
-                </div>
+            </div>
         </div>
     </div>
 
@@ -201,15 +201,10 @@
                         {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                     </ng-template>
 
-                    <input type="text" class="form-control form-control-sm"
-                        [ngbTypeahead]="searchRegion"
-                        [resultTemplate]="rt"
-                        [readOnly]="showEditField"
-                        [inputFormatter]="formatterRegion" 
-                        (selectItem)="selectItemRegion($event)"
-                        required/>
+                    <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion" [resultTemplate]="rt" [readOnly]="showEditField"
+                        [inputFormatter]="formatterRegion" (selectItem)="selectItemRegion($event)" required/>
 
-                        <!-- value="{{SuspectFG.get('Region').value}}" -->
+                    <!-- value="{{SuspectFG.get('Region').value}}" -->
                 </div>
             </div>
             <div class="row">
@@ -240,19 +235,19 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เข้าประเทศ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" formControlName="PassportDateIn" class="form-control form-control-sm" [readonly]="showEditField">
+                    <my-date-picker-th formControlName="PassportDateIn" [options]="myDatePickerOptions" [disabled]="showEditField"></my-date-picker-th>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่ออกประเทศ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" formControlName="PassportDateOut" class="form-control form-control-sm" [readonly]="showEditField">
+                    <my-date-picker-th formControlName="PassportDateOut" [options]="myDatePickerOptions" [disabled]="showEditField"></my-date-picker-th>
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทวีซ่า :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="VISAType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
+                    <select formControlName="VISAType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required>
                         <option value="" selected disabled></option>
-                        <option *ngFor="let item of visaTypes; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
+                        <option *ngFor="let item of visaTypes; let i=index;" [value]="item.value">{{item.text}}</option>
                     </select>
                 </div>
             </div>

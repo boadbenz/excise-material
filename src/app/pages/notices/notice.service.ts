@@ -8,6 +8,7 @@ import { Http, } from '@angular/http';
 import { Message } from '../../config/message';
 import { NoticeDocument } from './notice-document';
 import { Lawbreaker } from './lawbreaker/lawbreaker.interface';
+import { Suspect } from './suspect/suspect.interface';
 
 @Injectable()
 export class NoticeService {
@@ -93,6 +94,16 @@ export class NoticeService {
         return res.ResponseData;
     }
 
+    async getSuspectByCon(SuspectID: string) : Promise<Suspect> {
+        const params = { SuspectID };
+        const url = `${appConfig.api8082}/NoticeSuspectgetByCon`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (res.IsSuccess === false || !res.ResponseData) {
+            return new Suspect();
+        }
+        return res.ResponseData;
+    }
+
     insAll(Notice: Notice): Promise<any> {
         const params = Notice;
         const url = `${appConfig.api8082}/NoticeinsAll`;
@@ -108,6 +119,12 @@ export class NoticeService {
     updLawbreaker(lawbreaker: Lawbreaker): Promise<boolean> {
         const params = lawbreaker;
         const url = `${appConfig.api8082}/LawbreakerupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    updSuspect(suspect: Suspect): Promise<boolean> {
+        const params = suspect;
+        const url = `${appConfig.api8082}/SuspectupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
