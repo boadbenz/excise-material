@@ -151,9 +151,11 @@
                                 <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly >
                             </td>
                             <td>
-                                <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField" >
-                                <!-- <select formControlName="ContributorID" class="form-control form-control-sm" [disabled]="showEditField">
-                                </select> -->
+                                <!-- <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField" > -->
+                                <select formControlName="ContributorID" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
+                                    <option value="" disabled selected></option>
+                                    <option value="-">-</option>
+                                </select>
                             </td>
                             <td>
                                 <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField" (click)="deleteStaff(i, item.get('StaffID').value)">
