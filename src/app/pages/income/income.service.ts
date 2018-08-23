@@ -17,6 +17,7 @@ export class IncomeService {
   };
 
   getByKeyword(Textsearch: string) {
+    debugger
     const params = Textsearch;
     const url = `${appConfig.api8084}/RevenuegetByKeyword`;
     return this.http.post<Revenue[]>(url, params, this.httpOptions);
@@ -28,17 +29,82 @@ export class IncomeService {
     return this.http.post<Revenue>(url, params, this.httpOptions);
   }
 
-  getByConAdv(form: any) {
+  async getByConAdv(form: any): Promise<any> {
+    debugger
     const params = JSON.stringify(form);
     const url = `${appConfig.api8084}/RevenuegetByConAdv`;
-    return this.http.post<Revenue[]>(url, params, this.httpOptions);
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
+    } catch (error) {
+      // await alert(error);
+      return [];
+    }
   }
 
-  InsAll(revenue: Revenue) {
-    const params = revenue;
-    const url = `${appConfig.api8084}/RevenueinsAll`;
-    return this.http.post<any>(url, params, this.httpOptions);
+  async getStatus(RevenueDetailID: string): Promise<any> {
+    debugger
+    const params = { RevenueDetailID };
+    const url = `${appConfig.api8084}/RevenueDetailgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
   }
+
+  async getDepartment(Textsearch: string): Promise<any> {
+    const params = { Textsearch };
+    const url = `${appConfig.api8084}/MasDepartmentgetAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async StaffgetByKeyword(Textsearch): Promise<any> {
+    const params = { Textsearch };
+    const url = `${appConfig.api8084}/StaffgetByKeyword`;
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async RevenueComparegetByCon(CompareID: string): Promise<any> {
+    const params = { CompareID };
+    const url = `${appConfig.api8084}/RevenueComparegetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+
+  async RevenueinsAll(oRevenue: Revenue): Promise<any> {
+    debugger
+    const params = JSON.stringify(oRevenue);
+    const url = `${appConfig.api8084}/RevenueinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
 
   updByCon(revenue: Revenue) {
     const params = revenue;

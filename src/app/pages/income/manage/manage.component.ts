@@ -8,24 +8,51 @@ import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@ang
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Staff } from '../staff';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { MatAutocomplete } from '@angular/material';
+import { del } from '../../../../../node_modules/@types/selenium-webdriver/http';
+import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
+import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-manage',
     templateUrl: './manage.component.html'
 })
 export class ManageComponent implements OnInit, OnDestroy {
- 
+
     private sub: any;
     mode: string;
     modal: any;
-    revenueCode: string;
-    // rawOptions = [];
-    // options = [];
-
-    // --------
     showEditField: any;
-    revenueForm: FormGroup;
-   
+
+    revenueID: string;
+    StaffSendID: string;    // รหัสผู้นำส่ง
+    PosSend: string;        // ตำแหน่งผู้นำส่ง
+    DeptSend: string;       // แผนกผู้นำส่ง
+    StaffID: string;        // รหัสผู้จัดทำ
+    PosStaff: string;        // ตำแหน่งผู้จัดทำ
+    DeptStaff: string;       // แผนกผู้จัดทำ
+    RevenueStation: string;   // เขียนที่
+    CompareFine: number;      // ยอดนำส่งรวม
+    MistreatNo: number;     // จำนวนคดี
+    BribeMoney: number;     // เงินสินบนรวม
+    RewardMoney: number;    // เงินรางวัลรวม
+    TreasuryMoney: number;  // เงินส่งคลัง
+
+
+    StaffSendoptions = [];
+    rawStaffSendOptions = [];
+    Staffoptions = [];
+    rawOptions = [];
+    options = [];
+
+
+    oRevenue: Revenue;
+    oRevenueSendStaff: Staff;
+    oRevenueStaff: Staff;
+
+
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
@@ -34,7 +61,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private ngbModel: NgbModal,
         private navService: NavigationService,
-        private incomeService: IncomeService
+        private IncService: IncomeService,
+        private preloader: PreloaderService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -42,40 +70,32 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setNextPageButton(false);
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+        this.preloader.setShowPreloader(true);
+
         this.active_Route();
         this.navigate_Service();
-        this.createForm();
-    }
+        await this.CreateObject();
 
-    createForm() {
-        this.revenueForm = this.formBuilder.group({
-            RevenueDate: new FormControl({ value: '' }),
-            RevenueTime: new FormControl({ value: '' }),
-            RevenueCode: new FormControl({ value: '' }),
-            InformTo: new FormControl({ value: '' }),
-            StationName: new FormControl({ value: '' }),
-            StaffName: new  FormControl({ value: '' }),
-            PositionName: new  FormControl({ value: '' }),
-            DepartmentName: new  FormControl({ value: '' }),
-            OfficeName: new  FormControl({ value: '' }),
-            OfficeShortName: new  FormControl({ value: '' }),
-            RevenueStatus: new  FormControl({ value: '' })
-        });
+        // await this.getReveneueStaff();
+        // await this.getStation();
+        this.ShowRevenueCompare();
+
+        this.preloader.setShowPreloader(false);
     }
 
     private active_Route() {
-        this.sub = this.activeRoute.params.subscribe(p => {       
+        this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
             if (p['mode'] === 'C') {
                 // set false
+                this.navService.setPrintButton(false);
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-
             } else if (p['mode'] === 'R') {
                 // set false
                 this.navService.setSaveButton(false);
@@ -85,11 +105,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
-            }
 
-            if (p['code']) {
-                this.revenueCode = p['code'];
-                this.Revenue_GetByCon(p['code']);
+                if (p['code']) {
+                    // this.arrestCode = p['code'];
+                    // this.getByCon(p['code']);
+                }
             }
         });
     }
@@ -103,114 +123,322 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
-                debugger
-                if (this.mode === 'C') {
-                    this.onCreate();
 
-                } else if (this.mode === 'R') {
-                    this.onReviced();
+                // if (this.ReportNo == "" || this.ProveStaffName == "" || this.ScienceStaffName == "" 
+                //     || this.ProveStation == "" || this.ProveDate == null || this.DeliveryDate == null) {
+                //     this.isRequired = true;
+                //     alert(Message.checkData);
+
+                //     // this.showEditField = false;
+
+                //     return false;
+                // }
+
+                if (this.mode == 'C') {
+                    await this.onInsRevenue();
+                    // this.router.navigate(['/prove/list']);
+                } else {
+                    // await this.onUpdProve();
+                    // await this.onComplete();
                 }
             }
         });
 
-        this.sub = this.navService.onDelete.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnDelete(false);
-                this.onDelete();
-            }
-        });
+        // this.sub = this.navService.onDelete.subscribe(async status => {
+        //     if (status) {
+        //         await this.navService.setOnDelete(false);
+        //         this.onDelete();
+        //     }
+        // });
 
-        this.sub = this.navService.onPrint.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnPrint(false);
-                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-            }
-        })
-    }
+        // this.sub = this.navService.onPrint.subscribe(async status => {
+        //     if (status) {
+        //         await this.navService.setOnPrint(false);
+        //         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        //     }
+        // })
 
-    private Revenue_GetByCon(revenueCode: string) {
-        this.sub = this.incomeService.getByCon(revenueCode).subscribe(item => {
-            this.revenueForm.reset({
-                RevenueCode: item[0].RevenueCode,
-                RevenueDate: item[0].RevenueDate,
-                InformTo: item[0].InformTo,
-                StationName: item[0].StationName,
-                StaffName: item[0].RevenueStaff[0].TitleName + item[0].RevenueStaff[0].FirstName + ' ' + item[0].RevenueStaff[0].LastName,
-                PositionName: item[0].RevenueStaff[0].PositionName,
-                DepartmentName: item[0].RevenueStaff[0].DepartmentName,
-                OfficeName: item[0].RevenueStaff[0].OfficeName,
-                OfficeShortName: item[0].RevenueStaff[0].OfficeShortName,
-                RevenueStatus: item[0].RevenueDetail[0].RevenueStatus
-            });
-            debugger
-            // this.setInvestTeam(item.InvestigationTeam);
-            // this.investigateDetail = item.InvestigationDetail;
-
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
-    }
-
-    private onCreate() {
-        if (this.revenueForm.valid) {
-            this.incomeService.InsAll(this.revenueForm.value).subscribe(p => {
-                this.onComplete();
-            }, (err: HttpErrorResponse) => {
-                alert(Message.saveFail);
-            });
-        }
-    }
-
-    private onReviced() {
-        debugger
-        if (this.revenueForm.valid) {
-            this.incomeService.updByCon(this.revenueForm.value).subscribe(p => {
-                this.onComplete();
-            }, (err: HttpErrorResponse) => {
-                alert(Message.saveFail);
-            });
-        }
-    }
-
-    private onComplete() {
-        // set true
-        this.navService.setEditField(true);
-        this.navService.setEditButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        // set false
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
-
-        alert(Message.saveComplete);
-    }
-
-    private onDelete() {
-        // if (confirm(Message.confirmAction)) {
-        //     this.invesService.updDelete(this.investCode).subscribe(result => {
-        //         // tslint:disable-next-line:triple-equals
-        //         if (result.IsSuccess == 'True') {
-        //             alert(Message.saveComplete);
-        //         // tslint:disable-next-line:triple-equals
-        //         } else if (result.IsSuccess == 'False') {
-        //             alert(Message.saveError);
+        // this.sub = this.navService.onCancel.subscribe(async status => {
+        //     if (status) {
+        //         if (confirm(Message.confirmAction)) {
+        //             await this.navService.setOnCancel(false);
+        //             this.router.navigate(['/prove/list']);
         //         }
-        //     }, (err: HttpErrorResponse) => {
-        //         alert(err.message);
-        //     })
-        // }
+        //     }
+        // })
     }
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
 
-    // onAutoChange(value: string) {
-    //     if (value == '') {
-    //       this.options = [];
-    //     } else {
-    //       this.options = this.rawOptions.filter(f => f.name.toLowerCase().indexOf(value.toLowerCase()) > -1);
-    //     }
-    //   }
+    ShowRevenueCompare()
+    {
+        this.IncService.RevenueComparegetByCon("3").then(async res => {
+            if (res) {
+                debugger
+            }
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
+    }
 
+    CreateObject() {
+        this.oRevenue = {
+            RevenueID: "",
+            RevenueCode: "",
+            RevenueNo:  "",
+            RevenueDate: "",
+            StationCode: "",
+            StationName: "",
+            InformTo: "",
+            ISACTIVE: 1,
+            RevenueOneStaff: [],
+            RevenueDetail: [],
+            RevenueStaff: []
+        }
+    }
+
+    async onInsRevenue() {
+        this.preloader.setShowPreloader(true);
+
+        this.oRevenue.RevenueStaff = [];
+
+        if (this.oRevenueSendStaff != null && this.oRevenueSendStaff != undefined) {
+            this.oRevenue.RevenueStaff.push(this.oRevenueSendStaff);
+        }
+
+        if (this.oRevenueStaff != null && this.oRevenueStaff != undefined) {
+            this.oRevenue.RevenueStaff.push(this.oRevenueStaff);
+        }
+
+        let isSuccess: boolean = true;
+
+        await this.IncService.RevenueinsAll(this.oRevenue).then(async IsSuccess => {
+            if (!IsSuccess) {
+                isSuccess = IsSuccess;
+                return false;
+            }
+        }, (error) => { isSuccess = false; console.error(error); return false; });
+
+        if (!isSuccess) return false;
+
+        if (isSuccess) {
+            alert(Message.saveComplete);
+            // this.oProve = {};
+            // this.router.navigate(['/prove/list']);
+        } else {
+            alert(Message.saveFail);
+        }
+
+        this.preloader.setShowPreloader(false);
+
+    }
+
+
+    // ----- ผู้นำส่ง ---
+    async getReveneueStaff() {
+        await this.IncService.StaffgetByKeyword("").then(async res => {
+            if (res) {
+                this.rawStaffSendOptions = res;
+            }
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
+    }
+
+    StaffSendonAutoChange(value: string) {
+        if (value == '') {
+            this.StaffSendoptions = [];
+            this.ClearStaffSendData();
+        } else {
+            if (this.rawStaffSendOptions.length == 0) {
+                this.getReveneueStaff();
+            }
+
+            this.StaffSendoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    StaffSendonAutoFocus(value: string) {
+        if (value == '') {
+            this.StaffSendoptions = [];
+            this.ClearStaffSendData();
+        }
+    }
+
+    StaffSendonAutoSelecteWord(event) {
+        this.oRevenueSendStaff = {
+            StaffID: this.StaffSendID,
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-07",
+            RevenueID: this.revenueID,
+            StaffCode: event.StaffCode,
+            TitleName: event.TitleName,
+            FirstName: event.FirstName,
+            LastName: event.LastName,
+            PositionCode: event.OperationPosCode,
+            PositionName: event.OperationPosName,
+            PosLevel: event.PosLevel,
+            PosLevelName: event.PosLevelName,
+            DepartmentCode: event.OperationDeptCode,
+            DepartmentName: event.OperationDeptName,
+            DepartmentLevel: event.DeptLevel,
+            OfficeCode: event.OfficeCode,
+            OfficeName: event.OfficeName,
+            OfficeShortName: event.OfficeShortName,
+            ContributorCode: "20",
+            IsActive: "1"
+        }
+
+        this.PosSend = event.PosLevelName;
+        this.DeptSend = event.OperationDeptName;
+    }
+
+    ClearStaffSendData() {
+        this.PosSend = "";
+        this.DeptSend = "";
+
+        this.oRevenueSendStaff = {
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            StaffID: this.StaffSendID,
+            RevenueID: this.revenueID,
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorCode: "20",
+            IsActive: "1"
+        }
+    }
+    // ----- End ผู้นำส่ง ---
+
+
+    // ----- ผู้จัดทำ ---
+    StaffonAutoChange(value: string) {
+        if (value == '') {
+            this.Staffoptions = [];
+            this.ClearStaffData();
+        } else {
+            if (this.rawStaffSendOptions.length == 0) {
+                this.getReveneueStaff();
+            }
+            debugger
+            this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    StaffonAutoFocus(value: string) {
+        if (value == '') {
+            this.Staffoptions = [];
+            this.ClearStaffData();
+        }
+    }
+
+    StaffonAutoSelecteWord(event) {
+        this.oRevenueStaff = {
+            StaffID: this.StaffID,
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-07",
+            RevenueID: this.revenueID,
+            StaffCode: event.StaffCode,
+            TitleName: event.TitleName,
+            FirstName: event.FirstName,
+            LastName: event.LastName,
+            PositionCode: event.OperationPosCode,
+            PositionName: event.OperationPosName,
+            PosLevel: event.PosLevel,
+            PosLevelName: event.PosLevelName,
+            DepartmentCode: event.OperationDeptCode,
+            DepartmentName: event.OperationDeptName,
+            DepartmentLevel: event.DeptLevel,
+            OfficeCode: event.OfficeCode,
+            OfficeName: event.OfficeName,
+            OfficeShortName: event.OfficeShortName,
+            ContributorCode: "34",
+            IsActive: "1"
+        }
+
+        this.PosStaff = event.PosLevelName;
+        this.DeptStaff = event.OperationDeptName;
+    }
+
+    ClearStaffData() {
+        this.PosStaff = "";
+        this.DeptStaff = "";
+
+        this.oRevenueStaff = {
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            StaffID: this.StaffID,
+            RevenueID: this.revenueID,
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorCode: "34",
+            IsActive: "1"
+        }
+    }
+    // ----- End ผู้นำส่ง ---
+
+
+    // --- เขียนที่ ---
+    async getStation() {
+        // this.preloader.setShowPreloader(true);
+        await this.IncService.getDepartment("").then(async res => {
+            if (res) {
+                this.rawOptions = res;
+            }
+
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
+        // this.preloader.setShowPreloader(false);
+    }
+
+    onAutoChange(value: string) {
+        // 
+        if (value == '') {
+            this.options = [];
+
+            this.oRevenue.StationCode = "";
+            this.oRevenue.StationName = "";
+        } else {
+            this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    onAutoFocus(value: string) {
+        if (value == '') {
+            this.options = [];
+        }
+    }
+
+    onAutoSelecteWord(event) {
+        this.oRevenue.StationCode = event.DepartmentCode;
+        this.oRevenue.StationName = event.DepartmentNameTH;
+    }
+    // ----- End เขียนที่ ---
 }

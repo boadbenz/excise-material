@@ -8,7 +8,6 @@ import { ProveService } from '../prove.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
-import { ContributorPipe } from '../../../shared/pipe/ContributorPipe';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
@@ -34,7 +33,7 @@ const routes: Routes = [
         PaginationTableModule,
         MyDatePickerTHModule
     ],
-    declarations: [ListComponent,ContributorPipe],
+    declarations: [ListComponent],
     providers: [ProveService]
 })
 export class ListModule { }
