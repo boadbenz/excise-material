@@ -80,10 +80,12 @@ export class ListComponent implements OnInit {
 
                 if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
                 else { this.onSearch(Textsearch); }
+
+                this.preLoaderService.setShowPreloader(false);
             }
         })
 
-        this.preLoaderService.setShowPreloader(false);
+       
     }
 
     ngOnDestroy(): void {
@@ -94,14 +96,14 @@ export class ListComponent implements OnInit {
         this.preLoaderService.setShowPreloader(true);
         await this.proveService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
+            this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
-        this.preLoaderService.setShowPreloader(false);
+       
     }
 
-    async onAdvSearch(form: any) {
-        debugger
+    async onAdvSearch(form: any) { 
         let sDate, eDate, sDateDelivery, eDateDelivery, sDateProve, eDateProve;
 
         if (form.value.DeliveryDateFrom) {
@@ -152,8 +154,12 @@ export class ListComponent implements OnInit {
 
         await this.proveService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
+
+            this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             alert(err.message);
+
+            this.preLoaderService.setShowPreloader(false);
         });
 
         this.preLoaderService.setShowPreloader(false);
@@ -170,8 +176,11 @@ export class ListComponent implements OnInit {
         await list.map((item) => {
             item.DeliveryDate = toLocalShort(item.DeliveryDate);
             item.ProveDate = toLocalShort(item.ProveDate);
+            item.ProveOneStaff = item.ProveStaff.filter(item => item.ContributorCode === '14');
+            item.ProveOneStaffScience = item.ProveStaff.filter(item => item.ContributorCode === '15');
         })
 
+        
         if (Array.isArray(list)) {
             this.Prove = list;
         } else {

@@ -323,23 +323,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async onUpdProve() {
-        if (this.ReportNo == "" || this.ProveStaffName == "" || this.ScienceStaffName == "" || this.ProveStation == "") {
-            this.isRequired = true;
-            alert(Message.checkData);
-
-            this.navService.setCancelButton(true);
-            this.navService.setSaveButton(true);
-            this.navService.setPrintButton(false);
-            this.navService.setSearchBar(false);
-            this.navService.setDeleteButton(false);
-            this.navService.setEditButton(false);
-
-            this.showEditField = false;
-
-            return false;
-        }
-
-
         this.preloader.setShowPreloader(true);
         debugger
         this.oProve.DeliveryDocNo = this.DeliveryDocNo;
