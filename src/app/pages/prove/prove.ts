@@ -6,12 +6,12 @@ export class Prove {
     public ProveID?: string;
     public IsDelivery?: number;
     public DeliveryDocNo?: string;
-    public DeliveryDate?: Date;
+    public DeliveryDate?: string;
     public DeliveryStationCode?: string;
     public DeliveryStation?: string;
     public ProveReportNo?: string;
     public IsOutside?: number;
-    public ProveDate?: Date;
+    public ProveDate?: string;
     public ProveStationCode?: string;
     public ProveStation?: string;
     public Command?: string;
