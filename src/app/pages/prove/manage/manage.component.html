@@ -122,8 +122,8 @@
                                         <input type="text" value="{{item.Qty}}" class="form-control form-control-sm" readonly>
                                     </td>
                                     <td>
-                                        <select class="form-control form-control-sm" readonly>
-                                            <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        <select class="form-control form-control-sm" [(ngModel)]="item.QtyUnit" name="item.QtyUnit" readonly>
+                                            <option *ngFor="let opt of UnitOption" value="{{opt.ProductUnitCode}}">{{opt.ProductUnitNameTH}}
                                             </option>
                                         </select>
                                     </td>
@@ -131,8 +131,8 @@
                                         <input type="text" value="{{item.NetVolume}}" class="form-control form-control-sm" readonly>
                                     </td>
                                     <td>
-                                        <select class="form-control form-control-sm" readonly>
-                                            <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        <select class="form-control form-control-sm" [(ngModel)]="item.NetVolumeUnit" name="item.NetVolumeUnit" readonly>
+                                            <option *ngFor="let opt of UnitOption" value="{{opt.ProductUnitCode}}">{{opt.ProductUnitNameTH}}
                                             </option>
                                         </select>
                                     </td>
@@ -193,9 +193,11 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่ตรวจรับ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"  [(ngModel)]="ProveDate"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="ProveDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <!-- <div style="width:45%">
 
+                    </div> -->
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
@@ -213,8 +215,8 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <my-date-picker-th name="DeliveryDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control" [(ngModel)]="DeliveryDate"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <my-date-picker-th name="DeliveryDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="DeliveryDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="DeliveryDate" name="DeliveryDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
@@ -280,8 +282,8 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่พิสูจน์ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control" [(ngModel)]="ProveDate"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="ProveDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
@@ -340,7 +342,7 @@
                                     <th style="text-align: center">ตามปริมาณ</th>
                                     <th style="text-align: center">ตามมูลค่า</th>
                                     <th style="text-align: center">พิสูจน์ทางเคมีหรือวิทยาศาสตร์</th>
-                                    <th>มูลค่าภาษีพิสูจน์</th>
+                                    <th style="text-align: center">มูลค่าภาษีพิสูจน์</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -352,8 +354,8 @@
                                     <td>{{lsPD.ProductDesc}}</td>
                                     <td style="text-align: center">{{lsPD.ReferenceVatRate == '1' ?'/':'X'}}</td>
                                     <td style="text-align: center">{{lsPD.ReferenceVatQty == '1' ?'/':'X'}}</td>
-                                    <td style="text-align: center">{{lsPD.ProveScienceResult != '' ?'/':'X'}}</td>
-                                    <td>{{lsPD.VatProve}}</td>
+                                    <td style="text-align: center">{{lsPD.ProveScienceResult == null || lsPD.ProveScienceResult == '' ?'X':'/'}} </td>
+                                    <td style="text-align: center">{{lsPD.VatProve}}</td>
                                     <td>
                                         <a *ngIf="showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" data-toggle="modal" data-target="#SciencePopup">
                                             <i class="mdi mdi-eye fa-lg"></i>
