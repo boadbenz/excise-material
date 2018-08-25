@@ -11,22 +11,52 @@ export class LawsuitService {
 
   constructor(private http: HttpClient) { }
 
+  async getByKeywordOnInt(): Promise<Lawsuit[]> {
+    // const params = { 'Textsearch': '' };
+    // const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
+    // const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+    // if (res.IsSuccess) {
+    //   return res.ResponseData
+    // }
+    const params = {
+      'ArrestCode': null
+      , 'LawsuitNo': null
+      , 'LawsuitDateFrom': null
+      , 'LawsuitDateTo': null
+      , 'StaffName': null
+      , 'OfficeName': null };
+    const url = `${appConfig.api8083}/LawsuitgetByConAdv`;
+    const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+    if (res.IsSuccess) {
+      return res.ResponseData
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   private async responsePromiseGet(params: string, url: string) {
     const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
     if (!res.IsSuccess || !(res.ResponseData || []).length) { return []; }
     return res.ResponseData
   }
 
-  async getByKeywordOnInt(): Promise<Lawsuit[]> {
-    const params = { 'Textsearch': '' };
-    const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
-    const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-    if (res.IsSuccess) {
-      return res.ResponseData
-    }
-    // const url = `${appConfig.api8083}/LawsuitgetByConAdv`;
-    // return this.responsePromiseGet(JSON.stringify({}), url)
-  }
+
 
   getByKeyword(filterValue: any): Promise<Lawsuit[]> {
     const params = filterValue === '' ? { 'Textsearch': '' } : filterValue;
@@ -34,7 +64,7 @@ export class LawsuitService {
     return this.responsePromiseGet(JSON.stringify(params), url)
   }
 
-  getByConAdv(form: any): Promise<Lawsuit[]> {
+  async LawsuitgetByConAdv(form: any): Promise<Lawsuit[]> {
     const url = `${appConfig.api8083}/LawsuitgetByConAdv`;
     return this.responsePromiseGet(JSON.stringify(form), url)
   }

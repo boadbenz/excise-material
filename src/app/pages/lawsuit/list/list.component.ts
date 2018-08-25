@@ -25,22 +25,9 @@ export class ListComponent implements OnInit, OnDestroy {
 
   paginage = pagination;
 
-  private setShowButton() {
-    this.navService.setSearchBar(true);
-    this.navService.setPrintButton(false);
-    this.navService.setDeleteButton(false);
-    this.navService.setCancelButton(false);
-    this.navService.setEditButton(false);
-    this.navService.setSaveButton(false);
-  }
-
-  constructor(
-    private navService: NavigationService,
-    private router: Router,
-    private preLoaderService: PreloaderService,
-    private lawsuitService: LawsuitService
+  constructor(private router: Router, private navService: NavigationService, private preLoaderService: PreloaderService
+              , private lawsuitService: LawsuitService
   ) {
-    /* Initial Adv.Search */
     this.advSearch = this.navService.showAdvSearch;
     this.advSearchSub = this.navService.searchByKeyword.subscribe(filterValue => {
       if (filterValue) {
@@ -50,16 +37,27 @@ export class ListComponent implements OnInit, OnDestroy {
     });
   }
 
-  async ngOnInit() {
-    /* Display Button */
+  ngOnInit() {
     this.setShowButton();
-    /* Load Data*/
+    this.loadPage();
+  }
+
+  private loadPage(): void {
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+    this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
 
-  async onSearchComplete(list: Lawsuit[]) {
+  private setShowButton(): void {
+    this.navService.setSearchBar(true);
+    this.navService.setPrintButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setSaveButton(false);
+  }
+
+  private onSearchComplete(list: Lawsuit[]) {
     /* Alert When No Data To Show */
     if (!list.length) {
       alert(Message.noRecord);
@@ -75,7 +73,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.paginage.TotalItems = this.results.length;
   }
 
-  async onAdvSearch(form: any) {
+  private onAdvSearch(form: any) {
     if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
       const sDateCompare = new Date(form.value.LawsuitDateFrom);
       const eDateCompare = new Date(form.value.LawsuitDateTo);
@@ -87,25 +85,26 @@ export class ListComponent implements OnInit, OnDestroy {
       form.value.LawsuitDateTo = eDateCompare.toISOString();
     }
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
+    this.lawsuitService.LawsuitgetByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
 
-  viewData(item) {
+  private viewData(item) {
     this.router.navigate(['/lawsuit/manage', 'R'], {
       queryParams: { id: item.LawsuitID, code: item.ArrestCode }
     });
   }
 
-  closeAdvSearch() {
+  private closeAdvSearch() {
     this.navService.showAdvSearch.next(false);
   }
 
-  async pageChanges(event) {
-    this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
+  private pageChanges(event) {
+    this.resultsPerPage = this.results.slice(event.startIndex - 1, event.endIndex);
   }
 
   ngOnDestroy() {
     this.advSearchSub.unsubscribe();
   }
+
 }
