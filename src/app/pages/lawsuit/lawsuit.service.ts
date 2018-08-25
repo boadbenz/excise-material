@@ -119,19 +119,21 @@ export class LawsuitService {
   }
 
   async ArrestLawbreakergetByCon(LawbreakerID) {
-    // const params = JSON.stringify({ LawbreakerID: LawbreakerID });
-    // const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
-    // try {
-    //   const res = await this.http
-    //     .post(url, params, this.httpOptions)
-    //     .toPromise();
-    //   return res.json();
-    // } catch (error) {
-    //   await alert(error);
-    // }
     const params = { LawbreakerID: LawbreakerID };
     const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
-    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise()
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+
+  async LawsuitupdByCon(LawsuitList) {
+    const params = LawsuitList;
+    const url = `${appConfig.api8083}/LawsuitupdByCon`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+
+  async LawsuitupdDelete(LawsuitID) {
+    const params = { LawsuitID: LawsuitID };
+    const url = `${appConfig.api8083}/LawsuitupdDelete`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
 
@@ -224,30 +226,7 @@ export class LawsuitService {
 
 
 
-  //
-  // async LawsuitupdByCon(LawsuitList) {
-  //   const params = JSON.stringify(LawsuitList);
-  //   const url = `${appConfig.api8083}/LawsuitupdByCon`;
-  //   try {
-  //     const res = await this.http
-  //       .post(url, params, this.httpOptions)
-  //       .toPromise();
-  //     return res.json();
-  //   } catch (error) {
-  //     await alert(error);
-  //   }
-  // }
-  //
-  // async LawsuitupdDelete(LawsuitID) {
-  //   const params = JSON.stringify({ LawsuitID: LawsuitID });
-  //   const url = `${appConfig.api8083}/LawsuitupdDelete`;
-  //   try {
-  //     const res = await this.http
-  //       .post(url, params, this.httpOptions)
-  //       .toPromise();
-  //     return res.json();
-  //   } catch (error) {
-  //     await alert(error);
-  //   }
-  // }
+
+
+
 }

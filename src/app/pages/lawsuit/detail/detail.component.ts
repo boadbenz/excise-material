@@ -47,14 +47,9 @@ export class DetailComponent implements OnInit {
 
   ngOnInit() {
     this.setShowButton();
+    this.subNavService();
     this.getParamFromActiveRoute();
   }
-
-  // ngOnInit() {
-    // this.setShowButton();
-    // this.subNavService();
-    // this.getParamFromActiveRoute();
-  // }
 
   private setShowButton() {
     this.navService.setPrintButton(true);
@@ -65,80 +60,76 @@ export class DetailComponent implements OnInit {
     this.navService.setSaveButton(false);
   }
 
-  // private subNavService() {
-  //
-  //   // Print Modal
-  //   this.navService.onPrint.subscribe(async status => {
-  //     if (status) {
-  //       await this.navService.setOnPrint(false);
-  //       this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-  //     }
-  //   })
-  //
-  //   // Save Button
-  //   this.navService.onSave.subscribe(async status => {
-  //     if (status) {
-  //       await this.navService.setOnSave(false);
-  //       this.lawsuitService.LawsuitupdByCon(this.lawsuitList[0]).then(res => {
-  //         if (res.IsSuccess) {
-  //           this.navService.setEditField(true);
-  //           alert(Message.saveComplete);
-  //         } else {
-  //           alert(Message.saveFail);
-  //         }
-  //       })
-  //
-  //     }
-  //   })
-  //
-  //   // Delete Button
-  //   this.navService.onDelete.subscribe(async status => {
-  //     if (status) {
-  //       await this.navService.setOnDelete(false);
-  //       if (confirm(Message.confirmAction)) {
-  //         this.lawsuitService.LawsuitupdDelete(this.lawsuitList[0].LawsuitID).then(res => {
-  //           if (res.IsSuccess) {
-  //             alert(Message.saveComplete);
-  //             this.router.navigate(["/lawsuit/manage", "R"], {
-  //               queryParams: { id: this.lawsuitList[0].LawsuitID, code: "050100020" }
-  //             });
-  //           } else {
-  //             alert(Message.cannotDelete);
-  //           }
-  //         })
-  //       }
-  //
-  //
-  //     }
-  //   })
-  //
-  //   // Edit Button
-  //   this.navService.showFieldEdit.subscribe(status => {
-  //     this.showEditField = status;
-  //     if (!this.showEditField) {
-  //       this.navService.setSaveButton(true);
-  //       this.navService.setCancelButton(true);
-  //       this.navService.setPrintButton(false);
-  //       this.navService.setSearchBar(false);
-  //       this.navService.setDeleteButton(false);
-  //       this.navService.setEditButton(false);
-  //     } else {
-  //       this.navService.setPrintButton(true);
-  //       this.navService.setDeleteButton(true);
-  //       this.navService.setEditButton(true);
-  //       this.navService.setSearchBar(false);
-  //       this.navService.setCancelButton(false);
-  //       this.navService.setSaveButton(false);
-  //     }
-  //   });
-  // }
-  //
+  private subNavService() {
+
+    // Print Modal
+    this.navService.onPrint.subscribe(async status => {
+      if (status) {
+        await this.navService.setOnPrint(false);
+        this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+      }
+    });
+
+    // Save Button
+    this.navService.onSave.subscribe(async status => {
+      if (status) {
+        await this.navService.setOnSave(false);
+        this.lawsuitService.LawsuitupdByCon(this.lawsuitList[0]).then(res => {
+          if (res.IsSuccess) {
+            this.navService.setEditField(true);
+            alert(Message.saveComplete);
+          } else {
+            alert(Message.saveFail);
+          }
+        })
+
+      }
+    });
+
+    // Delete Button
+    this.navService.onDelete.subscribe(async status => {
+      if (status) {
+        await this.navService.setOnDelete(false);
+        if (confirm(Message.confirmAction)) {
+          this.lawsuitService.LawsuitupdDelete(this.lawsuitList[0].LawsuitID).then(res => {
+            if (res.IsSuccess) {
+              alert(Message.saveComplete);
+              this.router.navigate(["/lawsuit/manage", "R"], {
+                queryParams: { id: this.lawsuitList[0].LawsuitID, code: "050100020" }
+              });
+            } else {
+              alert(Message.cannotDelete);
+            }
+          })
+        }
+      }
+
+    });
+
+    // Edit Button
+    this.navService.showFieldEdit.subscribe(status => {
+      this.showEditField = status;
+      if (!this.showEditField) {
+        this.navService.setSaveButton(true);
+        this.navService.setCancelButton(true);
+        this.navService.setPrintButton(false);
+        this.navService.setSearchBar(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setEditButton(false);
+      } else {
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setSearchBar(false);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+      }
+    });
+  }
+
   private getParamFromActiveRoute() {
-    console.log('detail loading...');
     this.getDatafromManagePage = this.activeRoute.queryParams.subscribe(
       async params => {
-
-        console.log('cp-1');
 
         // ArrestgetByCon
         await this.lawsuitService.ArrestgetByCon(params.ArrestCode).then(res => {
@@ -158,13 +149,13 @@ export class DetailComponent implements OnInit {
         //   // }
         // });
 
-        console.log('cp-2');
         // LawsuitgetByCon
         await this.lawsuitService.LawsuitgetByCon(params.LawsuitID).then(res => {
           // if (res.IsSuccess) {
             this.lawsuitList.push(res);
             this.lawsuitList.map(data => {
               data.LawsuitDate = toLocalNumeric(data.LawsuitDate);
+              data.LawsuitTime = toTimeShort(data.LawsuitTime);
               data.LawsuiteStaff.map(staff => {
                 staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
                   staff.LastName
@@ -174,7 +165,6 @@ export class DetailComponent implements OnInit {
           // }
         });
 
-        console.log('cp-3');
         this.arrestList[0].ArrestIndictment.forEach(value => {
           // Find lawbreakerID
           value.OpsArrestIndicmentDetailCollection.forEach(data => {
@@ -186,7 +176,6 @@ export class DetailComponent implements OnInit {
           }
         });
 
-        console.log('cp-4');
         // ArrestLawbreakergetByCon on Table
         this.lawsuitService
           .ArrestLawbreakergetByCon(this.lawbreakerID)
@@ -208,7 +197,6 @@ export class DetailComponent implements OnInit {
             // }
           });
 
-        console.log('cp-5');
         this.lawsuitService
           .CompareMasLawgetByCon(this.guiltBaseID)
           .then(res => {

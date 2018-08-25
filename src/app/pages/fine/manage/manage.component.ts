@@ -318,7 +318,7 @@ export class ManageComponent implements OnInit {
         
         this.setCompareConditionAdv();
         debugger
-        this.fineService.getByConAdv(this.conditionAdv).then(async res => {
+        this.fineService.LawsuitgetByConAdv(this.conditionAdv).then(async res => {
           
           // if (Array.isArray(res)) {
           //   this.oCompare = res;
