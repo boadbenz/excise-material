@@ -365,10 +365,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
         })
 
-        // await this.noticeService.getDocument(code).then(async res => {
-        //     res.map(item => item.IsNewItem = false)
-        //     await this.setItemFormArray(res, 'NoticeDocument')
-        // })
+        await this.noticeService.getDocument(code).then(async res => {
+            res.map(item => item.IsNewItem = false)
+            await this.setItemFormArray(res, 'NoticeDocument')
+        })
     }
 
     private async onCreate() {

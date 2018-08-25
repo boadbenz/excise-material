@@ -48,10 +48,7 @@ export class NoticeService {
     async getByKeywordOnInt(): Promise<Notice[]> {
         const params = { 'Textsearch': '' };
         const url = `${appConfig.api8082}/NoticegetByKeyword`;
-        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-        if (res.IsSuccess) {
-            return res.ResponseData
-        }
+        return this.resposePromisGet(JSON.stringify(params), url);
     }
 
     getByKeyword(Textsearch: any): Promise<Notice[]> {
