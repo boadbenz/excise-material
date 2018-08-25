@@ -50,7 +50,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
 
-    programSpect: 'ILG60-02-02-00';
+    programSpect: string = 'ILG60-02-02-00';
     mode: string;
     showEditField: Boolean;
     modal: any;
@@ -365,10 +365,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
         })
 
-        // await this.noticeService.getDocument(code).then(async res => {
-        //     res.map(item => item.IsNewItem = false)
-        //     await this.setItemFormArray(res, 'NoticeDocument')
-        // })
+        await this.noticeService.getDocument(code).then(async res => {
+            res.map(item => item.IsNewItem = false)
+            await this.setItemFormArray(res, 'NoticeDocument')
+        })
     }
 
     private async onCreate() {
@@ -725,8 +725,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             ProcessCode: '0002',
             NoticeCode: this.noticeCode,
             IsActive: 1,
-            PositionCode: e.item.ManagementPosCode,
-            PositionName: e.item.ManagementPosName,
+            PositionCode: e.item.OperationPosCode,
+            PositionName: e.item.OperationPosName,
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,

@@ -116,7 +116,8 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
     async onSearchByKeyword(f: any) {
         this.preloader.setShowPreloader(true)
-        await this.suspectService.searchByKeyword(f).then(res => this.onComplete(res));
+        debugger;
+        const result = await this.suspectService.searchByKeyword(f).then(res => this.onComplete(res));
         this.preloader.setShowPreloader(false)
     }
 
