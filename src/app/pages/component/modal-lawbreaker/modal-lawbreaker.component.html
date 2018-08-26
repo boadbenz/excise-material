@@ -39,7 +39,7 @@
                 <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
             </div>
             <div class="card-body">
-                <form class="form-horizontal">
+                <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onSearchAdv(advForm.value)">
                     <div class="row">
                         <label for="" class="col-lg-2 col-sm-4">ประเภทผู้ต้องหา :</label>
                         <div class="col-lg-4 col-sm-8 form-group">

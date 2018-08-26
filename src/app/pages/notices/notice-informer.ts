@@ -29,7 +29,7 @@ export class NoticeInformer {
     public ZipCode: string;
     public TelephoneNo: string;
     public InformerInfo: string;
-    public IsActive: string;
+    public IsActive: number;
 
     public Region: string;
 }

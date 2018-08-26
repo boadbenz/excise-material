@@ -20,7 +20,7 @@ export class ArrestStaff {
     public OfficeName = '';
     public OfficeShortName = '';
     public ContributorCode = '';
-    public IsActive = '';
+    public IsActive: number;
 
     ContributorID = '';
     public FullName = '';
@@ -64,7 +64,7 @@ export const ArrestStaffFormControl = {
     ContributorCode: new FormControl(null),
     IsActive: new FormControl(null),
 
-    ContributorID: new FormControl(null, Validators.required),
+    ContributorID: new FormControl(null),
     FullName: new FormControl(null),
     IsNewItem: new FormControl(false)
 }
