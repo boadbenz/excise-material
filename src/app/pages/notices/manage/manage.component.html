@@ -95,9 +95,7 @@
                     </label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.TitleName == null ? '' : r.TitleName }} 
-                            {{r.FirstName == null ? '' : r.FirstName}} 
-                            {{r.LastName == null ? '' : r.LastName}}
+                            {{ r.TitleName}} {{r.FirstName}} {{r.LastName}}
                         </ng-template>
     
                         <input type="text" class="form-control form-control-sm"

@@ -50,7 +50,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
 
-    programSpect: 'ILG60-02-02-00';
+    programSpect: string = 'ILG60-02-02-00';
     mode: string;
     showEditField: Boolean;
     modal: any;
@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.1.9');
+        this.sidebarService.setVersion('0.0.2.9');
 
         this.navigate_service();
 
@@ -310,7 +310,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.noticeForm.setControl(formControl, itemFormArray);
         }
     }
-    
+
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
             this.noticeCode = res.NoticeCode;
@@ -365,10 +365,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
         })
 
-        // await this.noticeService.getDocument(code).then(async res => {
-        //     res.map(item => item.IsNewItem = false)
-        //     await this.setItemFormArray(res, 'NoticeDocument')
-        // })
+        await this.noticeService.getDocument(code).then(async res => {
+            res.map(item => item.IsNewItem = false)
+            await this.setItemFormArray(res, 'NoticeDocument')
+        })
     }
 
     private async onCreate() {
@@ -381,23 +381,21 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log('===================');
 
         let IsSuccess: boolean | false;
-        await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
+        await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
             IsSuccess = isSuccess;
-            if (!isSuccess)
-                return false;
+            if (!isSuccess) return;
 
-            await this.NoticeDocument.value.map(async doc => {
-                console.log('===================');
-                console.log('Create Document : ', JSON.stringify(doc));
-                console.log('===================');
+            this.NoticeDocument.value.map(async doc => {
                 // insert Document
                 await this.noticeService.insDocument(doc).then(docIsSuccess => {
                     IsSuccess = docIsSuccess;
-                    if (!docIsSuccess)
-                        return false;
-                }, (error) => { IsSuccess = false; console.error(error); return false; });
-            })
-        }, (error) => { IsSuccess = false; console.error(error); return false; });
+                    if (!docIsSuccess) return;
+
+                }, () => { IsSuccess = false; return false; });
+            });
+
+        }, () => { IsSuccess = false; return; });
+
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -424,16 +422,22 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!isSuccess)
                 return false;
 
-            await this.NoticeDocument.value
-                .filter((item: NoticeDocument) => item.IsNewItem = true)
-                .map((item: NoticeDocument) => {
+            await this.NoticeDocument.value.map(async (item: NoticeDocument) => {
+                if (item.IsNewItem) {
+                    await this.noticeService.insDocument(item).then(docIsSuccess => {
+                        IsSuccess = docIsSuccess;
+                        if (!docIsSuccess) return;
+
+                    }, () => { IsSuccess = false; return false; });
+                } else {
                     this.noticeService.updDocument(item).then(docIsSuccess => {
                         IsSuccess = docIsSuccess
                         if (!docIsSuccess)
                             return false;
-                    }, (error) => { IsSuccess = false; console.error(error); return false; })
-                })
-        }, (error) => { IsSuccess = false; console.error(error); return false; })
+                    }, () => { IsSuccess = false; return; })
+                }
+            })
+        }, () => { IsSuccess = false; return; })
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -725,8 +729,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             ProcessCode: '0002',
             NoticeCode: this.noticeCode,
             IsActive: 1,
-            PositionCode: e.item.ManagementPosCode,
-            PositionName: e.item.ManagementPosName,
+            PositionCode: e.item.OperationPosCode,
+            PositionName: e.item.OperationPosName,
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,
@@ -806,7 +810,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 await this.noticeService.documentUpDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
-                        this.NoticeSuspect.removeAt(index);
+                        this.NoticeDocument.removeAt(index);
                         alert(Message.delDocumentComplete)
                     } else {
                         alert(Message.delDocumentFail)

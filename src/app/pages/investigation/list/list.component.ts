@@ -6,6 +6,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Investigate } from '../investigate';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
+import { getDateMyDatepicker, compareDate, MyDatePickerOptions, toLocalShort } from 'app/config/dateFormat';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { IMyDateModel } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-list',
@@ -18,6 +21,12 @@ export class ListComponent implements OnInit, OnDestroy {
     investigate = new Array<Investigate>();
     invesList = new Array<Investigate>();
     paginage = pagination;
+
+    myDatePickerOptions = MyDatePickerOptions;
+
+    dateStartFrom: any;
+    dateStartTo: any;
+
     private subOnSearch: any;
 
     @ViewChild('invesTable') invesTable: ElementRef;
@@ -25,7 +34,8 @@ export class ListComponent implements OnInit, OnDestroy {
     constructor(
         private navService: NavigationService,
         private invesService: InvestigateService,
-        private router: Router
+        private router: Router,
+        private preLoaderService: PreloaderService,
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -41,10 +51,16 @@ export class ListComponent implements OnInit, OnDestroy {
 
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+
+        this.preLoaderService.setShowPreloader(true);
+        await this.invesService.getByKeyword('').then(list => this.onSearchComplete(list));
+        this.preLoaderService.setShowPreloader(false);
+
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
+
                 this.onSearch(Textsearch);
             }
         })
@@ -54,14 +70,10 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subOnSearch.unsubscribe();
     }
 
-    onSearch(Textsearch: any) {
-        this.invesService.getByKeyword(Textsearch).subscribe(list => {
-
-            this.onSearchComplete(list)
-
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
+    async onSearch(Textsearch: any) {
+        this.preLoaderService.setShowPreloader(true);
+        await this.invesService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+        this.preLoaderService.setShowPreloader(false);
     }
 
     onAdvSearch(form: any) {
@@ -84,29 +96,52 @@ export class ListComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSearchComplete(list: any) {
-        this.investigate = [];
-
-        if (!list) {
+    async onSearchComplete(list: Investigate[]) {
+        if (!list.length) {
             alert(Message.noRecord);
             return false;
         }
+        
+        await list
+            .filter(item => item.IsActive == 1)
+            .map(item => {
+                item.DateStart = toLocalShort(item.DateStart);
+                item.DateEnd = toLocalShort(item.DateEnd);
+            })
 
-        if (Array.isArray(list)) {
-            this.investigate = list;
-        } else {
-            this.investigate.push(list);
-        }
-
-        if (!this.investigate.length) {
-            alert(Message.noRecord);
-        }
-        // set total record
+        this.investigate = list;
         this.paginage.TotalItems = this.investigate.length;
     }
 
     clickView(invesCode: string) {
         this.router.navigate([`/investigation/manage/R/${invesCode}`]);
+    }
+
+
+    onSDateChange(event: IMyDateModel) {
+        this.dateStartFrom = event;
+        this.checkDate();
+    }
+
+    onEDateChange(event: IMyDateModel) {
+        this.dateStartTo = event;
+        this.checkDate();
+    }
+
+    checkDate() {
+        if (this.dateStartFrom && this.dateStartTo) {
+
+            const _sdate = this.dateStartFrom;
+            const sdate = getDateMyDatepicker(this.dateStartFrom);
+            const edate = getDateMyDatepicker(this.dateStartTo);
+
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.dateStartTo = { date: _sdate.date };
+                }, 0);
+            }
+        }
     }
 
     async pageChanges(event) {

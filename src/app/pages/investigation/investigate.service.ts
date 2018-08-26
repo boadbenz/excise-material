@@ -9,7 +9,6 @@ export class InvestigateService {
 
     constructor(private http: HttpClient) { }
 
-    // tslint:disable-next-line:member-ordering
     private httpOptions = {
         headers: new HttpHeaders(
             {
@@ -18,9 +17,9 @@ export class InvestigateService {
     };
 
     getByKeyword(Textsearch: string) {
-        const params = Textsearch;
+        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.apiUrl}/InvestigategetByKeyword`;
-        return this.http.post<Investigate[]>(url, params, this.httpOptions);
+        return this.http.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     getByCon(InvestigateCode: string) {

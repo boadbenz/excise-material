@@ -48,10 +48,7 @@ export class NoticeService {
     async getByKeywordOnInt(): Promise<Notice[]> {
         const params = { 'Textsearch': '' };
         const url = `${appConfig.api8082}/NoticegetByKeyword`;
-        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-        if (res.IsSuccess) {
-            return res.ResponseData
-        }
+        return this.resposePromisGet(JSON.stringify(params), url);
     }
 
     getByKeyword(Textsearch: any): Promise<Notice[]> {
@@ -78,12 +75,6 @@ export class NoticeService {
         return res.ResponseData
     }
 
-    async getDocument(ReferenceCode: string): Promise<NoticeDocument[]> {
-        const params = { ReferenceCode };
-        const url = `${appConfig.api8883}/DocumentRequestgetByCon`;
-        return this.resposePromisGet(JSON.stringify(params), url)
-    }
-
     async getLawbreakerByCon(LawbreakerID: string): Promise<Lawbreaker> {
         const params = { LawbreakerID };
         const url = `${appConfig.api8082}/LawbreakergetByCon`;
@@ -94,7 +85,7 @@ export class NoticeService {
         return res.ResponseData;
     }
 
-    async getSuspectByCon(SuspectID: string) : Promise<Suspect> {
+    async getSuspectByCon(SuspectID: string): Promise<Suspect> {
         const params = { SuspectID };
         const url = `${appConfig.api8082}/NoticeSuspectgetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -107,12 +98,6 @@ export class NoticeService {
     insAll(Notice: Notice): Promise<any> {
         const params = Notice;
         const url = `${appConfig.api8082}/NoticeinsAll`;
-        return this.responsePromisModify(JSON.stringify(params), url);
-    }
-
-    insDocument(document: NoticeDocument): Promise<any> {
-        const params = document;
-        const url = `${appConfig.api8883}/DocumentRequestinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
@@ -131,12 +116,6 @@ export class NoticeService {
     updByCon(Notice: Notice): Promise<any> {
         const params = Notice;
         const url = `${appConfig.api8082}/NoticeupdByCon`;
-        return this.responsePromisModify(JSON.stringify(params), url);
-    }
-
-    updDocument(document: NoticeDocument): Promise<any> {
-        const params = document;
-        const url = `${appConfig.api8883}/DocumentRequestupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
@@ -200,13 +179,39 @@ export class NoticeService {
         return res.IsSuccess
     }
 
+    async getDocument(ReferenceCode: string): Promise<NoticeDocument[]> {
+        const params = { ReferenceCode };
+        const url = `${appConfig.api8883}/DocumentRequestgetByCon`;
+        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+        if (!res.length) {
+            return new Array<NoticeDocument>()
+        }
+        return res;
+    }
+
+    async insDocument(document: NoticeDocument): Promise<any> {
+        const params = document;
+        const url = `${appConfig.api8883}/DocumentRequestinsAll`;
+        return await this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    async updDocument(document: NoticeDocument): Promise<any> {
+        const params = document;
+        const url = `${appConfig.api8882}/DocumentupdByCon`;
+        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
+            return false;
+        }
+        return true;
+    }
+
     async documentUpDelete(DocumentID: string): Promise<any> {
         const params = { DocumentID };
-        const url = `${appConfig.api8883}/DocumentRequestupdDelete`;
+        const url = `${appConfig.api8882}/DocumentupdDelete`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         if (!res.IsSuccess) {
             return false;
         }
-        return res.IsSuccess
+        return true;
     }
 }

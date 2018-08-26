@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('0.0.1.9');
+        this.sidebarService.setVersion('0.0.2.9');
         this.paginage.TotalItems = 0;
 
         this.preLoaderService.setShowPreloader(true);
@@ -95,7 +95,7 @@ export class ListComponent implements OnInit, OnDestroy {
     async onAdvSearch(form: any) {
 
         if (form.value.DateStartFrom && form.value.DateStartTo) {
-            
+
             const sdate = getDateMyDatepicker(form.value.dateStartFrom);
             const edate = getDateMyDatepicker(form.value.dateStartTo);
 
@@ -109,49 +109,50 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         this.preLoaderService.setShowPreloader(true);
-        console.log(JSON.stringify(form.value))
+
         await this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
 
         this.preLoaderService.setShowPreloader(false);
     }
 
     async onSearchComplete(list: Notice[]) {
-
         if (!list.length) {
             alert(Message.noRecord)
             return false;
         }
 
         this.notice = [];
-        await list.map((item, i) => {
-            item.RowId = i + 1;
-            item.NoticeDate = toLocalShort(item.NoticeDate);
-            item.NoticeStaff.map(s => {
-                s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
-            });
-            item.NoticeSuspect.map(s => {
-                s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+        await list
+            .filter(item => item.IsActive == 1)
+            .map((item, i) => {
+                item.RowId = i + 1;
+                item.NoticeDate = toLocalShort(item.NoticeDate);
+                item.NoticeStaff.map(s => {
+                    s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+                });
+                item.NoticeSuspect.map(s => {
+                    s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+                })
             })
-        })
 
         this.notice = list
         // set total record
         this.paginage.TotalItems = this.notice.length;
     }
 
-    onSDateChange(event: IMyDateModel){
+    onSDateChange(event: IMyDateModel) {
         this.dateStartFrom = event;
         this.checkDate();
     }
 
-    onEDateChange(event: IMyDateModel){
+    onEDateChange(event: IMyDateModel) {
         this.dateStartTo = event;
         this.checkDate();
     }
 
     checkDate() {
         if (this.dateStartFrom && this.dateStartTo) {
-            
+
             const _sdate = this.dateStartFrom;
             const sdate = getDateMyDatepicker(this.dateStartFrom);
             const edate = getDateMyDatepicker(this.dateStartTo);
