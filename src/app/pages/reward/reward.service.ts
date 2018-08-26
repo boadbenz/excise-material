@@ -83,25 +83,25 @@ export class RewardService {
 
   async ArrestRequestupdDelete(ArrestCode: string) {
     const params = { ArrestCode: ArrestCode };
-    const url = `${appConfig.api8083}/ArrestRequestupdDelete`;
+    const url = `${appConfig.api8883}/ArrestRequestupdDelete`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async RequestbribeupdDelete(RequestBribeCode: string) {
     const params = { ArrestCode: RequestBribeCode };
-    const url = `${appConfig.api8083}/RequestbribeupdDelete`;
+    const url = `${appConfig.api8883}/RequestbribeupdDelete`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async RequestrewardupdDelete(RequestRewardCode: string) {
     const params = { ArrestCode: RequestRewardCode };
-    const url = `${appConfig.api8083}/RequestrewardupdDelete`;
+    const url = `${appConfig.api8883}/RequestrewardupdDelete`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async RequestbribeinsAll(form) {
     const params = form;
-    const url = `${appConfig.api8083}/RequestbribeinsAll`;
+    const url = `${appConfig.api8883}/RequestbribeinsAll`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
