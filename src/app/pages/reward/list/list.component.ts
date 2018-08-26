@@ -163,7 +163,7 @@ export class ListComponent implements OnInit {
   };
 
   viewData(arrestCode: string) {
-    this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { arrestCode: arrestCode } });
+    this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { ArrestCode: arrestCode } });
   }
 
 }

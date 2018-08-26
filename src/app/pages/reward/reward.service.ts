@@ -63,13 +63,46 @@ export class RewardService {
   }
 
   getRequestbribegetByKeyword(text: string) {
-    const textSearch = new TextSearch();
-    textSearch.Textsearch = text;
+    const textSearch = { 'Textsearch': text };
     return this.http.post(`${HOSTNAME}/RequestbribegetByKeyword`, textSearch)
+  }
+
+  getNoticeRequestgetByCon(text: string) {
+    const textSearch = { 'NoticeCode': text };
+    return this.http.post(`${HOSTNAME}/NoticeRequestgetByCon`, textSearch)
+  }
+
+  getRequestrewardgetByCon(text: string) {
+    const textSearch = { 'RequestRewardCode': text };
+    return this.http.post(`${HOSTNAME}/RequestrewardgetByCon`, textSearch)
   }
 
   getRequestbribegetByCon(requestBribeCode: string) {
     return this.http.post(`${HOSTNAME}/RequestbribegetByCon`, requestBribeCode)
+  }
+
+  async ArrestRequestupdDelete(ArrestCode: string) {
+    const params = { ArrestCode: ArrestCode };
+    const url = `${appConfig.api8083}/ArrestRequestupdDelete`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+
+  async RequestbribeupdDelete(RequestBribeCode: string) {
+    const params = { ArrestCode: RequestBribeCode };
+    const url = `${appConfig.api8083}/RequestbribeupdDelete`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+
+  async RequestrewardupdDelete(RequestRewardCode: string) {
+    const params = { ArrestCode: RequestRewardCode };
+    const url = `${appConfig.api8083}/RequestrewardupdDelete`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+
+  async RequestbribeinsAll(form) {
+    const params = form;
+    const url = `${appConfig.api8083}/RequestbribeinsAll`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
 }

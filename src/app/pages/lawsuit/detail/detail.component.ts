@@ -103,7 +103,6 @@ export class DetailComponent implements OnInit {
           })
         }
       }
-
     });
 
     // Edit Button
