@@ -7,6 +7,7 @@ import { Compare } from '../compare';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-list',
@@ -45,8 +46,27 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.onSearch({ Textsearch: "" });
-        
+        console.log("First methos");
+
+        let model = new FormGroup({
+            "ArrestCode": new FormControl(""),
+            "LawsuitCode": new FormControl(""),
+            "ProveReportNo": new FormControl(""),
+            "CompareCode": new FormControl(""),
+            "CompareDateFrom": new FormControl(""),
+            "CompareDateTo": new FormControl(""),
+            "ProgramCode": new FormControl("ILG60-01-01"),
+            "ProcessCode": new FormControl("01"),
+            "Staff":new FormControl(""),
+            "Department":new FormControl(""),
+            
+          });
+
+
+        var form = {"ArrestCode":"","LawsuitCode":"","ProveReportNo":"","CompareCode":"","CompareDateFrom":"","CompareDateTo":"","ProgramCode":"XCS06","ProcessCode":"01","Staff":"","Department":""}
+
+        // this.onSearch({ Textsearch: "" });
+        this.onAdvSearch(model);
         this.preLoaderService.setShowPreloader(true);
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
@@ -65,6 +85,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async onSearch(Textsearch: any) {
         await this.fineService.getByKeyword(Textsearch).subscribe(list => {
+            console.log("First search");
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
             alert(err.message);
@@ -82,11 +103,16 @@ export class ListComponent implements OnInit, OnDestroy {
             form.value.CompareDateFrom  = sDateCompare.getTime();
             form.value.CompareDateTo = eDateCompare.getTime();
 
-            form.value.ProgramCode = "XCS06";
+            form.value.ProgramCode = "ILG60-01-01";
             form.value.ProcessCode = "01";
 
+            if (isNaN(form.value.CompareDateFrom)) {
+                form.value.CompareDateFrom = "";
+                form.value.CompareDateTo = "";
+            }
 
            await this.fineService.getByConAdv(form.value).then(async list => {
+               console.log(list);
                 this.onSearchComplete(list)
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
@@ -116,8 +142,11 @@ export class ListComponent implements OnInit, OnDestroy {
     clickView(LawsuitID: string,ArrestCode: string, CompareID:string) {
         if(CompareID == null || CompareID == "")
             CompareID = "0";
-
+        console.log(LawsuitID);
+        console.log(ArrestCode);
+        console.log(CompareID);
         this._router.navigate([`/fine/manage/R/${LawsuitID}/${ArrestCode}/${CompareID}`]);
+        
     }
 
     async pageChanges(event) {

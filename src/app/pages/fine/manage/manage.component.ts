@@ -100,7 +100,7 @@ export class ManageComponent implements OnInit {
     private LawsuitSV: LawsuitService,
     private MasterSV: MasterService,
     private router: Router,
-    private preloader: PreloaderService
+    private preloader: PreloaderService,
   ) {
     // set false
     this.navService.setNewButton(false);
@@ -126,7 +126,10 @@ export class ManageComponent implements OnInit {
     this.CompareDate = this.getCurrentDate();
     this.CompareTime = this.getCurrentTime();
 
-    if (this.CompareID != '0') {
+    console.log("CompareID");
+    console.log(this.CompareID);
+
+    if (this.CompareID !== '0') {
       await this.getCompareByID();
       await this.ShowData();
     }
@@ -159,6 +162,7 @@ export class ManageComponent implements OnInit {
     //   this.navService.setNextPageButton(true);
     // });
 
+    console.log(this.activeRoute);
 
     this.param = this.activeRoute.params.subscribe(p => {
       this.navService.setPrintButton(true);
@@ -169,6 +173,8 @@ export class ManageComponent implements OnInit {
       this.navService.setSaveButton(false);
 
       this.navService.setNextPageButton(true);
+
+      console.log(this.param);
 
       if (p['code1']) {
         this.LawsuitID = p['code1'];
@@ -184,6 +190,17 @@ export class ManageComponent implements OnInit {
     });
   }
 
+  // async getProveByID() {
+    
+  //   await this.proveService.ProvegetByCon("").then(async res => {
+  //       if (res != null) {
+  //           // this.oProve = res;
+  //       }
+  //   }, (err: HttpErrorResponse) => {
+  //       alert(err.message);
+  //   });
+  // }
+
   private navigate_Service() {
     this.sub = this.navService.showFieldEdit.subscribe(p => {
       this.showEditField = p;
@@ -192,7 +209,7 @@ export class ManageComponent implements OnInit {
     this.sub = this.navService.onSave.subscribe(async status => {
       if (status) {
         await this.navService.setOnSave(false);
-
+        
         if (this.CompareID == '0') {
           await this.onInsCompare();
           this.router.navigate(['/fine/list']);
@@ -272,7 +289,7 @@ export class ManageComponent implements OnInit {
 
     await this.LawsuitSV.LawsuitegetByCon(LawsuitID).then(async res => {
       // --- รายละเอียดคดี ----
-
+      console.log(res);
       if (res.IsOutside == "1") {
         this.LawsuiltCode = "น " + res.LawsuitNo;
       }
@@ -294,9 +311,10 @@ export class ManageComponent implements OnInit {
 
   async getArrestByID(ArrestCode: string) {
     this.preloader.setShowPreloader(true);
-
+    
     await this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
-      debugger
+      console.log("getByArrestCon");
+      console.log(res);
       res.ArrestStaff.map(async item => {
         item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
         item.FullName += `${item.FirstName == null ? '' : item.FirstName}`;
@@ -450,10 +468,22 @@ export class ManageComponent implements OnInit {
     this.preloader.setShowPreloader(false);
   }
 
+  // async getProveByID() {
+    
+  //   await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
+  //       if (res != null) {
+  //           this.oProve = res;
+  //       }
+  //   }, (err: HttpErrorResponse) => {
+  //       alert(err.message);
+  //   });
+  // }
+
   async getCompareByID() {
     this.preloader.setShowPreloader(true);
 
     await this.fineService.getByCon(this.CompareID).then(async res => {
+      console.log(this.CompareID);
       if (res != null) {
         this.oCompare = res[0];
 

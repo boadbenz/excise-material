@@ -48,6 +48,7 @@ export class FineService {
 
 
     async getByConAdv(form: any): Promise<any> {
+        console.log(form);
         const params = JSON.stringify(form);
         const url = `${appConfig.api8881}/ComparegetByConAdv`;
 
