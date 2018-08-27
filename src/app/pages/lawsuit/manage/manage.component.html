@@ -77,7 +77,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-3">ผู้กล่าวหา : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="item.ArrestStaff[0].FullName" name="fullName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="(item.ArrestStaff[0] || {FullName: null}).FullName" name="fullName" disabled>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="item.ArrestStaff[0].PositionName" name="PositionName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="(item.ArrestStaff[0] || {PositionName: null}).PositionName" name="PositionName" disabled>
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
             <div class="col-md-9">
-              <input class="form-control" type="text" [(ngModel)]="item.ArrestStaff[0].DepartmentName" name="DepartmentName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="(item.ArrestStaff[0] || {DepartmentName: null}).DepartmentName" name="DepartmentName" disabled>
             </div>
           </div>
         </div>

@@ -30,6 +30,9 @@ export class ListComponent implements OnInit {
   results: Reward[] = [];
   resultsPerPage: Reward[] = [];
 
+  staffs: any[] = [];
+  departments: any[] = [];
+
   advSearch: any;
   advSearchSub: any;
 
@@ -92,63 +95,29 @@ export class ListComponent implements OnInit {
   }
 
   async onAdvSearch(form: any) {
-    // if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
-    //   const sDateCompare = new Date(form.value.LawsuitDateFrom);
-    //   const eDateCompare = new Date(form.value.LawsuitDateTo);
-    //   if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-    //     alert(Message.checkDate);
-    //     return false;
-    //   }
-    //   form.value.LawsuitDateFrom = sDateCompare.toISOString();
-    //   form.value.LawsuitDateTo = eDateCompare.toISOString();
-    // }
+    if (form.value.sArrestDate && form.value.eArrestDate) {
+      const sDateCompare = new Date(form.value.sArrestDate);
+      const eDateCompare = new Date(form.value.eArrestDate);
+      if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+        alert(Message.checkDate);
+        return false;
+      }
+      form.value.sArrestDate = sDateCompare.toISOString();
+      form.value.eArrestDate = eDateCompare.toISOString();
+    } else if (form.value.sLawsuitDate && form.value.eLawsuitDate) {
+      const sDateCompare = new Date(form.value.sLawsuitDate);
+      const eDateCompare = new Date(form.value.eLawsuitDate);
+      if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+        alert(Message.checkDate);
+        return false;
+      }
+      form.value.sLawsuitDate = sDateCompare.toISOString();
+      form.value.eLawsuitDate = eDateCompare.toISOString();
+    }
     this.preLoaderService.setShowPreloader(true);
     await this.rewardService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
-
-  // onAdvanceSearchByKeyword(form: NgForm) {
-  //   const reward = new Reward();
-  //   reward.ArrestCode = form.value.ArrestCode;
-  //   reward.LawsuitID = form.value.LawsuitID;
-  //   console.log(new Date(form.value.sArrestDate));
-  //   // reward.OccurrenceDateFrom = new Date(form.value.sArrestDate);
-  //   // reward.OccurrenceDateTo = new Date(form.value.eArrestDate);
-  //   // reward.LawsuitDateFrom = new Date(form.value.sLawsuitDate);
-  //   // reward.LawsuitDateTo = new Date(form.value.eLawsuitDate);
-  //   reward.LastName = form.value.MasStaff;
-  //   reward.DepartmentName = form.value.DepartmentName;
-  //   reward.OccurrenceDateFrom = '';
-  //   reward.OccurrenceDateTo = '';
-  //   reward.LawsuitDateFrom = '';
-  //   reward.LawsuitDateTo = '';
-  //
-  //   if (false) {
-  //     // if (RewardCommon.isDate(reward.OccurrenceDateFrom) || RewardCommon.isDate(reward.OccurrenceDateTo) ||
-  //     //     RewardCommon.isDate(reward.LawsuitDateFrom) || RewardCommon.isDate(reward.LawsuitDateTo)) {
-  //     reward.OccurrenceDateFrom = '';
-  //     reward.OccurrenceDateTo = '';
-  //     reward.LawsuitDateFrom = '';
-  //     reward.LawsuitDateTo = '';
-  //
-  //   } else {
-  //     if (false) {
-  //       // if (RewardCommon.isVerifyDate(reward.OccurrenceDateFrom, reward.OccurrenceDateTo) ||
-  //       //     RewardCommon.isVerifyDate(reward.LawsuitDateFrom, reward.LawsuitDateFrom)) {
-  //
-  //       alert(RewordMessages.compareDateFailed);
-  //     } else {
-  //       console.log(reward);
-  //       this.rewardService.getArrestRequestgetByConAdv(reward).subscribe(response => {
-  //         console.log(response);
-  //         this.onSearchComplete(response)
-  //       }, error => {
-  //         alert(error.message)
-  //       })
-  //     }
-  //
-  //   }
-  // }
 
   closeAdvSearch() {
     this.navService.showAdvSearch.next(false);
@@ -162,61 +131,39 @@ export class ListComponent implements OnInit {
     this.advSearchSub.unsubscribe();
   }
 
+  autoCompleteStaff(term: string) {
+    this.rewardService.getMasStaffRequestGetByKeyword(term).then(response => {
+      this.staffs = response;
+    });
+  }
 
+  onAutoCompleteStaff = (text$: Observable<string>) => {
+    return text$.debounceTime(200).distinctUntilChanged().do(term => {
+      if (term.length > 2) {
+        this.autoCompleteStaff(term)
+      }
+    }).map(term => term.length < 2 ? []
+      : this.staffs.map((value, index, array) => value.TitleName + value.FirstName + ' ' + value.LastName));
+  };
 
+  autoCompleteDepartment(term: string) {
+    return this.rewardService.getMasDepartmentRequestGetByKeyword(term).then(response => {
+      console.log(response);
+      this.departments = response;
+    });
+  }
 
+  onAutoCompleteDepartment = (text$: Observable<string>) => {
+    return text$.debounceTime(200).distinctUntilChanged().do(term => {
+      if (term.length > 2) {
+        this.autoCompleteDepartment(term)
+      }
+    }).map(term => term.length < 2 ? []
+      : this.departments.map((value, index, array) => value.DepartmentNameTH));
+  };
 
-
-
-
-
-
-
-
-
-
-  private sub: any;
-    rewardList: any[] = [];
-    reward: any[] = [];
-
-    staffs: any[] = [];
-    departments: any[] = [];
-
-    @ViewChild('rewardTable') rewardTable: ElementRef;
-
-    autoCompleteStaff(term: string) {
-        this.rewardService.getMasStaffRequestgetByKeyword(term).subscribe(response => {
-            this.staffs = response;
-        });
-    }
-
-    onAutoCompleteStaff = (text$: Observable<string>) => {
-        return text$.debounceTime(200).distinctUntilChanged().do(term => {
-            if (term.length > 2) {
-                this.autoCompleteStaff(term)
-            }
-        }).map(term => term.length < 2 ? []
-            : this.staffs.map((value, index, array) => value.TitleName + value.FirstName + ' ' + value.LastName));
-    };
-
-    autoCompleteDepartment(term: string) {
-        return this.rewardService.getMasDepartmentRequestgetByKeyword(term).subscribe(response => {
-            console.log(response);
-            this.departments = response;
-        });
-    }
-
-    onAutoCompleteDepartment = (text$: Observable<string>) => {
-        return text$.debounceTime(200).distinctUntilChanged().do(term => {
-            if (term.length > 2) {
-                this.autoCompleteDepartment(term)
-            }
-        }).map(term => term.length < 2 ? []
-            : this.departments.map((value, index, array) => value.DepartmentNameTH));
-    };
-
-    viewData(arrestCode: string) {
-        this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { arrestCode: arrestCode } });
-    }
+  viewData(arrestCode: string) {
+    this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { ArrestCode: arrestCode } });
+  }
 
 }

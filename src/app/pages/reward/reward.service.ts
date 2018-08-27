@@ -39,49 +39,70 @@ export class RewardService {
     return this.responsePromiseGet(JSON.stringify(form), url)
   }
 
+  async getMasStaffRequestGetByKeyword(filterValue: string) {
+    const params = { 'Textsearch': (filterValue || '') };
+    const url = `${appConfig.api8883}/MasStaffRequestgetByKeyword`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
 
+  async getMasDepartmentRequestGetByKeyword(filterValue: string) {
+    const params = { 'Textsearch': (filterValue || '') };
+    const url = `${appConfig.api8883}/MasDepartmentRequestgetByKeyword`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
 
+  getArrestRequestgetByConAdv(reward: Reward) {
+    return this.http.post<any[]>(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
+  }
 
+  getArrestRequestgetByCon(arrestCode: string) {
+    const params = {
+      ArrestCode: arrestCode
+    };
+    return this.http.post<any>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
+  }
 
+  getRequestbribegetByKeyword(text: string) {
+    const textSearch = { 'Textsearch': text };
+    return this.http.post(`${HOSTNAME}/RequestbribegetByKeyword`, textSearch)
+  }
 
+  getNoticeRequestgetByCon(text: string) {
+    const textSearch = { 'NoticeCode': text };
+    return this.http.post(`${HOSTNAME}/NoticeRequestgetByCon`, textSearch)
+  }
 
+  getRequestrewardgetByCon(text: string) {
+    const textSearch = { 'RequestRewardCode': text };
+    return this.http.post(`${HOSTNAME}/RequestrewardgetByCon`, textSearch)
+  }
 
+  getRequestbribegetByCon(requestBribeCode: string) {
+    return this.http.post(`${HOSTNAME}/RequestbribegetByCon`, requestBribeCode)
+  }
 
+  async ArrestRequestupdDelete(ArrestCode: string) {
+    const params = { ArrestCode: ArrestCode };
+    const url = `${appConfig.api8883}/ArrestRequestupdDelete`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
 
-    getArrestRequestgetByKeyword(textSearch: string) {
-        return this.http.post(`${HOSTNAME}/ArrestRequestgetByKeyword`, textSearch)
-    }
+  async RequestbribeupdDelete(RequestBribeCode: string) {
+    const params = { ArrestCode: RequestBribeCode };
+    const url = `${appConfig.api8883}/RequestbribeupdDelete`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
 
-    getMasStaffRequestgetByKeyword(text: string) {
-        const textSearch = new TextSearch();
-        textSearch.Textsearch = text;
-        return this.http.post<any[]>(`${HOSTNAME}/MasStaffRequestgetByKeyword`, textSearch)
-    }
+  async RequestrewardupdDelete(RequestRewardCode: string) {
+    const params = { ArrestCode: RequestRewardCode };
+    const url = `${appConfig.api8883}/RequestrewardupdDelete`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
 
-    getMasDepartmentRequestgetByKeyword(text: string) {
-        const textSearch = new TextSearch();
-        textSearch.Textsearch = text;
-        return this.http.post<any[]>(`${HOSTNAME}/MasDepartmentRequestgetByKeyword`, textSearch)
-    }
+  async RequestbribeinsAll(form) {
+    const params = form;
+    const url = `${appConfig.api8883}/RequestbribeinsAll`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
 
-    getArrestRequestgetByConAdv(reward: Reward) {
-        return this.http.post<any[]>(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
-    }
-
-    getArrestRequestgetByCon(arrestCode: string) {
-        const params = {
-            ArrestCode: arrestCode
-        };
-        return this.http.post<any>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
-    }
-
-    getRequestbribegetByKeyword(text: string) {
-        const textSearch = new TextSearch();
-        textSearch.Textsearch = text;
-        return this.http.post(`${HOSTNAME}/RequestbribegetByKeyword`, textSearch)
-    }
-
-    getRequestbribegetByCon(requestBribeCode: string) {
-        return this.http.post(`${HOSTNAME}/RequestbribegetByCon`, requestBribeCode)
-    }
 }
