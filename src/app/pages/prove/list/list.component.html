@@ -151,12 +151,12 @@
                         <td>{{item.LawsuitNo}}</td>
                         <td>{{item.ProveReportNo}}</td>
                         <td>
-                            <div *ngFor="let staff of item.ProveStaff | ContributorPipe:14;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
+                            <div *ngFor="let staff of item.ProveOneStaff;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
                         </td>
                         <!-- <td>{{item.DeliveryDate | date:'dd-MM-yyyy'}}</td> -->
                         <td>{{item.DeliveryDate}}</td>
                         <td>
-                            <div *ngFor="let staff of item.ProveStaff | ContributorPipe:15;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
+                            <div *ngFor="let staff of item.ProveOneStaffScience ;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
                         </td>
                         <td>{{item.ProveDate}}</td>
                         <td>{{item.ProveStation}}</td>

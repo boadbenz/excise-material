@@ -23,9 +23,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
     @ViewChild('fineTable') fineTable: ElementRef;
 
-    CompareDateFrom = "";
-    CompareDateTo = "";
-
     constructor(
         private _router: Router,
         private navService: NavigationService,
@@ -72,11 +69,9 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
-                await  this.onSearch(Textsearch);
+                this.onSearch(Textsearch);
             }
-        });
-
-        this.preLoaderService.setShowPreloader(false);
+        })
     }
 
     ngOnDestroy(): void {
@@ -87,12 +82,13 @@ export class ListComponent implements OnInit, OnDestroy {
         await this.fineService.getByKeyword(Textsearch).subscribe(list => {
             console.log("First search");
             this.onSearchComplete(list)
+
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
     }
 
-    async onAdvSearch(form: any) {
+    onAdvSearch(form: any) {
         
         const sDateCompare = new Date(form.value.CompareDateFrom );
         const eDateCompare = new Date(form.value.CompareDateTo);
@@ -111,9 +107,10 @@ export class ListComponent implements OnInit, OnDestroy {
                 form.value.CompareDateTo = "";
             }
 
-           await this.fineService.getByConAdv(form.value).then(async list => {
+            this.fineService.getByConAdv(form.value).then(async list => {
                console.log(list);
                 this.onSearchComplete(list)
+
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
             });
@@ -122,7 +119,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onSearchComplete(list: any) {
         this.Compare = [];
-
+debugger
         if (!list.length) {
             alert(Message.noRecord);
             return false;
@@ -136,7 +133,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
         // set total record
         this.paginage.TotalItems = this.Compare.length;
-        this.CompareList = this.Compare.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
     clickView(LawsuitID: string,ArrestCode: string, CompareID:string) {
@@ -151,25 +147,5 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async pageChanges(event) {
         this.CompareList = await this.Compare.slice(event.startIndex - 1, event.endIndex);
-    }
-
-    varidateCDF(form: any) {
-        const sDateCompare = new Date(form.value.CompareDateFrom);
-        const eDateCompare = new Date(form.value.CompareDateTo);
-
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
-            alert(Message.checkReceiveDate);
-            this.CompareDateFrom = "";
-        }
-    }
-
-    varidateCDE(form: any) {
-        const sDateCompare = new Date(form.value.CompareDateFrom);
-        const eDateCompare = new Date(form.value.CompareDateTo);
-
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
-            alert(Message.checkReceiveDate);
-            this.CompareDateTo = "";
-        }
     }
 }

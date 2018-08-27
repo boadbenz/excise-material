@@ -8,6 +8,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { NoticeService } from '../notice.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
   {
@@ -30,16 +32,17 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     HttpClientModule,
     RouterModule.forChild(routes),
     NgbModule.forRoot(),
-    ReactiveFormsModule,
-    CardActionsModule
+    CardActionsModule,
+    MyDatePickerTHModule
   ],
   declarations: [SuspectComponent],
   exports: [SuspectComponent],
-  providers: [ArrestsService],
+  providers: [ArrestsService, NoticeService],
   schemas: [NO_ERRORS_SCHEMA]
 })
 export class SuspectModule { }

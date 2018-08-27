@@ -17,38 +17,49 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่รับแจ้งความ :
                 </label>
-                <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" #noticeDate formControlName="NoticeDate" class="form-control form-control-sm" 
-                    [readonly]="showEditField"                    
-                    (change)="addNoticeDueDate(noticeDue); checkDate()"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group input-group">
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" 
+                            [options]="myDatePickerOptions" [disabled]="showEditField" 
+                            [ngClass]="{'ng-touched':isRequired}" required
+                            (dateChanged)="onNoticeDateChange($event)" formControlName="NoticeDate"></my-date-picker-th>
 
-                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input #noticeTime type="text" formControlName="NoticeTime" class="form-control form-control-sm" 
-                    [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                </div>
+                            <label for="OccurrenceDateTo">&nbsp;เวลา :&nbsp;</label>
+
+                            <input #noticeTime type="text" formControlName="NoticeTime" class="form-control form-control-sm" 
+                            [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        </div>
+                    </div>
             </div>
+            
 
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ใช้ได้ภายในกำหนด(วัน) :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <input #noticeDue type="number" min="0" formControlName="NoticeDue" class="form-control form-control-sm" 
-                        (keyup)="addNoticeDueDate(noticeDue)"
+                        (keyup)="addNoticeDueDate(noticeDue)" 
+                        (change)="addNoticeDueDate(noticeDue)" 
                         [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">สิ้นสุดวันที่ :</label>
-                <div class="form-group input-group  col-lg-4 col-md-7 col-sm-8">
-                    <input type="date" #noticeDueDate formControlName="NoticeDueDate" class="form-control form-control-sm" 
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group input-group" style="z-index: 1;">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" 
+                        [options]="myDatePickerOptions" [disabled]="showEditField"
+                        (dateChanged)="onNoticeDueDateChange($event)" formControlName="NoticeDueDate"></my-date-picker-th>
+    
+                        <label for="" class="">&nbsp;เวลา :&nbsp;</label>
+                        <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
+                        [readOnly]="showEditField"
+                        [value]="noticeTime.value">
+                    </div>
+                    <!-- <input type="date" #noticeDueDate formControlName="NoticeDueDate" class="form-control form-control-sm" 
                     [readonly]="showEditField"
                     [ngClass]="{'ng-touched':isRequired}" required
-                    (change)="checkDate()">
-
-                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
-                    [readonly]="showEditField" [value]="noticeTime.value">
+                    (change)="checkDate()"> -->
                 </div>
             </div>
 
@@ -57,8 +68,22 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="NoticeStation" class="form-control form-control-sm" 
-                        [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <ng-template #rt let-r="result" let-t="term">
+                            {{ r.OfficeShortName }}
+                        </ng-template>
+    
+                        <input type="text" class="form-control form-control-sm "
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required
+                            [ngbTypeahead]="serachOffice"
+                            [resultTemplate]="rt"
+                            [readOnly]="showEditField"
+                            [inputFormatter]="formatterOffice" 
+                            (selectItem)="selectItemOffice($event)"
+                            [value]="noticeForm.get('NoticeStation').value"
+                                />
+                        <!-- <input type="text" formControlName="NoticeStation" class="form-control form-control-sm" 
+                        [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required> -->
                     </div>
                 </div>
             </div>
@@ -70,9 +95,7 @@
                     </label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.TitleName == null ? '' : r.TitleName }} 
-                            {{r.FirstName == null ? '' : r.FirstName}} 
-                            {{r.LastName == null ? '' : r.LastName}}
+                            {{ r.TitleName}} {{r.FirstName}} {{r.LastName}}
                         </ng-template>
     
                         <input type="text" class="form-control form-control-sm"
@@ -130,7 +153,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
                             <input type="text" class="form-control form-control-sm" formControlName="FirstName" [attr.disabled]="isConceal ? '' : null"
-                            [readonly]="showEditField">
+                            [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
 
@@ -331,12 +354,9 @@
                             <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
-                            <!-- <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required> -->
-                            <select formControlName="QtyUnit" class="form-control form-control-sm">
+                            <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of typeheadProductUnit;"
-                                [disabled]="showEditField" 
-                                [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                <option *ngFor="let item of typeheadProductUnit;" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
                             </select>
                         </td>
                         <td class="text-center">
@@ -435,18 +455,16 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ช่องทางการรับแจ้งความ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
+                    <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                         <option value="" selected disabled></option>
-                        <option *ngFor="let item of communicateModel; let i=index;" 
-                        [value]="item.CommunicationChanelID"
-                        [disabled]="showEditField">
+                        <option *ngFor="let item of communicateModel; let i=index;" [value]="item.CommunicationChanelID">
                             {{item.CommunicationChanelName}}
                         </option>
                     </select>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเอกสารแนบ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                    <input type="text" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
             </div>
             <div class="row">

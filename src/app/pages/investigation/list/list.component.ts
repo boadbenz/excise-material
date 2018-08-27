@@ -6,7 +6,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Investigate } from '../investigate';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
-
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html',
@@ -19,13 +20,16 @@ export class ListComponent implements OnInit, OnDestroy {
     invesList = new Array<Investigate>();
     paginage = pagination;
     private subOnSearch: any;
+    private subSetNextPage: any;
 
     @ViewChild('invesTable') invesTable: ElementRef;
 
     constructor(
         private navService: NavigationService,
         private invesService: InvestigateService,
-        private router: Router
+        private router: Router,
+        private sidebarService: SidebarService,
+        private preLoader: PreloaderService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -42,10 +46,20 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.sidebarService.setVersion('1.02');
+        this.onSearch('');
+        
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
+            }
+        })
+
+        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnNextPage(false);
+                this.router.navigate([`/investigation/manage/C/NEW`]);
             }
         })
     }
@@ -55,13 +69,16 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearch(Textsearch: any) {
+        this.paginage.TotalItems = 0;
+        this.preLoader.setShowPreloader(true);
+        
         this.invesService.getByKeyword(Textsearch).subscribe(list => {
-
-            this.onSearchComplete(list)
-
+            this.onSearchComplete(list);
+            this.preLoader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
+        
     }
 
     onAdvSearch(form: any) {

@@ -19,6 +19,7 @@ export class PrintDocModalComponent implements OnInit {
     TitleName: String;
     FirstName: String;
     LastName: String;
+    document: any = [];
 
     @Input() pCompareID: string;
 

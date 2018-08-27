@@ -1,7 +1,9 @@
+import { Staff } from './../income/staff';
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { appConfig } from '../../app.config';
 import { Investigate } from './investigate';
+import { InvestigateTeam } from './investigate-team';
 import { InvestigateDetail } from './investigate-detail';
 
 @Injectable()
@@ -9,7 +11,6 @@ export class InvestigateService {
 
     constructor(private http: HttpClient) { }
 
-    // tslint:disable-next-line:member-ordering
     private httpOptions = {
         headers: new HttpHeaders(
             {
@@ -17,10 +18,15 @@ export class InvestigateService {
             })
     };
 
+    private async resposePromiseArray(params: string, url: string) {
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        return res[0];
+    }
+
     getByKeyword(Textsearch: string) {
-        const params = Textsearch;
+        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.apiUrl}/InvestigategetByKeyword`;
-        return this.http.post<Investigate[]>(url, params, this.httpOptions);
+        return this.http.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     getByCon(InvestigateCode: string) {
@@ -38,12 +44,24 @@ export class InvestigateService {
     detailGetByCon(InvestigateCode: string) {
         const params = { InvestigateCode };
         const url = `${appConfig.apiUrl}/InvestigateDetailgetByCon`;
-        return this.http.post<InvestigateDetail[]>(url, params, this.httpOptions);
+        return this.resposePromiseArray(JSON.stringify(params), url)
     }
 
     updByCon(investigate: Investigate) {
         const params = investigate;
         const url = `${appConfig.apiUrl}/InvestigateupdByCon`;
+        return this.http.post<any>(url, params, this.httpOptions);
+    }
+
+    teaminsAll(investTeam: InvestigateTeam) {
+        const params = investTeam;
+        const url = `${appConfig.apiUrl}/InvestigateTeaminsAll`;
+        return this.http.post<any>(url, params, this.httpOptions);
+    }
+
+    teamudpDelete(StaffId: string) {
+        const params = { StaffId }
+        const url = `${appConfig.apiUrl}/InvestigateTeamupdDelete`;
         return this.http.post<any>(url, params, this.httpOptions);
     }
 
@@ -58,4 +76,30 @@ export class InvestigateService {
         const url = `${appConfig.apiUrl}/InvestigateinsAll`;
         return this.http.post<any>(url, params, this.httpOptions);
     }
+
+    masStaffByKeyword() {
+        const params = "";
+        const url = `${appConfig.apiUrl}/InvestigateMasStaffgetByKeyword`;
+        return this.http.post<Investigate[]>(url, params, this.httpOptions);
+    }
+
+    teamByKeyword(Textsearch: string) {
+        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
+        const url = `${appConfig.apiUrl}/InvestigateTeamgetByKeyword`;
+        return this.http.post<Investigate[]>(url, params, this.httpOptions);
+    }
+
+    teamgetByCon(InvestigateCode: string) {
+        const params = { InvestigateCode };
+        const url = `${appConfig.apiUrl}/InvestigateTeamgetByCon`;
+        return this.http.post<any>(url, params, this.httpOptions);
+    }
+
+    localgetByCon(InvestigateCode: string) {
+        const params = { InvestigateCode };
+        const url = `${appConfig.apiUrl}/InvestigateLocalgetByCon`;
+        return this.http.post<any>(url, params, this.httpOptions);
+    }
+
+
 }

@@ -5,9 +5,10 @@ import { NoticeService } from '../notice.service';
 import { Message } from '../../../config/message';
 import { Notice } from '../notice';
 import { pagination } from '../../../config/pagination';
-import { toLocalShort, compareDate, toLocalNumeric } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, toLocalNumeric, setZeroHours, getDateMyDatepicker, setDateMyDatepicker } from '../../../config/dateFormat';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-list',
@@ -23,8 +24,14 @@ export class ListComponent implements OnInit, OnDestroy {
     notice = new Array<Notice>();
     noticeList = new Array<Notice>();
 
-    dateStartFrom: string;
-    dateStartTo: string;
+    dateStartFrom: any;
+    dateStartTo: any;
+
+    myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd mmm yyyy',
+        showClearDateBtn: false,
+        height: '30px'
+    };
 
     private subOnsearchByKeyword: any;
     private subSetNextPage: any;
@@ -51,17 +58,15 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('1.04');
+        this.sidebarService.setVersion('0.0.2.9');
         this.paginage.TotalItems = 0;
-        this.dateStartFrom = toLocalNumeric((new Date()).toISOString());
-        this.dateStartTo = this.dateStartFrom;
 
         this.preLoaderService.setShowPreloader(true);
         await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
 
         this.subOnsearchByKeyword = this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
-                await this.navservice.setOnSearch(null);
+                await this.navservice.setOnSearch('');
                 this.onSearch(Textsearch);
             }
         })
@@ -90,16 +95,17 @@ export class ListComponent implements OnInit, OnDestroy {
     async onAdvSearch(form: any) {
 
         if (form.value.DateStartFrom && form.value.DateStartTo) {
-            const sDateCompare = new Date(form.value.DateStartFrom);
-            const eDateCompare = new Date(form.value.DateStartTo);
 
-            if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+            const sdate = getDateMyDatepicker(form.value.dateStartFrom);
+            const edate = getDateMyDatepicker(form.value.dateStartTo);
+
+            if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate);
                 return false;
             }
 
-            form.value.DateStartFrom = sDateCompare.toISOString();
-            form.value.DateStartTo = eDateCompare.toISOString();
+            form.value.DateStartFrom = setZeroHours(sdate);
+            form.value.DateStartTo = setZeroHours(edate);
         }
 
         this.preLoaderService.setShowPreloader(true);
@@ -110,33 +116,53 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onSearchComplete(list: Notice[]) {
-
         if (!list.length) {
             alert(Message.noRecord)
             return false;
         }
 
         this.notice = [];
-        await list.map((item, i) => {
-            item.RowId = i + 1;
-            item.NoticeDate = toLocalShort(item.NoticeDate);
-            item.NoticeStaff.map(s => {
-                s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
-            });
-            item.NoticeSuspect.map(s => {
-                s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+        await list
+            .filter(item => item.IsActive == 1)
+            .map((item, i) => {
+                item.RowId = i + 1;
+                item.NoticeDate = toLocalShort(item.NoticeDate);
+                item.NoticeStaff.map(s => {
+                    s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+                });
+                item.NoticeSuspect.map(s => {
+                    s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+                })
             })
-        })
 
         this.notice = list
         // set total record
         this.paginage.TotalItems = this.notice.length;
     }
 
+    onSDateChange(event: IMyDateModel) {
+        this.dateStartFrom = event;
+        this.checkDate();
+    }
+
+    onEDateChange(event: IMyDateModel) {
+        this.dateStartTo = event;
+        this.checkDate();
+    }
+
     checkDate() {
-        if (!compareDate(this.dateStartFrom, this.dateStartTo)) {
-            alert(Message.checkDate)
-            this.dateStartTo = this.dateStartFrom;
+        if (this.dateStartFrom && this.dateStartTo) {
+
+            const _sdate = this.dateStartFrom;
+            const sdate = getDateMyDatepicker(this.dateStartFrom);
+            const edate = getDateMyDatepicker(this.dateStartTo);
+
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.dateStartTo = { date: _sdate.date };
+                }, 0);
+            }
         }
     }
 

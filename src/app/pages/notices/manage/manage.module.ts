@@ -14,6 +14,7 @@ import { ArrestsService } from '../../arrests/arrests.service';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 import { DatepickerI18nService } from '../../../services/datepicker-i18n.service';
 import { ProveService } from '../../prove/prove.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
     {
@@ -42,7 +43,8 @@ const routes: Routes = [
         CardActionsModule,
         SuspectModalModule,
         ModalLawbreakerModule,
-        PrintDocModalModule
+        PrintDocModalModule,
+        MyDatePickerTHModule
     ],
     declarations: [
         ManageComponent

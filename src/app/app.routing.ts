@@ -24,7 +24,7 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' }
         ]
     }, {
-        path: 'investigation', component: LayoutComponent,
+        path: 'investigation', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/investigation/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/investigation/manage/manage.module#ManageModule' },
@@ -47,7 +47,7 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
         ]
     }, {
-        path: 'lawsuit', component: LayoutComponent,
+        path: 'lawsuit', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/lawsuit/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/lawsuit/manage/manage.module#ManageModule' },

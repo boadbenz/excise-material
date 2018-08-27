@@ -8,6 +8,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
   {
@@ -29,7 +30,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     CardActionsModule,
-    PaginationTableModule
+    PaginationTableModule,
+    MyDatePickerTHModule
+    
   ],
   declarations: [
     ListComponent

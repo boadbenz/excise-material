@@ -7,6 +7,7 @@ import { FormArray, FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Message } from '../../../config/message';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { NoticeSuspect } from '../../notices/notice-suspect';
+import { ArrestLawbreaker } from '../../model/arrest-lawbreaker';
 
 const suspectTypes = [
     {
@@ -122,7 +123,9 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
     async onSearchAdv(f: any) {
         this.preloader.setShowPreloader(true)
+
         await this.suspectService.searchAdv(f).then(res => this.onComplete(res));
+        
         this.preloader.setShowPreloader(false)
     }
 

@@ -8,6 +8,7 @@ import { ProveService } from '../prove.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { ContributorPipe } from '../../../shared/pipe/ContributorPipe';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 
@@ -16,7 +17,7 @@ const routes: Routes = [
         path: '',
         data: {
             // title: 'ค้นหาข้อมูล',
-            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง' }],
+            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง Lastupdate 16/08/2561' }],
             nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/prove/manage' }
         },
         component: ListComponent
@@ -35,6 +36,6 @@ const routes: Routes = [
         MyDatePickerTHModule
     ],
     declarations: [ListComponent,ContributorPipe],
-    providers: [ProveService]
+    providers: [ProveService,PreloaderService]
 })
 export class ListModule { }

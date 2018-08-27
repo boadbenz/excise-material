@@ -4,41 +4,41 @@
 
 <div class="wizard-content">
     <div class="wizard-circle wizard clearfix clearfix">
-        <div class="steps tab-wizard">
-            <ul role="tablist">
-                <li role="tab" class="current" aria-disabled="false" aria-selected="true">
-                    <a>
-                        <span class="current-info audible">current step: </span>
-                        <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
-                </li>
-                <li role="tab" class="current" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 2. งานจับกุม </a>
-                </li>
-                <li role="tab" class="current" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 3. รับคำกล่าวโทษ </a>
-                </li>
-                <li role="tab" class="current" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
-                </li>
-                <li role="tab" class="disabled" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
-                </li>
-                <li role="tab" class="disabled" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 6. นำส่งเงินรายได้ </a>
-                </li>
-                <li role="tab" class="disabled" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
-                </li>
-            </ul>
-        </div>
+      <div class="steps tab-wizard">
+        <ul role="tablist">
+          <li role="tab" class="current" aria-disabled="false" aria-selected="true">
+            <a>
+              <span class="current-info audible">current step: </span>
+              <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
+          </li>
+          <li role="tab" class="current" aria-disabled="true">
+            <a>
+              <span class="step"></span> 2. งานจับกุม </a>
+          </li>
+          <li role="tab" class="current" aria-disabled="true">
+            <a>
+              <span class="step"></span> 3. รับคำกล่าวโทษ </a>
+          </li>
+          <li role="tab" class="current" aria-disabled="true">
+            <a>
+              <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
+          </li>
+          <li role="tab" class="disabled" aria-disabled="true">
+            <a>
+              <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
+          </li>
+          <li role="tab" class="disabled" aria-disabled="true">
+            <a>
+              <span class="step"></span> 6. นำส่งเงินรายได้ </a>
+          </li>
+          <li role="tab" class="disabled" aria-disabled="true">
+            <a>
+              <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
+          </li>
+        </ul>
+      </div>
     </div>
-</div>
+  </div>
 
 <!-- รายละเอียดคดี -->
 <div class="card card-outline-bluish unset-radius">
@@ -122,8 +122,8 @@
                                         <input type="text" value="{{item.Qty}}" class="form-control form-control-sm" readonly>
                                     </td>
                                     <td>
-                                        <select class="form-control form-control-sm" readonly>
-                                            <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        <select class="form-control form-control-sm" [(ngModel)]="item.QtyUnit" name="item.QtyUnit" readonly>
+                                            <option *ngFor="let opt of UnitOption" value="{{opt.ProductUnitCode}}">{{opt.ProductUnitNameTH}}
                                             </option>
                                         </select>
                                     </td>
@@ -131,8 +131,8 @@
                                         <input type="text" value="{{item.NetVolume}}" class="form-control form-control-sm" readonly>
                                     </td>
                                     <td>
-                                        <select class="form-control form-control-sm" readonly>
-                                            <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        <select class="form-control form-control-sm" [(ngModel)]="item.NetVolumeUnit" name="item.NetVolumeUnit" readonly>
+                                            <option *ngFor="let opt of UnitOption" value="{{opt.ProductUnitCode}}">{{opt.ProductUnitNameTH}}
                                             </option>
                                         </select>
                                     </td>
@@ -173,8 +173,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">ทะเบียนตรวจพิสูจน์ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField"
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label">/{{ProveYear}}</label>
                 </div>
             </div>
@@ -194,9 +193,11 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่ตรวจรับ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"  [(ngModel)]="ProveDate"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="ProveDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <!-- <div style="width:45%">
 
+                    </div> -->
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
@@ -214,8 +215,8 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <my-date-picker-th name="DeliveryDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control" [(ngModel)]="DeliveryDate"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <my-date-picker-th name="DeliveryDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="DeliveryDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="DeliveryDate" name="DeliveryDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
@@ -281,8 +282,8 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่พิสูจน์ :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control" [(ngModel)]="ProveDate"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="ProveDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
 
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
@@ -293,8 +294,7 @@
                 <div class="form-group col-lg-4 col-md-7">
                     <input type="text" class="form-control" [(ngModel)]="ScienceStaffName" name="ScienceStaffName" placeholder="พิมพ์ข้อความ"
                         aria-label="Number" matInput [matAutocomplete]="auto3" (input)="ScienceStaffonAutoChange($event.target.value)"
-                        (focus)="ScienceStaffonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                        (focus)="ScienceStaffonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete #auto3="matAutocomplete">
                         <mat-option *ngFor="let ScOption of Scienceoptions" [value]="ScOption.TitleName + ScOption.FirstName + ' ' + ScOption.LastName"
                             (click)="ScienceStaffonAutoSelecteWord(ScOption)">
@@ -342,7 +342,7 @@
                                     <th style="text-align: center">ตามปริมาณ</th>
                                     <th style="text-align: center">ตามมูลค่า</th>
                                     <th style="text-align: center">พิสูจน์ทางเคมีหรือวิทยาศาสตร์</th>
-                                    <th>มูลค่าภาษีพิสูจน์</th>
+                                    <th style="text-align: center">มูลค่าภาษีพิสูจน์</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -354,14 +354,13 @@
                                     <td>{{lsPD.ProductDesc}}</td>
                                     <td style="text-align: center">{{lsPD.ReferenceVatRate == '1' ?'/':'X'}}</td>
                                     <td style="text-align: center">{{lsPD.ReferenceVatQty == '1' ?'/':'X'}}</td>
-                                    <td style="text-align: center">{{lsPD.ProveScienceResult != '' ?'/':'X'}}</td>
-                                    <td>{{lsPD.VatProve}}</td>
+                                    <td style="text-align: center">{{lsPD.ProveScienceResult == null || lsPD.ProveScienceResult == '' ?'X':'/'}} </td>
+                                    <td style="text-align: center">{{lsPD.VatProve}}</td>
                                     <td>
                                         <a *ngIf="showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" data-toggle="modal" data-target="#SciencePopup">
                                             <i class="mdi mdi-eye fa-lg"></i>
                                         </a>
-                                        <a *ngIf="!showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" [hidden]="showEditField" data-toggle="modal"
-                                            data-target="#SciencePopup">
+                                        <a *ngIf="!showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" [hidden]="viewMode" data-toggle="modal" data-target="#SciencePopup">
                                             <i class="ti-pencil-alt btn-action"></i>
                                         </a>
                                         &nbsp;
@@ -406,19 +405,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let lsDoc of ListProveDoc | IsActivePipe; let i=index;">
+                            <tr *ngFor="let lsDoc of ListProveDoc; let i=index;">
                                 <td style="text-align: center">{{i+1}}</td>
                                 <td>
                                     <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control form-control-sm" [disabled]="showEditField">
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control form-control-sm" [(ngModel)]="lsDoc.FilePath" name="lsDoc.FilePath" style="border-right: 0;"
-                                            [disabled]="showEditField">
+                                        <input type="text" class="form-control form-control-sm" [(ngModel)]="lsDoc.FilePath" name="lsDoc.FilePath" style="border-right: 0;" [disabled]="showEditField">
                                         <div class="input-group-append">
-                                            <input [id]="'communicateAttach'+lsDoc.DocumentSeq" type="file" (change)="changeComunicateFile($event, lsDoc.DocumentSeq)"
-                                                hidden>
-                                            <label [for]="'communicateAttach'+lsDoc.DocumentSeq" class="input-group-text custom-file-upload text-secondary" [hidden]="showEditField">
+                                            <!-- <input id="communicateAttach" type="file" (change)="changeComunicateFile($event)" hidden [readonly]="showEditField"> -->
+                                            <input id="communicateAttach" type="file" (change)="changeComunicateFile($event,i)" hidden [disabled]="showEditField">
+                                            <label for="communicateAttach" class="input-group-text custom-file-upload text-secondary" >
                                                 <i class="ti-more-alt"></i>
                                             </label>
                                         </div>
