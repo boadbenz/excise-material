@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.3.9');
+        this.sidebarService.setVersion('0.0.2.10');
 
         this.navigate_service();
 

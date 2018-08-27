@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('0.0.3.9');
+        this.sidebarService.setVersion('0.0.2.10');
         this.paginage.TotalItems = 0;
 
         this.preLoaderService.setShowPreloader(true);
@@ -69,7 +69,7 @@ export class ListComponent implements OnInit, OnDestroy {
                 await this.navservice.setOnSearch('');
                 this.onSearch(Textsearch);
             }
-        })
+        })  
 
         this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
             if (status) {
