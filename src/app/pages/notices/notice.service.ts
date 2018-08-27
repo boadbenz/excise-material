@@ -72,12 +72,12 @@ export class NoticeService {
         if (!res.ResponseData) {
             return new Notice()
         }
-        return res.ResponseData
+        return res.ResponseData 
     }
 
     async getLawbreakerByCon(LawbreakerID: string): Promise<Lawbreaker> {
         const params = { LawbreakerID };
-        const url = `${appConfig.api8082}/LawbreakergetByCon`;
+        const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         if (res.IsSuccess === false || !res.ResponseData) {
             return new Lawbreaker();
@@ -103,7 +103,7 @@ export class NoticeService {
 
     updLawbreaker(lawbreaker: Lawbreaker): Promise<boolean> {
         const params = lawbreaker;
-        const url = `${appConfig.api8082}/LawbreakerupdByCon`;
+        const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
@@ -173,6 +173,7 @@ export class NoticeService {
         const params = { SuspectID };
         const url = `${appConfig.api8082}/NoticeSuspectupdDelete`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        debugger
         if (!res.IsSuccess) {
             return false;
         }

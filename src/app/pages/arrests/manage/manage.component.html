@@ -148,7 +148,7 @@
                                 <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly >
                             </td>
                             <td>
-                                <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly >
+                                <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" readonly >
                             </td>
                             <td>
                                 <!-- <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField" > -->
@@ -375,7 +375,7 @@
                                 <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
+                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null">
                                     <option value=""></option>
                                     <option *ngFor="let item of typeheadNetVolumeUnit" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
                                 </select>

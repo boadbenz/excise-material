@@ -6,6 +6,7 @@ import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { Router } from '@angular/router';
 import { LawbreakerTypes, EntityTypes } from '../../../models';
+import { Message } from '../../../config/message';
 
 @Component({
     selector: 'app-modal-lawbreaker',
@@ -66,7 +67,12 @@ export class ModalLawbreakerComponent implements OnInit {
     }
 
     private async onSearchComplete(list: ArrestLawbreaker[]) {
-        this.lawbreaker = [];
+        
+        if (!list.length) {
+            alert(Message.noRecord);
+            return;
+        }
+        
         await list.map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;

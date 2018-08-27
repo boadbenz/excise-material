@@ -329,7 +329,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsActive: res.IsActive
             });
 
-            await res.NoticeStaff.map(item => {
+            const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
+            staff.map(item => {
                 item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
             });
 
@@ -337,32 +338,35 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
             )
 
-            await res.NoticeInformer.map(item => {
+            const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
+            informer.map(item => {
                 this.isConceal = item.InformerType == 1 ? true : false;
                 item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
                 item.Region += item.District == null ? '' : ` ${item.District}`;
                 item.Region += item.Province == null ? '' : ` ${item.Province}`;
             });
 
-            await res.NoticeSuspect.map(item => {
+            const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
+            suspect.map(item => {
                 item.SuspectFullName = item.SuspectTitleName == null ? '' : item.SuspectTitleName;
                 item.SuspectFullName += item.SuspectFirstName == null ? '' : ` ${item.SuspectFirstName}`;
                 item.SuspectFullName += item.SuspectFirstName == null ? '' : ` ${item.SuspectFirstName}`;
             }
             )
 
-            await res.NoticeProduct.map(item => {
+            const product = res.NoticeProduct.filter(item => item.IsActive == 1);
+            product.map(item => {
                 item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
                 item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
                 item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
             }
             )
 
-            await this.setItemFormArray(res.NoticeStaff, 'NoticeStaff');
-            await this.setItemFormArray(res.NoticeInformer, 'NoticeInformer');
+            await this.setItemFormArray(staff, 'NoticeStaff');
+            await this.setItemFormArray(informer, 'NoticeInformer');
             await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-            await this.setItemFormArray(res.NoticeProduct, 'NoticeProduct');
-            await this.setItemFormArray(res.NoticeSuspect, 'NoticeSuspect');
+            await this.setItemFormArray(product, 'NoticeProduct');
+            await this.setItemFormArray(suspect, 'NoticeSuspect');
         })
 
         await this.noticeService.getDocument(code).then(async res => {
@@ -419,16 +423,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         let IsSuccess: boolean | false;
         await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
             IsSuccess = isSuccess;
-            if (!isSuccess)
-                return false;
+            if (!isSuccess) return;
 
-            await this.NoticeDocument.value.map(async (item: NoticeDocument) => {
+            const document = this.NoticeDocument.value;
+            await document.map(async (item: NoticeDocument) => {
                 if (item.IsNewItem) {
                     await this.noticeService.insDocument(item).then(docIsSuccess => {
                         IsSuccess = docIsSuccess;
                         if (!docIsSuccess) return;
-
                     }, () => { IsSuccess = false; return false; });
+
                 } else {
                     this.noticeService.updDocument(item).then(docIsSuccess => {
                         IsSuccess = docIsSuccess
@@ -674,7 +678,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     ).slice(0, 10));
 
     formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
-        `${x.BrandNameTH || ''} ${x.SubBrandNameTH || ''} ${x.ModelName || ''}`;
+        `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;
 
     formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubDistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
@@ -729,6 +733,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ProcessCode: '0002',
             NoticeCode: this.noticeCode,
             IsActive: 1,
+            StaffFullName: `${e.item.TitleName || ''} ${e.item.FirstName || ''} ${e.item.LastName || ''}`,
             PositionCode: e.item.OperationPosCode,
             PositionName: e.item.OperationPosName,
             DepartmentCode: e.item.OfficeCode,
@@ -736,11 +741,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             DepartmentLevel: e.item.DeptLevel,
             ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode
         })
-
-        // this.noticeForm.patchValue({
-        //     NoticeStationCode: e.item.OperationPosCode,
-        //     NoticeStation: e.item.OperationPosName,
-        // })
     }
 
     selectItemOffice(e) {
@@ -755,9 +755,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.NoticeProduct.removeAt(index);
 
         } else if (this.mode === 'R') {
-            if (!this.NoticeProduct.at(index).get('ProductID').value) {
+            if (this.NoticeProduct.at(index).value.IsNewItem) {
                 this.NoticeProduct.removeAt(index);
-                return false;
+                return;
             }
 
             if (confirm(Message.confirmAction)) {
@@ -782,6 +782,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.NoticeSuspect.removeAt(index);
 
         } else if (this.mode === 'R') {
+            if (this.NoticeSuspect.at(index).value.IsNewItem) {
+                this.NoticeSuspect.removeAt(index);
+                return;
+            }
 
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
@@ -794,7 +798,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                         alert(Message.delSuspectFail)
                     }
                 })
-
                 this.preloader.setShowPreloader(false);
             }
         }
@@ -805,6 +808,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.NoticeDocument.removeAt(index);
 
         } else if (this.mode === 'R') {
+            if (this.NoticeDocument.at(index).value.IsNewItem) {
+                this.NoticeDocument.removeAt(index);
+                return;
+            }
+
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
 
@@ -816,7 +824,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                         alert(Message.delDocumentFail)
                     }
                 })
-
                 this.preloader.setShowPreloader(false);
             }
         }
