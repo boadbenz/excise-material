@@ -70,8 +70,9 @@
                         <div class="form-group">
                             <div class="form-line">
                                 <select [(ngModel)]="RevenueStatus" name="RevenueStatust" class="form-control form-control-sm" [disabled]="showEditField">
-                                    <option *ngFor="let opt of StatusOption" value={{opt.RevenueStatus}}>{{opt.RevenueStatus}}
-                                    </option>
+                                    <option value="0">ยังไม่นำส่งเงินรายได้</option>
+                                    <option value="1">นำส่งเงินรายได้</option>
+                                    <option value="2">รับายการนำส่งเงิน</option>
                                 </select>
                             </div>
                         </div>

@@ -62,10 +62,10 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <div style="width:45%">
-                        <my-date-picker-th name="oRevenue.RevenueStaff" [(ngModel)]="oRevenue.RevenueStaff"></my-date-picker-th>
+                        <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate"></my-date-picker-th>
                     </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="time" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
 
@@ -81,7 +81,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">เรียน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="text" name="InformTo" [(ngModel)]="InformTo" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
 
@@ -167,7 +167,10 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">สถานะนำส่งเงิน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select name="" id="" class="form-control form-control-sm" [disabled]="showEditField">
+                    <select [(ngModel)]="RevenueStatus" name="RevenueStatust" class="form-control form-control-sm" disabled>
+                        <option value="0">ยังไม่นำส่งเงินรายได้</option>
+                        <option value="1">นำส่งเงินรายได้</option>
+                        <option value="2">รับายการนำส่งเงิน</option>
                     </select>
                 </div>
             </div>
