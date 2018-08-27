@@ -9,6 +9,7 @@ import { Lawsuit } from "../models/lawsuit";
 import { toLocalShort } from "../../../config/dateFormat";
 import { Notice } from "../../notices/notice";
 import {PreloaderService} from "../../../shared/preloader/preloader.component";
+import {SidebarService} from "../../../shared/sidebar/sidebar.component";
 
 @Component({
   selector: "app-list",
@@ -26,7 +27,7 @@ export class ListComponent implements OnInit, OnDestroy {
   paginage = pagination;
 
   constructor(private router: Router, private navService: NavigationService, private preLoaderService: PreloaderService
-              , private lawsuitService: LawsuitService
+              , private lawsuitService: LawsuitService, private sidebarService: SidebarService
   ) {
     this.advSearch = this.navService.showAdvSearch;
     this.advSearchSub = this.navService.searchByKeyword.subscribe(filterValue => {
@@ -38,6 +39,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.0.2');
     this.setShowButton();
     this.loadPage();
   }

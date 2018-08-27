@@ -10,6 +10,7 @@ import {RewardArrest} from '../reward-arrest';
 import {PreloaderService} from "../../../shared/preloader/preloader.component";
 import {Message} from "../../../config/message";
 import {FormGroup} from "@angular/forms";
+import {SidebarService} from "../../../shared/sidebar/sidebar.component";
 
 @Component({
   selector: 'app-manage',
@@ -52,7 +53,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   totalPartMoney = 0;
 
   constructor(private router: Router, private navService: NavigationService, private activeRoute: ActivatedRoute
-    , private preLoaderService: PreloaderService, private rewardService: RewardService) { }
+              , private preLoaderService: PreloaderService, private rewardService: RewardService
+              , private sidebarService: SidebarService) { }
 
   // private getParamFromActiveRoute(): void {
   //   this.preLoaderService.setShowPreloader(true);
@@ -63,6 +65,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // this.getParamFromActiveRoute();
 
+    this.sidebarService.setVersion('0.0.0.1');
     this.sumPartMoney();
 
     this.sub = this.navService.showFieldEdit.subscribe(status => {
