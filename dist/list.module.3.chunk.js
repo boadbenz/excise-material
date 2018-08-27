@@ -113,7 +113,7 @@ var ListComponent = /** @class */ (function () {
                     case 0:
                         this.DeliveryDateTo = null;
                         this.ProveDateTo = null;
-                        this.sidebarService.setVersion('Prove 0.0.0.3');
+                        this.sidebarService.setVersion('Prove 0.0.0.4');
                         this.onSearch({ Textsearch: "" });
                         this.preLoaderService.setShowPreloader(true);
                         _a = this;

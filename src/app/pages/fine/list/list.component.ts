@@ -26,7 +26,8 @@ export class ListComponent implements OnInit, OnDestroy {
     constructor(
         private _router: Router,
         private navService: NavigationService,
-        private fineService: FineService
+        private fineService: FineService,
+        private preLoaderService: PreloaderService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -87,7 +88,7 @@ export class ListComponent implements OnInit, OnDestroy {
         });
     }
 
-    onAdvSearch(form: any) {
+    async onAdvSearch(form: any) {
         
         const sDateCompare = new Date(form.value.CompareDateFrom );
         const eDateCompare = new Date(form.value.CompareDateTo);

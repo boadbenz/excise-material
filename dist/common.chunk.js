@@ -4054,6 +4054,7 @@ var FineService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        console.log(form);
                         params = JSON.stringify(form);
                         url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/ComparegetByConAdv";
                         _a.label = 1;

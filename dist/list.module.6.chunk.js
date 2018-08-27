@@ -3,7 +3,7 @@ webpackJsonp(["list.module.6"],{
 /***/ "./src/app/pages/fine/list/list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"advSearch | async\" class=\"card card-outline-bluish unset-radius\">\n  <div class=\"card-header unset-radius\">\n    <app-card-actions-close></app-card-actions-close>\n    <h4 class=\"card-title m-b-0\">ค้นหาขั้นสูง</h4>\n  </div>\n\n  <div class=\"card-body\">\n    <form class=\"form-horizontal\" #advForm=\"ngForm\" (ngSubmit)=\"onAdvSearch(advForm)\">\n      <div>\n        <div class=\"row\">\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">เลขที่ใบงาน :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"ArrestCode\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">เลขที่คดีรับคำกล่าวโทษ :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"LawsuitCode\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">ทะเบียนตรวจพิสูจน์ :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"ProveReportNo\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">เลขที่เปรียบเทียบคดี :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"CompareCode\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">วันที่เปรียบเทียบคดี :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group input-group form-line\">\n              <input type=\"date\" name=\"CompareDateFrom\" ngModel class=\"form-control \" placeholder=\"วว/ดด/ปปปป\">\n              <label class=\"col-2 control-label text-center padding-adv-search\">ถึง</label>\n              <input type=\"date\" name=\"CompareDateTo\" ngModel class=\"form-control \" placeholder=\"วว/ดด/ปปปป\">\n            </div>\n          </div>\n\n          <input type=\"hidden\" name=\"ProgramCode\" ngModel>\n          <input type=\"hidden\" name=\"ProcessCode\" ngModel>\n\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">ผู้เปรียบเทียบคดี :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"Staff\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">หน่วยงาน :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"Department\" ngModel  class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row form-group\">\n          \n            <div class=\"col-10\"></div>\n            <div class=\"col-2\">\n                <button type=\"submit\" class=\"btn btn-block btn-themecolor\">ค้นข้อมูล</button>\n            </div>\n        </div>\n      </div>\n    </form>\n  </div>\n</div>\n\n<div class=\"card\">\n  <div class=\"card-body\">\n\n    <div class=\"table-responsive table-striped \">\n      <table #fineTable class=\"table\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">ลำดับ</th>\n            <th>เลขที่ใบงาน</th>\n            <th style=\"text-align: center\">เลขที่คดีรับคำกล่าว</th>\n            <th>ทะเบียนตรวจพิสูจน์</th>\n            <th style=\"text-align: center\">เลขที่เปรียบเทียบคดี</th>\n            <th>ผู้เปรียบเทียบคดี</th>\n            <th style=\"text-align: center\">วันที่เปรียบเทียบคดี</th>\n            <th>หน่วยงาน</th>\n            <th></th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of CompareList; let i=index;\">\n            <td style=\"text-align: center\">{{i + 1}}</td>\n            <td>{{item.ArrestCode}}</td>\n            <td style=\"text-align: center\">\n              <div *ngIf=\"item.IsOutside == 1\">น {{item.Lawsuilt}}</div>\n              <div *ngIf=\"item.IsOutside != 1\">{{item.Lawsuilt}}</div>\n            </td>\n            <td>{{item.ProveReportNo}}</td>\n            <td style=\"text-align: center\">\n              <div *ngIf=\"item.IsOutside == 1\">น {{item.CompareCode}}</div>\n              <div *ngIf=\"item.IsOutside != 1\">{{item.CompareCode}}</div>\n            </td>\n            <td>\n                <div *ngFor=\"let staff of item.CompareStaff | ContributorPipe:18;\">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>\n            </td>\n            <td style=\"text-align: center\">{{item.CompareDate | date:'dd-MM-yyyy'}}</td>\n            <td>\n                <div *ngFor=\"let staff of item.CompareStaff | ContributorPipe:18;\">{{staff.DepartmentName}}</div>\n            </td>\n            <td class=\"text-center\">\n              <a href=\"javaScript:void(0);\" class=\"text-secondary\" (click)=\"clickView(item.LawsuitID,item.ArrestCode,item.CompareID)\">\n                <i class=\"mdi mdi-eye fa-lg\"></i>\n              </a>\n            </td>\n          </tr>\n        </tbody>\n      </table>\n    </div>\n\n    <div class=\"card-footer card-footer-unset\">\n      <app-pagination-table [TotalItems]=\"paginage.TotalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\n        [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\n      </app-pagination-table>\n    </div>\n  </div>\n</div>"
+module.exports = "<div *ngIf=\"advSearch | async\" class=\"card card-outline-bluish unset-radius\">\n  <div class=\"card-header unset-radius\">\n    <app-card-actions-close></app-card-actions-close>\n    <h4 class=\"card-title m-b-0\">ค้นหาขั้นสูง</h4>\n  </div>\n\n  <div class=\"card-body\">\n    <form class=\"form-horizontal\" #advForm=\"ngForm\" (ngSubmit)=\"onAdvSearch(advForm)\">\n      <div>\n        <div class=\"row\">\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">เลขที่ใบงาน :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"ArrestCode\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">เลขที่คดีรับคำกล่าวโทษ :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"LawsuitCode\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">ทะเบียนตรวจพิสูจน์ :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"ProveReportNo\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">เลขที่เปรียบเทียบคดี :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"CompareCode\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">วันที่เปรียบเทียบคดี :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group input-group form-line\">\n              <input type=\"date\" name=\"CompareDateFrom\" ngModel class=\"form-control \" placeholder=\"วว/ดด/ปปปป\">\n              <label class=\"col-2 control-label text-center padding-adv-search\">ถึง</label>\n              <input type=\"date\" name=\"CompareDateTo\" ngModel class=\"form-control \" placeholder=\"วว/ดด/ปปปป\">\n            </div>\n          </div>\n\n          <input type=\"hidden\" name=\"ProgramCode\" ngModel>\n          <input type=\"hidden\" name=\"ProcessCode\" ngModel>\n\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">ผู้เปรียบเทียบคดี :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"Staff\" ngModel class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <label for=\"\" class=\"col-md-2 control-label padding-adv-search\">หน่วยงาน :</label>\n          <div class=\"col-md-4 padding-input-adv-search\">\n            <div class=\"form-group\">\n              <div class=\"form-line\">\n                <input type=\"text\" name=\"Department\" ngModel  class=\"form-control \" placeholder=\"\">\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row form-group\">\n          \n            <div class=\"col-10\"></div>\n            <div class=\"col-2\">\n                <button type=\"submit\" class=\"btn btn-block btn-themecolor\">ค้นข้อมูล</button>\n            </div>\n        </div>\n      </div>\n    </form>\n  </div>\n</div>\n\n<div class=\"card\">\n  <div class=\"card-body\">\n\n    <div class=\"table-responsive table-striped \">\n      <table #fineTable class=\"table\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">ลำดับ</th>\n            <th>เลขที่ใบงาน</th>\n            <th style=\"text-align: center\">เลขที่คดีรับคำกล่าว</th>\n            <th>ทะเบียนตรวจพิสูจน์</th>\n            <th style=\"text-align: center\">เลขที่เปรียบเทียบคดี</th>\n            <th>ผู้เปรียบเทียบคดี</th>\n            <th style=\"text-align: center\">วันที่เปรียบเทียบคดี</th>\n            <th>หน่วยงาน</th>\n            <th></th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of CompareList; let i=index;\">\n            <td style=\"text-align: center\">{{i + 1}}</td>\n            <td>{{item.ArrestCode}}</td>\n            <td style=\"text-align: center\">\n              <div *ngIf=\"item.IsOutside == 1\">น {{item.Lawsuilt}}</div>\n              <div *ngIf=\"item.IsOutside != 1\">{{item.Lawsuilt}}</div>\n            </td>\n            <td>{{item.ProveReportNo}}</td>\n            <td style=\"text-align: center\">\n              <div *ngIf=\"item.IsOutside == 1\">น {{item.CompareCode}}</div>\n              <div *ngIf=\"item.IsOutside != 1\">{{item.CompareCode}}</div>\n            </td>\n            <td>\n                <div *ngFor=\"let staff of item.CompareStaff \">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>\n                <!-- <div *ngFor=\"let staff of item.CompareStaff | ContributorPipe:18;\">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div> -->\n            </td>\n            <td style=\"text-align: center\">{{item.CompareDate | date:'dd-MM-yyyy'}}</td>\n            <td>\n                <!-- <div *ngFor=\"let staff of item.CompareStaff | ContributorPipe:18;\">{{staff.DepartmentName}}</div> -->\n                <div *ngFor=\"let staff of item.CompareStaff\">{{staff.DepartmentName}}</div>\n            </td>\n            <td class=\"text-center\">\n              <a href=\"javaScript:void(0);\" class=\"text-secondary\" (click)=\"clickView(item.LawsuitID,item.ArrestCode,item.CompareID)\">\n                <i class=\"mdi mdi-eye fa-lg\"></i>\n              </a>\n            </td>\n          </tr>\n        </tbody>\n      </table>\n    </div>\n\n    <div class=\"card-footer card-footer-unset\">\n      <app-pagination-table [TotalItems]=\"paginage.TotalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\n        [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\n      </app-pagination-table>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -18,6 +18,8 @@ module.exports = "<div *ngIf=\"advSearch | async\" class=\"card card-outline-blu
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fine_service__ = __webpack_require__("./src/app/pages/fine/fine.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__config_pagination__ = __webpack_require__("./src/app/config/pagination.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__config_message__ = __webpack_require__("./src/app/config/message.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -68,11 +70,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 
 
+
+
 var ListComponent = /** @class */ (function () {
-    function ListComponent(_router, navService, fineService) {
+    function ListComponent(_router, navService, fineService, preLoaderService) {
         this._router = _router;
         this.navService = navService;
         this.fineService = fineService;
+        this.preLoaderService = preLoaderService;
         this.Compare = new Array();
         this.CompareList = new Array();
         this.paginage = __WEBPACK_IMPORTED_MODULE_4__config_pagination__["a" /* pagination */];
@@ -89,56 +94,109 @@ var ListComponent = /** @class */ (function () {
         this.advSearch = this.navService.showAdvSearch;
     }
     ListComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.subOnSearch = this.navService.searchByKeyword.subscribe(function (Textsearch) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+        return __awaiter(this, void 0, void 0, function () {
+            var model, form, _a;
+            var _this = this;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        if (!Textsearch) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.navService.setOnSearch('')];
+                        console.log("First methos");
+                        model = new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["d" /* FormGroup */]({
+                            "ArrestCode": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */](""),
+                            "LawsuitCode": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */](""),
+                            "ProveReportNo": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */](""),
+                            "CompareCode": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */](""),
+                            "CompareDateFrom": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */](""),
+                            "CompareDateTo": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */](""),
+                            "ProgramCode": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */]("ILG60-01-01"),
+                            "ProcessCode": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */]("01"),
+                            "Staff": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */](""),
+                            "Department": new __WEBPACK_IMPORTED_MODULE_7__angular_forms__["c" /* FormControl */](""),
+                        });
+                        form = { "ArrestCode": "", "LawsuitCode": "", "ProveReportNo": "", "CompareCode": "", "CompareDateFrom": "", "CompareDateTo": "", "ProgramCode": "XCS06", "ProcessCode": "01", "Staff": "", "Department": "" };
+                        // this.onSearch({ Textsearch: "" });
+                        this.onAdvSearch(model);
+                        this.preLoaderService.setShowPreloader(true);
+                        _a = this;
+                        return [4 /*yield*/, this.navService.searchByKeyword.subscribe(function (Textsearch) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!Textsearch) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, this.navService.setOnSearch('')];
+                                        case 1:
+                                            _a.sent();
+                                            this.onSearch(Textsearch);
+                                            _a.label = 2;
+                                        case 2: return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
                     case 1:
-                        _a.sent();
-                        this.onSearch(Textsearch);
-                        _a.label = 2;
-                    case 2: return [2 /*return*/];
+                        _a.subOnSearch = _b.sent();
+                        return [2 /*return*/];
                 }
             });
-        }); });
+        });
     };
     ListComponent.prototype.ngOnDestroy = function () {
         this.subOnSearch.unsubscribe();
     };
     ListComponent.prototype.onSearch = function (Textsearch) {
-        var _this = this;
-        this.fineService.getByKeyword(Textsearch).subscribe(function (list) {
-            debugger;
-            _this.onSearchComplete(list);
-        }, function (err) {
-            alert(err.message);
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.fineService.getByKeyword(Textsearch).subscribe(function (list) {
+                            console.log("First search");
+                            _this.onSearchComplete(list);
+                        }, function (err) {
+                            alert(err.message);
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
         });
     };
     ListComponent.prototype.onAdvSearch = function (form) {
-        var _this = this;
-        var sDateCompare = new Date(form.value.CompareDateFrom);
-        var eDateCompare = new Date(form.value.CompareDateTo);
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
-            alert(__WEBPACK_IMPORTED_MODULE_5__config_message__["a" /* Message */].checkRevenueDate);
-        }
-        else {
-            form.value.CompareDateFrom = sDateCompare.getTime();
-            form.value.CompareDateTo = eDateCompare.getTime();
-            form.value.ProgramCode = "XCS06";
-            form.value.ProcessCode = "01";
-            this.fineService.getByConAdv(form.value).then(function (list) { return __awaiter(_this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    debugger;
-                    this.onSearchComplete(list);
-                    return [2 /*return*/];
-                });
-            }); }, function (err) {
-                alert(err.message);
+        return __awaiter(this, void 0, void 0, function () {
+            var sDateCompare, eDateCompare;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sDateCompare = new Date(form.value.CompareDateFrom);
+                        eDateCompare = new Date(form.value.CompareDateTo);
+                        if (!(sDateCompare.getTime() > eDateCompare.getTime())) return [3 /*break*/, 1];
+                        alert(__WEBPACK_IMPORTED_MODULE_5__config_message__["a" /* Message */].checkRevenueDate);
+                        return [3 /*break*/, 3];
+                    case 1:
+                        form.value.CompareDateFrom = sDateCompare.getTime();
+                        form.value.CompareDateTo = eDateCompare.getTime();
+                        form.value.ProgramCode = "ILG60-01-01";
+                        form.value.ProcessCode = "01";
+                        if (isNaN(form.value.CompareDateFrom)) {
+                            form.value.CompareDateFrom = "";
+                            form.value.CompareDateTo = "";
+                        }
+                        return [4 /*yield*/, this.fineService.getByConAdv(form.value).then(function (list) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    console.log(list);
+                                    this.onSearchComplete(list);
+                                    return [2 /*return*/];
+                                });
+                            }); }, function (err) {
+                                alert(err.message);
+                            })];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
+                }
             });
-        }
+        });
     };
     ListComponent.prototype.onSearchComplete = function (list) {
         this.Compare = [];
@@ -159,6 +217,9 @@ var ListComponent = /** @class */ (function () {
     ListComponent.prototype.clickView = function (LawsuitID, ArrestCode, CompareID) {
         if (CompareID == null || CompareID == "")
             CompareID = "0";
+        console.log(LawsuitID);
+        console.log(ArrestCode);
+        console.log(CompareID);
         this._router.navigate(["/fine/manage/R/" + LawsuitID + "/" + ArrestCode + "/" + CompareID]);
     };
     ListComponent.prototype.pageChanges = function (event) {
@@ -187,7 +248,8 @@ var ListComponent = /** @class */ (function () {
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
             __WEBPACK_IMPORTED_MODULE_2__shared_header_navigation_navigation_service__["a" /* NavigationService */],
-            __WEBPACK_IMPORTED_MODULE_3__fine_service__["a" /* FineService */]])
+            __WEBPACK_IMPORTED_MODULE_3__fine_service__["a" /* FineService */],
+            __WEBPACK_IMPORTED_MODULE_6__shared_preloader_preloader_component__["b" /* PreloaderService */]])
     ], ListComponent);
     return ListComponent;
 }());
