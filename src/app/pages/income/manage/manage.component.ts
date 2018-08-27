@@ -27,6 +27,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     showEditField: any;
 
     revenueID: string;
+    RevenueCode: string;    // เลขที่หนังสือนำส่ง
+    InformTo: string;       // เรียน
     StaffSendID: string;    // รหัสผู้นำส่ง
     PosSend: string;        // ตำแหน่งผู้นำส่ง
     DeptSend: string;       // แผนกผู้นำส่ง
@@ -39,6 +41,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     BribeMoney: number;     // เงินสินบนรวม
     RewardMoney: number;    // เงินรางวัลรวม
     TreasuryMoney: number;  // เงินส่งคลัง
+    RevenueDate: any;       // วันที่นำส่ง
+    RevenueTime: string;    // เวลาที่นำส่ง
+    RevenueStatus: number;  // สถานะนำส่ง
 
 
     StaffSendoptions = [];
@@ -75,10 +80,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.active_Route();
         this.navigate_Service();
-        await this.CreateObject();
 
-        // await this.getReveneueStaff();
-        // await this.getStation();
+        this.RevenueStatus = 0;
+
+        await this.CreateObject();
+        await this.getReveneueStaff();
+        await this.getStation();
         this.ShowRevenueCompare();
 
         this.preloader.setShowPreloader(false);
@@ -174,7 +181,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ShowRevenueCompare()
     {
-        this.IncService.RevenueComparegetByCon("3").then(async res => {
+        this.IncService.RevenueComparegetByCon("").then(async res => {
             if (res) {
                 debugger
             }
@@ -202,6 +209,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     async onInsRevenue() {
         this.preloader.setShowPreloader(true);
 
+        let DRate,cDateRevenue;
+        DRate = this.RevenueDate.date;
+
+        if (DRate != undefined) {
+            cDateRevenue = DRate.year + '-' + DRate.month + '-' +DRate.day + ' ' +this.RevenueTime;
+        }
+
+        this.oRevenue.RevenueDate = cDateRevenue;
+        this.oRevenue.RevenueCode = this.RevenueCode;
+        this.oRevenue.InformTo = this.InformTo;
+
         this.oRevenue.RevenueStaff = [];
 
         if (this.oRevenueSendStaff != null && this.oRevenueSendStaff != undefined) {
@@ -215,6 +233,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         let isSuccess: boolean = true;
 
         await this.IncService.RevenueinsAll(this.oRevenue).then(async IsSuccess => {
+            debugger
             if (!IsSuccess) {
                 isSuccess = IsSuccess;
                 return false;
