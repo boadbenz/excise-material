@@ -354,7 +354,6 @@
                             <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
-                            <!-- <input type="text" formControlName="QtyUnit" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required> -->
                             <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of typeheadProductUnit;" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>

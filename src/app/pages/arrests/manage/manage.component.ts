@@ -36,6 +36,7 @@ import {
 } from '../../../models'
 import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
+import { replaceFakePath } from '../../../config/dataString';
 
 @Component({
     selector: 'app-manage',
@@ -134,7 +135,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.8');
+        this.sidebarService.setVersion('0.0.0.9');
 
         this.active_route();
         this.navigate_Service();
@@ -267,7 +268,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.checkData)
                     return false;
                 }
-        
+
                 if (!this.ArrestLawbreaker.length) {
                     alert(Message.checkData)
                     return false;
@@ -280,7 +281,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.checkDate);
                     return false;
                 }
-                
+
                 this.arrestFG.value.ArrestDate = setZeroHours(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = setZeroHours(eDateCompare);
 
@@ -387,6 +388,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private getByCon(code: string) {
 
         this.arrestService.getByCon(code).then(async res => {
+
             await this.arrestFG.reset({
                 ArrestCode: res.ArrestCode,
                 ArrestDate: setDateMyDatepicker(new Date(res.ArrestDate)),
@@ -406,8 +408,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                 InvestigationCode: res.InvestigationCode,
                 IsActive: res.IsActive
             });
-            await res.ArrestLocale.map(item => item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`);
-            await res.ArrestStaff.map(item => {
+            res.ArrestLocale.map(item => {
+                item.ArrestCode = item.ArrestCode || code;
+                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`;
+            });
+
+            const staff = res.ArrestStaff.filter(item => item.IsActive == 1);
+            staff.map(item => {
                 item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
                 item.FullName += ` ${item.FirstName == null ? '' : item.FirstName}`;
                 item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
@@ -415,7 +422,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.IsNewItem = false;
                 item.ContributorID = item.ContributorID
             });
-            await res.ArrestLawbreaker.map(item => {
+
+            const lawbreaker = res.ArrestLawbreaker.filter(item => item.IsActive == 1);
+            lawbreaker.map(item => {
                 item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
                 item.LawbreakerFullName += ` ${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
                 item.LawbreakerFullName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
@@ -428,14 +437,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.LawbreakerTypeName = this.lawbreakerType.find(e => parseInt(e.value) == item.LawbreakerType).text
                 item.IsNewItem = false;
             });
-            await res.ArrestProduct.map(item => {
+
+            const product = res.ArrestProduct.filter(item => item.IsActive == 1);
+            product.map(item => {
                 item.IsNewItem = false;
                 item.ProductFullName = `${item.SubBrandNameTH == null ? '' : item.SubBrandNameTH}`;
                 item.ProductFullName += ` ${item.BrandNameTH == null ? '' : item.BrandNameTH}`;
                 item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
             });
 
-            await res.ArrestIndictment.map(async item => {
+            const indictment = res.ArrestIndictment.filter(item => item.IsActive == 1);
+            indictment.map(async item => {
                 item.IsNewItem = false
                 item.SectionName = item.SectionName ? item.SectionName : null;
                 let _IndictmentLawbreaker = new Array<IndictmentLawbreaker>();
@@ -462,13 +474,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.IndictmentLawbreaker = _IndictmentLawbreaker;
             });
 
-            this.setItemFormArray(res.ArrestStaff, 'ArrestStaff');
-            this.setItemFormArray(res.ArrestLocale, 'ArrestLocale');
-            this.setItemFormArray(res.ArrestLawbreaker, 'ArrestLawbreaker');
-            this.setItemFormArray(res.ArrestProduct, 'ArrestProduct');
-            this.setItemFormArray(res.ArrestDocument, 'ArrestDocument');
+            await this.arrestService.getDocument(code).then(async res => {
+                const doc = res.filter(item => item.IsActive == 1);
+                doc.map(item => item.IsNewItem = false)
 
-            this.addIndicment(res.ArrestIndictment);
+                await this.setItemFormArray(res, 'ArrestDocument');
+            })
+
+            this.setItemFormArray(staff, 'ArrestStaff');
+            this.setItemFormArray(res.ArrestLocale, 'ArrestLocale');
+            this.setItemFormArray(lawbreaker, 'ArrestLawbreaker');
+            this.setItemFormArray(product, 'ArrestProduct');
+
+            this.addIndicment(indictment);
         })
     }
 
@@ -483,9 +501,19 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         // ___1.บันทึกข้อมูลจับกุม
         await this.arrestService.insAll(this.arrestFG.value).then(async IsSuccess => {
-            if (!IsSuccess) { IsSuccess = false; return false; }
+            if (!IsSuccess) { isSuccess = false; return false; }
             await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
-        }, (error) => { isSuccess = false; console.error(error); return false; });
+
+            if (!isSuccess) { return; }
+
+            this.ArrestDocument.value.map(async doc => {
+                // insert Document
+                await this.arrestService.insDocument(doc).then(docIsSuccess => {
+                    if (!docIsSuccess) { isSuccess = docIsSuccess; return; }
+                }, () => { isSuccess = false; return false; });
+            });
+
+        }, () => { isSuccess = false; return; });
 
         if (isSuccess) {
             this.onComplete()
@@ -505,7 +533,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         // ___2. ดึงข้อมูการจับกุม ด้วยเลขที่ ArrestCode
         await this.arrestService.getByCon(this.arrestCode).then(arrestRes => {
-            if (!arrestRes) { IsSuccess = false; return false; }
+            if (!arrestRes) { IsSuccess = false; return; }
             // ___3. ค้นหาข้อมูลภายใน ArrestIndictment
             IsSuccess = true
             // arrestRes.ArrestIndictment.map(indictObj => {
@@ -548,7 +576,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             // })
 
-        }, (error) => { IsSuccess = false; return false; });
+        }, () => { IsSuccess = false; return false; });
 
         return IsSuccess;
     }
@@ -561,76 +589,99 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(JSON.stringify(this.arrestFG.value));
         console.log('====================================');
 
-        let isSuccess: boolean | false;
+        let isSuccess: boolean | true;
 
-        await this.arrestService.updByCon(this.arrestFG.value).then(async IsSuccess => {
+        await this.arrestService.updByCon(this.arrestFG.value).then(async _arrest => {
 
-            if (!isSuccess) {
-                isSuccess = false;
-                return false;
-            }
+            if (!_arrest) { isSuccess = false; return; }
 
             await this.arrestService.localeupdByCon(this.ArrestLocale.at(0).value)
-                .then(IsSuccess => isSuccess = IsSuccess,
-                    (error) => { IsSuccess = false; return false; });
+                .then(IsSuccess => isSuccess = IsSuccess, () => { isSuccess = false; return false; });
 
             if (!isSuccess) return false;
 
             const staff = this.ArrestStaff.value;
-            staff.filter(item => item.IsNewItem === true)
-                .map(async item => {
-                    await this.arrestService.staffinsAll(item).then(IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { IsSuccess = false; return false; });
-                });
+            staff.map(async item => {
+                if (item.IsNewItem) {
+                    await this.arrestService.staffinsAll(item).then(_staff => {
+                        if (!_staff) { isSuccess = false; return; }
+                    }, () => { isSuccess = false; return; });
+
+                } else {
+                    await this.arrestService.staffUpd(item).then(_staff => {
+                        if (!_staff) { isSuccess = false; return; }
+                    }, () => { isSuccess = false; return; });
+                }
+
+            });
 
             if (!isSuccess) return false;
 
             const lawbreaker = this.ArrestLawbreaker.value;
-            lawbreaker.filter(item => item.IsNewItem === true)
-                .map(async item => {
-                    await this.arrestService.lawbreakerinsAll(item).then(IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { IsSuccess = false; return false; });
-                });
+            lawbreaker.map(async item => {
+                
+                if (item.IsNewItem) {
+                    await this.arrestService.lawbreakerinsAll(item).then(_lawbreaker => {
+                        if (!_lawbreaker) { isSuccess = false; return; }
+                        
+                    }, () => { isSuccess = false; return; });
+
+                } else {
+                    await this.arrestService.lawbreakerUpd(item).then(_lawbreaker => {
+                        if (!_lawbreaker) { isSuccess = false; return; }
+                    }, () => { isSuccess = false; return; });
+                }
+
+            });
 
             if (!isSuccess) return false;
 
             const product = this.ArrestProduct.value;
-            product.filter(item => item.IsNewItem === true)
-                .map(async item => {
-                    await this.arrestService.productinsAll(item).then(IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { IsSuccess = false; return false; });
-                });
+            product.map(async item => {
+                if (item.IsNewItem) {
+                    await this.arrestService.productinsAll(item).then(_product => {
+                        if (!_product) { isSuccess = false; return; }
+                    }, () => { isSuccess = false; return false; });
+                } else {
+                    await this.arrestService.productUpd(item).then(_product => {
+                        if (!_product) { isSuccess = false; return; }
+                    }, () => { isSuccess = false; return false; });
+                }
+            });
 
             if (!isSuccess) return false;
 
             const indicment = this.ArrestIndictment.value;
-            indicment.filter(item => item.IsNewItem === true)
-                .map(async item => {
-                    // ___1.บันทึกข้อมูลจับกุม
-                    await this.arrestService.indicmentinsAll(item).then(async IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
+            indicment.map(async item => {
+                if (item.IsNewItem) {
+                    await this.arrestService.indicmentinsAll(item).then(async _indict => {
+                        if (!_indict) { isSuccess = false; return; }
+                        // await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
+                    }, () => { isSuccess = false; return false; });
+                } else {
+                    await this.arrestService.indictmentUpd(item).then(async _indict => {
+                        if (!_indict) { isSuccess = false; return; }
+                        // await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
+                    }, () => { isSuccess = false; return false; });
+                }
 
-                        await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
+            });
 
-                    }, (error) => { IsSuccess = false; return false; });
-                });
+            const document = this.ArrestDocument.value;
+            document.map(async item => {
+                if (item.IsNewItem) {
+                    await this.arrestService.insDocument(item).then(docIsSuccess => {
+                        if (!docIsSuccess) { isSuccess = docIsSuccess; return; }
+                    }, () => { isSuccess = false; return false; });
 
-        }, (error) => { isSuccess = false; return false; })
+                } else {
+                    this.arrestService.updDocument(item).then(docIsSuccess => {
+                        if (!docIsSuccess) { isSuccess = docIsSuccess; return; }
+                    }, () => { isSuccess = false; return; })
+                }
+            })
+
+        }, () => { isSuccess = false; return false; })
 
         if (isSuccess) {
             alert(Message.saveComplete)
@@ -669,7 +720,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     setNoticeForm(notice: Notice) {
         this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
-debugger
+
         let locale = notice.NoticeLocale[0];
         let product = notice.NoticeProduct;
         let lawbreaker = [];
@@ -721,10 +772,13 @@ debugger
 
     addLawbreaker(e: ArrestLawbreaker[]) {
         e.map(item => {
-            item.ArrestCode = this.arrestCode
-            item.IsNewItem = true
-            this.ArrestLawbreaker.push(this.fb.group(item))
+            item.ArrestCode = this.arrestCode;
+            item.IsNewItem = true;
+            this.ArrestLawbreaker.push(this.fb.group(item));
         })
+
+        console.log(this.ArrestLawbreaker.value);
+        
     }
 
 
@@ -798,7 +852,7 @@ debugger
 
             let FG = this.fb.group({
                 ArrestCode: new FormControl(this.arrestCode, Validators.required),
-                IndictmentID: new FormControl(1),
+                IndictmentID: new FormControl(item.IndictmentID),
                 IsProve: new FormControl(item.IsProve, Validators.required),
                 IsActive: new FormControl(item.IsActive, Validators.required),
                 GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),
@@ -815,7 +869,9 @@ debugger
     }
 
     patchIndicment(e: ArrestIndictment) {
+        const isNewItem = this.ArrestIndictment.at(this.indicmentIndex).value.isNewItem;
         this.ArrestIndictment.at(this.indicmentIndex).reset({
+            IsNewItem: isNewItem || true,
             ArrestCode: this.arrestCode,
             IsProve: 1,
             IsActive: 1,
@@ -823,9 +879,8 @@ debugger
             SectionNo: e.SectionNo,
             SectionDesc1: e.SectionDesc1,
             SectionName: e.SectionName,
-            IndictmentLawbreaker: e.IndictmentLawbreaker,
+            IndictmentLawbreaker: this.fb.array(e.IndictmentLawbreaker),
         });
-        
     }
 
     addDocument() {
@@ -852,10 +907,10 @@ debugger
             this.ArrestStaff.removeAt(indexForm);
 
         } else if (this.mode === 'R') {
-            const isNewItem = this.ArrestStaff.at(indexForm).value.IsNewItem
-            if (isNewItem) {
-                this.ArrestStaff.removeAt(indexForm)
-            } else if (confirm(Message.confirmAction)) {
+            const isNewItem = this.ArrestStaff.at(indexForm).value.IsNewItem;
+            if (isNewItem) { this.ArrestStaff.removeAt(indexForm); return; }
+
+            if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
                 await this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
                     if (IsSuccess) {
@@ -875,10 +930,10 @@ debugger
             this.ArrestLawbreaker.removeAt(indexForm);
 
         } else if (this.mode === 'R') {
-            const isNewItem = this.ArrestLawbreaker.at(indexForm).value.IsNewItem
-            if (isNewItem) {
-                this.ArrestLawbreaker.removeAt(indexForm)
-            } else if (confirm(Message.confirmAction)) {
+            const isNewItem = this.ArrestLawbreaker.at(indexForm).value.IsNewItem;
+            if (isNewItem) { this.ArrestLawbreaker.removeAt(indexForm); return; }
+
+            if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
                 await this.arrestService.lawbreakerupdDelete(lawbreakerId).then(IsSuccess => {
                     if (IsSuccess) {
@@ -898,10 +953,11 @@ debugger
             this.ArrestProduct.removeAt(indexForm);
 
         } else if (this.mode === 'R') {
-            const isNewItem = this.ArrestProduct.at(indexForm).value.IsNewItem
-            if (isNewItem) {
-                this.ArrestProduct.removeAt(indexForm)
-            } else if (confirm(Message.confirmAction)) {
+            const isNewItem = this.ArrestProduct.at(indexForm).value.IsNewItem;
+
+            if (isNewItem) { this.ArrestProduct.removeAt(indexForm); return; }
+
+            if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
                 await this.arrestService.productupdDelete(productId).then(IsSuccess => {
                     if (IsSuccess) {
@@ -922,11 +978,11 @@ debugger
 
         } else if (this.mode === 'R') {
 
-            const isNewItem = this.ArrestIndictment.at(indexForm).value.IsNewItem
+            const isNewItem = this.ArrestIndictment.at(indexForm).value.IsNewItem;
 
-            if (isNewItem) {
-                this.ArrestIndictment.removeAt(indexForm)
-            } else if (confirm(Message.confirmAction)) {
+            if (isNewItem) { this.ArrestIndictment.removeAt(indexForm); return; }
+
+            if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
                 await this.arrestService.indicmentupdDelete(indicmtmentId).then(IsSuccess => {
                     if (IsSuccess) {
@@ -941,28 +997,30 @@ debugger
         }
     }
 
-    deleteDocument(indexForm: number) {
+    async deleteDocument(id: string, indexForm: number) {
         if (this.mode === 'C') {
             this.ArrestDocument.removeAt(indexForm);
 
         } else if (this.mode === 'R') {
 
-            const isNewItem = this.ArrestDocument.at(indexForm).value.IsNewItem
+            const isNewItem = this.ArrestDocument.at(indexForm).value.IsNewItem;
 
-            if (isNewItem) {
-                this.ArrestDocument.removeAt(indexForm)
-            } else if (confirm(Message.confirmAction)) {
-                // this.arrestService.indicmentupdDelete(indicmtmentId).then(IsSuccess => {
-                //     if (IsSuccess)
-                this.ArrestDocument.removeAt(indexForm)
-                // })
+            if (isNewItem) { this.ArrestDocument.removeAt(indexForm); return; }
+
+            if (confirm(Message.confirmAction)) {
+                this.preloader.setShowPreloader(true);
+
+                await this.arrestService.documentUpDelete(id).then(isSuccess => {
+                    if (isSuccess === true) {
+                        this.ArrestDocument.removeAt(indexForm);
+                        alert(Message.delDocumentComplete)
+                    } else {
+                        alert(Message.delDocumentFail)
+                    }
+                })
+                this.preloader.setShowPreloader(false);
             }
         }
-    }
-
-    handleArrestDocInput(file: FileList, indexForm: number) {
-        // this.ArrestDocument.patchValue({
-        // })
     }
 
     searchProduct = (text$: Observable<string>) =>
@@ -972,8 +1030,9 @@ debugger
             .map(term => term === '' ? []
                 : this.typeheadProduct
                     .filter(v =>
-                        v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
@@ -983,9 +1042,9 @@ debugger
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (v.SubDistrictNameTH && v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -995,9 +1054,9 @@ debugger
             .map(term => term === '' ? []
                 : this.typeheadStaff
                     .filter(v =>
-                        v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>
@@ -1007,18 +1066,18 @@ debugger
             .map(term => term === '' ? []
                 : this.typeheadOffice
                     .filter(v =>
-                        v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubDistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
+        `${x.SubDistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
 
     formatterProduct = (x: { SubBrandNameTH: string, BrandNameTH: string, ModelName: string }) =>
-        `${x.SubBrandNameTH} ${x.BrandNameTH} ${x.ModelName}`;
+        `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
-        `${x.TitleName} ${x.FirstName} ${x.LastName}`
+        `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
 
     formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
 
@@ -1034,10 +1093,13 @@ debugger
     }
 
     selectItemProductItem(e, i) {
-        this.ArrestProduct.at(i).reset(e.item)
+        const isNewItem = this.ArrestProduct.at(i).value.isNewItem;
+        this.ArrestProduct.at(i).reset(e.item);
         this.ArrestProduct.at(i).patchValue({
-            IsNewItem: true,
+            IsNewItem: isNewItem || true,
             ArrestCode: this.arrestCode,
+            GroupCode: e.item.GroupCode || 1,
+            IsDomestic: e.item.IsDomestic || 1
             // Qty: e.item.Size,
             // QtyUnit: e.item.SizeCode,
             // NetVolume: null,
@@ -1046,13 +1108,21 @@ debugger
     }
 
     selectItemStaff(e, i) {
+        const isNewItem = this.ArrestStaff.at(i).value.isNewItem;
         this.ArrestStaff.at(i).reset(e.item);
         this.ArrestStaff.at(i).patchValue({
+            IsNewItem: isNewItem || true,
             ProgramCode: this.programSpect,
             ProcessCode: '0002',
             ArrestCode: this.arrestCode,
             PositionCode: e.item.OperationPosCode,
-            PositionName: e.item.OperationPosName.trim()
+            PositionName: e.item.OperationPosName,
+            DepartmentCode: e.item.OfficeCode,
+            DepartmentName: e.item.OfficeName,
+            DepartmentLevel: e.item.DeptLevel,
+            ContributorID: e.item.ContributorID == null ? 1 : e.item.ContributorID,
+            ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode
+
         })
     }
 
@@ -1075,7 +1145,7 @@ debugger
             if (dataSource && dataSource !== undefined) {
                 this.ArrestDocument.at(index).patchValue({
                     ReferenceCode: this.arrestCode,
-                    FilePath: e.target.value,
+                    FilePath: replaceFakePath(e.target.value),
                     IsActive: 1
                 })
             }

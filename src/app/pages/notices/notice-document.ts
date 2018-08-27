@@ -7,7 +7,7 @@ export class NoticeDocument {
     public DataSource = '';
     DocumentType = '';
     DocumentName = '';
-    public IsActive = '';
+    public IsActive: number;
     public IsNewItem: boolean;
 }
 

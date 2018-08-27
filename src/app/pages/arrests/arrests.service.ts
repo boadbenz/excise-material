@@ -9,6 +9,7 @@ import { ArrestIndictment, ArrestIndicmentDetail } from './arrest-indictment';
 // import { ProductModel } from '../../models/product.model';
 import { Message } from '../../config/message';
 import { ArrestLocale } from './arrest-locale';
+import { ArrestDocument } from './arrest-document';
 // import { Observable } from 'rxjs/Observable';
 
 // const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -122,6 +123,12 @@ export class ArrestsService {
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
+    staffUpd(ArrestStaff: ArrestStaff): Promise<boolean> {
+        const params = ArrestStaff;
+        const url = `${appConfig.api7788}/ArrestStaffupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url)
+    }
+
     localeinsAll(ArrestLocale: ArrestLocale): Promise<boolean> {
         const params = ArrestLocale;
         const url = `${appConfig.api7788}/ArrestLocaleinsAll`;
@@ -134,22 +141,40 @@ export class ArrestsService {
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
+    lawbreakerUpd(lawbreaker: ArrestLawbreaker): Promise<boolean> {
+        const params = lawbreaker;
+        const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url)
+    }
+
     productinsAll(product: ArrestProduct): Promise<boolean> {
         const params = product;
         const url = `${appConfig.api7788}/ArrestProductinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    productDetailInsAll(productDetail: ArrestProductDetail): Promise<boolean> {
-        const params = productDetail;
-        const url = `${appConfig.api7788}/ArrestProductDetailinsAll`;
+    productUpd(product: ArrestProduct): Promise<boolean>{
+        const params = product;
+        const url = `${appConfig.api7788}/ArrestProductupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    indicmentinsAll(indicment: ArrestIndictment): Promise<boolean> {
-        const params = indicment;
+    productDetailInsAll(productDetail: ArrestProductDetail): Promise<boolean> {
+        const params = productDetail;
+        const url = `${appConfig.api7788}/ArrestProductDetailinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    indicmentinsAll(indictment: ArrestIndictment): Promise<boolean> {
+        const params = indictment;
         const url = `${appConfig.api7788}/ArrestIndicmentinsAll`;
-        return this.responsePromisModify(JSON.stringify(params), url)
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    indictmentUpd(indictment: ArrestIndictment): Promise<boolean> {
+        const params = indictment;
+        const url = `${appConfig.api7788}/ArrestIndicmentupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     indicmentgetByCon(IndicmentID: string): Promise<ArrestIndictment[]> {
@@ -193,6 +218,44 @@ export class ArrestsService {
         return this.resposePromisGetList(Textsearch, url);
     }
     //-- Arrest Notice --//
+
+    //-- Document --//
+    async getDocument(ReferenceCode: string): Promise<ArrestDocument[]> {
+        const params = { ReferenceCode };
+        const url = `${appConfig.api8883}/DocumentRequestgetByCon`;
+        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+        if (!res.length) {
+            return new Array<ArrestDocument>()
+        }
+        return res;
+    }
+
+    async insDocument(document: ArrestDocument): Promise<any> {
+        const params = document;
+        const url = `${appConfig.api8883}/DocumentRequestinsAll`;
+        return await this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    async updDocument(document: ArrestDocument): Promise<any> {
+        const params = document;
+        const url = `${appConfig.api8882}/DocumentupdByCon`;
+        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
+            return false;
+        }
+        return true;
+    }
+
+    async documentUpDelete(DocumentID: string): Promise<any> {
+        const params = { DocumentID };
+        const url = `${appConfig.api8882}/DocumentupdDelete`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.IsSuccess) {
+            return false;
+        }
+        return true;
+    }
+    //-- Document --//
 
     //-- Mas --//
     masLawbreakergetByConAdv(Textsearch: any): Promise<any[]> {
