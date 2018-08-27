@@ -24,6 +24,7 @@ const routes: Routes = [
                 { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/notice/manage/C/NEW' },
                 { title: 'จัดการข้อมูลผู้ต้องหา' }
             ],
+            codePage: 'XCS60-99-02-02-00',
             nextPage: { title: 'งานจับกุม', url: '/' }
         },
         component: LawbreakerComponent

@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.9');
+        this.sidebarService.setVersion('0.0.3.9');
 
         this.navigate_service();
 
@@ -148,10 +148,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
+                this.navService.setNextPageButton(false);
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.navService.setNextPageButton(true);
                 this.noticeCode = `LS-${(new Date).getTime()}`;
                 this.arrestCode = `TN-${(new Date).getTime()}`;
 
@@ -384,22 +384,20 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log('Create Notice : ', JSON.stringify(this.noticeForm.value));
         console.log('===================');
 
-        let IsSuccess: boolean | false;
-        await this.noticeService.insAll(this.noticeForm.value).then(isSuccess => {
-            IsSuccess = isSuccess;
-            if (!isSuccess) return;
+        let IsSuccess: boolean = true;
+        await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
+            if (!isSuccess) { IsSuccess = false; return false; };
+        }, () => { IsSuccess = false; return; });
 
-            this.NoticeDocument.value.map(async doc => {
+        if (IsSuccess) {
+            await this.NoticeDocument.value.map(async doc => {
                 // insert Document
                 await this.noticeService.insDocument(doc).then(docIsSuccess => {
-                    IsSuccess = docIsSuccess;
-                    if (!docIsSuccess) return;
+                    if (!docIsSuccess) { IsSuccess = false; return false; };
 
                 }, () => { IsSuccess = false; return false; });
             });
-
-        }, () => { IsSuccess = false; return; });
-
+        }
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -420,28 +418,26 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log('Update Notice : ', JSON.stringify(this.noticeForm.value));
         console.log('===================');
 
-        let IsSuccess: boolean | false;
+        let IsSuccess: boolean = true;
         await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
-            IsSuccess = isSuccess;
-            if (!isSuccess) return;
+            if (!isSuccess) { IsSuccess = false; return; };
+        }, () => { IsSuccess = false; return; });
 
+        if (IsSuccess) {
             const document = this.NoticeDocument.value;
             await document.map(async (item: NoticeDocument) => {
                 if (item.IsNewItem) {
                     await this.noticeService.insDocument(item).then(docIsSuccess => {
-                        IsSuccess = docIsSuccess;
-                        if (!docIsSuccess) return;
-                    }, () => { IsSuccess = false; return false; });
+                        if (!docIsSuccess) { IsSuccess = false; return; };
+                    }, () => { IsSuccess = false; return; });
 
                 } else {
                     this.noticeService.updDocument(item).then(docIsSuccess => {
-                        IsSuccess = docIsSuccess
-                        if (!docIsSuccess)
-                            return false;
+                        if (!docIsSuccess) { IsSuccess = false; return };
                     }, () => { IsSuccess = false; return; })
                 }
             })
-        }, () => { IsSuccess = false; return; })
+        }
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -713,10 +709,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemProductItem(ele: any, index: number) {
-        ele.item.NoticeCode = this.noticeCode;
-        ele.item.IsActive = 1;
         this.NoticeProduct.at(index).reset(ele.item)
         this.NoticeProduct.at(index).patchValue({
+            IsActive: 1,
             IsNewItem: true,
             NoticeCode: this.noticeCode,
             GroupCode: ele.item.GroupCode || '1',
