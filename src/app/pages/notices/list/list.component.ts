@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('0.0.2.9');
+        this.sidebarService.setVersion('0.0.3.9');
         this.paginage.TotalItems = 0;
 
         this.preLoaderService.setShowPreloader(true);
@@ -127,12 +127,16 @@ export class ListComponent implements OnInit, OnDestroy {
             .map((item, i) => {
                 item.RowId = i + 1;
                 item.NoticeDate = toLocalShort(item.NoticeDate);
-                item.NoticeStaff.map(s => {
-                    s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
-                });
-                item.NoticeSuspect.map(s => {
-                    s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
-                })
+                item.NoticeStaff
+                    .filter(_s => _s.IsActive == 1)
+                    .map(s => {
+                        s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+                    });
+                item.NoticeSuspect
+                    .filter(_s => _s.IsActive == 1)
+                    .map(s => {
+                        s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+                    })
             })
 
         this.notice = list

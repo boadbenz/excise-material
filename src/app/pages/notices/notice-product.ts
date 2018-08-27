@@ -67,6 +67,7 @@ export const NoticeProductFormControl = {
     NetWeight: new FormControl(null),
     NetWeightUnit: new FormControl(null),
     Remarks: new FormControl(null),
+    IsActive: new FormControl(null),
 
     BrandFullName: new FormControl(null),
     IsNewItem: new FormControl(false)
