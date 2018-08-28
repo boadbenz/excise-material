@@ -12,6 +12,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { Lawsuit } from "../models/lawsuit";
 import { LawsuitDocument } from "../models/lawsuit_document";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import {SidebarService} from "../../../shared/sidebar/sidebar.component";
 
 @Component({
   selector: "app-detail",
@@ -43,9 +44,11 @@ export class DetailComponent implements OnInit {
     private navService: NavigationService,
     private lawsuitService: LawsuitService,
     private ngbModel: NgbModal,
+    private sidebarService: SidebarService
   ) { }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.0.2');
     this.setShowButton();
     this.subNavService();
     this.getParamFromActiveRoute();

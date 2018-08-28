@@ -47,6 +47,7 @@ export class ManageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.0.2');
     this.setShowButton();
     this.getParamFromActiveRoute();
   }

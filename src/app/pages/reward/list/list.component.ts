@@ -18,6 +18,7 @@ import {pagination} from '../../../config/pagination';
 import {Message} from '../../../config/message';
 import {toLocalShort} from '../../../config/dateFormat';
 import {PreloaderService} from "../../../shared/preloader/preloader.component";
+import {SidebarService} from "../../../shared/sidebar/sidebar.component";
 
 @Component({
     selector: 'app-list',
@@ -43,7 +44,8 @@ export class ListComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     private navService: NavigationService,
     private preLoaderService: PreloaderService,
-    private rewardService: RewardService
+    private rewardService: RewardService,
+    private sidebarService: SidebarService
   ) {
     /* Initial Adv.Search */
     this.advSearch = this.navService.showAdvSearch;
@@ -67,6 +69,7 @@ export class ListComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.sidebarService.setVersion('0.0.0.1');
     /* Display Button */
     this.setShowButton();
     /* Load Data*/

@@ -26,7 +26,7 @@ export class InvestigateService {
     getByKeyword(Textsearch: string) {
         const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.apiUrl}/InvestigategetByKeyword`;
-        return this.http.post<any>(url, params, this.httpOptions).toPromise();
+        return this.http.post<any>(url, params, this.httpOptions);
     }
 
     getByCon(InvestigateCode: string) {
