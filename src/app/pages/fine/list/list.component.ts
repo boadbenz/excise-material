@@ -107,7 +107,7 @@ export class ListComponent implements OnInit, OnDestroy {
                 form.value.CompareDateTo = "";
             }
 
-           await this.fineService.getByConAdv(form.value).then(async list => {
+            this.fineService.getByConAdv(form.value).then(async list => {
                console.log(list);
                 this.onSearchComplete(list)
 
