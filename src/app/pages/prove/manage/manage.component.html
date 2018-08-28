@@ -4,41 +4,41 @@
 
 <div class="wizard-content">
     <div class="wizard-circle wizard clearfix clearfix">
-      <div class="steps tab-wizard">
-        <ul role="tablist">
-          <li role="tab" class="current" aria-disabled="false" aria-selected="true">
-            <a>
-              <span class="current-info audible">current step: </span>
-              <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 2. งานจับกุม </a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 3. รับคำกล่าวโทษ </a>
-          </li>
-          <li role="tab" class="current" aria-disabled="true">
-            <a>
-              <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 6. นำส่งเงินรายได้ </a>
-          </li>
-          <li role="tab" class="disabled" aria-disabled="true">
-            <a>
-              <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
-          </li>
-        </ul>
-      </div>
+        <div class="steps tab-wizard">
+            <ul role="tablist">
+                <li role="tab" class="current" aria-disabled="false" aria-selected="true">
+                    <a>
+                        <span class="current-info audible">current step: </span>
+                        <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 2. งานจับกุม </a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 3. รับคำกล่าวโทษ </a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
+                </li>
+                <li role="tab" class="disabled" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
+                </li>
+                <li role="tab" class="disabled" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 6. นำส่งเงินรายได้ </a>
+                </li>
+                <li role="tab" class="disabled" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
+</div>
 
 <!-- รายละเอียดคดี -->
 <div class="card card-outline-bluish unset-radius">
@@ -173,7 +173,8 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">ทะเบียนตรวจพิสูจน์ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label">/{{ProveYear}}</label>
                 </div>
             </div>
@@ -294,7 +295,8 @@
                 <div class="form-group col-lg-4 col-md-7">
                     <input type="text" class="form-control" [(ngModel)]="ScienceStaffName" name="ScienceStaffName" placeholder="พิมพ์ข้อความ"
                         aria-label="Number" matInput [matAutocomplete]="auto3" (input)="ScienceStaffonAutoChange($event.target.value)"
-                        (focus)="ScienceStaffonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        (focus)="ScienceStaffonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                        required>
                     <mat-autocomplete #auto3="matAutocomplete">
                         <mat-option *ngFor="let ScOption of Scienceoptions" [value]="ScOption.TitleName + ScOption.FirstName + ' ' + ScOption.LastName"
                             (click)="ScienceStaffonAutoSelecteWord(ScOption)">
@@ -360,7 +362,8 @@
                                         <a *ngIf="showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" data-toggle="modal" data-target="#SciencePopup">
                                             <i class="mdi mdi-eye fa-lg"></i>
                                         </a>
-                                        <a *ngIf="!showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" [hidden]="viewMode" data-toggle="modal" data-target="#SciencePopup">
+                                        <a *ngIf="!showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" [hidden]="showEditField" data-toggle="modal"
+                                            data-target="#SciencePopup">
                                             <i class="ti-pencil-alt btn-action"></i>
                                         </a>
                                         &nbsp;
@@ -405,18 +408,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let lsDoc of ListProveDoc; let i=index;">
+                            <tr *ngFor="let lsDoc of ListProveDoc | IsActivePipe; let i=index;">
                                 <td style="text-align: center">{{i+1}}</td>
                                 <td>
                                     <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control form-control-sm" [disabled]="showEditField">
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control form-control-sm" [(ngModel)]="lsDoc.FilePath" name="lsDoc.FilePath" style="border-right: 0;" [disabled]="showEditField">
+                                        <input type="text" class="form-control form-control-sm" [(ngModel)]="lsDoc.FilePath" name="lsDoc.FilePath" style="border-right: 0;"
+                                            [disabled]="showEditField">
                                         <div class="input-group-append">
-                                            <!-- <input id="communicateAttach" type="file" (change)="changeComunicateFile($event)" hidden [readonly]="showEditField"> -->
-                                            <input id="communicateAttach" type="file" (change)="changeComunicateFile($event,i)" hidden [disabled]="showEditField">
-                                            <label for="communicateAttach" class="input-group-text custom-file-upload text-secondary" >
+                                            <input [id]="'communicateAttach'+lsDoc.DocumentSeq" type="file" (change)="changeComunicateFile($event, lsDoc.DocumentSeq)"
+                                                hidden>
+                                            <label [for]="'communicateAttach'+lsDoc.DocumentSeq" class="input-group-text custom-file-upload text-secondary" [hidden]="showEditField">
                                                 <i class="ti-more-alt"></i>
                                             </label>
                                         </div>

@@ -46,8 +46,7 @@ const routes: Routes = [
     providers: [ProveService,
         ArrestService,
         LawsuitService,
-        MasterService,
-       // PreloaderService
+        MasterService
     ],
     declarations: [ManageComponent,IsActivePipe],
     exports: [MatAutocompleteModule]

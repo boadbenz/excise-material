@@ -9,7 +9,7 @@ import { pagination } from '../../../config/pagination';
 import { NgForm, FormBuilder } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
-import { toLocalShort, compareDate, setZeroHours, getDateMyDatepicker } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
@@ -161,8 +161,6 @@ export class ListComponent implements OnInit {
 
             this.preLoaderService.setShowPreloader(false);
         });
-
-        this.preLoaderService.setShowPreloader(false);
     }
 
     async onSearchComplete(list: any) {
@@ -206,12 +204,12 @@ export class ListComponent implements OnInit {
     }
 
     onSDeliveryDateChange(event: IMyDateModel) {
-        this._dateDeliveryStartFrom = event;
+        this._dateDeliveryStartFrom = event.date;
         this.checkDateDelivery();
     }
 
     onEDeliveryDateChange(event: IMyDateModel) {
-        this._dateDeliveryStartTo = event;
+        this._dateDeliveryStartTo = event.date;
         if (this.checkDateDelivery()) {
 
         }
@@ -219,13 +217,13 @@ export class ListComponent implements OnInit {
 
     checkDateDelivery() {
         if (this._dateDeliveryStartFrom && this._dateDeliveryStartTo) {
-            const sdate = getDateMyDatepicker(this._dateDeliveryStartFrom);
-            const edate = getDateMyDatepicker(this._dateDeliveryStartTo);
+            const sdate = `${this._dateDeliveryStartFrom.year}-${this._dateDeliveryStartFrom.month}-${this._dateDeliveryStartFrom.day}`;
+            const edate = `${this._dateDeliveryStartTo.year}-${this._dateDeliveryStartTo.month}-${this._dateDeliveryStartTo.day}`;
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.DeliveryDateTo = { date: this._dateDeliveryStartFrom.date };
+                    this.DeliveryDateTo = { date: this._dateDeliveryStartFrom };
                 }, 0);
             }
         }
@@ -245,13 +243,13 @@ export class ListComponent implements OnInit {
 
     checkDateProve() {
         if (this._dateProveStartFrom && this._dateProveStartTo) {
-            const sPdate = getDateMyDatepicker(this._dateProveStartFrom);
-            const ePdate = getDateMyDatepicker(this._dateProveStartTo);
+            const sPdate = `${this._dateProveStartFrom.year}-${this._dateProveStartFrom.month}-${this._dateProveStartFrom.day}`;
+            const ePdate = `${this._dateProveStartTo.year}-${this._dateProveStartTo.month}-${this._dateProveStartTo.day}`;
 
             if (!compareDate(sPdate, ePdate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.ProveDateTo = { date: this._dateProveStartFrom.date };
+                    this.ProveDateTo = { date: this._dateProveStartFrom };
                 }, 0);
             }
         }
