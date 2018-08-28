@@ -60,7 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
           });
 
 
-        var form = {"ArrestCode":"","LawsuitCode":"","ProveReportNo":"","CompareCode":"","CompareDateFrom":"","CompareDateTo":"","ProgramCode":"XCS06","ProcessCode":"01","Staff":"","Department":""}
+        
 
         // this.onSearch({ Textsearch: "" });
         this.onAdvSearch(model);
@@ -88,8 +88,8 @@ export class ListComponent implements OnInit, OnDestroy {
         });
     }
 
-    async onAdvSearch(form: any) {
-        
+    onAdvSearch(form: any) {
+        //log
         const sDateCompare = new Date(form.value.CompareDateFrom );
         const eDateCompare = new Date(form.value.CompareDateTo);
 
