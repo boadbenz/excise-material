@@ -2,15 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-// import { LawbreakerModalModule } from '../../arrests/lawbreaker-modal/lawbreaker-modal.module';
 import { FineService } from '../fine.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
+import { ArrestService } from '../../model/arrest.service';
+import { LawsuitService } from '../../model/lawsuit.service';
+import { MasterService }  from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
+import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
 
 const routes: Routes = [
   {
@@ -27,26 +29,23 @@ const routes: Routes = [
   }
 ];
 
-
-
 @NgModule({
   imports: [
-    FormsModule,
-    CommonModule,
-    CardActionsModule,
-    RouterModule.forChild(routes),
-    HttpModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgbModule.forRoot(),
-    RouterModule.forChild(routes),
-    CardActionsModule,
-    PrintDocModalModule,
-    MatAutocompleteModule
+      FormsModule,
+      CommonModule,
+      RouterModule.forChild(routes),
+      HttpModule,
+      HttpClientModule,
+      CardActionsModule,
+      MatAutocompleteModule,
+      PrintDocModalModule
   ],
-  declarations: [ ManageComponent],
-  providers: [FineService],
+  providers: [FineService,
+      ArrestService,
+      LawsuitService,
+      MasterService
+  ],
+  declarations: [ManageComponent,IsActivePipe],
   exports: [MatAutocompleteModule]
 })
 export class ManageModule { }
