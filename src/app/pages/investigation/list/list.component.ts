@@ -72,12 +72,12 @@ export class ListComponent implements OnInit, OnDestroy {
         this.paginage.TotalItems = 0;
         this.preLoader.setShowPreloader(true);
         
-        this.invesService.getByKeyword(Textsearch).then(list => {
-            this.onSearchComplete(list);
-            this.preLoader.setShowPreloader(false);
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
+        //this.invesService.getByKeyword(Textsearch).then(list => {
+        //    this.onSearchComplete(list);
+       //     this.preLoader.setShowPreloader(false);
+      //  }, (err: HttpErrorResponse) => {
+      //      alert(err.message);
+      //  });
         
     }
 

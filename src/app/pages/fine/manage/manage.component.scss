@@ -1,0 +1,49 @@
+  .btn-navy {
+    background: rgb(0, 94, 141);
+    color: white;
+  }
+
+  .btn-orange {
+    background: rgb(224, 112, 35);
+    color: white;
+  }
+
+  .top-navbar {
+    background: linear-gradient(45deg, rgb(0, 94, 141), rgb(53, 57, 147));
+  }
+  
+  .btn-action {
+    color: red;
+    font-size: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  
+  #btn-browse {
+    opacity: 0;
+  }
+  
+  .form-popup {
+    margin-bottom: 0;
+  }
+  
+  .col-form-label {
+    color: black;
+    font-weight: 400;
+  }
+
+ .card-header {
+    background: #ccdeea;
+    border-color: #ccdeea;
+}
+
+::ng-deep .cdk-overlay-container
+{
+
+}
+
+::ng-deep .mat-autocomplete-panel{
+  background-color: white;
+  // top:-2200px;
+  // left:600px;
+}
