@@ -48,7 +48,7 @@ export class ListComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sidebarService.setVersion('1.02');
         this.onSearch('');
-        
+
         this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
@@ -62,6 +62,7 @@ export class ListComponent implements OnInit, OnDestroy {
                 this.router.navigate([`/investigation/manage/C/NEW`]);
             }
         })
+
     }
 
     ngOnDestroy(): void {
@@ -71,14 +72,14 @@ export class ListComponent implements OnInit, OnDestroy {
     onSearch(Textsearch: any) {
         this.paginage.TotalItems = 0;
         this.preLoader.setShowPreloader(true);
-        
-        //this.invesService.getByKeyword(Textsearch).then(list => {
-        //    this.onSearchComplete(list);
-       //     this.preLoader.setShowPreloader(false);
-      //  }, (err: HttpErrorResponse) => {
-      //      alert(err.message);
-      //  });
-        
+
+        this.invesService.getByKeyword(Textsearch).subscribe(list => {
+            this.onSearchComplete(list);
+            this.preLoader.setShowPreloader(false);
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
+
     }
 
     onAdvSearch(form: any) {
