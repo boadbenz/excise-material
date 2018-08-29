@@ -117,7 +117,9 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
     async onSearchByKeyword(f: any) {
         this.preloader.setShowPreloader(true)
-        await this.suspectService.searchByKeyword(f).then(res => this.onComplete(res));
+        // let lawbreaker = await this.s
+        let list = await this.suspectService.searchByKeyword(f).then(res => res);
+
         this.preloader.setShowPreloader(false)
     }
 
