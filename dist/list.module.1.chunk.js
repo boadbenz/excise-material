@@ -27,6 +27,7 @@ module.exports = ""
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config_dateFormat__ = __webpack_require__("./src/app/config/dateFormat.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__ = __webpack_require__("./src/app/shared/sidebar/sidebar.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -44,13 +45,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var ListComponent = /** @class */ (function () {
-    function ListComponent(router, navService, preLoaderService, lawsuitService) {
+    function ListComponent(router, navService, preLoaderService, lawsuitService, sidebarService) {
         var _this = this;
         this.router = router;
         this.navService = navService;
         this.preLoaderService = preLoaderService;
         this.lawsuitService = lawsuitService;
+        this.sidebarService = sidebarService;
         this.results = [];
         this.resultsPerPage = [];
         this.paginage = __WEBPACK_IMPORTED_MODULE_0__config_pagination__["a" /* pagination */];
@@ -63,6 +66,7 @@ var ListComponent = /** @class */ (function () {
         });
     }
     ListComponent.prototype.ngOnInit = function () {
+        this.sidebarService.setVersion('0.0.0.2');
         this.setShowButton();
         this.loadPage();
     };
@@ -132,7 +136,7 @@ var ListComponent = /** @class */ (function () {
             styles: [__webpack_require__("./src/app/pages/lawsuit/list/list.component.scss")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4__angular_router__["c" /* Router */], __WEBPACK_IMPORTED_MODULE_3__shared_header_navigation_navigation_service__["a" /* NavigationService */], __WEBPACK_IMPORTED_MODULE_7__shared_preloader_preloader_component__["b" /* PreloaderService */],
-            __WEBPACK_IMPORTED_MODULE_2__lawsuit_service__["a" /* LawsuitService */]])
+            __WEBPACK_IMPORTED_MODULE_2__lawsuit_service__["a" /* LawsuitService */], __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__["b" /* SidebarService */]])
     ], ListComponent);
     return ListComponent;
 }());

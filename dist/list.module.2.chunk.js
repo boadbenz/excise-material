@@ -141,7 +141,7 @@ var ListComponent = /** @class */ (function () {
         var _this = this;
         this.paginage.TotalItems = 0;
         this.preLoader.setShowPreloader(true);
-        this.invesService.getByKeyword(Textsearch).then(function (list) {
+        this.invesService.getByKeyword(Textsearch).subscribe(function (list) {
             _this.onSearchComplete(list);
             _this.preLoader.setShowPreloader(false);
         }, function (err) {

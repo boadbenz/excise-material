@@ -34,6 +34,7 @@ module.exports = ".pages {\n  padding: 10px; }\n\n.pages a {\n  color: #67757c; 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__config_message__ = __webpack_require__("./src/app/config/message.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__config_dateFormat__ = __webpack_require__("./src/app/config/dateFormat.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__shared_sidebar_sidebar_component__ = __webpack_require__("./src/app/shared/sidebar/sidebar.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -94,14 +95,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 
 
+
 var ListComponent = /** @class */ (function () {
-    function ListComponent(router, activeRoute, navService, preLoaderService, rewardService) {
+    function ListComponent(router, activeRoute, navService, preLoaderService, rewardService, sidebarService) {
         var _this = this;
         this.router = router;
         this.activeRoute = activeRoute;
         this.navService = navService;
         this.preLoaderService = preLoaderService;
         this.rewardService = rewardService;
+        this.sidebarService = sidebarService;
         this.results = [];
         this.resultsPerPage = [];
         this.staffs = [];
@@ -148,6 +151,7 @@ var ListComponent = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.sidebarService.setVersion('0.0.0.1');
                         /* Display Button */
                         this.setShowButton();
                         /* Load Data*/
@@ -269,7 +273,8 @@ var ListComponent = /** @class */ (function () {
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
             __WEBPACK_IMPORTED_MODULE_2__shared_header_navigation_navigation_service__["a" /* NavigationService */],
             __WEBPACK_IMPORTED_MODULE_14__shared_preloader_preloader_component__["b" /* PreloaderService */],
-            __WEBPACK_IMPORTED_MODULE_10__reward_service__["a" /* RewardService */]])
+            __WEBPACK_IMPORTED_MODULE_10__reward_service__["a" /* RewardService */],
+            __WEBPACK_IMPORTED_MODULE_15__shared_sidebar_sidebar_component__["b" /* SidebarService */]])
     ], ListComponent);
     return ListComponent;
 }());

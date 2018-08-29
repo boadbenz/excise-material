@@ -8090,6 +8090,7 @@ module.exports = ".pages a {\n  color: #67757c; }\n\n.btn-navy {\n  background: 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_operators__ = __webpack_require__("./node_modules/rxjs/_esm5/operators.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__config_message__ = __webpack_require__("./src/app/config/message.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__ = __webpack_require__("./src/app/shared/sidebar/sidebar.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8142,14 +8143,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 
 
+
 var ManageComponent = /** @class */ (function () {
-    function ManageComponent(router, navService, activeRoute, preLoaderService, rewardService) {
+    function ManageComponent(router, navService, activeRoute, preLoaderService, rewardService, sidebarService) {
         var _this = this;
         this.router = router;
         this.navService = navService;
         this.activeRoute = activeRoute;
         this.preLoaderService = preLoaderService;
         this.rewardService = rewardService;
+        this.sidebarService = sidebarService;
         this.courtCase = '';
         this.test = 'ส่งฟ้องศาล';
         this.arrest = {};
@@ -8187,6 +8190,7 @@ var ManageComponent = /** @class */ (function () {
     ManageComponent.prototype.ngOnInit = function () {
         // this.getParamFromActiveRoute();
         var _this = this;
+        this.sidebarService.setVersion('0.0.0.1');
         this.sumPartMoney();
         this.sub = this.navService.showFieldEdit.subscribe(function (status) {
             // this.viewMode = status;
@@ -8386,7 +8390,8 @@ var ManageComponent = /** @class */ (function () {
             providers: [__WEBPACK_IMPORTED_MODULE_3__reward_service__["a" /* RewardService */]]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */], __WEBPACK_IMPORTED_MODULE_2__shared_header_navigation_navigation_service__["a" /* NavigationService */], __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
-            __WEBPACK_IMPORTED_MODULE_6__shared_preloader_preloader_component__["b" /* PreloaderService */], __WEBPACK_IMPORTED_MODULE_3__reward_service__["a" /* RewardService */]])
+            __WEBPACK_IMPORTED_MODULE_6__shared_preloader_preloader_component__["b" /* PreloaderService */], __WEBPACK_IMPORTED_MODULE_3__reward_service__["a" /* RewardService */],
+            __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__["b" /* SidebarService */]])
     ], ManageComponent);
     return ManageComponent;
 }());

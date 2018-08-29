@@ -100,6 +100,7 @@ var ManageComponent = /** @class */ (function () {
         // this.navService.setInnerTextNextPageButton('งานจับกุม')
     }
     ManageComponent.prototype.ngOnInit = function () {
+        this.sidebarService.setVersion('0.0.0.2');
         this.setShowButton();
         this.getParamFromActiveRoute();
     };

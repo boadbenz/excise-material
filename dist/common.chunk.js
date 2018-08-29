@@ -4770,7 +4770,7 @@ var InvestigateService = /** @class */ (function () {
     InvestigateService.prototype.getByKeyword = function (Textsearch) {
         var params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].apiUrl + "/InvestigategetByKeyword";
-        return this.http.post(url, params, this.httpOptions).toPromise();
+        return this.http.post(url, params, this.httpOptions);
     };
     InvestigateService.prototype.getByCon = function (InvestigateCode) {
         var params = { InvestigateCode: InvestigateCode };

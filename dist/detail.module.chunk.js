@@ -26,6 +26,7 @@ module.exports = ".btn-action {\n  color: red;\n  font-size: 20px;\n  cursor: po
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ng_bootstrap_ng_bootstrap__ = __webpack_require__("./node_modules/@ng-bootstrap/ng-bootstrap/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_sidebar_sidebar_component__ = __webpack_require__("./src/app/shared/sidebar/sidebar.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -77,13 +78,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 
 
+
 var DetailComponent = /** @class */ (function () {
-    function DetailComponent(router, activeRoute, navService, lawsuitService, ngbModel) {
+    function DetailComponent(router, activeRoute, navService, lawsuitService, ngbModel, sidebarService) {
         this.router = router;
         this.activeRoute = activeRoute;
         this.navService = navService;
         this.lawsuitService = lawsuitService;
         this.ngbModel = ngbModel;
+        this.sidebarService = sidebarService;
         this.masLawGroupSectionList = new Array();
         this.masLawGuitBaseList = new Array();
         this.masLawPenaltyList = new Array();
@@ -93,6 +96,7 @@ var DetailComponent = /** @class */ (function () {
         this.lawBreakerList = new Array();
     }
     DetailComponent.prototype.ngOnInit = function () {
+        this.sidebarService.setVersion('0.0.0.2');
         this.setShowButton();
         this.subNavService();
         this.getParamFromActiveRoute();
@@ -334,7 +338,8 @@ var DetailComponent = /** @class */ (function () {
             __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */],
             __WEBPACK_IMPORTED_MODULE_3__shared_header_navigation_navigation_service__["a" /* NavigationService */],
             __WEBPACK_IMPORTED_MODULE_2__lawsuit_service__["a" /* LawsuitService */],
-            __WEBPACK_IMPORTED_MODULE_6__ng_bootstrap_ng_bootstrap__["d" /* NgbModal */]])
+            __WEBPACK_IMPORTED_MODULE_6__ng_bootstrap_ng_bootstrap__["d" /* NgbModal */],
+            __WEBPACK_IMPORTED_MODULE_7__shared_sidebar_sidebar_component__["b" /* SidebarService */]])
     ], DetailComponent);
     return DetailComponent;
 }());
