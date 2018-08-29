@@ -41,28 +41,108 @@ export class SuspectService {
             })
     };
 
-    searchByKeyword(Textsearch: string): Promise<NoticeSuspect[]> {
+    async searchByKeyword(Textsearch: string): Promise<NoticeSuspect[]> {
         const params = JSON.stringify(Textsearch);
-        const url = `${appConfig.api8082}/NoticeSuspectgetByKeyword`;
-        return this.response(params, url);
+        const lawbreakerUrl = `${appConfig.api8082}/LawbreakergetByKeyword`;
+        const suspectUrl = `${appConfig.api8082}/NoticeSuspectgetByKeyword`;
+        const url = { lawbreakerUrl, suspectUrl };
+
+        return this.response(params, url, 'keyword');
     }
 
     searchAdv(form: any): Promise<NoticeSuspect[]> {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8082}/SuspectgetByConAdv`;
-        return this.response(params, url);
+        const lawbreakerUrl = `${appConfig.api8082}/LawbreakergetByConAdv`;
+        const suspectUrl = `${appConfig.api8082}/SuspectgetByConAdv`;
+        const url = { lawbreakerUrl, suspectUrl };
+
+        return this.response(params, url, 'advance');
     }
 
-    private async response(params: string, url: string) {
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise()
-        if (res.IsSuccess === false) {
-            return [];
+    private async response(params: string, url: any, searchMode: string) {
+        // const res = await this.http.post<any>(url, params, this.httpOptions).toPromise()
+        const lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise()
+
+        
+
+        if (lawbreaker.IsSuccess && lawbreaker.ResponseData.length) {
+            let response: NoticeSuspect[];
+            // lawbreaker.reduce()
+            // Object.assign({
+            //     SuspectID: LawbreakerID,
+            //     EntityType,
+            //     CompanyTitleCode,
+            //     CompanyTitle,
+            //     CompanyName,
+            //     CompanyOtherName,
+            //     CompanyRegistrationNo,
+            //     CompanyLicenseNo,
+            //     FoundedDate,
+            //     LicenseDateForm,
+            //     LicenseDateTo,
+            //     TaxID,
+            //     ExciseRegNo,
+            //     SuspectType,
+            //     SuspectTitleCode: LawbreakerTitleCode,
+            //     SuspectTitleName: LawbreakerTitleName,
+            //     SuspectFirstName: LawbreakerFirstName,
+            //     SuspectMiddleName: LawbreakerMiddleName,
+            //     SuspectLastName:LawbreakertLastName,
+            //     SuspectOtherName: LawbreakerOtherName,
+            //     SuspectDesc: LawbreakerDesc,
+            //     IDCard,
+            //     PassportNo,
+            //     VISAType,
+            //     PassportCountryCode,
+            //     PassportCountryName,
+            //     PassportDateIn,
+            //     PassportDateOut,
+            //     BirthDate,
+            //     GenderType,
+            //     BloodType,
+            //     NationalityCode,
+            //     NationalityNameTH,
+            //     RaceCode,
+            //     RaceName,
+            //     ReligionCode,
+            //     ReligionName,
+            //     MaritalStatus,
+            //     Career,
+            //     GPS,
+            //     Location,
+            //     Address,
+            //     Village,
+            //     Building,
+            //     Floor,
+            //     Room,
+            //     Alley,
+            //     Road,
+            //     SubDistrictCode,
+            //     SubDistrict,
+            //     DistrictCode,
+            //     District,
+            //     ProvinceCode,
+            //     Province,
+            //     ZipCode,
+            //     TelephoneNo,
+            //     Email,
+            //     FatherName,
+            //     MotherName,
+            //     Remarks,
+            //     LinkPhoto,
+            //     PhotoDesc,
+            //     IsActive,
+            // }, ...lawbreaker);
+
+            return response;
         }
 
-        if (!res.ResponseData.length) {
-            return [];
+        const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
+
+        if (!suspect.IsSuccess || suspect.ResponseData.length) {
+            return suspect.ResponseData;
         }
-        return res.ResponseData;
+
     }
 }
 
@@ -118,7 +198,7 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
     async onSearchByKeyword(f: any) {
         this.preloader.setShowPreloader(true)
         // let lawbreaker = await this.s
-        let list = await this.suspectService.searchByKeyword(f).then(res => res);
+        await this.suspectService.searchByKeyword(f).then(res => res);
 
         this.preloader.setShowPreloader(false)
     }
@@ -127,7 +207,7 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true)
 
         await this.suspectService.searchAdv(f).then(res => this.onComplete(res));
-        
+
         this.preloader.setShowPreloader(false)
     }
 
@@ -140,7 +220,7 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
         this.suspect = new Array<NoticeSuspect>();
         const list = await res.map((item, i) => {
-            item.RowId = i +1;
+            item.RowId = i + 1;
             item.IsChecked = false;
             item.CompanyFullName = `${item.CompanyTitleName} ${item.CompanyName}`;
             item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;
