@@ -47,7 +47,7 @@ export class SuspectService {
         const suspectUrl = `${appConfig.api8082}/NoticeSuspectgetByKeyword`;
         const url = { lawbreakerUrl, suspectUrl };
 
-        return this.response(params, url, 'keyword');
+        return this.response(params, url);
     }
 
     searchAdv(form: any): Promise<NoticeSuspect[]> {
@@ -56,94 +56,46 @@ export class SuspectService {
         const suspectUrl = `${appConfig.api8082}/SuspectgetByConAdv`;
         const url = { lawbreakerUrl, suspectUrl };
 
-        return this.response(params, url, 'advance');
+        return this.response(params, url);
     }
 
-    private async response(params: string, url: any, searchMode: string) {
-        // const res = await this.http.post<any>(url, params, this.httpOptions).toPromise()
+    private async response(params: string, url: any) {
         const lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise()
-
         
-
-        if (lawbreaker.IsSuccess && lawbreaker.ResponseData.length) {
-            let response: NoticeSuspect[];
-            // lawbreaker.reduce()
-            // Object.assign({
-            //     SuspectID: LawbreakerID,
-            //     EntityType,
-            //     CompanyTitleCode,
-            //     CompanyTitle,
-            //     CompanyName,
-            //     CompanyOtherName,
-            //     CompanyRegistrationNo,
-            //     CompanyLicenseNo,
-            //     FoundedDate,
-            //     LicenseDateForm,
-            //     LicenseDateTo,
-            //     TaxID,
-            //     ExciseRegNo,
-            //     SuspectType,
-            //     SuspectTitleCode: LawbreakerTitleCode,
-            //     SuspectTitleName: LawbreakerTitleName,
-            //     SuspectFirstName: LawbreakerFirstName,
-            //     SuspectMiddleName: LawbreakerMiddleName,
-            //     SuspectLastName:LawbreakertLastName,
-            //     SuspectOtherName: LawbreakerOtherName,
-            //     SuspectDesc: LawbreakerDesc,
-            //     IDCard,
-            //     PassportNo,
-            //     VISAType,
-            //     PassportCountryCode,
-            //     PassportCountryName,
-            //     PassportDateIn,
-            //     PassportDateOut,
-            //     BirthDate,
-            //     GenderType,
-            //     BloodType,
-            //     NationalityCode,
-            //     NationalityNameTH,
-            //     RaceCode,
-            //     RaceName,
-            //     ReligionCode,
-            //     ReligionName,
-            //     MaritalStatus,
-            //     Career,
-            //     GPS,
-            //     Location,
-            //     Address,
-            //     Village,
-            //     Building,
-            //     Floor,
-            //     Room,
-            //     Alley,
-            //     Road,
-            //     SubDistrictCode,
-            //     SubDistrict,
-            //     DistrictCode,
-            //     District,
-            //     ProvinceCode,
-            //     Province,
-            //     ZipCode,
-            //     TelephoneNo,
-            //     Email,
-            //     FatherName,
-            //     MotherName,
-            //     Remarks,
-            //     LinkPhoto,
-            //     PhotoDesc,
-            //     IsActive,
-            // }, ...lawbreaker);
-
+        if (lawbreaker.length) {
+            let response: NoticeSuspect[] = [];
+            lawbreaker.map(item => {
+                let obj: any = item;
+                obj = this.renameProp('LawbreakerID', 'SuspectID', obj);
+                obj = this.renameProp('LawbreakerType', 'SuspectType', obj);
+                obj = this.renameProp('LawbreakerTitleCode', 'SuspectTitleCode', obj);
+                obj = this.renameProp('LawbreakerTitleName', 'SuspectTitleName', obj);
+                obj = this.renameProp('LawbreakerFirstName', 'SuspectFirstName', obj);
+                obj = this.renameProp('LawbreakerMiddleName', 'SuspectMiddleName', obj);
+                obj = this.renameProp('LawbreakerLastName', 'SuspectLastName', obj);
+                obj = this.renameProp('LawbreakerOtherName', 'SuspectOtherName', obj);
+                obj = this.renameProp('LawbreakerDesc', 'SuspectDesc', obj);
+                response.push(obj);
+            })
             return response;
+        } else {
+            const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
+
+            if (suspect.length) {
+                return suspect.ResponseData;
+            }
         }
-
-        const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
-
-        if (!suspect.IsSuccess || suspect.ResponseData.length) {
-            return suspect.ResponseData;
-        }
-
     }
+
+    private renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => {
+        return { [newProp]: old, ...others };
+    };
+
+    getPropsWithout = (names, object) => Object.keys(object)
+        .filter((key) => !names.includes(key))
+        .reduce((newObject, currentKey) => ({
+            ...newObject, [currentKey]: object[currentKey]
+        }), {})
 }
 
 @Component({
