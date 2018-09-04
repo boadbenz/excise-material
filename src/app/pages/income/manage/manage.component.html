@@ -54,7 +54,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่นำส่งเงิน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" value="Auto Generate" readonly>
+                        <input type="text" name="RevenueCode" [(ngModel)]="RevenueCode" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
@@ -62,7 +62,7 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <div style="width:45%">
-                        <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate"></my-date-picker-th>
+                        <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
                     </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="time" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField">
@@ -74,7 +74,8 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="RevenueCode" [(ngModel)]="RevenueCode"  class="form-control form-control-sm" [disabled]="showEditField">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
@@ -167,7 +168,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">สถานะนำส่งเงิน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select [(ngModel)]="RevenueStatus" name="RevenueStatust" class="form-control form-control-sm" disabled>
+                    <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm" disabled>
                         <option value="0">ยังไม่นำส่งเงินรายได้</option>
                         <option value="1">นำส่งเงินรายได้</option>
                         <option value="2">รับายการนำส่งเงิน</option>
@@ -193,10 +194,13 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>
+                                            <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();">
+                                            <label for="H_0" class="m-0"></label>
+                                        </th>
                                         <th style="text-align: center">ลำดับ</th>
                                         <th>เลขคดีเปรียบเทียบ</th>
-                                        <th>เลขที่ใบเสร็จ</th>
+                                        <th style="text-align: center;">เลขที่ใบเสร็จ</th>
                                         <th>ผู้ต้องหา</th>
                                         <th>ผู้รับชำระค่าปรับ</th>
                                         <th>วันที่ชำระ</th>
@@ -207,112 +211,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr *ngFor="let item of ListRevenueDetailPaging; let i=index;">
                                         <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
+                                            <input type="checkbox" [id]="'RevenueD'+i" class="filled-in chk-col-indigo" name="item.IsCheck" [(ngModel)]="item.IsCheck"
+                                                (change)="checkIfAllChbSelected();">
+                                            <label [for]="'RevenueD'+i" class="m-0"></label>
                                         </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
-                                        </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
-                                        </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
-                                        </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
-                                        </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
+                                        <th style="text-align: center">{{i + 1}}</th>
+                                        <th>{{ item.CompareCode }}</th>
+                                        <th style="text-align: center;">{{ item.ReceiptNo }}</th>
+                                        <th>{{ item.LawBreaker }}</th>
+                                        <th>{{ item.StaffReceip }}</th>
+                                        <th>{{ item.PaymentDate }}</th>
+                                        <th>{{ item.TotalFine | number:0 }}</th>
+                                        <th>{{ item.BribeMoney | number:0 }}</th>
+                                        <th>{{ item.TreasuryMoney | number:0 }}</th>
+                                        <th>{{ item.RewardMoney | number:0 }}</th>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         <div class="card-footer card-footer-unset">
-                            <div class="row justify-content-between m-l-5">
-                                <div clas="col">
-                                    <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
-                                        << </a>
-                                            <label> หน้าที่
-                                                <select>
-                                                    <option value="1">1</option>
-                                                </select> จาก 1 หน้า</label>
-                                            <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
-                                            รายการที่ 1 - 1 จาก 1 รายการ
-                                </div>
-                                <div class="col col-lg-3 text-right">
-                                    <label>แสดง
-                                        <select>
-                                            <option (click)="numPage = 5">5</option>
-                                            <option (click)="numPage = 10">10</option>
-                                            <option (click)="numPage = 15">15</option>
-                                            <option (click)="numPage = 20">20</option>
-                                        </select> รายการ</label>
-                                </div>
-                            </div>
+                            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+                            </app-pagination-table>
                         </div>
                     </div>
                 </div>

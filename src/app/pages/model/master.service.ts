@@ -24,7 +24,7 @@ export class MasterService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      //await alert(error);
     }
   }
 
@@ -36,7 +36,7 @@ export class MasterService {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      await alert(error);
+      //await alert(error);
     }
   }
   

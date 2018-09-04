@@ -11,6 +11,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 
 const routes: Routes = [
     {
@@ -39,7 +40,8 @@ const routes: Routes = [
         CardActionsModule,
         PrintDocModalModule,
         MyDatePickerTHModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        PaginationTableModule
     ],
     declarations: [
         ManageComponent
