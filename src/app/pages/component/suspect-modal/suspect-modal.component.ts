@@ -90,12 +90,6 @@ export class SuspectService {
     private renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => {
         return { [newProp]: old, ...others };
     };
-
-    getPropsWithout = (names, object) => Object.keys(object)
-        .filter((key) => !names.includes(key))
-        .reduce((newObject, currentKey) => ({
-            ...newObject, [currentKey]: object[currentKey]
-        }), {})
 }
 
 @Component({

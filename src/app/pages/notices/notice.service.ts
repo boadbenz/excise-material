@@ -28,15 +28,17 @@ export class NoticeService {
 
     private async responsePromisModify(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (res.IsSuccess === false) {
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess) {
             return false;
         }
-        return res.IsSuccess
+        return true;
     }
 
     private async resposePromisGet(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (res.IsSuccess === false) {
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess) {
             return [];
         }
         if (!res.ResponseData.length) {
@@ -66,7 +68,8 @@ export class NoticeService {
         const params = { NoticeCode };
         const url = `${appConfig.api8082}/NoticegetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (res.IsSuccess === false) {
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (IsSuccess) {
             return new Notice();
         }
         if (!res.ResponseData) {
@@ -79,7 +82,8 @@ export class NoticeService {
         const params = { LawbreakerID };
         const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (res.IsSuccess === false || !res.ResponseData) {
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess || !res.ResponseData) {
             return new Lawbreaker();
         }
         return res.ResponseData;
@@ -89,7 +93,8 @@ export class NoticeService {
         const params = { SuspectID };
         const url = `${appConfig.api8082}/NoticeSuspectgetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (res.IsSuccess === false || !res.ResponseData) {
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess || !res.ResponseData) {
             return new Suspect();
         }
         return res.ResponseData;
@@ -122,62 +127,37 @@ export class NoticeService {
     async updDelete(NoticeCode: string): Promise<any> {
         const params = { NoticeCode };
         const url = `${appConfig.api8082}/NoticeupdDelete`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.IsSuccess) {
-            return false;
-        }
-        return res.IsSuccess
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async productupdDelete(ProductID: string): Promise<any> {
         const params = { ProductID };
         const url = `${appConfig.api8082}/NoticeproductupdDelete`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.IsSuccess) {
-            return false;
-        }
-        return res.IsSuccess
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async staffupdDelete(StaffID: string): Promise<any> {
         const params = { StaffID };
         const url = `${appConfig.api8082}/NoticeStaffupdDelete`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.IsSuccess) {
-            return false;
-        }
-        return res.IsSuccess
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async informerupdDelete(InformerID: string): Promise<any> {
         const params = { InformerID };
         const url = `${appConfig.api8082}/NoticeInformerupdDelete`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.IsSuccess) {
-            return false;
-        }
-        return res.IsSuccess
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async localeupdDelete(LocaleID: string): Promise<any> {
         const params = { LocaleID };
         const url = `${appConfig.api8082}/NoticeLocaleupdDelete`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.IsSuccess) {
-            return false;
-        }
-        return res.IsSuccess
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async suspectupdDelete(SuspectID: string): Promise<any> {
         const params = { SuspectID };
         const url = `${appConfig.api8082}/NoticeSuspectupdDelete`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        debugger
-        if (!res.IsSuccess) {
-            return false;
-        }
-        return res.IsSuccess
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async getDocument(ReferenceCode: string): Promise<NoticeDocument[]> {
@@ -199,21 +179,13 @@ export class NoticeService {
     async updDocument(document: NoticeDocument): Promise<any> {
         const params = document;
         const url = `${appConfig.api8882}/DocumentupdByCon`;
-        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-        if (!res.IsSuccess) {
-            return false;
-        }
-        return true;
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async documentUpDelete(DocumentID: string): Promise<any> {
         const params = { DocumentID };
         const url = `${appConfig.api8882}/DocumentupdDelete`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.IsSuccess) {
-            return false;
-        }
-        return true;
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     
