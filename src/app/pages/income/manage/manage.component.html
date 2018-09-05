@@ -213,7 +213,7 @@
                                 <tbody>
                                     <tr *ngFor="let item of ListRevenueDetailPaging; let i=index;">
                                         <td style="text-align: center">
-                                            <input type="checkbox" [id]="'RevenueD'+i" class="filled-in chk-col-indigo" name="item.IsCheck" [(ngModel)]="item.IsCheck"
+                                            <input type="checkbox" [id]="'RevenueD'+i" class="filled-in chk-col-indigo" name="ListChK[i]" [(ngModel)]="item.IsCheck"
                                                 (change)="checkIfAllChbSelected();">
                                             <label [for]="'RevenueD'+i" class="m-0"></label>
                                         </td>

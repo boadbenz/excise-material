@@ -134,7 +134,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     checkDate() {
-        if (!compareDate(this.dateStartFrom, this.dateStartTo)) {
+        if (!compareDate(new Date(this.dateStartFrom), new Date(this.dateStartTo))) {
             alert(Message.checkDate)
             this.dateStartTo = this.dateStartFrom;
         }
