@@ -98,7 +98,7 @@ export class ListComponent implements OnInit {
             this.onSearchComplete(list)
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            alert(Message.noRecord + " (API Disconnected)");
         });
        
     }
@@ -157,7 +157,7 @@ export class ListComponent implements OnInit {
 
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            alert(Message.noRecord + " (API Disconnected)");
 
             this.preLoaderService.setShowPreloader(false);
         });
@@ -196,8 +196,8 @@ export class ListComponent implements OnInit {
         this.ListProve = await this.Prove.slice(event.startIndex - 1, event.endIndex);
     }
 
-    clickView(LawsuitID: string, ArrestCode: string, ProveID: string) {
-        this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${ProveID}`]);
+    clickView(LawsuitID: string, ArrestCode: string, IndictmentID: string, GuiltBaseID: string, ProveID: string) {
+        this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${IndictmentID}/${GuiltBaseID}/${ProveID}`]);
     }
 
     getCurrentDate() {
@@ -222,7 +222,7 @@ export class ListComponent implements OnInit {
             const sdate = getDateMyDatepicker(this._dateDeliveryStartFrom);
             const edate = getDateMyDatepicker(this._dateDeliveryStartTo);
 
-            if (!compareDate(sdate, edate)) {
+            if (!compareDate(new Date(sdate) , new Date(edate))) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.DeliveryDateTo = { date: this._dateDeliveryStartFrom.date };
@@ -248,7 +248,7 @@ export class ListComponent implements OnInit {
             const sPdate = getDateMyDatepicker(this._dateProveStartFrom);
             const ePdate = getDateMyDatepicker(this._dateProveStartTo);
 
-            if (!compareDate(sPdate, ePdate)) {
+            if (!compareDate(new Date(sPdate), new Date(ePdate))) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.ProveDateTo = { date: this._dateProveStartFrom.date };

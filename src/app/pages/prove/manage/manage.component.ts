@@ -16,7 +16,7 @@ import { ProveProduct } from '../proveProduct';
 import { Message } from '../../../config/message';
 import { ProveDocument } from '../proveDoc';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker, MyDatePickerOptions } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
@@ -35,6 +35,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     // --------
     showEditField: any;
 
+    myDatePickerOptions = MyDatePickerOptions;
+    C1_ReferenceVatRate: any;
+    C1_ReferenceVatQty: any;
+    IsProveScience: any;
+
     // -- Parameter ---
     LawsuitID: string;
     ArrestCode: string;
@@ -51,6 +56,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ArrestProduct = [];
     ListProveDoc = [];
     ListProduct = [];
+    ListQtyUnit = [];
 
     // ---- Varible ---
     LawsuiltCode: string;
@@ -59,6 +65,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     SectionNo: string;
     PenaltyDesc: string;
     IndictmentID: string;
+    GuiltBaseID: string;
     ReportNo: string = "";       // เลขทะเบียนตรวจพิสูจน์  (ไม่รวม /ปี พ.ศ.)
     ProveYear: string;      // ปี พ.ศ.
     ProveDate: any;      // วันที่ตรวจรับ
@@ -114,6 +121,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         // set true
         this.navService.setNextPageButton(true);
+
+
     }
 
     async ngOnInit() {
@@ -122,15 +131,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.active_Route();
         this.navigate_Service();
-
-        await this.getStation();
-        await this.getProveStaff();
-        this.getUnit();
         this.CreateObject();
         this.CreateProduct();
         this.CreateScience();
         // this.CreateStaff();
         this.CreateDocuement();
+        this.getUnit();
+        await this.getStation();
+        await this.getProveStaff();
 
         this.ArrestCode = this.ArrestCode;
         this.ProveStaffName = "";
@@ -146,14 +154,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ProveScienceDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
         this.ProveScienceTime = await this.getCurrentTime();
 
+
+
         if (this.ProveID != '0') {
             await this.getProveByID();
         }
 
-        debugger
-        await this.getLawsuitByID(this.LawsuitID);
-
-        this.preloader.setShowPreloader(true);
+        await this.getLawsuitByID();
+        await this.getGuiltBaseByID();
     }
 
     private active_Route() {
@@ -190,7 +198,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (p['code3']) {
-                this.ProveID = p['code3'];
+                this.IndictmentID = p['code3'];
+            }
+
+            if (p['code4']) {
+                this.GuiltBaseID = p['code4'];
+            }
+
+            if (p['code5']) {
+                this.ProveID = p['code5'];
             }
         });
     }
@@ -202,12 +218,17 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.sub = this.navService.onSave.subscribe(async status => {
             if (status) {
-                debugger
+                this.preloader.setShowPreloader(true);
                 // set action save = false
                 await this.navService.setOnSave(false);
+                // await this.onComplete();
+                // alert(Message.saveComplete);
 
-                if (this.ReportNo == "" || this.ProveStaffName == "" || this.ScienceStaffName == ""
-                    || this.ProveStation == "" || this.ProveDate == null || this.DeliveryDate == null) {
+                if (this.ReportNo == ""
+                    // || this.ProveStaffName == "" || this.ProveStaffName == undefined
+                    // || this.ScienceStaffName == "" || this.ScienceStaffName == undefined
+                    || this.ProveStation == "" || this.ProveStation == undefined
+                    || this.ProveDate == null || this.DeliveryDate == null) {
                     this.isRequired = true;
                     alert(Message.checkData);
 
@@ -215,17 +236,18 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     return false;
                 }
-
-                if (this.oProve) {
-                    if (this.ProveID == '0') {
-                        await this.onInsProve();
-                        this.router.navigate(['/prove/list']);
-                    } else {
-                        await this.onUpdProve();
-                        await this.onComplete();
-                        await this.navService.setOnSave(false);
+                else {
+                    if (this.oProve) {
+                        if (this.ProveID == '0') {
+                            await this.onInsProve();
+                            this.router.navigate(['/prove/list']);
+                        } else {
+                            await this.onUpdProve();
+                        }
                     }
                 }
+
+                await this.onComplete();
             }
         });
 
@@ -275,16 +297,16 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.oProve.DeliveryDocNo = this.DeliveryDocNo;
 
-        let DDate,cDateDelivery, PDate, cProveDate;
+        let DDate, cDateDelivery, PDate, cProveDate;
 
         DDate = this.DeliveryDate.date;
         if (DDate != undefined) {
-            cDateDelivery = DDate.year + '-' + DDate.month + '-' +DDate.day + ' ' +this.DeliveryTime;
+            cDateDelivery = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
         }
 
         PDate = this.ProveDate.date;
         if (PDate != undefined) {
-            cProveDate = PDate.year + '-' + PDate.month + '-' +PDate.day + ' ' +this.ProveTime;
+            cProveDate = PDate.year + '-' + PDate.month + '-' + PDate.day + ' ' + this.ProveTime;
         }
 
         this.oProve.DeliveryDate = cDateDelivery;
@@ -304,55 +326,48 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         let isSuccess: boolean = true;
 
-        await this.proveService.insAll(this.oProve).then(async IsSuccess => {
+        this.proveService.insAll(this.oProve).then(async IsSuccess => {
             if (!IsSuccess) {
                 isSuccess = IsSuccess;
                 return false;
             }
+
+            if (this.ListProveDoc.length > 0) {
+                this.ListProveDoc.map(async item => {
+                    item.ReferenceCode = this.oProve.ProveReportNo;
+
+                    await this.proveService.DocumentinsAll(item).then(IsSuccess => {
+                        if (!IsSuccess) {
+                            isSuccess = IsSuccess;
+                            return false;
+                        }
+                    }, (error) => { isSuccess = false; console.error(error); return false; });
+                });
+            }
         }, (error) => { isSuccess = false; console.error(error); return false; });
 
-        if (!isSuccess) return false;
-
-
-        if (this.ListProveDoc.length > 0) {
-            this.ListProveDoc.map(async item => {
-                item.ReferenceCode = this.oProve.ProveReportNo;
-
-                await this.proveService.DocumentinsAll(item).then(IsSuccess => {
-                    if (!IsSuccess) {
-                        isSuccess = IsSuccess;
-                        return false;
-                    }
-                }, (error) => { isSuccess = false; console.error(error); return false; });
-            });
-        }
-
         if (isSuccess) {
+            this.preloader.setShowPreloader(false);
             alert(Message.saveComplete);
             this.oProve = {};
             this.router.navigate(['/prove/list']);
         } else {
+            this.preloader.setShowPreloader(false);
             alert(Message.saveFail);
         }
-
-        this.preloader.setShowPreloader(false);
-
     }
 
-    async onUpdProve() {
-        this.preloader.setShowPreloader(true);
-        debugger
-
-        let DDate,cDateDelivery, PDate, cProveDate;
+    onUpdProve() {
+        let DDate, cDateDelivery, PDate, cProveDate;
 
         DDate = this.DeliveryDate.date;
         if (DDate != undefined) {
-            cDateDelivery = DDate.year + '-' + DDate.month + '-' +DDate.day + ' ' +this.DeliveryTime;
+            cDateDelivery = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
         }
 
         PDate = this.ProveDate.date;
         if (PDate != undefined) {
-            cProveDate = PDate.year + '-' + PDate.month + '-' +PDate.day + ' ' +this.ProveTime;
+            cProveDate = PDate.year + '-' + PDate.month + '-' + PDate.day + ' ' + this.ProveTime;
         }
 
         this.oProve.DeliveryDocNo = this.DeliveryDocNo;
@@ -361,36 +376,54 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve.ProveDate = cProveDate;
         this.oProve.IndictmentID = this.IndictmentID;
 
-        var aIndex;
-        aIndex = this.getIndexOf(this.oProve.ProveStaff, "14", "ContributorCode");
-        if (aIndex != -1) {
-            this.oProve.ProveStaff[aIndex] = this.oProveStaff;
-            this.oProve.ProveStaff[aIndex].ProveID = this.ProveID;
+        // var aIndex;
+        // aIndex = this.getIndexOf(this.oProve.ProveStaff, "14", "ContributorCode");
+        // if (aIndex != -1) {
+        //     this.oProve.ProveStaff[aIndex] = this.oProveStaff;
+        //     this.oProve.ProveStaff[aIndex].ProveID = this.ProveID;
+        // }
+
+
+        // var sIndex;
+        // sIndex = this.getIndexOf(this.oProve.ProveStaff, "15", "ContributorCode");
+        // if (sIndex != -1) {
+        //     this.oProve.ProveStaff[sIndex] = this.oProveScienceStaff;
+        //     this.oProve.ProveStaff[sIndex].ProveID = this.ProveID;
+        // }
+
+        this.oProve.ProveStaff = [];
+
+        if (this.oProveStaff != 'nulll' && this.oProveStaff != undefined) {
+            this.oProve.ProveStaff.push(this.oProveStaff);
+            this.oProve.ProveStaff[this.oProve.ProveStaff.length - 1].ProveID = this.ProveID;
         }
 
-
-        var sIndex;
-        sIndex = this.getIndexOf(this.oProve.ProveStaff, "15", "ContributorCode");
-        if (sIndex != -1) {
-            this.oProve.ProveStaff[sIndex] = this.oProveScienceStaff;
-            this.oProve.ProveStaff[sIndex].ProveID = this.ProveID;
+        if (this.oProveScienceStaff != 'nulll' && this.oProveScienceStaff != undefined) {
+            this.oProve.ProveStaff.push(this.oProveScienceStaff);
+            this.oProve.ProveStaff[this.oProve.ProveStaff.length - 1].ProveID = this.ProveID;
         }
 
         this.ListProduct = this.oProve.ProveProduct;
         this.oProve.ProveProduct = [];
 
-        if (this.oProve.ProveScience[0].ProveScienceDate == null) {
-            this.oProve.ProveScience[0].ProveScienceDate = cProveDate;
-            this.oProve.ProveScience[0].ProveScienceTime = this.ProveTime;
-        }
-        else {
-            this.oProve.ProveScience[0].ProveScienceDate = cProveDate;
+        if (this.oProve.ProveScience.length > 0) {
+            if (this.oProve.ProveScience[0].ProveScienceDate == null) {
+                this.oProve.ProveScience[0].ProveScienceDate = cProveDate;
+                this.oProve.ProveScience[0].ProveScienceTime = this.ProveTime;
+            }
+            else {
+                this.oProve.ProveScience[0].ProveScienceDate = cProveDate;
+            }
         }
 
+
+        // -----------------------------------------------------------
+        //                       Call API Update
+        // -----------------------------------------------------------
 
         let isSuccess: boolean = true;
         // Update Prove
-        await this.proveService.ProveupdByCon(this.oProve).then(IsSuccess => {
+        this.proveService.ProveupdByCon(this.oProve).then(async IsSuccess => {
             if (!IsSuccess) {
                 isSuccess = IsSuccess;
                 return false;
@@ -433,7 +466,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (!isSuccess) return false;
 
 
-        debugger
         if (this.ListProveDoc.length > 0) {
             // New Document
             this.ListProveDoc.filter(item => item.IsNewItem === true)
@@ -466,6 +498,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }, (error) => { isSuccess = false; console.error(error); return false; });
                 });
 
+            if (!isSuccess) return false;
+
 
             // Del Document
             this.ListProveDoc.filter(item => item.IsDelItem === true)
@@ -481,20 +515,20 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!isSuccess) return false;
         }
 
-
+        
         if (isSuccess) {
             alert(Message.saveComplete);
             this.oProve.ProveProduct = this.ListProduct;
+            this.preloader.setShowPreloader(false);
         } else {
             alert(Message.saveFail);
+            this.preloader.setShowPreloader(false);
         }
-
-        this.preloader.setShowPreloader(false);
     }
 
-    async onDelete() {
+    onDelete() {
         if (confirm(Message.confirmDeleteProduct)) {
-            await this.proveService.ProveupdDelete(this.ProveID).then(IsSuccess => {
+            this.proveService.ProveupdDelete(this.ProveID).then(async IsSuccess => {
                 if (IsSuccess) {
                     this.oProve = {};
                     alert(Message.saveComplete);
@@ -682,6 +716,67 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
             if (res != null) {
                 this.oProve = res;
+
+                var PRN = this.oProve.ProveReportNo.split('/');
+
+                if (PRN.length > 1) {
+                    this.ReportNo = PRN[0];
+                    this.ProveYear = PRN[1];
+                }
+
+                this.ProveStation = `${this.oProve.ProveStation == 'null' ? '' : this.oProve.ProveStation}`;
+                this.ProveDelivery = `${this.oProve.DeliveryStation == 'null' ? '' : this.oProve.DeliveryStation}`;
+                this.DeliveryDocNo = this.oProve.DeliveryDocNo;
+
+                var PDate = this.oProve.ProveDate.toString().split(" ");
+                this.ProveDate = setDateMyDatepicker(new Date(PDate[0]));
+                this.ProveTime = PDate[1] + ".000";
+
+                var PSDate = this.oProve.DeliveryDate.toString().split(" ");
+                this.DeliveryDate = setDateMyDatepicker(new Date(PSDate[0]));
+                this.DeliveryTime = PSDate[1] + ".000";
+
+                var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
+                if (PStaff.length > 0) {
+                    this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
+                    this.PosExaminer = PStaff[0].PositionName;
+                    this.DeptExaminer = PStaff[0].DepartmentName;
+                    this.StaffID = PStaff[0].StaffID;
+                    this.oProveStaff = PStaff[0];
+                }
+
+
+                var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "15");
+                if (PScienceStaff.length) {
+                    this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
+                    this.PosScience = PScienceStaff[0].PositionName;
+                    this.DeptScience = PScienceStaff[0].DepartmentName;
+                    this.StaffScienceID = PScienceStaff[0].StaffID;
+                    this.oProveScienceStaff = PScienceStaff[0];
+                }
+
+                this.oProve.ProveStaff = [];
+
+                this.oProve.ProveProduct.map(item => {
+                    item.IsNewItem = false;
+                    item.IsDelItem = false;
+
+                    item.Remarks = `${item.Remarks == null ? '' : item.Remarks}`;
+                    item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
+                    item.ProveResult = `${item.ProveResult == null ? '' : item.ProveResult}`;
+                });
+
+                for (var i = 0; i < this.oProve.ProveProduct.length; i += 1) {
+                    this.oProve.ProveProduct[i].ProductSeq = i;
+                }
+
+                this.oProve.ProveScience.map(item => {
+                    item.DeliveryDocNo = `${item.DeliveryDocNo == null ? '' : item.DeliveryDocNo}`;
+                    item.ProveScienceDate = `${item.ProveScienceDate == null ? '' : item.ProveScienceDate}`;
+                    item.RequestNo = `${item.RequestNo == null ? '' : item.RequestNo}`;
+                    item.ReportNo = `${item.ReportNo == null ? '' : item.ReportNo}`;
+                });
+
             }
         }, (err: HttpErrorResponse) => {
             alert(err.message);
@@ -702,70 +797,70 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.preloader.setShowPreloader(false);
     }
 
-    async getLawsuitByID(LawsuitID: string) {
-        // this.preloader.setShowPreloader(true);
+    getLawsuitByID() {
+        if (this.IndictmentID != "0") {
+            this.LawsuitSV.LawsuitegetByCon(this.LawsuitID).then(async res => {
+                // --- รายละเอียดคดี ----
+                if (res.length > 0) {
+                    if (res[0].ArrestIndicment.length > 0) {
+                        var aIndex;
+                        aIndex = this.getIndexOf(res[0].ArrestIndicment, this.IndictmentID, "IndictmentID");
 
-        await this.LawsuitSV.LawsuitegetByCon(LawsuitID).then(async res => {
-            // --- รายละเอียดคดี ----
+                        if (aIndex != -1) {
+                            if (res[0].ArrestIndicment[aIndex].Lawsuit.length > 0) {
+                                if (res[0].ArrestIndicment[aIndex].Lawsuit[0].IsOutside == "1") {
+                                    this.LawsuiltCode = "น " + res[0].ArrestIndicment[aIndex].Lawsuit[0].LawsuitNo;
+                                }
+                                else {
+                                    this.LawsuiltCode = res[0].ArrestIndicment[aIndex].Lawsuit[0].LawsuitNo;
+                                }
+                            }
+                        }
+                    }
+                }
+            }, (err: HttpErrorResponse) => {
 
-            if (res.IsOutside == "1") {
-                this.LawsuiltCode = "น " + res.LawsuitNo;
-            }
-            else {
-                this.LawsuiltCode = res.LawsuitNo;
-            }
-
-            this.IndictmentID = res.IndictmentID.toString();
-
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
-
-        await this.getArrestByID(this.ArrestCode);
-
-        // this.preloader.setShowPreloader(false);
+            });
+        }
     }
 
-    async getArrestByID(ArrestCode: string) {
-        // this.preloader.setShowPreloader(true);
+    getArrestByID(ArrestCode: string) {
+        debugger
+        this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
+            if (res.length > 0) {
+                if (res.IsSuccess == true) {
+                    this.oArrest = res.ResponseData;
 
-        await this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
-            this.oArrest = res;
+                    this.ArrestProduct = res.ResponseData.ArrestProduct;
 
-            this.ArrestProduct = res.ArrestProduct;
+                    await this.getProveProduct();
+                    this.preloader.setShowPreloader(false);
+                }
+                else {
+                    alert(res.ResponseData.Msg);
+                    this.preloader.setShowPreloader(false);
+                }
+            }
+            else {
+                this.preloader.setShowPreloader(false);
+            }
+
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            //alert(err.message);
         });
-
-        await this.getGuiltBaseByID();
-        await this.getProveProduct();
-
-
-        // this.preloader.setShowPreloader(false);
     }
 
     getGuiltBaseByID() {
-        // this.preloader.setShowPreloader(true);
+        this.LawsuitSV.getGuiltBaseByCon(this.GuiltBaseID).then(async res => {
+            this.SectionName = res.CompareMasLawSection.SectionName;
+            this.GuiltBaseName = res.CompareMasLawGuiltBase.GuiltBaseName;
+            this.SectionNo = res.CompareMasLawPenalty.SectionNo.toString();
+            this.PenaltyDesc = res.CompareMasLawPenalty.PenaltyDesc;
 
-        var aIndex;
-        var arrestIndex;
-        if (this.oArrest.ArrestIndictment.length > 0) {
-            aIndex = this.getIndexOf(this.oArrest.ArrestIndictment, this.IndictmentID, "IndictmentID");
-
-            if (aIndex != -1) {
-                this.LawsuitSV.getGuiltBaseByCon(this.oArrest.ArrestIndictment[aIndex].GuiltBaseID.toString()).then(async res => {
-                    this.SectionName = res.CompareMasLawSection.SectionName;
-                    this.GuiltBaseName = res.CompareMasLawGuiltBase.GuiltBaseName;
-                    this.SectionNo = res.CompareMasLawPenalty.SectionNo.toString();
-                    this.PenaltyDesc = res.CompareMasLawPenalty.PenaltyDesc;
-
-                }, (err: HttpErrorResponse) => {
-                    alert(err.message);
-                });
-            }
-        }
-
-        this.preloader.setShowPreloader(false);
+            await this.getArrestByID(this.ArrestCode);
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
     }
 
     getIndexOf(arr, val, prop) {
@@ -851,71 +946,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }
 
                     this.oProve.ProveProduct.push(this.oProveProduct);
+                    this.ListQtyUnit.push(this.oArrest.ArrestProduct[i].QtyUnit);
                 }
             }
         }
-        else  // ---- กรณีมีเลข ProveID จะแสดงข้อมูล Product ตาม Prove Product ----
-        {
-            var PRN = this.oProve.ProveReportNo.split('/');
 
-            if (PRN.length > 1) {
-                this.ReportNo = PRN[0];
-                this.ProveYear = PRN[1];
-            }
-
-            this.ProveStation = this.oProve.ProveStation;
-            this.ProveDelivery = this.oProve.DeliveryStation;
-            this.DeliveryDocNo = this.oProve.DeliveryDocNo;
-
-            var PDate = this.oProve.ProveDate.toString().split(" ");
-            this.ProveDate = setDateMyDatepicker(new Date(PDate[0]));
-            this.ProveTime = PDate[1] + ".000";
-
-            var PSDate = this.oProve.DeliveryDate.toString().split(" ");
-            this.DeliveryDate = setDateMyDatepicker(new Date(PSDate[0]));
-            this.DeliveryTime = PSDate[1] + ".000";
-
-            var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
-            if (PStaff.length > 0) {
-                this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
-                this.PosExaminer = PStaff[0].PositionName;
-                this.DeptExaminer = PStaff[0].DepartmentName;
-                this.StaffID = PStaff[0].StaffID;
-                this.oProveStaff = PStaff[0];
-            }
-
-
-            var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "15");
-            if (PScienceStaff.length) {
-                this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
-                this.PosScience = PScienceStaff[0].PositionName;
-                this.DeptScience = PScienceStaff[0].DepartmentName;
-                this.StaffScienceID = PScienceStaff[0].StaffID;
-                this.oProveScienceStaff = PScienceStaff[0];
-            }
-
-            this.oProve.ProveProduct.map(item => {
-                item.IsNewItem = false;
-                item.IsDelItem = false;
-
-                item.Remarks = `${item.Remarks == null ? '' : item.Remarks}`;
-                item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
-                item.ProveResult = `${item.ProveResult == null ? '' : item.ProveResult}`;
-            });
-
-            for (var i = 0; i < this.oProve.ProveProduct.length; i += 1) {
-                this.oProve.ProveProduct[i].ProductSeq = i;
-            }
-
-            this.oProve.ProveScience.map(item => {
-                item.DeliveryDocNo = `${item.DeliveryDocNo == null ? '' : item.DeliveryDocNo}`;
-                item.ProveScienceDate = `${item.ProveScienceDate == null ? '' : item.ProveScienceDate}`;
-                item.RequestNo = `${item.RequestNo == null ? '' : item.RequestNo}`;
-                item.ReportNo = `${item.ReportNo == null ? '' : item.ReportNo}`;
-            });
-        }
-
-        // this.preloader.setShowPreloader(false);
+        this.preloader.setShowPreloader(false);
     }
 
     // --- เขียนที่ ---
@@ -927,7 +963,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            //alert(err.message);
         });
         // this.preloader.setShowPreloader(false);
     }
@@ -986,15 +1022,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     // --- ผู้ตรวจรับ ---
     getProveStaff() {
-        // this.preloader.setShowPreloader(true);
         this.MasterSV.getStaff().then(async res => {
             if (res) {
                 this.rawStaffOptions = res;
             }
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            // alert(err.message);
         });
-        // this.preloader.setShowPreloader(false);
     }
 
     StaffonAutoChange(value: string) {
@@ -1121,7 +1155,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.UnitOption = res;
             }
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            //alert(err.message);
         });
         // this.preloader.setShowPreloader(false);
     }
@@ -1132,11 +1166,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ----- Popup Product-----
     OpenPopupProduct(i: number) {
         this.oProveProduct = this.oProve.ProveProduct[i];
-        this.oProveScience = this.oProve.ProveScience[0];
 
-        this.ProveScienceDate = setDateMyDatepicker(new Date(this.oProveScience.ProveScienceDate));
-        this.ProveScienceTime = this.oProveScience.ProveScienceTime;
+        if(this.oProve.ProveScience.length > 0){
+            this.oProveScience = this.oProve.ProveScience[0];
 
+            this.ProveScienceDate = setDateMyDatepicker(new Date(this.oProveScience.ProveScienceDate));
+            this.ProveScienceTime = this.oProveScience.ProveScienceTime;    
+        }
+        
         this.ProductID = this.oProve.ProveProduct[i].ProductID;
         this.iPopup = i;
         this.modePopup = "U";
@@ -1145,9 +1182,23 @@ export class ManageComponent implements OnInit, OnDestroy {
     ClosePopupProduct() {
         debugger
         this.oProveProduct.ProductID = this.ProductID;
-        this.oProveScience.ProveScienceDate = this.ProveScienceDate + ' ' + this.ProveScienceTime;
+
+        let DDate, cDateScience, PDate, cProveDate;
+
+        DDate = this.ProveScienceDate.date;
+        if (DDate != undefined) {
+            cDateScience = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
+        }
+
+        this.oProveScience.ProveScienceDate =  this.oProve.DeliveryDate = cDateScience;;
         this.oProveScience.ProveScienceTime = this.ProveScienceTime;
-        this.oProve.ProveScience[0] = this.oProveScience;
+
+        if(this.oProve.ProveScience.length > 0){
+            this.oProve.ProveScience[0] = this.oProveScience;
+        }
+        else {
+            this.oProve.ProveScience.push(this.oProveScience);
+        }
 
 
         if (this.modePopup == "I") {

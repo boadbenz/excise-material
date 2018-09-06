@@ -23,10 +23,16 @@ export class IncomeService {
     return this.http.post<Revenue[]>(url, params, this.httpOptions);
   }
 
-  getByCon(RevenueCode: string) {
+  async getByCon(RevenueCode: string): Promise<any> {
     const params = { RevenueCode };
     const url = `${appConfig.api8084}/RevenuegetByCon`;
-    return this.http.post<Revenue>(url, params, this.httpOptions);
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
   }
 
   async getByConAdv(form: any): Promise<any> {
@@ -56,9 +62,9 @@ export class IncomeService {
     }
   }
 
-  async getDepartment(Textsearch: string): Promise<any> {
-    const params = { Textsearch };
-    const url = `${appConfig.api8084}/MasDepartmentgetAll`;
+  async getDepartment(): Promise<any> {
+    const params = { };
+    const url = `${appConfig.api8084}/RevenueDepartmentgetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -68,9 +74,9 @@ export class IncomeService {
     }
   }
 
-  async StaffgetByKeyword(Textsearch): Promise<any> {
-    const params = { Textsearch };
-    const url = `${appConfig.api8084}/StaffgetByKeyword`;
+  async StaffgetByKeyword(): Promise<any> {
+    const params = { };
+    const url = `${appConfig.api8084}/RevenueStaffgetAll`;
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
@@ -79,9 +85,9 @@ export class IncomeService {
     }
   }
 
-  async RevenueComparegetByCon(CompareID: string): Promise<any> {
-    const params = { CompareID };
-    const url = `${appConfig.api8084}/RevenueComparegetByCon`;
+  async RevenueComparegetByCon(): Promise<any> {
+    const params = { };
+    const url = `${appConfig.api8084}/RevenueCompareDetailRecieptgetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -105,40 +111,16 @@ export class IncomeService {
     }
   }
 
-
-  updByCon(revenue: Revenue) {
-    const params = revenue;
+  async RevenueUdp(oRevenue: Revenue): Promise<any> {
+    debugger
+    const params = JSON.stringify(oRevenue);
     const url = `${appConfig.api8084}/RevenueupdByCon`;
-    return this.http.post<any>(url, params, this.httpOptions);
-  }
 
-  updDelete(RevenueCode: string) {
-    const params = { RevenueCode };
-    const url = `${appConfig.api8084}/RevenueupdDelete`;
-    return this.http.post<any>(url, params, this.httpOptions);
-  }
-
-  detailUpdDelete(RevenueDetailID: string) {
-    const params = RevenueDetailID;
-    const url = `${appConfig.api8084}/RevenueDetailupdDelete`;
-    return this.http.post<any>(url, params, this.httpOptions);
-  }
-
-  staffUpdDelete(StaffID: string) {
-    const params = StaffID;
-    const url = `${appConfig.api8084}/RevenueStaffupdDelete`;
-    return this.http.post<any>(url, params, this.httpOptions);
-  }
-
-  getStaffByKeyword(Textsearch: string) {
-    const params = Textsearch;
-    const url = `${appConfig.api8084}/StaffgetByKeyword`;
-    return this.http.post<any>(url, params, this.httpOptions);
-  }
-
-  DocumentgetByCon(DocumentID: String){
-    const params = DocumentID;
-    const url = `${appConfig.api8084}/DocumentgetByCon`;
-    return this.http.post<any>(url, params, this.httpOptions);
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
   }
 }

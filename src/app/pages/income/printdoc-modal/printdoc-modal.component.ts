@@ -30,10 +30,10 @@ export class PrintDocModalComponent implements OnInit {
     ngOnInit() {
         debugger
 
-        this.incomeService.DocumentgetByCon(this.DocumentID).subscribe(result => {
-            this.document = new Array<Document>();
-            this.document = result;
-        })
+        // this.incomeService.DocumentgetByCon(this.DocumentID).subscribe(result => {
+        //     this.document = new Array<Document>();
+        //     this.document = result;
+        // })
     }
 
     createFrom() {

@@ -15,15 +15,15 @@ export class ArrestService {
       })
   };
 
-  async getByArrestCon(ArrestCode: string): Promise<Arrest> {
+  async getByArrestCon(ArrestCode: string): Promise<any> {
     const params = { ArrestCode };
     const url = `${appConfig.api7788}/ArrestgetByCon`;
 
     try {
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        return res.ResponseData as Arrest;
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
     } catch (error) {
-        await alert(error);
+      return [];
     }
-}
+  }
 }
