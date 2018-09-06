@@ -9,6 +9,8 @@ import { Message } from '../../config/message';
 import { NoticeDocument } from './notice-document';
 import { Lawbreaker } from './lawbreaker/lawbreaker.interface';
 import { Suspect } from './suspect/suspect.interface';
+import { MasProductModel, CommunicationChanelModel } from '../../models';
+import { MasDutyProductUnitModel } from '../../models/mas-duty-product-unit.model';
 
 @Injectable()
 export class NoticeService {
@@ -128,6 +130,36 @@ export class NoticeService {
         const params = { NoticeCode };
         const url = `${appConfig.api8082}/NoticeupdDelete`;
         return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    async masProductgetAll(): Promise<MasProductModel[]> {
+        const params = {};
+        const url = `${appConfig.api8082}/NoticeMasProductgetAll`; 
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.ResponseData) {
+            return new Array<MasProductModel>();
+        }
+        return res.ResponseData;
+    }
+
+    async dutyunitgetAll(): Promise<MasDutyProductUnitModel[]> {
+        const params = {};
+        const url = `${appConfig.api8082}/NoticeDutyunitgetAll`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.ResponseData) {
+            return new Array<MasDutyProductUnitModel>();
+        }
+        return res.ResponseData;
+    }
+
+    async communicationChanelgetAll(): Promise<any[]> {
+        const params = {};
+        const url = `${appConfig.api8082}/NoticeCommunicationChanelgetAll`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        if (!res.ResponseData) {
+            return new Array<CommunicationChanelModel>();
+        }
+        return res.ResponseData;
     }
 
     async productupdDelete(ProductID: string): Promise<any> {

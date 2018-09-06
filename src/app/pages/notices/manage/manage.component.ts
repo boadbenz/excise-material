@@ -31,7 +31,8 @@ import {
     MasDistrictModel,
     MasProvinceModel,
     MasSubdistrictModel,
-    MasStaffModel
+    MasStaffModel,
+    CommunicationChanelModel
 } from '../../../models';
 import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
@@ -76,6 +77,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadOffice = new Array<MasOfficeModel>();
     typeheadStaff = new Array<MasStaffModel>();
     typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+    typeheadcommunicateModel = new Array<CommunicationChanelModel>();
 
     get NoticeStaff(): FormArray {
         return this.noticeForm.get('NoticeStaff') as FormArray;
@@ -561,14 +563,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async setProductStore() {
-        await this.arrestService.masProductgetAll().then(res => {
+        await this.noticeService.masProductgetAll().then(res => {
             this.typeheadProduct = res;
         })
     }
 
     private async setProductUnitStore() {
-        await this.proveService.getProveProductUnit('').then(res => {
+        await this.noticeService.dutyunitgetAll().then(res => {
             this.typeheadProductUnit = res;
+        })
+    }
+
+    private async setCommunicateStore() {
+        await this.noticeService.communicationChanelgetAll().then(res => {
+            this.typeheadcommunicateModel = res;
         })
     }
 
