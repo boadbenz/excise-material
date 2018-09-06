@@ -69,10 +69,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     ListChK = [];
 
 
-    oRevenue: Revenue;
-    oRevenueDetail: RevenueDetail;
-    oRevenueSendStaff: Staff;
-    oRevenueStaff: Staff;
+    oRevenue = new Revenue();
+    oRevenueDetail = new RevenueDetail();
+    oRevenueSendStaff = new Staff();
+    oRevenueStaff = new Staff();
 
     isRequired: boolean | false;
 
