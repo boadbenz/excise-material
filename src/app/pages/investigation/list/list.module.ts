@@ -11,13 +11,14 @@ import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
-      path: '',
-      data: {
-          // title: 'ค้นหาข้อมูล',
-          urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาข้อมูลสืบสวน' }],
-          nextPage: { title: 'รายงานสืบสวน', url: '/investigation/manage' }
-      },
-      component: ListComponent
+    path: '',
+    data: {
+      // title: 'ค้นหาข้อมูล',
+      urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาข้อมูลสืบสวน' }],
+      codePage: 'XCS60-01-01-00',
+      nextPage: { title: 'รายงานสืบสวน', url: '/investigation/manage' }
+    },
+    component: ListComponent
   }
 ]
 

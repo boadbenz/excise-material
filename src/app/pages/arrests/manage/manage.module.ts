@@ -28,7 +28,7 @@ const routes: Routes = [
               { title: 'ค้นหางานจับกุม', url: '/arrest/list' },
               { title: 'จัดการข้อมูลบันทึกจับกุม' }
           ],
-          codePage: 'XCS60-03-02-00-00',
+          codePage: 'XCS60-03-02-00',
           nextPage: { title: 'รับคำกล่าวโทษ', url: '/accusations/manage' }
       },
       component: ManageComponent

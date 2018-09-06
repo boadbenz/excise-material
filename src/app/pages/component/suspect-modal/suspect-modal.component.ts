@@ -41,29 +41,55 @@ export class SuspectService {
             })
     };
 
-    searchByKeyword(Textsearch: string): Promise<NoticeSuspect[]> {
+    async searchByKeyword(Textsearch: string): Promise<NoticeSuspect[]> {
         const params = JSON.stringify(Textsearch);
-        const url = `${appConfig.api8082}/NoticeSuspectgetByKeyword`;
+        const lawbreakerUrl = `${appConfig.api8082}/LawbreakergetByKeyword`;
+        const suspectUrl = `${appConfig.api8082}/NoticeSuspectgetByKeyword`;
+        const url = { lawbreakerUrl, suspectUrl };
+
         return this.response(params, url);
     }
 
     searchAdv(form: any): Promise<NoticeSuspect[]> {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8082}/SuspectgetByConAdv`;
+        const lawbreakerUrl = `${appConfig.api8082}/LawbreakergetByConAdv`;
+        const suspectUrl = `${appConfig.api8082}/SuspectgetByConAdv`;
+        const url = { lawbreakerUrl, suspectUrl };
+
         return this.response(params, url);
     }
 
-    private async response(params: string, url: string) {
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise()
-        if (res.IsSuccess === false) {
-            return [];
-        }
+    private async response(params: string, url: any) {
+        const lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise()
+        
+        if (lawbreaker.length) {
+            let response: NoticeSuspect[] = [];
+            lawbreaker.map(item => {
+                let obj: any = item;
+                obj = this.renameProp('LawbreakerID', 'SuspectID', obj);
+                obj = this.renameProp('LawbreakerType', 'SuspectType', obj);
+                obj = this.renameProp('LawbreakerTitleCode', 'SuspectTitleCode', obj);
+                obj = this.renameProp('LawbreakerTitleName', 'SuspectTitleName', obj);
+                obj = this.renameProp('LawbreakerFirstName', 'SuspectFirstName', obj);
+                obj = this.renameProp('LawbreakerMiddleName', 'SuspectMiddleName', obj);
+                obj = this.renameProp('LawbreakerLastName', 'SuspectLastName', obj);
+                obj = this.renameProp('LawbreakerOtherName', 'SuspectOtherName', obj);
+                obj = this.renameProp('LawbreakerDesc', 'SuspectDesc', obj);
+                response.push(obj);
+            })
+            return response;
+        } else {
+            const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
 
-        if (!res.ResponseData.length) {
-            return [];
+            if (suspect.length) {
+                return suspect.ResponseData;
+            }
         }
-        return res.ResponseData;
     }
+
+    private renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => {
+        return { [newProp]: old, ...others };
+    };
 }
 
 @Component({
@@ -117,7 +143,9 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
     async onSearchByKeyword(f: any) {
         this.preloader.setShowPreloader(true)
-        await this.suspectService.searchByKeyword(f).then(res => this.onComplete(res));
+        // let lawbreaker = await this.s
+        await this.suspectService.searchByKeyword(f).then(res => res);
+
         this.preloader.setShowPreloader(false)
     }
 
@@ -125,7 +153,7 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true)
 
         await this.suspectService.searchAdv(f).then(res => this.onComplete(res));
-        
+
         this.preloader.setShowPreloader(false)
     }
 
@@ -138,7 +166,7 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
         this.suspect = new Array<NoticeSuspect>();
         const list = await res.map((item, i) => {
-            item.RowId = i +1;
+            item.RowId = i + 1;
             item.IsChecked = false;
             item.CompanyFullName = `${item.CompanyTitleName} ${item.CompanyName}`;
             item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;

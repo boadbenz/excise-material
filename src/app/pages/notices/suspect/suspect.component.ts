@@ -4,8 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel } from '../../../models';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ISuspect, Suspect } from './suspect.interface';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Suspect } from './suspect.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -28,12 +28,9 @@ import { ImageType } from 'app/config/imageType';
 export class SuspectComponent implements OnInit, OnDestroy {
 
     constructor(
-        private ngModalService: NgbModal,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private preloader: PreloaderService,
         private navService: NavigationService,
-        private fb: FormBuilder,
         private arrestService: ArrestsService,
         private noticeService: NoticeService
     ) {
