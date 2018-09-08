@@ -131,8 +131,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.CreateStaff();
         this.CreateDocuement();
         this.getUnit();
-        await this.getStation();
-        await this.getProveStaff();
+        // await this.getStation();
+        // await this.getProveStaff();
 
         this.ArrestCode = this.ArrestCode;
         this.ProveStaffName = "";
@@ -472,7 +472,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 .map(async item => {
 
                     item.ReferenceCode = this.oProve.ProveReportNo;
-                    debugger
+
                     await this.proveService.DocumentinsAll(item).then(IsSuccess => {
                         if (!IsSuccess) {
                             isSuccess = IsSuccess;
@@ -515,7 +515,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!isSuccess) return false;
         }
 
-        
+
         if (isSuccess) {
             alert(Message.saveComplete);
             this.oProve.ProveProduct = this.ListProduct;
@@ -711,8 +711,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async getProveByID() {
         // this.preloader.setShowPreloader(true);
-
-        debugger
         await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
             if (res != null) {
                 this.oProve = res;
@@ -776,7 +774,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     item.RequestNo = `${item.RequestNo == null ? '' : item.RequestNo}`;
                     item.ReportNo = `${item.ReportNo == null ? '' : item.ReportNo}`;
                 });
-
             }
         }, (err: HttpErrorResponse) => {
             alert(err.message);
@@ -829,26 +826,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     getArrestByID(ArrestCode: string) {
-        debugger
         this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
             if (res.length > 0) {
-                if (res.IsSuccess == true) {
-                    this.oArrest = res.ResponseData;
+                this.oArrest = res[0];
+                this.ArrestProduct = res[0].ArrestProduct;
 
-                    this.ArrestProduct = res.ResponseData.ArrestProduct;
-
-                    await this.getProveProduct();
-                    this.preloader.setShowPreloader(false);
-                }
-                else {
-                    alert(res.ResponseData.Msg);
-                    this.preloader.setShowPreloader(false);
-                }
+                await this.getProveProduct();
             }
-            else {
+            else
+            {
                 this.preloader.setShowPreloader(false);
             }
-
         }, (err: HttpErrorResponse) => {
             //alert(err.message);
         });
@@ -950,6 +938,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }
 
                     this.oProve.ProveProduct.push(this.oProveProduct);
+                    this.ListQtyUnit.push(this.oArrest.ArrestProduct[i].QtyUnit);
+                }
+            }
+        }
+        else{
+            if (this.oArrest.ArrestProduct.length > 0) {
+                this.ListQtyUnit = [];
+                
+                for (var i = 0; i < this.oArrest.ArrestProduct.length; i += 1) {
                     this.ListQtyUnit.push(this.oArrest.ArrestProduct[i].QtyUnit);
                 }
             }
@@ -1154,7 +1151,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ----- Unit -----
     async getUnit() {
         // this.preloader.setShowPreloader(true);
-        await this.proveService.getProveProductUnit("").then(async res => {
+        await this.proveService.getProveProductUnit().then(async res => {
             if (res) {
                 this.UnitOption = res;
             }
@@ -1171,20 +1168,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     OpenPopupProduct(i: number) {
         this.oProveProduct = this.oProve.ProveProduct[i];
 
-        if(this.oProve.ProveScience.length > 0){
+        if (this.oProve.ProveScience.length > 0) {
             this.oProveScience = this.oProve.ProveScience[0];
 
             this.ProveScienceDate = setDateMyDatepicker(new Date(this.oProveScience.ProveScienceDate));
-            this.ProveScienceTime = this.oProveScience.ProveScienceTime;    
+            this.ProveScienceTime = this.oProveScience.ProveScienceTime;
         }
-        
+
         this.ProductID = this.oProve.ProveProduct[i].ProductID;
         this.iPopup = i;
         this.modePopup = "U";
     }
 
     ClosePopupProduct() {
-        debugger
         this.oProveProduct.ProductID = this.ProductID;
 
         let DDate, cDateScience, PDate, cProveDate;
@@ -1194,10 +1190,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             cDateScience = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
         }
 
-        this.oProveScience.ProveScienceDate =  this.oProve.DeliveryDate = cDateScience;;
+        this.oProveScience.ProveScienceDate = this.oProve.DeliveryDate = cDateScience;;
         this.oProveScience.ProveScienceTime = this.ProveScienceTime;
 
-        if(this.oProve.ProveScience.length > 0){
+        if (this.oProve.ProveScience.length > 0) {
             this.oProve.ProveScience[0] = this.oProveScience;
         }
         else {

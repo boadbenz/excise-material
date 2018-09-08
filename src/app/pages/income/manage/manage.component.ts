@@ -219,6 +219,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 //     this.ReceiptBookNo = "";
                 // }
 
+                debugger
                 this.oRevenue.RevenueID = res[0].RevenueID;
                 this.oRevenue.StationCode = res[0].StationCode;
                 this.RevenueStation = res[0].StationName;
@@ -323,7 +324,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    async onInsRevenue() {
+    onInsRevenue() {
         this.preloader.setShowPreloader(true);
 
         let DRate, cDateRevenue;
@@ -352,7 +353,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         debugger
 
         let isSuccess: boolean = true;
-        await this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
+        this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
             if (!item.IsSuccess) {
                 isSuccess = item.IsSuccess;
             }
@@ -371,7 +372,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    async onUdpRevenue() {
+    onUdpRevenue() {
         this.preloader.setShowPreloader(true);
 
         let DRate, cDateRevenue;
@@ -399,7 +400,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         debugger
 
         let isSuccess: boolean = true;
-        await this.IncService.RevenueUdp(this.oRevenue).then(async item => {
+        this.IncService.RevenueUdp(this.oRevenue).then(async item => {
             if (!item.IsSuccess) {
                 isSuccess = item.IsSuccess;
             }
