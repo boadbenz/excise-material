@@ -138,6 +138,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.setRegionStore();
         await this.setProductUnitStore();
         await this.setOfficeStore();
+        await this.setCommunicateStore();
 
         this.preloader.setShowPreloader(false);
     }
