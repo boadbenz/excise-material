@@ -15,7 +15,7 @@ export class Notice {
     public NoticeDueDate: string;
     public NoticeDueTime: string;
     public GroupNameDesc: string;
-    public CommunicationChanelID: string;
+    public CommunicationChanelID: number;
     public DataSource: string;
     public FilePath: string;
     public ArrestCode: string;
