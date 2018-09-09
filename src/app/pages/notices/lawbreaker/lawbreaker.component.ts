@@ -330,8 +330,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     .map(pro => {
                         let r = { ...subdis, ...dis, ...pro }
                         this.typeheadRegion.push({
-                            SubDistrictCode: r.subdistrictCode,
-                            SubDistrictNameTH: r.subdistrictNameTH,
+                            SubdistrictCode: r.subdistrictCode,
+                            SubdistrictNameTH: r.subdistrictNameTH,
                             DistrictCode: r.DistrictCode,
                             DistrictNameTH: r.DistrictNameTH,
                             ProvinceCode: r.ProvinceCode,
@@ -354,18 +354,18 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
-    formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubDistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
+    formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
+        `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
     selectItemRegion(ele: any) {
         this.LawbreakerFG.patchValue({
-            SubDistrictCode: ele.item.SubDistrictCode,
-            SubDistrict: ele.item.SubDistrictNameTH,
+            SubDistrictCode: ele.item.SubdistrictCode,
+            SubDistrict: ele.item.SubdistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,

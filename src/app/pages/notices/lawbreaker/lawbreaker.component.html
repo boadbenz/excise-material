@@ -202,7 +202,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <ng-template #rt let-r="result" let-t="term">
-                        {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                        {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                     </ng-template>
 
                     <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion" [resultTemplate]="rt" [readOnly]="showEditField"

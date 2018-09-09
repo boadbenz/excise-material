@@ -11,6 +11,7 @@ import { Lawbreaker } from './lawbreaker/lawbreaker.interface';
 import { Suspect } from './suspect/suspect.interface';
 import { MasProductModel, CommunicationChanelModel } from '../../models';
 import { MasDutyProductUnitModel } from '../../models/mas-duty-product-unit.model';
+import { NoticeDutyUnit } from './notice-duty-unit';
 
 @Injectable()
 export class NoticeService {
@@ -70,12 +71,9 @@ export class NoticeService {
         const params = { NoticeCode };
         const url = `${appConfig.api8082}/NoticegetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        const IsSuccess = new Boolean(res.IsSuccess);
-        if (IsSuccess) {
-            return new Notice();
-        }
+        
         if (!res.ResponseData) {
-            return new Notice()
+            return new Notice();
         }
         return res.ResponseData 
     }
@@ -136,30 +134,30 @@ export class NoticeService {
         const params = {};
         const url = `${appConfig.api8082}/NoticeMasProductgetAll`; 
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.ResponseData) {
+        if (!res.NoticeMasProduct.length) {
             return new Array<MasProductModel>();
         }
-        return res.ResponseData;
+        return res.NoticeMasProduct;
     }
 
-    async dutyunitgetAll(): Promise<MasDutyProductUnitModel[]> {
+    async dutyunitgetAll(): Promise<NoticeDutyUnit[]> {
         const params = {};
         const url = `${appConfig.api8082}/NoticeDutyunitgetAll`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.ResponseData) {
-            return new Array<MasDutyProductUnitModel>();
+        if (!res.NoticeDutyunit.length) {
+            return new Array<NoticeDutyUnit>();
         }
-        return res.ResponseData;
+        return res.NoticeDutyunit;
     }
 
     async communicationChanelgetAll(): Promise<any[]> {
         const params = {};
         const url = `${appConfig.api8082}/NoticeCommunicationChanelgetAll`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.ResponseData) {
+        if (!res.NoticeCommunicationChanel.length) {
             return new Array<CommunicationChanelModel>();
         }
-        return res.ResponseData;
+        return res.NoticeCommunicationChanel;
     }
 
     async productupdDelete(ProductID: string): Promise<any> {

@@ -216,7 +216,7 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
     
                         <input type="text" class="form-control form-control-sm"
@@ -301,7 +301,7 @@
                                     {{item.get('LawbreakerFullName').value}}
                                 </span>
                             </td>
-                            <td></td>
+                            <td>{{i+1}}</td>
                             <td class="text-center">
                                 <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="viewLawbreaker(item.get('LawbreakerID').value)">
                                     <i class="fa fa-eye fa-lg"></i>
