@@ -29,12 +29,15 @@ export class ArrestsService {
 
     private async responsePromisModify(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        return res.IsSuccess ? true : false;
+        if (!res || res.IsSuccess == 'False') {
+            return false;
+        }
+        return true;
     }
 
     private async resposePromisGet(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res) {
+        if (!res || res.IsSuccess == 'False') {
             return {}
         }
         return res
@@ -42,8 +45,8 @@ export class ArrestsService {
 
     private async resposePromisGetList(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.length) {
-            return []
+        if (res.IsSuccess == 'False' || !res.length) {
+            return [];
         }
         return res
     }
@@ -274,11 +277,7 @@ export class ArrestsService {
 
     async masStaffgetAll(): Promise<any[]> {
         const url = `${appConfig.api7788}/ArrestgetMasStaffgetAll`;
-        const res = await this.http.post<any>(url, '{}', this.httpOptions).toPromise();
-        if (res.length) {
-            return res;
-        }
-        return [];
+        return this.resposePromisGetList('{}', url);
     }
 
     masSubdistrictgetAll(): Promise<any[]> {

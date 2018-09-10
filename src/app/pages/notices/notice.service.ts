@@ -31,8 +31,7 @@ export class NoticeService {
 
     private async responsePromisModify(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        const IsSuccess = new Boolean(res.IsSuccess);
-        if (!IsSuccess) {
+        if (res.IsSuccess == 'False') {
             return false;
         }
         return true;
@@ -40,12 +39,9 @@ export class NoticeService {
 
     private async resposePromisGet(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        const IsSuccess = new Boolean(res.IsSuccess);
-        if (!IsSuccess) {
+        
+        if (res.IsSuccess == 'False' || !res.ResponseData.length) {
             return [];
-        }
-        if (!res.ResponseData.length) {
-            return []
         }
         return res.ResponseData
     }

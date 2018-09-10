@@ -145,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.preloader.setShowPreloader(false);
     }
-
+ 
     private active_route() {
         this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
