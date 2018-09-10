@@ -69,7 +69,7 @@
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.OfficeShortName }}
+                            {{ r.OfficeName }}
                         </ng-template>
     
                         <input type="text" class="form-control form-control-sm "
@@ -207,11 +207,11 @@
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <input type="text" class="form-control form-control-sm" formControlName="Road" [readOnly]="showEditField">
                     </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ตำบล/อำเภอ/จังหวัด :</label>
 
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
 
                         <input type="text" class="form-control form-control-sm"
@@ -290,11 +290,11 @@
                         <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
 
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ตำบล/อำเภอ/จังหวัด :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
 
                         <ng-template #rt let-r="result" let-t="term">
-                            {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                            {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
                         <input type="text" class="form-control form-control-sm"
                             [ngbTypeahead]="searchRegion"
@@ -356,7 +356,7 @@
                         <td>
                             <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of typeheadProductUnit;" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
                             </select>
                         </td>
                         <td class="text-center">
@@ -383,7 +383,9 @@
                 </div>
 
                 <ng-template #suspect let-c="close" let-d="dismiss">
-                    <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" (exportSuspectData)="addSuspect($event)"></app-suspect-modal>
+                    <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" 
+                    (exportSuspectData)="addSuspect($event)">
+                </app-suspect-modal>
                     <!-- <app-modal-lawbreaker (c)="modal.close()" (d)="modal.dismiss()" (lawbreakerEmit)="addSuspect($event)"></app-modal-lawbreaker> -->
                 </ng-template>
             </div>
@@ -403,31 +405,16 @@
                 <tbody formArrayName="NoticeSuspect">
                     <tr *ngFor="let item of NoticeSuspect.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">{{i+1}}</td>
+                        <td>{{item.get('SuspectTypeName').value}}</td>
+                        <td>{{item.get('EntityTypeName').value}}</td>
+                        <td>{{item.get('SuspectID').value}}</td>
                         <td>
-                            <!-- {{item.get('SuspectType').value}} -->
-                        </td>
-                        <td>
-                            <!-- {{item.get('EntityType').value}} -->
-                        </td>
-                        <td>
-                            <!-- <span *ngIf="item.get('EntityType').value == 0">
-                                {{item.get('CompanyRegistrationNo').value}}
-                            </span>
-                            <span *ngIf="item.get('EntityType').value == 1 && item.get('SuspectType').value == 0">
-                                {{item.get('PassportNo').value}}
-                            </span>
-                            <span *ngIf="item.get('EntityType').value == 1 && item.get('SuspectType').value == 1">
-                                {{item.get('Idcard').value}}
-                            </span> -->
-                        </td>
-                        <td>
-                            <!-- <span *ngIf="item.get('EntityType').value == 0">
+                            <span *ngIf="item.get('EntityType').value == 0">
                                 {{item.get('CompanyFullName').value}}
                             </span>
                             <span *ngIf="item.get('EntityType').value == 1">
                                 {{item.get('SuspectFullName').value}}
-                            </span> -->
-                            {{item.get('SuspectFullName').value}}
+                            </span>
                         </td>
                         <td></td>
                         <td class="text-center">
@@ -457,7 +444,7 @@
                 <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                     <select formControlName="CommunicationChanelID" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                         <option value="" selected disabled></option>
-                        <option *ngFor="let item of communicateModel; let i=index;" [value]="item.CommunicationChanelID">
+                        <option *ngFor="let item of typeheadcommunicateModel; let i=index;" [value]="item.CommunicationChanelID">
                             {{item.CommunicationChanelName}}
                         </option>
                     </select>

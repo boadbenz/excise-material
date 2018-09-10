@@ -125,7 +125,7 @@
             <div class="form-group row">
               <label class="col-form-label col-md-4">สถานที่จับกุม : </label>
               <div class="col-md-8">
-                <input class="form-control" type="text" [(ngModel)]="ArrestLocal" name="ArrestLocal" disabled>
+                <input class="form-control" type="text" [(ngModel)]="ArrestLocation" name="ArrestLocation" disabled>
               </div>
             </div>
           </div>
@@ -199,6 +199,8 @@
         <tbody>
           <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
             <td class="">{{item.LawBrakerName}}</td>
+                        <!--<td *ngIf="item.EntityType === '0'" class="">{{item.CompanyTitle}} + {{item.CompanyName }}</td>
+            <td *ngIf="item.EntityType === '1'" class="">{{item.LawbreakerTitleName}} + {{item.LawbreakerFirstName}} + {{item.LawbreakerMiddleName}} + {{item.LawbreakerLastName}} </td>-->
             <td class="text-center">
               <b>
                 <u>
@@ -209,15 +211,15 @@
             <td>{{item.ProductDesc}}</td>
             <!-- <td class="text-center">{{item.FineRate}}</td> -->
             <td>
-              <input class="form-control" type="text" [(ngModel)]="item.FineRate" [disabled]="viewMode" value="">
+              <input class="form-control" type="text" [(ngModel)]="item.FineRate" [disabled]="showEditField" value="">
             </td>
             <!-- <td class="">{{item.VatValue}}</td> -->
             <td>
-              <input class="form-control" type="text" [(ngModel)]="item.VatValue" [disabled]="viewMode" value="">
+              <input class="form-control" type="text" [(ngModel)]="item.VatValue" [disabled]="showEditField" value="">
             </td>
             <td class="">{{item.FineRate * item.VatValue}}</td>
             <td>
-              <input class="form-control" type="text" [(ngModel)]="item.CompareFine" [disabled]="viewMode" value="">
+              <input class="form-control" type="text" [(ngModel)]="item.CompareFine" [disabled]="showEditField" value="">
             </td>
             <!-- <td class="">{{item.BribeMoney}}</td> -->
             <td>
@@ -239,18 +241,18 @@
     <app-card-actions-collapse></app-card-actions-collapse>
     <h4 class="card-title m-b-0">คำให้การของผู้ต้องหา</h4>
   </div>
-  <div class="card-body" style="display: none;">
+  <div class="card-body">
     <div class="form-body">
       <div class="row">
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label  col-md-3">วันที่จัดทำ : </label>
             <div class="col-md-4">
-              <input class="form-control" type="date" [(ngModel)]="CompareDate" name="CompareDate" [disabled]="viewMode">
+              <input class="form-control" type="date" [(ngModel)]="CompareDate" name="CompareDate" [disabled]="showEditField">
             </div>
             <label class="col-form-label text-center col-md-2">เวลา</label>
             <div class="col-md-3">
-              <input class="form-control" type="time" [(ngModel)]="CompareTime" name="CompareTime" [disabled]="viewMode">
+              <input class="form-control" type="time" [(ngModel)]="CompareTime" name="CompareTime" [disabled]="showEditField">
             </div>
           </div>
         </div>
@@ -260,7 +262,7 @@
             <div class="col-md-7">
               <input type="text" class="form-control" [(ngModel)]="StationName" name="StationName" placeholder="พิมพ์ข้อความ" aria-label="Number"
                 matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
-                [disabled]="viewMode">
+                [disabled]="showEditField">
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
                   {{ option.OfficeName }}
@@ -333,7 +335,7 @@
               <a (click)="onClickEditF3(i)" class="text-secondary" data-toggle="modal" data-target="#testimonyPopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a (click)="onClickEditF3(i)" class="text-secondary" [hidden]="viewMode" data-toggle="modal" data-target="#testimonyPopup">
+              <a (click)="onClickEditF3(i)" class="text-secondary" [hidden]="showEditField" data-toggle="modal" data-target="#testimonyPopup">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>
@@ -352,7 +354,7 @@
     <h4 class="card-title m-b-0">บันทึกการเปรียบเทียบคดีและชำระค่าปรับ</h4>
   </div>
 
-  <div class="card-body" style="display: none;">
+  <div class="card-body">
     <div class="form-body">
       <div class="row">
         <div class="col-md-12">
@@ -406,7 +408,7 @@
               <a (click)="onClickEditF4(i)" class="text-secondary" data-toggle="modal" data-target="#payPopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a (click)="onClickEditF4(i)" class="text-secondary" [hidden]="viewMode" data-toggle="modal" data-target="#payPopup">
+              <a (click)="onClickEditF4(i)" class="text-warning" [hidden]="showEditField" data-toggle="modal" data-target="#payPopup">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>
@@ -423,7 +425,7 @@
     <app-card-actions-collapse></app-card-actions-collapse>
     <h4 class="card-title m-b-0">รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ</h4>
   </div>
-  <div class="card-body" style="display: none;">
+  <div class="card-body">
     <div class="table-responsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
@@ -445,7 +447,7 @@
               <a (click)="onClickEditF5(i)" class="text-secondary" data-toggle="modal" data-target="#approvePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a (click)="onClickEditF5(i)" class="text-secondary" [hidden]="viewMode" data-toggle="modal" data-target="#approvePopup">
+              <a (click)="onClickEditF5(i)" class="text-warning" [hidden]="showEditField" data-toggle="modal" data-target="#approvePopup">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>
@@ -462,10 +464,10 @@
     <app-card-actions-collapse></app-card-actions-collapse>
     <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
   </div>
-  <div class="card-body" style="display: none;">
+  <div class="card-body">
     <div class="text-right">
-      <input type="file" id="btn-browse" #file [disabled]="viewMode">
-      <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
+      <input type="file" id="btn-browse" #file [disabled]="showEditField">
+      <label for="btn-browse" [ngClass]="{disabled : showEditField}" class="btn waves-effect waves-light btn-navy"> เพิ่มเอกสารแนบ </label>
     </div>
     <div class="table-responsive">
       <table class="dataTable table table-sm table-striped table-hover">
@@ -480,13 +482,13 @@
           <tr class="footable">
             <td class="text-center">1</td>
             <td>
-              <input class="form-control" type="text" nmae="fileName" [disabled]="viewMode">
+              <input class="form-control" type="text" nmae="fileName" [disabled]="showEditField">
             </td>
             <td>
-              <input class="form-control" type="text" name="filePath" [disabled]="viewMode">
+              <input class="form-control" type="text" name="filePath" [disabled]="showEditField">
             </td>
             <td>
-              <i class="ti-trash btn-action" [hidden]="viewMode"></i>
+              <i class="ti-trash btn-action" [hidden]="showEditField"></i>
             </td>
           </tr>
         </tbody>
@@ -521,7 +523,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">วันที่กำหนดชำระค่าปรับ : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="date" [(ngModel)]="PaymentFineAppointDate" name="PaymentFineAppointDate" [disabled]="viewMode">
+                  <input class="form-control" type="date" [(ngModel)]="PaymentFineAppointDate" name="PaymentFineAppointDate" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -531,7 +533,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">วันที่กำหนดชำระภาษี : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="date" [(ngModel)]="PaymentVatDate" name="PaymentVatDate" [disabled]="viewMode">
+                  <input class="form-control" type="date" [(ngModel)]="PaymentVatDate" name="PaymentVatDate" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -549,11 +551,11 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-4">
-                  <input class="col-form-label filled-in chk-col-indigo" id="insurance" type="checkbox" [checked]="Bail!='' && Bail!=null" disabled>
+                  <input class="col-form-label filled-in chk-col-indigo" id="insurance" type="checkbox" [checked]="Bail!='' && Bail!=nul" disabled>
                   <label for="insurance">ประกัน :</label>
                 </div>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" [(ngModel)]="Bail" name="Bail" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="Bail" name="Bail" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -563,11 +565,11 @@
             <div class="col-md-12">
               <div class="form-group row">
                 <div class="custom-control custom-checkbox col-form-label col-md-4">
-                  <input class="col-form-label filled-in chk-col-indigo" id="collateral" type="checkbox" disabled [checked]="Guaruntee!='' && Guaruntee!=null">
+                  <input class="col-form-label filled-in chk-col-indigo" id="collateral" type="checkbox" disabled [checked]="Guaruntee!='' && Guaruntee!=nul">
                   <label for="collateral">ประกันและหลักประกัน :</label>
                 </div>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" [(ngModel)]="Guaruntee" name="Guaruntee" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="Guaruntee" name="Guaruntee" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -611,14 +613,14 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-3">คำให้การของผู้ต้องหา : </label>
                 <div class="col-md-9">
-                  <textarea class="form-control" [disabled]="viewMode" rows="5" [(ngModel)]="LawbrakerTestimony" name="LawbrakerTestimony"></textarea>
+                  <textarea class="form-control" [disabled]="showEditField" rows="5" [(ngModel)]="LawbrakerTestimony" name="LawbrakerTestimony"></textarea>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="text-right">
-          <button type="button" class="btn waves-effect waves-light btn-navy" [disabled]="viewMode" data-toggle="modal" data-target="#testimonyPopup"
+          <button type="button" class="btn waves-effect waves-light btn-navy" [disabled]="showEditField" data-toggle="modal" data-target="#testimonyPopup"
             (click)="onSaveF3()">บันทึก</button>
         </div>
       </div>
@@ -653,7 +655,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ยอดชำระค่าปรับ : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" [(ngModel)]="TotalFine" name="TotalFine" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="TotalFine" name="TotalFine" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -664,11 +666,11 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ชำระค่าปรับ : </label>
                 <div class="col-md-3">
-                  <input class="form-control" type="date" [(ngModel)]="PaymentDate" name="PaymentDate" [disabled]="viewMode">
+                  <input class="form-control" type="date" [(ngModel)]="PaymentDate" name="PaymentDate" [disabled]="showEditField">
                 </div>
                 <label class="col-form-label text-center col-md-2">เวลา</label>
                 <div class="col-md-3">
-                  <input class="form-control" type="date" [(ngModel)]="PaymentTime" name="PaymentTime" [disabled]="viewMode">
+                  <input class="form-control" type="date" [(ngModel)]="PaymentTime" name="PaymentTime" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -678,7 +680,7 @@
                 <div class="col-md-7">
                   <input type="text" class="form-control" [(ngModel)]="ReceipStation" name="ReceipStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
                     matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
-                    [disabled]="viewMode">
+                    [disabled]="showEditField">
                   <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
                       {{ option.OfficeName }}
@@ -694,7 +696,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้รับชำระค่าปรับ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" [(ngModel)]="ReceipStaff" name="ReceipStaff" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="ReceipStaff" name="ReceipStaff" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -737,7 +739,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ใบเสร็จเล่มที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" [(ngModel)]="ReceiptBookNo" name="ReceiptBookNo" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="ReceiptBookNo" name="ReceiptBookNo" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -745,7 +747,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">ใบเสร็จเลขที่ : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="text" [(ngModel)]="ReceiptNo" name="ReceiptNo" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="ReceiptNo" name="ReceiptNo" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -756,7 +758,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หมายเลขอ้างอิง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" [(ngModel)]="ReferenceNo" name="ReferenceNo" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="ReferenceNo" name="ReferenceNo" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -840,7 +842,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่จัดทำรายงานฯ : </label>
                 <div class="col-md-8">
-                  <input class="form-control" type="date" [(ngModel)]="ApproveReportDate" name="ApproveReportDate" [disabled]="viewMode">
+                  <input class="form-control" type="date" [(ngModel)]="ApproveReportDate" name="ApproveReportDate" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -869,7 +871,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้เสนอพิจารณาเห็นชอบ : </label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" [disabled]="viewMode">
+                  <input class="form-control" type="text" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -899,7 +901,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้พิจารณาเห็นชอบ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="reviewer" [disabled]="viewMode">
+                  <input class="form-control" type="text" name="reviewer" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -930,7 +932,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้มีอำนาจอนุมัติ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="approver" [disabled]="viewMode">
+                  <input class="form-control" type="text" name="approver" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -957,7 +959,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">คำสั่งกรมฯ ที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="departOrder" [disabled]="viewMode">
+                  <input class="form-control" type="text" name="departOrder" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -968,7 +970,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ออกคำสั่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="date" name="dateOfIssue" [disabled]="viewMode">
+                  <input class="form-control" type="date" name="dateOfIssue" [disabled]="showEditField">
                 </div>
               </div>
             </div>
@@ -979,7 +981,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด : </label>
                 <div class="col-md-8">
-                  <textarea class="form-control" [disabled]="viewMode" rows="5"></textarea>
+                  <textarea class="form-control" [disabled]="showEditField" rows="5"></textarea>
                 </div>
               </div>
             </div>
@@ -990,7 +992,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">เหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง :</label>
                 <div class="col-md-8">
-                  <textarea class="form-control" [disabled]="viewMode" rows="5"></textarea>
+                  <textarea class="form-control" [disabled]="showEditField" rows="5"></textarea>
                 </div>
               </div>
             </div>

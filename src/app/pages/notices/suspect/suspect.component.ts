@@ -4,8 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel } from '../../../models';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ISuspect, Suspect } from './suspect.interface';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Suspect } from './suspect.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -28,12 +28,9 @@ import { ImageType } from 'app/config/imageType';
 export class SuspectComponent implements OnInit, OnDestroy {
 
     constructor(
-        private ngModalService: NgbModal,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private preloader: PreloaderService,
         private navService: NavigationService,
-        private fb: FormBuilder,
         private arrestService: ArrestsService,
         private noticeService: NoticeService
     ) {
@@ -323,13 +320,13 @@ export class SuspectComponent implements OnInit, OnDestroy {
         )
 
         await subdistrict
-            .map(subdis => district.filter(dis => dis.DistrictCode == subdis.districtCode)
+            .map(subdis => district.filter(dis => dis.DistrictCode == subdis.DistrictCode)
                 .map(dis => province.filter(pro => pro.ProvinceCode == dis.ProvinceCode)
                     .map(pro => {
                         let r = { ...subdis, ...dis, ...pro }
                         this.typeheadRegion.push({
-                            SubDistrictCode: r.subdistrictCode,
-                            SubDistrictNameTH: r.subdistrictNameTH,
+                            SubdistrictCode: r.SubdistrictCode,
+                            SubdistrictNameTH: r.SubdistrictNameTH,
                             DistrictCode: r.DistrictCode,
                             DistrictNameTH: r.DistrictNameTH,
                             ProvinceCode: r.ProvinceCode,
@@ -348,13 +345,13 @@ export class SuspectComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                         v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
-    formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubDistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
+    formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
+        `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
     selectItemRegion(ele: any) {
         this.SuspectFG.patchValue({

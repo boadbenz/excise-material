@@ -73,6 +73,7 @@ export class ManageComponent implements OnInit {
   ArrestLocation: string;   // สถานที่จับกุม
   AccuserSubdistrictCode: string;   // รหัสสถานที่จับกลุ่ม
   AccuserSubdistrict: string;   // สถานที่จับกลุ่ม
+
   CompareDate: string;      // วันที่จัดทำ
   CompareTime: string;      // เวลาจัดทำ
   StationName: string;      // เขียนที่ (คำให้การของผู้ต้องหา)
@@ -81,6 +82,7 @@ export class ManageComponent implements OnInit {
   OperationDeptName: string; // แผนกผู้เปรียบเทียบ (คำให้การของผู้ต้องหา)
   CompareStaffID: string;   // รหัสผู้เปรียบเทียบ (คำให้การของผู้ต้องหา)
   IsOutside: string;        // flg คดีเปรียบเทียบนอกสถานที่ทำการ
+
   // --- Object ---
   oArrest: Arrest;
   oCompare: Compare;
@@ -98,7 +100,7 @@ export class ManageComponent implements OnInit {
     private LawsuitSV: LawsuitService,
     private MasterSV: MasterService,
     private router: Router,
-    private preloader: PreloaderService,
+    private preloader: PreloaderService
   ) {
     // set false
     this.navService.setNewButton(false);
@@ -124,10 +126,7 @@ export class ManageComponent implements OnInit {
     this.CompareDate = this.getCurrentDate();
     this.CompareTime = this.getCurrentTime();
 
-    console.log("CompareID");
-    console.log(this.CompareID);
-
-    if (this.CompareID !== '0') {
+    if (this.CompareID !== "0") {
       await this.getCompareByID();
       await this.ShowData();
     }
@@ -147,6 +146,7 @@ export class ManageComponent implements OnInit {
     //     this.navService.setSearchBar(false);
     //     this.navService.setDeleteButton(false);
     //     this.navService.setEditButton(false);
+
     //   } else {
     //     this.navService.setPrintButton(true);
     //     this.navService.setDeleteButton(true);
@@ -155,10 +155,10 @@ export class ManageComponent implements OnInit {
     //     this.navService.setCancelButton(false);
     //     this.navService.setSaveButton(false);
     //   }
+
     //   this.navService.setNextPageButton(true);
     // });
 
-    console.log(this.activeRoute);
 
     this.param = this.activeRoute.params.subscribe(p => {
       this.navService.setPrintButton(true);
@@ -186,17 +186,6 @@ export class ManageComponent implements OnInit {
     });
   }
 
-  // async getProveByID() {
-    
-  //   await this.proveService.ProvegetByCon("").then(async res => {
-  //       if (res != null) {
-  //           // this.oProve = res;
-  //       }
-  //   }, (err: HttpErrorResponse) => {
-  //       alert(err.message);
-  //   });
-  // }
-
   private navigate_Service() {
     this.sub = this.navService.showFieldEdit.subscribe(p => {
       this.showEditField = p;
@@ -205,7 +194,7 @@ export class ManageComponent implements OnInit {
     this.sub = this.navService.onSave.subscribe(async status => {
       if (status) {
         await this.navService.setOnSave(false);
-        
+
         if (this.CompareID == '0') {
           await this.onInsCompare();
           this.router.navigate(['/fine/list']);
@@ -222,6 +211,7 @@ export class ManageComponent implements OnInit {
     //         this.onDelete();
     //     }
     // });
+
     this.sub = this.navService.onPrint.subscribe(async status => {
       if (status) {
         await this.navService.setOnPrint(false);
@@ -284,7 +274,7 @@ export class ManageComponent implements OnInit {
 
     await this.LawsuitSV.LawsuitegetByCon(LawsuitID).then(async res => {
       // --- รายละเอียดคดี ----
-      console.log(res);
+
       if (res.IsOutside == "1") {
         this.LawsuiltCode = "น " + res.LawsuitNo;
       }
@@ -306,9 +296,8 @@ export class ManageComponent implements OnInit {
 
   async getArrestByID(ArrestCode: string) {
     this.preloader.setShowPreloader(true);
-    
+
     await this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
-      console.log("getByArrestCon");
       console.log(res);
       res.ArrestStaff.map(async item => {
         item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
@@ -321,9 +310,10 @@ export class ManageComponent implements OnInit {
       this.ArrestLocation += ` ${res.ArrestLocale[0].District == null ? '' : res.ArrestLocale[0].District}`;
       this.ArrestLocation += ` ${res.ArrestLocale[0].Province == null ? '' : res.ArrestLocale[0].Province}`;
       this.AccuserSubdistrictCode = `${res.ArrestLocale[0].SubDistrictCode == null ? '' : res.ArrestLocale[0].SubDistrictCode}`;
-      this.AccuserSubdistrict =  `${res.ArrestLocale[0].SubDistrict == null ? '' : res.ArrestLocale[0].SubDistrict}`;
+      this.AccuserSubdistrict = `${res.ArrestLocale[0].SubDistrict == null ? '' : res.ArrestLocale[0].SubDistrict}`;
 
-      res.ArrestStaff.filter(item => item.ContributorID === "11").map(async item => {
+      // res.ArrestStaff.filter(item => item.ContributorID === "11").map(async item => {
+      res.ArrestStaff.map(async item => {
         this.ArrestStaffName = item.FullName;   // ผู้กล่าวหา
         this.PositionName = item.PositionName;  // ตำแหน่งผู้กล่าวหา
         this.DepartmentName = item.DepartmentName;  // แผนกผู้กล่าวหา
@@ -342,7 +332,8 @@ export class ManageComponent implements OnInit {
           item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
         }
       });
-
+      console.log("ArrestLawbreaker");
+      console.log(this.oArrest);
       await this.getGuiltBaseByID();
 
       this.preloader.setShowPreloader(false);
@@ -362,7 +353,7 @@ export class ManageComponent implements OnInit {
     if (this.oArrest.ArrestIndictment.length > 0) {
       this.ArrestIndictment = this.oArrest.ArrestIndictment.filter(item => item.IndictmentID == +this.IndictmentID)
 
-      await this.LawsuitSV.getGuiltBaseByCon(this.ArrestIndictment[0].GuiltBaseID.toString()).then(async res => {
+      await this.LawsuitSV.getGuiltBaseByCon(this.oArrest.ArrestIndictment[0].GuiltBaseID.toString()).then(async res => {
         this.SectionName = res.CompareMasLawSection.SectionName;
         this.GuiltBaseName = res.CompareMasLawGuiltBase.GuiltBaseName;
         this.SectionNo = res.CompareMasLawPenalty.SectionNo.toString();
@@ -372,6 +363,8 @@ export class ManageComponent implements OnInit {
         if (this.ArrestIndictment[0].OpsArrestIndicmentDetailCollection.length > 0) {
           let ArrestLawbreaker = [];
           let ArrestName = "";
+
+
           ArrestLawbreaker = this.oArrest.ArrestLawbreaker;
           ArrestLawbreaker.map(async item => {
             if (item.EntityType == 0) {
@@ -384,12 +377,16 @@ export class ManageComponent implements OnInit {
               item.ArrestName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
             }
           });
+
+
           // ถ้ามี CompareID แต่ไม่มี CompareDetail => get from  Arrest
           if (this.CompareID == '-') {
             for (var i = 0; i < ArrestIndictment[0].OpsArrestIndicmentDetailCollection.length; i += 1) {
               let ArrestList = [];
               let Product = "";
+
               ArrestList = ArrestLawbreaker.filter(item => item.LawbreakerID === ArrestIndictment[0].OpsArrestIndicmentDetailCollection[i].LawbreakerID);
+
               if (ArrestList.length > 0) {
                 for (var j = 0; j < this.oArrest.ArrestProduct.length; j++) {
                   if (Product == "") {
@@ -399,6 +396,7 @@ export class ManageComponent implements OnInit {
                     Product += "<br>" + this.oArrest.ArrestProduct[j].ProductDesc;
                   }
                 }
+
                 // ----- คำให้การผู้ต้องหา && รายงานการอนุมัติ ---//
                 this.oCompareDetail = {
                   CompareDetailID: "",
@@ -439,10 +437,13 @@ export class ManageComponent implements OnInit {
                   CompareDetailFine: [],
                   CompareDetailReceipt: [],
                 }
+
                 this.ListCompareDetail.push(this.oCompareDetail);
               }
+
             }
           }
+
         }
         */
       }, (err: HttpErrorResponse) => {
@@ -453,22 +454,12 @@ export class ManageComponent implements OnInit {
     this.preloader.setShowPreloader(false);
   }
 
-  // async getProveByID() {
-    
-  //   await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
-  //       if (res != null) {
-  //           this.oProve = res;
-  //       }
-  //   }, (err: HttpErrorResponse) => {
-  //       alert(err.message);
-  //   });
-  // }
-
   async getCompareByID() {
     this.preloader.setShowPreloader(true);
 
     await this.fineService.getByCon(this.CompareID).then(async res => {
-      console.log(this.CompareID);
+      console.log("getCompareByID");
+      console.log(res);
       if (res != null) {
         this.oCompare = res[0];
 
@@ -479,9 +470,11 @@ export class ManageComponent implements OnInit {
     });
 
     //this.ListProveDoc = [];
+
     // await this.proveService.DocumentgetByCon(this.oProve.ProveReportNo).then(async doc => {
     //   if (doc) {
     //     this.ListProveDoc.push(doc);
+
     //     for (var i = 0; i < this.ListProveDoc.length; i += 1) {
     //       this.ListProveDoc[i].DocumentSeq = i;
     //       this.ListProveDoc[i].IsNewItem = false;
@@ -491,12 +484,13 @@ export class ManageComponent implements OnInit {
     // }, (err: HttpErrorResponse) => {
     //   alert(err.message);
     // });
+
     // this.preloader.setShowPreloader(false);
   }
 
   ShowData() {
     debugger
-    if (this.CompareID != "0") {
+    if (this.CompareID !== "0") {
       var CRN = this.oCompare.CompareCode.split('/');
 
       if (CRN.length > 1) {
@@ -568,7 +562,7 @@ export class ManageComponent implements OnInit {
 
     this.oCompare.CompareCode = this.CompareNo + "/" + this.CompareYear;
     this.oCompare.CompareDate = this.CompareDate + ' ' + this.CompareTime;
-    
+
     this.oCompare.AccuserSubdistrictCode = this.AccuserSubdistrictCode;
     this.oCompare.AccuserSubdistrict = this.AccuserSubdistrict;
 
@@ -583,6 +577,7 @@ export class ManageComponent implements OnInit {
     // else {
     //   this.oCompare.IsOutside = '0';
     // }
+
     let isSuccess: boolean = true;
     debugger
     // Update compare
@@ -643,6 +638,7 @@ export class ManageComponent implements OnInit {
   }
   // ----- End เขียนที่ (คำให้การของผู้ต้องหา) ---
 
+
   // --- เขียนที่ (รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ) ---
   ReportonAutoChange(value: string) {
     // 
@@ -665,6 +661,7 @@ export class ManageComponent implements OnInit {
   }
   // ----- End เขียนที่ (รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ) ---
 
+
   // ----- Format Datetime ---
   getCurrentDate() {
     let date = new Date();
@@ -677,6 +674,7 @@ export class ManageComponent implements OnInit {
     return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
   }
   // ----- End DateTime -----
+
 
   // ----- ผู้เปรียบเทียบ ---
   async getCompareStaff() {
@@ -777,3 +775,6 @@ export class ManageComponent implements OnInit {
   }
   // ----- End ผู้เปรียบเทียบ ---
 }
+
+
+

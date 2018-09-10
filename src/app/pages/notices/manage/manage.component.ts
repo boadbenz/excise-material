@@ -12,7 +12,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { setZero, compareDate, setDateMyDatepicker, getDateMyDatepicker, MyDatePickerOptions, setZeroHours } from '../../../config/dateFormat';
+import { setZero, compareDate, setDateMyDatepicker, getDateMyDatepicker, MyDatePickerOptions, setZeroHours, convertDateForSave } from '../../../config/dateFormat';
 import { MasProductModel } from '../../../models/mas-product.model';
 import { Message } from '../../../config/message';
 import { NoticeProduct, NoticeProductFormControl } from '../notice-product';
@@ -31,12 +31,15 @@ import {
     MasDistrictModel,
     MasProvinceModel,
     MasSubdistrictModel,
-    MasStaffModel
+    MasStaffModel,
+    CommunicationChanelModel
 } from '../../../models';
 import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
 import { IMyDateModel } from 'mydatepicker-th';
 import { replaceFakePath } from 'app/config/dataString';
+import { NoticeDutyUnit } from '../notice-duty-unit';
+import { NoticeMasSuspect } from '../../component/suspect-modal/notice-mas-suspect';
 
 @Component({
     selector: 'app-manage',
@@ -75,7 +78,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadProduct = new Array<MasProductModel>();
     typeheadOffice = new Array<MasOfficeModel>();
     typeheadStaff = new Array<MasStaffModel>();
-    typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+    typeheadProductUnit = new Array<NoticeDutyUnit>();
+    typeheadcommunicateModel = new Array<CommunicationChanelModel>();
 
     get NoticeStaff(): FormArray {
         return this.noticeForm.get('NoticeStaff') as FormArray;
@@ -123,7 +127,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.10');
+        this.sidebarService.setVersion('0.0.2.11');
 
         this.navigate_service();
 
@@ -131,15 +135,17 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
+        await this.setCommunicateStore();
         await this.setProductStore();
         await this.setStaffStore();
         await this.setRegionStore();
         await this.setProductUnitStore();
         await this.setOfficeStore();
+        await this.setCommunicateStore();
 
         this.preloader.setShowPreloader(false);
     }
-
+ 
     private active_route() {
         this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
@@ -211,8 +217,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                this.noticeForm.value.NoticeDate = setZeroHours(sDateCompare);
-                this.noticeForm.value.NoticeDueDate = setZeroHours(eDateCompare);
+                this.noticeForm.value.NoticeDate = convertDateForSave(sDateCompare);
+                this.noticeForm.value.NoticeDueDate = convertDateForSave(eDateCompare);
                 this.noticeForm.value.NoticeInformer.map(item => {
                     item.InformerType = item.InformerType == true ? 1 : 0;
                 });
@@ -254,7 +260,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         let noticeDueDate = noticeDate;
         this.noticeForm = this.fb.group({
             NoticeCode: new FormControl(this.noticeCode, Validators.required),
-            NoticeStationCode: new FormControl(null, Validators.required),
+            NoticeStationCode: new FormControl(null),
             NoticeStation: new FormControl(null, Validators.required),
             NoticeDate: new FormControl(noticeDate, Validators.required),
             NoticeTime: new FormControl(noticeTime, Validators.required),
@@ -348,9 +354,17 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
             suspect.map(item => {
-                item.SuspectFullName = item.SuspectTitleName == null ? '' : item.SuspectTitleName;
-                item.SuspectFullName += item.SuspectFirstName == null ? '' : ` ${item.SuspectFirstName}`;
-                item.SuspectFullName += item.SuspectFirstName == null ? '' : ` ${item.SuspectFirstName}`;
+                item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
+                item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+                item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+
+                item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
+                item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
+
+                item.SuspectType = item.SuspectType || 1;
+                item.EntityType = item.EntityType || 0;
+                item.SuspectTypeName = item.SuspectTypeName || '';
+                item.EntityTypeName = item.EntityTypeName || '';
             }
             )
 
@@ -518,18 +532,38 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.NoticeProduct.push(this.fb.group(product));
         } else {
             const lastDoc = this.NoticeProduct.at(lastIndex).value;
-            if (lastDoc.ProductID) {
+            if (lastDoc.Qty && lastDoc.QtyUnit) {
                 this.NoticeProduct.push(this.fb.group(product));
             }
         }
     }
 
-    addSuspect(suspect: NoticeSuspect[]) {
+    addSuspect(suspect: NoticeMasSuspect[]) {
         if (suspect.length) {
             suspect.map(item => {
-                item.IsNewItem = true;
-                item.NoticeCode = this.noticeCode;
-                this.NoticeSuspect.push(this.fb.group(item))
+                let noticeSuspect: NoticeSuspect = {
+                    SuspectID: item.SuspectID.toString(),
+                    SuspectReferenceID: item.SuspectID.toString(),
+                    NoticeCode: this.noticeCode,
+                    SuspectTitleName: item.SuspectTitleName,
+                    SuspectFirstName: item.SuspectFirstName,
+                    SuspectLastName: item.SuspectLastName,
+                    CompanyTitleName: item.CompanyTitle,
+                    CompanyName: item.CompanyName,
+                    CompanyOtherName: item.CompanyOtherName,
+                    IsActive: 1,
+
+                    EntityType: item.EntityType,
+                    SuspectType: item.SuspectType,
+                    EntityTypeName: item.EntityTypeName,
+                    SuspectTypeName: item.SuspectTypeName,
+                    CompanyFullName: item.CompanyFullName,
+                    SuspectFullName: item.SuspectFullName,
+                    RowId: item.RowId,
+                    IsChecked: true,
+                    IsNewItem: true,
+                }
+                this.NoticeSuspect.push(this.fb.group(noticeSuspect))
             });
         }
     }
@@ -561,14 +595,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async setProductStore() {
-        await this.arrestService.masProductgetAll().then(res => {
+        await this.noticeService.masProductgetAll().then(res => {
             this.typeheadProduct = res;
         })
     }
 
     private async setProductUnitStore() {
-        await this.proveService.getProveProductUnit('').then(res => {
+        await this.noticeService.dutyunitgetAll().then(res => {
             this.typeheadProductUnit = res;
+        })
+    }
+
+    private async setCommunicateStore() {
+        await this.noticeService.communicationChanelgetAll().then(res => {
+            this.typeheadcommunicateModel = res;
         })
     }
 
@@ -587,15 +627,15 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.subdistrict
             .map(subdis =>
                 this.district
-                    .filter(dis => dis.DistrictCode == subdis.districtCode)
+                    .filter(dis => dis.DistrictCode == subdis.DistrictCode)
                     .map(dis =>
                         this.province
                             .filter(pro => pro.ProvinceCode == dis.ProvinceCode)
                             .map(pro => {
                                 let r = { ...subdis, ...dis, ...pro }
                                 this.typeheadRegion.push({
-                                    SubDistrictCode: r.subdistrictCode,
-                                    SubDistrictNameTH: r.subdistrictNameTH,
+                                    SubdistrictCode: r.SubdistrictCode,
+                                    SubdistrictNameTH: r.SubdistrictNameTH,
                                     DistrictCode: r.DistrictCode,
                                     DistrictNameTH: r.DistrictNameTH,
                                     ProvinceCode: r.ProvinceCode,
@@ -633,7 +673,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        (v.SubDistrictNameTH && v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.SubdistrictNameTH && v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
                         (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
                         (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
@@ -676,8 +716,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
         `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;
 
-    formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubDistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
+    formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
+        `${x.SubdistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
@@ -686,8 +726,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     selectItemInformmerRegion(ele: any) {
         this.NoticeInformer.at(0).patchValue({
-            SubDistrictCode: ele.item.SubDistrictCode,
-            SubDistrict: ele.item.SubDistrictNameTH,
+            SubDistrictCode: ele.item.SubdistrictCode,
+            SubDistrict: ele.item.SubdistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,
@@ -698,8 +738,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     selectItemLocaleRegion(ele: any) {
         this.NoticeLocale.at(0).patchValue({
-            SubdistrictCode: ele.item.SubDistrictCode,
-            SubDistrict: ele.item.SubDistrictNameTH,
+            SubdistrictCode: ele.item.SubdistrictCode,
+            SubDistrict: ele.item.SubdistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,
@@ -715,7 +755,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsNewItem: true,
             NoticeCode: this.noticeCode,
             GroupCode: ele.item.GroupCode || '1',
-            IsDomestic: ele.item.IsDomestic || '1'
+            IsDomestic: ele.item.IsDomestic || '1',
+            NetWeight: ele.item.NetWeight || 0,
+            NetWeightUnit: ele.item.NetWeightUnit || 0,
             // Qty: ele.item.Size,
             // QtyUnit: ele.item.SizeCode
         })
@@ -729,19 +771,20 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeCode: this.noticeCode,
             IsActive: 1,
             StaffFullName: `${e.item.TitleName || ''} ${e.item.FirstName || ''} ${e.item.LastName || ''}`,
-            PositionCode: e.item.OperationPosCode,
-            PositionName: e.item.OperationPosName,
-            DepartmentCode: e.item.OfficeCode,
-            DepartmentName: e.item.OfficeName,
-            DepartmentLevel: e.item.DeptLevel,
-            ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode
+            PositionCode: e.item.PositionCode,
+            PositionName: e.item.PositionName,
+            DepartmentCode: e.item.DepartmentCode,
+            DepartmentName: e.item.DepartmentName,
+            DepartmentLevel: e.item.DepartmentLevel,
+            ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode,
+            ContributorID: e.item.ContributorID
         })
     }
 
     selectItemOffice(e) {
         this.noticeForm.patchValue({
-            NoticeStationCode: e.item.OfficeCode,
-            NoticeStation: e.item.OfficeShortName
+            NoticeStationCode: e.item.OfficeCode || '-',
+            NoticeStation: e.item.OfficeName
         })
     }
 

@@ -365,15 +365,15 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.subdistrict
             .map(subdis =>
                 this.district
-                    .filter(dis => dis.DistrictCode == subdis.districtCode)
+                    .filter(dis => dis.DistrictCode == subdis.DistrictCode)
                     .map(dis =>
                         this.province
                             .filter(pro => pro.ProvinceCode == dis.ProvinceCode)
                             .map(pro => {
                                 let r = { ...subdis, ...dis, ...pro }
                                 this.typeheadRegion.push({
-                                    SubDistrictCode: r.subdistrictCode,
-                                    SubDistrictNameTH: r.subdistrictNameTH,
+                                    SubdistrictCode: r.SubdistrictCode,
+                                    SubdistrictNameTH: r.SubdistrictNameTH,
                                     DistrictCode: r.DistrictCode,
                                     DistrictNameTH: r.DistrictNameTH,
                                     ProvinceCode: r.ProvinceCode,
@@ -1042,7 +1042,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        (v.SubDistrictNameTH && v.SubDistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.SubdistrictNameTH && v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
                         (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
                         (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
@@ -1070,8 +1070,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
-    formatterRegion = (x: { SubDistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubDistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
+    formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
+        `${x.SubdistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
 
     formatterProduct = (x: { SubBrandNameTH: string, BrandNameTH: string, ModelName: string }) =>
         `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;

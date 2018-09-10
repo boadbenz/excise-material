@@ -59,7 +59,7 @@ export const MyDatePickerOptions: IMyOptions = {
 };
 
 export function setDateMyDatepicker(date: Date) {
-    if(!date) 
+    if (!date)
         return null;
 
     date = new Date(date);
@@ -67,15 +67,25 @@ export function setDateMyDatepicker(date: Date) {
 }
 
 export function getDateMyDatepicker(date: any) {
-    if(!date)
+    if (!date)
         return null;
-    
+
     date = date.date
     return new Date(`${date.year}-${date.month}-${date.day}`);
 }
 
+export function convertDateForSave(date: Date) {
+    if (!date)
+        return null;
+        
+    date.setHours(0, -date.getTimezoneOffset(), 0, 0);
+    let d = date.toISOString();
+    d = d.replace('T', ' ').split('.')[0];
+    return d;
+}
+
 export function setZeroHours(date: Date): string {
-    if(!date)
+    if (!date)
         return null;
 
     date = new Date(date);

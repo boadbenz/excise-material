@@ -22,7 +22,7 @@ const routes: Routes = [
               { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/notice/manage/C/NEW' },
               { title: 'จัดการข้อมูลผู้ต้องสงสัย' }
           ],
-          codePage: 'XCS60-99-01-02-00',
+          codePage: 'XCS60-99-01-02-00',  
           nextPage: { title: 'งานแจ้งความ', url: '/' }
       },
       component: SuspectComponent

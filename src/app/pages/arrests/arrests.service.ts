@@ -29,29 +29,26 @@ export class ArrestsService {
 
     private async responsePromisModify(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        return res.IsSuccess ? true : false;
+        if (!res || res.IsSuccess == 'False') {
+            return false;
+        }
+        return true;
     }
 
     private async resposePromisGet(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (res.IsSuccess === false) {
-            return {};
-        }
-        if (!res.ResponseData) {
+        if (!res || res.IsSuccess == 'False') {
             return {}
         }
-        return res.ResponseData
+        return res
     }
 
     private async resposePromisGetList(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (res.IsSuccess === false) {
+        if (res.IsSuccess == 'False' || !res.length) {
             return [];
         }
-        if (!res.ResponseData.length) {
-            return []
-        }
-        return res.ResponseData
+        return res
     }
 
     async getByKeywordOnInit(): Promise<any[]> {
@@ -278,7 +275,7 @@ export class ArrestsService {
         return this.resposePromisGetList('{}', url);
     }
 
-    masStaffgetAll(): Promise<any[]> {
+    async masStaffgetAll(): Promise<any[]> {
         const url = `${appConfig.api7788}/ArrestgetMasStaffgetAll`;
         return this.resposePromisGetList('{}', url);
     }

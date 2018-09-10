@@ -1,3 +1,9 @@
+export class CommunicationChanelModel {
+    CommunicationChanelID: number;
+    CommunicationChanelName: string;
+    IsActive: number;
+}
+
 export const communicate = [
     {
         CommunicationChanelID: 1,

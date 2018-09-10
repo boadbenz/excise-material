@@ -18,7 +18,7 @@ const routes: Routes = [
                 { title: 'หน้าหลัก', url: '/' }, 
                 { title: 'ค้นหาใบแจ้งความนำจับ' }
             ],
-            codePage: 'XCS60-02-01-00-00' 
+            codePage: 'XCS60-02-01-00' 
         },
         component: ListComponent
     }

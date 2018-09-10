@@ -21,32 +21,69 @@ export class ListComponent implements OnInit, OnDestroy {
   results: Lawsuit[] = [];
   resultsPerPage: Lawsuit[] = [];
 
+  subOnSearchByKeyword: any;
+  subSetNextPage: any;
+
   advSearch: any;
-  advSearchSub: any;
+  // advSearchSub: any;
 
   paginage = pagination;
 
   constructor(private router: Router, private navService: NavigationService, private preLoaderService: PreloaderService
               , private lawsuitService: LawsuitService, private sidebarService: SidebarService
   ) {
+    this.setShowButton();
     this.advSearch = this.navService.showAdvSearch;
-    this.advSearchSub = this.navService.searchByKeyword.subscribe(filterValue => {
-      if (filterValue) {
-        this.lawsuitService.getByKeyword(filterValue)
-          .then(res => this.onSearchComplete(res));
+  }
+
+  async ngOnInit() {
+    this.sidebarService.setVersion('0.0.0.3');
+    this.paginage.TotalItems = 0;
+
+    this.preLoaderService.setShowPreloader(true);
+    await this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+
+    this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
+      if (Textsearch) {
+        await this.navService.setOnSearch('');
+        this.onSearch(Textsearch);
       }
     });
+
+    this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+      if (status) {
+        await this.navService.setOnNextPage(false);
+        this.router.navigate(['/notice/manage', 'C', 'NEW']);
+      }
+    });
+
+    this.preLoaderService.setShowPreloader(false);
   }
 
-  ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.2');
-    this.setShowButton();
-    this.loadPage();
+  ngOnDestroy() {
+    this.subOnSearchByKeyword.unsubscribe();
+    this.subSetNextPage.unsubscribe();
   }
 
-  private loadPage(): void {
+  async onSearch(Textsearch: any) {
     this.preLoaderService.setShowPreloader(true);
-    this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+    await this.lawsuitService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+    this.preLoaderService.setShowPreloader(false);
+  }
+
+  async onAdvSearch(form: any) {
+    if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
+      const sDateCompare = new Date(form.value.LawsuitDateFrom);
+      const eDateCompare = new Date(form.value.LawsuitDateTo);
+      if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+        alert(Message.checkDate);
+        return false;
+      }
+      form.value.LawsuitDateFrom = sDateCompare.toISOString();
+      form.value.LawsuitDateTo = eDateCompare.toISOString();
+    }
+    this.preLoaderService.setShowPreloader(true);
+    await this.lawsuitService.LawsuitgetByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
 
@@ -75,22 +112,6 @@ export class ListComponent implements OnInit, OnDestroy {
     this.paginage.TotalItems = this.results.length;
   }
 
-  private onAdvSearch(form: any) {
-    if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
-      const sDateCompare = new Date(form.value.LawsuitDateFrom);
-      const eDateCompare = new Date(form.value.LawsuitDateTo);
-      if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-        alert(Message.checkDate);
-        return false;
-      }
-      form.value.LawsuitDateFrom = sDateCompare.toISOString();
-      form.value.LawsuitDateTo = eDateCompare.toISOString();
-    }
-    this.preLoaderService.setShowPreloader(true);
-    this.lawsuitService.LawsuitgetByConAdv(form.value).then(list => this.onSearchComplete(list));
-    this.preLoaderService.setShowPreloader(false);
-  }
-
   private viewData(item) {
     this.router.navigate(['/lawsuit/manage', 'R'], {
       queryParams: { id: item.LawsuitID, code: item.ArrestCode }
@@ -101,12 +122,8 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.showAdvSearch.next(false);
   }
 
-  private pageChanges(event) {
-    this.resultsPerPage = this.results.slice(event.startIndex - 1, event.endIndex);
-  }
-
-  ngOnDestroy() {
-    this.advSearchSub.unsubscribe();
+  async pageChanges(event) {
+    this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
   }
 
 }

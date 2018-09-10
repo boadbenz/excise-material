@@ -33,6 +33,7 @@ export class FineService {
     //     const url = `${appConfig.api8881}/ComparegetByCon`;
     //     return this.http.post<Compare[]>(url, params, this.httpOptions);
     // }
+
     async getByCon(CompareID: string): Promise<any> {
         const params = { CompareID };
         const url = `${appConfig.api8881}/ComparegetByCon`;
@@ -47,7 +48,6 @@ export class FineService {
 
 
     async getByConAdv(form: any): Promise<any> {
-        console.log(form);
         const params = JSON.stringify(form);
         const url = `${appConfig.api8881}/ComparegetByConAdv`;
 

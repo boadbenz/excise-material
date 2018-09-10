@@ -5,6 +5,7 @@ export interface MasOfficeModel {
     SubDistrictCode: string;
     SubOfficeCode: string;
     EffectiveDate: Date;
+    INDCOffice: string;
     ExpirationDate: Date;
     IsActive: number;
     EventDatetime: Date;

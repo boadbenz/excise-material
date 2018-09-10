@@ -98,7 +98,7 @@ export class ListComponent implements OnInit {
             this.onSearchComplete(list)
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            alert(Message.noRecord + " (API Disconnected)");
         });
        
     }
@@ -157,7 +157,7 @@ export class ListComponent implements OnInit {
 
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            alert(Message.noRecord + " (API Disconnected)");
 
             this.preLoaderService.setShowPreloader(false);
         });
@@ -194,8 +194,8 @@ export class ListComponent implements OnInit {
         this.ListProve = await this.Prove.slice(event.startIndex - 1, event.endIndex);
     }
 
-    clickView(LawsuitID: string, ArrestCode: string, ProveID: string) {
-        this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${ProveID}`]);
+    clickView(LawsuitID: string, ArrestCode: string, IndictmentID: string, GuiltBaseID: string, ProveID: string) {
+        this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${IndictmentID}/${GuiltBaseID}/${ProveID}`]);
     }
 
     getCurrentDate() {

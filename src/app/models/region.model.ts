@@ -1,6 +1,6 @@
 export interface RegionModel {
-    SubDistrictCode: string;
-    SubDistrictNameTH: string;
+    SubdistrictCode: string;
+    SubdistrictNameTH: string;
     DistrictCode: string;
     DistrictNameTH: string;
     ProvinceCode: string;

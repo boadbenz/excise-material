@@ -42,4 +42,13 @@ export class RevenueDetail {
     public RevenueStatus?: string;
     public RevenueID?: string;
     public CompareReceiptID ?: number;
+    public CompareCode?: string;
+    public LawBreaker?: string;
+    public StaffReceip?: string;
+    public PaymentDate?: string;
+    public TotalFine?: number;
+    public BribeMoney?: number;
+    public RewardMoney?: number;
+    public TreasuryMoney?: number;
+    public IsCheck?: boolean;
 }
