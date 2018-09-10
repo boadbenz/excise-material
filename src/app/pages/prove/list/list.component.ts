@@ -220,7 +220,7 @@ export class ListComponent implements OnInit {
             const sdate = `${this._dateDeliveryStartFrom.year}-${this._dateDeliveryStartFrom.month}-${this._dateDeliveryStartFrom.day}`;
             const edate = `${this._dateDeliveryStartTo.year}-${this._dateDeliveryStartTo.month}-${this._dateDeliveryStartTo.day}`;
 
-            if (!compareDate(sdate, edate)) {
+            if (!compareDate(new Date(sdate) , new Date(edate))) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.DeliveryDateTo = { date: this._dateDeliveryStartFrom };
@@ -246,7 +246,7 @@ export class ListComponent implements OnInit {
             const sPdate = `${this._dateProveStartFrom.year}-${this._dateProveStartFrom.month}-${this._dateProveStartFrom.day}`;
             const ePdate = `${this._dateProveStartTo.year}-${this._dateProveStartTo.month}-${this._dateProveStartTo.day}`;
 
-            if (!compareDate(sPdate, ePdate)) {
+            if (!compareDate(new Date(sPdate), new Date(ePdate))) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.ProveDateTo = { date: this._dateProveStartFrom };
