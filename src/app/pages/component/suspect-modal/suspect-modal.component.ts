@@ -152,7 +152,6 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
         const list = await res.map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;
-            item.EntityTypeName = '';
             item.EntityTypeName = this.entityType.find(el => parseInt(el.value) == item.EntityType).text;
             item.SuspectTypeName = this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
             item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;

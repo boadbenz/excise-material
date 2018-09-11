@@ -56,10 +56,6 @@
                         [readOnly]="showEditField"
                         [value]="noticeTime.value">
                     </div>
-                    <!-- <input type="date" #noticeDueDate formControlName="NoticeDueDate" class="form-control form-control-sm" 
-                    [readonly]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required
-                    (change)="checkDate()"> -->
                 </div>
             </div>
 
@@ -82,8 +78,6 @@
                             (selectItem)="selectItemOffice($event)"
                             [value]="noticeForm.get('NoticeStation').value"
                                 />
-                        <!-- <input type="text" formControlName="NoticeStation" class="form-control form-control-sm" 
-                        [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required> -->
                     </div>
                 </div>
             </div>
@@ -410,13 +404,13 @@
                         <td>{{item.get('SuspectID').value}}</td>
                         <td>
                             <span *ngIf="item.get('EntityType').value == 0">
-                                {{item.get('CompanyFullName').value}}
-                            </span>
-                            <span *ngIf="item.get('EntityType').value == 1">
                                 {{item.get('SuspectFullName').value}}
                             </span>
+                            <span *ngIf="item.get('EntityType').value == 1">
+                                {{item.get('CompanyFullName').value}}
+                            </span>
                         </td>
-                        <td></td>
+                        <td>{{i+1}}</td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="onViewSuspect(item.get('SuspectID').value)">
                                 <i class="fa fa-eye fa-lg"></i>

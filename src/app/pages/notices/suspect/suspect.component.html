@@ -195,14 +195,18 @@
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField" required>
                 </div>
-                <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
+                <label for="" class="col-lg-2 col-sm-4 control-label">ตำบล/อำเภอ/จังหวัด :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <ng-template #rt let-r="result" let-t="term">
-                        {{ r.SubDistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                        {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                     </ng-template>
 
-                    <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion" [resultTemplate]="rt" [readOnly]="showEditField"
-                        [inputFormatter]="formatterRegion" (selectItem)="selectItemRegion($event)" required/>
+                    <input type="text" class="form-control form-control-sm" 
+                    [ngbTypeahead]="searchRegion" 
+                    [resultTemplate]="rt" 
+                    [readOnly]="showEditField"
+                    [inputFormatter]="formatterRegion" 
+                    (selectItem)="selectItemRegion($event)" required/>
 
                     <!-- value="{{SuspectFG.get('Region').value}}" -->
                 </div>

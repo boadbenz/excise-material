@@ -133,10 +133,10 @@
                             <td>{{item.get('SuspectID').value}}</td>
                             <td>
                                 <span *ngIf="item.get('EntityType').value == 0">
-                                    {{item.get('CompanyFullName').value}}
+                                    {{item.get('SuspectFullName').value}}
                                 </span>
                                 <span *ngIf="item.get('EntityType').value == 1">
-                                    {{item.get('SuspectFullName').value}}
+                                    {{item.get('CompanyFullName').value}}
                                 </span>
                             </td>
                             <td>{{i+1}}</td>

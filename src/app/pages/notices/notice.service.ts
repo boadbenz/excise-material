@@ -1,17 +1,12 @@
-import { Injectable, HostListener } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from '../../app.config';
 import { Notice } from './notice';
-import { NoticeProduct } from './notice-product';
-import { Observable } from 'rxjs/Observable';
 import { Http, } from '@angular/http';
-import { Message } from '../../config/message';
 import { NoticeDocument } from './notice-document';
 import { Lawbreaker } from './lawbreaker/lawbreaker.interface';
 import { Suspect } from './suspect/suspect.interface';
-import { MasProductModel, CommunicationChanelModel } from '../../models';
-import { MasDutyProductUnitModel } from '../../models/mas-duty-product-unit.model';
-import { NoticeDutyUnit } from './notice-duty-unit';
+import { NoticeSuspect } from './notice-suspect';
 
 @Injectable()
 export class NoticeService {
@@ -85,12 +80,12 @@ export class NoticeService {
         return res.ResponseData;
     }
 
-    async getSuspectByCon(SuspectID: string): Promise<Suspect> {
+    async noticeSuspectgetByCon(SuspectID: string): Promise<Suspect> {
         const params = { SuspectID };
         const url = `${appConfig.api8082}/NoticeSuspectgetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        const IsSuccess = new Boolean(res.IsSuccess);
-        if (!IsSuccess || !res.ResponseData) {
+
+        if (res.IsSuccess == 'False' || !res.ResponseData) {
             return new Suspect();
         }
         return res.ResponseData;
@@ -126,36 +121,6 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    async masProductgetAll(): Promise<MasProductModel[]> {
-        const params = {};
-        const url = `${appConfig.api8082}/NoticeMasProductgetAll`; 
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.NoticeMasProduct.length) {
-            return new Array<MasProductModel>();
-        }
-        return res.NoticeMasProduct;
-    }
-
-    async dutyunitgetAll(): Promise<NoticeDutyUnit[]> {
-        const params = {};
-        const url = `${appConfig.api8082}/NoticeDutyunitgetAll`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.NoticeDutyunit.length) {
-            return new Array<NoticeDutyUnit>();
-        }
-        return res.NoticeDutyunit;
-    }
-
-    async communicationChanelgetAll(): Promise<any[]> {
-        const params = {};
-        const url = `${appConfig.api8082}/NoticeCommunicationChanelgetAll`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (!res.NoticeCommunicationChanel.length) {
-            return new Array<CommunicationChanelModel>();
-        }
-        return res.NoticeCommunicationChanel;
-    }
-
     async productupdDelete(ProductID: string): Promise<any> {
         const params = { ProductID };
         const url = `${appConfig.api8082}/NoticeproductupdDelete`;
@@ -186,31 +151,49 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    async getDocument(ReferenceCode: string): Promise<NoticeDocument[]> {
-        const params = { ReferenceCode };
-        const url = `${appConfig.api8883}/DocumentRequestgetByCon`;
-        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-        if (!res.length) {
-            return new Array<NoticeDocument>()
-        }
-        return res;
-    }
-
-    async insDocument(document: NoticeDocument): Promise<any> {
-        const params = document;
-        const url = `${appConfig.api8883}/DocumentRequestinsAll`;
-        return await this.responsePromisModify(JSON.stringify(params), url);
-    }
-
-    async updDocument(document: NoticeDocument): Promise<any> {
-        const params = document;
-        const url = `${appConfig.api8882}/DocumentupdByCon`;
+    async noticeMasSuspectinsAll(from: any): Promise<boolean> {
+        const params = JSON.stringify(from);
+        const url = `${appConfig.api8082}/NoticeMasSuspectinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    async documentUpDelete(DocumentID: string): Promise<any> {
+    async noticeMasSuspectupdByCon(from: any): Promise<boolean> {
+        const params = JSON.stringify(from);
+        const url = `${appConfig.api8082}/NoticeMasSuspectupdByCon`
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    // async documentRequestgetByCon(ReferenceCode: string): Promise<NoticeDocument[]> {
+    //     const params = { ReferenceCode };
+    //     const url = `${appConfig.api8883}/DocumentRequestgetByCon`;
+    //     const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+    //     if (!res.length) {
+    //         return new Array<NoticeDocument>()
+    //     }
+    //     return res;
+    // }
+
+    // async documentRequestinsAll(document: NoticeDocument): Promise<any> {
+    //     const params = document;
+    //     const url = `${appConfig.api8883}/DocumentRequestinsAll`;
+    //     return await this.responsePromisModify(JSON.stringify(params), url);
+    // }
+
+    async noticeDocumentinsAll(document: NoticeDocument): Promise<any> {
+        const params = document;
+        const url = `${appConfig.api8882}/NoticeDocumentinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    async noticeDocumentupd(document: NoticeDocument): Promise<any> {
+        const params = document;
+        const url = `${appConfig.api8882}/NoticeDocumentupd`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    async noticeDocumentupdDelete(DocumentID: string): Promise<any> {
         const params = { DocumentID };
-        const url = `${appConfig.api8882}/DocumentupdDelete`;
+        const url = `${appConfig.api8882}/NoticeDocumentupdDelete`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 

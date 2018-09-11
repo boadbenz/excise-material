@@ -15,11 +15,12 @@ export class Notice {
     public NoticeDueDate: string;
     public NoticeDueTime: string;
     public GroupNameDesc: string;
-    public CommunicationChanelID: number;
+    public CommunicationChanelID: string;
     public DataSource: string;
     public FilePath: string;
     public ArrestCode: string;
     public IsActive: number;
+    public IsArrest: number;
     public NoticeStaff: Array<NoticeStaff>;
     public NoticeInformer: Array<NoticeInformer>;
     public NoticeLocale: Array<NoticeLocale>;
