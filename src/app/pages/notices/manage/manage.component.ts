@@ -20,10 +20,9 @@ import { NoticeSuspect } from '../notice-suspect';
 import { NoticeDocument, NoticeDocumentFormControl } from '../notice-document';
 import { NoticeStaffFormControl } from '../notice-staff';
 import { NoticeInformerFormControl } from '../notice-informer';
-import { NoticeLocaleFormControl } from '../notice-locale';
+import { NoticeLocaleFormControl, NoticeLocale } from '../notice-locale';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
-import { ArrestsService } from '../../arrests/arrests.service';
 import { MasOfficeModel } from '../../../models/mas-office.model';
 import {
     communicate,
@@ -32,14 +31,15 @@ import {
     MasProvinceModel,
     MasSubdistrictModel,
     MasStaffModel,
-    CommunicationChanelModel
+    CommunicationChanelModel,
+    LawbreakerTypes,
+    EntityTypes
 } from '../../../models';
-import { ProveService } from '../../prove/prove.service';
-import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
 import { IMyDateModel } from 'mydatepicker-th';
 import { replaceFakePath } from 'app/config/dataString';
-import { NoticeDutyUnit } from '../notice-duty-unit';
 import { NoticeMasSuspect } from '../../component/suspect-modal/notice-mas-suspect';
+import { MainMasterService } from '../../../services/main-master.service';
+import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
 
 @Component({
     selector: 'app-manage',
@@ -70,6 +70,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
     communicateModel = communicate;
+    suspectTypes = LawbreakerTypes;
+    entityTypes = EntityTypes;
 
     subdistrict = new Array<MasSubdistrictModel>();
     district = new Array<MasDistrictModel>();
@@ -78,7 +80,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadProduct = new Array<MasProductModel>();
     typeheadOffice = new Array<MasOfficeModel>();
     typeheadStaff = new Array<MasStaffModel>();
-    typeheadProductUnit = new Array<NoticeDutyUnit>();
+    typeheadProductUnit = new Array<MasDutyUnitModel>();
     typeheadcommunicateModel = new Array<CommunicationChanelModel>();
 
     get NoticeStaff(): FormArray {
@@ -115,8 +117,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ngbModel: NgbModal,
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
-        private arrestService: ArrestsService,
-        private proveService: ProveService
+        private mainMasterService: MainMasterService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -127,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.11');
+        this.sidebarService.setVersion('0.0.2.12');
 
         this.navigate_service();
 
@@ -143,9 +144,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.setOfficeStore();
         await this.setCommunicateStore();
 
+        if (this.mode == 'R') {
+            this.getByCon(this.noticeCode);
+        }
+
         this.preloader.setShowPreloader(false);
     }
- 
+
     private active_route() {
         this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
@@ -172,10 +177,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditField(true);
                 this.navService.setNextPageButton(true);
 
-                if (p['code']) {
-                    this.noticeCode = p['code'];
-                    this.getByCon(p['code']);
-                }
+                this.noticeCode = p['code'];
             }
         });
     }
@@ -303,12 +305,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.fb.group(NoticeProductFormControl)
     }
 
-    private createDocumentForm(): FormGroup {
-        NoticeDocumentFormControl.IsActive = new FormControl(1);
-        NoticeDocumentFormControl.IsNewItem = new FormControl(true);
-        return this.fb.group(NoticeDocumentFormControl)
-    }
-
     private setItemFormArray(array: any[], formControl: string) {
         if (array !== undefined && array.length) {
             const itemFGs = array.map(item => this.fb.group(item));
@@ -329,10 +325,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 NoticeTime: res.NoticeTime,
                 NoticeDue: res.NoticeDue,
                 NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
-                GroupNameDesc: res.GroupNameDesc,
+                GroupNameDesc: res.GroupNameDesc || 'N/A',
                 CommunicationChanelID: res.CommunicationChanelID,
                 ArrestCode: res.ArrestCode,
-                IsActive: res.IsActive
+                IsActive: res.IsActive,
+                IsArrest: res.IsArrest || 1
             });
 
             const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
@@ -361,10 +358,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
                 item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
 
-                item.SuspectType = item.SuspectType || 1;
+                item.SuspectType = item.SuspectType || 0;
                 item.EntityType = item.EntityType || 0;
-                item.SuspectTypeName = item.SuspectTypeName || '';
-                item.EntityTypeName = item.EntityTypeName || '';
+                item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
+                item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
             }
             )
 
@@ -373,6 +370,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
                 item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
                 item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
+                item.NetWeight = item.NetWeight || '0';
+                item.NetWeightUnit = item.NetWeightUnit || '0';
             }
             )
 
@@ -383,10 +382,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.setItemFormArray(suspect, 'NoticeSuspect');
         })
 
-        await this.noticeService.getDocument(code).then(async res => {
-            res.map(item => item.IsNewItem = false)
-            await this.setItemFormArray(res, 'NoticeDocument')
-        })
+        // await this.noticeService.getDocument(code).then(async res => {
+        //     res.map(item => item.IsNewItem = false)
+        //     await this.setItemFormArray(res, 'NoticeDocument')
+        // })
     }
 
     private async onCreate() {
@@ -406,7 +405,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (IsSuccess) {
             await this.NoticeDocument.value.map(async doc => {
                 // insert Document
-                await this.noticeService.insDocument(doc).then(docIsSuccess => {
+                await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
                     if (!docIsSuccess) { IsSuccess = false; return false; };
 
                 }, () => { IsSuccess = false; return false; });
@@ -434,6 +433,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         let IsSuccess: boolean = true;
         await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
+            debugger
             if (!isSuccess) { IsSuccess = false; return; };
         }, () => { IsSuccess = false; return; });
 
@@ -441,12 +441,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             const document = this.NoticeDocument.value;
             await document.map(async (item: NoticeDocument) => {
                 if (item.IsNewItem) {
-                    await this.noticeService.insDocument(item).then(docIsSuccess => {
+                    await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
                         if (!docIsSuccess) { IsSuccess = false; return; };
                     }, () => { IsSuccess = false; return; });
 
                 } else {
-                    this.noticeService.updDocument(item).then(docIsSuccess => {
+                    this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
                         if (!docIsSuccess) { IsSuccess = false; return };
                     }, () => { IsSuccess = false; return; })
                 }
@@ -583,68 +583,54 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async setOfficeStore() {
-        await this.arrestService.masOfficegetAll().then(res =>
+        await this.mainMasterService.masOfficeMaingetAll().then(res =>
             this.typeheadOffice = res
         )
     }
 
     private async setStaffStore() {
-        await this.arrestService.masStaffgetAll().then(res =>
+        await this.mainMasterService.masStaffMaingetAll().then(res =>
             this.typeheadStaff = res
         )
     }
 
     private async setProductStore() {
-        await this.noticeService.masProductgetAll().then(res => {
+        await this.mainMasterService.masProductMaingetAll().then(res => {
             this.typeheadProduct = res;
         })
     }
 
     private async setProductUnitStore() {
-        await this.noticeService.dutyunitgetAll().then(res => {
+        await this.mainMasterService.masDutyUnitMaingetAll().then(res => {
             this.typeheadProductUnit = res;
         })
     }
 
     private async setCommunicateStore() {
-        await this.noticeService.communicationChanelgetAll().then(res => {
+        await this.mainMasterService.masCommunicationchanelMaingetAll().then(res => {
             this.typeheadcommunicateModel = res;
         })
     }
 
     private async setRegionStore() {
-
-        await this.arrestService.masSubdistrictgetAll().then(res =>
-            this.subdistrict = res
-        )
-        await this.arrestService.masDistrictgetAll().then(res =>
-            this.district = res
-        )
-        await this.arrestService.masProvincegetAll().then(res =>
-            this.province = res
-        )
-
-        await this.subdistrict
-            .map(subdis =>
-                this.district
-                    .filter(dis => dis.DistrictCode == subdis.DistrictCode)
-                    .map(dis =>
-                        this.province
-                            .filter(pro => pro.ProvinceCode == dis.ProvinceCode)
-                            .map(pro => {
-                                let r = { ...subdis, ...dis, ...pro }
-                                this.typeheadRegion.push({
-                                    SubdistrictCode: r.SubdistrictCode,
-                                    SubdistrictNameTH: r.SubdistrictNameTH,
-                                    DistrictCode: r.DistrictCode,
-                                    DistrictNameTH: r.DistrictNameTH,
-                                    ProvinceCode: r.ProvinceCode,
-                                    ProvinceNameTH: r.ProvinceNameTH,
-                                    ZipCode: null
-                                })
-                            })
-                    )
+        await this.mainMasterService.masDistrictMaingetAll().then(res => {
+            res.map(prov =>
+                prov.MasDistrict.map(dis =>
+                    dis.MasSubDistrict.map(subdis => {
+                        this.typeheadRegion.push({
+                            SubdistrictCode: subdis.SubdistrictCode,
+                            SubdistrictNameTH: subdis.SubdistrictNameTH,
+                            DistrictCode: dis.DistrictCode,
+                            DistrictNameTH: dis.DistrictNameTH,
+                            ProvinceCode: prov.ProvinceCode,
+                            ProvinceNameTH: prov.ProvinceNameTH,
+                            ZipCode: null
+                        })
+                    })
+                )
             )
+
+        })
     }
 
     addNoticeDueDate(e: any) {
@@ -738,7 +724,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     selectItemLocaleRegion(ele: any) {
         this.NoticeLocale.at(0).patchValue({
-            SubdistrictCode: ele.item.SubdistrictCode,
+            SubDistrictCode: ele.item.SubdistrictCode,
             SubDistrict: ele.item.SubdistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
@@ -758,8 +744,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsDomestic: ele.item.IsDomestic || '1',
             NetWeight: ele.item.NetWeight || 0,
             NetWeightUnit: ele.item.NetWeightUnit || 0,
-            // Qty: ele.item.Size,
-            // QtyUnit: ele.item.SizeCode
         })
     }
 
@@ -771,13 +755,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeCode: this.noticeCode,
             IsActive: 1,
             StaffFullName: `${e.item.TitleName || ''} ${e.item.FirstName || ''} ${e.item.LastName || ''}`,
-            PositionCode: e.item.PositionCode,
-            PositionName: e.item.PositionName,
-            DepartmentCode: e.item.DepartmentCode,
-            DepartmentName: e.item.DepartmentName,
-            DepartmentLevel: e.item.DepartmentLevel,
-            ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode,
-            ContributorID: e.item.ContributorID
+            PositionCode: e.item.PositionCode || e.item.ManagementPosCode,
+            PositionName: e.item.PositionName || e.item.ManagementPosName,
+            DepartmentLevel: e.item.DepartmentLevel || e.item.DeptLevel,
+            DepartmentCode: e.item.DepartmentCode || e.item.OfficeCode,
+            DepartmentName: `${e.item.DepartmentName || e.item.OfficeName}`,
+            ContributorCode: e.item.ContributorCode || 2,
+            ContributorID: e.item.ContributorID || 1
         })
     }
 
@@ -854,7 +838,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
 
-                await this.noticeService.documentUpDelete(id).then(isSuccess => {
+                await this.noticeService.noticeDocumentupdDelete(id).then(isSuccess => {
                     if (isSuccess === true) {
                         this.NoticeDocument.removeAt(index);
                         alert(Message.delDocumentComplete)
@@ -895,14 +879,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     changeComunicateFile(e: any) {
         let reader = new FileReader();
         let file = e.target.files[0];
-        let fileName: string = file.name;
 
         reader.readAsDataURL(file);
         reader.onload = () => {
             let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
-                    FilePath: replaceFakePath(e.target.value)
+                    FilePath: replaceFakePath(e.target.value),
+                    DataSource: dataSource,
+                    IsActive: 1
                 })
             }
         };
@@ -911,8 +896,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     changeNoticeDoc(e: any, index: number) {
         let reader = new FileReader();
         let file = e.target.files[0];
-        let fileName: string = file.name;
-        let fileType: string = file.type;
 
         reader.readAsDataURL(file);
         reader.onload = () => {
@@ -921,6 +904,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,
                     FilePath: replaceFakePath(e.target.value),
+                    DataSource: dataSource,
                     IsActive: 1
                 })
             }

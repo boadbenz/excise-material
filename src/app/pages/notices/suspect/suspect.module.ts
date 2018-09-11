@@ -10,6 +10,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { NoticeService } from '../notice.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MainMasterService } from '../../../services/main-master.service';
 
 const routes: Routes = [
   {
@@ -43,7 +44,7 @@ const routes: Routes = [
   ],
   declarations: [SuspectComponent],
   exports: [SuspectComponent],
-  providers: [ArrestsService, NoticeService],
+  providers: [ArrestsService, NoticeService, MainMasterService],
   schemas: [NO_ERRORS_SCHEMA]
 })
 export class SuspectModule { }

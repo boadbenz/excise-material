@@ -17,21 +17,13 @@
                     <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
-                            <my-date-picker-th name="DateStartFrom" [options]="myDatePickerOptions"
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" 
+                            name="DateStartFrom" [options]="myDatePickerOptions"
                             (dateChanged)="onSDateChange($event)" [(ngModel)]="dateStartFrom"></my-date-picker-th>
-                            <!-- <input type="date" name="DateStartFrom" [(ngModel)]="dateStartFrom" 
-                            class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"
-                            (change)="checkDate()"> -->
-
                             <label for="">&nbsp;ถึง&nbsp;</label>
-
-
-                            <my-date-picker-th name="DateStartTo" [options]="myDatePickerOptions"
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control"
+                            name="DateStartTo" [options]="myDatePickerOptions"
                             (dateChanged)="onEDateChange($event)" [(ngModel)]="dateStartTo"></my-date-picker-th>
-                            
-                            <!-- <input type="date" name="DateStartTo" [(ngModel)]="dateStartTo"
-                            class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"
-                            (change)="checkDate()"> -->
                         </div>
                     </div>
                 </div>

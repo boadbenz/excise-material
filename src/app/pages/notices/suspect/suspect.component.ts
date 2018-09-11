@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel } from '../../../models';
@@ -14,11 +13,11 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { ArrestsService } from '../../arrests/arrests.service';
 import { NoticeService } from '../notice.service';
-import { getDateMyDatepicker, setZeroHours, setDateMyDatepicker, MyDatePickerOptions } from 'app/config/dateFormat';
+import { getDateMyDatepicker, setDateMyDatepicker, MyDatePickerOptions, convertDateForSave } from 'app/config/dateFormat';
 import { Message } from 'app/config/message';
 import { ImageType } from 'app/config/imageType';
+import { MainMasterService } from '../../../services/main-master.service';
 
 @Component({
     selector: 'app-suspect',
@@ -31,8 +30,8 @@ export class SuspectComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private preloader: PreloaderService,
         private navService: NavigationService,
-        private arrestService: ArrestsService,
-        private noticeService: NoticeService
+        private noticeService: NoticeService,
+        private mainMasterService: MainMasterService
     ) {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
@@ -73,7 +72,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
         await this.setRegionStore();
         this.active_route();
         this.navigate_service();
-        
+
         this.preloader.setShowPreloader(false);
     }
 
@@ -180,7 +179,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
     private navigate_service() {
         this.navService.showFieldEdit.subscribe(p => {
-            this.showEditField = p.valueOf();
+            this.showEditField = p;
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
@@ -191,9 +190,12 @@ export class SuspectComponent implements OnInit, OnDestroy {
                 const passportDateIn = getDateMyDatepicker(this.SuspectFG.value.PassportDateIn);
                 const passportDateOut = getDateMyDatepicker(this.SuspectFG.value.PassportDateOut);
 
-                this.SuspectFG.value.BirthDate = setZeroHours(birthDay);
-                this.SuspectFG.value.PassportDateIn = setZeroHours(passportDateIn);
-                this.SuspectFG.value.passportDateOut = setZeroHours(passportDateOut);
+                this.SuspectFG.value.BirthDate = convertDateForSave(birthDay);
+                this.SuspectFG.value.PassportDateIn = convertDateForSave(passportDateIn);
+                this.SuspectFG.value.PassportDateOut = convertDateForSave(passportDateOut);
+
+                console.log(JSON.stringify(this.SuspectFG.value));
+                
 
                 if (this.mode === 'C') {
                     this.OnCreate();
@@ -207,7 +209,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
     async GetByCon(SuspectID: string) {
 
-        await this.noticeService.getSuspectByCon(SuspectID).then(res => {
+        await this.noticeService.noticeSuspectgetByCon(SuspectID).then(res => {
             this.SuspectFG.reset({
                 SuspectID: res.SuspectID,
                 EntityType: res.EntityType,
@@ -281,18 +283,31 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
     }
 
-    OnCreate() {
+    async OnCreate() {
+        this.preloader.setShowPreloader(true);
 
+        let IsSuccess: boolean = false;
+        await this.noticeService.noticeMasSuspectinsAll(this.SuspectFG.value).then(isSuccess => {
+            IsSuccess = isSuccess;
+        }, () => { IsSuccess = false; });
+
+        if (IsSuccess) {
+            alert(Message.saveComplete)
+        } else {
+            alert(Message.saveFail)
+        }
+
+        this.preloader.setShowPreloader(false);
     }
 
     async OnRevice() {
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
-        let IsSuccess: boolean | false;
-        await this.noticeService.updSuspect(this.SuspectFG.value).then(isSuccess => {
+        let IsSuccess: boolean = false;
+        await this.noticeService.noticeMasSuspectupdByCon(this.SuspectFG.value).then(isSuccess => {
             IsSuccess = isSuccess;
-        }, (error) => { IsSuccess = false; })
+        }, () => { IsSuccess = false; })
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -305,37 +320,24 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
     private async setRegionStore() {
 
-        let subdistrict: any[];
-        let district: any[];
-        let province: any[];
-
-        await this.arrestService.masSubdistrictgetAll().then(res =>
-            subdistrict = res
-        )
-        await this.arrestService.masDistrictgetAll().then(res =>
-            district = res
-        )
-        await this.arrestService.masProvincegetAll().then(res =>
-            province = res
-        )
-
-        await subdistrict
-            .map(subdis => district.filter(dis => dis.DistrictCode == subdis.DistrictCode)
-                .map(dis => province.filter(pro => pro.ProvinceCode == dis.ProvinceCode)
-                    .map(pro => {
-                        let r = { ...subdis, ...dis, ...pro }
+        await this.mainMasterService.masDistrictMaingetAll().then(res => {
+            res.map(prov =>
+                prov.MasDistrict.map(dis =>
+                    dis.MasSubDistrict.map(subdis => {
                         this.typeheadRegion.push({
-                            SubdistrictCode: r.SubdistrictCode,
-                            SubdistrictNameTH: r.SubdistrictNameTH,
-                            DistrictCode: r.DistrictCode,
-                            DistrictNameTH: r.DistrictNameTH,
-                            ProvinceCode: r.ProvinceCode,
-                            ProvinceNameTH: r.ProvinceNameTH,
+                            SubdistrictCode: subdis.SubdistrictCode,
+                            SubdistrictNameTH: subdis.SubdistrictNameTH,
+                            DistrictCode: dis.DistrictCode,
+                            DistrictNameTH: dis.DistrictNameTH,
+                            ProvinceCode: prov.ProvinceCode,
+                            ProvinceNameTH: prov.ProvinceNameTH,
                             ZipCode: null
                         })
                     })
                 )
             )
+
+        })
     }
 
     searchRegion = (text3$: Observable<string>) =>
@@ -355,7 +357,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
     selectItemRegion(ele: any) {
         this.SuspectFG.patchValue({
-            SubDistrictCode: ele.item.SubDistrictCode,
+            SubDistrictCode: ele.item.SubdistrictCode,
             SubDistrict: ele.item.SubDistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
@@ -368,7 +370,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
         let file = e.target.files[0];
         let isMatch: boolean | false;
-        
+
         ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
 
         if (!isMatch) {
@@ -380,7 +382,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
         reader.onload = () => {
             img.src = reader.result;
             this.SuspectFG.patchValue({
-                LinkPhoto: reader.result,
+                // LinkPhoto: reader.result,
                 PhotoDesc: file.name
             })
         };

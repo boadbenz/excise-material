@@ -15,6 +15,7 @@ import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-la
 import { DatepickerI18nService } from '../../../services/datepicker-i18n.service';
 import { ProveService } from '../../prove/prove.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MainMasterService } from '../../../services/main-master.service';
 
 const routes: Routes = [
     {
@@ -53,7 +54,8 @@ const routes: Routes = [
         { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },
         NoticeService,
         ArrestsService,
-        ProveService
+        ProveService,
+        MainMasterService
     ]
 })
 export class ManageModule { }

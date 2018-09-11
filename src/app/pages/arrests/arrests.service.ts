@@ -45,7 +45,8 @@ export class ArrestsService {
 
     private async resposePromisGetList(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        if (res.IsSuccess == 'False' || !res.length) {
+        debugger
+        if (!res.length || res.IsSuccess == 'False') {
             return [];
         }
         return res
@@ -54,10 +55,7 @@ export class ArrestsService {
     async getByKeywordOnInit(): Promise<any[]> {
         const params = { 'Textsearch': '' };
         const url = `${appConfig.api7788}/ArrestgetByKeyword`;
-        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-        if (res.IsSuccess) {
-            return res.ResponseData
-        }
+        return this.resposePromisGetList(JSON.stringify(params), url)
     }
 
     getByKeyword(Textsearch: string): Promise<Arrest[]> {

@@ -727,7 +727,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.ArrestLocale.at(0).reset(locale);
         this.ArrestLocale.at(0).patchValue({
-            SubDistrictCode: locale.SubdistrictCode,
+            SubDistrictCode: locale.SubDistrictCode,
             SubDistrict: locale.SubDistrict,
             DistrictCode: locale.DistrictCode,
             District: locale.District,
@@ -1099,11 +1099,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsNewItem: isNewItem || true,
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || 1,
-            IsDomestic: e.item.IsDomestic || 1
-            // Qty: e.item.Size,
-            // QtyUnit: e.item.SizeCode,
-            // NetVolume: null,
-            // NetVolumeUnit: e.item.SizeUnitCode
+            IsDomestic: e.item.IsDomestic || 1,
+            NetWeight: e.item.NetWeight || 0,
+            NetWeightUnit: e.item.NetWeight || 0
         })
     }
 
