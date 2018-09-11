@@ -48,7 +48,8 @@ export class NoticeService {
     }
 
     getByKeyword(Textsearch: any): Promise<Notice[]> {
-        const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
+        debugger
+        const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api8082}/NoticegetByKeyword`;
         return this.resposePromisGet(JSON.stringify(params), url)
     }
