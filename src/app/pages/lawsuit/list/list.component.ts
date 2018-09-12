@@ -6,7 +6,7 @@ import { NavigationService } from "../../../shared/header-navigation/navigation.
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
-import {compareDate, getDateMyDatepicker, toLocalShort} from "../../../config/dateFormat";
+import {compareDate, getDateMyDatepicker, setZeroHours, toLocalShort} from "../../../config/dateFormat";
 import { Notice } from "../../notices/notice";
 import { PreloaderService } from "../../../shared/preloader/preloader.component";
 import { SidebarService } from "../../../shared/sidebar/sidebar.component";
@@ -80,16 +80,10 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async onAdvSearch(form: any) {
-    if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
-      const sDateCompare = new Date(form.value.LawsuitDateFrom);
-      const eDateCompare = new Date(form.value.LawsuitDateTo);
-      if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-        alert(Message.checkDate);
-        return false;
-      }
-      form.value.LawsuitDateFrom = sDateCompare.toISOString();
-      form.value.LawsuitDateTo = eDateCompare.toISOString();
-    }
+    /* Clear Time */
+    form.value.LawsuitDateFrom = setZeroHours(getDateMyDatepicker(form.value.lawsuitDateFrom));
+    form.value.LawsuitDateTo = setZeroHours(getDateMyDatepicker(form.value.lawsuitDateTo));
+    /* Query (Advance Search) */
     this.preLoaderService.setShowPreloader(true);
     await this.lawsuitService.LawsuitgetByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
