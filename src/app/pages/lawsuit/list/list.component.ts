@@ -6,10 +6,11 @@ import { NavigationService } from "../../../shared/header-navigation/navigation.
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
-import { toLocalShort } from "../../../config/dateFormat";
+import {compareDate, getDateMyDatepicker, toLocalShort} from "../../../config/dateFormat";
 import { Notice } from "../../notices/notice";
-import {PreloaderService} from "../../../shared/preloader/preloader.component";
-import {SidebarService} from "../../../shared/sidebar/sidebar.component";
+import { PreloaderService } from "../../../shared/preloader/preloader.component";
+import { SidebarService } from "../../../shared/sidebar/sidebar.component";
+import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
   selector: "app-list",
@@ -25,9 +26,16 @@ export class ListComponent implements OnInit, OnDestroy {
   subSetNextPage: any;
 
   advSearch: any;
-  // advSearchSub: any;
-
   paginage = pagination;
+
+  lawsuitDateFrom: any;
+  lawsuitDateTo: any;
+
+  datePickerOptions: IMyOptions = {
+    dateFormat: 'dd mmm yyyy',
+    showClearDateBtn: false,
+    height: '30px'
+  };
 
   constructor(private router: Router, private navService: NavigationService, private preLoaderService: PreloaderService
               , private lawsuitService: LawsuitService, private sidebarService: SidebarService
@@ -37,7 +45,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.3');
+    this.sidebarService.setVersion('0.0.0.4');
     this.paginage.TotalItems = 0;
 
     this.preLoaderService.setShowPreloader(true);
@@ -124,6 +132,28 @@ export class ListComponent implements OnInit, OnDestroy {
 
   async pageChanges(event) {
     this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
+  }
+
+  onLawsuitDateFromChange(form: any, event: IMyDateModel) {
+    if ((event && form.value.LawsuitDateTo)
+        && !compareDate(getDateMyDatepicker(event), getDateMyDatepicker(form.value.LawsuitDateTo))) {
+      alert(Message.checkDate);
+      setTimeout(() => {
+        this.lawsuitDateTo = { date: event.date };
+      }, 0);
+      return false;
+    }
+  }
+
+  onLawsuitDateToChange(form: any, event: IMyDateModel) {
+    if ((form.value.LawsuitDateFrom && event)
+        && !compareDate(getDateMyDatepicker(form.value.LawsuitDateFrom), getDateMyDatepicker(event))) {
+      alert(Message.checkDate);
+      setTimeout(() => {
+        this.lawsuitDateTo = { date: form.value.LawsuitDateFrom.date };
+      }, 0);
+      return false;
+    }
   }
 
 }

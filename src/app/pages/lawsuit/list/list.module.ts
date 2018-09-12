@@ -9,7 +9,8 @@ import { PaginationTableModule } from '../../component/pagination-table/paginati
 import { HttpModule } from "@angular/http";
 import { HttpClientModule } from "@angular/common/http";
 import { CardActionsModule } from "../../component/card-actions/card-actions.module";
-import {NoticeService} from "../../notices/notice.service";
+import { NoticeService } from "../../notices/notice.service";
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
     {
@@ -32,7 +33,8 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forChild(routes),
     CardActionsModule,
-    PaginationTableModule
+    PaginationTableModule,
+    MyDatePickerTHModule
   ],
   declarations: [
     ListComponent,
