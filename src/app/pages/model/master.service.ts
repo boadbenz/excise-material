@@ -18,26 +18,25 @@ export class MasterService {
   
   async getStation(): Promise<any> {
     const params = {};
-    const url = `${appConfig.api8881}/CompareMasStaffgetByAll`;
+    const url = `${appConfig.api8881}/CompareMasOfficegetByKeyword`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      //await alert(error);
+      await alert(error);
     }
   }
 
   async getStaff(): Promise<any> {
     const params = {};
-    const url = `${appConfig.api8881}/CompareMasOfficegetAll`;
+    const url = `${appConfig.api8881}/CompareMasStaffgetByKeyword`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-      //await alert(error);
+      await alert(error);
     }
   }
-  
 }

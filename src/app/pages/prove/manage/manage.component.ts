@@ -14,10 +14,6 @@ import { ProveStaff } from '../proveStaff';
 import { ProveScience } from '../proveScience';
 import { ProveProduct } from '../proveProduct';
 import { Message } from '../../../config/message';
-import { ProveDocument } from '../proveDoc';
-import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
-import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-manage',
@@ -26,11 +22,14 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 })
 export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
+    viewMode: any;
     mode: string;
     modal: any;
     param: any;
-    programSpect = 'ILG60-05-02-00'
 
+    C1_ReferenceVatRate: any;
+    C1_ReferenceVatQty: any;
+    IsProveScience: any;
     // --------
     showEditField: any;
 
@@ -39,7 +38,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ArrestCode: string;
     ProveID: string;
 
-    // --- Array ---
+    // --- Autocomplate ---
     rawOptions = [];
     options = [];
     rawStaffOptions = [];
@@ -48,9 +47,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     Deliveryoptions = [];
     UnitOption = [];
     ArrestProduct = [];
-    ListProveDoc = [];
-    ListProduct = [];
-    ListQtyUnit = [];
 
     // ---- Varible ---
     LawsuiltCode: string;
@@ -59,27 +55,24 @@ export class ManageComponent implements OnInit, OnDestroy {
     SectionNo: string;
     PenaltyDesc: string;
     IndictmentID: string;
-    GuiltBaseID: string;
     ReportNo: string = "";       // เลขทะเบียนตรวจพิสูจน์  (ไม่รวม /ปี พ.ศ.)
     ProveYear: string;      // ปี พ.ศ.
-    ProveDate: any;      // วันที่ตรวจรับ
+    ProveDate: string;      // วันที่ตรวจรับ
     ProveTime: string;      // เวลาตรวจรับ
     DeliveryDocNo: string = "";  // เลขที่หนังสือนำส่ง
-    DeliveryDate: any;   // วันที่นำส่ง
+    DeliveryDate: string;   // วันที่นำส่ง
     DeliveryTime: string;   // เวลานำส่ง
     PosExaminer: string;    // ตำแหน่งผู้ตรวจรับ
     DeptExaminer: string;   // หน่วยงานผู้ตรวจรับ
     PosScience: string;     // ตำแหน่งผู้พิสูจน์
     DeptScience: string;    // หน่วยงานผู้พิสูจน์
-    ProveScienceDate: any;   // วันที่พิสูจน์
+    ProveScienceDate: string;   // วันที่พิสูจน์
     ProveScienceTime: string;   // เวลาที่พิสูจน์
     Command: string         // คำสั่ง
     ProveStation: string;   // เขียนที่
     ProveDelivery: string;  // หน่วยงานที่นำส่ง
     ProveStaffName: string; // ผู้ตรวจรับ
     ScienceStaffName: string;   // ผู้พิสูจน์
-    StaffID: number;        // รหัสผู้ตรวจรับ
-    StaffScienceID: number;   // รหัสผู้ตรวจพิสูจน์
 
     iPopup: number;
     modePopup: string = 'I';
@@ -92,9 +85,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     oProveScienceStaff: ProveStaff;
     oProveScience: ProveScience;
     oProveProduct: ProveProduct;
-    oProveDocument: ProveDocument;
-
-    isRequired: boolean | false;
 
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -107,90 +97,70 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ArrestSV: ArrestService,
         private LawsuitSV: LawsuitService,
         private MasterSV: MasterService,
-        private router: Router,
-        private preloader: PreloaderService
+        private router: Router
     ) {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
         // set true
         this.navService.setNextPageButton(true);
-
-
     }
 
-    async ngOnInit() {
-        this.preloader.setShowPreloader(true);
-        await this.navService.setEditField(true);
-
+    ngOnInit() {
         this.active_Route();
         this.navigate_Service();
+
+        this.getStation();
+        this.getProveStaff();
+        this.getUnit();
         this.CreateObject();
         this.CreateProduct();
         this.CreateScience();
-        // this.CreateStaff();
-        this.CreateDocuement();
-        this.getUnit();
-        // await this.getStation();
-        // await this.getProveStaff();
 
         this.ArrestCode = this.ArrestCode;
-        this.ProveStaffName = "";
-        this.ScienceStaffName = "";
-        this.ProveStation = "";
+
+        if (this.ProveID != '0') {
+            this.getProveByID();
+        }
+
+        this.getLawsuitByID(this.LawsuitID);
 
         let date = new Date();
         this.ProveYear = (date.getFullYear() + 543).toString();
-        this.ProveDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
-        this.ProveTime = await this.getCurrentTime();
-        this.DeliveryDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
-        this.DeliveryTime = await this.getCurrentTime();
-        this.ProveScienceDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
-        this.ProveScienceTime = await this.getCurrentTime();
-
-
-
-        if (this.ProveID != '0') {
-            await this.getProveByID();
-        }
-
-        await this.getLawsuitByID();
-        await this.getGuiltBaseByID();
+        this.ProveDate = this.getCurrentDate();
+        this.ProveTime = this.getCurrentTime();
+        this.DeliveryDate = this.getCurrentDate();
+        this.DeliveryTime = this.getCurrentTime();
+        this.ProveScienceDate = this.getCurrentDate();
+        this.ProveScienceTime = this.getCurrentTime();
     }
 
     private active_Route() {
-        // this.sub = this.navService.showFieldEdit.subscribe(status => {
-        //     if (!status) {
-        //         this.navService.setCancelButton(true);
-        //         this.navService.setSaveButton(true);
-        //         this.navService.setPrintButton(false);
-        //         this.navService.setSearchBar(false);
-        //         this.navService.setDeleteButton(false);
-        //         this.navService.setEditButton(false);
+        this.sub = this.navService.showFieldEdit.subscribe(status => {
+            this.viewMode = status;
+            if (!this.viewMode) {
+                this.navService.setCancelButton(true);
+                this.navService.setSaveButton(true);
+                this.navService.setPrintButton(false);
+                this.navService.setSearchBar(false);
+                this.navService.setDeleteButton(false);
+                this.navService.setEditButton(false);
 
-        //     } else {
-        //         this.navService.setPrintButton(true);
-        //         this.navService.setDeleteButton(true);
-        //         this.navService.setEditButton(true);
-        //         this.navService.setSearchBar(false);
-        //         this.navService.setCancelButton(false);
-        //         this.navService.setSaveButton(false);
-        //     }
+            } else {
+                this.navService.setPrintButton(true);
+                this.navService.setDeleteButton(true);
+                this.navService.setEditButton(true);
+                this.navService.setSearchBar(false);
+                this.navService.setCancelButton(false);
+                this.navService.setSaveButton(false);
+            }
 
-        //     this.navService.setNextPageButton(true);
-        // });
+
+            this.navService.setNextPageButton(true);
+        });
 
 
         this.param = this.activeRoute.params.subscribe(p => {
-            this.navService.setPrintButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setEditButton(true);
-            this.navService.setSearchBar(false);
-            this.navService.setCancelButton(false);
-            this.navService.setSaveButton(false);
-
-            this.navService.setNextPageButton(true);
-
             if (p['code1']) {
                 this.LawsuitID = p['code1'];
             }
@@ -200,15 +170,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             if (p['code3']) {
-                this.IndictmentID = p['code3'];
-            }
-
-            if (p['code4']) {
-                this.GuiltBaseID = p['code4'];
-            }
-
-            if (p['code5']) {
-                this.ProveID = p['code5'];
+                this.ProveID = p['code3'];
             }
         });
     }
@@ -220,45 +182,29 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.sub = this.navService.onSave.subscribe(async status => {
             if (status) {
-                this.preloader.setShowPreloader(true);
                 // set action save = false
-                await this.navService.setOnSave(false);
-                // await this.onComplete();
-                // alert(Message.saveComplete);
+                this.navService.setOnSave(false);
+                // 
+                if (this.oProve) {
+                    if (this.ProveID == '0') {
+                        this.onInsProve();
 
-                if (this.ReportNo == ""
-                    // || this.ProveStaffName == "" || this.ProveStaffName == undefined
-                    // || this.ScienceStaffName == "" || this.ScienceStaffName == undefined
-                    || this.ProveStation == "" || this.ProveStation == undefined
-                    || this.ProveDate == null || this.DeliveryDate == null) {
-                    this.isRequired = true;
-                    alert(Message.checkData);
-
-                    // this.showEditField = false;
-
-                    return false;
-                }
-                else {
-                    if (this.oProve) {
-                        if (this.ProveID == '0') {
-                            await this.onInsProve();
-                            this.router.navigate(['/prove/list']);
-                        } else {
-                            await this.onUpdProve();
-                        }
+                    } else {
+                        this.onUpdProve();
+                        //   this.onComplete();
                     }
                 }
 
-                await this.onComplete();
+                this.router.navigate(['/prove/list']);
             }
         });
 
-        this.sub = this.navService.onDelete.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnDelete(false);
-                this.onDelete();
-            }
-        });
+        // this.sub = this.navService.onDelete.subscribe(async status => {
+        //     if (status) {
+        //         await this.navService.setOnDelete(false);
+        //         this.onDelete();
+        //     }
+        // });
 
         this.sub = this.navService.onPrint.subscribe(async status => {
             if (status) {
@@ -270,9 +216,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sub = this.navService.onCancel.subscribe(async status => {
             if (status) {
                 if (confirm(Message.confirmAction)) {
-                    // await this.navService.setOnCancel(false);
-                    // this.router.navigate(['/prove/list']);
-                    await this.navService.setOnSave(false);
+                    await this.navService.setOnCancel(false);
+                    this.router.navigate(['/prove/list']);
                 }
             }
         })
@@ -280,25 +225,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     onInsProve() {
         this.oProve.DeliveryDocNo = this.DeliveryDocNo;
-
-        let DDate, cDateDelivery, PDate, cProveDate;
-
-        DDate = this.DeliveryDate.date;
-        if (DDate != undefined) {
-            cDateDelivery = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
-        }
-
-        PDate = this.ProveDate.date;
-        if (PDate != undefined) {
-            cProveDate = PDate.year + '-' + PDate.month + '-' + PDate.day + ' ' + this.ProveTime;
-        }
-
-        this.oProve.DeliveryDate = cDateDelivery;
+        this.oProve.DeliveryDate = this.DeliveryDate + ' ' + this.DeliveryTime;
         this.oProve.ProveReportNo = this.ReportNo + "/" + this.ProveYear;
-        this.oProve.ProveDate = cProveDate;
+        this.oProve.ProveDate = this.ProveDate + ' ' + this.ProveTime;
         this.oProve.IndictmentID = this.IndictmentID;
 
         this.oProve.ProveStaff = [];
+
+
 
         if (this.oProveStaff != 'nulll' && this.oProveStaff != undefined) {
             this.oProve.ProveStaff.push(this.oProveStaff);
@@ -308,253 +242,58 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oProve.ProveStaff.push(this.oProveScienceStaff);
         }
 
-        let isSuccess: boolean = true;
 
-        this.proveService.insAll(this.oProve).then(async IsSuccess => {
-            if (!IsSuccess) {
-                isSuccess = IsSuccess;
-                return false;
+        this.proveService.insAll(this.oProve).then(async res => {
+            if (res.IsSuccess == "True") {
+                this.oProve = {};
+
+                alert(Message.saveComplete);
+            } else {
+                alert(Message.saveFail);
             }
-
-            if (this.ListProveDoc.length > 0) {
-                this.ListProveDoc.map(async item => {
-                    item.ReferenceCode = this.oProve.ProveReportNo;
-
-                    await this.proveService.DocumentinsAll(item).then(IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
-                });
-            }
-        }, (error) => { isSuccess = false; console.error(error); return false; });
-
-        if (isSuccess) {
-            this.preloader.setShowPreloader(false);
-            alert(Message.saveComplete);
-            this.oProve = {};
-            this.router.navigate(['/prove/list']);
-        } else {
-            this.preloader.setShowPreloader(false);
-            alert(Message.saveFail);
-        }
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
     }
 
     onUpdProve() {
-        let DDate, cDateDelivery, PDate, cProveDate;
-
-        DDate = this.DeliveryDate.date;
-        if (DDate != undefined) {
-            cDateDelivery = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
-        }
-
-        PDate = this.ProveDate.date;
-        if (PDate != undefined) {
-            cProveDate = PDate.year + '-' + PDate.month + '-' + PDate.day + ' ' + this.ProveTime;
-        }
-
         this.oProve.DeliveryDocNo = this.DeliveryDocNo;
-        this.oProve.DeliveryDate = cDateDelivery;
+        this.oProve.DeliveryDate = this.DeliveryDate + ' ' + this.DeliveryTime;
         this.oProve.ProveReportNo = this.ReportNo + "/" + this.ProveYear;
-        this.oProve.ProveDate = cProveDate;
+        this.oProve.ProveDate = this.ProveDate + ' ' + this.ProveTime;
         this.oProve.IndictmentID = this.IndictmentID;
 
-        // var aIndex;
-        // aIndex = this.getIndexOf(this.oProve.ProveStaff, "14", "ContributorCode");
-        // if (aIndex != -1) {
-        //     this.oProve.ProveStaff[aIndex] = this.oProveStaff;
-        //     this.oProve.ProveStaff[aIndex].ProveID = this.ProveID;
+        // this.oProve.ProveStaff = [];
+
+
+
+        // if (this.oProveStaff != 'nulll' && this.oProveStaff != undefined) {
+        //     this.oProve.ProveStaff.push(this.oProveStaff);
         // }
 
-
-        // var sIndex;
-        // sIndex = this.getIndexOf(this.oProve.ProveStaff, "15", "ContributorCode");
-        // if (sIndex != -1) {
-        //     this.oProve.ProveStaff[sIndex] = this.oProveScienceStaff;
-        //     this.oProve.ProveStaff[sIndex].ProveID = this.ProveID;
+        // if (this.oProveScienceStaff != 'nulll' && this.oProveScienceStaff != undefined) {
+        //     this.oProve.ProveStaff.push(this.oProveScienceStaff);
         // }
 
-        this.oProve.ProveStaff = [];
+        debugger
+        this.proveService.ProveupdByCon(this.oProve).then(async res => {
+            debugger
+            if (res.IsSuccess == "True") {
+                this.oProve = {};
 
-        if (this.oProveStaff != 'nulll' && this.oProveStaff != undefined) {
-            this.oProve.ProveStaff.push(this.oProveStaff);
-            this.oProve.ProveStaff[this.oProve.ProveStaff.length - 1].ProveID = this.ProveID;
-        }
-
-        if (this.oProveScienceStaff != 'nulll' && this.oProveScienceStaff != undefined) {
-            this.oProve.ProveStaff.push(this.oProveScienceStaff);
-            this.oProve.ProveStaff[this.oProve.ProveStaff.length - 1].ProveID = this.ProveID;
-        }
-
-        this.ListProduct = this.oProve.ProveProduct;
-        this.oProve.ProveProduct = [];
-
-        if (this.oProve.ProveScience.length > 0) {
-            if (this.oProve.ProveScience[0].ProveScienceDate == null) {
-                this.oProve.ProveScience[0].ProveScienceDate = cProveDate;
-                this.oProve.ProveScience[0].ProveScienceTime = this.ProveTime;
+                alert(Message.saveComplete);
+            } else {
+                alert(Message.saveFail);
             }
-            else {
-                this.oProve.ProveScience[0].ProveScienceDate = cProveDate;
-            }
-        }
-
-
-        // -----------------------------------------------------------
-        //                       Call API Update
-        // -----------------------------------------------------------
-
-        let isSuccess: boolean = true;
-        // Update Prove
-        this.proveService.ProveupdByCon(this.oProve).then(async IsSuccess => {
-            if (!IsSuccess) {
-                isSuccess = IsSuccess;
-                return false;
-            }
-        }, (error) => { isSuccess = false; console.error(error); return false; });
-
-        if (!isSuccess) return false;
-
-
-        if (this.ListProduct.length > 0) {
-            // New Product
-            this.ListProduct.filter(item => item.IsNewItem === true)
-                .map(async item => {
-                    item.ProveID = this.ProveID;
-                    item.ReferenceDate = this.oProve.ProveDate + ".000";
-
-                    await this.proveService.ProveProductinsAll(item).then(async IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
-                });
-
-            if (!isSuccess) return false;
-
-
-            // Update Product
-            this.ListProduct.filter(item => item.IsNewItem === false)
-                .map(async item => {
-                    item.ReferenceDate = this.oProve.ProveDate + ".000";
-
-                    await this.proveService.ProveProductupdByCon(item).then(async IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
-                });
-
-            if (!isSuccess) return false;
-
-
-            // Delete Product
-            this.ListProduct.filter(item => item.IsDelItem === true)
-                .map(async item => {
-                    await this.proveService.ProveProductupdDelete(item).then(async IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
-                });
-
-            if (!isSuccess) return false;
-
-        }
-
-        if (this.ListProveDoc.length > 0) {
-            // New Document
-            this.ListProveDoc.filter(item => item.IsNewItem === true)
-                .map(async item => {
-
-                    item.ReferenceCode = this.oProve.ProveReportNo;
-
-                    await this.proveService.DocumentinsAll(item).then(IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
-                });
-
-            if (!isSuccess) return false;
-
-
-            // Edit Document
-            this.ListProveDoc.filter(item => item.IsNewItem === false)
-                .map(async item => {
-
-                    item.ReferenceCode = this.oProve.ProveReportNo;
-
-                    await this.proveService.DocumentupdByCon(item).then(IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
-                });
-
-            if (!isSuccess) return false;
-
-
-            // Del Document
-            this.ListProveDoc.filter(item => item.IsDelItem === true)
-                .map(async item => {
-                    await this.proveService.DocumentupdDelete(item).then(IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
-                });
-
-            if (!isSuccess) return false;
-        }
-
-
-        if (isSuccess) {
-            alert(Message.saveComplete);
-            this.oProve.ProveProduct = this.ListProduct;
-            this.preloader.setShowPreloader(false);
-        } else {
-            alert(Message.saveFail);
-            this.preloader.setShowPreloader(false);
-        }
-    }
-
-    onDelete() {
-        if (confirm(Message.confirmDeleteProduct)) {
-            this.proveService.ProveupdDelete(this.ProveID).then(async IsSuccess => {
-                if (IsSuccess) {
-                    this.oProve = {};
-                    alert(Message.saveComplete);
-                    this.router.navigate(['/prove/list']);
-                } else {
-                    alert(Message.saveFail);
-                }
-            }, (error) => { console.error(error); return false; });
-        }
+        }, (err: HttpErrorResponse) => {
+            alert(err.message);
+        });
     }
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();
-        this.param.unsubscribe();
     }
 
-    onComplete() {
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        this.navService.setEditButton(true);
-        this.navService.setSearchBar(false);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
-
-        this.showEditField = true;
-    }
     // openSuspect(e) {
     //     this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     // }
@@ -564,9 +303,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve = {
             ProveID: "",
             DeliveryDocNo: "",
-            DeliveryDate: null,
+            DeliveryDate: "",
             ProveReportNo: "",
-            ProveDate: null,
+            ProveDate: "",
             ProveStationCode: "",
             ProveStation: "",
             IndictmentID: "",
@@ -625,8 +364,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ReferenceDate: "",
             IsStatusExhibit: "",
             Remarks: "",
-            IsNewItem: false,
-            IsDelItem: false
+            IsAction: "I"
         }
     }
 
@@ -646,213 +384,68 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    // CreateStaff()
-    // {
-    //     this.oProveStaff = {};
+    getProveByID() {
+        this.proveService.ProvegetByCon(this.ProveID).then(async res => {
+           this.oProve = res;
 
-    //     this.oProveStaff = {
-    //         ProgramCode: "XCS-60",
-    //         ProcessCode: "XCS-60-05",
-    //         LawsuitID: this.LawsuitID,
-    //         StaffCode: "-",
-    //         TitleName: "",
-    //         FirstName: "",
-    //         LastName: "",
-    //         PositionCode: "",
-    //         PositionName: "",
-    //         PosLevel: "",
-    //         PosLevelName: "",
-    //         DepartmentCode: "",
-    //         DepartmentName: "",
-    //         DepartmentLevel: "",
-    //         OfficeCode: "",
-    //         OfficeName: "",
-    //         OfficeShortName: "",
-    //         ContributorCode: "14"
-    //     }
-
-    //     this.oProveScienceStaff = {};
-
-    //     this.oProveScienceStaff = {
-    //         ProgramCode: "XCS-60",
-    //         ProcessCode: "XCS-60-05",
-    //         LawsuitID: this.LawsuitID,
-    //         StaffCode: "-",
-    //         TitleName: "-",
-    //         FirstName: "-",
-    //         LastName: "-",
-    //         PositionCode: "",
-    //         PositionName: "",
-    //         PosLevel: "",
-    //         PosLevelName: "",
-    //         DepartmentCode: "",
-    //         DepartmentName: "",
-    //         DepartmentLevel: "",
-    //         OfficeCode: "",
-    //         OfficeName: "",
-    //         OfficeShortName: "",
-    //         ContributorCode: "15"
-    //     }
-    // }
-
-    CreateDocuement() {
-        this.oProveDocument = {};
-
-        this.oProveDocument = {
-            DocumentID: "",
-            ReferenceCode: "",
-            FilePath: "",
-            DataSource: "",
-            DocumentType: "",
-            DocumentName: "",
-            IsActive: "1"
-        }
-    }
-
-    async getProveByID() {
-        // this.preloader.setShowPreloader(true);
-        await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
-            if (res != null) {
-                this.oProve = res;
-
-                var PRN = this.oProve.ProveReportNo.split('/');
-
-                if (PRN.length > 1) {
-                    this.ReportNo = PRN[0];
-                    this.ProveYear = PRN[1];
-                }
-
-                this.ProveStation = `${this.oProve.ProveStation == 'null' ? '' : this.oProve.ProveStation}`;
-                this.ProveDelivery = `${this.oProve.DeliveryStation == 'null' ? '' : this.oProve.DeliveryStation}`;
-                this.DeliveryDocNo = this.oProve.DeliveryDocNo;
-
-                var PDate = this.oProve.ProveDate.toString().split(" ");
-                this.ProveDate = setDateMyDatepicker(new Date(PDate[0]));
-                this.ProveTime = PDate[1] + ".000";
-
-                var PSDate = this.oProve.DeliveryDate.toString().split(" ");
-                this.DeliveryDate = setDateMyDatepicker(new Date(PSDate[0]));
-                this.DeliveryTime = PSDate[1] + ".000";
-
-                var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
-                if (PStaff.length > 0) {
-                    this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
-                    this.PosExaminer = PStaff[0].PositionName;
-                    this.DeptExaminer = PStaff[0].DepartmentName;
-                    this.StaffID = PStaff[0].StaffID;
-                    this.oProveStaff = PStaff[0];
-                }
-
-
-                var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "15");
-                if (PScienceStaff.length) {
-                    this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
-                    this.PosScience = PScienceStaff[0].PositionName;
-                    this.DeptScience = PScienceStaff[0].DepartmentName;
-                    this.StaffScienceID = PScienceStaff[0].StaffID;
-                    this.oProveScienceStaff = PScienceStaff[0];
-                }
-
-                this.oProve.ProveStaff = [];
-
-                this.oProve.ProveProduct.map(item => {
-                    item.IsNewItem = false;
-                    item.IsDelItem = false;
-
-                    item.Remarks = `${item.Remarks == null ? '' : item.Remarks}`;
-                    item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
-                    item.ProveResult = `${item.ProveResult == null ? '' : item.ProveResult}`;
-                });
-
-                for (var i = 0; i < this.oProve.ProveProduct.length; i += 1) {
-                    this.oProve.ProveProduct[i].ProductSeq = i;
-                }
-
-                this.oProve.ProveScience.map(item => {
-                    item.DeliveryDocNo = `${item.DeliveryDocNo == null ? '' : item.DeliveryDocNo}`;
-                    item.ProveScienceDate = `${item.ProveScienceDate == null ? '' : item.ProveScienceDate}`;
-                    item.RequestNo = `${item.RequestNo == null ? '' : item.RequestNo}`;
-                    item.ReportNo = `${item.ReportNo == null ? '' : item.ReportNo}`;
-                });
-            }
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
+    }
 
-        this.ListProveDoc = [];
+    getLawsuitByID(LawsuitID: string) {
+        this.LawsuitSV.LawsuitegetByCon(LawsuitID).then(async res => {
+            // --- รายละเอียดคดี ----
 
-        await this.proveService.DocumentgetByCon(this.oProve.ProveReportNo).then(async doc => {
-            if (doc) {
-                this.ListProveDoc.push(doc);
-
-                for (var i = 0; i < this.ListProveDoc.length; i += 1) {
-                    this.ListProveDoc[i].DocumentSeq = i;
-                    this.ListProveDoc[i].IsNewItem = false;
-                    this.ListProveDoc[i].IsDelItem = false;
-                }
+            if (res.IsOutside == "1") {
+                this.LawsuiltCode = "น " + res.LawsuitNo;
             }
+            else {
+                this.LawsuiltCode = res.LawsuitNo;
+            }
+
+            this.IndictmentID = res.IndictmentID.toString();
+
+            this.getArrestByID(this.ArrestCode)
+
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
-
-        // this.preloader.setShowPreloader(false);
-    }
-
-    getLawsuitByID() {
-        if (this.IndictmentID != "0") {
-            this.LawsuitSV.LawsuitegetByCon(this.LawsuitID).then(async res => {
-                // --- รายละเอียดคดี ----
-                if (res.length > 0) {
-                    if (res[0].ArrestIndicment.length > 0) {
-                        var aIndex;
-                        aIndex = this.getIndexOf(res[0].ArrestIndicment, this.IndictmentID, "IndictmentID");
-
-                        if (aIndex != -1) {
-                            if (res[0].ArrestIndicment[aIndex].Lawsuit.length > 0) {
-                                if (res[0].ArrestIndicment[aIndex].Lawsuit[0].IsOutside == "1") {
-                                    this.LawsuiltCode = "น " + res[0].ArrestIndicment[aIndex].Lawsuit[0].LawsuitNo;
-                                }
-                                else {
-                                    this.LawsuiltCode = res[0].ArrestIndicment[aIndex].Lawsuit[0].LawsuitNo;
-                                }
-                            }
-                        }
-                    }
-                }
-            }, (err: HttpErrorResponse) => {
-
-            });
-        }
     }
 
     getArrestByID(ArrestCode: string) {
         this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
-            if (res.length > 0) {
-                this.oArrest = res[0];
-                this.ArrestProduct = res[0].ArrestProduct;
+            this.oArrest = res;
 
-                await this.getProveProduct();
-            }
-            else
-            {
-                this.preloader.setShowPreloader(false);
-            }
+            this.ArrestProduct = res.ArrestProduct;
+
+            debugger
+            this.getProveProduct();
+            this.getGuiltBaseByID();
+
         }, (err: HttpErrorResponse) => {
-            //alert(err.message);
+            alert(err.message);
         });
     }
 
     getGuiltBaseByID() {
-        this.LawsuitSV.getGuiltBaseByCon(this.GuiltBaseID).then(async res => {
-            this.SectionName = res.CompareMasLawSection.SectionName;
-            this.GuiltBaseName = res.CompareMasLawGuiltBase.GuiltBaseName;
-            this.SectionNo = res.CompareMasLawPenalty.SectionNo.toString();
-            this.PenaltyDesc = res.CompareMasLawPenalty.PenaltyDesc;
+        var aIndex;
+        var arrestIndex;
+        if (this.oArrest.ArrestIndictment.length > 0) {
+            aIndex = this.getIndexOf(this.oArrest.ArrestIndictment, this.IndictmentID, "IndictmentID");
+        }
 
-            await this.getArrestByID(this.ArrestCode);
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
+        if (aIndex != "false") {
+            this.LawsuitSV.getGuiltBaseByCon(this.oArrest.ArrestIndictment[aIndex].GuiltBaseID.toString()).then(async res => {
+                this.SectionName = res.CompareMasLawSection.SectionName;
+                this.GuiltBaseName = res.CompareMasLawGuiltBase.GuiltBaseName;
+                this.SectionNo = res.CompareMasLawPenalty.SectionNo.toString();
+                this.PenaltyDesc = res.CompareMasLawPenalty.PenaltyDesc;
+
+            }, (err: HttpErrorResponse) => {
+                alert(err.message);
+            });
+        }
     }
 
     getIndexOf(arr, val, prop) {
@@ -863,12 +456,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 return k;
             }
         }
-        return -1;
+        return false;
     }
 
     getProveProduct() {
-        // this.preloader.setShowPreloader(true);
-
+        // 
         // ---- กรณีไม่มีเลข ProveID จะ default Product จาก ArrestProduct----
         if (this.ProveID == "0") {
             if (this.oArrest.ArrestProduct.length > 0) {
@@ -933,49 +525,66 @@ export class ManageComponent implements OnInit, OnDestroy {
                         IsStatusExhibit: "",
                         Remarks: "",
                         ProveResult: "",
-                        IsNewItem: true,
-                        IsDelItem: false
+                        IsAction: "U"
                     }
 
                     this.oProve.ProveProduct.push(this.oProveProduct);
-                    this.ListQtyUnit.push(this.oArrest.ArrestProduct[i].QtyUnit);
                 }
             }
         }
-        else{
-            if (this.oArrest.ArrestProduct.length > 0) {
-                this.ListQtyUnit = [];
-                
-                for (var i = 0; i < this.oArrest.ArrestProduct.length; i += 1) {
-                    this.ListQtyUnit.push(this.oArrest.ArrestProduct[i].QtyUnit);
-                }
-            }
-        }
+        else  // ---- กรณีมีเลข ProveID จะแสดงข้อมูล Product ตาม Prove Product ----
+        {
+            var PRN = this.oProve.ProveReportNo.split('/');
 
-        this.preloader.setShowPreloader(false);
+            if(PRN.length > 1)
+            {
+                this.ReportNo = PRN[0];
+                this.ProveYear = PRN[1];
+                this.ProveStation =  this.oProve.ProveStation;
+                this.ProveDelivery =  this.oProve.DeliveryStation;
+                this.DeliveryDocNo = this.oProve.DeliveryDocNo;
+
+                var PDate = this.oProve.ProveDate.split(" ");
+                this.ProveDate = PDate[0];
+                this.ProveTime = PDate[1];
+
+                var PSDate = this.oProve.DeliveryDate.split(" ");
+                this.DeliveryDate = PSDate[0];
+                this.DeliveryTime = PSDate[1];
+
+                var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
+                this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
+                this.PosExaminer = PStaff[0].PositionName;
+                this.DeptExaminer =  PStaff[0].DepartmentName;
+
+                var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "15");
+                this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
+                this.PosScience = PScienceStaff[0].PositionName;
+                this.DeptScience =  PScienceStaff[0].DepartmentName;
+
+                for (var i = 0; i < this.oProve.ProveProduct.length; i += 1) {
+                    this.oProve.ProveProduct[i].IsAction = 'U';
+                }
+            }
+        }
     }
 
     // --- เขียนที่ ---
-    async getStation() {
-        // this.preloader.setShowPreloader(true);
-        await this.MasterSV.getStation().then(async res => {
+    getStation() {
+        this.MasterSV.getStation().then(async res => {
             if (res) {
                 this.rawOptions = res;
             }
-
+            // 
         }, (err: HttpErrorResponse) => {
-            //alert(err.message);
+            alert(err.message);
         });
-        // this.preloader.setShowPreloader(false);
     }
 
     onAutoChange(value: string) {
         // 
         if (value == '') {
             this.options = [];
-
-            this.oProve.ProveStationCode = "";
-            this.oProve.ProveStation = "";
         } else {
 
             this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
@@ -999,9 +608,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     DeliveryOnAutoChange(value: string) {
         if (value == '') {
             this.Deliveryoptions = [];
-
-            this.oProve.DeliveryStationCode = "";
-            this.oProve.DeliveryStation = "";
         } else {
 
             this.Deliveryoptions = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
@@ -1024,11 +630,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     // --- ผู้ตรวจรับ ---
     getProveStaff() {
         this.MasterSV.getStaff().then(async res => {
+            // 
+
             if (res) {
                 this.rawStaffOptions = res;
             }
         }, (err: HttpErrorResponse) => {
-            // alert(err.message);
+            alert(err.message);
         });
     }
 
@@ -1036,26 +644,22 @@ export class ManageComponent implements OnInit, OnDestroy {
         // 
         if (value == '') {
             this.Staffoptions = [];
-            this.ClearStaffData();
+            this.PosExaminer = "";
+            this.DeptExaminer = "";
         } else {
-            if (this.rawStaffOptions.length == 0) {
-                this.getProveStaff();
-            }
-            this.Staffoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
 
+            this.Staffoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
     StaffonAutoFocus(value: string) {
         if (value == '') {
             this.Staffoptions = [];
-            this.ClearStaffData();
         }
     }
 
     StaffonAutoSelecteWord(event) {
         this.oProveStaff = {
-            StaffID: this.StaffID,
             ProgramCode: "XCS-60",
             ProcessCode: "XCS-60-05",
             LawsuitID: this.LawsuitID,
@@ -1081,16 +685,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     // ----- End ผู้ตรวจรับ ---
 
+
     // --- ผู้พิสูจน์ ---
     ScienceStaffonAutoChange(value: string) {
         // 
         if (value == '') {
             this.Scienceoptions = [];
-            this.ClearStaffScience();
+            this.PosScience = "";
+            this.DeptScience = "";
         } else {
-            if (this.rawStaffOptions.length == 0) {
-                this.getProveStaff();
-            }
 
             this.Scienceoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
@@ -1099,13 +702,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     ScienceStaffonAutoFocus(value: string) {
         if (value == '') {
             this.Scienceoptions = [];
-            this.ClearStaffScience();
         }
     }
 
     ScienceStaffonAutoSelecteWord(event) {
         this.oProveScienceStaff = {
-            StaffID: this.StaffScienceID,
             ProgramCode: "XCS-60",
             ProcessCode: "XCS-60-05",
             LawsuitID: this.LawsuitID,
@@ -1149,31 +750,25 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
     // ----- Unit -----
-    async getUnit() {
-        // this.preloader.setShowPreloader(true);
-        await this.proveService.getProveProductUnit().then(async res => {
+    getUnit() {
+
+
+        this.proveService.getProveProductUnit("").then(async res => {
             if (res) {
                 this.UnitOption = res;
             }
         }, (err: HttpErrorResponse) => {
-            //alert(err.message);
+            alert(err.message);
         });
-        // this.preloader.setShowPreloader(false);
     }
 
     // ----- End Unit -----
 
 
-    // ----- Popup Product-----
+    // ----- Popup -----
     OpenPopupProduct(i: number) {
         this.oProveProduct = this.oProve.ProveProduct[i];
-
-        if (this.oProve.ProveScience.length > 0) {
-            this.oProveScience = this.oProve.ProveScience[0];
-
-            this.ProveScienceDate = setDateMyDatepicker(new Date(this.oProveScience.ProveScienceDate));
-            this.ProveScienceTime = this.oProveScience.ProveScienceTime;
-        }
+        this.oProveScience = this.oProve.ProveScience[0];
 
         this.ProductID = this.oProve.ProveProduct[i].ProductID;
         this.iPopup = i;
@@ -1182,30 +777,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ClosePopupProduct() {
         this.oProveProduct.ProductID = this.ProductID;
-
-        let DDate, cDateScience, PDate, cProveDate;
-
-        DDate = this.ProveScienceDate.date;
-        if (DDate != undefined) {
-            cDateScience = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
-        }
-
-        this.oProveScience.ProveScienceDate = this.oProve.DeliveryDate = cDateScience;;
+        this.oProveScience.ProveScienceDate = this.ProveScienceDate + ' ' + this.ProveScienceTime;
         this.oProveScience.ProveScienceTime = this.ProveScienceTime;
-
-        if (this.oProve.ProveScience.length > 0) {
-            this.oProve.ProveScience[0] = this.oProveScience;
-        }
-        else {
-            this.oProve.ProveScience.push(this.oProveScience);
-        }
+        this.oProve.ProveScience[0] = this.oProveScience;
 
 
         if (this.modePopup == "I") {
             this.oProveProduct.ReferenceDate = "";
-            this.oProveProduct.IsNewItem = true;
-            this.oProveProduct.IsDelItem = false;
-            this.oProveProduct.ProductSeq = this.oProve.ProveProduct.length;
             this.oProve.ProveProduct.push(this.oProveProduct);
         }
         else if (this.modePopup == 'U') {
@@ -1217,8 +795,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.modePopup = "I";
 
         this.ProductID = "";
-
-        this.CreateProduct();
     }
 
     SelecteArrestProduct(event) {
@@ -1226,134 +802,22 @@ export class ManageComponent implements OnInit, OnDestroy {
         let aIndex;
         aIndex = this.getIndexOf(this.ArrestProduct, this.ProductID, "ProductID");
 
-        if (aIndex != -1) {
+        if (aIndex != "false") {
             this.oProveProduct = this.ArrestProduct[aIndex];
 
-            this.oProveProduct.IsNewItem = true;
+            this.oProveProduct.IsAction = "I";
         }
     }
+    // ----- End Popup -----
 
     private onDeleteProduct(i: number) {
         if (confirm(Message.confirmDeleteProduct)) {
-            var aIndex;
-            aIndex = this.getIndexOf(this.oProve.ProveProduct, i, "ProductSeq");
-
-            if (aIndex != -1) {
-                if (this.oProve.ProveProduct[aIndex].IsNewItem == false) {
-                    this.oProve.ProveProduct[aIndex].IsDelItem = true;
-                }
-                else {
-                    this.oProve.ProveProduct.splice(i, 1);
-                }
+            if (this.oProve.ProveProduct[i].IsAction == "U") {
+                this.oProve.ProveProduct[i].IsAction = "D";
             }
-
-        }
-    }
-    // ----- End Popup Product -----
-
-
-    // ----- Clear -----
-    ClearStaffData() {
-        this.PosExaminer = "";
-        this.DeptExaminer = "";
-
-        this.oProveStaff = {
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-05",
-            StaffID: this.StaffID,
-            LawsuitID: this.LawsuitID,
-            StaffCode: "",
-            TitleName: "",
-            FirstName: "",
-            LastName: "",
-            PositionCode: "",
-            PositionName: "",
-            PosLevel: "",
-            PosLevelName: "",
-            DepartmentCode: "",
-            DepartmentName: "",
-            DepartmentLevel: "",
-            OfficeCode: "",
-            OfficeName: "",
-            OfficeShortName: "",
-            ContributorCode: "14"
-        }
-    }
-
-    ClearStaffScience() {
-        this.PosScience = "";
-        this.DeptScience = "";
-
-        this.oProveScienceStaff = {
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-05",
-            StaffID: this.StaffScienceID,
-            LawsuitID: this.LawsuitID,
-            StaffCode: "",
-            TitleName: "",
-            FirstName: "",
-            LastName: "",
-            PositionCode: "",
-            PositionName: "",
-            PosLevel: "",
-            PosLevelName: "",
-            DepartmentCode: "",
-            DepartmentName: "",
-            DepartmentLevel: "",
-            OfficeCode: "",
-            OfficeName: "",
-            OfficeShortName: "",
-            ContributorCode: "15"
-        }
-    }
-    // ----- End Clear -----
-
-    // ----- Document -----
-    AddDocument() {
-        this.oProveDocument = {};
-        this.oProveDocument.ReferenceCode = "";
-        this.oProveDocument.DocumentSeq = this.ListProveDoc.length;
-        this.oProveDocument.IsNewItem = true;
-        this.oProveDocument.IsDelItem = false;
-
-        this.ListProveDoc.push(this.oProveDocument);
-    }
-
-    changeComunicateFile(e: any, i: number) {
-        let reader = new FileReader();
-        let file = e.target.files[0];
-        let fileName: string = file.name;
-        let fileType: string = file.type;
-
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            let dataSource = reader.result.split(',')[1];
-            if (dataSource && dataSource !== undefined) {
-                this.ListProveDoc[i].FilePath = `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`;
-                this.ListProveDoc[i].DataSource = "";
-                this.ListProveDoc[i].DocumentType = 1;
-                this.ListProveDoc[i].DocumentName = fileName;
-                this.ListProveDoc[i].IsActive = 1;
+            else {
+                this.oProve.ProveProduct.splice(i, 1);
             }
-        };
-    }
-
-
-    DelDocument(i: number) {
-        if (confirm(Message.confirmDeleteProduct)) {
-            var aIndex;
-            aIndex = this.getIndexOf(this.ListProveDoc, i, "DocumentSeq");
-
-            if (aIndex != -1) {
-                if (this.ListProveDoc[aIndex].IsNewItem == false) {
-                    this.ListProveDoc[aIndex].IsDelItem = true;
-                }
-                else {
-                    this.ListProveDoc.splice(i, 1);
-                }
-            }
-
         }
     }
-    // ----- End Document -----
 }

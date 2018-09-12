@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import {NgForm} from '@angular/forms';
@@ -12,11 +12,9 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import {Reward} from '../reward';
+import {RewardCommon} from '../reward-common';
 import {RewordMessages} from '../reward-message';
 import {RewardService} from '../reward.service';
-import {pagination} from '../../../config/pagination';
-import {Message} from '../../../config/message';
-import {toLocalShort} from '../../../config/dateFormat';
 
 @Component({
     selector: 'app-list',
@@ -26,15 +24,10 @@ import {toLocalShort} from '../../../config/dateFormat';
 })
 export class ListComponent implements OnInit, AfterViewInit {
     private sub: any;
-    rewardList: any[] = [];
-    reward: any[] = [];
-
+    response: any;
     advSearch: any;
     staffs: any[] = [];
     departments: any[] = [];
-    paginage = pagination;
-
-    @ViewChild('rewardTable') rewardTable: ElementRef;
 
     constructor(
         private router: Router,
@@ -61,6 +54,7 @@ export class ListComponent implements OnInit, AfterViewInit {
             //   this.newButton();
             // }
         });
+
         this.initialSearchByKeyword();
     }
 
@@ -75,9 +69,9 @@ export class ListComponent implements OnInit, AfterViewInit {
     }
 
     // onSearchByKeyword() {
-    //     this.rewardService.getArrestRequestgetByKeyword('').subscribe(rewardList => {
-    //         if (rewardList) {
-    //             this.rewardList = rewardList;
+    //     this.rewardService.getArrestRequestgetByKeyword('').subscribe(response => {
+    //         if (response) {
+    //             this.response = response;
     //         } else {
     //             alert(RewordMessages.notFoundData)
     //         }
@@ -144,15 +138,19 @@ export class ListComponent implements OnInit, AfterViewInit {
 
         } else {
             if (false) {
-                // if (RewardCommon.isVerifyDate(reward.OccurrenceDateFrom, reward.OccurrenceDateTo) ||
-                //     RewardCommon.isVerifyDate(reward.LawsuitDateFrom, reward.LawsuitDateFrom)) {
+            // if (RewardCommon.isVerifyDate(reward.OccurrenceDateFrom, reward.OccurrenceDateTo) ||
+            //     RewardCommon.isVerifyDate(reward.LawsuitDateFrom, reward.LawsuitDateFrom)) {
 
                 alert(RewordMessages.compareDateFailed);
             } else {
-                console.log(reward);
+                console.log(reward)
                 this.rewardService.getArrestRequestgetByConAdv(reward).subscribe(response => {
-                    console.log(response);
-                    this.onSearchComplete(response)
+                    console.log(response)
+                    if (response) {
+                        this.response = response;
+                    } else {
+                        alert(RewordMessages.notFoundData)
+                    }
                 }, error => {
                     alert(error.message)
                 })
@@ -161,41 +159,16 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onSearchComplete(list: any) {
-        if (!list.length) {
-            alert(Message.noRecord);
-            return false;
-        }
-
-        if (Array.isArray(list)) {
-            this.reward = list;
-        } else {
-            this.reward.push(list);
-        }
-
-        list.map((p, i) => {
-            p.RowsId = i + 1;
-            if (p.ArrestLawbreaker.length !== 0) {
-                p.Lawbreaker = (p.ArrestLawbreaker[0].LawbreakerTitleName +
-                    p.ArrestLawbreaker[0].LawbreakerFirstName + ' ' + p.ArrestLawbreaker[0].LawbreakerLastName)
-            } else {
-                p.Lawbreaker = '';
-            }
-
-        });
-
-        this.reward = list;
-
-        // set total record
-        this.paginage.TotalItems = this.reward.length;
-    }
-
-
     onSearchByKeyword(text: any) {
-
         this.rewardService.getArrestRequestgetByKeyword(text).subscribe(response => {
             if (response) {
-                this.onSearchComplete(response);
+                if (Array.isArray(response)) {
+                    this.response = response;
+                } else {
+                    console.log(response)
+                    alert(RewordMessages.notFoundData);
+                }
+
             } else {
                 alert(RewordMessages.notFoundData);
             }
@@ -206,10 +179,6 @@ export class ListComponent implements OnInit, AfterViewInit {
 
     viewData(arrestCode: string) {
         this.router.navigate(['/reward/manage', 'R', 'v'], { queryParams: { arrestCode: arrestCode } });
-    }
-
-    async pageChanges(event) {
-        this.rewardList = await this.reward.slice(event.startIndex - 1, event.endIndex);
     }
 
     ngAfterViewInit(): void {

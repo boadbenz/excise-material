@@ -82,7 +82,7 @@
             <div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table #rewardTable class="dataTable table table-sm table-striped table-hover">
+                        <table class="dataTable table table-sm table-striped table-hover">
                             <thead>
                             <tr>
                                 <th class="text-center">ลำดับ</th>
@@ -96,13 +96,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let item of rewardList; let i = index;">
-                                <td class="text-center">{{item.RowsId}}</td>
+                            <tr *ngFor="let item of response; let i = index;">
+                                <td class="text-center">{{i + 1}}</td>
                                 <td>{{item.ArrestCode}}</td>
                                 <td>{{item.NoticeCode}}</td>
                                 <td>{{item.ArrestDate}}</td>
                                 <td>{{item.OccurrenceDate}}</td>
-                                <td>{{item.Lawbreaker}}</td>
+                                <td>{{item.lawyer}}</td>
                                 <td>{{item.ArrestStation}}</td>
                                 <td>
                                     <!-- ... -->
@@ -114,18 +114,27 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
-                <div class="card-footer card-footer-unset">
-                    <app-pagination-table
-                          [TotalItems]="paginage.TotalItems"
-                          [CurrentPage]="paginage.CurrentPage"
-                          [PageSize]="paginage.PageSize"
-                          [RowsPerPageOptions]="paginage.RowsPerPageOptions"
-                          (onPageChange)="pageChanges($event)">
-                    </app-pagination-table>
+
+                <div class="row pages">
+                    <div class="col-9 ">
+                        <a href="#">|&lt;&lt;</a> หน้าที่
+                        <select class="custom-select">
+                            <option>1</option>
+                        </select> จาก 2 หน้า
+                        <a href="#">&gt;&gt;|</a> รายการที่ 1-5 จาก 13 รายการ
+                    </div>
+                    <div class="col-3 text-right">
+                        แสดง
+                        <select class="custom-select">
+                            <option (click)="numPage = 5">5</option>
+                            <option (click)="numPage = 10">10</option>
+                            <option (click)="numPage = 15">15</option>
+                        </select> รายการ
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

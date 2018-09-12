@@ -8,8 +8,6 @@ import { IncomeService } from '../income.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
-import { MyDatePickerTHModule } from 'mydatepicker-th';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const routes: Routes = [
     {
@@ -31,12 +29,9 @@ const routes: Routes = [
       FormsModule,
       RouterModule.forChild(routes),
       CardActionsModule,
-      PaginationTableModule,
-      MyDatePickerTHModule,
-      MatAutocompleteModule,
+      PaginationTableModule
     ],
     declarations: [ListComponent],
-    providers: [IncomeService],
-    exports: [MatAutocompleteModule]
+    providers: [IncomeService]
   })
   export class ListModule { }

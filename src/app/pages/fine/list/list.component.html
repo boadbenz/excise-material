@@ -1,0 +1,148 @@
+<div *ngIf="advSearch | async" class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <app-card-actions-close></app-card-actions-close>
+    <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
+  </div>
+
+  <div class="card-body">
+    <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
+      <div>
+        <div class="row">
+          <label for="" class="col-md-2 control-label padding-adv-search">เลขที่ใบงาน :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" name="ArrestCode" ngModel class="form-control " placeholder="">
+              </div>
+            </div>
+          </div>
+          <label for="" class="col-md-2 control-label padding-adv-search">เลขที่คดีรับคำกล่าวโทษ :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" name="LawsuitCode" ngModel class="form-control " placeholder="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="" class="col-md-2 control-label padding-adv-search">ทะเบียนตรวจพิสูจน์ :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" name="ProveReportNo" ngModel class="form-control " placeholder="">
+              </div>
+            </div>
+          </div>
+          <label for="" class="col-md-2 control-label padding-adv-search">เลขที่เปรียบเทียบคดี :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" name="CompareCode" ngModel class="form-control " placeholder="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="" class="col-md-2 control-label padding-adv-search">วันที่เปรียบเทียบคดี :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group input-group form-line">
+              <input type="date" name="CompareDateFrom" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
+              <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
+              <input type="date" name="CompareDateTo" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
+            </div>
+          </div>
+
+          <input type="hidden" name="ProgramCode" ngModel>
+          <input type="hidden" name="ProcessCode" ngModel>
+
+          <label for="" class="col-md-2 control-label padding-adv-search">ผู้เปรียบเทียบคดี :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" name="Staff" ngModel class="form-control " placeholder="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="" class="col-md-2 control-label padding-adv-search">หน่วยงาน :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" name="Department" ngModel  class="form-control " placeholder="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          
+            <div class="col-10"></div>
+            <div class="col-2">
+                <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
+            </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+
+    <div class="table-responsive table-striped ">
+      <table #fineTable class="table">
+        <thead>
+          <tr>
+            <th class="text-center">ลำดับ</th>
+            <th>เลขที่ใบงาน</th>
+            <th style="text-align: center">เลขที่คดีรับคำกล่าว</th>
+            <th>ทะเบียนตรวจพิสูจน์</th>
+            <th style="text-align: center">เลขที่เปรียบเทียบคดี</th>
+            <th>ผู้เปรียบเทียบคดี</th>
+            <th style="text-align: center">วันที่เปรียบเทียบคดี</th>
+            <th>หน่วยงาน</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of CompareList; let i=index;">
+            <td style="text-align: center">{{i + 1}}</td>
+            <td>{{item.ArrestCode}}</td>
+            <td style="text-align: center">
+              <div *ngIf="item.IsOutside == 1">น {{item.Lawsuilt}}</div>
+              <div *ngIf="item.IsOutside != 1">{{item.Lawsuilt}}</div>
+            </td>
+            <td>{{item.ProveReportNo}}</td>
+            <td style="text-align: center">
+              <div *ngIf="item.IsOutside == 1">น {{item.CompareCode}}</div>
+              <div *ngIf="item.IsOutside != 1">{{item.CompareCode}}</div>
+            </td>
+            <td>
+                <div *ngFor="let staff of item.CompareStaff;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
+            </td>
+            <td style="text-align: center">{{item.CompareDate | date:'dd-MM-yyyy'}}</td>
+            <td>
+                <div *ngFor="let staff of item.CompareStaff;">{{staff.DepartmentName}}</div>
+            </td>
+            <td class="text-center">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitID,item.ArrestCode,item.CompareID)">
+                <i class="mdi mdi-eye fa-lg"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer card-footer-unset">
+      <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+        [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+      </app-pagination-table>
+    </div>
+  </div>
+</div>

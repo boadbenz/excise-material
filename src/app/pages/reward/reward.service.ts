@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Reward } from './reward';
-import { environment } from 'environments/environment';
+import { environment } from '../../../environments/environment';
 import {TextSearch} from './reward-search';
 import {RewardArrest} from './reward-arrest';
 
@@ -29,14 +29,14 @@ export class RewardService {
     }
 
     getArrestRequestgetByConAdv(reward: Reward) {
-        return this.httpClient.post<any[]>(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
+        return this.httpClient.post(`${HOSTNAME}/ArrestRequestgetByConAdv`, reward)
     }
 
     getArrestRequestgetByCon(arrestCode: string) {
         const params = {
             ArrestCode: arrestCode
         };
-        return this.httpClient.post<any>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
+        return this.httpClient.post<RewardArrest>(`${HOSTNAME}/ArrestRequestgetByCon`, params)
     }
 
     getRequestbribegetByKeyword(text: string) {

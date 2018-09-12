@@ -1,22 +1,25 @@
 export class Staff {
-    public StaffID : string;
-    public ProgramCode: string;
-    public ProcessCode: string;
-    public RevenueID: string;
-    public StaffCode: string;
+    public StaffCode : string;
+    public PerType : string;
     public TitleName  : string;
     public FirstName : string;
     public LastName : string;
-    public PositionCode : string;
-    public PositionName : string;
+    public OperationPosCode : string;
+    public OperationPosName : string;
+    public ManagementPosCode  : string;
+    public ManagementPosName : string;
     public PosLevel  : string;
     public PosLevelName : string;
-    public DepartmentCode : string;
-    public DepartmentName : string;
-    public DepartmentLevel : string;
+    public RepresentationPosCode : string;
+    public RepresentationPosName : string;
+    public OperationDeptCode : string;
+    public OperationDeptName  : string;
+    public UnderDeptCode : string;
+    public UnderDeptName  : string;
+    public DeptLevel : string;
     public OfficeCode : string;
     public OfficeName : string;
     public OfficeShortName : string;
-    public ContributorCode  : string;
-    public IsActive   : string;
+    public StatusCode  : string;
+    public ISACTIVE   : number;
 }

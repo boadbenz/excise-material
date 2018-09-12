@@ -32,7 +32,6 @@
     "@types/jquery": "^2.0.42",
     "core-js": "^2.4.1",
     "jquery": "^3.3.1",
-    "mydatepicker-th": "^0.1.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
   },

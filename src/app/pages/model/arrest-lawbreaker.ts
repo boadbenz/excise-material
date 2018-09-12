@@ -50,7 +50,7 @@ export class ArrestLawbreaker {
     public LinkPhoto: string;
     public PhotoDesc: string;
     public IsActive: number;
-    public ArrestLawbreakerAddress: Array<ArrestLawbreakerAddress>;
+    public ArrestLawbreakerAddress: Array<ArrestLawbreakerAddress>
     public IsNewItem: boolean;
 }
 

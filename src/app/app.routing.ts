@@ -37,7 +37,7 @@ export const routes: Routes = [
         path: 'prove', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/prove/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code1/:code2/:code3/:code4/:code5', loadChildren: './pages/prove/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/prove/manage/manage.module#ManageModule' }
         ]
     },
     {
@@ -52,6 +52,13 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/lawsuit/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/lawsuit/manage/manage.module#ManageModule' },
             { path: 'detail/:mode', loadChildren: './pages/lawsuit/detail/detail.module#DetailModule' }
+        ]
+    }, {
+        path: 'fine', component: LayoutComponent,
+        children: [
+            { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
+            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
         ]
     }, {
         path: 'reward', component: LayoutComponent,

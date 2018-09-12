@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { ProveService } from '../prove.service';
 
 @Component({
     selector: 'app-printdoc-modal',
@@ -11,29 +10,37 @@ export class PrintDocModalComponent implements OnInit {
 
     isOpen = false;
     isCheckAll = false;
-    document = new Array<Document>();
+    advSearch = false;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
 
-    constructor(
-        private proveService: ProveService,
-        private _chRef: ChangeDetectorRef
-    ) { }
+    constructor(private _chRef: ChangeDetectorRef) { }
 
     ngOnInit() {
-        this.proveService.DocumentgetByCon("").then(result => {
-            this.document = new Array<Document>();
-            this.document = result;
-        })
+        // this.onDetactTable();
     }
+
+    // private onDetactTable() {
+    //     //   const table: any = $('table#suspectModal');
+
+    //     //   if ($.fn.dataTable.isDataTable('table#suspectModal')) {
+
+    //     //       this.dataTable = table.DataTable();
+    //     //       this.dataTable.destroy();
+    //     //   }
+
+    //     //   this._chRef.detectChanges();
+
+    //     //   this.dataTable = table.DataTable(options);
+    // }
 
     checkAll() {
         this.isCheckAll = !this.isCheckAll;
     }
 
     toggle(e) {
-    //    this.advSearch = !this.advSearch;
+       this.advSearch = !this.advSearch;
     }
 
     dismiss(e: any) {

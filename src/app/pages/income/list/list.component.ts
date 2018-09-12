@@ -6,11 +6,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Revenue } from '../Revenue';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
-import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
-import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
-import { SidebarService } from '../../../shared/sidebar/sidebar.component';
-import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { MatAutocomplete } from '@angular/material';
 
 @Component({
     selector: 'app-list',
@@ -22,25 +17,14 @@ export class ListComponent implements OnInit, OnDestroy {
     revenue = new Array<Revenue>();
     RevenueList = new Array<Revenue>();
     paginage = pagination;
-    DateStartTo: any;
-    _dateStartFrom: any;
-    _dateStartTo: any;
-
-    StatusOption = [];
-    options = [];
-    rawOptions = [];
-
     private subOnSearch: any;
-    private subSetNextPage: any;
 
     @ViewChild('revenueTable') revenueTable: ElementRef;
 
     constructor(
         private _router: Router,
         private navService: NavigationService,
-        private sidebarService: SidebarService,
-        private incomeService: IncomeService,
-        private preloader: PreloaderService
+        private incomeService: IncomeService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -55,110 +39,57 @@ export class ListComponent implements OnInit, OnDestroy {
         this.advSearch = this.navService.showAdvSearch;
     }
 
-    async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.1');
-
-        this.preloader.setShowPreloader(true);
-
-        this.getDepartmentRevenue();
-        this.onSearch({ Textsearch: "" });
-
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
+    ngOnInit() {
+        this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
-
-                let ts;
-                ts = { Textsearch: "" }
-                ts = Textsearch;
-
-                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
-                else { this.onSearch(Textsearch); }
-
-            }
-        })
-
-        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnNextPage(false);
-                this._router.navigate(['/income/manage', 'C', 'NEW']);
+                this.onSearch(Textsearch);
             }
         })
     }
 
     ngOnDestroy(): void {
         this.subOnSearch.unsubscribe();
-        this.subSetNextPage.unsubscribe();
     }
 
     onSearch(Textsearch: any) {
         this.incomeService.getByKeyword(Textsearch).subscribe(list => {
+
             this.onSearchComplete(list)
 
-            this.preloader.setShowPreloader(false);
-        }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord);
-            this.preloader.setShowPreloader(true);
-        });
-    }
-
-    async onAdvSearch(form: any) {
-        this.preloader.setShowPreloader(true);
-        let sDate, eDate, sDateRevenue, eDateRevenue;
-
-        if (form.value.DateStartFrom) {
-            sDate = form.value.DateStartFrom.date;
-
-            if (sDate != undefined) {
-                sDateRevenue = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
-                form.value.DateStartFrom = setZeroHours(sDateRevenue);
-            }
-        }
-
-        if (form.value.DateStartTo) {
-            eDate = form.value.DateStartTo.date;
-
-            if (sDate != undefined) {
-                eDateRevenue = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
-                form.value.DateStartTo = setZeroHours(eDateRevenue);
-            }
-        }
-
-
-        await this.incomeService.getByConAdv(form.value).then(async list => {
-            this.onSearchComplete(list);
-            this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             alert(err.message);
-            this.preloader.setShowPreloader(false);
         });
     }
 
-    async onSearchComplete(list: any) {
+    onAdvSearch(form: any) {
+
+        const sDateCompare = new Date(form.value.DateStartFrom);
+        const eDateCompare = new Date(form.value.DateStartTo);
+
+        if (sDateCompare.getTime() > eDateCompare.getTime()) {
+            alert(Message.checkRevenueDate);
+        } else {
+            form.value.DateStartFrom = sDateCompare.getTime();
+            form.value.DateStartTo = eDateCompare.getTime();
+            this.incomeService.getByConAdv(form.value).subscribe(list => {
+
+                this.onSearchComplete(list)
+
+            }, (err: HttpErrorResponse) => {
+                alert(err.message);
+            });
+        }
+    }
+
+    onSearchComplete(list: any) {
         this.revenue = [];
 
+        debugger
         if (!list.length) {
             alert(Message.noRecord);
             return false;
         }
-
-        await list.map((item) => {
-            item.RevenueDate = toLocalShort(item.RevenueDate);
-            item.RevenueOneStaff = item.RevenueStaff.filter(item => item.ContributorCode === '20');
-
-            debugger
-            if (item.RevenueDetail.length > 0) {
-                if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    item.RevenueDetail[0].RevenueStatus = "ยังไม่นำส่งเงินรายได้"
-                }
-                else if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    item.RevenueDetail[0].RevenueStatus = "นำส่งเงินรายได้"
-                }
-                else {
-                    item.RevenueDetail[0].RevenueStatus = "รับรายการนำส่งเงิน"
-                }
-            }
-
-        })
 
         if (Array.isArray(list)) {
             this.revenue = list;
@@ -168,82 +99,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
         // set total record
         this.paginage.TotalItems = this.revenue.length;
-        this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
-    clickView(RevenueCode: string) {
-        this._router.navigate([`/income/manage/R/${RevenueCode}`]);
+    clickView(revenueCode: string) {
+        this._router.navigate([`/income/manage/R/${revenueCode}`]);
     }
 
     async pageChanges(event) {
         this.RevenueList = await this.revenue.slice(event.startIndex - 1, event.endIndex);
     }
-
-
-    getCurrentDate() {
-        let date = new Date();
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
-    }
-
-    onSDateChange(event: IMyDateModel) {
-        this._dateStartFrom = event.date;
-        this.checkDateDelivery();
-    }
-
-    onEDateChange(event: IMyDateModel) {
-        this._dateStartTo = event.date;
-        if (this.checkDateDelivery()) {
-
-        }
-    }
-
-    checkDateDelivery() {
-        if (this._dateStartFrom && this._dateStartTo) {
-            const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
-            const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
-
-            if (!compareDate(new Date(sdate), new Date(edate))) {
-                alert(Message.checkDate)
-                setTimeout(() => {
-                    this.DateStartTo = { date: this._dateStartFrom };
-                }, 0);
-            }
-        }
-    }
-
-    // --- หน่วยงาน ---
-    async getDepartmentRevenue() {
-        await this.incomeService.getDepartment().then(async res => {
-            if (res) {
-                this.rawOptions = res;
-            }
-        }, (err: HttpErrorResponse) => {
-            this.preloader.setShowPreloader(false);
-        });
-    }
-
-    onAutoChange(value: string) {
-        // 
-        if (value == '') {
-            this.options = [];
-
-            // this.oProve.ProveStationCode = "";
-            // this.oProve.ProveStation = "";
-        } else {
-            this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
-            debugger
-        }
-    }
-
-    onAutoFocus(value: string) {
-        if (value == '') {
-            this.options = [];
-        }
-    }
-
-    // onAutoSelecteWord(event) {
-    //     // this.oProve.ProveStationCode = event.OfficeCode;
-    //     // this.oProve.ProveStation = event.OfficeName;
-    // }
-    // ----- End หน่วยงาน ---
 }
