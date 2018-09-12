@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ManageDetailComponent } from './manage-detail.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ReductionService } from '../reduction.service';
 
 
 const routes: Routes = [
@@ -29,8 +31,10 @@ const routes: Routes = [
     FormsModule,
     CommonModule,
     CardActionsModule,
+    HttpClientModule,
     RouterModule.forChild(routes)
   ],
+  providers: [ReductionService],
   declarations: [
     ManageDetailComponent
   ]

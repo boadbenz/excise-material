@@ -1,3 +1,6 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+  <app-print-doc-modal (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+</ng-template>
 <div class="card card-outline-bluish unset-radius">
   <div class="card-header unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>
@@ -10,7 +13,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">เลขที่ใบงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.arrestCode" name="arrestCode" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ArrestCode" name="arrestCode" disabled>
             </div>
           </div>
         </div>
@@ -18,9 +21,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่จับกุม : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceDate" name="lawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceTime" name="lawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -90,7 +93,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ฐานความผิดมาตรา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.faultNo" name="faultNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.faultWornNo" name="faultNo" disabled>
             </div>
           </div>
         </div>
@@ -128,7 +131,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">เลขที่คดีเปรียบเทียบ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitNo" name="lawsuitNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareCode" name="lawsuitNo" disabled>
             </div>
           </div>
         </div>
@@ -136,9 +139,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่เปรียบเทียบ : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareDate" name="lawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareTime" name="lawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -149,7 +152,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ผู้เปรียบเทียบ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="fullName" name="" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.fullNameComparer" name="" disabled>
             </div>
           </div>
         </div>
@@ -157,7 +160,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.positionlawName" name="positionlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.positionComparer" name="positionlawName" disabled>
             </div>
           </div>
         </div>
@@ -168,7 +171,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="departmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.departmentComparer" name="departmentlawName" disabled>
             </div>
           </div>
         </div>
@@ -184,8 +187,8 @@
   </div>
   <div class="card-body">
     <div class="text-right m-b-10">
-      <button [ngClass]="{disabled : showField}" class="btn waves-effect waves-light btn-navy" [disabled]="showField" (click)="showReductionPopup()">
-      ปรับเพิ่ม-ลด </button>
+      <button [ngClass]="{disabled : showField}" class="btn waves-effect waves-light btn-navy" [disabled]="showField" (click)="showReductionPopup(reductionPopup)">
+        ปรับเพิ่ม-ลด </button>
     </div>
     <div class="table-responsive table-striped no-wrap">
       <table class="table">
@@ -253,14 +256,14 @@
                 </th>
                 <th class="footable-sortable">ลำดับ</th>
                 <th class="footable-sortable">ชื่อผู้ต้องหา</th>
-                <th class="footable-sortable">ลักษณะคดี </th>
-                <th class="footable-sortable">เลขที่ดคีเปรียบเทียบ/คำพิพากษาฎีกาที่ </th>
+                <!-- <th class="footable-sortable">ลักษณะคดี </th> -->
+                <th class="footable-sortable">เลขที่ดคีเปรียบเทียบ</th>
                 <th class="footable-sortable">วันที่ชำระเงิน </th>
-                <th class="footable-sortable">งวดชำระ </th>
+                <!-- <th class="footable-sortable">งวดชำระ </th> -->
               </tr>
             </thead>
             <tbody>
-              <tr class="footable" *ngFor="let item of tableData; let i = index;">
+              <tr class="footable" *ngFor="let item of tableDataModal; let i = index;">
                 <td class="text-center">
                   <div class="custom-control custom-checkbox">
                     <input id="checkbox_{{i}}" [checked]="selectAll" type="checkbox" class="col-form-label filled-in chk-col-indigo">
@@ -269,17 +272,17 @@
                 </td>
                 <td>{{i+1}}</td>
                 <td>{{item.fullName}}</td>
-                <td>{{item.typeCase}}</td>
+                <!-- <td>{{item.typeCase}}</td> -->
                 <td>{{item.receiptRef}}</td>
                 <td>{{item.dateFine}}</td>
-                <td>{{item.period}}</td>
+                <!-- <td>{{item.period}}</td> -->
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#reductionPopup">ถัดไป</button>
+        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#reductionPopup" (click)="next()">ถัดไป</button>
       </div>
     </div>
   </div>

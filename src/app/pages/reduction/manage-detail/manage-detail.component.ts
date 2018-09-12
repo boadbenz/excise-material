@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { ReductionService } from '../reduction.service';
 
 @Component({
   selector: 'app-manage-detail',
@@ -38,27 +39,27 @@ export class ManageDetailComponent implements OnInit {
   }]
 
   reductionDataTable = [
-  {
-    fullName: "นายธวัชชัย บิงขุนทด",
-    exhibit: "Hoegaarden/Witb",
-    oldFine: "800,000.00",
-    newFine: "900,000.00",
-    diffFine: "100,000.00",
-    status: true,
-    bribe: "160,000.00",
-    prize: "160,000.00",
-    treasury: "480,000.00"
-  }, {
-    fullName: "นายสุชาติ ปัญโญใหญ่",
-    exhibit: "Hoegaarden/Witb",
-    oldFine: "800,000.00",
-    newFine: "700,000.00",
-    diffFine: "-100,000.00",
-    status: false,
-    bribe: "160,000.00",
-    prize: "160,000.00",
-    treasury: "480,000.00"
-  }]
+    {
+      fullName: "นายธวัชชัย บิงขุนทด",
+      exhibit: "Hoegaarden/Witb",
+      oldFine: "800,000.00",
+      newFine: "900,000.00",
+      diffFine: "100,000.00",
+      status: true,
+      bribe: "160,000.00",
+      prize: "160,000.00",
+      treasury: "480,000.00"
+    }, {
+      fullName: "นายสุชาติ ปัญโญใหญ่",
+      exhibit: "Hoegaarden/Witb",
+      oldFine: "800,000.00",
+      newFine: "700,000.00",
+      diffFine: "-100,000.00",
+      status: false,
+      bribe: "160,000.00",
+      prize: "160,000.00",
+      treasury: "480,000.00"
+    }]
 
   listData = [
     {
@@ -160,7 +161,12 @@ export class ManageDetailComponent implements OnInit {
 
   private getDataFromListPage: any;
 
-  constructor(private router: Router, private activeRoute: ActivatedRoute, private navService: NavigationService) { }
+  constructor(
+    private router: Router,
+    private activeRoute: ActivatedRoute,
+    private navService: NavigationService,
+    private reductionService: ReductionService
+  ) { }
 
   ngOnInit() {
 
@@ -199,7 +205,28 @@ export class ManageDetailComponent implements OnInit {
               this.listData[i].lastName;
           }
         }
+        console.log(params);
+        this.findArrest('TN-0657011210113');
+        // this.reductionService.AdjustComparegetByCon(100).then(data=>{
+        //   console.log(data);
+        // });
       });
+
+
+  }
+
+  async findArrest(ArrestCode) {
+    await this.reductionService.ArrestgetByCon(ArrestCode).then(data => {
+      console.log(data);
+      if (data[0].ArrestLawbreaker[0].EntityType == 1) {
+        this.fullName = data[0].ArrestLawbreaker[0].LawbreakerTitleName +
+          data[0].ArrestLawbreaker[0].LawbreakerFirstName +
+          data[0].ArrestLawbreaker[0].LawbreakerMiddleName +
+          data[0].ArrestLawbreaker[0].LawbreakerLastName;
+      } else if (data[0].ArrestLawbreaker[0].EntityType == 0) {
+        this.fullName = data[0].ArrestLawbreaker[0].CompanyTitle + data[0].ArrestLawbreaker[0].CompanyName;
+      }
+    });
   }
 
   viewData() {

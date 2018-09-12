@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ReductionService } from '../reduction.service';
+import { HttpClientModule } from '@angular/common/http';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 const routes: Routes = [
     {
@@ -22,9 +25,10 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
+        HttpClientModule,
         RouterModule.forChild(routes)
     ],
-    providers: [NavigationComponent],
+    providers: [NavigationComponent, ReductionService, PreloaderService],
     declarations: [ListComponent]
 })
 export class ListModule { }
