@@ -16,7 +16,7 @@ import { ProveProduct } from '../proveProduct';
 import { Message } from '../../../config/message';
 import { ProveDocument } from '../proveDoc';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker, MyDatePickerOptions } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
 @Component({
@@ -33,11 +33,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     // --------
     showEditField: any;
-
-    myDatePickerOptions = MyDatePickerOptions;
-    C1_ReferenceVatRate: any;
-    C1_ReferenceVatQty: any;
-    IsProveScience: any;
 
     // -- Parameter ---
     LawsuitID: string;
@@ -136,8 +131,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.CreateStaff();
         this.CreateDocuement();
         this.getUnit();
-        await this.getStation();
-        await this.getProveStaff();
+        // await this.getStation();
+        // await this.getProveStaff();
 
         this.ArrestCode = this.ArrestCode;
         this.ProveStaffName = "";
@@ -283,9 +278,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    async onInsProve() {
-        this.preloader.setShowPreloader(true);
-
+    onInsProve() {
         this.oProve.DeliveryDocNo = this.DeliveryDocNo;
 
         let DDate, cDateDelivery, PDate, cProveDate;
@@ -431,7 +424,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     item.ProveID = this.ProveID;
                     item.ReferenceDate = this.oProve.ProveDate + ".000";
 
-                    await this.proveService.ProveProductinsAll(item).then(IsSuccess => {
+                    await this.proveService.ProveProductinsAll(item).then(async IsSuccess => {
                         if (!IsSuccess) {
                             isSuccess = IsSuccess;
                             return false;
@@ -447,7 +440,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 .map(async item => {
                     item.ReferenceDate = this.oProve.ProveDate + ".000";
 
-                    await this.proveService.ProveProductupdByCon(item).then(IsSuccess => {
+                    await this.proveService.ProveProductupdByCon(item).then(async IsSuccess => {
                         if (!IsSuccess) {
                             isSuccess = IsSuccess;
                             return false;
@@ -461,7 +454,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             // Delete Product
             this.ListProduct.filter(item => item.IsDelItem === true)
                 .map(async item => {
-                    await this.proveService.ProveProductupdDelete(item).then(IsSuccess => {
+                    await this.proveService.ProveProductupdDelete(item).then(async IsSuccess => {
                         if (!IsSuccess) {
                             isSuccess = IsSuccess;
                             return false;
@@ -469,16 +462,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }, (error) => { isSuccess = false; console.error(error); return false; });
                 });
 
+            if (!isSuccess) return false;
+
         }
 
-        debugger
         if (this.ListProveDoc.length > 0) {
             // New Document
             this.ListProveDoc.filter(item => item.IsNewItem === true)
                 .map(async item => {
 
                     item.ReferenceCode = this.oProve.ProveReportNo;
-                    debugger
+
                     await this.proveService.DocumentinsAll(item).then(IsSuccess => {
                         if (!IsSuccess) {
                             isSuccess = IsSuccess;
@@ -521,7 +515,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!isSuccess) return false;
         }
 
-        
+
         if (isSuccess) {
             alert(Message.saveComplete);
             this.oProve.ProveProduct = this.ListProduct;
@@ -717,8 +711,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async getProveByID() {
         // this.preloader.setShowPreloader(true);
-
-        debugger
         await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
             if (res != null) {
                 this.oProve = res;
@@ -782,7 +774,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     item.RequestNo = `${item.RequestNo == null ? '' : item.RequestNo}`;
                     item.ReportNo = `${item.ReportNo == null ? '' : item.ReportNo}`;
                 });
-
             }
         }, (err: HttpErrorResponse) => {
             alert(err.message);
@@ -835,26 +826,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     getArrestByID(ArrestCode: string) {
-        debugger
         this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
             if (res.length > 0) {
-                if (res.IsSuccess == true) {
-                    this.oArrest = res.ResponseData;
+                this.oArrest = res[0];
+                this.ArrestProduct = res[0].ArrestProduct;
 
-                    this.ArrestProduct = res.ResponseData.ArrestProduct;
-
-                    await this.getProveProduct();
-                    this.preloader.setShowPreloader(false);
-                }
-                else {
-                    alert(res.ResponseData.Msg);
-                    this.preloader.setShowPreloader(false);
-                }
+                await this.getProveProduct();
             }
-            else {
+            else
+            {
                 this.preloader.setShowPreloader(false);
             }
-
         }, (err: HttpErrorResponse) => {
             //alert(err.message);
         });
@@ -960,6 +942,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
             }
         }
+        else{
+            if (this.oArrest.ArrestProduct.length > 0) {
+                this.ListQtyUnit = [];
+                
+                for (var i = 0; i < this.oArrest.ArrestProduct.length; i += 1) {
+                    this.ListQtyUnit.push(this.oArrest.ArrestProduct[i].QtyUnit);
+                }
+            }
+        }
 
         this.preloader.setShowPreloader(false);
     }
@@ -1031,9 +1022,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
     // --- ผู้ตรวจรับ ---
-    async getProveStaff() {
-        // this.preloader.setShowPreloader(true);
-        await this.MasterSV.getStaff().then(async res => {
+    getProveStaff() {
+        this.MasterSV.getStaff().then(async res => {
             if (res) {
                 this.rawStaffOptions = res;
             }
@@ -1161,7 +1151,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ----- Unit -----
     async getUnit() {
         // this.preloader.setShowPreloader(true);
-        await this.proveService.getProveProductUnit("").then(async res => {
+        await this.proveService.getProveProductUnit('').then(async res => {
             if (res) {
                 this.UnitOption = res;
             }
@@ -1178,20 +1168,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     OpenPopupProduct(i: number) {
         this.oProveProduct = this.oProve.ProveProduct[i];
 
-        if(this.oProve.ProveScience.length > 0){
+        if (this.oProve.ProveScience.length > 0) {
             this.oProveScience = this.oProve.ProveScience[0];
 
             this.ProveScienceDate = setDateMyDatepicker(new Date(this.oProveScience.ProveScienceDate));
-            this.ProveScienceTime = this.oProveScience.ProveScienceTime;    
+            this.ProveScienceTime = this.oProveScience.ProveScienceTime;
         }
-        
+
         this.ProductID = this.oProve.ProveProduct[i].ProductID;
         this.iPopup = i;
         this.modePopup = "U";
     }
 
     ClosePopupProduct() {
-        debugger
         this.oProveProduct.ProductID = this.ProductID;
 
         let DDate, cDateScience, PDate, cProveDate;
@@ -1201,10 +1190,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             cDateScience = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
         }
 
-        this.oProveScience.ProveScienceDate =  this.oProve.DeliveryDate = cDateScience;;
+        this.oProveScience.ProveScienceDate = this.oProve.DeliveryDate = cDateScience;;
         this.oProveScience.ProveScienceTime = this.ProveScienceTime;
 
-        if(this.oProve.ProveScience.length > 0){
+        if (this.oProve.ProveScience.length > 0) {
             this.oProve.ProveScience[0] = this.oProveScience;
         }
         else {

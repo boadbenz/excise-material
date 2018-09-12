@@ -26,11 +26,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
     mode: string;
     modal: any;
-    isCheckAll: any;
-    // rawOptions = [];
-    // options = [];
-
-    // --------
     showEditField: any;
     selectAllChb: any;
     paginage = pagination;
@@ -69,10 +64,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     ListChK = [];
 
 
-    oRevenue = new Revenue();
-    oRevenueDetail = new RevenueDetail();
-    oRevenueSendStaff = new Staff();
-    oRevenueStaff = new Staff();
+    oRevenue: Revenue;
+    oRevenueDetail: RevenueDetail;
+    oRevenueSendStaff: Staff;
+    oRevenueStaff: Staff;
 
     isRequired: boolean | false;
 
@@ -224,6 +219,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 //     this.ReceiptBookNo = "";
                 // }
 
+                debugger
                 this.oRevenue.RevenueID = res[0].RevenueID;
                 this.oRevenue.StationCode = res[0].StationCode;
                 this.RevenueStation = res[0].StationName;
@@ -271,14 +267,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    async ShowRevenueCompare() {
-        await this.IncService.RevenueComparegetByCon().then(async res => {
+    ShowRevenueCompare() {
+        this.IncService.RevenueComparegetByCon().then(async res => {
             debugger
             if (res.length > 0) {
                 for (var j = 0; j < res.length; j += 1) {
                     if (res[j].CompareDetail.length > 0) {
                         for (var i = 0; i < res[j].CompareDetail.length; i += 1) {
-                            if (res[j].CompareDetail[i].CompareDetailReceipt.length > 0) {
+                            if (res[j].CompareDetail[i] != null && res[j].CompareDetail[i].CompareDetailReceipt.length > 0) {
                                 for (var k = 0; k < res[j].CompareDetail[i].CompareDetailReceipt.length; k += 1) {
                                     this.oRevenueDetail = {
                                         RevenueDetailID: "",
@@ -328,7 +324,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    async onInsRevenue() {
+    onInsRevenue() {
         this.preloader.setShowPreloader(true);
 
         let DRate, cDateRevenue;
@@ -357,7 +353,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         debugger
 
         let isSuccess: boolean = true;
-        await this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
+        this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
             if (!item.IsSuccess) {
                 isSuccess = item.IsSuccess;
             }
@@ -376,7 +372,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    async onUdpRevenue() {
+    onUdpRevenue() {
         this.preloader.setShowPreloader(true);
 
         let DRate, cDateRevenue;
@@ -404,7 +400,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         debugger
 
         let isSuccess: boolean = true;
-        await this.IncService.RevenueUdp(this.oRevenue).then(async item => {
+        this.IncService.RevenueUdp(this.oRevenue).then(async item => {
             if (!item.IsSuccess) {
                 isSuccess = item.IsSuccess;
             }

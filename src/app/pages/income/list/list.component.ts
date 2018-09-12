@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Revenue } from '../Revenue';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
-import { toLocalShort, compareDate, setZeroHours, getDateMyDatepicker, MyDatePickerOptions } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
@@ -22,20 +22,13 @@ export class ListComponent implements OnInit, OnDestroy {
     revenue = new Array<Revenue>();
     RevenueList = new Array<Revenue>();
     paginage = pagination;
-    DateStartFrom: any;
     DateStartTo: any;
     _dateStartFrom: any;
     _dateStartTo: any;
 
-    showEditField: any;
-    DepartmentName: string;
-
-    RevenueStatus: any;
     StatusOption = [];
     options = [];
     rawOptions = [];
-
-    myDatePickerOptions = MyDatePickerOptions;
 
     private subOnSearch: any;
     private subSetNextPage: any;
@@ -63,7 +56,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.1');
+        this.sidebarService.setVersion('Revenue 0.0.0.2');
 
         this.preloader.setShowPreloader(true);
 
@@ -206,13 +199,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
     checkDateDelivery() {
         if (this._dateStartFrom && this._dateStartTo) {
-            const sdate = getDateMyDatepicker(this._dateStartFrom);
-            const edate = getDateMyDatepicker(this._dateStartTo);
+            const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
+            const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
 
             if (!compareDate(new Date(sdate), new Date(edate))) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.DateStartTo = { date: this._dateStartFrom.date };
+                    this.DateStartTo = { date: this._dateStartFrom };
                 }, 0);
             }
         }
@@ -248,9 +241,9 @@ export class ListComponent implements OnInit, OnDestroy {
         }
     }
 
-    onAutoSelecteWord(event) {
-        // this.oProve.ProveStationCode = event.OfficeCode;
-        // this.oProve.ProveStation = event.OfficeName;
-    }
+    // onAutoSelecteWord(event) {
+    //     // this.oProve.ProveStationCode = event.OfficeCode;
+    //     // this.oProve.ProveStation = event.OfficeName;
+    // }
     // ----- End หน่วยงาน ---
 }
