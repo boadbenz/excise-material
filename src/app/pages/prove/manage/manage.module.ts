@@ -13,6 +13,7 @@ import { MasterService }  from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
     {
@@ -39,7 +40,8 @@ const routes: Routes = [
         HttpClientModule,
         CardActionsModule,
         MatAutocompleteModule,
-        PrintDocModalModule
+        PrintDocModalModule,
+        MyDatePickerTHModule
     ],
     providers: [ProveService,
         ArrestService,

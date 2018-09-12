@@ -1,31 +1,13 @@
 import { Component, OnInit, Output, EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { pagination } from '../../../config/pagination';
-import { Observable } from 'rxjs/Observable';
 import { appConfig } from '../../../app.config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { FormArray, FormControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Message } from '../../../config/message';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { NoticeMasSuspect } from './notice-mas-suspect';
+import { LawbreakerTypes, EntityTypes } from 'app/models';
 import { NoticeSuspect } from '../../notices/notice-suspect';
-
-const suspectTypes = [
-    {
-        value: '0',
-        text: 'ชาวต่างชาติ'
-    }, {
-        value: '1',
-        text: 'ชาวไทย'
-    }
-]
-const entityTypes = [
-    {
-        value: '1',
-        text: 'บุคคลธรรมดา'
-    }, {
-        value: '2',
-        text: 'นิติบุคคล'
-    }
-]
 
 @Injectable()
 export class SuspectService {
@@ -40,29 +22,58 @@ export class SuspectService {
             })
     };
 
-    searchByKeyword(Textsearch: string): Promise<NoticeSuspect[]> {
+    async searchByKeyword(Textsearch: string): Promise<NoticeMasSuspect[]> {
         const params = JSON.stringify(Textsearch);
-        const url = `${appConfig.api8082}/NoticeSuspectgetByKeyword`;
+        const lawbreakerUrl = `${appConfig.api8082}/NoticeLawbreakergetByKeyword`;
+        const suspectUrl = `${appConfig.api8082}/NoticeMasSuspectgetByKeyword`;
+        const url = { lawbreakerUrl, suspectUrl };
+
         return this.response(params, url);
     }
 
-    searchAdv(form: any): Promise<NoticeSuspect[]> {
+    searchAdv(form: any): Promise<NoticeMasSuspect[]> {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8082}/SuspectgetByConAdv`;
+        const lawbreakerUrl = `${appConfig.api8082}/NoticeLawbreakergetByConAdv`;
+        const suspectUrl = `${appConfig.api8082}/NoticeMasSuspectgetByConAdv`;
+        const url = { lawbreakerUrl, suspectUrl };
+
         return this.response(params, url);
     }
 
-    private async response(params: string, url: string) {
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise()
-        if (res.IsSuccess === false) {
-            return [];
-        }
+    private async response(params: string, url: any) {
+        const lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise()
 
-        if (!res.ResponseData.length) {
-            return [];
+        if (lawbreaker.NoticeLawbreaker.length) {
+            let response: NoticeMasSuspect[] = [];
+            lawbreaker.NoticeLawbreaker.map(item => {
+                let obj: any = item;
+                obj = this.renameProp('LawbreakerID', 'SuspectID', obj);
+                obj = this.renameProp('LawbreakerType', 'SuspectType', obj);
+                obj = this.renameProp('LawbreakerTitleCode', 'SuspectTitleCode', obj);
+                obj = this.renameProp('LawbreakerTitleName', 'SuspectTitleName', obj);
+                obj = this.renameProp('LawbreakerFirstName', 'SuspectFirstName', obj);
+                obj = this.renameProp('LawbreakerMiddleName', 'SuspectMiddleName', obj);
+                obj = this.renameProp('LawbreakerLastName', 'SuspectLastName', obj);
+                obj = this.renameProp('LawbreakerOtherName', 'SuspectOtherName', obj);
+                obj = this.renameProp('LawbreakerDesc', 'SuspectDesc', obj);
+                response.push(obj);
+            })
+            return response;
+        } else {
+            const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
+
+            if (suspect.ResponseData.length) {
+                return suspect.ResponseData;
+            } else {
+                alert(Message.noRecord);
+                return new Array<NoticeMasSuspect>();
+            }
         }
-        return res.ResponseData;
     }
+
+    private renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => {
+        return { [newProp]: old, ...others };
+    };
 }
 
 @Component({
@@ -76,13 +87,12 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
     isOpen = false;
     isCheckAll = false;
     advSearch = false;
-    suspect = new Array<NoticeSuspect>();
-    suspectList = new Array<NoticeSuspect>();
+    suspect = new Array<NoticeMasSuspect>();
 
-    suspectTypes = suspectTypes;
-    entityType = entityTypes;
+    suspectTypes = LawbreakerTypes;
+    entityType = EntityTypes;
 
-    paginage = pagination;
+    paginage: any;
 
     suspectFormGroup: FormGroup;
 
@@ -101,6 +111,7 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        this.paginage = pagination;
         this.suspectFormGroup = this.fb.group({
             Suspect: this.fb.array([])
         });
@@ -116,31 +127,38 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
     async onSearchByKeyword(f: any) {
         this.preloader.setShowPreloader(true)
+
         await this.suspectService.searchByKeyword(f).then(res => this.onComplete(res));
+
         this.preloader.setShowPreloader(false)
     }
 
     async onSearchAdv(f: any) {
         this.preloader.setShowPreloader(true)
+
         await this.suspectService.searchAdv(f).then(res => this.onComplete(res));
+
         this.preloader.setShowPreloader(false)
     }
 
-    async onComplete(res: NoticeSuspect[]) {
+    async onComplete(res: NoticeMasSuspect[]) {
 
         if (!res.length) {
             alert(Message.noRecord)
             return false;
         }
 
-        this.suspect = new Array<NoticeSuspect>();
+        this.suspect = new Array<NoticeMasSuspect>();
         const list = await res.map((item, i) => {
-            item.RowId = i +1;
+            item.RowId = i + 1;
             item.IsChecked = false;
-            item.CompanyFullName = `${item.CompanyTitleName} ${item.CompanyName}`;
+            item.EntityTypeName = this.entityType.find(el => parseInt(el.value) == item.EntityType).text;
+            item.SuspectTypeName = this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
+            item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
             item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;
             return item;
         });
+
         this.suspect = list;
         // set total record
         this.paginage.TotalItems = this.suspect.length;
@@ -165,17 +183,8 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
     }
 
     async exportData() {
-        let form = this.suspectFormGroup.value.Suspect as NoticeSuspect[];
-        form = await form
-            .map(item => {
-                // item.EntityTypeName = this.entityType.find(el => el.value == item.EntityType).text;
-                // item.SuspectTypeName = this.suspectTypes.find(el => el.value == item.SuspectType).text;
-                item.CompanyFullName = `${item.CompanyTitleName} ${item.CompanyName}`;
-                item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;
-                return item;
-            })
-            .filter(item => item.IsChecked === true);
-
+        let form = this.suspectFormGroup.value.Suspect;
+        form = await form.filter(item => item.IsChecked === true);
         this.exportSuspectData.emit(form);
         this.close('Save click');
     }

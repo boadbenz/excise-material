@@ -16,14 +16,13 @@ export class LawsuitService {
       })
   };
 
-  async LawsuitegetByCon(LawsuitID: string): Promise<Lawsuit> {
-    debugger
+  async LawsuitegetByCon(LawsuitID: string): Promise<any> {
     const params = { LawsuitID };
     const url = `${appConfig.api8083}/LawsuitgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res.ResponseData as Lawsuit;
+      return res;
     } catch (error) {
       await alert(error);
     }

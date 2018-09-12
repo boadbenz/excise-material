@@ -29,7 +29,7 @@ export class NoticeInformer {
     public ZipCode: string;
     public TelephoneNo: string;
     public InformerInfo: string;
-    public IsActive: string;
+    public IsActive: number;
 
     public Region: string;
 }
@@ -40,7 +40,7 @@ export const NoticeInformerFormControl = {
     NoticeCode: new FormControl(null, Validators.required),
     TitleCode: new FormControl(null),
     TitleName: new FormControl(null),
-    FirstName: new FormControl(null),
+    FirstName: new FormControl(null, Validators.required),
     LastName: new FormControl(null),
     IDCard: new FormControl('N/A'),
     Age: new FormControl(null),

@@ -13,7 +13,7 @@ export class NoticeLocale {
     public Room: string;
     public Alley: string;
     public Road: string;
-    public SubdistrictCode: string;
+    public SubDistrictCode: string;
     public SubDistrict: string;
     public DistrictCode: string;
     public District: string;
@@ -38,14 +38,14 @@ export const NoticeLocaleFormControl = {
     Room: new FormControl(null, Validators.required),
     Alley: new FormControl(null, Validators.required),
     Road: new FormControl(null, Validators.required),
-    SubdistrictCode: new FormControl(null, Validators.required),
+    SubDistrictCode: new FormControl(null, Validators.required),
     SubDistrict: new FormControl(null, Validators.required),
     DistrictCode: new FormControl(null, Validators.required),
     District: new FormControl(null, Validators.required),
     ProvinceCode: new FormControl(null, Validators.required),
     Province: new FormControl(null, Validators.required),
     ZipCode: new FormControl('N/A', Validators.required),
-    Policestation: new FormControl('N/A', Validators.required),
+    Policestation: new FormControl(null),
     IsActive: new FormControl(1),
     Region: new FormControl(null)
 }

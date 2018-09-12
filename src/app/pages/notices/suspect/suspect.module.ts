@@ -8,6 +8,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { NoticeService } from '../notice.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MainMasterService } from '../../../services/main-master.service';
 
 const routes: Routes = [
   {
@@ -20,6 +23,7 @@ const routes: Routes = [
               { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/notice/manage/C/NEW' },
               { title: 'จัดการข้อมูลผู้ต้องสงสัย' }
           ],
+          codePage: 'XCS60-99-01-02-00',  
           nextPage: { title: 'งานแจ้งความ', url: '/' }
       },
       component: SuspectComponent
@@ -30,16 +34,17 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     HttpClientModule,
     RouterModule.forChild(routes),
     NgbModule.forRoot(),
-    ReactiveFormsModule,
-    CardActionsModule
+    CardActionsModule,
+    MyDatePickerTHModule
   ],
   declarations: [SuspectComponent],
   exports: [SuspectComponent],
-  providers: [ArrestsService],
+  providers: [ArrestsService, NoticeService, MainMasterService],
   schemas: [NO_ERRORS_SCHEMA]
 })
 export class SuspectModule { }

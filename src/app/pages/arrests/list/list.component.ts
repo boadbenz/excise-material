@@ -4,10 +4,11 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
-import { toLocalShort, toLocalNumeric, resetLocalNumeric } from '../../../config/dateFormat';
+import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate, setZeroHours, getDateMyDatepicker } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -19,21 +20,28 @@ export class ListComponent implements OnInit, OnDestroy {
     paginage = pagination;
     dataTable: any;
     advSearch: any;
-    OccurrenceDateForm: string;
-    OccurrenceDateTo: string
+    private dateStartFrom: any;
+    private dateStartTo: any;
+    OccurrenceDateTo: any;
 
     arrestList = new Array<Arrest>();
     arrest = new Array<Arrest>();
 
     @ViewChild('arrestTable') arrestTable: ElementRef;
 
+    myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd mmm yyyy',
+        showClearDateBtn: false,
+        height: '30px'
+    };
 
     constructor(
         private navService: NavigationService,
         private arrestService: ArrestsService,
         private router: Router,
         private sidebarService: SidebarService,
-        private preLoader: PreloaderService
+        private preLoader: PreloaderService,
+        public chRef: ChangeDetectorRef
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -50,10 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('1.02');
-
-        this.OccurrenceDateForm = toLocalNumeric((new Date()).toISOString())
-        this.OccurrenceDateTo = toLocalNumeric((new Date()).toISOString())
+        this.sidebarService.setVersion('0.0.0.9');
 
         this.onSearch('');
 
@@ -80,19 +85,29 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onAdvSearch(form: any) {
-        this.paginage.TotalItems = 0;
-        const sDateCompare =  new Date(resetLocalNumeric(form.value.OccurrenceDateFrom));
-        const eDateCompare = new Date(resetLocalNumeric(form.value.OccurrenceDateTo));
 
-        if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-            alert(Message.checkDate);
-        } else {
-            this.preLoader.setShowPreloader(true);
-            form.value.DateStartFrom = sDateCompare;
-            form.value.DateStartTo = eDateCompare;
-            await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
-            this.preLoader.setShowPreloader(false);
+        if (form.value.OccurrenceDateFrom && form.value.OccurrenceDateTo) {
+            const sdate = getDateMyDatepicker(form.value.OccurrenceDateFrom);
+            const edate = getDateMyDatepicker(form.value.OccurrenceDateTo);
+
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate);
+                return
+            }
+
+            form.value.OccurrenceDateFrom = setZeroHours(sdate);
+            form.value.OccurrenceDateTo = setZeroHours(edate);
         }
+
+        this.paginage.TotalItems = 0;        
+
+        this.preLoader.setShowPreloader(true);
+        console.log('===================');
+        console.log(JSON.stringify(form.value));
+        console.log('===================');
+        await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
+        this.preLoader.setShowPreloader(false);
+
     }
 
     onSearchComplete(list: Arrest[]) {
@@ -114,6 +129,31 @@ export class ListComponent implements OnInit, OnDestroy {
         // set total record
         this.paginage.TotalItems = this.arrest.length;
 
+    }
+
+    onSDateChange(event: IMyDateModel) {
+        this.dateStartFrom = event
+        this.checkDate();
+    }
+
+    onEDateChange(event: IMyDateModel) {
+        this.dateStartTo = event
+        this.checkDate()
+    }
+
+    checkDate() {
+        if (this.dateStartFrom && this.dateStartTo) {
+
+            const sdate = getDateMyDatepicker(this.dateStartFrom);
+            const edate = getDateMyDatepicker(this.dateStartTo);
+
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.OccurrenceDateTo = { date: this.dateStartFrom.date };
+                }, 0);
+            }
+        }
     }
 
     clickView(code: string) {

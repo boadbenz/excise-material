@@ -30,7 +30,7 @@ export class ArrestProduct {
     public QtyUnit = '';
     public NetVolume = '';
     public NetVolumeUnit = '';
-    public IsActive = '';
+    public IsActive: number;
     public IsNewItem: boolean;
     ProductFullName = '';
 }
@@ -77,8 +77,8 @@ export const ArrestProductFormControl = {
     CarNo: new FormControl(null),
     Qty: new FormControl(null, Validators.required),
     QtyUnit: new FormControl(null, Validators.required),
-    NetVolume: new FormControl(null, Validators.required),
-    NetVolumeUnit: new FormControl(null, Validators.required),
+    NetVolume: new FormControl(null),
+    NetVolumeUnit: new FormControl(null),
     IsActive: new FormControl(1, Validators.required),
     IsNewItem: new FormControl(null, Validators.required),
     ProductFullName: new FormControl(null)

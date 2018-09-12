@@ -16,6 +16,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalNoticeModule } from '../../component/modal-notice/modal-notice.module';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 import { ProveService } from '../../prove/prove.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
   {
@@ -27,6 +28,7 @@ const routes: Routes = [
               { title: 'ค้นหางานจับกุม', url: '/arrest/list' },
               { title: 'จัดการข้อมูลบันทึกจับกุม' }
           ],
+          codePage: 'XCS60-03-02-00',
           nextPage: { title: 'รับคำกล่าวโทษ', url: '/accusations/manage' }
       },
       component: ManageComponent
@@ -50,7 +52,8 @@ const routes: Routes = [
     AllegationModalModule,
     ModalNoticeModule,
     StepWizardModule,
-    PrintDocModalModule
+    PrintDocModalModule,
+    MyDatePickerTHModule
   ],
   declarations: [
     ManageComponent

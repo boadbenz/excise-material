@@ -14,6 +14,8 @@ import { ArrestsService } from '../../arrests/arrests.service';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 import { DatepickerI18nService } from '../../../services/datepicker-i18n.service';
 import { ProveService } from '../../prove/prove.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MainMasterService } from '../../../services/main-master.service';
 
 const routes: Routes = [
     {
@@ -23,7 +25,8 @@ const routes: Routes = [
                 { title: 'หน้าหลัก', url: '/' },
                 { title: 'ค้นหาใบแจ้งความนำจับ', url: '/notice/list' },
                 { title: 'จัดการข้อมูลใบแจ้งความนำจับ' }
-            ]            
+            ],
+            codePage: 'XCS60-02-02-00' 
         },
         component: ManageComponent
     }
@@ -42,7 +45,8 @@ const routes: Routes = [
         CardActionsModule,
         SuspectModalModule,
         ModalLawbreakerModule,
-        PrintDocModalModule
+        PrintDocModalModule,
+        MyDatePickerTHModule
     ],
     declarations: [
         ManageComponent
@@ -50,7 +54,8 @@ const routes: Routes = [
         { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },
         NoticeService,
         ArrestsService,
-        ProveService
+        ProveService,
+        MainMasterService
     ]
 })
 export class ManageModule { }

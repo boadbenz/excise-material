@@ -19,7 +19,6 @@ export class PrintDocModalComponent implements OnInit {
     TitleName: String;
     FirstName: String;
     LastName: String;
-    document: any = [];
 
     @Input() pCompareID: string;
 
@@ -46,9 +45,9 @@ export class PrintDocModalComponent implements OnInit {
         //   } 
         // });
 
-        this.fineService.getByCon(this.condtion).then(async res => {
-            this.getLawbreakerByArrest(res[0].ArrestCode);
-        });
+        // this.fineService.getByCon(this.condtion).then(async res => {
+        //     this.getLawbreakerByArrest(res[0].ArrestCode);
+        // });
       }
 
       getLawbreakerByArrest(ArrestCode: string) {

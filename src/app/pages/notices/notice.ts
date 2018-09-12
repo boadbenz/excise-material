@@ -20,6 +20,7 @@ export class Notice {
     public FilePath: string;
     public ArrestCode: string;
     public IsActive: number;
+    public IsArrest: number;
     public NoticeStaff: Array<NoticeStaff>;
     public NoticeInformer: Array<NoticeInformer>;
     public NoticeLocale: Array<NoticeLocale>;

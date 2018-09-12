@@ -21,6 +21,7 @@ export class NoticeStaff {
    public OfficeShortName: string;
    public ContributorCode: string;
 
+   public IsActive: number;
    public StaffFullName: string;
 }
 
@@ -44,5 +45,6 @@ export const NoticeStaffFormControl = {
     OfficeName: new FormControl(null),
     OfficeShortName: new FormControl(null),
     ContributorCode: new FormControl(null),
+    IsActive: new FormControl(null),
     StaffFullName: new FormControl(null)
 }

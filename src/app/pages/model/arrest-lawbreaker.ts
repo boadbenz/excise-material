@@ -50,68 +50,68 @@ export class ArrestLawbreaker {
     public LinkPhoto: string;
     public PhotoDesc: string;
     public IsActive: number;
-    public ArrestLawbreakerAddress: Array<ArrestLawbreakerAddress>
+    public ArrestLawbreakerAddress: Array<ArrestLawbreakerAddress>;
     public IsNewItem: boolean;
 }
 
-class Types {
-    public value: string;
-    public text: string;
-}
+// class Types {
+//     public value: string;
+//     public text: string;
+// }
 
-export const VISATypes: Types[] = [
-    {
-        value: '1',
-        text: 'ประเภทคนเดินทางผ่านราชอาณาจักร (Transit Visa)'
-    }, {
-        value: '2',
-        text: 'ประเภทนักท่องเที่ยว (Tourist Visa)'
-    }
-];
+// export const VISATypes: Types[] = [
+//     {
+//         value: '1',
+//         text: 'ประเภทคนเดินทางผ่านราชอาณาจักร (Transit Visa)'
+//     }, {
+//         value: '2',
+//         text: 'ประเภทนักท่องเที่ยว (Tourist Visa)'
+//     }
+// ];
 
-export const EntityTypes: Types[] = [
-    {
-        value: '1',
-        text: 'บุคคลธรรมดา'
-    }, {
-        value: '2',
-        text: 'นิติบุคคล'
-    }
-]
+// export const EntityTypes: Types[] = [
+//     {
+//         value: '1',
+//         text: 'บุคคลธรรมดา'
+//     }, {
+//         value: '2',
+//         text: 'นิติบุคคล'
+//     }
+// ]
 
-export const GenderTypes: Types[] = [
-    {
-        value: 'M',
-        text: 'ชาย'
-    }, {
-        value: 'F',
-        text: 'หญิง'
-    }
-]
+// export const GenderTypes: Types[] = [
+//     {
+//         value: 'M',
+//         text: 'ชาย'
+//     }, {
+//         value: 'F',
+//         text: 'หญิง'
+//     }
+// ]
 
-export const LawbreakerTypes: Types[] = [
-    {
-        value: '0',
-        text: 'ชาวต่างชาติ'
-    }, {
-        value: '1',
-        text: 'ชาวไทย'
-    }
-]
+// export const LawbreakerTypes: Types[] = [
+//     {
+//         value: '0',
+//         text: 'ชาวต่างชาติ'
+//     }, {
+//         value: '1',
+//         text: 'ชาวไทย'
+//     }
+// ]
 
-export const MaritalStatus: Types[] = [
-    {
-        value: '1',
-        text: 'โสด'
-    }, {
-        value: '2',
-        text: 'สมรส'
-    }, {
-        value: '3',
-        text: 'หย่าร้าง'
-    }, {
-        value: '4',
-        text: 'หม้าย'
-    },
-]
+// export const MaritalStatus: Types[] = [
+//     {
+//         value: '1',
+//         text: 'โสด'
+//     }, {
+//         value: '2',
+//         text: 'สมรส'
+//     }, {
+//         value: '3',
+//         text: 'หย่าร้าง'
+//     }, {
+//         value: '4',
+//         text: 'หม้าย'
+//     },
+// ]
 

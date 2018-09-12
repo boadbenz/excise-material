@@ -1,20 +1,23 @@
 export class NoticeSuspect {
-    SuspectID: number;
-    SuspectReferenceID: number;
-    SuspectTitleName: string;
-    SuspectFirstName: string;
-    SuspectLastName: string;
-    CompanyTitleName: string;
-    CompanyName: string;
-    CompanyOtherName: string;
-    NoticeCode: string;
-
-    IsActive: number;
+    public SuspectID: string;
+    public SuspectReferenceID: string;
+    public NoticeCode: string;
+    public SuspectTitleName: string;
+    public SuspectFirstName: string;
+    public SuspectLastName: string;
+    public CompanyTitleName: string;
+    public CompanyName: string;
+    public CompanyOtherName: string;
+    public IsActive: number;
 
     //--- Custom ---//
-    CompanyFullName: string;
-    SuspectFullName: string;
-    RowId: number;
-    IsChecked: boolean;
-    IsNewItem: boolean;
+    public EntityType: number;
+    public SuspectType: number;
+    public EntityTypeName: string;
+    public SuspectTypeName: string;
+    public CompanyFullName: string;
+    public SuspectFullName: string;
+    public RowId: number;
+    public IsChecked: boolean;
+    public IsNewItem: boolean;
 }

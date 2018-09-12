@@ -1,5 +1,5 @@
 
-export * from './communicationChanel';
+export * from './communication-chanel.model';
 export * from './region.model'
 export * from './drop-downs.model'
 

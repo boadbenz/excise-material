@@ -49,9 +49,9 @@
           <label for="" class="col-md-2 control-label padding-adv-search">วันที่เปรียบเทียบคดี :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group input-group form-line">
-              <input type="date" name="CompareDateFrom" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
+              <input type="date"  [(ngModel)]="CompareDateFrom" name="CompareDateFrom"  (blur)="varidateCDF(advForm,$event)"  ngModel class="form-control " placeholder="วว/ดด/ปปปป">
               <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
-              <input type="date" name="CompareDateTo" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
+              <input type="date" [(ngModel)]="CompareDateTo" name="CompareDateTo"  (blur)="varidateCDE(advForm,$event)" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
             </div>
           </div>
 
@@ -123,11 +123,11 @@
               <div *ngIf="item.IsOutside != 1">{{item.CompareCode}}</div>
             </td>
             <td>
-                <div *ngFor="let staff of item.CompareStaff;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
+                <div *ngFor="let staff of item.CompareStaff | ContributorPipe:18;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
             </td>
             <td style="text-align: center">{{item.CompareDate | date:'dd-MM-yyyy'}}</td>
             <td>
-                <div *ngFor="let staff of item.CompareStaff;">{{staff.DepartmentName}}</div>
+                <div *ngFor="let staff of item.CompareStaff | ContributorPipe:18;">{{staff.DepartmentName}}</div>
             </td>
             <td class="text-center">
               <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitID,item.ArrestCode,item.CompareID)">
