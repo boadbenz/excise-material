@@ -154,7 +154,7 @@
                                 <!-- <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField" > -->
                                 <select formControlName="ContributorID" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
                                     <option value="" disabled selected></option>
-                                    <option value="-">-</option>
+                                    <option *ngFor="let c of contributerType;" [value]="c.value">{{c.text}}</option>
                                 </select>
                             </td>
                             <td>
@@ -213,7 +213,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
                         <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField"  [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
-                    <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
+                    <label for="" class="col-lg-2 col-sm-4 control-label">ตำบล/อำเภอ/จังหวัด :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
@@ -282,17 +282,7 @@
                             <td class="text-center">{{i+1}}</td>
                             <td>{{item.get('EntityTypeName').value}}</td>
                             <td>{{item.get('LawbreakerTypeName').value}}</td>
-                            <td>
-                                <span *ngIf="item.get('EntityType').value == 0">
-                                    {{item.get('CompanyRegistrationNo').value}}
-                                </span>
-                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 0">
-                                    {{item.get('PassportNo').value}}
-                                </span>
-                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 1">
-                                    {{item.get('IDCard').value}}
-                                </span>
-                            </td>
+                            <td>{{item.get('LawbreakerRefID').value}}</td>
                             <td>
                                 <span *ngIf="item.get('EntityType').value == 0">
                                     {{item.get('CompanyFullName').value}}
@@ -359,25 +349,24 @@
                                     [resultTemplate]="rt"
                                     [inputFormatter]="formatterProduct"
                                     (selectItem)="selectItemProductItem($event, i)" 
-                                    value="{{item.value.ProductFullName}}"
-                                    />
+                                    value="{{item.value.ProductFullName}}" />
                             </td>
                             <td>
-                                <input type="text" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
                                 <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                     <option value="" disabled selected></option>
-                                    <option *ngFor="let item of typeheadQtyUnit" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                    <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
                                 </select>
                             </td>
                             <td>
-                                <input type="text" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField">
+                                <input type="number" formControlName="NetWeight" class="form-control form-control-sm" [readonly]="showEditField">
                             </td>
                             <td>
-                                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null">
-                                    <option value=""></option>
-                                    <option *ngFor="let item of typeheadNetVolumeUnit" [value]="item.ProductUnitCode">{{item.ProductUnitNameTH}}</option>
+                                <select formControlName="NetWeightUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null">
+                                    <option value="" selected disabled></option>
+                                    <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
                                 </select>
                             </td>
                             <td>

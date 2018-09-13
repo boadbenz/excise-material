@@ -67,13 +67,12 @@ export class ModalLawbreakerComponent implements OnInit {
     }
 
     private async onSearchComplete(list: ArrestLawbreaker[]) {
-        
         if (!list.length) {
             alert(Message.noRecord);
             return;
         }
-        
-        await list.map((item, i) => {
+
+        await list.filter(item => item.IsActive == 1).map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;
             item.LawbreakerRefID = item.LawbreakerRefID == null ? 1 : item.LawbreakerRefID
@@ -109,7 +108,7 @@ export class ModalLawbreakerComponent implements OnInit {
         this.d.emit(e);
     }
 
-    view(id:number) {
+    view(id: number) {
         this.dismiss('Cross click')
         this.router.navigate([`/arrest/lawbreaker/R/${id}`])
     }

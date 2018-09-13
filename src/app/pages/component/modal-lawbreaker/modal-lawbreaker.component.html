@@ -127,17 +127,7 @@
                             <td>{{item.get('RowId').value}}</td>
                             <td>{{item.get('LawbreakerTypeName').value}}</td>
                             <td>{{item.get('EntityTypeName').value}}</td>
-                            <td>
-                                <span *ngIf="item.get('EntityType').value == 0">
-                                    {{item.get('CompanyRegistrationNo').value}}
-                                </span>
-                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 0">
-                                    {{item.get('PassportNo').value}}
-                                </span>
-                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 1">
-                                    {{item.get('Idcard').value}}
-                                </span>
-                            </td>
+                            <td>{{item.get('LawbreakerID').value}}</td>
                             <td>
                                 <span *ngIf="item.get('EntityType').value == 0">
                                     {{item.get('CompanyFullName').value}}
@@ -146,7 +136,7 @@
                                     {{item.get('LawbreakerFullName').value}}
                                 </span>
                             </td>
-                            <td></td>
+                            <td>{{i+1}}</td>
                             <td class="text-center">
                                 <a href="javaScript:void(0);" class="text-center text-secondary" (click)="view(item.value.LawbreakerID)">
                                     <i class="fa fa-eye fa-lg"></i>

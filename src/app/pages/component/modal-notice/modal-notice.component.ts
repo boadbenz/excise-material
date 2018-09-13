@@ -84,7 +84,7 @@ export class ModalNoticeComponent implements OnInit {
 
     async onSearchComplete(list: Notice[]) {
         this.notice = [];
-        await list.map((item, i) => {
+        await list.filter(item => item.IsActive == 1).map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;
             item.NoticeDate = toLocalShort(item.NoticeDate);
