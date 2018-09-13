@@ -23,7 +23,7 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { ArrestStaff } from '../../model/arrest-staff';
 import { isNgTemplate } from '@angular/compiler';
 import { async } from 'q';
-
+import { isArray } from 'jquery';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -43,7 +43,7 @@ export class ManageComponent implements OnInit {
   LawsuitID: string;
   ArrestCode: string;
   CompareID: string;
-
+  LawsuitList: any;
 
   // --- Array ---
   rawOptions = [];
@@ -82,7 +82,7 @@ export class ManageComponent implements OnInit {
   OperationDeptName: string; // แผนกผู้เปรียบเทียบ (คำให้การของผู้ต้องหา)
   CompareStaffID: string;   // รหัสผู้เปรียบเทียบ (คำให้การของผู้ต้องหา)
   IsOutside: string;        // flg คดีเปรียบเทียบนอกสถานที่ทำการ
-
+  AccusedTable: any; // ส่วนข้อมูลคาให้การของผู้ต้องหา ส่วนตาราง
   // --- Object ---
   oArrest: Arrest;
   oCompare: Compare;
@@ -110,7 +110,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.preloader.setShowPreloader(true);
+    // this.preloader.setShowPreloader(true);
 
     this.active_Route();
     this.navigate_Service();
@@ -270,10 +270,28 @@ export class ManageComponent implements OnInit {
   }
 
   async getLawsuitByID(LawsuitID: string) {
-    this.preloader.setShowPreloader(true);
+    // this.preloader.setShowPreloader(true);
 
-    await this.LawsuitSV.LawsuitegetByCon(LawsuitID).then(async res => {
+    await this.LawsuitSV.LawsuitegetByCon2(LawsuitID).then(async res => {
       // --- รายละเอียดคดี ----
+      var tmplawsuit: any;
+      tmplawsuit = res;
+
+      // for (let index = 0; index < tmplawsuit.length; index++) {
+
+      //   if (this.LawsuitID === tmplawsuit.ArrestIndicment[index].Lawsuit[0].LawsuitID) {
+
+      //     // this.LawsuitList =
+      //   }
+
+      // }  
+
+      // if (res[0].ArrestIndicment[0].Lawsuit[0].IsOutside == "1") {
+      //   this.LawsuiltCode = "น " + res[0].ArrestIndicment[0].Lawsuit[0].LawsuitNo;
+      // }
+      // else {
+      //   this.LawsuiltCode = res[0].ArrestIndicment[0].Lawsuit[0].LawsuitNo;
+      // }
 
       if (res.IsOutside == "1") {
         this.LawsuiltCode = "น " + res.LawsuitNo;
@@ -282,10 +300,13 @@ export class ManageComponent implements OnInit {
         this.LawsuiltCode = res.LawsuitNo;
       }
 
-      this.LawsuiltDate = new Date(res.LawsuitDate).toISOString().substring(0, 10);
-      this.LawsuiltTime = new Date(res.LawsuitTime).toISOString().substring(0, 10);
-      this.IndictmentID = res.IndictmentID.toString();
+      // this.LawsuiltDate = new Date(res.LawsuitDate).toISOString().substring(0, 10);
+      // this.LawsuiltTime = new Date(res.LawsuitTime).toISOString().substring(0, 10);
+      // this.IndictmentID = res.IndictmentID.toString();
 
+      // this.LawsuiltDate = new Date(res[0].ArrestIndicment[0].Lawsuit[0].LawsuitDate).toISOString().substring(0, 10);
+      // this.LawsuiltTime = new Date(res[0].ArrestIndicment[0].Lawsuit[0].LawsuitTime).toISOString().substring(15, 20);
+      // this.IndictmentID = res[0].ArrestIndicment[0].IndictmentID.toString();
       this.preloader.setShowPreloader(false);
     }, (err: HttpErrorResponse) => {
       alert(err.message);
@@ -295,31 +316,74 @@ export class ManageComponent implements OnInit {
   }
 
   async getArrestByID(ArrestCode: string) {
-    this.preloader.setShowPreloader(true);
+    // this.preloader.setShowPreloader(true);
 
     await this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
       console.log(res);
-      res.ArrestStaff.map(async item => {
-        item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
-        item.FullName += `${item.FirstName == null ? '' : item.FirstName}`;
-        item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
+
+      res[0].ArrestStaff.map(async item => {
+
+        if (item.ContributorCode === "6") {
+          item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
+          item.FullName += `${item.FirstName == null ? '' : item.FirstName}`;
+          item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
+        }
+        
       });
 
+      res[0].ArrestLawbreaker.forEach(item => {
 
-      this.ArrestLocation = `${res.ArrestLocale[0].SubDistrict == null ? '' : res.ArrestLocale[0].SubDistrict}`;
-      this.ArrestLocation += ` ${res.ArrestLocale[0].District == null ? '' : res.ArrestLocale[0].District}`;
-      this.ArrestLocation += ` ${res.ArrestLocale[0].Province == null ? '' : res.ArrestLocale[0].Province}`;
-      this.AccuserSubdistrictCode = `${res.ArrestLocale[0].SubDistrictCode == null ? '' : res.ArrestLocale[0].SubDistrictCode}`;
-      this.AccuserSubdistrict = `${res.ArrestLocale[0].SubDistrict == null ? '' : res.ArrestLocale[0].SubDistrict}`;
+        if (item.EntityType === "0") {
+          item.AccusedName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
+          item.AccusedName += `${item.CompanyName == null ? '' : item.CompanyName}`;
+          // item.AccusedName += ` ${item.LastName == null ? '' : item.LastName}`;
+        } else {
+          let tpmname = {
+            AccusedName : item.AccusedName = item.LawbreakerTitleName + " " 
+                                            + item.LawbreakerFirstName + " " 
+                                            + item.LawbreakerMiddleName + " " 
+                                            + item.LawbreakerLastName 
+                                            
+          }
+          if (this.AccusedTable === undefined) {
+            this.AccusedTable = new Array();
+          } 
+          this.AccusedTable.push(tpmname);
+          // item.AccusedName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
+          // item.AccusedName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
+          // item.AccusedName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
+          // item.AccusedName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
+        }
+
+      });
+      
+      
+
+      this.ArrestLocation = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
+      this.ArrestLocation += ` ${res[0].ArrestLocale[0].District == null ? '' : res[0].ArrestLocale[0].District}`;
+      this.ArrestLocation += ` ${res[0].ArrestLocale[0].Province == null ? '' : res[0].ArrestLocale[0].Province}`;
+      this.AccuserSubdistrictCode = `${res[0].ArrestLocale[0].SubDistrictCode == null ? '' : res[0].ArrestLocale[0].SubDistrictCode}`;
+      this.AccuserSubdistrict = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
 
       // res.ArrestStaff.filter(item => item.ContributorID === "11").map(async item => {
-      res.ArrestStaff.map(async item => {
-        this.ArrestStaffName = item.FullName;   // ผู้กล่าวหา
-        this.PositionName = item.PositionName;  // ตำแหน่งผู้กล่าวหา
-        this.DepartmentName = item.DepartmentName;  // แผนกผู้กล่าวหา
+      res[0].ArrestStaff.map(async item => {
+        if (item.ContributorCode === "6") {
+          this.ArrestStaffName = item.FullName;   // ผู้กล่าวหา
+          this.PositionName = item.PositionName;  // ตำแหน่งผู้กล่าวหา
+          this.DepartmentName = item.DepartmentName;  // แผนกผู้กล่าวหา
+        }
+        
       });
 
-      this.oArrest = res;
+      // res[0].ArrestLawbreaker.map(async item => {
+        
+      //   this.AccusedTable = item.AccusedName;
+      //   if (isArray(this.AccusedTable)) {
+      //     this.AccusedTable = [this.AccusedTable];
+      //   }
+      // });
+
+      this.oArrest = res[0];
 
       this.oArrest.ArrestLawbreaker.map(async item => {
         if (item.EntityType == 0) {
@@ -344,8 +408,24 @@ export class ManageComponent implements OnInit {
 
   }
 
+  async CompareMasLawgetByCon () {
+  //  await this.LawsuitSV.CompareMasLawgetByCon(value.GuiltBaseID).then(res => {
+  //     if (res) {
+  //       for (let key in res) {
+  //         if (key == "CompareMasLawSection") {
+  //           this.masLawGroupSectionList.push(res[key]);
+  //         }
+  //         if (key == "CompareMasLawGuiltBase") {
+  //           this.masLawGuitBaseList.push(res[key]);
+  //         }
+  //       }
+  //     }
+  //   });
+  }
+
+
   async getGuiltBaseByID() {
-    this.preloader.setShowPreloader(true);
+    // this.preloader.setShowPreloader(true);
 
     var aIndex;
     var arrestIndex;
@@ -455,14 +535,17 @@ export class ManageComponent implements OnInit {
   }
 
   async getCompareByID() {
-    this.preloader.setShowPreloader(true);
+    // this.preloader.setShowPreloader(true);
 
     await this.fineService.getByCon(this.CompareID).then(async res => {
       console.log("getCompareByID");
       console.log(res);
       if (res != null) {
         this.oCompare = res[0];
-
+        var CompareStaff = res[0].CompareStaff[0];
+        this.CompareStaffName = CompareStaff.TitleName + " " +CompareStaff.FirstName + " " + CompareStaff.LastName;
+        this.OperationPosName = CompareStaff.PositionName;
+        this.OperationDeptName = CompareStaff.DepartmentName;
         this.preloader.setShowPreloader(false);
       }
     }, (err: HttpErrorResponse) => {
@@ -508,9 +591,9 @@ export class ManageComponent implements OnInit {
       this.ListCompareStaff = this.oCompare.CompareStaff;
 
       this.ListCompareStaff.filter(f => f.ContributorCode == "18").map(async item => {
-        this.CompareStaffName = `${item.TitleName == null ? '' : item.TitleName}`;
-        this.CompareStaffName += `${item.FirstName == null ? '' : item.FirstName}`;
-        this.CompareStaffName += ` ${item.LastName == null ? '' : item.LastName}`;
+        // this.CompareStaffName = `${item.TitleName == null ? '' : item.TitleName}`;
+        // this.CompareStaffName += `${item.FirstName == null ? '' : item.FirstName}`;
+        // this.CompareStaffName += ` ${item.LastName == null ? '' : item.LastName}`;
 
         this.OperationPosName = `${item.PositionName == null ? '' : item.PositionName}`;
         this.OperationDeptName = `${item.DepartmentName == null ? '' : item.DepartmentName}`;
@@ -519,25 +602,25 @@ export class ManageComponent implements OnInit {
         this.oCompareStaff.IsNewItem = false;
       });
 
-      for (var i = 0; this.ListCompareDetail.length; i++) {
-        this.ListCompareDetail[i].LawBrakerName = "";
-        this.ListCompareDetailReceipt.push(this.oCompare.CompareDetail[i].CompareDetailReceipt);
-        this.ListCompareDetail[i].IsNewItem = false;
-        this.ListCompareDetailReceipt[i].IsNewItem = false;
+      // for (var i = 0; this.ListCompareDetail.length; i++) {
+      //   this.ListCompareDetail[i].LawBrakerName = "";
+      //   this.ListCompareDetailReceipt.push(this.oCompare.CompareDetail[i].CompareDetailReceipt);
+      //   this.ListCompareDetail[i].IsNewItem = false;
+      //   this.ListCompareDetailReceipt[i].IsNewItem = false;
 
-        if (this.ListCompareDetail[i].IndictmentDetailID != null && this.ListCompareDetail[i].IndictmentDetailID || "") {
-          let LawbreakerID = this.oArrest.ArrestIndictment
-            .filter(item => item.IndictmentID === +this.IndictmentID)[0].OpsArrestIndicmentDetailCollection
-            .filter(item => item.IndictmentDetailID === this.ListCompareDetail[i].IndictmentDetailID);
+      //   if (this.ListCompareDetail[i].IndictmentDetailID != null && this.ListCompareDetail[i].IndictmentDetailID || "") {
+      //     let LawbreakerID = this.oArrest.ArrestIndictment
+      //       .filter(item => item.IndictmentID === +this.IndictmentID)[0].OpsArrestIndicmentDetailCollection
+      //       .filter(item => item.IndictmentDetailID === this.ListCompareDetail[i].IndictmentDetailID);
 
-          let result = this.oArrest.ArrestLawbreaker.filter(item => item.LawbreakerID === +LawbreakerID[0].LawbreakerID);
+      //     let result = this.oArrest.ArrestLawbreaker.filter(item => item.LawbreakerID === +LawbreakerID[0].LawbreakerID);
 
-          if (result.length > 0) {
-            this.ListCompareDetail[i].LawBrakerName = result[0].LawbreakerFullName;
-            this.ListCompareDetailReceipt[i].LawBrakerName = result[0].LawbreakerFullName;
-          }
-        }
-      }
+      //     if (result.length > 0) {
+      //       this.ListCompareDetail[i].LawBrakerName = result[0].LawbreakerFullName;
+      //       this.ListCompareDetailReceipt[i].LawBrakerName = result[0].LawbreakerFullName;
+      //     }
+      //   }
+      // }
     }
   }
 
@@ -558,7 +641,7 @@ export class ManageComponent implements OnInit {
   }
 
   async onUpdCompare() {
-    this.preloader.setShowPreloader(true);
+    // this.preloader.setShowPreloader(true);
 
     this.oCompare.CompareCode = this.CompareNo + "/" + this.CompareYear;
     this.oCompare.CompareDate = this.CompareDate + ' ' + this.CompareTime;

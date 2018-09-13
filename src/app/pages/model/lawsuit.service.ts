@@ -17,12 +17,26 @@ export class LawsuitService {
   };
 
   async LawsuitegetByCon(LawsuitID: string): Promise<Lawsuit> {
+    console.log(LawsuitID);
     const params = { LawsuitID };
     const url = `${appConfig.api8083}/LawsuitgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res.ResponseData as Lawsuit;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async LawsuitegetByCon2(LawsuitID: string): Promise<Lawsuit> {
+    console.log(LawsuitID);
+    const params = { LawsuitID };
+    const url = `${appConfig.api8083}/LawsuitgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
     } catch (error) {
       await alert(error);
     }
@@ -38,5 +52,15 @@ export class LawsuitService {
     } catch (error) {
       await alert(error);
     }
+  }
+
+  async CompareMasLawgetByCon(GuiltBaseID) {
+    const params = { GuiltBaseID: GuiltBaseID };
+    const url = `${appConfig.api8881}/CompareMasLawgetByCon`;
+    const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+    // if (res.IsSuccess) {
+    //   return res.ResponseData
+    // }
+    return res
   }
 }
