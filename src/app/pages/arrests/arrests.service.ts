@@ -45,7 +45,6 @@ export class ArrestsService {
 
     private async resposePromisGetList(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        debugger
         if (!res.length || res.IsSuccess == 'False') {
             return [];
         }
@@ -254,7 +253,7 @@ export class ArrestsService {
 
     //-- Mas --//
     masLawbreakergetByConAdv(Textsearch: any): Promise<any[]> {
-        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByKeyword`;
+        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByConAdv`;
         return this.resposePromisGetList(Textsearch, url);
     }
 

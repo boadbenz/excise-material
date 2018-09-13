@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { setZero, MyDatePickerOptions, setDateMyDatepicker, getDateMyDatepicker, setZeroHours } from '../../../config/dateFormat';
+import { setZero, MyDatePickerOptions, setDateMyDatepicker, getDateMyDatepicker, setZeroHours, convertDateForSave } from '../../../config/dateFormat';
 import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
 import { Message } from '../../../config/message';
 import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
@@ -32,11 +32,13 @@ import {
     RegionModel,
     MasStaffModel,
     LawbreakerTypes,
-    EntityTypes
+    EntityTypes,
+    ContributorType
 } from '../../../models'
 import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
 import { replaceFakePath } from '../../../config/dataString';
+import { MainMasterService } from '../../../services/main-master.service';
 
 @Component({
     selector: 'app-manage',
@@ -64,11 +66,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadStaff = new Array<MasStaffModel>();
     typeheadRegion = new Array<RegionModel>();
     typeheadProduct = new Array<MasProductModel>();
-    typeheadQtyUnit = new Array<MasDutyProductUnitModel>();
-    typeheadNetVolumeUnit = new Array<MasDutyProductUnitModel>();
+    typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+    // typeheadNetVolumeUnit = new Array<MasDutyProductUnitModel>();
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
+    readonly contributerType = ContributorType;
 
     private onSaveSubscribe: any;
     private onDeleSubscribe: any;
@@ -121,7 +124,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private proveService: ProveService,
         public router: Router,
         private sidebarService: SidebarService,
-        private preloader: PreloaderService
+        private preloader: PreloaderService,
+        private mainMasterService: MainMasterService,
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -184,7 +188,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestStaff: this.fb.array([this.createStaffForm()]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
             ArrestLawbreaker: this.fb.array([]),
-            ArrestProduct: this.fb.array([this.createProductForm()]),
+            ArrestProduct: this.fb.array([]),
             ArrestIndictment: this.fb.array([]),
             ArrestDocument: this.fb.array([])
         })
@@ -282,8 +286,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                this.arrestFG.value.ArrestDate = setZeroHours(sDateCompare);
-                this.arrestFG.value.OccurrenceDate = setZeroHours(eDateCompare);
+                this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
+                this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
 
                 this.arrestFG.value.ArrestTime = (new Date()).toISOString();
 
@@ -325,64 +329,73 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+    // private async setOfficeStore() {
+    //     await this.arrestService.masOfficegetAll().then(res =>
+    //         this.typeheadOffice = res
+    //     )
+    // }
+
+    // private async setProductStore() {
+    //     await this.arrestService.masProductgetAll().then(res => {
+    //         this.typeheadProduct = res;
+    //     })
+    // }
+
+    // private async setProductUnitStore() {
+    //     await this.proveService.getProveProductUnit('').then(res => {
+    //         this.typeheadQtyUnit = res;
+    //         this.typeheadNetVolumeUnit = res;
+    //     })
+    // }
+
+    // private async setStaffStore() {
+    //     await this.arrestService.masStaffgetAll().then(res =>
+    //         this.typeheadStaff = res
+    //     )
+    // }
+
     private async setOfficeStore() {
-        await this.arrestService.masOfficegetAll().then(res =>
+        await this.mainMasterService.masOfficeMaingetAll().then(res =>
             this.typeheadOffice = res
         )
     }
 
+    private async setStaffStore() {
+        await this.mainMasterService.masStaffMaingetAll().then(res =>
+            this.typeheadStaff = res
+        )
+    }
+
     private async setProductStore() {
-        await this.arrestService.masProductgetAll().then(res => {
+        await this.mainMasterService.masProductMaingetAll().then(res => {
             this.typeheadProduct = res;
         })
     }
 
     private async setProductUnitStore() {
-        await this.proveService.getProveProductUnit('').then(res => {
-            this.typeheadQtyUnit = res;
-            this.typeheadNetVolumeUnit = res;
+        await this.mainMasterService.masDutyUnitMaingetAll().then(res => {
+            this.typeheadProductUnit = res;
         })
     }
 
-    private async setStaffStore() {
-        await this.arrestService.masStaffgetAll().then(res =>
-            this.typeheadStaff = res
-        )
-    }
-
     private async setRegionStore() {
-
-        await this.arrestService.masSubdistrictgetAll().then(res =>
-            this.subdistrict = res
-        )
-        await this.arrestService.masDistrictgetAll().then(res =>
-            this.district = res
-        )
-        await this.arrestService.masProvincegetAll().then(res =>
-            this.province = res
-        )
-
-        await this.subdistrict
-            .map(subdis =>
-                this.district
-                    .filter(dis => dis.DistrictCode == subdis.DistrictCode)
-                    .map(dis =>
-                        this.province
-                            .filter(pro => pro.ProvinceCode == dis.ProvinceCode)
-                            .map(pro => {
-                                let r = { ...subdis, ...dis, ...pro }
-                                this.typeheadRegion.push({
-                                    SubdistrictCode: r.SubdistrictCode,
-                                    SubdistrictNameTH: r.SubdistrictNameTH,
-                                    DistrictCode: r.DistrictCode,
-                                    DistrictNameTH: r.DistrictNameTH,
-                                    ProvinceCode: r.ProvinceCode,
-                                    ProvinceNameTH: r.ProvinceNameTH,
-                                    ZipCode: null
-                                })
-                            })
-                    )
+        await this.mainMasterService.masDistrictMaingetAll().then(res => {
+            res.map(prov =>
+                prov.MasDistrict.map(dis =>
+                    dis.MasSubDistrict.map(subdis => {
+                        this.typeheadRegion.push({
+                            SubdistrictCode: subdis.SubdistrictCode,
+                            SubdistrictNameTH: subdis.SubdistrictNameTH,
+                            DistrictCode: dis.DistrictCode,
+                            DistrictNameTH: dis.DistrictNameTH,
+                            ProvinceCode: prov.ProvinceCode,
+                            ProvinceNameTH: prov.ProvinceNameTH,
+                            ZipCode: null
+                        })
+                    })
+                )
             )
+        })
     }
 
     private getByCon(code: string) {
@@ -420,7 +433,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
 
                 item.IsNewItem = false;
-                item.ContributorID = item.ContributorID
+                item.ContributorID = item.ContributorID;
             });
 
             const lawbreaker = res.ArrestLawbreaker.filter(item => item.IsActive == 1);
@@ -619,11 +632,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             const lawbreaker = this.ArrestLawbreaker.value;
             lawbreaker.map(async item => {
-                
+
                 if (item.IsNewItem) {
                     await this.arrestService.lawbreakerinsAll(item).then(_lawbreaker => {
                         if (!_lawbreaker) { isSuccess = false; return; }
-                        
+
                     }, () => { isSuccess = false; return; });
 
                 } else {
@@ -718,12 +731,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setCancelButton(false);
     }
 
-    setNoticeForm(notice: Notice) {
+    async setNoticeForm(notice: Notice) {
         this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
 
         let locale = notice.NoticeLocale[0];
         let product = notice.NoticeProduct;
-        let lawbreaker = [];
 
         this.ArrestLocale.at(0).reset(locale);
         this.ArrestLocale.at(0).patchValue({
@@ -738,12 +750,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsArrest: 1
         })
 
-        product.map(item => {
+        await product.map(item => {
             item.ProductFullName = `${item.SubBrandNameTH == null ? '' : item.SubBrandNameTH}`;
             item.ProductFullName += ` ${item.BrandNameTH == null ? '' : item.BrandNameTH}`;
             item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
+            item.NetWeight = item.NetWeight || null;
+            item.NetWeightUnit = item.NetWeightUnit || null;
+            this.ArrestProduct.push(this.fb.group(item));
         })
-        this.ArrestProduct.reset(product);
+
         for (let i = 0; i < this.ArrestProduct.length; i++) {
             this.ArrestProduct.at(i).patchValue({
                 ArrestCode: this.arrestCode,
@@ -774,11 +789,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         e.map(item => {
             item.ArrestCode = this.arrestCode;
             item.IsNewItem = true;
+            item.LawbreakerRefID = item.LawbreakerID;
             this.ArrestLawbreaker.push(this.fb.group(item));
         })
-
-        console.log(this.ArrestLawbreaker.value);
-        
     }
 
 
@@ -1083,8 +1096,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     selectItemLocaleRegion(e) {
         this.ArrestLocale.at(0).patchValue({
-            SubDistrictCode: e.item.SubDistrictCode,
-            SubDistrict: e.item.SubDistrictNameTH,
+            SubDistrictCode: e.item.SubdistrictCode,
+            SubDistrict: e.item.SubdistrictNameTH,
             DistrictCode: e.item.DistrictCode,
             District: e.item.DistrictNameTH,
             ProvinceCode: e.item.ProvinceCode,
@@ -1099,9 +1112,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsNewItem: isNewItem || true,
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || 1,
-            IsDomestic: e.item.IsDomestic || 1,
-            NetWeight: e.item.NetWeight || 0,
-            NetWeightUnit: e.item.NetWeight || 0
+            IsDomestic: e.item.IsDomestic || 1
         })
     }
 
@@ -1118,8 +1129,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,
-            ContributorID: e.item.ContributorID == null ? 1 : e.item.ContributorID,
-            ContributorCode: e.item.ContributorCode == null ? 2 : e.item.ContributorCode
+            ContributorID: e.item.ContributorID || 2,
+            ContributorCode: e.item.ContributorCode || 2
 
         })
     }

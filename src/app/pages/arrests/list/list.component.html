@@ -29,14 +29,14 @@
                     <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
-                            <my-date-picker-th name="OccurrenceDateFrom" [options]="myDatePickerOptions"
-                            (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" 
+                            [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
 
                             <label for="OccurrenceDateTo">&nbsp;ถึง&nbsp;</label>
 
-                            <my-date-picker-th id="OccurrenceDateTo" name="OccurrenceDateTo" [options]="myDatePickerOptions"
-                            (dateChanged)="onEDateChange($event)" [(ngModel)]="OccurrenceDateTo"
-                            ></my-date-picker-th>
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" id="OccurrenceDateTo" 
+                            name="OccurrenceDateTo" [options]="myDatePickerOptions"
+                            (dateChanged)="onEDateChange($event)" [(ngModel)]="OccurrenceDateTo"></my-date-picker-th>
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-3">ชื่อผู้กล่าวหา :</label>

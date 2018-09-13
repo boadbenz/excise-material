@@ -4,7 +4,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
-import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate, setZeroHours, getDateMyDatepicker } from '../../../config/dateFormat';
+import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate, setZeroHours, getDateMyDatepicker, convertDateForSave } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
@@ -95,8 +95,8 @@ export class ListComponent implements OnInit, OnDestroy {
                 return
             }
 
-            form.value.OccurrenceDateFrom = setZeroHours(sdate);
-            form.value.OccurrenceDateTo = setZeroHours(edate);
+            form.value.OccurrenceDateFrom = convertDateForSave(sdate);
+            form.value.OccurrenceDateTo = convertDateForSave(edate);
         }
 
         this.paginage.TotalItems = 0;        
