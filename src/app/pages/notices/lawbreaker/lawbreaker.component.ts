@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel } from '../../../models';
+import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel, MasDistrictModel } from '../../../models';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -17,8 +17,9 @@ import { ILawbreaker, Lawbreaker } from './lawbreaker.interface';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { NoticeService } from '../notice.service';
 import { Message } from 'app/config/message';
-import { MyDatePickerOptions, getDateMyDatepicker, setZeroHours, setDateMyDatepicker } from '../../../config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, setZeroHours, setDateMyDatepicker, convertDateForSave } from '../../../config/dateFormat';
 import { ImageType } from '../../../config/imageType';
+import { MainMasterService } from '../../../services/main-master.service';
 
 
 @Component({
@@ -35,7 +36,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private fb: FormBuilder,
         private arrestService: ArrestsService,
-        private noticeService: NoticeService
+        private noticeService: NoticeService,
+        private mainMasterService: MainMasterService
     ) {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
@@ -196,9 +198,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 const passportDateIn = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateIn);
                 const passportDateOut = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut);
 
-                this.LawbreakerFG.value.BirthDate = setZeroHours(birthDay);
-                this.LawbreakerFG.value.PassportDateIn = setZeroHours(passportDateIn);
-                this.LawbreakerFG.value.passportDateOut = setZeroHours(passportDateOut);
+                this.LawbreakerFG.value.BirthDate = convertDateForSave(birthDay);
+                this.LawbreakerFG.value.PassportDateIn = convertDateForSave(passportDateIn);
+                this.LawbreakerFG.value.passportDateOut = convertDateForSave(passportDateOut);
 
                 if (this.mode === 'C') {
                     this.OnCreate();
@@ -309,38 +311,24 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     private async setRegionStore() {
-
-        let subdistrict: any[];
-        let district: any[];
-        let province: any[];
-
-        await this.arrestService.masSubdistrictgetAll().then(res =>
-            subdistrict = res
-        )
-        await this.arrestService.masDistrictgetAll().then(res =>
-            district = res
-        )
-        await this.arrestService.masProvincegetAll().then(res =>
-            province = res
-        )
-
-        await subdistrict
-            .map(subdis => district.filter(dis => dis.DistrictCode == subdis.districtCode)
-                .map(dis => province.filter(pro => pro.ProvinceCode == dis.ProvinceCode)
-                    .map(pro => {
-                        let r = { ...subdis, ...dis, ...pro }
+        await this.mainMasterService.masDistrictMaingetAll().then(res => {
+            res.map(prov =>
+                prov.MasDistrict.map(dis =>
+                    dis.MasSubDistrict.map(subdis => {
                         this.typeheadRegion.push({
-                            SubdistrictCode: r.subdistrictCode,
-                            SubdistrictNameTH: r.subdistrictNameTH,
-                            DistrictCode: r.DistrictCode,
-                            DistrictNameTH: r.DistrictNameTH,
-                            ProvinceCode: r.ProvinceCode,
-                            ProvinceNameTH: r.ProvinceNameTH,
+                            SubdistrictCode: subdis.SubdistrictCode,
+                            SubdistrictNameTH: subdis.SubdistrictNameTH,
+                            DistrictCode: dis.DistrictCode,
+                            DistrictNameTH: dis.DistrictNameTH,
+                            ProvinceCode: prov.ProvinceCode,
+                            ProvinceNameTH: prov.ProvinceNameTH,
                             ZipCode: null
                         })
                     })
                 )
             )
+
+        })
     }
 
     openOffenseDetailModal(e: any) {

@@ -17,6 +17,7 @@ import { ModalNoticeModule } from '../../component/modal-notice/modal-notice.mod
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 import { ProveService } from '../../prove/prove.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MainMasterService } from '../../../services/main-master.service';
 
 const routes: Routes = [
   {
@@ -58,6 +59,6 @@ const routes: Routes = [
   declarations: [
     ManageComponent
   ],
-  providers: [ArrestsService, ProveService]
+  providers: [ArrestsService, ProveService, MainMasterService]
 })
 export class ManageModule { }
