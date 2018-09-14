@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
+import { LawsuitService } from "../lawsuit.service";
+import {Observable} from 'rxjs/Rx';
 @Component({
-  selector: 'app-print-doc-modal',
+  selector: 'app-print-lawsuit-modal',
   templateUrl: './print-doc-modal.component.html',
   styleUrls: ['./print-doc-modal.component.scss']
 })
-export class PrintDocModalComponent implements OnInit {
+export class PrintLawsuitModalComponent implements OnInit {
 
   printDoc = [
     {
@@ -22,9 +23,21 @@ export class PrintDocModalComponent implements OnInit {
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
 
+  private lawsuitid: any;
+  private lawsuitService: LawsuitService
+
   constructor() { }
 
   ngOnInit() {
+    this.lawsuitService.LawsuitCompareDocumentgetByCon(this.lawsuitid).then(
+      data => {
+      this.printDoc = data || [ ];
+      return true;
+      },
+    );
+    /*this.lawsuitService.LawsuitCompareDocumentgetByCon(this.lawsuitid).then(res => {
+      this.printDoc = res || [ ];
+    });*/
   }
 
   onPrint(f: any) {
