@@ -1,3 +1,6 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+  <app-print-lawsuit-modal (c)="modal.close()" (d)="modal.dismiss()"></app-print-lawsuit-modal>
+</ng-template>
 <div class="wizard-content">
   <div class="wizard-circle wizard clearfix clearfix">
     <div class="steps tab-wizard">
