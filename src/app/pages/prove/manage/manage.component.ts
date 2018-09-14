@@ -397,9 +397,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.oProve.ProveScience[0].ProveScienceDate = cProveDate;
                 this.oProve.ProveScience[0].ProveScienceTime = this.ProveTime;
             }
-            else {
-                this.oProve.ProveScience[0].ProveScienceDate = cProveDate;
-            }
         }
 
 
@@ -717,7 +714,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.preloader.setShowPreloader(true);
         await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
             if (res != null) {
-                debugger
+                
                 this.oProve = res;
 
                 var PRN = this.oProve.ProveReportNo.split('/');
@@ -774,6 +771,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.oProve.ProveProduct[i].ProductSeq = i;
                 }
 
+                debugger
+                
                 this.oProve.ProveScience.map(item => {
                     item.DeliveryDocNo = `${item.DeliveryDocNo == null ? '' : item.DeliveryDocNo}`;
                     item.ProveScienceDate = `${item.ProveScienceDate == null ? '' : item.ProveScienceDate}`;
@@ -1196,7 +1195,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             cDateScience = DDate.year + '-' + DDate.month + '-' + DDate.day + ' ' + this.DeliveryTime;
         }
 
-        this.oProveScience.ProveScienceDate = this.oProve.DeliveryDate = cDateScience;;
+        this.oProveScience.ProveScienceDate  = cDateScience;
         this.oProveScience.ProveScienceTime = this.ProveScienceTime;
 
         if (this.oProve.ProveScience.length > 0) {
