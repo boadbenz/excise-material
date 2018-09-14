@@ -4,12 +4,11 @@ import { toLocalShort, toTimeShort } from "../../../config/dateFormat";
 import { LawsuitService } from "../lawsuit.service";
 import { Lawsuit } from "../models/lawsuit";
 import { Router, ActivatedRoute } from "@angular/router";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit ,ViewChild, ElementRef } from "@angular/core";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { Arrest } from "../../arrests/arrest";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormBuilder } from "@angular/forms";
-import { NoticeService } from "../../notices/notice.service";
 import { PreloaderService } from "../../../shared/preloader/preloader.component";
 import { SidebarService } from "../../../shared/sidebar/sidebar.component";
 import { ArrestsService } from "../../arrests/arrests.service";
@@ -26,8 +25,10 @@ export class ManageComponent implements OnInit {
   masLawGuitBaseList: MasLawGuitBase[] = [];
   arrestList: Arrest[] = [];
   errorShow: any;
+  modal: any;
   private getDataFromListPage: any;
-
+  private onPrintSubscribe: any;
+  @ViewChild('printDocModal') printDocModel: ElementRef;
   constructor(
     private activeRoute: ActivatedRoute,
     private suspectModalService: NgbModal,
@@ -51,9 +52,19 @@ export class ManageComponent implements OnInit {
     this.sidebarService.setVersion('0.0.0.3');
     // this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
+    this.navigate_service();
     // this.preLoaderService.setShowPreloader(false);
   }
+  private navigate_service() {
+    this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+        if (status) {
+            await this.navService.setOnPrint(false);
+            this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        }
+    })
 
+    
+  } 
   private setShowButton() {
     this.navService.setPrintButton(true);
     this.navService.setNewButton(false);
@@ -68,7 +79,6 @@ export class ManageComponent implements OnInit {
     this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
       async params => {
         this.preLoaderService.setShowPreloader(true);
-
         // ArrestgetByCon
         await this.lawsuitService.ArrestgetByCon(params.code).then(res => {
           this.arrestList = res || [ ];
@@ -84,7 +94,7 @@ export class ManageComponent implements OnInit {
         // LawsuitgetByCon
         await this.lawsuitService.LawsuitgetByCon(params.id).then(res => {
           this.lawsuitList = res || [ ];
-
+          
           if (res) {
             this.lawsuitList.map((data, index) => {
               data.RowsId = index + 1;
@@ -150,5 +160,7 @@ export class ManageComponent implements OnInit {
 
   ngOnDestroy() {
     this.getDataFromListPage.unsubscribe();
+    this.onPrintSubscribe.unsubscribe();
   }
+
 }
