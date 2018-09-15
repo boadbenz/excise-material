@@ -141,9 +141,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.sidebarService.setVersion('0.0.0.10');
 
+        this.arrestFG = this.createForm();
         this.active_route();
         this.navigate_Service();
-        this.arrestFG = this.createForm();
 
         await this.setStaffStore()
         await this.setOfficeStore()
@@ -329,30 +329,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    // private async setOfficeStore() {
-    //     await this.arrestService.masOfficegetAll().then(res =>
-    //         this.typeheadOffice = res
-    //     )
-    // }
-
-    // private async setProductStore() {
-    //     await this.arrestService.masProductgetAll().then(res => {
-    //         this.typeheadProduct = res;
-    //     })
-    // }
-
-    // private async setProductUnitStore() {
-    //     await this.proveService.getProveProductUnit('').then(res => {
-    //         this.typeheadQtyUnit = res;
-    //         this.typeheadNetVolumeUnit = res;
-    //     })
-    // }
-
-    // private async setStaffStore() {
-    //     await this.arrestService.masStaffgetAll().then(res =>
-    //         this.typeheadStaff = res
-    //     )
-    // }
 
     private async setOfficeStore() {
         await this.mainMasterService.masOfficeMaingetAll().then(res =>
@@ -401,32 +377,32 @@ export class ManageComponent implements OnInit, OnDestroy {
     private getByCon(code: string) {
 
         this.arrestService.getByCon(code).then(async res => {
-
+            let o = res[0];
             await this.arrestFG.reset({
-                ArrestCode: res.ArrestCode,
-                ArrestDate: setDateMyDatepicker(new Date(res.ArrestDate)),
-                ArrestTime: res.ArrestTime,
-                OccurrenceDate: setDateMyDatepicker(new Date(res.OccurrenceDate)),
-                OccurrenceTime: res.OccurrenceTime,
-                ArrestStationCode: res.ArrestStationCode,
-                ArrestStation: res.ArrestStation,
-                HaveCulprit: res.HaveCulprit,
-                Behaviour: res.Behaviour,
-                Testimony: res.Testimony,
-                Prompt: res.Prompt,
-                IsMatchNotice: res.IsMatchNotice,
-                ArrestDesc: res.ArrestDesc,
-                NoticeCode: res.NoticeCode,
-                InvestigationSurveyDocument: res.InvestigationSurveyDocument,
-                InvestigationCode: res.InvestigationCode,
-                IsActive: res.IsActive
+                ArrestCode: o.ArrestCode,
+                ArrestDate: setDateMyDatepicker(new Date(o.ArrestDate)),
+                ArrestTime: o.ArrestTime,
+                OccurrenceDate: setDateMyDatepicker(new Date(o.OccurrenceDate)),
+                OccurrenceTime: o.OccurrenceTime,
+                ArrestStationCode: o.ArrestStationCode,
+                ArrestStation: o.ArrestStation,
+                HaveCulprit: o.HaveCulprit,
+                Behaviour: o.Behaviour,
+                Testimony: o.Testimony,
+                Prompt: o.Prompt,
+                IsMatchNotice: o.IsMatchNotice,
+                ArrestDesc: o.ArrestDesc,
+                NoticeCode: o.NoticeCode,
+                InvestigationSurveyDocument: o.InvestigationSurveyDocument,
+                InvestigationCode: o.InvestigationCode,
+                IsActive: o.IsActive
             });
-            res.ArrestLocale.map(item => {
+            o.ArrestLocale.map(item => {
                 item.ArrestCode = item.ArrestCode || code;
                 item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`;
             });
 
-            const staff = res.ArrestStaff.filter(item => item.IsActive == 1);
+            const staff = o.ArrestStaff.filter(item => item.IsActive == 1);
             staff.map(item => {
                 item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
                 item.FullName += ` ${item.FirstName == null ? '' : item.FirstName}`;
@@ -436,7 +412,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.ContributorID = item.ContributorID;
             });
 
-            const lawbreaker = res.ArrestLawbreaker.filter(item => item.IsActive == 1);
+            const lawbreaker = o.ArrestLawbreaker.filter(item => item.IsActive == 1);
             lawbreaker.map(item => {
                 item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
                 item.LawbreakerFullName += ` ${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
@@ -451,7 +427,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.IsNewItem = false;
             });
 
-            const product = res.ArrestProduct.filter(item => item.IsActive == 1);
+            const product = o.ArrestProduct.filter(item => item.IsActive == 1);
             product.map(item => {
                 item.IsNewItem = false;
                 item.ProductFullName = `${item.SubBrandNameTH == null ? '' : item.SubBrandNameTH}`;
@@ -459,14 +435,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
             });
 
-            const indictment = res.ArrestIndictment.filter(item => item.IsActive == 1);
+            const indictment = o.ArrestIndictment.filter(item => item.IsActive == 1);
             indictment.map(async item => {
                 item.IsNewItem = false
                 item.SectionName = item.SectionName ? item.SectionName : null;
                 let _IndictmentLawbreaker = new Array<IndictmentLawbreaker>();
 
                 // await item.OpsArrestIndicmentDetailCollection.map(a1 => {
-                //     let _lawbreaker = res.ArrestLawbreaker.filter(a2 => a2.LawbreakerID == a1.LawbreakerID);
+                //     let _lawbreaker = o.ArrestLawbreaker.filter(a2 => a2.LawbreakerID == a1.LawbreakerID);
                 //     _IndictmentLawbreaker.push({
                 //         LawbreakerID: a1.LawbreakerID.toString(),
                 //         LawbreakerFullName: _lawbreaker.length ? _lawbreaker[0].LawbreakerFullName : null,
@@ -495,7 +471,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             })
 
             this.setItemFormArray(staff, 'ArrestStaff');
-            this.setItemFormArray(res.ArrestLocale, 'ArrestLocale');
+            this.setItemFormArray(o.ArrestLocale, 'ArrestLocale');
             this.setItemFormArray(lawbreaker, 'ArrestLawbreaker');
             this.setItemFormArray(product, 'ArrestProduct');
 
