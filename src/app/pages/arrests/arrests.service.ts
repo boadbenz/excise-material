@@ -72,7 +72,7 @@ export class ArrestsService {
     getByCon(ArrestCode: string): Promise<Arrest> {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestgetByCon`;
-        return this.resposePromisGet(JSON.stringify(params), url)
+        return this.resposePromisGetList(JSON.stringify(params), url)
     }
 
     updDelete(ArrestCode: string): Promise<any> {
