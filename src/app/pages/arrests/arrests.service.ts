@@ -45,7 +45,6 @@ export class ArrestsService {
 
     private async resposePromisGetList(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        debugger
         if (!res.length || res.IsSuccess == 'False') {
             return [];
         }
@@ -73,7 +72,7 @@ export class ArrestsService {
     getByCon(ArrestCode: string): Promise<Arrest> {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestgetByCon`;
-        return this.resposePromisGet(JSON.stringify(params), url)
+        return this.resposePromisGetList(JSON.stringify(params), url)
     }
 
     updDelete(ArrestCode: string): Promise<any> {
@@ -254,7 +253,7 @@ export class ArrestsService {
 
     //-- Mas --//
     masLawbreakergetByConAdv(Textsearch: any): Promise<any[]> {
-        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByKeyword`;
+        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByConAdv`;
         return this.resposePromisGetList(Textsearch, url);
     }
 

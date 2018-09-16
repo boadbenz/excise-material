@@ -8,9 +8,9 @@ import { ArrestDocument } from './arrest-document';
 export class Arrest {
     RowsId: number;
     ArrestCode: string;
-    ArrestDate: string;
+    ArrestDate: any;
     ArrestTime: string;
-    OccurrenceDate: string;
+    OccurrenceDate: any;
     OccurrenceTime: string;
     ArrestStationCode: string;
     ArrestStation: string;

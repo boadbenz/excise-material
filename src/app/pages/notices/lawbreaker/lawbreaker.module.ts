@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { NoticeService } from '../notice.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MainMasterService } from '../../../services/main-master.service';
 
 const routes: Routes = [
     {
@@ -47,7 +48,8 @@ const routes: Routes = [
     declarations: [LawbreakerComponent],
     providers: [
         ArrestsService,
-        NoticeService
+        NoticeService,
+        MainMasterService
     ]
 })
 export class LawbreakerModule { }
