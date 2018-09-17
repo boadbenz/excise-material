@@ -1240,6 +1240,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private onDeleteProduct(i: number) {
         if (confirm(Message.confirmDeleteProduct)) {
+            debugger
             var aIndex;
             aIndex = this.getIndexOf(this.oProve.ProveProduct, i, "ProductSeq");
 
