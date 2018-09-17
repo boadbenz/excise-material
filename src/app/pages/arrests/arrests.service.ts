@@ -213,6 +213,34 @@ export class ArrestsService {
     }
     //-- Arrest Notice --//
 
+    async ArrestLawbreakerinsAll(lawbreaker: ArrestLawbreaker): Promise<ArrestLawbreaker> {
+        const params = lawbreaker;
+        const url = `${appConfig.api7788}/ArrestLawbreakerinsAll`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess || !res.ResponseData) {
+            return new ArrestLawbreaker();
+        }
+        return res.ResponseData;
+    }
+
+    async ArrestLawbreakergetByCon(LawbreakerID: string): Promise<ArrestLawbreaker> {
+        const params = { LawbreakerID };
+        const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess || !res.ResponseData) {
+            return new ArrestLawbreaker();
+        }
+        return res.ResponseData;
+    }
+
+    ArrestLawbreakerupdByCon(lawbreaker: ArrestLawbreaker): Promise<boolean> {
+        const params = lawbreaker;
+        const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
     //-- Document --//
     async getDocument(ReferenceCode: string): Promise<ArrestDocument[]> {
         const params = { ReferenceCode };

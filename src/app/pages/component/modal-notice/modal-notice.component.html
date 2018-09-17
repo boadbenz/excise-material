@@ -22,6 +22,9 @@
         </a>
     </div>
 </div>
+
+<h5 class="text-right mt-3 pr-3">XCS60-03-02-00-00</h5>
+
 <div class="modal-body font-14">
     <div *ngIf="advSearch" class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
@@ -32,6 +35,7 @@
             </div>
             <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
         </div>
+
         <div class="card-body">
             <form class="form-horizontal" *ngIf="advSearch" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
                 <div>
@@ -39,20 +43,25 @@
                         <label for="" class="col-lg-2 col-sm-3">เลขที่ใบแจ้งความ :</label>
                         <div class="col-lg-4 col-md-7 col-sm-9">
                             <div class="form-group">
-                                <input type="text" name="NoticeCode" ngModel class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
+                                <input type="text" name="NoticeCode" ngModel class="form-control form-control-sm">
                             </div>
                         </div>
 
                         <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
                         <div class="col-lg-4 col-md-7 col-sm-9">
                             <div class="form-group input-group">
-                                <input type="date" name="DateStartFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป" [ngClass]="{'ng-touched':isRequired}"
-                                    required>
+                                <my-date-picker-th class="form-control form-control-sm unset-form-control" name="DateStartFrom"
+                                    [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)" [(ngModel)]="dateStartFrom"></my-date-picker-th>
+
+                                <label for="">&nbsp;ถึง&nbsp;</label>
+
+                                <my-date-picker-th class="form-control form-control-sm unset-form-control" name="DateStartTo"
+                                    [options]="myDatePickerOptions" (dateChanged)="onEDateChange($event)" [(ngModel)]="dateStartTo"></my-date-picker-th>
+                                <!-- <input type="date" name="DateStartFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
 
                                 <label for="">&nbsp; ถึง &nbsp;</label>
 
-                                <input type="date" name="DateStartTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป" [ngClass]="{'ng-touched':isRequired}"
-                                    required>
+                                <input type="date" name="DateStartTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"> -->
                             </div>
                         </div>
                     </div>
@@ -61,15 +70,13 @@
                         <label for="" class="col-lg-2 col-sm-3">ชื่อผู้รับแจ้ง :</label>
                         <div class="col-lg-4 col-md-7 col-sm-9">
                             <div class="form-group">
-                                <input type="text" name="StaffName" ngModel class="form-control form-control-sm" placeholder="" [ngClass]="{'ng-touched':isRequired}"
-                                    required>
+                                <input type="text" name="StaffName" ngModel class="form-control form-control-sm">
                             </div>
                         </div>
                         <label for="" class="col-lg-2 col-sm-3">หน่วยงาน :</label>
                         <div class="col-lg-4 col-md-7 col-sm-9">
                             <div class="form-group">
-                                <input type="text" name="DepartmentName" ngModel class="form-control form-control-sm" placeholder="" [ngClass]="{'ng-touched':isRequired}"
-                                    required>
+                                <input type="text" name="DepartmentName" ngModel class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>
@@ -78,8 +85,7 @@
                         <label for="" class="col-lg-2 col-sm-3">ผู้ต้องสงสัย :</label>
                         <div class="col-lg-4 col-md-7 col-sm-9">
                             <div class="form-group">
-                                <input type="text" name="SuspectName" ngModel class="form-control form-control-sm" placeholder="" [ngClass]="{'ng-touched':isRequired}"
-                                    required>
+                                <input type="text" name="SuspectName" ngModel class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>
@@ -113,9 +119,8 @@
                     <tbody formArrayName="NoticeList">
                         <tr *ngFor="let item of NoticeList.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">
-                                <input name="IsChecked" formControlName="IsChecked" 
-                                type="radio" id="td{{i}}" (change)="setIsChecked(i)"
-                                class="with-gap radio-col-indigo">
+                                <input name="IsChecked" formControlName="IsChecked" type="radio" id="td{{i}}" (change)="setIsChecked(i)"
+                                    class="with-gap radio-col-indigo">
                                 <label for="td{{i}}" class="m-0"></label>
                             </td>
                             <td class="text-center">{{item.get('RowId').value}}</td>

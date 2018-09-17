@@ -285,15 +285,15 @@
                             <td>{{item.get('LawbreakerRefID').value}}</td>
                             <td>
                                 <span *ngIf="item.get('EntityType').value == 0">
-                                    {{item.get('CompanyFullName').value}}
+                                    {{item.get('LawbreakerFullName').value}}
                                 </span>
                                 <span *ngIf="item.get('EntityType').value == 1">
-                                    {{item.get('LawbreakerFullName').value}}
+                                    {{item.get('CompanyFullName').value}}
                                 </span>
                             </td>
                             <td>{{i+1}}</td>
                             <td class="text-center">
-                                <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="viewLawbreaker(item.get('LawbreakerID').value)">
+                                <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="openModal(lawbreaker)">
                                     <i class="fa fa-eye fa-lg"></i>
                                 </a>
                             </td>
