@@ -4,13 +4,14 @@ import { Message } from "../../../config/message";
 import { LawsuitService } from "../lawsuit.service";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
-import {compareDate, getDateMyDatepicker, setZeroHours, toLocalShort} from "../../../config/dateFormat";
+import { compareDate, getDateMyDatepicker, setZeroHours, toLocalShort } from "../../../config/dateFormat";
 import { Notice } from "../../notices/notice";
 import { PreloaderService } from "../../../shared/preloader/preloader.component";
 import { SidebarService } from "../../../shared/sidebar/sidebar.component";
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
+import { PaginationTableComponent } from "../../component/pagination-table/pagination-table.component";
 
 @Component({
   selector: "app-list",
@@ -18,6 +19,8 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
   styleUrls: ["./list.component.scss"]
 })
 export class ListComponent implements OnInit, OnDestroy {
+
+  @ViewChild(PaginationTableComponent) paginator: PaginationTableComponent;
 
   results: Lawsuit[] = [];
   resultsPerPage: Lawsuit[] = [];
@@ -80,9 +83,11 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async onAdvSearch(form: any) {
+    console.log();
+    console.log();
     /* Clear Time */
-    form.value.LawsuitDateFrom = setZeroHours(getDateMyDatepicker(form.value.lawsuitDateFrom));
-    form.value.LawsuitDateTo = setZeroHours(getDateMyDatepicker(form.value.lawsuitDateTo));
+    form.value.LawsuitDateFrom = form.value.LawsuitDateFrom? new Date(getDateMyDatepicker(form.value.LawsuitDateFrom)): "";
+    form.value.LawsuitDateTo = form.value.LawsuitDateTo? new Date(getDateMyDatepicker(form.value.LawsuitDateTo)): "";
     /* Query (Advance Search) */
     this.preLoaderService.setShowPreloader(true);
     await this.lawsuitService.LawsuitgetByConAdv(form.value).then(list => this.onSearchComplete(list));
@@ -99,19 +104,20 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private onSearchComplete(list: Lawsuit[]) {
-    /* Alert When No Data To Show */
-    if (!list.length) {
-      alert(Message.noRecord);
-      return false;
-    }
     /* Adjust Another Column */
     this.results = list.map((item, i) => {
       item.RowsId = i + 1;
       item.LawsuitDate = toLocalShort(item.LawsuitDate);
       return item;
     });
-    /* Set Total Record */
+    /* Reload Data & Set Total Record */
+    this.paginator.changePage();
     this.paginage.TotalItems = this.results.length;
+    /* Alert When No Data To Show */
+    if (!list.length) {
+      alert(Message.noRecord);
+      return false;
+    }
   }
 
   private viewData(item) {

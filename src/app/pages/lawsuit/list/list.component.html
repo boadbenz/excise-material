@@ -36,13 +36,13 @@
                   <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
                   <div class="col-md-4">
                     <my-date-picker-th name="LawsuitDateFrom" [options]="datePickerOptions"
-                                       (dateChanged)="onLawsuitDateFromChange(advForm, $event)" [(ngModel)]="lawsuitDateFrom"></my-date-picker-th>
+                                       (dateChanged)="onLawsuitDateFromChange(advForm, $event)" ngModel></my-date-picker-th>
                     <!--<input class="form-control" type="date" ngModel name="LawsuitDateFrom">-->
                   </div>
                   <label class="col-form-label text-right col-md-1 px-0">ถึง : </label>
                   <div class="col-md-4">
                     <my-date-picker-th name="LawsuitDateTo" [options]="datePickerOptions"
-                                       (dateChanged)="onLawsuitDateToChange(advForm, $event)" [(ngModel)]="lawsuitDateTo"></my-date-picker-th>
+                                       (dateChanged)="onLawsuitDateToChange(advForm, $event)" ngModel></my-date-picker-th>
                     <!--<input class="form-control" type="date" ngModel name="LawsuitDateTo">-->
                   </div>
                 </div>
