@@ -158,7 +158,7 @@ export class DetailComponent implements OnInit {
             this.lawsuitList.map(data => {
               data.LawsuitDate = toLocalNumeric(data.LawsuitDate);
               data.LawsuitTime = toTimeShort(data.LawsuitTime);
-              data.LawsuiteStaff.map(staff => {
+              data.LawsuitStaff.map(staff => {
                 staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
                   staff.LastName
                   }`;
