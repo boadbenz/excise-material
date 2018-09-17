@@ -31,8 +31,8 @@ export class ListComponent implements OnInit, OnDestroy {
   advSearch: any;
   paginage = pagination;
 
-  lawsuitDateFrom: any;
-  lawsuitDateTo: any;
+  // lawsuitDateFrom: any;
+  // lawsuitDateTo: any;
 
   datePickerOptions: IMyOptions = {
     dateFormat: 'dd mmm yyyy',
@@ -83,14 +83,16 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async onAdvSearch(form: any) {
-    console.log();
-    console.log();
-    /* Clear Time */
-    form.value.LawsuitDateFrom = form.value.LawsuitDateFrom? new Date(getDateMyDatepicker(form.value.LawsuitDateFrom)): "";
-    form.value.LawsuitDateTo = form.value.LawsuitDateTo? new Date(getDateMyDatepicker(form.value.LawsuitDateTo)): "";
     /* Query (Advance Search) */
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.LawsuitgetByConAdv(form.value).then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitgetByConAdv({
+      ArrestCode: form.value.ArrestCode,
+      LawsuitNo: form.value.LawsuitNo,
+      LawsuitDateFrom: form.value.LawsuitDateFrom? new Date(getDateMyDatepicker(form.value.LawsuitDateFrom)): "",
+      LawsuitDateTo: form.value.LawsuitDateTo? new Date(getDateMyDatepicker(form.value.LawsuitDateTo)): "",
+      StaffName: form.value.StaffName,
+      OfficeName: form.value.OfficeName,
+    }).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
 
@@ -138,9 +140,10 @@ export class ListComponent implements OnInit, OnDestroy {
     if ((event && form.value.LawsuitDateTo)
         && !compareDate(getDateMyDatepicker(event), getDateMyDatepicker(form.value.LawsuitDateTo))) {
       alert(Message.checkDate);
-      setTimeout(() => {
-        this.lawsuitDateTo = { date: event.date };
-      }, 0);
+      // setTimeout(() => {
+      //   form.controls['LawsuitDateTo'].setValue(new Date());
+      //   this.lawsuitDateTo = { date: event.date };
+      // }, 0);
       return false;
     }
   }
@@ -149,9 +152,9 @@ export class ListComponent implements OnInit, OnDestroy {
     if ((form.value.LawsuitDateFrom && event)
         && !compareDate(getDateMyDatepicker(form.value.LawsuitDateFrom), getDateMyDatepicker(event))) {
       alert(Message.checkDate);
-      setTimeout(() => {
-        this.lawsuitDateTo = { date: form.value.LawsuitDateFrom.date };
-      }, 0);
+      // setTimeout(() => {
+      //   this.lawsuitDateTo = { date: form.value.LawsuitDateFrom.date };
+      // }, 0);
       return false;
     }
   }

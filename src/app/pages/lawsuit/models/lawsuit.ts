@@ -21,7 +21,7 @@ export class Lawsuit {
   public IsActive: number;
   public LawsuitType: number;
   public LawsuitEnd: number;
-  public LawsuiteStaff: Array<LawsuiteStaff>;
+  public LawsuitStaff: Array<LawsuiteStaff>;
   public LawsuitJudgement: Array<LawsuitJudgement>;
 }
 

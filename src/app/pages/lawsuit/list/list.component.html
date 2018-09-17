@@ -36,13 +36,15 @@
                   <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
                   <div class="col-md-4">
                     <my-date-picker-th name="LawsuitDateFrom" [options]="datePickerOptions"
-                                       (dateChanged)="onLawsuitDateFromChange(advForm, $event)" ngModel></my-date-picker-th>
+                                       (dateChanged)="onLawsuitDateFromChange(advForm, $event)"
+                                       ngModel></my-date-picker-th>
                     <!--<input class="form-control" type="date" ngModel name="LawsuitDateFrom">-->
                   </div>
                   <label class="col-form-label text-right col-md-1 px-0">ถึง : </label>
                   <div class="col-md-4">
                     <my-date-picker-th name="LawsuitDateTo" [options]="datePickerOptions"
-                                       (dateChanged)="onLawsuitDateToChange(advForm, $event)" ngModel></my-date-picker-th>
+                                       (dateChanged)="onLawsuitDateToChange(advForm, $event)"
+                                       ngModel></my-date-picker-th>
                     <!--<input class="form-control" type="date" ngModel name="LawsuitDateTo">-->
                   </div>
                 </div>
@@ -78,44 +80,47 @@
         <div class="table-responsive table-striped">
           <table class="table">
             <thead>
-              <tr>
-                <th class="footable-sortable text-center">ลำดับ</th>
-                <th class="footable-sortable">เลขที่ใบงาน</th>
-                <th class="footable-sortable">เลขที่คดีรับคำกล่าวโทษ</th>
-                <th class="footable-sortable">วันที่รับคดี</th>
-                <th class="footable-sortable">ชื่อผู้รับคดี</th>
-                <th class="footable-sortable">หน่วยงาน</th>
-                <th class="footable-sortable"></th>
-              </tr>
+            <tr>
+              <th class="footable-sortable text-center">ลำดับ</th>
+              <th class="footable-sortable">เลขที่ใบงาน</th>
+              <th class="footable-sortable">เลขที่คดีรับคำกล่าวโทษ</th>
+              <th class="footable-sortable">วันที่รับคดี</th>
+              <th class="footable-sortable">ชื่อผู้รับคดี</th>
+              <th class="footable-sortable">หน่วยงาน</th>
+              <th class="footable-sortable"></th>
+            </tr>
             </thead>
             <tbody>
-              <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
-                <td class="text-center">{{ item.RowsId || '' }}</td>
-                <td>{{ item.ArrestCode || '-' }}</td>
-                <td>{{ item.LawsuitNo || '-' }}</td>
-                <td>{{ item.LawsuitDate || '-' }}</td>
-                <td>
-                  <div *ngFor="let staff of item.LawsuiteStaff;">
-                    {{ (staff.TitleName || '') + (staff.FullName || '') + ' ' + (staff.LastName || '')}}
-                  </div>
-                </td>
-                <td>
-                  <div *ngFor="let staff of item.LawsuiteStaff;">
-                    {{ (staff.DepartmentName || '-') }}
-                  </div>
-                </td>
-                <td>
-                  <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)">
-                    <i class="mdi mdi-eye fa-lg"></i>
-                  </a>
-                </td>
-              </tr>
+            <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
+              <td class="text-center">{{ item.RowsId || '' }}</td>
+              <td>{{ item.ArrestCode || '-' }}</td>
+              <td>{{ item.LawsuitNo || '-' }}</td>
+              <td>{{ item.LawsuitDate || '-' }}</td>
+              <td>
+                <div *ngFor="let staff of item.LawsuitStaff; let last = last">
+                  {{ (staff.TitleName || '') + (staff.FullName || '') + ' ' + (staff.LastName || '')}}{{last? '' : ',
+                  '}}
+                </div>
+              </td>
+              <td>
+                <div *ngFor="let staff of item.LawsuitStaff; let last = last">
+                  {{ (staff.DepartmentName || '-') }}{{last? '' : ', '}}
+                </div>
+              </td>
+              <td>
+                <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)">
+                  <i class="mdi mdi-eye fa-lg"></i>
+                </a>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
         <div class="card-footer card-footer-unset">
-          <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
-            [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+          <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage"
+                                [PageSize]="paginage.PageSize"
+                                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)"
+                                #paginator>
           </app-pagination-table>
         </div>
       </div>
