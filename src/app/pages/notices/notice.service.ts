@@ -43,14 +43,26 @@ export class NoticeService {
     async getByKeywordOnInt(): Promise<Notice[]> {
         const params = { 'Textsearch': '' };
         const url = `${appConfig.api8082}/NoticegetByKeyword`;
-        return this.resposePromisGet(JSON.stringify(params), url);
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+
+        if (res.IsSuccess == 'False' || !res.Notice.length) {
+            return new Array<Notice>();
+        }
+
+        return res.Notice;
     }
 
-    getByKeyword(Textsearch: any): Promise<Notice[]> {
+    async getByKeyword(Textsearch: any): Promise<Notice[]> {
         debugger
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api8082}/NoticegetByKeyword`;
-        return this.resposePromisGet(JSON.stringify(params), url)
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+
+        if (res.IsSuccess == 'False' || !res.Notice.length) {
+            return new Array<Notice>();
+        }
+
+        return res.Notice;
     }
 
     getByConAdv(form: any): Promise<Notice[]> {
@@ -63,10 +75,10 @@ export class NoticeService {
         const url = `${appConfig.api8082}/NoticegetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         
-        if (!res.ResponseData) {
+        if (!res.Notice) {
             return new Notice();
         }
-        return res.ResponseData 
+        return res.Notice 
     }
 
     // async getLawbreakerByCon(LawbreakerID: string): Promise<Lawbreaker> {

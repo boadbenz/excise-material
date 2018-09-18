@@ -145,11 +145,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.active_route();
         this.navigate_Service();
 
-        // await this.setStaffStore()
-        // await this.setOfficeStore()
-        // await this.setProductStore()
-        // await this.setProductUnitStore()
-        // await this.setRegionStore()
+        await this.setStaffStore()
+        await this.setOfficeStore()
+        await this.setProductStore()
+        await this.setProductUnitStore()
+        await this.setRegionStore()
 
         this.preloader.setShowPreloader(false);
     }

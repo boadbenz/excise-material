@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-5">
             <h4 class="modal-title text-white">เพิ่มผู้ต้องหา
-                <a href="javaScript:void(0);" class="btn btn-ghost" (click)="dismiss('Cross click')" [routerLink]="['/arrest/lawbreaker/c/new']">
+                <a href="javaScript:void(0);" class="btn btn-ghost" (click)="dismiss('Cross click')" [routerLink]="['/arrest/lawbreaker/C/NEW']">
                     <i class="ti-plus"></i>
                     สร้างข้อมูล
                 </a>
@@ -27,6 +27,7 @@
         </a>
     </div>
 </div>
+
 
 <h5 class="text-right mt-3 pr-3">XCS60-03-02-03-00</h5>
 <div class="modal-body font-14">
@@ -111,7 +112,7 @@
                                 <label for="th" class="m-t-10 m-b-0"></label>
                             </th>
                             <th>ลำดับ</th>
-                            <th>ประเภทผู้ต้องสงสัย</th>
+                            <th>ประเภทผู้ต้องหา</th>
                             <th>ประเภทบุคคล</th>
                             <th>หมายเลขอ้างอิง</th>
                             <th>ชื่อผู้ต้องสงสัย</th>
@@ -122,8 +123,7 @@
                     <tbody formArrayName="Lawbreaker">
                         <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">
-                                <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo" 
-                                [checked]="isCheckAll">
+                                <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo" [checked]="isCheckAll">
                                 <label [for]="'td'+i" class="m-0"></label>
                             </td>
                             <td>{{item.get('RowId').value}}</td>
@@ -132,10 +132,10 @@
                             <td>{{item.get('LawbreakerID').value}}</td>
                             <td>
                                 <span *ngIf="item.get('EntityType').value == 0">
-                                    {{item.get('CompanyFullName').value}}
+                                    {{item.get('LawbreakerFullName').value}}
                                 </span>
                                 <span *ngIf="item.get('EntityType').value == 1">
-                                    {{item.get('LawbreakerFullName').value}}
+                                    {{item.get('CompanyFullName').value}}
                                 </span>
                             </td>
                             <td>{{i+1}}</td>

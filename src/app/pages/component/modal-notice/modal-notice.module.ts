@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationTableModule } from '../pagination-table/pagination-table.module';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { NoticeService } from '../../notices/notice.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { NoticeService } from '../../notices/notice.service';
     FormsModule,
     ReactiveFormsModule,
     CardActionsModule,
-    PaginationTableModule
+    PaginationTableModule, 
+    MyDatePickerTHModule
   ],
   declarations: [ModalNoticeComponent],
   exports: [ModalNoticeComponent],
