@@ -47,7 +47,8 @@ const routes: Routes = [
     declarations: [LawbreakerComponent],
     providers: [
         ArrestsService,
-        MainMasterService
+        MainMasterService,
+        
     ]
 })
 export class LawbreakerModule { }

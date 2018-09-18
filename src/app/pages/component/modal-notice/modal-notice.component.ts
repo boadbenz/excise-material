@@ -4,12 +4,11 @@ import { Router } from '@angular/router';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { Message } from '../../../config/message';
 import { Notice } from '../../notices/notice';
-import { toLocalShort, MyDatePickerOptions, getDateMyDatepicker, compareDate, setZeroHours } from '../../../config/dateFormat';
+import { toLocalShort, getDateMyDatepicker, compareDate, setZeroHours, MyDatePickerOptions } from '../../../config/dateFormat';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { NoticeService } from '../../notices/notice.service';
 import { IMyDateModel } from 'mydatepicker-th';
-import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 
 @Component({
     selector: 'app-modal-notice',
@@ -24,10 +23,10 @@ export class ModalNoticeComponent implements OnInit {
     isNoRecord = false;
     notice = new Array<Notice>();
     noticeList = new Array<Notice>();
-    msgNorecord = Message.noRecord;
-    myDatePickerOptions = MyDatePickerOptions;
     dateStartFrom: any;
     dateStartTo: any;
+
+    myDatePickerOptions = MyDatePickerOptions;
 
     paginage = pagination;
 
@@ -44,7 +43,6 @@ export class ModalNoticeComponent implements OnInit {
     @ViewChild('noticeTable') noticeTable: ElementRef
 
     constructor(
-        private navservice: NavigationService,
         private arrestService: ArrestsService,
         private _router: Router,
         private preLoaderService: PreloaderService,
@@ -57,22 +55,11 @@ export class ModalNoticeComponent implements OnInit {
         this.noticeFG = this.fb.group({
             NoticeList: this.fb.array([])
         })
-
-        this.preLoaderService.setShowPreloader(true);
-        this.navservice.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {
-                await this.navservice.setOnSearch('');
-                this.onSearch(Textsearch);
-            }
-        })
-        this.preLoaderService.setShowPreloader(false);
     }
-
-
 
     async onSearch(Textsearch: any) {
         this.preLoaderService.setShowPreloader(true);
-        await this.noticeService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+        await this.arrestService.noticegetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
         this.preLoaderService.setShowPreloader(false);
     }
 
@@ -101,8 +88,8 @@ export class ModalNoticeComponent implements OnInit {
     async onSearchComplete(list: Notice[]) {
 
         if (!list.length) {
-            alert(this.msgNorecord);
-            return false;
+            alert(Message.noRecord);
+            return;
         }
 
         this.notice = [];
@@ -124,25 +111,26 @@ export class ModalNoticeComponent implements OnInit {
     }
 
     onSDateChange(event: IMyDateModel) {
-        this.dateStartFrom = event
+        this.dateStartFrom = event;
         this.checkDate();
     }
 
     onEDateChange(event: IMyDateModel) {
-        this.dateStartTo = event
-        this.checkDate()
+        this.dateStartTo = event;
+        this.checkDate();
     }
 
     checkDate() {
         if (this.dateStartFrom && this.dateStartTo) {
 
+            const _sdate = this.dateStartFrom;
             const sdate = getDateMyDatepicker(this.dateStartFrom);
             const edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.dateStartTo = { date: this.dateStartFrom.date };
+                    this.dateStartTo = { date: _sdate.date };
                 }, 0);
             }
         }

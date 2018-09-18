@@ -29,6 +29,7 @@ export class ArrestsService {
 
     private async responsePromisModify(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        debugger
         if (!res || res.IsSuccess == 'False') {
             return false;
         }
