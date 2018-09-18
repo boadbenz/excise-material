@@ -11,6 +11,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from 'app/app.config';
 import { NoticeLawbreaker } from './notice-lawbreaker';
 
+const renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => {
+    return { [newProp]: old, ...others };
+};
+
 @Injectable()
 export class LawbreakerService {
 
@@ -29,53 +33,55 @@ export class LawbreakerService {
         const suspectUrl = `${appConfig.api8082}/NoticeMasSuspectgetByKeyword`;
         const url = { lawbreakerUrl, suspectUrl };
 
-        return this.response(params, url);
+        return this.response(params, url, 'keyword');
     }
 
-    searchAdv(form: any): Promise<NoticeLawbreaker[]> {
-        const params = JSON.stringify(form);
+    async searchAdv(form: any): Promise<NoticeLawbreaker[]> {
+        const params = form;
         const lawbreakerUrl = `${appConfig.api8082}/NoticeLawbreakergetByConAdv`;
         const suspectUrl = `${appConfig.api8082}/NoticeMasSuspectgetByConAdv`;
         const url = { lawbreakerUrl, suspectUrl };
 
-        return this.response(params, url);
+        return this.response(params, url, 'adv');
     }
 
-    private async response(params: string, url: any) {
+    private async response(params: any, url: any, mode: string) {
         const lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise()
 
         if (lawbreaker.NoticeLawbreaker.length) {
             return lawbreaker.NoticeLawbreaker;
 
         } else {
-            const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
+            let obj: any = params;
+            if (mode == 'adv') {
+                obj = renameProp('LawbreakerType', 'SuspectType', obj);
+                obj = renameProp('LawbreakerTitleName', 'SuspectTitleName', obj);
+                obj = renameProp('LawbreakerFirstName', 'SuspectFirstName', obj);
+                obj = renameProp('LawbreakerLastName', 'SuspectLastName', obj);
+            }
+            const suspect = await this.http.post<any>(url.suspectUrl, obj, this.httpOptions).toPromise();
 
             if (!suspect.ResponseData.length) {
-                alert(Message.noRecord);
                 return new Array<NoticeLawbreaker>();
             }
 
             let response: NoticeLawbreaker[] = [];
             suspect.ResponseData.map(item => {
                 let obj: any = item;
-                obj = this.renameProp('SuspectID', 'LawbreakerID', obj);
-                obj = this.renameProp('SuspectType', 'LawbreakerType', obj);
-                obj = this.renameProp('SuspectTitleCode', 'LawbreakerTitleCode', obj);
-                obj = this.renameProp('SuspectTitleName', 'LawbreakerTitleName', obj);
-                obj = this.renameProp('SuspectFirstName', 'LawbreakerFirstName', obj);
-                obj = this.renameProp('SuspectMiddleName', 'LawbreakerMiddleName', obj);
-                obj = this.renameProp('SuspectLastName', 'LawbreakerLastName', obj);
-                obj = this.renameProp('SuspectOtherName', 'LawbreakerOtherName', obj);
-                obj = this.renameProp('SuspectDesc', 'LawbreakerDesc', obj);
+                obj = renameProp('SuspectID', 'LawbreakerID', obj);
+                obj = renameProp('SuspectType', 'LawbreakerType', obj);
+                obj = renameProp('SuspectTitleCode', 'LawbreakerTitleCode', obj);
+                obj = renameProp('SuspectTitleName', 'LawbreakerTitleName', obj);
+                obj = renameProp('SuspectFirstName', 'LawbreakerFirstName', obj);
+                obj = renameProp('SuspectMiddleName', 'LawbreakerMiddleName', obj);
+                obj = renameProp('SuspectLastName', 'LawbreakerLastName', obj);
+                obj = renameProp('SuspectOtherName', 'LawbreakerOtherName', obj);
+                obj = renameProp('SuspectDesc', 'LawbreakerDesc', obj);
                 response.push(obj);
             })
             return response;
         }
     }
-
-    private renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => {
-        return { [newProp]: old, ...others };
-    };
 }
 
 @Component({
@@ -107,7 +113,8 @@ export class ModalLawbreakerComponent implements OnInit {
     }
 
     constructor(
-        private arrestService: ArrestsService,
+        // private arrestService: ArrestsService,
+        private lawbreakerService: LawbreakerService,
         private fb: FormBuilder,
         private preloader: PreloaderService,
         private router: Router
@@ -122,16 +129,17 @@ export class ModalLawbreakerComponent implements OnInit {
 
     async  onSearchAdv(f: any) {
         this.preloader.setShowPreloader(true);
-        await this.arrestService
-            .masLawbreakergetByConAdv(f)
+
+        await this.lawbreakerService
+            .searchAdv(f)
             .then(res => this.onSearchComplete(res));
         this.preloader.setShowPreloader(false);
     }
 
     async  onSearchByKey(f: any) {
         this.preloader.setShowPreloader(true);
-        await this.arrestService
-            .masLawbreakergetByKeyword(f)
+        await this.lawbreakerService
+            .searchByKeyword(f)
             .then(res => this.onSearchComplete(res));
         this.preloader.setShowPreloader(false)
     }

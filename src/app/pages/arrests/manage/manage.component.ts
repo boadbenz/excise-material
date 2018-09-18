@@ -121,7 +121,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private ngbModel: NgbModal,
         private arrestService: ArrestsService,
-        public router: Router,
+        private router: Router,
         private sidebarService: SidebarService,
         private preloader: PreloaderService,
         private mainMasterService: MainMasterService,
@@ -138,10 +138,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.12');
+        this.sidebarService.setVersion('0.0.0.13');
 
-        this.arrestFG = this.createForm();
         this.active_route();
+        this.arrestFG = this.createForm();
         this.navigate_Service();
 
         await this.setStaffStore()
@@ -333,7 +333,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         })
     }
-
 
     private async setOfficeStore() {
         await this.mainMasterService.masOfficeMaingetAll().then(res =>
@@ -715,17 +714,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     async setNoticeForm(notice: Notice) {
         this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
 
-        let locale = notice.NoticeLocale[0];
+        const locale = notice.NoticeLocale[0];
         let product = notice.NoticeProduct;
+
+        const region = this.findRegion(locale.SubDistrict, locale.District, locale.Province)
 
         this.ArrestLocale.at(0).reset(locale);
         this.ArrestLocale.at(0).patchValue({
-            SubDistrictCode: locale.SubDistrictCode,
-            SubDistrict: locale.SubDistrict,
-            DistrictCode: locale.DistrictCode,
-            District: locale.District,
-            ProvinceCode: locale.ProvinceCode,
-            Province: locale.Province,
+            SubDistrictCode: locale.SubDistrictCode || region.SubdistrictCode,
+            SubDistrict: locale.SubDistrict || region.SubdistrictNameTH,
+            DistrictCode: locale.DistrictCode || region.DistrictCode,
+            District: locale.District || region.DistrictNameTH,
+            ProvinceCode: locale.ProvinceCode || region.ProvinceCode,
+            Province: locale.Province || region.ProvinceNameTH,
             Region: `${locale.SubDistrict} ${locale.District} ${locale.Province}`,
             ArrestCode: this.arrestCode,
             IsArrest: 1
@@ -747,6 +748,24 @@ export class ManageComponent implements OnInit, OnDestroy {
             })
         }
 
+    }
+
+    findRegion(subdistrict, district, province) {
+        let r = this.typeheadRegion.filter(v =>
+            (v.SubdistrictNameTH == subdistrict) &&
+            (v.DistrictNameTH == district) &&
+            (v.ProvinceNameTH == province)
+        ).reduce((obj, key) => {
+            obj['SubdistrictCode'] = key.SubdistrictCode;
+            obj['SubdistrictNameTH'] = key.SubdistrictNameTH;
+            obj['DistrictCode'] = key.SubdistrictCode;
+            obj['DistrictNameTH'] = key.DistrictNameTH;
+            obj['ProvinceCode'] = key.ProvinceCode;
+            obj['ProvinceNameTH'] = key.ProvinceNameTH;
+            return obj;
+        }, {});
+
+        return r as RegionModel;
     }
 
     openModal(e) {
