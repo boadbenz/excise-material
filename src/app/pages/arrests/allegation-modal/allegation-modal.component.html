@@ -88,10 +88,10 @@
                         <td class="text-center">{{i+1}}</td>
                         <td>
                             <span *ngIf="item.get('EntityType').value == 0">
-                                {{item.get('CompanyFullName').value}}
+                                {{item.get('LawbreakerFullName').value}}
                             </span>
                             <span *ngIf="item.get('EntityType').value == 1">
-                                {{item.get('LawbreakerFullName').value}}
+                                {{item.get('CompanyFullName').value}}
                             </span>
                         </td>
                         <td>
