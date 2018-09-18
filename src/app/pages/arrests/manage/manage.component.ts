@@ -145,22 +145,27 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.active_route();
         this.navigate_Service();
 
-        await this.setStaffStore()
-        await this.setOfficeStore()
-        await this.setProductStore()
-        await this.setProductUnitStore()
-        await this.setRegionStore()
+        // await this.setStaffStore()
+        // await this.setOfficeStore()
+        // await this.setProductStore()
+        // await this.setProductUnitStore()
+        // await this.setRegionStore()
 
         this.preloader.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
         // this.sub.unsubscribe();
-        this.onCancelSubscribe.unsubscribe();
-        this.onSaveSubscribe.unsubscribe();
-        this.onDeleSubscribe.unsubscribe();
-        this.onPrintSubscribe.unsubscribe();
-        this.onNextPageSubscribe.unsubscribe()
+        if (this.onCancelSubscribe)
+            this.onCancelSubscribe.unsubscribe();
+        if (this.onSaveSubscribe)
+            this.onSaveSubscribe.unsubscribe();
+        if (this.onDeleSubscribe)
+            this.onDeleSubscribe.unsubscribe();
+        if (this.onPrintSubscribe)
+            this.onPrintSubscribe.unsubscribe();
+        if (this.onNextPageSubscribe)
+            this.onNextPageSubscribe.unsubscribe();
     }
 
     private createForm(): FormGroup {
@@ -888,7 +893,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     viewLawbreaker(id: number) {
-        this.router.navigate([`/notice/lawbreaker`, 'R', id]);
+        this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
     }
 
     async deleteStaff(indexForm: number, staffId: string) {

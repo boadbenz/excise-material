@@ -10,7 +10,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-import { NoticeService } from '../notice.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MainMasterService } from '../../../services/main-master.service';
 
@@ -48,8 +47,8 @@ const routes: Routes = [
     declarations: [LawbreakerComponent],
     providers: [
         ArrestsService,
-        NoticeService,
-        MainMasterService
+        MainMasterService,
+        
     ]
 })
 export class LawbreakerModule { }
