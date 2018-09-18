@@ -44,9 +44,6 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     NgbModule.forRoot(),
-    StoreModule.forRoot({
-      productModule: productReducer
-    }),
     RouterModule.forChild(routes),
     ModalLawbreakerModule,
     CardActionsModule,
@@ -59,6 +56,6 @@ const routes: Routes = [
   declarations: [
     ManageComponent
   ],
-  providers: [ArrestsService, ProveService, MainMasterService]
+  providers: [ArrestsService, MainMasterService]
 })
 export class ManageModule { }

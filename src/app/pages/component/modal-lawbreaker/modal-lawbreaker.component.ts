@@ -45,8 +45,18 @@ export class LawbreakerService {
         const lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise()
 
         if (lawbreaker.NoticeLawbreaker.length) {
+            return lawbreaker.NoticeLawbreaker;
+
+        } else {
+            const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
+
+            if (!suspect.ResponseData.length) {
+                alert(Message.noRecord);
+                return new Array<NoticeLawbreaker>();
+            }
+
             let response: NoticeLawbreaker[] = [];
-            lawbreaker.NoticeLawbreaker.map(item => {
+            suspect.ResponseData.map(item => {
                 let obj: any = item;
                 obj = this.renameProp('SuspectID', 'LawbreakerID', obj);
                 obj = this.renameProp('SuspectType', 'LawbreakerType', obj);
@@ -60,16 +70,6 @@ export class LawbreakerService {
                 response.push(obj);
             })
             return response;
-
-        } else {
-            const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
-
-            if (suspect.ResponseData.length) {
-                return suspect.ResponseData;
-            } else {
-                alert(Message.noRecord);
-                return new Array<NoticeLawbreaker>();
-            }
         }
     }
 

@@ -121,7 +121,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private ngbModel: NgbModal,
         private arrestService: ArrestsService,
-        private proveService: ProveService,
         public router: Router,
         private sidebarService: SidebarService,
         private preloader: PreloaderService,
@@ -139,7 +138,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.11');
+        this.sidebarService.setVersion('0.0.0.12');
 
         this.arrestFG = this.createForm();
         this.active_route();
@@ -155,12 +154,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.sub.unsubscribe();
-        this.onCancelSubscribe.unsubscribe();
-        this.onSaveSubscribe.unsubscribe();
-        this.onDeleSubscribe.unsubscribe();
-        this.onPrintSubscribe.unsubscribe();
-        this.onNextPageSubscribe.unsubscribe()
+        if (this.sub) this.sub.unsubscribe();
+        if (this.onCancelSubscribe) this.onCancelSubscribe.unsubscribe();
+        if (this.onSaveSubscribe) this.onSaveSubscribe.unsubscribe();
+        if (this.onDeleSubscribe) this.onDeleSubscribe.unsubscribe();
+        if (this.onPrintSubscribe) this.onPrintSubscribe.unsubscribe();
+        if (this.onNextPageSubscribe) this.onNextPageSubscribe.unsubscribe();
     }
 
     private createForm(): FormGroup {
@@ -228,7 +227,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private active_route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
-            if (p['mode'] === 'C') {
+
+            if (p['mode'] == 'C') {
                 // set false
                 this.navService.setPrintButton(false);
                 this.navService.setEditButton(false);
