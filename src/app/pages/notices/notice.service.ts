@@ -4,7 +4,9 @@ import { appConfig } from '../../app.config';
 import { Notice } from './notice';
 import { Http, } from '@angular/http';
 import { NoticeDocument } from './notice-document';
+import { Lawbreaker } from './lawbreaker/lawbreaker.interface';
 import { Suspect } from './suspect/suspect.interface';
+import { NoticeSuspect } from './notice-suspect';
 
 @Injectable()
 export class NoticeService {
@@ -45,16 +47,11 @@ export class NoticeService {
         return this.resposePromisGet(JSON.stringify(params), url);
     }
 
-    async getByKeyword(Textsearch: any): Promise<Notice[]> {
+    getByKeyword(Textsearch: any): Promise<Notice[]> {
+        debugger
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api8082}/NoticegetByKeyword`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-
-        if (res.IsSuccess == 'False' || !res.Notice.length) {
-            return new Array<Notice>();
-        }
-
-        return res.Notice;
+        return this.resposePromisGet(JSON.stringify(params), url)
     }
 
     getByConAdv(form: any): Promise<Notice[]> {
@@ -73,6 +70,16 @@ export class NoticeService {
         return res.ResponseData 
     }
 
+    async getLawbreakerByCon(LawbreakerID: string): Promise<Lawbreaker> {
+        const params = { LawbreakerID };
+        const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess || !res.ResponseData) {
+            return new Lawbreaker();
+        }
+        return res.ResponseData;
+    }
 
     async noticeSuspectgetByCon(SuspectID: string): Promise<Suspect> {
         const params = { SuspectID };
@@ -88,6 +95,12 @@ export class NoticeService {
     insAll(Notice: Notice): Promise<any> {
         const params = Notice;
         const url = `${appConfig.api8082}/NoticeinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    updLawbreaker(lawbreaker: Lawbreaker): Promise<boolean> {
+        const params = lawbreaker;
+        const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 

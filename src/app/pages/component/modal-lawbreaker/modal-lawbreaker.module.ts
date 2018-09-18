@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModalLawbreakerComponent, LawbreakerService } from './modal-lawbreaker.component';
+import { ModalLawbreakerComponent } from './modal-lawbreaker.component';
 import { CardActionsModule } from '../card-actions/card-actions.module';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -20,6 +20,6 @@ import { ArrestsService } from '../../arrests/arrests.service';
   exports: [
     ModalLawbreakerComponent
   ],
-  providers: [ArrestsService, LawbreakerService]
+  providers: [ArrestsService]
 })
 export class ModalLawbreakerModule { }

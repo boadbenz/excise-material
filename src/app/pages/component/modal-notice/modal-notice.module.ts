@@ -6,8 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationTableModule } from '../pagination-table/pagination-table.module';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { NoticeService } from '../../notices/notice.service';
-import { MyDatePickerTHModule } from 'mydatepicker-th';
-import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 
 @NgModule({
   imports: [
@@ -15,11 +13,10 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
     FormsModule,
     ReactiveFormsModule,
     CardActionsModule,
-    PaginationTableModule,
-    MyDatePickerTHModule
+    PaginationTableModule
   ],
   declarations: [ModalNoticeComponent],
   exports: [ModalNoticeComponent],
-  providers: [ArrestsService, NoticeService, NavigationService]
+  providers: [ArrestsService, NoticeService]
 })
 export class ModalNoticeModule { }

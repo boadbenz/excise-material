@@ -888,7 +888,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     viewLawbreaker(id: number) {
-        this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
+        this.router.navigate([`/notice/lawbreaker`, 'R', id]);
     }
 
     async deleteStaff(indexForm: number, staffId: string) {
