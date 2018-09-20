@@ -115,7 +115,7 @@ export class ManageComponent implements OnInit {
 
         // Find guiltbaseID with IndictmentID from Lawsuit
         await this.arrestList[0].ArrestIndictment.forEach(value => {
-          if (this.lawsuitList.length && value.IndictmentID == this.lawsuitList[0].IndictmentID) {
+          if (this.lawsuitList.length && value.IndicmentID == this.lawsuitList[0].IndictmentID) {
             this.lawsuitService.CompareMasLawgetByCon(value.GuiltBaseID).then(res => {
               if (res) {
                 for (let key in res) {
