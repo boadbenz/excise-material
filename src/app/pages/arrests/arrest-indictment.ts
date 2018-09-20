@@ -28,7 +28,7 @@ export class IndictmentLawbreaker {
 
 export class ArrestIndictment {
     ArrestCode: string;
-    IndictmentID: number;
+    IndicmentID: number;
     IsProve: number;
     IsActive: number;
     GuiltBaseID: number;

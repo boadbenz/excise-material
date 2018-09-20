@@ -863,7 +863,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             let FG = this.fb.group({
                 ArrestCode: new FormControl(this.arrestCode, Validators.required),
-                IndictmentID: new FormControl(item.IndictmentID),
+                IndicmentID: new FormControl(item.IndicmentID),
                 IsProve: new FormControl(item.IsProve, Validators.required),
                 IsActive: new FormControl(item.IsActive, Validators.required),
                 GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),

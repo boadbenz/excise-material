@@ -43,7 +43,7 @@ export const Contributor: Types[] = [
 ]
 
 export const ArrestStaffFormControl = {
-    StaffID: new FormControl(null),
+    StaffId: new FormControl(null),
     ProgramCode: new FormControl('XCS60-02-02'),
     ProcessCode: new FormControl('0001'),
     ArrestCode: new FormControl(null, Validators.required),
