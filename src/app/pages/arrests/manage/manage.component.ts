@@ -138,7 +138,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.13');
+        this.sidebarService.setVersion('0.0.0.14');
 
         this.active_route();
         this.arrestFG = this.createForm();
@@ -794,7 +794,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-
     addStaff() {
         const lastIndex = this.ArrestStaff.length - 1;
         let item = new ArrestStaff();
@@ -804,7 +803,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestStaff.push(this.fb.group(item));
         } else {
             const lastDoc = this.ArrestStaff.at(lastIndex).value;
-            if (lastDoc.StaffCode) {
+            if (lastDoc.PositionName && lastDoc.DepartmentName && lastDoc.ContributorID) {
                 this.ArrestStaff.push(this.fb.group(item));
             }
         }
@@ -819,11 +818,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestProduct.push(this.fb.group(item));
         } else {
             const lastDoc = this.ArrestProduct.at(lastIndex).value;
-            if (lastDoc.ProductID) {
+            if (lastDoc.Qty && lastDoc.QtyUnit) {
                 this.ArrestProduct.push(this.fb.group(item));
             }
         }
-
     }
 
     addIndicment(e: ArrestIndictment[]) {

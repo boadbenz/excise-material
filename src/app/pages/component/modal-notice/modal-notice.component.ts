@@ -160,15 +160,19 @@ export class ModalNoticeComponent implements OnInit {
     }
 
     async close(e: any) {
-        this.preLoaderService.setShowPreloader(true);
+        console.log(this.NoticeList.value); 
 
-        const code = await this.NoticeList.value.find(item => item.IsChecked).NoticeCode;
-        const _notice = await this.noticeService.getByCon(code).then(res => {return res});
-  
-        this.outputNotice.emit(_notice);
-        this.c.emit(e);
+        const code = await this.NoticeList.value.find(item => item.IsChecked).NoticeCode || null;
+        if (code) {
+            this.preLoaderService.setShowPreloader(true);
+            const _notice = await this.noticeService.getByCon(code).then(res => { return res });
 
-        this.preLoaderService.setShowPreloader(false);
+            this.outputNotice.emit(_notice);
+            this.c.emit(e);
+
+            this.preLoaderService.setShowPreloader(false);
+        }
+
     }
 
     async pageChanges(event) {

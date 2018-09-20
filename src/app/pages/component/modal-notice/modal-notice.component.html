@@ -22,7 +22,7 @@
         </a>
     </div>
 </div>
-<h5 class="text-right mt-3 pr-3">XCS60-03-02-02-00</h5>
+<h5 class="text-right mt-3 pr-3">ILG60-03-02-02-00</h5>
 <div class="modal-body font-14">
     <div *ngIf="advSearch" class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
@@ -37,14 +37,14 @@
             <form class="form-horizontal" *ngIf="advSearch" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
                 <div>
                     <div class="row">
-                        <label for="" class="col-lg-2 col-sm-3">เลขที่ใบแจ้งความ :</label>
+                        <label for="" class="col-lg-2 col-sm-3">ใบแจ้งความนำจับ :</label>
                         <div class="col-lg-4 col-md-7 col-sm-9">
                             <div class="form-group">
                                 <input type="text" name="NoticeCode" ngModel class="form-control form-control-sm">
                             </div>
                         </div>
 
-                        <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
+                        <label for="" class="col-lg-2 col-sm-3">วันที่แจ้งความ :</label>
                         <div class="col-lg-4 col-md-7 col-sm-9">
                             <div class="form-group input-group">
                                 <my-date-picker-th class="form-control form-control-sm unset-form-control" name="DateStartFrom"
@@ -57,7 +57,7 @@
                     </div>
 
                     <div class="row">
-                        <label for="" class="col-lg-2 col-sm-3">ชื่อผู้รับแจ้ง :</label>
+                        <label for="" class="col-lg-2 col-sm-3">ชื่อผู้รับแจ้งความ :</label>
                         <div class="col-lg-4 col-md-7 col-sm-9">
                             <div class="form-group">
                                 <input type="text" name="StaffName" ngModel class="form-control form-control-sm">
@@ -98,9 +98,9 @@
                         <tr>
                             <th class="text-center"></th>
                             <th class="text-center">ลำดับ</th>
-                            <th>เลขที่ใบแจ้งความ</th>
+                            <th>ใบแจ้งความนำจับ</th>
                             <th>วันที่แจ้งความ</th>
-                            <th>ผู้รับแจ้ง</th>
+                            <th>ผู้รับแจ้งความ</th>
                             <th>หน่วยงาน</th>
                             <th>ผู้ต้องสงสัย</th>
                             <th></th>

@@ -20,11 +20,11 @@ const routes: Routes = [
             // title: 'จัดการข้อมูล',
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหาใบแจ้งความ', url: '/notice/list' },
-                { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/notice/manage/C/NEW' },
+                { title: 'ค้นหางานจับกุม', url: '/arrest/list' },
+                { title: 'จัดการข้อมูลงานจับกุม', url: '/arrest/manage/C/NEW' },
                 { title: 'จัดการข้อมูลผู้ต้องหา' }
             ],
-            codePage: 'XCS60-99-02-02-00',
+            codePage: 'ILG60-03-02-03-00',
             nextPage: { title: 'งานจับกุม', url: '/' }
         },
         component: LawbreakerComponent
