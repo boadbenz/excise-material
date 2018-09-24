@@ -1,3 +1,4 @@
+//#region "Imports"
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
@@ -11,6 +12,7 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { MatAutocomplete } from '@angular/material';
+//#endregion
 
 @Component({
     selector: 'app-list',
@@ -18,6 +20,8 @@ import { MatAutocomplete } from '@angular/material';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
+    //#region "Variables"
+    
     advSearch: any;
     revenue = new Array<Revenue>();
     RevenueList = new Array<Revenue>();
@@ -42,6 +46,10 @@ export class ListComponent implements OnInit, OnDestroy {
 
     @ViewChild('revenueTable') revenueTable: ElementRef;
 
+    //#endregion
+
+    //#region "Ng"
+    
     constructor(
         private _router: Router,
         private navService: NavigationService,
@@ -62,39 +70,131 @@ export class ListComponent implements OnInit, OnDestroy {
         this.advSearch = this.navService.showAdvSearch;
     }
 
+    
     async ngOnInit() {
         this.sidebarService.setVersion('Revenue 0.0.0.1');
 
         this.preloader.setShowPreloader(true);
 
         this.getDepartmentRevenue();
-        this.onSearch({ Textsearch: "" });
+        // this.onSearch({ Textsearch: "" });
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {
-                await this.navService.setOnSearch('');
+        // this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
+        //     if (Textsearch) {
+        //         await this.navService.setOnSearch('');
 
-                let ts;
-                ts = { Textsearch: "" }
-                ts = Textsearch;
+        //         let ts;
+        //         ts = { Textsearch: "" }
+        //         ts = Textsearch;
 
-                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
-                else { this.onSearch(Textsearch); }
+        //         if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
+        //         else { this.onSearch(Textsearch); }
 
-            }
-        })
+        //     }
+        // })
 
-        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnNextPage(false);
-                this._router.navigate(['/income/manage', 'C', 'NEW']);
-            }
-        })
+        // this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+        //     if (status) {
+        //         await this.navService.setOnNextPage(false);
+        //         this._router.navigate(['/income/manage', 'C', 'NEW']);
+        //     }
+        // })
     }
 
     ngOnDestroy(): void {
         this.subOnSearch.unsubscribe();
         this.subSetNextPage.unsubscribe();
+    }
+
+    //#endregion
+
+    //#region "Getter"
+
+    getCurrentDate() {
+        let date = new Date();
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
+    }
+
+    async getDepartmentRevenue() {
+        await this.incomeService.getDepartment().then(async res => {
+            if (res) {
+                this.rawOptions = res;
+            }
+        }, (err: HttpErrorResponse) => {
+            this.preloader.setShowPreloader(false);
+        });
+    }
+
+
+    //#endregion
+    
+    //#region "Others"
+
+    clickView(RevenueCode: string) {
+        this._router.navigate([`/income/manage/R/${RevenueCode}`]);
+    }
+
+    async pageChanges(event) {
+        this.RevenueList = await this.revenue.slice(event.startIndex - 1, event.endIndex);
+    }
+
+
+    
+
+    
+
+    checkDateDelivery() {
+        if (this._dateStartFrom && this._dateStartTo) {
+            const sdate = getDateMyDatepicker(this._dateStartFrom);
+            const edate = getDateMyDatepicker(this._dateStartTo);
+
+            if (!compareDate(new Date(sdate), new Date(edate))) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.DateStartTo = { date: this._dateStartFrom.date };
+                }, 0);
+            }
+        }
+    }
+
+    //#endregion
+    
+    //#region "Events"
+
+    onAutoChange(value: string) {
+        // 
+        if (value == '') {
+            this.options = [];
+
+            // this.oProve.ProveStationCode = "";
+            // this.oProve.ProveStation = "";
+        } else {
+            this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            debugger
+        }
+    }
+
+    onAutoFocus(value: string) {
+        if (value == '') {
+            this.options = [];
+        }
+    }
+
+    onAutoSelecteWord(event) {
+        // this.oProve.ProveStationCode = event.OfficeCode;
+        // this.oProve.ProveStation = event.OfficeName;
+    }
+
+    onSDateChange(event: IMyDateModel) {
+        this._dateStartFrom = event.date;
+        this.checkDateDelivery();
+    }
+
+    onEDateChange(event: IMyDateModel) {
+        this._dateStartTo = event.date;
+        if (this.checkDateDelivery()) {
+
+        }
     }
 
     onSearch(Textsearch: any) {
@@ -178,79 +278,6 @@ export class ListComponent implements OnInit, OnDestroy {
         this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
-    clickView(RevenueCode: string) {
-        this._router.navigate([`/income/manage/R/${RevenueCode}`]);
-    }
+    //#endregion
 
-    async pageChanges(event) {
-        this.RevenueList = await this.revenue.slice(event.startIndex - 1, event.endIndex);
-    }
-
-
-    getCurrentDate() {
-        let date = new Date();
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
-    }
-
-    onSDateChange(event: IMyDateModel) {
-        this._dateStartFrom = event.date;
-        this.checkDateDelivery();
-    }
-
-    onEDateChange(event: IMyDateModel) {
-        this._dateStartTo = event.date;
-        if (this.checkDateDelivery()) {
-
-        }
-    }
-
-    checkDateDelivery() {
-        if (this._dateStartFrom && this._dateStartTo) {
-            const sdate = getDateMyDatepicker(this._dateStartFrom);
-            const edate = getDateMyDatepicker(this._dateStartTo);
-
-            if (!compareDate(new Date(sdate), new Date(edate))) {
-                alert(Message.checkDate)
-                setTimeout(() => {
-                    this.DateStartTo = { date: this._dateStartFrom.date };
-                }, 0);
-            }
-        }
-    }
-
-    // --- หน่วยงาน ---
-    async getDepartmentRevenue() {
-        await this.incomeService.getDepartment().then(async res => {
-            if (res) {
-                this.rawOptions = res;
-            }
-        }, (err: HttpErrorResponse) => {
-            this.preloader.setShowPreloader(false);
-        });
-    }
-
-    onAutoChange(value: string) {
-        // 
-        if (value == '') {
-            this.options = [];
-
-            // this.oProve.ProveStationCode = "";
-            // this.oProve.ProveStation = "";
-        } else {
-            this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
-            debugger
-        }
-    }
-
-    onAutoFocus(value: string) {
-        if (value == '') {
-            this.options = [];
-        }
-    }
-
-    onAutoSelecteWord(event) {
-        // this.oProve.ProveStationCode = event.OfficeCode;
-        // this.oProve.ProveStation = event.OfficeName;
-    }
-    // ----- End หน่วยงาน ---
 }
