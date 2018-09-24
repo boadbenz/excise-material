@@ -47,6 +47,15 @@ import { MainMasterService } from '../../../services/main-master.service';
 })
 export class ManageComponent implements OnInit, OnDestroy {
 
+    card1: boolean = true;
+    card2: boolean = false;
+    card3: boolean = false;
+    card4: boolean = false;
+    card5: boolean = false;
+    card6: boolean = false;
+    card7: boolean = false;
+    card8: boolean = false;
+
     private sub: any;
     programSpect = 'ILG60-03-02-00'
     mode: string;
@@ -138,7 +147,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.14');
+        this.sidebarService.setVersion('0.0.0.15');
 
         this.active_route();
         this.arrestFG = this.createForm();
@@ -170,6 +179,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private createForm(): FormGroup {
         let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
         let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
+        let testCode = `test-${(new Date).getTime()}`;
         // let OccurrenceDate = ArrestDate;
         return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
@@ -187,7 +197,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestDesc: new FormControl('N/A'),
             NoticeCode: new FormControl(null, Validators.required),
             InvestigationSurveyDocument: new FormControl(null),
-            InvestigationCode: new FormControl(null, Validators.required),
+            InvestigationCode: new FormControl(testCode, Validators.required),
             IsActive: new FormControl(1),
             ArrestStaff: this.fb.array([this.createStaffForm()]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
@@ -803,7 +813,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestStaff.push(this.fb.group(item));
         } else {
             const lastDoc = this.ArrestStaff.at(lastIndex).value;
-            if (lastDoc.PositionName && lastDoc.DepartmentName && lastDoc.ContributorID) {
+            if (lastDoc.ContributorID) {
                 this.ArrestStaff.push(this.fb.group(item));
             }
         }

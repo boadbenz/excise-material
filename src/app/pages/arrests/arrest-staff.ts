@@ -46,7 +46,7 @@ export const ArrestStaffFormControl = {
     StaffId: new FormControl(null),
     ProgramCode: new FormControl('XCS60-02-02'),
     ProcessCode: new FormControl('0001'),
-    ArrestCode: new FormControl(null, Validators.required),
+    ArrestCode: new FormControl(null),
     StaffCode: new FormControl(null),
     TitleName: new FormControl(null),
     FirstName: new FormControl(null, Validators.required),

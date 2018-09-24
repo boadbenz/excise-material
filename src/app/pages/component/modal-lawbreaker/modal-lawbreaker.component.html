@@ -86,9 +86,9 @@
                     <div class="row">
                         <label for="" class="col-lg-2 col-sm-4">ชื่อผู้ต้องสงสัย :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-                            <input type="text" name="LawbreakerFirstName" class="form-control form-control-sm">
-                            <input type="hidden" name="LawbreakerTitleName">
-                            <input type="hidden" name="LawbreakerLastName">
+                            <input #fname type="text" name="LawbreakerFirstName" class="form-control form-control-sm">
+                            <input type="hidden" name="LawbreakerTitleName" [value]="fname">
+                            <input type="hidden" name="LawbreakerLastName" [value]="fname">
                         </div>
                     </div>
 
@@ -117,8 +117,8 @@
                             <th>ประเภทผู้ต้องหา</th>
                             <th>ประเภทบุคคล</th>
                             <th>หมายเลขอ้างอิง</th>
-                            <th>ชื่อผู้ต้องสงสัย</th>
-                            <th>จำนวนครั้งการกระทำความผิด</th>
+                            <th>ชื่อ</th>
+                            <th>จำนวนครั้งการกระทำผิด</th>
                             <th></th>
                         </tr>
                     </thead>

@@ -47,7 +47,7 @@ export class LawbreakerService {
 
     private async response(params: any, url: any, mode: string) {
         const lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise()
-
+debugger
         if (lawbreaker.NoticeLawbreaker.length) {
             return lawbreaker.NoticeLawbreaker;
 

@@ -7,7 +7,11 @@
 <form action="" [formGroup]="arrestFG">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">                          
+                <a class="" #card1>                                  
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>                             
+                </a>             
+            </div>
             <h4 class="card-title m-b-0">ข้อมูลการจับกุม</h4>
         </div>
         <div class="card-body">
@@ -96,15 +100,16 @@
         </div>
     </div>
 
-
-        
-
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+                <div class="card-actions">                          
+                    <a class="" (click)="card2 = !card2">                                  
+                        <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>                          
+                    </a>             
+                </div>
             <h4 class="card-title m-b-0">ผู้จับกุม</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card2" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -144,10 +149,10 @@
                                     />
                             </td>
                             <td>
-                                <input type="text" formControlName="PositionName" class="form-control form-control-sm" [readonly]="showEditField" >
+                                <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly >
                             </td>
                             <td>
-                                <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" [readonly]="showEditField" >
+                                <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" readonly >
                             </td>
                             <td>
                                 <!-- <input type="text" formControlName="ContributorID" class="form-control form-control-sm" [readonly]="showEditField" > -->
@@ -169,13 +174,16 @@
         </div>
     </div>
 
-
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">                          
+                <a class="" (click)="card3 = !card3">                                  
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>                          
+                </a>             
+            </div>
             <h4 class="card-title m-b-0">สถานที่เกิดเหตุ</h4>
         </div>
-        <div class="card-body" formArrayName="ArrestLocale">
+        <div *ngIf="card3" class="card-body" formArrayName="ArrestLocale">
             <div *ngFor="let item of ArrestLocale.controls; let i = index;" [formGroupName]="i">
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
@@ -245,10 +253,14 @@
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">                          
+                <a class="" (click)="card4 = !card4">                                  
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card4, 'fa-chevron-up': !card4}"></i>                             
+                </a>             
+            </div>
             <h4 class="card-title m-b-0">ผู้ต้องหา</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card4" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -267,11 +279,11 @@
                     <thead>
                         <tr>
                             <th class="text-center">ลำดับ</th>
-                            <th>ประเภทผู้ต้องสงสัย</th>
+                            <th>ประเภทผู้ต้องหา</th>
                             <th>ประเภทบุคคล</th>
                             <th>หมายเลขอ้างอิง</th>
                             <th>ชื่อ</th>
-                            <th>จำนวนครั้งกระทำผิด</th>
+                            <th>จำนวนครั้งการกระทำผิด</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -311,10 +323,14 @@
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">                          
+                <a class="" (click)="card5 = !card5">                                  
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card5, 'fa-chevron-up': !card5}"></i>                             
+                </a>             
+            </div>
             <h4 class="card-title m-b-0">ของกลาง</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card5" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -382,10 +398,14 @@
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">                          
+                <a class="" (click)="card6 = !card6">                                  
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card6, 'fa-chevron-up': !card6}"></i>                             
+                </a>             
+            </div>
             <h4 class="card-title m-b-0">ข้อกล่าวหา</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card6" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -457,10 +477,14 @@
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">                          
+                <a class="" (click)="card7 = !card7">                                  
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card7, 'fa-chevron-up': !card7}"></i>                             
+                </a>             
+            </div>
             <h4 class="card-title m-b-0">รายละเอียดการจับกุม</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card7" class="card-body">
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
@@ -484,10 +508,14 @@
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">                          
+                <a class="" (click)="card8 = !card8">                                  
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card8, 'fa-chevron-up': !card8}"></i>                             
+                </a>             
+            </div>
             <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card8" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
