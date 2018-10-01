@@ -15,55 +15,67 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">เลขที่ใบงาน : </label>
-                  <div class="col-md-9">
+                  <label class="col-form-label text-left col-4">เลขที่ใบงาน : </label>
+                  <div class="col-8">
                     <input class="form-control" type="text" ngModel name="ArrestCode">
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-left col-4">ฐานความผิดมาตรา : </label>
+                  <div class="col-8">
+                    <input class="form-control" type="text" ngModel name="SubSectionType">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
                 <div class="form-group has-danger row">
-                  <label class="col-form-label text-right col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
-                  <div class="col-md-8">
+                  <label class="col-form-label text-left col-4">เลขที่คดีรับคำกล่าวโทษ : </label>
+                  <div class="col-8">
                     <input class="form-control" type="text" ngModel name="LawsuitNo">
                   </div>
                 </div>
               </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-left col-4">วันที่รับคดี : </label>
+                  <div class="col-8">
+                    <div class="row">
+                      <div class="col-5">
+                        <my-date-picker-th name="LawsuitDateFrom" [options]="datePickerOptions"
+                                           (dateChanged)="onLawsuitDateFromChange(advForm, $event)"
+                                           ngModel></my-date-picker-th>
+                        <!--<input class="form-control" type="date" ngModel name="LawsuitDateFrom">-->
+                      </div>
+                      <label class="col-form-label text-center col-2">ถึง : </label>
+                      <div class="col-5">
+                        <my-date-picker-th name="LawsuitDateTo" [options]="datePickerOptions"
+                                           (dateChanged)="onLawsuitDateToChange(advForm, $event)"
+                                           ngModel></my-date-picker-th>
+                        <!--<input class="form-control" type="date" ngModel name="LawsuitDateTo">-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
-                  <div class="col-md-4">
-                    <my-date-picker-th name="LawsuitDateFrom" [options]="datePickerOptions"
-                                       (dateChanged)="onLawsuitDateFromChange(advForm, $event)"
-                                       ngModel></my-date-picker-th>
-                    <!--<input class="form-control" type="date" ngModel name="LawsuitDateFrom">-->
-                  </div>
-                  <label class="col-form-label text-right col-md-1 px-0">ถึง : </label>
-                  <div class="col-md-4">
-                    <my-date-picker-th name="LawsuitDateTo" [options]="datePickerOptions"
-                                       (dateChanged)="onLawsuitDateToChange(advForm, $event)"
-                                       ngModel></my-date-picker-th>
-                    <!--<input class="form-control" type="date" ngModel name="LawsuitDateTo">-->
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-4">ชื่อผู้รับคดี : </label>
-                  <div class="col-md-8">
+                  <label class="col-form-label text-left col-4">ชื่อผู้รับคดี : </label>
+                  <div class="col-8">
                     <input class="form-control" type="text" ngModel name="StaffName">
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" ngModel name="OfficeName">
+                  <label class="col-form-label text-left col-4">หน่วยงาน : </label>
+                  <div class="col-8">
+                    <input class="form-control" type="text" ngModel name="DepartmentName">
                   </div>
                 </div>
               </div>
@@ -83,6 +95,7 @@
             <tr>
               <th class="footable-sortable text-center">ลำดับ</th>
               <th class="footable-sortable">เลขที่ใบงาน</th>
+              <th class="footable-sortable">ฐานความผิดมาตรา</th>
               <th class="footable-sortable">เลขที่คดีรับคำกล่าวโทษ</th>
               <th class="footable-sortable">วันที่รับคดี</th>
               <th class="footable-sortable">ชื่อผู้รับคดี</th>
@@ -94,17 +107,27 @@
             <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
               <td class="text-center">{{ item.RowsId || '' }}</td>
               <td>{{ item.ArrestCode || '-' }}</td>
-              <td>{{ item.LawsuitNo || '-' }}</td>
-              <td>{{ item.LawsuitDate || '-' }}</td>
+              <td>{{ item.SubSectionType || '-' }}</td>
               <td>
-                <div *ngFor="let staff of item.LawsuitStaff; let last = last">
-                  {{ (staff.TitleName || '') + (staff.FullName || '') + ' ' + (staff.LastName || '')}}{{last? '' : ',
-                  '}}
+                <div *ngFor="let entry of item.Lawsuit; let last = last">
+                  {{ (entry.LawsuitNo || '') || '-' }}{{last? '' : ', '}}
                 </div>
               </td>
               <td>
-                <div *ngFor="let staff of item.LawsuitStaff; let last = last">
-                  {{ (staff.DepartmentName || '-') }}{{last? '' : ', '}}
+                <div *ngFor="let entry of item.Lawsuit; let last = last">
+                  {{ (entry.LawsuitDate || '') || '-' }}{{last? '' : ', '}}
+                </div>
+              </td>
+              <td>
+                <div *ngFor="let staff of item.LawsuitArrestStaff; let last = last">
+                  {{ ((staff.TitleName || '').toString()
+                  + (staff.FirstName || '').toString()
+                  + ' ' + (staff.LastName || '').toString()).trim() || '-' }}{{last? '' : ', '}}
+                </div>
+              </td>
+              <td>
+                <div *ngFor="let staff of item.LawsuitArrestStaff; let last = last">
+                  {{ (staff.DepartmentName || '').toString().trim() || '-' }}{{last? '' : ', '}}
                 </div>
               </td>
               <td>

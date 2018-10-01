@@ -24,17 +24,8 @@ export class LawsuitService {
 
   async getByKeywordOnInt(): Promise<Lawsuit[]> {
     const params = { 'Textsearch': '' };
-    const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
+    const url = `${appConfig.api8083}/LawsuitArrestgetByKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
-    // const params = {
-    //   'ArrestCode': ''
-    //   , 'LawsuitNo': ''
-    //   , 'LawsuitDateFrom': ''
-    //   , 'LawsuitDateTo': ''
-    //   , 'StaffName': ''
-    //   , 'OfficeName': '' };
-    // const url = `${appConfig.api8083}/LawsuitgetByConAdv`;
-    // return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
 
   getByKeyword(Textsearch: any): Promise<Lawsuit[]> {
