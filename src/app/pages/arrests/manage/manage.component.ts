@@ -47,6 +47,15 @@ import { MainMasterService } from '../../../services/main-master.service';
 })
 export class ManageComponent implements OnInit, OnDestroy {
 
+    card1: boolean = true;
+    card2: boolean = false;
+    card3: boolean = false;
+    card4: boolean = false;
+    card5: boolean = false;
+    card6: boolean = false;
+    card7: boolean = false;
+    card8: boolean = false;
+
     private sub: any;
     programSpect = 'ILG60-03-02-00'
     mode: string;
@@ -121,8 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private ngbModel: NgbModal,
         private arrestService: ArrestsService,
-        private proveService: ProveService,
-        public router: Router,
+        private router: Router,
         private sidebarService: SidebarService,
         private preloader: PreloaderService,
         private mainMasterService: MainMasterService,
@@ -139,10 +147,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.11');
+        this.sidebarService.setVersion('0.0.0.15');
 
-        this.arrestFG = this.createForm();
         this.active_route();
+        this.arrestFG = this.createForm();
         this.navigate_Service();
 
         await this.setStaffStore()
@@ -156,16 +164,22 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // this.sub.unsubscribe();
-        this.onCancelSubscribe.unsubscribe();
-        this.onSaveSubscribe.unsubscribe();
-        this.onDeleSubscribe.unsubscribe();
-        this.onPrintSubscribe.unsubscribe();
-        this.onNextPageSubscribe.unsubscribe()
+        if (this.onCancelSubscribe)
+            this.onCancelSubscribe.unsubscribe();
+        if (this.onSaveSubscribe)
+            this.onSaveSubscribe.unsubscribe();
+        if (this.onDeleSubscribe)
+            this.onDeleSubscribe.unsubscribe();
+        if (this.onPrintSubscribe)
+            this.onPrintSubscribe.unsubscribe();
+        if (this.onNextPageSubscribe)
+            this.onNextPageSubscribe.unsubscribe();
     }
 
     private createForm(): FormGroup {
         let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
         let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
+        let testCode = `test-${(new Date).getTime()}`;
         // let OccurrenceDate = ArrestDate;
         return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
@@ -183,7 +197,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestDesc: new FormControl('N/A'),
             NoticeCode: new FormControl(null, Validators.required),
             InvestigationSurveyDocument: new FormControl(null),
-            InvestigationCode: new FormControl(null, Validators.required),
+            InvestigationCode: new FormControl(testCode, Validators.required),
             IsActive: new FormControl(1),
             ArrestStaff: this.fb.array([this.createStaffForm()]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
@@ -228,7 +242,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private active_route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
-            if (p['mode'] === 'C') {
+
+            if (p['mode'] == 'C') {
                 // set false
                 this.navService.setPrintButton(false);
                 this.navService.setEditButton(false);
@@ -328,7 +343,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         })
     }
-
 
     private async setOfficeStore() {
         await this.mainMasterService.masOfficeMaingetAll().then(res =>
@@ -710,17 +724,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     async setNoticeForm(notice: Notice) {
         this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
 
-        let locale = notice.NoticeLocale[0];
+        const locale = notice.NoticeLocale[0];
         let product = notice.NoticeProduct;
+
+        const region = this.findRegion(locale.SubDistrict, locale.District, locale.Province)
 
         this.ArrestLocale.at(0).reset(locale);
         this.ArrestLocale.at(0).patchValue({
-            SubDistrictCode: locale.SubDistrictCode,
-            SubDistrict: locale.SubDistrict,
-            DistrictCode: locale.DistrictCode,
-            District: locale.District,
-            ProvinceCode: locale.ProvinceCode,
-            Province: locale.Province,
+            SubDistrictCode: locale.SubDistrictCode || region.SubdistrictCode,
+            SubDistrict: locale.SubDistrict || region.SubdistrictNameTH,
+            DistrictCode: locale.DistrictCode || region.DistrictCode,
+            District: locale.District || region.DistrictNameTH,
+            ProvinceCode: locale.ProvinceCode || region.ProvinceCode,
+            Province: locale.Province || region.ProvinceNameTH,
             Region: `${locale.SubDistrict} ${locale.District} ${locale.Province}`,
             ArrestCode: this.arrestCode,
             IsArrest: 1
@@ -742,6 +758,24 @@ export class ManageComponent implements OnInit, OnDestroy {
             })
         }
 
+    }
+
+    findRegion(subdistrict, district, province) {
+        let r = this.typeheadRegion.filter(v =>
+            (v.SubdistrictNameTH == subdistrict) &&
+            (v.DistrictNameTH == district) &&
+            (v.ProvinceNameTH == province)
+        ).reduce((obj, key) => {
+            obj['SubdistrictCode'] = key.SubdistrictCode;
+            obj['SubdistrictNameTH'] = key.SubdistrictNameTH;
+            obj['DistrictCode'] = key.SubdistrictCode;
+            obj['DistrictNameTH'] = key.DistrictNameTH;
+            obj['ProvinceCode'] = key.ProvinceCode;
+            obj['ProvinceNameTH'] = key.ProvinceNameTH;
+            return obj;
+        }, {});
+
+        return r as RegionModel;
     }
 
     openModal(e) {
@@ -770,7 +804,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-
     addStaff() {
         const lastIndex = this.ArrestStaff.length - 1;
         let item = new ArrestStaff();
@@ -780,7 +813,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestStaff.push(this.fb.group(item));
         } else {
             const lastDoc = this.ArrestStaff.at(lastIndex).value;
-            if (lastDoc.StaffCode) {
+            if (lastDoc.ContributorID) {
                 this.ArrestStaff.push(this.fb.group(item));
             }
         }
@@ -795,11 +828,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestProduct.push(this.fb.group(item));
         } else {
             const lastDoc = this.ArrestProduct.at(lastIndex).value;
-            if (lastDoc.ProductID) {
+            if (lastDoc.Qty && lastDoc.QtyUnit) {
                 this.ArrestProduct.push(this.fb.group(item));
             }
         }
-
     }
 
     addIndicment(e: ArrestIndictment[]) {
@@ -841,7 +873,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             let FG = this.fb.group({
                 ArrestCode: new FormControl(this.arrestCode, Validators.required),
-                IndictmentID: new FormControl(item.IndictmentID),
+                IndicmentID: new FormControl(item.IndicmentID),
                 IsProve: new FormControl(item.IsProve, Validators.required),
                 IsActive: new FormControl(item.IsActive, Validators.required),
                 GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),
@@ -888,7 +920,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     viewLawbreaker(id: number) {
-        this.router.navigate([`/notice/lawbreaker`, 'R', id]);
+        this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
     }
 
     async deleteStaff(indexForm: number, staffId: string) {

@@ -75,7 +75,7 @@ export class ArrestLawbreaker {
     public IDCard: string;
     public PassportNo: string;
     public VISAType: number;
-    public PassportConuntryCode: string;
+    public PassportCountryCode: string;
     public PassportCountryName: string;
     public PassportDateIn: any;
     public PassportDateOut: any;

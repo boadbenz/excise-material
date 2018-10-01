@@ -29,7 +29,7 @@ const routes: Routes = [
               { title: 'ค้นหางานจับกุม', url: '/arrest/list' },
               { title: 'จัดการข้อมูลบันทึกจับกุม' }
           ],
-          codePage: 'XCS60-03-02-00',
+          codePage: 'ILG60-03-02-00-00',
           nextPage: { title: 'รับคำกล่าวโทษ', url: '/accusations/manage' }
       },
       component: ManageComponent
@@ -44,9 +44,6 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     NgbModule.forRoot(),
-    StoreModule.forRoot({
-      productModule: productReducer
-    }),
     RouterModule.forChild(routes),
     ModalLawbreakerModule,
     CardActionsModule,
@@ -59,6 +56,6 @@ const routes: Routes = [
   declarations: [
     ManageComponent
   ],
-  providers: [ArrestsService, ProveService, MainMasterService]
+  providers: [ArrestsService, MainMasterService]
 })
 export class ManageModule { }

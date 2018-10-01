@@ -173,7 +173,7 @@ export class DetailComponent implements OnInit {
             this.lawbreakerID = data.LawbreakerID;
           });
           // Find guiltbaseID
-          if (value.IndictmentID == params.IndictmentID) {
+          if (value.IndicmentID == params.IndictmentID) {
             this.guiltBaseID = value.GuiltBaseID;
           }
         });

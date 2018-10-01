@@ -7,6 +7,7 @@ import { ArrestsService } from '../arrests.service';
 import { MasLawGroupSectionModel } from '../../../models';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { Message } from '../../../config/message';
 
 @Component({
     selector: 'app-allegation-modal',
@@ -95,6 +96,10 @@ export class AllegationModalComponent implements OnInit {
     }
 
     async onSearchComplete(list: MasLawGroupSectionModel[]) {
+        if (!list.length) {
+            alert(Message.noRecord);
+            return
+        }
         await list.map((item, i) => {
             item.RowId = i + 1
             item.IsChecked = false
