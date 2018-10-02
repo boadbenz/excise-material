@@ -107,16 +107,36 @@
             <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
               <td class="text-center">{{ item.RowsId || '' }}</td>
               <td>{{ item.ArrestCode || '-' }}</td>
-              <td>{{ item.SubSectionType || '-' }}</td>
               <td>
-                <div *ngFor="let entry of item.Lawsuit; let last = last">
-                  {{ (entry.LawsuitNo || '') || '-' }}{{last? '' : ', '}}
-                </div>
+                <span *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
+                  <span *ngFor="let b of a.LawsuitLawGuiltbase; let bLast = last">
+                    <span *ngFor="let c of b.LawsuitLawSubSectionRule; let cLast = last">
+                      <span *ngFor="let d of c.LawsuitLawSubSection; let dLast = last">
+                        {{ (d.SubSectionType || '') || '-' }}{{dLast? '' : ', '}}
+                      </span>{{cLast? '' : ', '}}
+                    </span>{{bLast? '' : ', '}}
+                  </span>{{aLast? '' : ', '}}
+                </span>
               </td>
               <td>
-                <div *ngFor="let entry of item.Lawsuit; let last = last">
-                  {{ (entry.LawsuitDate || '') || '-' }}{{last? '' : ', '}}
-                </div>
+                <span *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
+                  <span *ngFor="let b of a.Lawsuit; let bLast = last">
+                    {{ (b.LawsuitNo || '') || '-' }}{{bLast? '' : ', '}}
+                  </span>{{aLast? '' : ', '}}
+                </span>
+                <!--<div *ngFor="let entry of item.Lawsuit; let last = last">-->
+                  <!--{{ (entry.LawsuitNo || '') || '-' }}{{last? '' : ', '}}-->
+                <!--</div>-->
+              </td>
+              <td>
+                <span *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
+                  <span *ngFor="let b of a.Lawsuit; let bLast = last">
+                    {{ (b.LawsuitDate || '') || '-' }}{{bLast? '' : ', '}}
+                  </span>{{aLast? '' : ', '}}
+                </span>
+                <!--<div *ngFor="let entry of item.Lawsuit; let last = last">-->
+                  <!--{{ (entry.LawsuitDate || '') || '-' }}{{last? '' : ', '}}-->
+                <!--</div>-->
               </td>
               <td>
                 <div *ngFor="let staff of item.LawsuitArrestStaff; let last = last">

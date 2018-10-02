@@ -30,7 +30,7 @@ export class LawsuitService {
 
   getByKeyword(Textsearch: any): Promise<Lawsuit[]> {
     const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-    const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
+    const url = `${appConfig.api8083}/LawsuitArrestgetbyKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
 
