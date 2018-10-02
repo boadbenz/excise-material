@@ -49,6 +49,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     txtTreasuryMoney_Value: string = "0.00";    // เงินส่งคลัง
     revenueCmpList = [];
     
+    oldCompareRecId = [];
+    
     private sub: any;
     mode: string;
     modal: any;
@@ -182,6 +184,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     chkDetail_onChange() {
+        //alert("test");
+
         this.chkAll_Value = this.revenueCmpList.every(function (item: any) {
             return item.IsCheck == true;
         });
@@ -195,6 +199,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     txtStaffName_onInput(value: string) {
         if (value == '') {
+            //alert(this.revenueCmpList.length);
+
             this.Staffoptions = [];
             this.ClearStaffData();
 
@@ -202,6 +208,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.txtDeptStaff_Value = "";
             this.DeptStaffCode = "";
         } else {
+            //alert(this.revenueCmpList.length);
+
             this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
@@ -218,6 +226,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     txtStaffName_onClick(event) {
+
+        //alert(this.revenueCmpList.length);
+
+        console.log(this.txtRevenueDate_Value);
+
         this.oRevenueStaff = {
             StaffID: this.StaffID,
             ProgramCode: "XCS-60",
@@ -366,20 +379,26 @@ export class ManageComponent implements OnInit, OnDestroy {
     async getRevenueComparegetByCon() {
         this.preloader.setShowPreloader(true);
 
+        
+
         //alert(this.DeptStaffCode);
         //alert(this.getCurrentDate());
 
         await this.IncService.RevenueComparegetByCon(this.getCurrentDate()+"T00:00:00.0",this.DeptStaffCode).then(async res => {
             if (res) {
 
+                
+
                 if(res.length == 0){
-                    alert("ไม่พบข้อมูล");
+                    if (this.mode === 'C') {
+                        alert("ไม่พบข้อมูล");
+                    }
                 }
                 //console.log(res);
 
                 await res.map((item) => {
 
-                    item.IsCheck = null;
+                    item.IsCheck = false;
 
                     item.TreasuryMoney = item.RevenueCompareDetail[0].TreasuryMoney;
                     item.BribeMoney = item.RevenueCompareDetail[0].BribeMoney;
@@ -405,38 +424,21 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     item.StaffReceip = tmp[0].TitleName+tmp[0].FirstName+' '+tmp[0].LastName;
 
-                    // item.RevenueDate = toLocalShort(item.RevenueDate);
-                    // item.RevenueOneStaff = item.RevenueStaff.filter(item => item.ContributorID === '20');
-        
-                    // item.NameX = "";
-        
-                    // if(item.RevenueOneStaff.length > 0) {
-                    //     item.NameX = item.RevenueOneStaff[0].TitleName+item.RevenueOneStaff[0].FirstName+' '+item.RevenueOneStaff[0].LastName;
-                    // }
-        
-                    // console.log(item.RevenueOneStaff);
-        
-                    // item.Count = item.RevenueDetail.length;
-        
-                    // debugger
-                    // if (item.RevenueDetail.length > 0) {
-                    //     if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    //         item.RevenueDetail[0].RevenueStatus = "ยังไม่นำส่งเงินรายได้"
-                    //     }
-                    //     else if (item.RevenueDetail[0].RevenueStatus == "1") {
-                    //         item.RevenueDetail[0].RevenueStatus = "นำส่งเงินรายได้"
-                    //     }
-                    //     else {
-                    //         item.RevenueDetail[0].RevenueStatus = "รับรายการนำส่งเงิน"
-                    //     }
-                    // }
+                    
         
                 })
 
-                this.revenueCmp = res;
+                //this.revenueCmp = res;
+                //alert(this.revenueCmpList.length);
+                //res.push({"IsCheck":false,"CompareCode":"111"});
+                //res.push({"IsCheck":true,"CompareCode":"222"});
 
-                this.paginage.TotalItems = this.revenueCmp.length;
-                this.revenueCmpList = this.revenueCmp.slice(0, this.paginage.RowsPerPageOptions[0]);
+                this.revenueCmp = this.revenueCmpList.concat(res);
+
+
+                //this.paginage.TotalItems = this.revenueCmp.length;
+                //this.revenueCmpList = this.revenueCmp.slice(0, this.paginage.RowsPerPageOptions[0]);
+                this.revenueCmpList = this.revenueCmp;
 
                 this.preloader.setShowPreloader(false);
             }
@@ -508,6 +510,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.txtDeptSend_Value = SStaff[0].OfficeName;
                     this.StaffSendID = SStaff[0].StaffID;
                     this.oRevenueSendStaff = SStaff[0];
+
+                    console.log(SStaff[0]);
+
+                    this.DeptStaffCode = SStaff[0].DepartmentCode;
                 }
 
                 var Staff = res[0].RevenueStaff.filter(f => f.ContributorID == 34);
@@ -522,51 +528,58 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.selRevenueStatus_Value = res[0].RevenueStatus;
 
                 if (res[0].RevenueDetail.length > 0) {
+                    console.log(res[0].RevenueDetail);
+
                     //for (var i = 0; i < this.ListRevenueDetail.length; i += 1) {
                         var tmp = [];
                         for (var j = 0; j < res[0].RevenueDetail.length; j += 1) {
 
                             //alert(res[0].RevenueDetail.CompareReceiptID);
+                            this.oldCompareRecId.push(res[0].RevenueDetail[j].CompareReceiptID);
+                            let tmp_rev_id = res[0].RevenueDetail[j].RevenueDetailID;
                             
-                            await this.IncService.getRevenueComparegetByCompareReceiptID(res[0].RevenueDetail[0].CompareReceiptID).then(async res => {
-                                var o = new Object;
-                                o.CompareCode = res[0].CompareCode;
+                            await this.IncService.getRevenueComparegetByCompareReceiptID(res[0].RevenueDetail[j].CompareReceiptID).then(async res => {
+                                var o = new Object();
+                                o["CompareCode"] = res[0].CompareCode;
                                 //o.ReceiptNo = "111";
-                                o.LawBreaker = "111";
-                                o.StaffReceip = "111";
+                                o["LawBreaker"] = "111";
+                                o["StaffReceip"] = "111";
                                 //o.PaymentDate = "111";
                                 //o.TotalFine = "111";
                                 //o.BribeMoney = "111";
                                 //o.TreasuryMoney = "111";
                                 //o.RewardMoney = "111";
 
-                                o.IsCheck = true;
+                                o["IsCheck"] = true;
 
-                                o.TreasuryMoney = res[0].RevenueCompareDetail[0].TreasuryMoney;
-                                o.BribeMoney = res[0].RevenueCompareDetail[0].BribeMoney;
-                                o.RewardMoney = res[0].RevenueCompareDetail[0].RewardMoney;
-                                o.TotalFine = res[0].RevenueCompareDetail[0].RevenueCompareDetailReceipt[0].TotalFine;
-                                o.ReceiptNo = res[0].RevenueCompareDetail[0].RevenueCompareDetailReceipt[0].ReceiptNo;
+                                console.log(res[0]);
+                                o["RevenueDetailID"] = tmp_rev_id;
 
-                                o.TreasuryMoney = parseFloat(o.TreasuryMoney).toLocaleString(undefined, {minimumFractionDigits: 2});
-                                o.BribeMoney = parseFloat(o.BribeMoney).toLocaleString(undefined, {minimumFractionDigits: 2});
-                                o.RewardMoney = parseFloat(o.RewardMoney).toLocaleString(undefined, {minimumFractionDigits: 2});
-                                o.TotalFine = parseFloat(o.TotalFine).toLocaleString(undefined, {minimumFractionDigits: 2});
+                                o["TreasuryMoney"] = res[0].RevenueCompareDetail[0].TreasuryMoney;
+                                o["BribeMoney"] = res[0].RevenueCompareDetail[0].BribeMoney;
+                                o["RewardMoney"] = res[0].RevenueCompareDetail[0].RewardMoney;
+                                o["TotalFine"] = res[0].RevenueCompareDetail[0].RevenueCompareDetailReceipt[0].TotalFine;
+                                o["ReceiptNo"] = res[0].RevenueCompareDetail[0].RevenueCompareDetailReceipt[0].ReceiptNo;
 
-                                o.CompareReceiptID = res[0].RevenueCompareDetail[0].RevenueCompareDetailReceipt[0].CompareReceiptID;
+                                o["TreasuryMoney"] = parseFloat(o["TreasuryMoney"]).toLocaleString(undefined, {minimumFractionDigits: 2});
+                                o["BribeMoney"] = parseFloat(o["BribeMoney"]).toLocaleString(undefined, {minimumFractionDigits: 2});
+                                o["RewardMoney"] = parseFloat(o["RewardMoney"]).toLocaleString(undefined, {minimumFractionDigits: 2});
+                                o["TotalFine"] = parseFloat(o["TotalFine"]).toLocaleString(undefined, {minimumFractionDigits: 2});
 
-                                o.PaymentDate = toLocalShort(res[0].RevenueCompareDetail[0].RevenueCompareDetailReceipt[0].PaymentDate);
+                                o["CompareReceiptID"] = res[0].RevenueCompareDetail[0].RevenueCompareDetailReceipt[0].CompareReceiptID;
+
+                                o["PaymentDate"] = toLocalShort(res[0].RevenueCompareDetail[0].RevenueCompareDetailReceipt[0].PaymentDate);
 
 
                                 //let tmp = res[0].RevenueCompareDetail[0].RevenueArrestIndicmentDetail[0].RevenueArrestLawbreaker.filter(i => i.IsActive === '1');
 
-                                o.LawBreaker = res[0].RevenueCompareDetail[0].LawbreakerTitleName+res[0].RevenueCompareDetail[0].LawbreakerFirstName+' '+res[0].RevenueCompareDetail[0].LawbreakerLastName;
+                                o["LawBreaker"] = res[0].RevenueCompareDetail[0].LawbreakerTitleName+res[0].RevenueCompareDetail[0].LawbreakerFirstName+' '+res[0].RevenueCompareDetail[0].LawbreakerLastName;
 
                                 let tmp2 = res[0].RevenueCompareStaff.filter(i => i.ContributorID === 19);
 
                                 //alert(tmp.length);
 
-                                o.StaffReceip = tmp2[0].TitleName+tmp2[0].FirstName+' '+tmp2[0].LastName;
+                                o["StaffReceip"] = tmp2[0].TitleName+tmp2[0].FirstName+' '+tmp2[0].LastName;
 
                                 
 
@@ -577,6 +590,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     //}
 
                     this.revenueCmpList = tmp;
+
+                    await this.getRevenueComparegetByCon();
 
                     this.chkDetail_onChange();
 
@@ -670,7 +685,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorCode: "20",
+            ContributorID: "20",
             IsActive: "1"
         }
     }
@@ -698,7 +713,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorCode: "34",
+            ContributorID: "34",
             IsActive: "1"
         }
     }
@@ -841,6 +856,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async onUdpRevenue() {
+
+        // console.log(this.oldCompareRecId);
+
+        // return "";
+
         this.preloader.setShowPreloader(true);
 
         let DRate, cDateRevenue;
@@ -850,7 +870,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             cDateRevenue = DRate.year + '-' + DRate.month + '-' + DRate.day + ' ' + this.txtRevenueTime_Value;
         }
 
-        this.oRevenue.RevenueDate = cDateRevenue;
+        this.oRevenue.RevenueNo = this.txtRevenueNo_Value;
+        this.oRevenue.RevenueDate = "2017-12-29T22:00:00.0";
         this.oRevenue.RevenueCode = this.txtRevenueCode_Value;
         this.oRevenue.InformTo = this.txtInformTo_Value;
 
@@ -864,8 +885,64 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oRevenue.RevenueStaff.push(this.oRevenueStaff);
         }
 
-        this.oRevenue.RevenueDetail = this.ListRevenueDetail.filter(item => item.IsCheck === true);
-        debugger
+        //this.oRevenue.RevenueDetail = this.ListRevenueDetail.filter(item => item.IsCheck === true);
+        //debugger
+
+        this.oRevenue.RevenueDetail = [];
+
+        let toDel = [];
+        let toAdd = [];
+        let now = [];
+
+        for (var i = 0; i < this.revenueCmpList.length; i += 1) {
+            if(this.revenueCmpList[i].IsCheck){               
+                //this.oldCompareRecId;
+                now.push(this.revenueCmpList[i].CompareReceiptID);
+            }
+        }
+        
+        for (var i = 0; i < this.oldCompareRecId.length; i += 1) {
+            if(!now.includes(this.oldCompareRecId[i])){
+                toDel.push(this.oldCompareRecId[i]);
+            }     
+        }
+
+        for (var i = 0; i < now.length; i += 1) {
+            if(!toDel.includes(now[i]) && !this.oldCompareRecId.includes(now[i])){
+                toAdd.push(now[i]);
+            }
+        }
+
+        console.log(this.oldCompareRecId);
+        console.log(now);
+        console.log(toDel);
+        console.log(toAdd);
+
+        for (var i = 0; i < toAdd.length; i += 1) {
+            for (var j = 0; j < this.revenueCmpList.length; j += 1) {
+                if(this.revenueCmpList[j].CompareReceiptID == toAdd[i]){
+                    console.log(this.revenueCmpList[j]);
+
+                    this.IncService.RevenueDetailinsAll(this.revenueCmpList[j].CompareCode,this.revenueCmpList[j].ReceiptNo,
+                                            "1",this.revenueID,toAdd[i],"1");
+
+                    this.IncService.RevenueCompareDetailReceiptupdByCon(toAdd[i]);
+                }
+            }
+        }
+
+        for (var i = 0; i < toDel.length; i += 1) {
+            for (var j = 0; j < this.revenueCmpList.length; j += 1) {
+                //console.log(this.revenueCmpList[j]);
+
+                if(this.revenueCmpList[j].CompareReceiptID == toDel[i]){
+                    console.log(this.revenueCmpList[j]);
+
+                    this.IncService.RevenueDetailupdDelete(this.revenueCmpList[j].RevenueDetailID);
+                    this.IncService.RevenueCompareDetailReceiptupdDelete(toDel[i]);
+                }
+            }
+        }
 
         let isSuccess: boolean = true;
         await this.IncService.RevenueUdp(this.oRevenue).then(async item => {
@@ -878,6 +955,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (isSuccess) {
             alert(Message.saveComplete);
+            
             this.onComplete();
             this.navService.setOnSave(false);
         } else {

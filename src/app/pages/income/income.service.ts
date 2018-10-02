@@ -103,6 +103,19 @@ export class IncomeService {
     }
   }
 
+  async RevenueDetailupdDelete(RevenueDetailID: string): Promise<any> {
+    debugger
+    const params = { RevenueDetailID };
+    const url = `${appConfig.api8084}/RevenueDetailupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
   async getDepartment(): Promise<any> {
     const params = { };
     const url = `${appConfig.api8084}/RevenueDepartmentgetAll`;
@@ -168,6 +181,20 @@ export class IncomeService {
     debugger
     const params = JSON.stringify(oRevenue);
     const url = `${appConfig.api8084}/RevenueinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async RevenueDetailinsAll(ReceiptBookNo:any,ReceiptNo:any,RevenueStatus:any,RevenueID:any,CompareReceiptID:any
+  ,IsActive:any): Promise<any> {
+    debugger
+    const params = {ReceiptBookNo,ReceiptNo,RevenueStatus,RevenueID,CompareReceiptID,IsActive};
+    const url = `${appConfig.api8084}/RevenueDetailinsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

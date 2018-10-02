@@ -221,7 +221,7 @@
                                 <tbody>
                                     <tr *ngFor="let item of revenueCmpList; let i=index;">
                                         <td style="text-align: center">
-                                            <input [disabled]="showEditField" type="checkbox" [id]="'RevenueD'+i" class="filled-in chk-col-indigo" name="chkDetail[i]" [(ngModel)]="item.IsCheck"
+                                            <input [disabled]="showEditField" type="checkbox" [id]="'RevenueD'+i" class="filled-in chk-col-indigo" name="chkDetail[i]" [checked]="item.IsCheck" (change)="item.IsCheck = !item.IsCheck"
                                                 (change)="chkDetail_onChange();">
                                             <label [for]="'RevenueD'+i" class="m-0"></label>
                                         </td>
