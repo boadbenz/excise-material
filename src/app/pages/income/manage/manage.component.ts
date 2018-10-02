@@ -17,7 +17,7 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { async } from '../../../../../node_modules/@angular/core/testing';
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
-
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 //#endregion
 
 @Component({
@@ -125,7 +125,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private IncService: IncomeService,
         private preloader: PreloaderService,
-        private router: Router
+        private router: Router,
+        private sidebarService: SidebarService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -134,6 +135,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        this.sidebarService.setVersion('Revenue 0.0.0.2');
+
         this.preloader.setShowPreloader(true);
 
         
@@ -1080,12 +1083,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
-        // this.sub = this.navService.onPrint.subscribe(async status => {
-        //     if (status) {
-        //         await this.navService.setOnPrint(false);
-        //         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-        //     }
-        // })
+        this.sub = this.navService.onPrint.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnPrint(false);
+                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+            }
+        })
 
         this.sub = this.navService.onCancel.subscribe(async status => {
             if (status) {
