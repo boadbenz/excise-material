@@ -33,8 +33,9 @@ export class ListComponent implements OnInit, OnDestroy {
 
     showEditField: any;
     DepartmentName: string;
+    AdvRevenueCode: string;
 
-    RevenueStatus: any;
+    RevenueStatus: any = "";
     StatusOption = [];
     options = [];
     rawOptions = [];
@@ -76,27 +77,49 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.preloader.setShowPreloader(true);
 
-        this.getDepartmentRevenue();
+        // this.getDepartmentRevenue();
         // this.onSearch({ Textsearch: "" });
 
-        // this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-        //     if (Textsearch) {
-        //         await this.navService.setOnSearch('');
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
+            this.preloader.setShowPreloader(true);
 
-        //         let ts;
-        //         ts = { Textsearch: "" }
-        //         ts = Textsearch;
+            if (Textsearch) {
+                await this.navService.setOnSearch('');
 
-        //         if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
-        //         else { this.onSearch(Textsearch); }
+                let ts;
+                ts = { Textsearch: "" }
+                ts = Textsearch;
 
-        //     }
-        // })
+                //alert("1");
 
-        // this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+                if (ts.Textsearch == null) { 
+                    this.onSearch({ Textsearch: "" }); 
+                } else { 
+
+                    //alert(ts.Textsearch);
+
+                    this.onSearch(Textsearch); 
+                }
+
+            } else {
+                this.onSearch({ Textsearch: "" }); 
+            }
+        })
+
+        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnNextPage(false);
+                this._router.navigate(['/income/manage', 'C', 'NEW']);
+            }
+        })
+
+        // this.navService.onSearch.subscribe(async status => {
         //     if (status) {
-        //         await this.navService.setOnNextPage(false);
-        //         this._router.navigate(['/income/manage', 'C', 'NEW']);
+        //         alert(this.navService.searchByKeyword);
+
+        //         this.preloader.setShowPreloader(true);
+
+        //         this.onSearch({ Textsearch: status }); 
         //     }
         // })
     }
@@ -131,6 +154,12 @@ export class ListComponent implements OnInit, OnDestroy {
     //#region "Others"
 
     clickView(RevenueCode: string) {
+
+        RevenueCode = btoa(RevenueCode);
+        //RevenueCode = encodeURI(RevenueCode);
+
+        //alert(RevenueCode);
+
         this._router.navigate([`/income/manage/R/${RevenueCode}`]);
     }
 
@@ -144,14 +173,22 @@ export class ListComponent implements OnInit, OnDestroy {
     
 
     checkDateDelivery() {
-        if (this._dateStartFrom && this._dateStartTo) {
-            const sdate = getDateMyDatepicker(this._dateStartFrom);
-            const edate = getDateMyDatepicker(this._dateStartTo);
+        
 
-            if (!compareDate(new Date(sdate), new Date(edate))) {
+        if (this._dateStartFrom && this._dateStartTo) {
+            //console.log(this._dateStartFrom);
+            //alert(this._dateStartFrom);
+
+
+            //const sdate = getDateMyDatepicker(this._dateStartFrom);
+            //const edate = getDateMyDatepicker(this._dateStartTo);
+
+            //alert(sdate);
+
+            if (!compareDate(new Date(`${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`), new Date(`${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`))) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.DateStartTo = { date: this._dateStartFrom.date };
+                    this.DateStartTo = "";
                 }, 0);
             }
         }
@@ -160,30 +197,6 @@ export class ListComponent implements OnInit, OnDestroy {
     //#endregion
     
     //#region "Events"
-
-    onAutoChange(value: string) {
-        // 
-        if (value == '') {
-            this.options = [];
-
-            // this.oProve.ProveStationCode = "";
-            // this.oProve.ProveStation = "";
-        } else {
-            this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
-            debugger
-        }
-    }
-
-    onAutoFocus(value: string) {
-        if (value == '') {
-            this.options = [];
-        }
-    }
-
-    onAutoSelecteWord(event) {
-        // this.oProve.ProveStationCode = event.OfficeCode;
-        // this.oProve.ProveStation = event.OfficeName;
-    }
 
     onSDateChange(event: IMyDateModel) {
         this._dateStartFrom = event.date;
@@ -203,8 +216,18 @@ export class ListComponent implements OnInit, OnDestroy {
 
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord);
-            this.preloader.setShowPreloader(true);
+            alert(err.statusText);
+            //console.log(err.statusText);
+            // this.preloader.setShowPreloader(false);
+
+            // this.revenue = [];
+            // this.revenue.push({RevenueCode:"C111"});
+            
+            
+            
+            // this.paginage.TotalItems = 1;
+            // this.RevenueList = this.revenue;
+
         });
     }
 
@@ -213,12 +236,15 @@ export class ListComponent implements OnInit, OnDestroy {
         let sDate, eDate, sDateRevenue, eDateRevenue;
 
         if (form.value.DateStartFrom) {
+            
             sDate = form.value.DateStartFrom.date;
 
             if (sDate != undefined) {
                 sDateRevenue = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
                 form.value.DateStartFrom = setZeroHours(sDateRevenue);
             }
+        }else{
+            form.value.DateStartFrom = "";
         }
 
         if (form.value.DateStartTo) {
@@ -228,6 +254,8 @@ export class ListComponent implements OnInit, OnDestroy {
                 eDateRevenue = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
                 form.value.DateStartTo = setZeroHours(eDateRevenue);
             }
+        }else{
+            form.value.DateStartTo = "";
         }
 
 
@@ -250,20 +278,41 @@ export class ListComponent implements OnInit, OnDestroy {
 
         await list.map((item) => {
             item.RevenueDate = toLocalShort(item.RevenueDate);
-            item.RevenueOneStaff = item.RevenueStaff.filter(item => item.ContributorCode === '20');
+            item.RevenueOneStaff = item.RevenueStaff.filter(item => item.ContributorID === 20);
+
+            //alert(item.RevenueOneStaff.length);
+
+            item.NameX = "";
+            item.OfficeName = "";
+
+            if(item.RevenueOneStaff.length > 0) {
+                item.NameX = item.RevenueOneStaff[0].TitleName+item.RevenueOneStaff[0].FirstName+' '+item.RevenueOneStaff[0].LastName;
+
+                item.OfficeName = item.RevenueOneStaff[0].OfficeName;
+            }
+
+            //console.log(item.RevenueOneStaff);
+
+            item.Count = item.RevenueDetail.length;
 
             debugger
+
+            item.RevenueStatus = "ยังไม่นำส่งเงินรายได้";
+            
+
             if (item.RevenueDetail.length > 0) {
                 if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    item.RevenueDetail[0].RevenueStatus = "ยังไม่นำส่งเงินรายได้"
+                    item.RevenueStatus = "ยังไม่นำส่งเงินรายได้"
                 }
-                else if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    item.RevenueDetail[0].RevenueStatus = "นำส่งเงินรายได้"
+                else if (item.RevenueDetail[0].RevenueStatus == "1") {
+                    item.RevenueStatus = "นำส่งเงินรายได้"
                 }
                 else {
-                    item.RevenueDetail[0].RevenueStatus = "รับรายการนำส่งเงิน"
+                    item.RevenueStatus = "รับรายการนำส่งเงิน"
                 }
             }
+
+            
 
         })
 
