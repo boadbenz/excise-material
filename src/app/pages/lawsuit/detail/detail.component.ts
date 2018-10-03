@@ -36,7 +36,7 @@ export class DetailComponent implements OnInit {
   private lawbreakerID: number;
   private guiltBaseID: number;
 
-  @ViewChild('printDocModal') printDocModel: ElementRef;
+  @ViewChild('printLawsuitModal') printDocModel: ElementRef;
 
   constructor(
     private router: Router,
