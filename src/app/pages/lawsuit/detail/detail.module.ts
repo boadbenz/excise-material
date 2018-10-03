@@ -6,7 +6,7 @@ import { LawsuitService } from "../lawsuit.service";
 import { PaginationTableModule } from "../../component/pagination-table/pagination-table.module";
 import { DetailComponent } from "./detail.component";
 import { CardActionsModule } from "../../component/card-actions/card-actions.module";
-import { PrintDocModalModule } from "../print-doc-modal/print-doc-modal.module";
+import { PrintLawsuitModalModule } from "../print-doc-modal/print-doc-modal.module";
 import { StepWizardModule } from "../../component/step-wizard/step-wizard.module";
 import {HttpClientModule} from "../../../../../node_modules/@angular/common/http";
 import {HttpModule} from "@angular/http";
@@ -47,7 +47,7 @@ const routes: Routes = [
     CardActionsModule,
     SuspectModalModule,
     ModalLawbreakerModule,
-    PrintDocModalModule,
+    PrintLawsuitModalModule,
     PaginationTableModule,
     StepWizardModule
   ],
