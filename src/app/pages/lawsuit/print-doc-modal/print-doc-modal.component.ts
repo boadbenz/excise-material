@@ -29,12 +29,6 @@ export class PrintLawsuitModalComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.lawsuitService.LawsuitArrestgetByCon(this.ArrestCode).then(
-      data => {
-        this.printDoc = data || [ ];
-        return true;
-      }
-    )
     this.lawsuitService.LawsuitCompareDocumentgetByCon(this.lawsuitid).then(
       data => {
       this.printDoc = data || [ ];
