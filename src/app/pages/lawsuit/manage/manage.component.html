@@ -1,7 +1,7 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
     <app-print-lawsuit-modal (c)="modal.close()" (d)="modal.dismiss()"></app-print-lawsuit-modal>
   </ng-template>
-  
+  <form [formGroup]="lawsuitArrestForm">
   <div class="wizard-content">
     <div class="wizard-circle wizard clearfix clearfix">
       <div class="steps tab-wizard">
@@ -44,14 +44,15 @@
       <app-card-actions-collapse></app-card-actions-collapse>
       <h5 class="card-title m-b-0">ข้อมูลการจับกุม</h5>
     </div>
-    <div class="card-body" *ngIf="lawsuitList">
-      <div class="form-body" *ngFor="let item of lawsuitList">
+    <div class="card-body" >
+      <div class="form-body">
         <div class="row">
           <div class="col-md-6">
-            <div class="form-group row">
+            
+            <div class="form-group row" >
               <label class="col-form-label text-right col-md-3">เลขที่ใบงาน : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="item.ArrestCode" name="ArrestCode" disabled>
+                <input class="form-control" type="text"  disable formControlName="ArrestCode" >
               </div>
             </div>
           </div>
@@ -59,11 +60,11 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">วันที่จับกุม : </label>
               <div class="col-md-4">
-                <input class="form-control" type="text" [(ngModel)]="item.OccurrenceDate" name="OccurrenceDate" disabled>
+                <input class="form-control" type="text" disable formControlName="OccurrenceDate" >
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
               <div class="col-md-3">
-                <input class="form-control" type="text" [(ngModel)]="item.OccurrenceTime" name="OccurrenceTime" disabled>
+                <input class="form-control" type="text" disable formControlName="OccurrenceTime" >
               </div>
             </div>
           </div>
@@ -73,43 +74,50 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">เขียนที่ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="item.ArrestStation" name="ArrestStation" disabled>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">ผู้กล่าวหา : </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="(item.LawsuitArrestStaff[0] || {FullName: null}).FullName" name="fullName" disabled>
+                <input class="form-control" type="text" disable formControlName="ArrestStation" >
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
+        <div formArrayName="LawsuitArrestStaff">
+          <div class="row" *ngFor="let item of LawsuitArrestStaff.controls; let i=index;" [formGroupName]="i">
+          <div class="col-md-6" >
+            <div class="form-group row" >
+              <label class="col-form-label text-right col-md-3">ผู้กล่าวหา : </label>
+              <div class="col-md-9">
+                  <input class="form-control" type="text" formControlName="FullName" disable>
+              </div>
+           
+            </div>
+          </div>
+       
+        
           <div class="col-md-6">
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="(item.LawsuitArrestStaff[0] || {PositionName: null}).PositionName" name="PositionName" disabled>
+                <input class="form-control" type="text" formControlName="PositionName"  disable>
               </div>
             </div>
           </div>
+       
+          
           <div class="col-md-6">
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="(item.LawsuitArrestStaff[0] || {DepartmentName: null}).DepartmentName" name="DepartmentName" disabled>
+                <input class="form-control" type="text"  formControlName="DepartmentName" disable>
               </div>
             </div>
           </div>
         </div>
+      </div>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ฐานความผิดมาตรา : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="item.SubSectionType" name="SubSectionType" disabled>
+                <input class="form-control" type="text" formControlName ="SubSectionType" disable>
               </div>
             </div>
           </div>
@@ -117,7 +125,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ฐานความผิด : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="item.GuiltBaseName" name="GuiltBaseName" disabled>
+                <input class="form-control" type="text"  formControlName ="GuiltBaseName" disable>
               </div>
             </div>
           </div>
@@ -127,7 +135,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">บทกำหนดโทษ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="item.SectionNo" name="SectionNo" disabled>
+                <input class="form-control" type="text" formControlName ="SectionNo" disable>
               </div>
             </div>
           </div>
@@ -135,7 +143,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">อัตราโทษ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [(ngModel)]="item.PenaltyDesc" name="PenaltyDesc" disabled>
+                <input class="form-control" type="text" formControlName ="PenaltyDesc" disable>
               </div>
             </div>
           </div>
@@ -143,39 +151,40 @@
       </div>
     </div>
   </div>
+</form>
+<form [formGroup]="lawsuitForm">
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
       <app-card-actions-collapse></app-card-actions-collapse>
       <h5 class="card-title m-b-0">รับคำกล่าวโทษ</h5>
     </div>
-    <div class="card-body" *ngIf="lawsuitList">
-        <div class="form-body" *ngFor="let item of lawsuitList">
+    <div class="card-body" >
+        <div class="form-body">
             <div class="row">
                 <div class="col-md-12">
                   
-                  <div class="form-group row" >
-                    <div class="col-md-2">
-                      <input class="form-check-input" type="checkbox" id="IsLawsuit" name="IsLawsuit" >
-                      <label class="col-form-label text-right" for="defaultCheck1">
-                          ไม่รับคดีเป็นเพราะ
-                      </label>
+                    <div class="row form-group">
+                        <div class="col">
+                            <input [attr.disabled]="showEditField ? '' : null" 
+                            type="checkbox" id="md_checkbox_25" class="filled-in chk-col-indigo"
+                                (change)="onChangeConceal()" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                            <label for="md_checkbox_25">ไม่รับคดีเป็นเพราะ</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" formControlName="ReasonDontLawsuit" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                          </div>
                     </div>
-                    
-                    <div class="form-group col-md-10">
-                        <input class="form-control" type="text" [(ngModel)]="item.ReasonDontLawsuit" name="ReasonDontLawsuit"  disabled>
-                    </div>
-                  </div>
               </div>
           </div>
           <div class="row">
               <div class="col-md-12">
-                  <div class="form-group row">
-                    <div class="col-md-12">
-                      <input class="form-check-input" type="checkbox" value="" id="IsOutside" name="IsOutside" >
-                      <label class="col-form-label col-md-12" for="defaultCheck1">
-                          คดีรับคำกล่าวโทษนอกสถานที่ทำการ
-                      </label>
-                    </div>
+                  <div class="row form-group">
+                      <div class="col">
+                          <input [attr.disabled]="showEditField ? '' : null" 
+                          type="checkbox" id="IsOutSide"  class="filled-in chk-col-indigo"
+                              (change)="onChangeConceal()" [readonly]="showEditField">
+                          <label for="IsOutSide">คดีรับคำกล่าวโทษนอกสถานที่</label>
+                      </div>
                   </div>
                 </div>
           </div>
@@ -184,7 +193,7 @@
                 <div class="form-group row">
                   <label class="col-form-label text-right col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
                   <div class="col-md-8">
-                    <input class="form-control" type="text" [(ngModel)]="item.LawsuitNo" name="LawsuitNo" >
+                    <input class="form-control" type="text" formControlName="LawsuitNo" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                   </div>
                 </div>
               </div>
@@ -192,21 +201,22 @@
                 <div class="form-group row">
                   <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
                   <div class="col-md-4">
-                    <input class="form-control" type="text" [(ngModel)]="item.LawsuitDate" name="LawsuitDate" >
+                    <input class="form-control" type="text" formControlName="LawsuitDate" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                   </div>
                   <label class="col-form-label text-center col-md-2">เวลา</label>
                   <div class="col-md-3">
-                    <input class="form-control" type="text" [(ngModel)]="item.LawsuitTime" name="LawsuitTime" >
+                    <input class="form-control" type="text" formControlName="LawsuitTime" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                   </div>
                 </div>
               </div>
           </div>
-          <div class="row">
+          <div formArrayName="LawsuitStaff">
+          <div class="row" *ngFor="let item of LawsuitStaff.controls; let i=index;" [formGroupName]="i">
               <div class="col-md-6">
                 <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">ผู้รับคดี : </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" name="FullName" >
+                  <label class="col-form-label text-right col-md-4">ผู้รับคดี : </label>
+                  <div class="col-md-8">
+                    <input class="form-control" formControlName="FullName" type="text" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                   </div>
                 </div>
               </div>
@@ -214,25 +224,27 @@
                 <div class="form-group row">
                   <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
                   <div class="col-md-9">
-                    <input class="form-control" type="text" name="PositionName" disabled>
+                    <input class="form-control" type="text" formControlName="PositionName" disabled>
+                  </div>
+                </div>
+              </div>
+            
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label text-right col-md-4">หน่วยงาน : </label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" formControlName="DepartmentName"  disabled>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row">
+              <div class="row">
                 <div class="col-md-6">
                   <div class="form-group row">
-                    <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
-                    <div class="col-md-9">
-                      <input class="form-control" type="text" name="DepartmentName" disabled>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group row">
-                    <label class="col-form-label text-right col-md-3">เขียนที่ : </label>
-                    <div class="col-md-9">
-                      <input class="form-control" type="text" [(ngModel)]="item.LawsuitStation" name="LawsuitStation" >
+                    <label class="col-form-label text-right col-md-4">เขียนที่ : </label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text"  formControlName="LawsuitStation" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                   </div>
                 </div>
@@ -242,7 +254,7 @@
                     <div class="form-group row">
                       <label class="col-form-label text-right col-md-2">คำให้การของผู้กล่าวโทษ : </label>
                       <div class="col-md-10">
-                        <textarea class="form-control" rows="5" [(ngModel)]="item.AccuserTestimony" name="AccuserTestimony" ></textarea>
+                        <textarea class="form-control" rows="5" [readonly]="showEditField" formControlName="AccuserTestimony" [ngClass]="{'ng-touched':isRequired}" required></textarea>
                       </div>
                     </div>
                   </div>
@@ -284,3 +296,4 @@
       </div>
   
 </div>
+</form>
