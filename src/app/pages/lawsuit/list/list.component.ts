@@ -37,11 +37,11 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.3');
+    this.sidebarService.setVersion('0.0.0.4');
     this.paginage.TotalItems = 0;
 
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
 
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       if (Textsearch) {
@@ -67,7 +67,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   async onSearch(Textsearch: any) {
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
 
@@ -83,7 +83,7 @@ export class ListComponent implements OnInit, OnDestroy {
       form.value.LawsuitDateTo = eDateCompare.toISOString();
     }
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.LawsuitgetByConAdv(form.value).then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitArrestGetByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
 
@@ -102,10 +102,13 @@ export class ListComponent implements OnInit, OnDestroy {
       alert(Message.noRecord);
       return false;
     }
+    
     /* Adjust Another Column */
     this.results = list.map((item, i) => {
       item.RowsId = i + 1;
       item.LawsuitDate = toLocalShort(item.LawsuitDate);
+      //item.LawsuitID = list.LawsuitArrestIndicment[0];
+      //console.log("Check LIST:"+JSON.stringify(item));
       return item;
     });
     /* Set Total Record */
@@ -113,8 +116,14 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private viewData(item) {
+    
+    if(item.LawsuitArrestIndicment[0].Lawsuit[0]) {
+      item.LawsuitID = item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID;
+    } else {
+      item.LawsuitID = '';
+    }
     this.router.navigate(['/lawsuit/manage', 'R'], {
-      queryParams: { id: item.LawsuitID, code: item.ArrestCode }
+      queryParams: { IndictmentID : item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID : item.LawsuitID }
     });
   }
 
