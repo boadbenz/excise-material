@@ -57,7 +57,6 @@ export class ManageComponent implements OnInit {
     this.sidebarService.setVersion('0.0.0.4');
     // this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
-    this.createLawsuitForm();
     this.navigate_service();
 
     // this.preLoaderService.setShowPreloader(false);
