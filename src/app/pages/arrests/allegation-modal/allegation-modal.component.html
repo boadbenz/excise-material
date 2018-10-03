@@ -23,6 +23,7 @@
         </a>
     </div>
 </div>
+<h5 class="text-right mt-3 pr-3">ILG60-03-02-05-00</h5>
 <div class="modal-body font-14" [formGroup]="lawGroupFG">
     <div class="card unset-radius">
         <div class="card-body p-0">
@@ -47,10 +48,10 @@
                             <label for="td{{i}}" class="m-0"></label>
                         </td>
                         <td class="text-center">{{item.get('RowId').value}}</td>
+                        <td>{{item.get('SectionNo').value}}</td>
                         <td>{{item.get('SectionName').value}}</td>
-                        <td style="width: 430px">{{item.get('SectionDesc1').value}}</td>
-                        <td>{{item.get('SectionName').value}}</td>
-                        <td></td>
+                        <td>GuiltBaseID ไม่ถูกส่งออกมา</td>
+                        <td>GuiltBaseName ไม่ถูกส่งออกมา</td>
                     </tr>
                 </tbody>
             </table>
@@ -87,10 +88,10 @@
                         <td class="text-center">{{i+1}}</td>
                         <td>
                             <span *ngIf="item.get('EntityType').value == 0">
-                                {{item.get('CompanyFullName').value}}
+                                {{item.get('LawbreakerFullName').value}}
                             </span>
                             <span *ngIf="item.get('EntityType').value == 1">
-                                {{item.get('LawbreakerFullName').value}}
+                                {{item.get('CompanyFullName').value}}
                             </span>
                         </td>
                         <td>

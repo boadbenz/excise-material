@@ -16,7 +16,7 @@ const routes: Routes = [
     data: {
       // title: 'ค้นหาข้อมูล',
       urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานจับกุม' }],
-      codePage: 'XCS60-03-01-00'
+      codePage: 'ILG60-03-01-00-00'
     },
     component: ListComponent
   }

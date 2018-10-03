@@ -29,6 +29,7 @@ export class ArrestsService {
 
     private async responsePromisModify(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        debugger
         if (!res || res.IsSuccess == 'False') {
             return false;
         }
@@ -45,7 +46,6 @@ export class ArrestsService {
 
     private async resposePromisGetList(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        debugger
         if (!res.length || res.IsSuccess == 'False') {
             return [];
         }
@@ -73,7 +73,7 @@ export class ArrestsService {
     getByCon(ArrestCode: string): Promise<Arrest> {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestgetByCon`;
-        return this.resposePromisGet(JSON.stringify(params), url)
+        return this.resposePromisGetList(JSON.stringify(params), url)
     }
 
     updDelete(ArrestCode: string): Promise<any> {
@@ -214,6 +214,34 @@ export class ArrestsService {
     }
     //-- Arrest Notice --//
 
+    async ArrestLawbreakerinsAll(lawbreaker: ArrestLawbreaker): Promise<ArrestLawbreaker> {
+        const params = lawbreaker;
+        const url = `${appConfig.api7788}/ArrestLawbreakerinsAll`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess || !res.ResponseData) {
+            return new ArrestLawbreaker();
+        }
+        return res.ResponseData;
+    }
+
+    async ArrestLawbreakergetByCon(LawbreakerID: string): Promise<ArrestLawbreaker> {
+        const params = { LawbreakerID };
+        const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess || !res.ResponseData) {
+            return new ArrestLawbreaker();
+        }
+        return res.ResponseData;
+    }
+
+    ArrestLawbreakerupdByCon(lawbreaker: ArrestLawbreaker): Promise<boolean> {
+        const params = lawbreaker;
+        const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
     //-- Document --//
     async getDocument(ReferenceCode: string): Promise<ArrestDocument[]> {
         const params = { ReferenceCode };
@@ -254,7 +282,7 @@ export class ArrestsService {
 
     //-- Mas --//
     masLawbreakergetByConAdv(Textsearch: any): Promise<any[]> {
-        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByKeyword`;
+        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByConAdv`;
         return this.resposePromisGetList(Textsearch, url);
     }
 

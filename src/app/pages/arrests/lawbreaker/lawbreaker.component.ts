@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel } from '../../../models';
+import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel, MasDistrictModel } from '../../../models';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -15,10 +15,11 @@ import 'rxjs/add/operator/switchMap';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { ILawbreaker, Lawbreaker } from './lawbreaker.interface';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { NoticeService } from '../notice.service';
 import { Message } from 'app/config/message';
-import { MyDatePickerOptions, getDateMyDatepicker, setZeroHours, setDateMyDatepicker } from '../../../config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, setDateMyDatepicker, convertDateForSave } from '../../../config/dateFormat';
 import { ImageType } from '../../../config/imageType';
+import { MainMasterService } from '../../../services/main-master.service';
+import { ArrestLawbreakerFormControl } from '../arrest-lawbreaker';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private fb: FormBuilder,
         private arrestService: ArrestsService,
-        private noticeService: NoticeService
+        private mainMasterService: MainMasterService
     ) {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
@@ -86,71 +87,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     private createForm(): FormGroup {
-        return new FormGroup({
-            LawbreakerID: new FormControl(null),
-            EntityType: new FormControl(null),
-            CompanyTitleCode: new FormControl(null),
-            CompanyTitle: new FormControl(null),
-            CompanyName: new FormControl(null),
-            CompanyOtherName: new FormControl(null),
-            CompanyRegistrationNo: new FormControl(null),
-            CompanyLicenseNo: new FormControl(null),
-            FoundedDate: new FormControl(null),
-            LicenseDateForm: new FormControl(null),
-            LicenseDateTo: new FormControl(null),
-            TaxID: new FormControl(null),
-            ExciseRegNo: new FormControl(null),
-            LawbreakerType: new FormControl(null),
-            LawbreakerTitleCode: new FormControl(null),
-            LawbreakerTitleName: new FormControl(null),
-            LawbreakerFirstName: new FormControl(null),
-            LawbreakerMiddleName: new FormControl(null),
-            LawbreakerLastName: new FormControl(null),
-            LawbreakerOtherName: new FormControl(null),
-            LawbreakerDesc: new FormControl(null),
-            IDCard: new FormControl(null),
-            PassportNo: new FormControl(null),
-            VISAType: new FormControl(null),
-            PassportCountryCode: new FormControl(null),
-            PassportCountryName: new FormControl(null),
-            PassportDateIn: new FormControl(null),
-            PassportDateOut: new FormControl(null),
-            BirthDate: new FormControl(null),
-            GenderType: new FormControl(null),
-            BloodType: new FormControl(null),
-            NationalityCode: new FormControl(null),
-            NationalityNameTH: new FormControl(null),
-            RaceCode: new FormControl(null),
-            RaceName: new FormControl(null),
-            ReligionCode: new FormControl(null),
-            ReligionName: new FormControl(null),
-            MaritalStatus: new FormControl(null),
-            Career: new FormControl(null),
-            GPS: new FormControl(null),
-            Location: new FormControl(null),
-            Address: new FormControl(null),
-            Village: new FormControl(null),
-            Building: new FormControl(null),
-            Floor: new FormControl(null),
-            Room: new FormControl(null),
-            Alley: new FormControl(null),
-            Road: new FormControl(null),
-            SubDistrictCode: new FormControl(null),
-            SubDistrict: new FormControl(null),
-            DistrictCode: new FormControl(null),
-            District: new FormControl(null),
-            ProvinceCode: new FormControl(null),
-            Province: new FormControl(null),
-            ZipCode: new FormControl(null),
-            TelephoneNo: new FormControl(null),
-            Email: new FormControl(null),
-            FatherName: new FormControl(null),
-            MotherName: new FormControl(null),
-            Remarks: new FormControl(null),
-            LinkPhoto: new FormControl(null),
-            PhotoDesc: new FormControl(null),
-            IsActive: new FormControl(null)
-        });
+        return new FormGroup(ArrestLawbreakerFormControl);
     }
 
     private active_route() {
@@ -196,9 +133,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 const passportDateIn = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateIn);
                 const passportDateOut = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut);
 
-                this.LawbreakerFG.value.BirthDate = setZeroHours(birthDay);
-                this.LawbreakerFG.value.PassportDateIn = setZeroHours(passportDateIn);
-                this.LawbreakerFG.value.passportDateOut = setZeroHours(passportDateOut);
+                this.LawbreakerFG.value.BirthDate = convertDateForSave(birthDay);
+                this.LawbreakerFG.value.PassportDateIn = convertDateForSave(passportDateIn);
+                this.LawbreakerFG.value.passportDateOut = convertDateForSave(passportDateOut);
 
                 if (this.mode === 'C') {
                     this.OnCreate();
@@ -212,7 +149,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     async GetByCon(LawbreakerID: string) {
 
-        await this.noticeService.getLawbreakerByCon(LawbreakerID).then(res => {
+        await this.arrestService.ArrestLawbreakergetByCon(LawbreakerID).then(res => {
             this.LawbreakerFG.reset({
                 LawbreakerID: res.LawbreakerID,
                 EntityType: res.EntityType,
@@ -253,24 +190,26 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 ReligionName: res.ReligionName,
                 MaritalStatus: res.MaritalStatus,
                 Career: res.Career,
-                GPS: res.GPS,
-                Location: res.Location,
-                Address: res.Address,
-                Village: res.Village,
-                Building: res.Building,
-                Floor: res.Floor,
-                Room: res.Room,
-                Alley: res.Alley,
-                Road: res.Road,
-                SubDistrictCode: res.SubDistrictCode,
-                SubDistrict: res.SubDistrict,
-                DistrictCode: res.DistrictCode,
-                District: res.District,
-                ProvinceCode: res.ProvinceCode,
-                Province: res.Province,
-                ZipCode: res.ZipCode,
-                TelephoneNo: res.TelephoneNo,
-                Email: res.Email,
+
+                // GPS: res.GPS,
+                // Location: res.Location,
+                // Address: res.Address,
+                // Village: res.Village,
+                // Building: res.Building,
+                // Floor: res.Floor,
+                // Room: res.Room,
+                // Alley: res.Alley,
+                // Road: res.Road,
+                // SubDistrictCode: res.SubDistrictCode,
+                // SubDistrict: res.SubDistrict,
+                // DistrictCode: res.DistrictCode,
+                // District: res.District,
+                // ProvinceCode: res.ProvinceCode,
+                // Province: res.Province,
+                // ZipCode: res.ZipCode,
+                // TelephoneNo: res.TelephoneNo,
+                // Email: res.Email,
+
                 FatherName: res.FatherName,
                 MotherName: res.MotherName,
                 Remarks: res.Remarks,
@@ -295,9 +234,11 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
 
         let IsSuccess: boolean | false;
-        await this.noticeService.updLawbreaker(this.LawbreakerFG.value).then(isSuccess => {
-            IsSuccess = isSuccess;
-        }, (error) => { IsSuccess = false; })
+        await this.arrestService
+            .ArrestLawbreakerupdByCon(this.LawbreakerFG.value)
+            .then(isSuccess => {
+                IsSuccess = isSuccess;
+            }, () => { IsSuccess = false; })
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -309,38 +250,24 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     private async setRegionStore() {
-
-        let subdistrict: any[];
-        let district: any[];
-        let province: any[];
-
-        await this.arrestService.masSubdistrictgetAll().then(res =>
-            subdistrict = res
-        )
-        await this.arrestService.masDistrictgetAll().then(res =>
-            district = res
-        )
-        await this.arrestService.masProvincegetAll().then(res =>
-            province = res
-        )
-
-        await subdistrict
-            .map(subdis => district.filter(dis => dis.DistrictCode == subdis.districtCode)
-                .map(dis => province.filter(pro => pro.ProvinceCode == dis.ProvinceCode)
-                    .map(pro => {
-                        let r = { ...subdis, ...dis, ...pro }
+        await this.mainMasterService.masDistrictMaingetAll().then(res => {
+            res.map(prov =>
+                prov.MasDistrict.map(dis =>
+                    dis.MasSubDistrict.map(subdis => {
                         this.typeheadRegion.push({
-                            SubdistrictCode: r.subdistrictCode,
-                            SubdistrictNameTH: r.subdistrictNameTH,
-                            DistrictCode: r.DistrictCode,
-                            DistrictNameTH: r.DistrictNameTH,
-                            ProvinceCode: r.ProvinceCode,
-                            ProvinceNameTH: r.ProvinceNameTH,
+                            SubdistrictCode: subdis.SubdistrictCode,
+                            SubdistrictNameTH: subdis.SubdistrictNameTH,
+                            DistrictCode: dis.DistrictCode,
+                            DistrictNameTH: dis.DistrictNameTH,
+                            ProvinceCode: prov.ProvinceCode,
+                            ProvinceNameTH: prov.ProvinceNameTH,
                             ZipCode: null
                         })
                     })
                 )
             )
+
+        })
     }
 
     openOffenseDetailModal(e: any) {
@@ -377,7 +304,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
         let file = e.target.files[0];
         let isMatch: boolean | false;
-        
+
         ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
 
         if (!isMatch) {
