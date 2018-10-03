@@ -54,7 +54,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่นำส่งเงิน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="RevenueCode" [(ngModel)]="RevenueCode" class="form-control form-control-sm" readonly>
+                        <input type="text" name="txtRevenueCode" [(ngModel)]="txtRevenueCode_Value" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
@@ -62,10 +62,10 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <div style="width:45%">
-                        <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                        <my-date-picker-th name="txtRevenueDate" [(ngModel)]="txtRevenueDate_Value" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField" required></my-date-picker-th>
                     </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="time" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="text" [(ngModel)]="txtRevenueTime_Value" name="txtRevenueTime" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
 
@@ -74,7 +74,7 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                        <input type="text" name="txtRevenueNo" [(ngModel)]="txtRevenueNo_Value" class="form-control form-control-sm" [disabled]="showEditField"
                             [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
@@ -82,7 +82,15 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">เรียน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" name="InformTo" [(ngModel)]="InformTo" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="text" name="txtInformTo" [(ngModel)]="txtInformTo_Value" class="form-control" placeholder="พิมพ์ข้อความ" 
+                    matInput [matAutocomplete]="auto4" (input)="txtInformTo_onInput($event.target.value)"
+                    [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <mat-autocomplete #auto4="matAutocomplete">
+                        <mat-option *ngFor="let sOption of informOptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                >
+                                {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                            </mat-option>
+                    </mat-autocomplete>
                 </div>
             </div>
 
@@ -91,12 +99,12 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control" [(ngModel)]="RevenueStation" name="RevenueStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
-                            matInput [matAutocomplete]="auto3" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
+                        <input type="text" class="form-control" [(ngModel)]="txtRevenueStation_Value" name="txtRevenueStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                            matInput [matAutocomplete]="auto3" (input)="txtRevenueStation_onInput($event.target.value)" (focus)="txtRevenueStation_onFocus($event.target.value)"
                             [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         <mat-autocomplete #auto3="matAutocomplete">
-                            <mat-option *ngFor="let option of options" [value]="option.DepartmentNameTH" (click)="onAutoSelecteWord(option)">
-                                {{ option.DepartmentNameTH }}
+                            <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="txtRevenueStation_onClick(option)">
+                                {{ option.OfficeName }}
                             </mat-option>
                         </mat-autocomplete>
                     </div>
@@ -105,12 +113,12 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ" aria-label="Number"
-                        matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
+                    <input type="text" class="form-control" [(ngModel)]="txtStaffSendName_Value" name="txtStaffSendName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                        matInput [matAutocomplete]="auto" (input)="txtStaffSendName_onInput($event.target.value)" (focus)="txtStaffSendName_onFocus($event.target.value)"
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
-                            (click)="StaffSendonAutoSelecteWord(ssOption)">
+                            (click)="txtStaffSendName_onClick(ssOption)">
                             {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
                         </mat-option>
                     </mat-autocomplete>
@@ -122,14 +130,14 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="txtPosSend_Value" name="txtPosSend" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                    <input type="text" [(ngModel)]="txtDeptSend_Value" name="txtDeptSend" class="form-control form-control-sm" readonly>
                 </div>
             </div>
 
@@ -138,12 +146,12 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control" [(ngModel)]="StaffName" name="StaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
-                            matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
+                        <input type="text" class="form-control" [(ngModel)]="txtStaffName_Value" name="txtStaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                            matInput [matAutocomplete]="auto2" (input)="txtStaffName_onInput($event.target.value)" (focus)="txtStaffName_onFocus($event.target.value)"
                             [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         <mat-autocomplete #auto2="matAutocomplete">
                             <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                (click)="StaffonAutoSelecteWord(sOption)">
+                                (click)="txtStaffName_onClick(sOption)">
                                 {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                             </mat-option>
                         </mat-autocomplete>
@@ -153,7 +161,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="PosStaff" name="PosStaff" class="form-control form-control-sm" readonly>
+                    <input type="text" [(ngModel)]="txtPosStaff_Value" name="txtPosStaff" class="form-control form-control-sm" readonly>
                 </div>
             </div>
             <div class="row">
@@ -161,14 +169,14 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" [(ngModel)]="DeptStaff" name="DeptStaff" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="txtDeptStaff_Value" name="txtDeptStaff" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">สถานะนำส่งเงิน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm" disabled>
+                    <select [(ngModel)]="selRevenueStatus_Value" name="selRevenueStatus" class="form-control form-control-sm" disabled>
                         <option value="0">ยังไม่นำส่งเงินรายได้</option>
                         <option value="1">นำส่งเงินรายได้</option>
                         <option value="2">รับายการนำส่งเงิน</option>
@@ -195,7 +203,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();">
+                                            <input [disabled]="showEditField" type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="chkAll" [(ngModel)]="chkAll_Value" (change)="chkAll_onChange();">
                                             <label for="H_0" class="m-0"></label>
                                         </th>
                                         <th style="text-align: center">ลำดับ</th>
@@ -211,10 +219,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of ListRevenueDetailPaging; let i=index;">
+                                    <tr *ngFor="let item of revenueCmpList; let i=index;">
                                         <td style="text-align: center">
-                                            <input type="checkbox" [id]="'RevenueD'+i" class="filled-in chk-col-indigo" name="ListChK[i]" [(ngModel)]="item.IsCheck"
-                                                (change)="checkIfAllChbSelected();">
+                                            <input [disabled]="showEditField" type="checkbox" [id]="'RevenueD'+i" class="filled-in chk-col-indigo" name="chkDetail[i]" [checked]="item.IsCheck" (change)="item.IsCheck = !item.IsCheck"
+                                                (change)="chkDetail_onChange();">
                                             <label [for]="'RevenueD'+i" class="m-0"></label>
                                         </td>
                                         <th style="text-align: center">{{i + 1}}</th>
@@ -223,51 +231,51 @@
                                         <th>{{ item.LawBreaker }}</th>
                                         <th>{{ item.StaffReceip }}</th>
                                         <th>{{ item.PaymentDate }}</th>
-                                        <th>{{ item.TotalFine | number:0 }}</th>
-                                        <th>{{ item.BribeMoney | number:0 }}</th>
-                                        <th>{{ item.TreasuryMoney | number:0 }}</th>
-                                        <th>{{ item.RewardMoney | number:0 }}</th>
+                                        <th>{{ item.TotalFine  }}</th>
+                                        <th>{{ item.BribeMoney  }}</th>
+                                        <th>{{ item.TreasuryMoney  }}</th>
+                                        <th>{{ item.RewardMoney  }}</th>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <div class="card-footer card-footer-unset">
+                        <!-- <div class="card-footer card-footer-unset">
                             <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
                                 [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
                             </app-pagination-table>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">ยอดนำส่งรวม :</label>
                     <div class="form-group col-lg-4 col-md-7">
-                        <input type="text" [(ngModel)]="CompareFine" name="CompareFine" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="txtCompareFine_Value" name="txtCompareFine" class="form-control form-control-sm" readonly>
                     </div>
 
                     <label for="" class="col-lg-2 col-md-4 control-label">จำนวนคดี :</label>
                     <div class="col-lg-4 col-md-7 form-group ">
-                        <input type="text" [(ngModel)]="MistreatNo" name="MistreatNo" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="txtMistreatNo_Value" name="txtMistreatNo" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินสินบน :</label>
                     <div class="form-group col-lg-4 col-md-7">
-                        <input type="text" [(ngModel)]="BribeMoney" name="BribeMoney" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="txtBribeMoney_Value" name="txtBribeMoney" class="form-control form-control-sm" readonly>
                     </div>
 
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินรางวัล :</label>
                     <div class="col-lg-4 col-md-7 form-group ">
-                        <input type="text" [(ngModel)]="RewardMoney" name="RewardMoney" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="txtRewardMoney_Value" name="txtRewardMoney" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินส่งคลัง :</label>
                     <div class="form-group col-lg-4 col-md-7">
-                        <input type="text" [(ngModel)]="TreasuryMoney" name="TreasuryMoney" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="txtTreasuryMoney_Value" name="txtTreasuryMoney" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
             </form>

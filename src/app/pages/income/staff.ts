@@ -17,6 +17,6 @@ export class Staff {
     public OfficeCode: string;
     public OfficeName: string;
     public OfficeShortName: string;
-    public ContributorCode: string;
+    public ContributorID: string;
     public IsActive: string;
 }
