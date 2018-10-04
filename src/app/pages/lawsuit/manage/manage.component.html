@@ -52,7 +52,7 @@
             <div class="form-group row" >
               <label class="col-form-label text-right col-md-3">เลขที่ใบงาน : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text"  disable formControlName="ArrestCode" >
+                <input class="form-control" type="text"  [attr.disabled]="disabled ? '' : null" formControlName="ArrestCode" >
               </div>
             </div>
           </div>
@@ -60,11 +60,11 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">วันที่จับกุม : </label>
               <div class="col-md-4">
-                <input class="form-control" type="text" disable formControlName="OccurrenceDate" >
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="OccurrenceDate" >
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
               <div class="col-md-3">
-                <input class="form-control" type="text" disable formControlName="OccurrenceTime" >
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="OccurrenceTime" >
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">เขียนที่ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" disable formControlName="ArrestStation" >
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="ArrestStation" >
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@
             <div class="form-group row" >
               <label class="col-form-label text-right col-md-3">ผู้กล่าวหา : </label>
               <div class="col-md-9">
-                  <input class="form-control" type="text" formControlName="FullName" disable>
+                  <input class="form-control" type="text" formControlName="FullName" [attr.disabled]="disabled ? '' : null">
               </div>
            
             </div>
@@ -96,7 +96,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" formControlName="PositionName"  disable>
+                <input class="form-control" type="text" formControlName="PositionName"  [attr.disabled]="disabled ? '' : null">
               </div>
             </div>
           </div>
@@ -106,7 +106,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text"  formControlName="DepartmentName" disable>
+                <input class="form-control" type="text"  formControlName="DepartmentName" [attr.disabled]="disabled ? '' : null">
               </div>
             </div>
           </div>
@@ -117,7 +117,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ฐานความผิดมาตรา : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" formControlName ="SubSectionType" disable>
+                <input class="form-control" type="text" formControlName ="SubSectionType" [attr.disabled]="disabled ? '' : null">
               </div>
             </div>
           </div>
@@ -125,7 +125,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ฐานความผิด : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text"  formControlName ="GuiltBaseName" disable>
+                <input class="form-control" type="text"  formControlName ="GuiltBaseName" [attr.disabled]="disabled ? '' : null">
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">บทกำหนดโทษ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" formControlName ="SectionNo" disable>
+                <input class="form-control" type="text" formControlName ="SectionNo" [attr.disabled]="disabled ? '' : null">
               </div>
             </div>
           </div>
@@ -143,7 +143,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">อัตราโทษ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" formControlName ="PenaltyDesc" disable>
+                <input class="form-control" type="text" formControlName ="PenaltyDesc" [attr.disabled]="disabled ? '' : null">
               </div>
             </div>
           </div>
@@ -165,10 +165,10 @@
                   
                     <div class="row form-group">
                         <div class="col">
-                            <input [attr.disabled]="showEditField ? '' : null" 
-                            type="checkbox" id="md_checkbox_25" class="filled-in chk-col-indigo"
-                                (change)="onChangeConceal()" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                            <label for="md_checkbox_25">ไม่รับคดีเป็นเพราะ</label>
+                            <input [attr.disabled]="showEditField ? '' : null" formControlName="IsLawsuitCheck"
+                            type="checkbox" id="IsLawsuit" class="filled-in chk-col-indigo"
+                             [readonly]="showEditField">
+                            <label for="IsLawsuit">ไม่รับคดีเป็นเพราะ</label>
                         </div>
                         <div class="col-md-10">
                             <input class="form-control" type="text" formControlName="ReasonDontLawsuit" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
@@ -180,9 +180,9 @@
               <div class="col-md-12">
                   <div class="row form-group">
                       <div class="col">
-                          <input [attr.disabled]="showEditField ? '' : null" 
+                          <input [attr.disabled]="showEditField ? '' : null" formControlName="IsOutsideCheck"
                           type="checkbox" id="IsOutSide"  class="filled-in chk-col-indigo"
-                              (change)="onChangeConceal()" [readonly]="showEditField">
+                          formControlName="IsOutSide" [readonly]="showEditField">
                           <label for="IsOutSide">คดีรับคำกล่าวโทษนอกสถานที่</label>
                       </div>
                   </div>
@@ -274,18 +274,29 @@
               <th class="footable-sortable"></th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="footable" *ngFor="let item of lawsuitList; let i = index;">
-              <td class="text-center">{{item.RowsId}}</td>
-              <td>{{item.LawsuitNo}}</td>
+          <tbody formArrayName="LawsuitTableList">
+            <tr class="footable" *ngFor="let item of LawsuitTableList.controls; let i=index;" [formGroupName]="i">
+              <td class="text-center">{{i+1}}</td>
+              <td><input type="text" formControlName="LawBrakerFullName" class="form-control form-control-sm" [readonly]="showEditField"></td>
               <td>
-                <div *ngFor="let section of masLawGroupSectionList;">{{section.SectionNo}}</div>
+                
+                  <select  formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null" >
+                      <option [value]="type.id" *ngFor="let type of lstype">{{type.name}}</option>
+                    </select>
+
+                  <!--<input type="text" formControlName="LawsuitType" class="form-control form-control-sm" [readonly]="showEditField">-->
               </td>
               <td>
-                <div *ngFor="let guilt of masLawGuitBaseList;">{{guilt.GuiltBaseName}}</div>
+                  <select  formControlName="LawsuitEnd" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
+                      <option [value]="end.id" *ngFor="let end of lsend">{{end.name}}</option>
+                    </select>
+                
               </td>
-              <td>{{item.IsLawsuitStatus}}</td>
+              <td><input type="text" formControlName="ProductDesc" class="form-control form-control-sm" [readonly]="showEditField"></td>
               <td>
+                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="editTable(item, j)">
+                      <i class="fa fa-edit fa-lg"></i>
+                  </a>
                 <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)">
                   <i class="mdi mdi-eye fa-lg"></i>
                 </a>
@@ -295,5 +306,54 @@
         </table>
       </div>
   
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header  unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+    </div>
+    <div class="card-body">
+        <div class="row form-group">
+            <div class="col-lg-10 col-md-9 col-sm-8"></div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <button class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addDocument()">เพิ่มเอกสารแนบ</button>
+            </div>
+        </div>
+        <table class="table table-sm table-striped table-set-border">
+            <thead>
+                <tr>
+                    <th class="text-center">ลำดับ</th>
+                    <th>ชื่อเอกสารแนบ</th>
+                    <th>ที่อยู่เอกสารแนบ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody formArrayName="LawsuitDocument">
+                <tr *ngFor="let item of LawsuitDocument.controls; let j=index;" [formGroupName]="j">
+                    <td class="text-center">{{j+1}}</td>
+                    <td>
+                        <input type="text" formControlName="DocumentName" class="form-control form-control-sm" [readonly]="showEditField">
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"  [readonly]="showEditField">
+                            <div class="input-group-append">
+                                <input [id]="'lawsuitAttach'+j" type="file" (input)="changeLawsuitDoc($event, j)" hidden [attr.disabled]="showEditField ? '' : null">
+                                <label [for]="'lawsuitAttach'+j" class="input-group-text custom-file-upload text-secondary">
+                                    <i class="ti-more-alt"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteDocument(item.get('DocumentID').value, j)">
+                            <i class="fa fa-trash-o fa-lg"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </form>
