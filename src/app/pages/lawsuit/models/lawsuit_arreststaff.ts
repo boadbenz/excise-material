@@ -1,12 +1,13 @@
-export class Staff {
-    public StaffID: string;
+export class LawsuitArrestStaff {
+    public StaffID: number;
     public ProgramCode: string;
     public ProcessCode: string;
-    public RevenueID: string;
+    public ArrestCode: string;
     public StaffCode: string;
     public TitleName: string;
     public FirstName: string;
     public LastName: string;
+    public FullName: string;
     public PositionCode: string;
     public PositionName: string;
     public PosLevel: string;
@@ -17,6 +18,7 @@ export class Staff {
     public OfficeCode: string;
     public OfficeName: string;
     public OfficeShortName: string;
-    public ContributorID: string;
-    public IsActive: string;
-}
+    public ContributorID: number;
+    public IsActive: number;
+  }
+  

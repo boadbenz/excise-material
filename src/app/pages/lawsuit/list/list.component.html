@@ -108,47 +108,47 @@
               <td class="text-center">{{ item.RowsId || '' }}</td>
               <td>{{ item.ArrestCode || '-' }}</td>
               <td>
-                <span *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
-                  <span *ngFor="let b of a.LawsuitLawGuiltbase; let bLast = last">
-                    <span *ngFor="let c of b.LawsuitLawSubSectionRule; let cLast = last">
-                      <span *ngFor="let d of c.LawsuitLawSubSection; let dLast = last">
+                <ng-container *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
+                  <ng-container *ngFor="let b of a.LawsuitLawGuiltbase; let bLast = last">
+                    <ng-container *ngFor="let c of b.LawsuitLawSubSectionRule; let cLast = last">
+                      <ng-container *ngFor="let d of c.LawsuitLawSubSection; let dLast = last">
                         {{ (d.SubSectionType || '') || '-' }}{{dLast? '' : ', '}}
-                      </span>{{cLast? '' : ', '}}
-                    </span>{{bLast? '' : ', '}}
-                  </span>{{aLast? '' : ', '}}
-                </span>
+                      </ng-container>{{cLast? '' : ', '}}
+                    </ng-container>{{bLast? '' : ', '}}
+                  </ng-container>{{aLast? '' : ', '}}
+                </ng-container>
               </td>
               <td>
-                <span *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
-                  <span *ngFor="let b of a.Lawsuit; let bLast = last">
+                <ng-container *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
+                  <ng-container *ngFor="let b of a.Lawsuit; let bLast = last">
                     {{ (b.LawsuitNo || '') || '-' }}{{bLast? '' : ', '}}
-                  </span>{{aLast? '' : ', '}}
-                </span>
+                  </ng-container>{{aLast? '' : ', '}}
+                </ng-container>
                 <!--<div *ngFor="let entry of item.Lawsuit; let last = last">-->
                   <!--{{ (entry.LawsuitNo || '') || '-' }}{{last? '' : ', '}}-->
                 <!--</div>-->
               </td>
               <td>
-                <span *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
-                  <span *ngFor="let b of a.Lawsuit; let bLast = last">
+                <ng-container *ngFor="let a of item.LawsuitArrestIndicment; let aLast = last">
+                  <ng-container *ngFor="let b of a.Lawsuit; let bLast = last">
                     {{ (b.LawsuitDate || '') || '-' }}{{bLast? '' : ', '}}
-                  </span>{{aLast? '' : ', '}}
-                </span>
+                  </ng-container>{{aLast? '' : ', '}}
+                </ng-container>
                 <!--<div *ngFor="let entry of item.Lawsuit; let last = last">-->
                   <!--{{ (entry.LawsuitDate || '') || '-' }}{{last? '' : ', '}}-->
                 <!--</div>-->
               </td>
               <td>
-                <div *ngFor="let staff of item.LawsuitArrestStaff; let last = last">
+                <ng-container *ngFor="let staff of item.LawsuitArrestStaff; let last = last">
                   {{ ((staff.TitleName || '').toString()
                   + (staff.FirstName || '').toString()
                   + ' ' + (staff.LastName || '').toString()).trim() || '-' }}{{last? '' : ', '}}
-                </div>
+                </ng-container>
               </td>
               <td>
-                <div *ngFor="let staff of item.LawsuitArrestStaff; let last = last">
+                <ng-container *ngFor="let staff of item.LawsuitArrestStaff; let last = last">
                   {{ (staff.DepartmentName || '').toString().trim() || '-' }}{{last? '' : ', '}}
-                </div>
+                </ng-container>
               </td>
               <td>
                 <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)">

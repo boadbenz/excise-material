@@ -1,5 +1,6 @@
 import { LawsuitJudgement } from "./lawsuit_judgement";
 import { LawsuiteStaff } from "./lawsuit_staff";
+import { LawsuitArrestStaff } from "./lawsuit_arreststaff";
 export class Lawsuit {
   public RowsId: number;
   public ArrestCode: string;
@@ -10,7 +11,6 @@ export class Lawsuit {
   public FirstName: string;
   public LastName: string;
   public DepartmentName: string;
-  public LawsuitArrestStaff: [{ }];
 
 
   public LawsuitID: number;
@@ -29,8 +29,14 @@ export class Lawsuit {
   public IsActive: number;
   public LawsuitType: number;
   public LawsuitEnd: number;
-  public LawsuitStaff: Array<LawsuiteStaff>;
+  public LawsuiteStaff: Array<LawsuiteStaff>;
+  public LawsuitArrestStaff: Array<LawsuitArrestStaff>;
   public LawsuitJudgement: Array<LawsuitJudgement>;
+  OccurrenceDate: string;
+  OccurrenceTime: string;
+  GuiltBaseName: string;
+  SectionNo: string;
+  PenaltyDesc: string;
 }
 
 class Types {

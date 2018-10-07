@@ -36,7 +36,7 @@ export class DetailComponent implements OnInit {
   private lawbreakerID: number;
   private guiltBaseID: number;
 
-  @ViewChild('printDocModal') printDocModel: ElementRef;
+  @ViewChild('printLawsuitModal') printDocModel: ElementRef;
 
   constructor(
     private router: Router,
@@ -48,7 +48,7 @@ export class DetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.2');
+    this.sidebarService.setVersion('0.0.0.3');
     this.setShowButton();
     this.subNavService();
     this.getParamFromActiveRoute();
@@ -158,7 +158,7 @@ export class DetailComponent implements OnInit {
             this.lawsuitList.map(data => {
               data.LawsuitDate = toLocalNumeric(data.LawsuitDate);
               data.LawsuitTime = toTimeShort(data.LawsuitTime);
-              data.LawsuitStaff.map(staff => {
+              data.LawsuiteStaff.map(staff => {
                 staff.FullName = `${staff.TitleName} ${staff.FirstName} ${
                   staff.LastName
                   }`;
