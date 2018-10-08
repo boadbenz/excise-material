@@ -24,13 +24,19 @@ import { pagination } from '../../../config/pagination';
 export class ManageComponent implements OnInit, OnDestroy {
 
     private sub: any;
+    private onSaveSubscribe: any;
+    private onDeleSubscribe: any;
+    private onPrintSubscribe: any;
+    private onNextPageSubscribe: any;
+    private onCancelSubscribe: any;
+
     mode: string;
     modal: any;
     showEditField: any;
     selectAllChb: any;
     paginage = pagination;
 
-    revenueID: string;
+    RevenueID: string;
     RevenueCode: string;    // เลขที่นำส่งเงิน
     RevenueNo: string;  // เลขที่หนังสือนำส่ง
     InformTo: string;       // เรียน
@@ -42,6 +48,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     StaffName: string;      // ชื่อผู้จัดทำ
     PosStaff: string;        // ตำแหน่งผู้จัดทำ
     DeptStaff: string;       // แผนกผู้จัดทำ
+    StaffDeptCode: string;   // รหัสแผนกผู้จัดทำ
     RevenueStation: string;   // เขียนที่
     CompareFine: string = "0";      // ยอดนำส่งรวม
     MistreatNo: number = 0;     // จำนวนคดี
@@ -58,11 +65,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     rawStaffSendOptions = [];
     Staffoptions = [];
     rawOptions = [];
+    InformTooptions = [];
     options = [];
     ListRevenueDetail = [];
     ListRevenueDetailPaging = [];
     ListChK = [];
-
+    RevenueDetailForUDP = [];
 
     oRevenue: Revenue;
     oRevenueDetail: RevenueDetail;
@@ -96,34 +104,39 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.active_Route();
         this.navigate_Service();
 
-        this.RevenueStatus = 0;
+        this.RevenueStatus = 1;
         this.RevenueNo = "";
         this.RevenueStation == "";
         this.StaffSendName == "";
         this.StaffName == "";
         this.InformTo = "";
-        this.RevenueTime = await this.getCurrentTime();
+        this.StaffID = "";
+        this.StaffSendID = "";
+        this.RevenueTime = this.getCurrentTime();
         this.RevenueDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.RevenueCode = "Auto Generate";
 
         await this.CreateObject();
         await this.getReveneueStaff();
         await this.getStation();
-        await this.ShowRevenueCompare();
 
         if (this.mode === 'R') {
             await this.ShowRevenue();
+        } else {
+            this.preloader.setShowPreloader(false);
         }
 
         this.paginage.TotalItems = this.ListRevenueDetail.length;
         this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
-        
+
         this.CheckCompareReceive();
-        this.preloader.setShowPreloader(false);
+
     }
 
     private active_Route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
+            //alert(this.mode);
             if (p['mode'] === 'C') {
                 // set false
                 this.navService.setPrintButton(false);
@@ -146,25 +159,31 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditField(true);
 
                 if (p['code']) {
-                    this.RevenueCode = p['code'];
+                    this.RevenueID = p['code'];
                 }
             }
         });
     }
 
     private navigate_Service() {
-        this.sub = this.navService.showFieldEdit.subscribe(p => {
+        this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
 
-        this.sub = this.navService.onSave.subscribe(async status => {
+        this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
+            //alert(status);
             if (status) {
+                debugger
                 // set action save = false
                 await this.navService.setOnSave(false);
 
                 if (this.RevenueNo == "" || this.RevenueStation == "" || this.RevenueStation == undefined
                     || this.StaffSendName == "" || this.StaffSendName == undefined
                     || this.StaffName == "" || this.StaffName == undefined
+                    || this.PosSend == "" || this.PosSend == undefined
+                    || this.DeptSend == "" || this.DeptSend == undefined
+                    || this.PosStaff == "" || this.PosStaff == undefined
+                    || this.DeptStaff == "" || this.DeptStaff == undefined
                     || this.RevenueDate == null) {
                     this.isRequired = true;
                     alert(Message.checkData);
@@ -172,45 +191,98 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                if (this.mode == 'C') {
+                if (+this.MistreatNo < 1) {
+                    alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
+
+                    return false;
+                }
+
+                if (this.mode === 'C') {
+                    //alert("mode C");
                     await this.onInsRevenue();
-                    this.router.navigate(['/income/list']);
-                } else {
+                } else if (this.mode === 'R') {
+                    //alert("mode U");
                     await this.onUdpRevenue();
                 }
             }
         });
 
-        // this.sub = this.navService.onDelete.subscribe(async status => {
-        //     if (status) {
-        //         await this.navService.setOnDelete(false);
-        //         this.onDelete();
-        //     }
-        // });
+        this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnDelete(false);
+                this.onDelete();
+            }
+        });
 
-        // this.sub = this.navService.onPrint.subscribe(async status => {
-        //     if (status) {
-        //         await this.navService.setOnPrint(false);
-        //         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-        //     }
-        // })
+        this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnPrint(false);
+                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+            }
+        })
 
-        this.sub = this.navService.onCancel.subscribe(async status => {
+        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
             if (status) {
                 if (confirm(Message.confirmAction)) {
                     await this.navService.setOnCancel(false);
-                    this.router.navigate(['/income/list']);
+
+                    if (this.mode === 'C') {
+                        this.router.navigate(['/income/list']);
+                    } else if (this.mode === 'R') {
+                        // set false
+                        this.navService.setSaveButton(false);
+                        this.navService.setCancelButton(false);
+                        // set true
+                        this.navService.setPrintButton(true);
+                        this.navService.setEditButton(true);
+                        this.navService.setDeleteButton(true);
+                        this.navService.setEditField(true);
+
+                        await this.ShowRevenue();
+                    }
+
                 }
             }
         })
     }
 
     ngOnDestroy(): void {
-        this.sub.unsubscribe();
+        this.onCancelSubscribe.unsubscribe();
+        this.onSaveSubscribe.unsubscribe();
+        this.onDeleSubscribe.unsubscribe();
+        this.onPrintSubscribe.unsubscribe();
+    }
+
+    onDelete() {
+        if(this.RevenueStatus == 1){
+            if (confirm(Message.confirmAction)) {
+                this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
+                    if (IsSuccess) {
+                        this.ListRevenueDetail.filter(item => (item.IsCheck === true))
+                            .map(async item => {
+                                await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
+                                    if (IsSuccess) {
+                                        this.oRevenue = {};
+                                        alert(Message.saveComplete);
+                                        this.router.navigate(['/income/list']);
+                                    }
+                                }, (error) => { console.error(error); return false; });
+                            });
+                    } else {
+                        alert(Message.saveFail);
+                    }
+                }, (error) => { console.error(error); return false; });
+            }
+        }
+        else if (this.RevenueStatus == 2)
+        {
+            alert(Message.cannotDelete);
+        }
+        
     }
 
     ShowRevenue() {
-        this.IncService.getByCon(this.RevenueCode).then(async res => {
+        this.IncService.getByCon(this.RevenueID).then(async res => {
             if (res != null) {
                 // if (res[0].RevenueDetail.length > 0) {
                 //     this.ReceiptBookNo = res[0].RevenueDetail[0].ReceiptBookNo;
@@ -219,45 +291,96 @@ export class ManageComponent implements OnInit, OnDestroy {
                 //     this.ReceiptBookNo = "";
                 // }
 
-                debugger
                 this.oRevenue.RevenueID = res[0].RevenueID;
+                this.oRevenue.RevenueCode = res[0].RevenueCode;
                 this.oRevenue.StationCode = res[0].StationCode;
+                this.oRevenue.StationName = res[0].StationName;
+
+                this.RevenueCode = res[0].RevenueCode;
                 this.RevenueStation = res[0].StationName;
                 this.RevenueNo = res[0].RevenueNo;
                 this.InformTo = res[0].InformTo;
+                this.RevenueStatus = res[0].RevenueStatus;
 
                 var RDate = res[0].RevenueDate.toString().split(" ");
                 this.RevenueDate = setDateMyDatepicker(new Date(RDate[0]));
-                this.RevenueTime = RDate[1] + ".000";
+                this.RevenueTime = res[0].RevenueTime;
 
-                var SStaff = res[0].RevenueStaff.filter(f => f.ContributorCode == "20");
+                var SStaff = res[0].RevenueStaff.filter(f => f.ContributorID == "20");
                 if (SStaff.length > 0) {
                     this.StaffSendName = SStaff[0].TitleName + SStaff[0].FirstName + ' ' + SStaff[0].LastName;
                     this.PosSend = SStaff[0].PositionName;
-                    this.DeptSend = SStaff[0].DepartmentName;
+                    this.DeptSend = SStaff[0].OfficeName;
                     this.StaffSendID = SStaff[0].StaffID;
                     this.oRevenueSendStaff = SStaff[0];
                 }
 
-                var Staff = res[0].RevenueStaff.filter(f => f.ContributorCode == "34");
+                var Staff = res[0].RevenueStaff.filter(f => f.ContributorID == "36");
                 if (Staff.length) {
                     this.StaffName = Staff[0].TitleName + Staff[0].FirstName + ' ' + Staff[0].LastName;
                     this.PosStaff = Staff[0].PositionName;
-                    this.DeptStaff = Staff[0].DepartmentName;
+                    this.DeptStaff = Staff[0].OfficeName;
                     this.StaffID = Staff[0].StaffID;
+                    this.StaffDeptCode = Staff[0].OfficeCode;
                     this.oRevenueStaff = Staff[0];
                 }
 
+                await this.ShowRevenueCompare();
+
+                debugger
                 if (res[0].RevenueDetail.length > 0) {
-                    for (var i = 0; i < this.ListRevenueDetail.length; i += 1) {
-                        for (var j = 0; j < res[0].RevenueDetail.length; j += 1) {
-                            if (this.ListRevenueDetail[i].CompareReceiptID == res[0].RevenueDetail[j].CompareReceiptID) {
-                                this.ListRevenueDetail[i].RevenueID = res[0].RevenueID;
-                                this.ListRevenueDetail[i].RevenueDetailID = res[0].RevenueDetail[j].RevenueDetailID;
-                                this.ListRevenueDetail[i].IsCheck = true;
+                    for (var a = 0; a < res[0].RevenueDetail.length; a += 1) {
+                        await this.IncService.RevenueComparegetByCompareReceiptID(res[0].RevenueDetail[a].CompareReceiptID).then(async item => {
+                            if (item.length > 0) {
+                                for (var j = 0; j < item.length; j += 1) {
+                                    if (item[j].RevenueCompareDetail.length > 0) {
+                                        for (var i = 0; i < item[j].RevenueCompareDetail.length; i += 1) {
+                                            try {
+                                                if (item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
+                                                    for (var k = 0; k < item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
+                                                        this.oRevenueDetail = {
+                                                            RevenueDetailID: res[0].RevenueDetail[a].RevenueDetailID,
+                                                            ReceiptBookNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
+                                                            ReceiptNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
+                                                            RevenueStatus: "1",
+                                                            RevenueID: this.oRevenue.RevenueID,
+                                                            CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
+                                                            CompareID: item[j].CompareID,
+                                                            CompareCode: item[j].CompareCode,
+                                                            LawBreaker: item[j].RevenueCompareDetail[i].LawbreakerTitleName + item[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + item[j].RevenueCompareDetail[i].LawbreakerLastName,
+                                                            StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
+                                                            PaymentDate: toLocalShort(item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
+                                                            TotalFine: +`${item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
+                                                            BribeMoney: +`${item[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : item[0].RevenueCompareDetail[i].BribeMoney}`,
+                                                            TreasuryMoney: +`${item[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : item[0].RevenueCompareDetail[i].TreasuryMoney}`,
+                                                            RewardMoney: +`${item[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : item[0].RevenueCompareDetail[i].RewardMoney}`,
+                                                            IsCheck: true,
+                                                            IsNewItem: false,
+                                                            IsDelItem: false
+                                                        }
+
+                                                        this.ListRevenueDetail.push(this.oRevenueDetail);
+                                                    }
+                                                }
+                                            } catch{ }
+                                        }
+                                    }
+
+                                }
                             }
-                        }
+
+                            // set total record
+                            this.paginage.TotalItems = this.ListRevenueDetail.length;
+                            this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
+                            this.preloader.setShowPreloader(false);
+                        }, (err: HttpErrorResponse) => {
+                            alert(err.message);
+                        });
                     }
+
+                    // set total record
+                    this.paginage.TotalItems = this.ListRevenueDetail.length;
+                    this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
 
                     this.checkIfAllChbSelected();
                 }
@@ -267,41 +390,61 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    ShowRevenueCompare() {
-        this.IncService.RevenueComparegetByCon().then(async res => {
-            debugger
+    async ShowRevenueCompare() {
+        this.ListRevenueDetail = [];
+
+        let DRate, cDateRevenue;
+        DRate = this.RevenueDate.date;
+
+        if (DRate != undefined) {
+            cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
+        }
+
+        await this.IncService.RevenueComparegetByCon(setZeroHours(cDateRevenue), this.StaffDeptCode).then(async res => {
             if (res.length > 0) {
                 for (var j = 0; j < res.length; j += 1) {
-                    if (res[j].CompareDetail.length > 0) {
-                        for (var i = 0; i < res[j].CompareDetail.length; i += 1) {
-                            if (res[j].CompareDetail[i] != null && res[j].CompareDetail[i].CompareDetailReceipt.length > 0) {
-                                for (var k = 0; k < res[j].CompareDetail[i].CompareDetailReceipt.length; k += 1) {
-                                    this.oRevenueDetail = {
-                                        RevenueDetailID: "",
-                                        ReceiptBookNo: res[j].CompareDetail[i].CompareDetailReceipt[k].ReceiptBookNo,
-                                        ReceiptNo: res[j].CompareDetail[i].CompareDetailReceipt[k].ReceiptNo,
-                                        RevenueStatus: "0",
-                                        RevenueID: "",
-                                        CompareReceiptID: res[j].CompareDetail[i].CompareDetailReceipt[k].CompareReceiptID,
-                                        CompareCode: res[j].CompareCode,
-                                        LawBreaker: "นายธวัชชัย1 บิงขุนทด",
-                                        StaffReceip: "น.ส.แพรทิพย์1 โครตแสนลี",
-                                        PaymentDate: toLocalShort(res[j].CompareDetail[i].CompareDetailReceipt[k].PaymentDate),
-                                        TotalFine: +`${res[j].CompareDetail[i].CompareDetailReceipt[k] == null ? 0 : res[j].CompareDetail[i].CompareDetailReceipt[k].TotalFine}`,
-                                        BribeMoney: +`${res[j].CompareDetail[i].BribeMoney == null ? 0 : res[0].CompareDetail[i].BribeMoney}`,
-                                        TreasuryMoney: +`${res[j].CompareDetail[i].TreasuryMoney == null ? 0 : res[0].CompareDetail[i].TreasuryMoney}`,
-                                        RewardMoney: +`${res[j].CompareDetail[i].RewardMoney == null ? 0 : res[0].CompareDetail[i].RewardMoney}`,
-                                        IsCheck: false
-                                    }
+                    if (res[j].RevenueCompareDetail.length > 0) {
+                        for (var i = 0; i < res[j].RevenueCompareDetail.length; i += 1) {
+                            try {
+                                if (res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
+                                    for (var k = 0; k < res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
+                                        this.oRevenueDetail = {
+                                            RevenueDetailID: "",
+                                            ReceiptBookNo: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
+                                            ReceiptNo: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
+                                            RevenueStatus: "1",
+                                            RevenueID: "",
+                                            CompareReceiptID: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
+                                            CompareID: res[j].CompareID,
+                                            CompareCode: res[j].CompareCode,
+                                            LawBreaker: res[j].RevenueCompareDetail[i].LawbreakerTitleName + res[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + res[j].RevenueCompareDetail[i].LawbreakerLastName,
+                                            StaffReceip: res[j].RevenueCompareStaff[i].TitleName + res[j].RevenueCompareStaff[i].FirstName + " " + res[j].RevenueCompareStaff[i].LastName,
+                                            PaymentDate: toLocalShort(res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
+                                            TotalFine: +`${res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
+                                            BribeMoney: +`${res[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : res[0].RevenueCompareDetail[i].BribeMoney}`,
+                                            TreasuryMoney: +`${res[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : res[0].RevenueCompareDetail[i].TreasuryMoney}`,
+                                            RewardMoney: +`${res[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : res[0].RevenueCompareDetail[i].RewardMoney}`,
+                                            IsCheck: false,
+                                            IsNewItem: true,
+                                            IsDelItem: false
+                                        }
 
-                                    this.ListRevenueDetail.push(this.oRevenueDetail);
+                                        this.ListRevenueDetail.push(this.oRevenueDetail);
+                                    }
                                 }
-                            }
+                            } catch{ }
                         }
                     }
 
                 }
+
+
             }
+
+            // set total record
+            this.paginage.TotalItems = this.ListRevenueDetail.length;
+            this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
+
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
@@ -318,26 +461,30 @@ export class ManageComponent implements OnInit, OnDestroy {
             StationName: "",
             InformTo: "",
             ISACTIVE: 1,
-            RevenueOneStaff: [],
+            RevenueOneStaff: "",
             RevenueDetail: [],
             RevenueStaff: []
         }
     }
 
-    onInsRevenue() {
+    async onInsRevenue() {
         this.preloader.setShowPreloader(true);
 
         let DRate, cDateRevenue;
         DRate = this.RevenueDate.date;
 
         if (DRate != undefined) {
-            cDateRevenue = DRate.year + '-' + DRate.month + '-' + DRate.day + ' ' + this.RevenueTime;
+            cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
         }
+
+        debugger
         this.oRevenue.RevenueID = "";
         this.oRevenue.RevenueNo = this.RevenueNo;
-        this.oRevenue.RevenueDate = cDateRevenue;
-        this.oRevenue.RevenueCode = this.RevenueCode;
+        this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
+        this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.InformTo = this.InformTo;
+        this.oRevenue.RevenueStatus = this.RevenueStatus.toString();
+        this.oRevenue.ResultCount = this.MistreatNo.toString();
 
         this.oRevenue.RevenueStaff = [];
 
@@ -350,41 +497,58 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
 
         this.oRevenue.RevenueDetail = this.ListRevenueDetailPaging.filter(item => item.IsCheck === true);
-        debugger
 
-        let isSuccess: boolean = true;
-        this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
-            if (!item.IsSuccess) {
-                isSuccess = item.IsSuccess;
+        await this.IncService.TransactionRunninggetByCon("ops_revenue", this.StaffDeptCode).then(async item => {
+            if (item.length == 0) {
+                this.IncService.TransactionRunninginsAll(this.StaffDeptCode, "ops_revenue", "LC").then(async res => {
+                    if (res.IsSuccess) {
+                        this.RevenueCode = "LC" + (this.RevenueDate.date.year + 543).toString().substring(4, 2) + "00001";
+                        this.oRevenue.RevenueCode = this.RevenueCode;
+
+                        this.InsRevenue();
+                    }
+
+                    this.preloader.setShowPreloader(false);
+                }, (error) => { console.error(error); return false; });
             }
-        }, (error) => { isSuccess = false; console.error(error); return false; });
+            else {
+                await this.IncService.TransactionRunningupdByCon(item[0].RunningID).then(async res => {
+                    if (res.IsSuccess) {
+                        var pad = "00000"
+                        var RunningNo = pad.substring(0, pad.length - item[0].RunningNo.toString().length) + (+item[0].RunningNo + 1);
 
-        this.preloader.setShowPreloader(false);
+                        this.RevenueCode = "LC" + (this.RevenueDate.date.year + 543).toString().substring(4, 2) + RunningNo;
+                        this.oRevenue.RevenueCode = this.RevenueCode;
 
-        if (isSuccess) {
-            alert(Message.saveComplete);
-            // this.oProve = {};
-            // this.router.navigate(['/prove/list']);
-        } else {
-            alert(Message.saveFail);
+                        this.InsRevenue();
+                    }
+                }, (error) => { console.error(error); return false; });
+            }
 
-            if (!isSuccess) return false;
-        }
+
+
+
+        }, (error) => { console.error(error); return false; });
     }
 
-    onUdpRevenue() {
+    async onUdpRevenue() {
         this.preloader.setShowPreloader(true);
 
         let DRate, cDateRevenue;
         DRate = this.RevenueDate.date;
 
         if (DRate != undefined) {
-            cDateRevenue = DRate.year + '-' + DRate.month + '-' + DRate.day + ' ' + this.RevenueTime;
+            cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
         }
 
-        this.oRevenue.RevenueDate = cDateRevenue;
+
+        this.oRevenue.RevenueNo = this.RevenueNo;
+        this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
+        this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.RevenueCode = this.RevenueCode;
         this.oRevenue.InformTo = this.InformTo;
+        this.oRevenue.RevenueStatus = this.RevenueStatus.toString();
+        this.oRevenue.ResultCount = this.MistreatNo.toString();
 
         this.oRevenue.RevenueStaff = [];
 
@@ -396,30 +560,105 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oRevenue.RevenueStaff.push(this.oRevenueStaff);
         }
 
-        this.oRevenue.RevenueDetail = this.ListRevenueDetail.filter(item => item.IsCheck === true);
+        this.RevenueDetailForUDP = this.ListRevenueDetail;
+        this.oRevenue.RevenueDetail = [];
         debugger
 
+        // -----------------------------------------------------------
+        //                       Call API Update
+        // -----------------------------------------------------------
+
         let isSuccess: boolean = true;
-        this.IncService.RevenueUdp(this.oRevenue).then(async item => {
-            if (!item.IsSuccess) {
-                isSuccess = item.IsSuccess;
+
+        await this.IncService.RevenueUdp(this.oRevenue).then(async IsSuccess => {
+            if (!IsSuccess) {
+                isSuccess = IsSuccess;
+                return false;
             }
         }, (error) => { isSuccess = false; console.error(error); return false; });
 
-        this.preloader.setShowPreloader(false);
+        if (!isSuccess) return false;
+
+        if (this.RevenueDetailForUDP.length > 0) {
+            // New Product
+            this.RevenueDetailForUDP.filter(item => (item.IsNewItem === true && item.IsCheck === true))
+                .map(async item => {
+                    item.IsNewItem = false;
+                    item.RevenueID = this.RevenueID;
+
+                    await this.IncService.RevenueDetailinsAll(item).then(async IsSuccess => {
+                        if (!IsSuccess) {
+                            isSuccess = IsSuccess;
+                            return false;
+                        } else {
+                            await this.IncService.RevenueCompareDetailReceiptupdByCon(item.CompareReceiptID.toString()).then(async item => {
+                                if (!IsSuccess) {
+                                    isSuccess = IsSuccess;
+                                    return false;
+                                }
+                            }, (error) => { isSuccess = false; console.error(error); return false; });
+                        }
+                    }, (error) => { isSuccess = false; console.error(error); return false; });
+                });
+
+            if (!isSuccess) return false;
+
+
+            // Delete Product
+            this.RevenueDetailForUDP.filter(item => item.IsCheck === false)
+                .map(async item => {
+                    item.IsNewItem = true;
+                    item.IsDelItem = false;
+                    await this.IncService.RevenueDetailupdDelete(item.RevenueDetailID).then(async IsSuccess => {
+                        if (!IsSuccess) {
+                            isSuccess = IsSuccess;
+                            return false;
+                        } else {
+                            await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
+                                if (!IsSuccess) {
+                                    isSuccess = IsSuccess;
+                                    return false;
+                                }
+                            }, (error) => { isSuccess = false; console.error(error); return false; });
+                        }
+                    }, (error) => { isSuccess = false; console.error(error); return false; });
+                });
+
+            if (!isSuccess) return false;
+
+        }
 
         if (isSuccess) {
+            //alert("Update");
             alert(Message.saveComplete);
             this.onComplete();
-            this.navService.setOnSave(false);
+            this.preloader.setShowPreloader(false);
         } else {
             alert(Message.saveFail);
-
-            return false;
         }
     }
 
+    InsRevenue() {
+        this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
+            if (item.IsSuccess) {
+                this.oRevenue.RevenueDetail.map(async item => {
+                    await this.IncService.RevenueCompareDetailReceiptupdByCon(item.CompareReceiptID.toString()).then(async item => {
+                        if (item.IsSuccess) {
+                            //alert("Insert");
+                            alert(Message.saveComplete);
+                            this.oRevenue = {};
+                            this.onComplete();
+                            this.router.navigate(['/income/list']);
+                        }
 
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => { console.error(error); return false; });
+                });
+            } else {
+                alert(Message.saveFail);
+            }
+        }, (error) => { console.error(error); return false; });
+    }
 
     // ----- ผู้นำส่ง ---
     async getReveneueStaff() {
@@ -457,7 +696,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             StaffID: this.StaffSendID,
             ProgramCode: "XCS-60",
             ProcessCode: "XCS-60-07",
-            RevenueID: this.revenueID,
+            RevenueID: this.RevenueID,
             StaffCode: event.StaffCode,
             TitleName: event.TitleName,
             FirstName: event.FirstName,
@@ -472,12 +711,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: event.OfficeCode,
             OfficeName: event.OfficeName,
             OfficeShortName: event.OfficeShortName,
-            ContributorCode: "20",
+            ContributorID: "20",
             IsActive: "1"
         }
 
         this.PosSend = event.PosLevelName;
-        this.DeptSend = event.OperationDeptName;
+        this.DeptSend = event.OfficeName;
     }
 
     ClearStaffSendData() {
@@ -488,7 +727,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ProgramCode: "XCS-60",
             ProcessCode: "XCS-60-05",
             StaffID: this.StaffSendID,
-            RevenueID: this.revenueID,
+            RevenueID: this.RevenueID,
             StaffCode: "",
             TitleName: "",
             FirstName: "",
@@ -503,7 +742,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorCode: "20",
+            ContributorID: "20",
             IsActive: "1"
         }
     }
@@ -519,7 +758,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
             }
-            debugger
             this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
@@ -536,7 +774,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             StaffID: this.StaffID,
             ProgramCode: "XCS-60",
             ProcessCode: "XCS-60-07",
-            RevenueID: this.revenueID,
+            RevenueID: this.RevenueID,
             StaffCode: event.StaffCode,
             TitleName: event.TitleName,
             FirstName: event.FirstName,
@@ -551,12 +789,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: event.OfficeCode,
             OfficeName: event.OfficeName,
             OfficeShortName: event.OfficeShortName,
-            ContributorCode: "34",
+            ContributorID: "36",
             IsActive: "1"
         }
 
         this.PosStaff = event.PosLevelName;
-        this.DeptStaff = event.OperationDeptName;
+        this.DeptStaff = event.OfficeName;
+        this.StaffDeptCode = event.OfficeCode;
+
+        this.ShowRevenueCompare();
     }
 
     ClearStaffData() {
@@ -567,7 +808,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ProgramCode: "XCS-60",
             ProcessCode: "XCS-60-05",
             StaffID: this.StaffID,
-            RevenueID: this.revenueID,
+            RevenueID: this.RevenueID,
             StaffCode: "",
             TitleName: "",
             FirstName: "",
@@ -582,11 +823,31 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorCode: "34",
+            ContributorID: "36",
             IsActive: "1"
         }
     }
-    // ----- End ผู้นำส่ง ---
+    // ----- End ผู้จัดทำ ---
+
+    // ----- เรียน ---
+    InformToonAutoChange(value: string) {
+        if (value == '') {
+            this.InformTooptions = [];
+        } else {
+            if (this.rawStaffSendOptions.length == 0) {
+                this.getReveneueStaff();
+            }
+            this.InformTooptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    InformToonAutoFocus(value: string) {
+        if (value == '') {
+            this.InformTooptions = [];
+        }
+    }
+
+    // ----- End เรียน ---
 
 
     // --- เขียนที่ ---
@@ -611,7 +872,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oRevenue.StationCode = "";
             this.oRevenue.StationName = "";
         } else {
-            this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -622,8 +883,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onAutoSelecteWord(event) {
-        this.oRevenue.StationCode = event.DepartmentCode;
-        this.oRevenue.StationName = event.DepartmentNameTH;
+        this.oRevenue.StationCode = event.OfficeCode;
+        this.oRevenue.StationName = event.OfficeName;
     }
     // ----- End เขียนที่ ---
 
@@ -651,19 +912,26 @@ export class ManageComponent implements OnInit, OnDestroy {
             return item.IsCheck == true;
         });
 
+
         this.RevenueSummary();
     }
 
     RevenueSummary() {
+        debugger
         let CompareFine: number = 0, BribeMoney: number = 0, RewardMoney: number = 0, TreasuryMoney: number = 0;
+        let MistreatNoList = [];
         this.ListRevenueDetail.filter(item => item.IsCheck === true)
             .map(async item => {
                 BribeMoney += +item.BribeMoney;
                 RewardMoney += +item.RewardMoney;
                 TreasuryMoney += +item.TreasuryMoney;
+
+                MistreatNoList.push(item.CompareID)
             });
 
-        this.MistreatNo = this.ListRevenueDetail.length;
+        var MistreatNoUnique = Array.from(new Set(MistreatNoList));
+
+        this.MistreatNo = MistreatNoUnique.length;
         this.CompareFine = (BribeMoney + RewardMoney + TreasuryMoney).toLocaleString("en");
         this.BribeMoney = BribeMoney.toLocaleString("en");
         this.RewardMoney = RewardMoney.toLocaleString("en");
@@ -686,15 +954,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.CheckCompareReceive();
     }
 
-    CheckCompareReceive()
-    {
+    CheckCompareReceive() {
         this.ListChK = [];
 
         for (var i = 0; i < this.ListRevenueDetailPaging.length; i += 1) {
-            if(this.ListRevenueDetailPaging[i].IsCheck){
+            if (this.ListRevenueDetailPaging[i].IsCheck) {
                 this.ListChK.push(true);
             }
-            else{
+            else {
                 this.ListChK.push(false);
             }
         }

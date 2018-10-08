@@ -56,7 +56,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.2');
+        this.sidebarService.setVersion('Revenue 0.0.0.3');
 
         this.preloader.setShowPreloader(true);
 
@@ -142,20 +142,27 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         await list.map((item) => {
-            item.RevenueDate = toLocalShort(item.RevenueDate);
-            item.RevenueOneStaff = item.RevenueStaff.filter(item => item.ContributorCode === '20');
-
             debugger
-            if (item.RevenueDetail.length > 0) {
-                if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    item.RevenueDetail[0].RevenueStatus = "ยังไม่นำส่งเงินรายได้"
-                }
-                else if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    item.RevenueDetail[0].RevenueStatus = "นำส่งเงินรายได้"
-                }
-                else {
-                    item.RevenueDetail[0].RevenueStatus = "รับรายการนำส่งเงิน"
-                }
+            var StaffSendMoney;
+            item.RevenueDate = toLocalShort(item.RevenueDate);
+            StaffSendMoney = item.RevenueStaff.filter(item => item.ContributorID === 20);
+
+            item.RevenueOneStaff = "";
+            item.RevenueOneStaffDept = "";
+
+            if(StaffSendMoney.length > 0){
+                item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
+                item.RevenueOneStaffDept =  StaffSendMoney[0].DepartmentName;
+            }
+
+            if (item.RevenueStatus == "1") {
+                item.RevenueStatus = "นำส่งเงินรายได้"
+            }
+            else if (item.RevenueStatus == "2") {
+                item.RevenueStatus = "รับรายการนำส่งเงิน"
+            }
+            else{
+                item.RevenueStatus = "";
             }
 
         })
@@ -171,8 +178,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
-    clickView(RevenueCode: string) {
-        this._router.navigate([`/income/manage/R/${RevenueCode}`]);
+    clickView(RevenueID: string) {
+        this._router.navigate([`/income/manage/R/${RevenueID}`]);
     }
 
     async pageChanges(event) {
@@ -230,7 +237,7 @@ export class ListComponent implements OnInit, OnDestroy {
             // this.oProve.ProveStationCode = "";
             // this.oProve.ProveStation = "";
         } else {
-            this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
             debugger
         }
     }
