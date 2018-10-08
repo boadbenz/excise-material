@@ -4,19 +4,20 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
-import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate, setZeroHours, getDateMyDatepicker, convertDateForSave } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, getDateMyDatepicker, convertDateForSave } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
+import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-    private subOnSearch: any;
-    private subSetNextPage: any;
+    private subOnSearch: Subscription;
+    private subSetNextPage: Subscription;
     paginage = pagination;
     dataTable: any;
     advSearch: any;
@@ -58,7 +59,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.15');
+        this.sidebarService.setVersion('0.0.0.16');
 
         this.onSearch('');
 
@@ -86,20 +87,20 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async onAdvSearch(form: any) {
 
-        if (form.value.OccurrenceDateFrom && form.value.OccurrenceDateTo) {
-            const sdate = getDateMyDatepicker(form.value.OccurrenceDateFrom);
-            const edate = getDateMyDatepicker(form.value.OccurrenceDateTo);
+        const sdate = getDateMyDatepicker(form.value.OccurrenceDateFrom);
+        const edate = getDateMyDatepicker(form.value.OccurrenceDateTo);
 
+        if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate);
                 return
             }
-
-            form.value.OccurrenceDateFrom = convertDateForSave(sdate);
-            form.value.OccurrenceDateTo = convertDateForSave(edate);
         }
 
-        this.paginage.TotalItems = 0;        
+        form.value.OccurrenceDateFrom = convertDateForSave(sdate) || '';
+        form.value.OccurrenceDateTo = convertDateForSave(edate) || '';
+
+        this.paginage.TotalItems = 0;
 
         this.preLoader.setShowPreloader(true);
         console.log('===================');
@@ -167,5 +168,6 @@ export class ListComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.subOnSearch.unsubscribe();
         this.subSetNextPage.unsubscribe();
+        this.advSearch = false;
     }
 }

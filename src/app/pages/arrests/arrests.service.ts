@@ -1,25 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from '../../app.config';
 import { Arrest } from './arrest';
 import { ArrestStaff } from './arrest-staff';
 import { ArrestLawbreaker } from './arrest-lawbreaker';
 import { ArrestProduct, ArrestProductDetail } from './arrest-product';
 import { ArrestIndictment, ArrestIndicmentDetail } from './arrest-indictment';
-// import { ProductModel } from '../../models/product.model';
-import { Message } from '../../config/message';
 import { ArrestLocale } from './arrest-locale';
 import { ArrestDocument } from './arrest-document';
-// import { Observable } from 'rxjs/Observable';
-
-// const options = { year: 'numeric', month: 'short', day: 'numeric' };
 
 @Injectable()
 export class ArrestsService {
 
     constructor(private http: HttpClient) { }
 
-    // tslint:disable-next-line:member-ordering
     private httpOptions = {
         headers: new HttpHeaders(
             {

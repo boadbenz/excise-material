@@ -39,6 +39,8 @@ import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
 import { replaceFakePath } from '../../../config/dataString';
 import { MainMasterService } from '../../../services/main-master.service';
+import { Subscription } from 'rxjs';
+import { ArrestNoticeFormControl } from '../arrest-notice';
 
 @Component({
     selector: 'app-manage',
@@ -48,6 +50,7 @@ import { MainMasterService } from '../../../services/main-master.service';
 export class ManageComponent implements OnInit, OnDestroy {
 
     card1: boolean = true;
+    noticeCard: boolean = false;
     card2: boolean = false;
     card3: boolean = false;
     card4: boolean = false;
@@ -82,11 +85,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     readonly entityType = EntityTypes;
     readonly contributerType = ContributorType;
 
-    private onSaveSubscribe: any;
-    private onDeleSubscribe: any;
-    private onPrintSubscribe: any;
-    private onNextPageSubscribe: any;
-    private onCancelSubscribe: any;
+    private onSaveSubscribe: Subscription;
+    private onDeleSubscribe: Subscription;
+    private onPrintSubscribe: Subscription;
+    private onNextPageSubscribe: Subscription;
+    private onCancelSubscribe: Subscription;
+
+    get ArrestNotice(): FormArray {
+        return this.arrestFG.get('ArrestNotice') as FormArray;
+    }
 
     get ArrestStaff(): FormArray {
         return this.arrestFG.get('ArrestStaff') as FormArray;
@@ -120,6 +127,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.arrestFG.get('ArrestProductDetail') as FormArray;
     }
 
+    getArrestNoticeSuspect(form: any) {
+        return form.controls.ArrestNoticeSuspect.controls;
+    }
+
+    getArrestNoticeStaff(form: any) {
+        return form.controls.ArrestNoticeStaff.controls;
+    }
+
     @Input() _noticeCode: string;
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
@@ -147,7 +162,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.0.15');
+        this.sidebarService.setVersion('0.0.0.16');
 
         this.active_route();
         this.arrestFG = this.createForm();
@@ -163,7 +178,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.sub.unsubscribe();
         if (this.onCancelSubscribe)
             this.onCancelSubscribe.unsubscribe();
         if (this.onSaveSubscribe)
@@ -199,7 +213,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             InvestigationSurveyDocument: new FormControl(null),
             InvestigationCode: new FormControl(testCode, Validators.required),
             IsActive: new FormControl(1),
-            ArrestStaff: this.fb.array([this.createStaffForm()]),
+            ArrestNotice: this.fb.array([]),
+            ArrestStaff: this.fb.array([]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
             ArrestLawbreaker: this.fb.array([]),
             ArrestProduct: this.fb.array([]),
@@ -208,20 +223,25 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private createStaffForm(): FormGroup {
-        ArrestStaffFormControl.ArrestCode = new FormControl(this.arrestCode);
-        return this.fb.group(ArrestStaffFormControl);
-    }
+    // private createNoticeForm(): FormGroup {
+    //     ArrestNoticeFormControl.ArrestCode = new FormControl(this.arrestCode);
+    //     return this.fb.group(ArrestNoticeFormControl);
+    // }
+
+    // private createStaffForm(): FormGroup {
+    //     ArrestStaffFormControl.ArrestCode = new FormControl(this.arrestCode);
+    //     return this.fb.group(ArrestStaffFormControl);
+    // }
 
     private createLocalForm(): FormGroup {
         ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestLocaleFormControl);
     }
 
-    private createProductForm(): FormGroup {
-        ArrestProductFormControl.ArrestCode = new FormControl(this.arrestCode);
-        return this.fb.group(ArrestProductFormControl);
-    }
+    // private createProductForm(): FormGroup {
+    //     ArrestProductFormControl.ArrestCode = new FormControl(this.arrestCode);
+    //     return this.fb.group(ArrestProductFormControl);
+    // }
 
     // private createIndictment(): FormGroup {
     //     return this.fb.group(ArrestIndictmentFormControl)
@@ -416,6 +436,21 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`;
             });
 
+            const notice = o.ArrestNotice;
+            notice.map(item => {
+                item.ArrestNoticeSuspect.map(suspect => {
+                    suspect.FullName = `${suspect.SuspectTitleName || ''}`;
+                    suspect.FullName += ` ${suspect.SuspectFirstName || ''}`;
+                    suspect.FullName += ` ${suspect.SuspectLastName || ''}`
+                });
+
+                item.ArrestNoticeStaff.map(staff => {
+                    staff.FullName = `${staff.TitleName || ''}`;
+                    staff.FullName += ` ${staff.FirstName || ''}`;
+                    staff.FullName += ` ${staff.LastName || ''}`
+                })
+            })
+
             const staff = o.ArrestStaff.filter(item => item.IsActive == 1);
             staff.map(item => {
                 item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
@@ -426,20 +461,20 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.ContributorID = item.ContributorID;
             });
 
-            const lawbreaker = o.ArrestLawbreaker.filter(item => item.IsActive == 1);
-            lawbreaker.map(item => {
-                item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
-                item.LawbreakerFullName += ` ${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
-                item.LawbreakerFullName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
-                item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
+            // const lawbreaker = o.ArrestLawbreaker.filter(item => item.IsActive == 1);
+            // lawbreaker.map(item => {
+            //     item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
+            //     item.LawbreakerFullName += ` ${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
+            //     item.LawbreakerFullName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
+            //     item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
 
-                item.CompanyFullName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
-                item.CompanyFullName += `${item.CompanyName == null ? '' : item.CompanyName}`;
+            //     item.CompanyFullName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
+            //     item.CompanyFullName += `${item.CompanyName == null ? '' : item.CompanyName}`;
 
-                item.EntityTypeName = this.entityType.find(e => parseInt(e.value) == item.EntityType).text
-                item.LawbreakerTypeName = this.lawbreakerType.find(e => parseInt(e.value) == item.LawbreakerType).text
-                item.IsNewItem = false;
-            });
+            //     item.EntityTypeName = this.entityType.find(e => parseInt(e.value) == item.EntityType).text
+            //     item.LawbreakerTypeName = this.lawbreakerType.find(e => parseInt(e.value) == item.LawbreakerType).text
+            //     item.IsNewItem = false;
+            // });
 
             const product = o.ArrestProduct.filter(item => item.IsActive == 1);
             product.map(item => {
@@ -477,16 +512,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.IndictmentLawbreaker = _IndictmentLawbreaker;
             });
 
-            await this.arrestService.getDocument(code).then(async res => {
-                const doc = res.filter(item => item.IsActive == 1);
-                doc.map(item => item.IsNewItem = false)
+            // await this.arrestService.getDocument(code).then(async res => {
+            //     const doc = res.filter(item => item.IsActive == 1);
+            //     doc.map(item => item.IsNewItem = false)
 
-                await this.setItemFormArray(res, 'ArrestDocument');
-            })
+            //     await this.setItemFormArray(res, 'ArrestDocument');
+            // })
 
+            // this.setItemFormArray()
+            console.log(notice);
+            this.setItemFormArray(notice, 'ArrestNotice');
             this.setItemFormArray(staff, 'ArrestStaff');
             this.setItemFormArray(o.ArrestLocale, 'ArrestLocale');
-            this.setItemFormArray(lawbreaker, 'ArrestLawbreaker');
+            // this.setItemFormArray(lawbreaker, 'ArrestLawbreaker');
             this.setItemFormArray(product, 'ArrestProduct');
 
             this.addIndicment(indictment);
@@ -921,6 +959,29 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     viewLawbreaker(id: number) {
         this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
+    }
+
+    async deleteNotice(indexForm: number, noticeCode: string) {
+        if (this.mode === 'C') {
+            this.ArrestStaff.removeAt(indexForm);
+
+        } else if (this.mode === 'R') {
+            const isNewItem = this.ArrestStaff.at(indexForm).value.IsNewItem;
+            if (isNewItem) { this.ArrestStaff.removeAt(indexForm); return; }
+
+            if (confirm(Message.confirmAction)) {
+                this.preloader.setShowPreloader(true);
+                // await this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
+                //     if (IsSuccess) {
+                //         alert(Message.delStaffComplete)
+                //         this.ArrestStaff.removeAt(indexForm)
+                //     } else {
+                //         alert(Message.delStaffFail)
+                //     }
+                // })
+                this.preloader.setShowPreloader(false);
+            }
+        }
     }
 
     async deleteStaff(indexForm: number, staffId: string) {
