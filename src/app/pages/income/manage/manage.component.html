@@ -147,7 +147,7 @@
                     <div class="form-group ">
                         <input type="text" class="form-control" [(ngModel)]="StaffName" name="StaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
                             matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
-                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                            [ngClass]="{'ng-touched':isRequired}" required [disabled]="mode=='R'">
                         <mat-autocomplete #auto2="matAutocomplete">
                             <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                                 (click)="StaffonAutoSelecteWord(sOption)">
