@@ -22,25 +22,17 @@ export class ArrestStaff {
     public ContributorCode = '';
     public IsActive: number;
 
-    ContributorID = '';
+    public ContributorID = '';
     public FullName = '';
     public IsNewItem: boolean;
+    public IsModify: string;
+    public RowId: number;
 }
 
 class Types {
     public value: string;
     public text: string;
 }
-
-export const Contributor: Types[] = [
-    {
-        value: '1',
-        text: 'contributor1'
-    }, {
-        value: '2',
-        text: 'contributor2'
-    }
-]
 
 export const ArrestStaffFormControl = {
     StaffId: new FormControl(null),

@@ -4,19 +4,23 @@ export class ArrestNotice {
     NoticeCode: string;
     NoticeStationCode: string;
     NoticeStation: string;
-    NoticeDate: Date;
+    NoticeDate: string;
     NoticeTime: string;
     NoticeDue: number;
-    NoticeDueDate: Date;
+    NoticeDueDate: string;
     CommunicationChannelID: string;
     ArrestCode: string;
     IsArrest: number;
     IsActive: number;
     ArrestNoticeSuspect: ArrestNoticeSuspect[];
-    ArrestNoticeStaff: ArrestNoticeStaff[]
+    ArrestNoticeStaff: ArrestNoticeStaff[];
+
+    RowId: number;
+    IsChecked: boolean;
+    isModify: string;
 }
 
-class ArrestNoticeSuspect {
+export class ArrestNoticeSuspect {
     SuspectID: number;
     SuspectReferenceID: number;
     NoticeCode: string;
@@ -33,10 +37,13 @@ class ArrestNoticeSuspect {
     CompanyRegistrationNo: string;
     SuspectMiddleName: string;
     IDCard: string;
-    PassportNo: string
+    PassportNo: string;
+
+    // Custom
+    FullName: string;
 }
 
-class ArrestNoticeStaff {
+export class ArrestNoticeStaff {
     StaffID: number;
     ProgramCode: string;
     ProcessCode: string;
@@ -56,7 +63,10 @@ class ArrestNoticeStaff {
     OfficeName: string;
     OfficeShortName: string;
     ContributorID: string;
-    IsActive: number
+    IsActive: number;
+    
+    // Custom
+    FullName: string;
 }
 
 let fb: FormBuilder;

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
-import { ArrestLawbreaker } from '../arrest-lawbreaker';
-import { ArrestProduct } from '../arrest-product';
-import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
+import { ArrestLawbreaker } from '../models/arrest-lawbreaker';
+import { ArrestProduct } from '../models/arrest-product';
+import { ArrestIndictment, IndictmentLawbreaker } from '../models/arrest-indictment';
 import { pagination } from '../../../config/pagination';
 import { ArrestsService } from '../arrests.service';
 import { MasLawGroupSectionModel } from '../../../models';

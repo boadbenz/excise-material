@@ -5,15 +5,15 @@ import { Observable } from 'rxjs/Observable';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { setZero, MyDatePickerOptions, setDateMyDatepicker, getDateMyDatepicker, setZeroHours, convertDateForSave } from '../../../config/dateFormat';
-import { ArrestStaff, ArrestStaffFormControl } from '../arrest-staff';
+import { setZero, MyDatePickerOptions, setDateMyDatepicker, getDateMyDatepicker, convertDateForSave, toLocalShort } from '../../../config/dateFormat';
+import { ArrestStaff } from '../models/arrest-staff';
 import { Message } from '../../../config/message';
-import { ArrestProduct, ArrestProductFormControl } from '../arrest-product';
-import { ArrestDocument } from '../arrest-document';
-import { ArrestIndictment, IndictmentLawbreaker } from '../arrest-indictment';
+import { ArrestProduct, ArrestProductDetail } from '../models/arrest-product';
+import { ArrestDocument } from '../models/arrest-document';
+import { ArrestIndictment, ArrestIndicmentDetail } from '../models/arrest-indictment';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
-import { ArrestLocaleFormControl } from '../arrest-locale';
-import { ArrestLawbreaker } from '../arrest-lawbreaker';
+import { ArrestLocaleFormControl } from '../models/arrest-locale';
+import { ArrestLawbreaker } from '../models/arrest-lawbreaker';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -23,7 +23,6 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import { MasOfficeModel } from '../../../models/mas-office.model';
-import { Notice } from '../../notices/notice';
 import {
     MasProductModel,
     MasProvinceModel,
@@ -35,12 +34,12 @@ import {
     EntityTypes,
     ContributorType
 } from '../../../models'
-import { ProveService } from '../../prove/prove.service';
 import { MasDutyProductUnitModel } from '../../../models/mas-duty-product-unit.model';
 import { replaceFakePath } from '../../../config/dataString';
 import { MainMasterService } from '../../../services/main-master.service';
 import { Subscription } from 'rxjs';
-import { ArrestNoticeFormControl } from '../arrest-notice';
+import { ArrestNotice, ArrestNoticeStaff, ArrestNoticeSuspect } from '../models/arrest-notice';
+import { ArrestLawGuitbase, ArrestLawSubSectionRule, LawsuitLawSubSection } from '../models/arrest-law-guiltbase';
 
 @Component({
     selector: 'app-manage',
@@ -48,6 +47,15 @@ import { ArrestNoticeFormControl } from '../arrest-notice';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
+
+    // FormGroup ตรวจสอบสถานะในการบันทึก
+    // C: ข้อมูลใหม่
+    // R: อัพเดทข้อมูล
+
+    // FormArray ตรวจสอบสถานะด้วย
+    // c: รายการใหม่
+    // r: รายการอัพเดท
+    // d: รายการที่ถูกลบ
 
     card1: boolean = true;
     noticeCard: boolean = false;
@@ -59,13 +67,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     card7: boolean = false;
     card8: boolean = false;
 
-    private sub: any;
     programSpect = 'ILG60-03-02-00'
     mode: string;
     modal: any;
     arrestCode: string;
     showEditField: boolean;
-    isRequired: boolean | false;
+    isRequired: boolean;
 
     myDatePickerOptions = MyDatePickerOptions;
 
@@ -79,22 +86,24 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadRegion = new Array<RegionModel>();
     typeheadProduct = new Array<MasProductModel>();
     typeheadProductUnit = new Array<MasDutyProductUnitModel>();
-    // typeheadNetVolumeUnit = new Array<MasDutyProductUnitModel>();
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
     readonly contributerType = ContributorType;
 
+    private sub: Subscription;
     private onSaveSubscribe: Subscription;
     private onDeleSubscribe: Subscription;
     private onPrintSubscribe: Subscription;
     private onNextPageSubscribe: Subscription;
     private onCancelSubscribe: Subscription;
 
+    // --- ArresNotice --- //
     get ArrestNotice(): FormArray {
         return this.arrestFG.get('ArrestNotice') as FormArray;
     }
 
+    // --- ArrestStaff --- //
     get ArrestStaff(): FormArray {
         return this.arrestFG.get('ArrestStaff') as FormArray;
     }
@@ -153,7 +162,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
-
         // set true
         this.navService.setNextPageButton(true);
         this.navService.setInnerTextNextPageButton("รับคำกล่าวโทษ")
@@ -163,7 +171,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
 
         this.sidebarService.setVersion('0.0.0.16');
-
         this.active_route();
         this.arrestFG = this.createForm();
         this.navigate_Service();
@@ -178,23 +185,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.onCancelSubscribe)
-            this.onCancelSubscribe.unsubscribe();
-        if (this.onSaveSubscribe)
-            this.onSaveSubscribe.unsubscribe();
-        if (this.onDeleSubscribe)
-            this.onDeleSubscribe.unsubscribe();
-        if (this.onPrintSubscribe)
-            this.onPrintSubscribe.unsubscribe();
-        if (this.onNextPageSubscribe)
-            this.onNextPageSubscribe.unsubscribe();
+        this.sub.unsubscribe();
+        this.onCancelSubscribe.unsubscribe();
+        this.onSaveSubscribe.unsubscribe();
+        this.onDeleSubscribe.unsubscribe();
+        this.onPrintSubscribe.unsubscribe();
+        this.onNextPageSubscribe.unsubscribe();
     }
 
     private createForm(): FormGroup {
         let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
         let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
         let testCode = `test-${(new Date).getTime()}`;
-        // let OccurrenceDate = ArrestDate;
         return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
             ArrestDate: new FormControl(ArrestDate, Validators.required),
@@ -223,33 +225,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    // private createNoticeForm(): FormGroup {
-    //     ArrestNoticeFormControl.ArrestCode = new FormControl(this.arrestCode);
-    //     return this.fb.group(ArrestNoticeFormControl);
-    // }
-
-    // private createStaffForm(): FormGroup {
-    //     ArrestStaffFormControl.ArrestCode = new FormControl(this.arrestCode);
-    //     return this.fb.group(ArrestStaffFormControl);
-    // }
-
     private createLocalForm(): FormGroup {
         ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(ArrestLocaleFormControl);
     }
-
-    // private createProductForm(): FormGroup {
-    //     ArrestProductFormControl.ArrestCode = new FormControl(this.arrestCode);
-    //     return this.fb.group(ArrestProductFormControl);
-    // }
-
-    // private createIndictment(): FormGroup {
-    //     return this.fb.group(ArrestIndictmentFormControl)
-    // }
-
-    // private createLawbreaker(): FormGroup {
-    //     return this.fb.group(ArrestLawbreakerFormControl);
-    // }
 
     private setItemFormArray(array: any[], formControl: string) {
         if (array !== undefined && array.length) {
@@ -262,7 +241,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     private active_route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
-
             if (p['mode'] == 'C') {
                 // set false
                 this.navService.setPrintButton(false);
@@ -323,7 +301,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
-
                 this.arrestFG.value.ArrestTime = (new Date()).toISOString();
 
                 if (this.mode === 'C') {
@@ -437,7 +414,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             });
 
             const notice = o.ArrestNotice;
-            notice.map(item => {
+            notice.map((item: ArrestNotice) => {
+                item.NoticeDate = toLocalShort(item.NoticeDate)
                 item.ArrestNoticeSuspect.map(suspect => {
                     suspect.FullName = `${suspect.SuspectTitleName || ''}`;
                     suspect.FullName += ` ${suspect.SuspectFirstName || ''}`;
@@ -452,7 +430,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             })
 
             const staff = o.ArrestStaff.filter(item => item.IsActive == 1);
-            staff.map(item => {
+            staff.map((item: ArrestStaff) => {
                 item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
                 item.FullName += ` ${item.FirstName == null ? '' : item.FirstName}`;
                 item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
@@ -461,23 +439,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 item.ContributorID = item.ContributorID;
             });
 
-            // const lawbreaker = o.ArrestLawbreaker.filter(item => item.IsActive == 1);
-            // lawbreaker.map(item => {
-            //     item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
-            //     item.LawbreakerFullName += ` ${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
-            //     item.LawbreakerFullName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
-            //     item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
-
-            //     item.CompanyFullName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
-            //     item.CompanyFullName += `${item.CompanyName == null ? '' : item.CompanyName}`;
-
-            //     item.EntityTypeName = this.entityType.find(e => parseInt(e.value) == item.EntityType).text
-            //     item.LawbreakerTypeName = this.lawbreakerType.find(e => parseInt(e.value) == item.LawbreakerType).text
-            //     item.IsNewItem = false;
-            // });
-
             const product = o.ArrestProduct.filter(item => item.IsActive == 1);
-            product.map(item => {
+            product.map((item: ArrestProduct) => {
                 item.IsNewItem = false;
                 item.ProductFullName = `${item.SubBrandNameTH == null ? '' : item.SubBrandNameTH}`;
                 item.ProductFullName += ` ${item.BrandNameTH == null ? '' : item.BrandNameTH}`;
@@ -485,49 +448,21 @@ export class ManageComponent implements OnInit, OnDestroy {
             });
 
             const indictment = o.ArrestIndictment.filter(item => item.IsActive == 1);
-            indictment.map(async item => {
-                item.IsNewItem = false
-                item.SectionName = item.SectionName ? item.SectionName : null;
-                let _IndictmentLawbreaker = new Array<IndictmentLawbreaker>();
 
-                // await item.OpsArrestIndicmentDetailCollection.map(a1 => {
-                //     let _lawbreaker = o.ArrestLawbreaker.filter(a2 => a2.LawbreakerID == a1.LawbreakerID);
-                //     _IndictmentLawbreaker.push({
-                //         LawbreakerID: a1.LawbreakerID.toString(),
-                //         LawbreakerFullName: _lawbreaker.length ? _lawbreaker[0].LawbreakerFullName : null,
-                //         CompanyFullName: _lawbreaker.length ? _lawbreaker[0].CompanyFullName : null,
-                //         EntityType: _lawbreaker.length ? _lawbreaker[0].EntityType : null,
+            await this.arrestService.MasDocumentMaingetAll('3', this.arrestCode).then(res => {
+                const doc = res.filter(item => item.IsActive == 1);
+                doc.map(item => item.IsNewItem = false)
+                this.setItemFormArray(res, 'ArrestDocument');
+            })
 
-                //         ProductID: null,
-                //         ProductName: null,
-                //         Qty: null,
-                //         QtyUnit: null,
-                //         Size: null,
-                //         SizeUnit: null,
-                //         Weight: null,
-                //         WeightUnit: null,
-                //         IsChecked: false
-                //     })
-                // })
-                item.IndictmentLawbreaker = _IndictmentLawbreaker;
-            });
-
-            // await this.arrestService.getDocument(code).then(async res => {
-            //     const doc = res.filter(item => item.IsActive == 1);
-            //     doc.map(item => item.IsNewItem = false)
-
-            //     await this.setItemFormArray(res, 'ArrestDocument');
-            // })
-
-            // this.setItemFormArray()
-            console.log(notice);
             this.setItemFormArray(notice, 'ArrestNotice');
             this.setItemFormArray(staff, 'ArrestStaff');
             this.setItemFormArray(o.ArrestLocale, 'ArrestLocale');
-            // this.setItemFormArray(lawbreaker, 'ArrestLawbreaker');
             this.setItemFormArray(product, 'ArrestProduct');
+            // this.setItemFormArray(indictment, 'ArrestIndictment');
+            this.setArrestIndictmentForm(indictment);
 
-            this.addIndicment(indictment);
+
         })
     }
 
@@ -547,12 +482,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             if (!isSuccess) { return; }
 
-            this.ArrestDocument.value.map(async doc => {
-                // insert Document
-                await this.arrestService.insDocument(doc).then(docIsSuccess => {
-                    if (!docIsSuccess) { isSuccess = docIsSuccess; return; }
-                }, () => { isSuccess = false; return false; });
-            });
+            // this.ArrestDocument.value.map(async doc => {
+            //     // insert Document
+            //     await this.arrestService.insDocument(doc).then(docIsSuccess => {
+            //         if (!docIsSuccess) { isSuccess = docIsSuccess; return; }
+            //     }, () => { isSuccess = false; return false; });
+            // });
 
         }, () => { isSuccess = false; return; });
 
@@ -697,12 +632,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (item.IsNewItem) {
                     await this.arrestService.indicmentinsAll(item).then(async _indict => {
                         if (!_indict) { isSuccess = false; return; }
-                        // await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
                     }, () => { isSuccess = false; return false; });
                 } else {
                     await this.arrestService.indictmentUpd(item).then(async _indict => {
                         if (!_indict) { isSuccess = false; return; }
-                        // await this.saveIndictmentDetail().then(IsSuccess => isSuccess = IsSuccess);
                     }, () => { isSuccess = false; return false; });
                 }
 
@@ -711,12 +644,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             const document = this.ArrestDocument.value;
             document.map(async item => {
                 if (item.IsNewItem) {
-                    await this.arrestService.insDocument(item).then(docIsSuccess => {
-                        if (!docIsSuccess) { isSuccess = docIsSuccess; return; }
-                    }, () => { isSuccess = false; return false; });
+                    // await this.arrestService.insDocument(item).then(docIsSuccess => {
+                    //     if (!docIsSuccess) { isSuccess = docIsSuccess; return; }
+                    // }, () => { isSuccess = false; return false; });
 
                 } else {
-                    this.arrestService.updDocument(item).then(docIsSuccess => {
+                    this.arrestService.MasDocumentMainupdByCon(item).then(docIsSuccess => {
                         if (!docIsSuccess) { isSuccess = docIsSuccess; return; }
                     }, () => { isSuccess = false; return; })
                 }
@@ -758,102 +691,135 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
     }
-
-    async setNoticeForm(notice: Notice) {
-        this.arrestFG.patchValue({ NoticeCode: notice.NoticeCode });
-
-        const locale = notice.NoticeLocale[0];
-        let product = notice.NoticeProduct;
-
-        const region = this.findRegion(locale.SubDistrict, locale.District, locale.Province)
-
-        this.ArrestLocale.at(0).reset(locale);
-        this.ArrestLocale.at(0).patchValue({
-            SubDistrictCode: locale.SubDistrictCode || region.SubdistrictCode,
-            SubDistrict: locale.SubDistrict || region.SubdistrictNameTH,
-            DistrictCode: locale.DistrictCode || region.DistrictCode,
-            District: locale.District || region.DistrictNameTH,
-            ProvinceCode: locale.ProvinceCode || region.ProvinceCode,
-            Province: locale.Province || region.ProvinceNameTH,
-            Region: `${locale.SubDistrict} ${locale.District} ${locale.Province}`,
-            ArrestCode: this.arrestCode,
-            IsArrest: 1
-        })
-
-        await product.map(item => {
-            item.ProductFullName = `${item.SubBrandNameTH == null ? '' : item.SubBrandNameTH}`;
-            item.ProductFullName += ` ${item.BrandNameTH == null ? '' : item.BrandNameTH}`;
-            item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
-            item.NetWeight = item.NetWeight || null;
-            item.NetWeightUnit = item.NetWeightUnit || null;
-            this.ArrestProduct.push(this.fb.group(item));
-        })
-
-        for (let i = 0; i < this.ArrestProduct.length; i++) {
-            this.ArrestProduct.at(i).patchValue({
+    // Set Array ArrestNoticeForm
+    // 1
+    setNoticeForm(n: ArrestNotice) {
+        let arrestNotice = this.ArrestNotice;
+        arrestNotice.push(
+            this.fb.group({
                 ArrestCode: this.arrestCode,
-                IsNewItem: true
+                NoticeCode: n.NoticeCode,
+                NoticeDate: n.NoticeDate,
+                isModify: 'c',
+                ArrestNoticeStaff: this.setArrestNoticeStaff(n.ArrestNoticeStaff),
+                ArrestNoticeSuspect: this.setArrestNoticeSuspect(n.ArrestNoticeSuspect)
             })
-        }
-
+        );
+    }
+    // 2
+    private setArrestNoticeStaff(o: ArrestNoticeStaff[]) {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({ FullName: x.FullName, OfficeName: x.OfficeName }));
+        })
+        return arr;
+    }
+    // 3
+    private setArrestNoticeSuspect(o: ArrestNoticeSuspect[]) {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({ FullName: x.FullName }));
+        })
+        return arr;
+    }
+    // set FormArray ArrestIndictment
+    // 1
+    setArrestIndictmentForm(o: ArrestIndictment) {
+        let arr = this.ArrestIndictment;
+        arr.push(
+            this.fb.group({
+                ArrestIndictmentDetail: this.setArrestIndictmentDetail(o.ArrestIndictmentDetail),
+                ArrestLawGuitbase: this.setArrestLawGuitbase(o.ArrestLawGuitbase)
+            })
+        )
+        return arr;
+    }
+    // --- 1.1
+    private setArrestIndictmentDetail(o: ArrestIndicmentDetail[]) {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                ArrestLawbreaker: this.setArrestLawbreaker(x.ArrestLawbreaker),
+                ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail)
+            }))
+        })
+        return arr;
+    }
+    // --- --- 1.1.1
+    private setArrestLawbreaker = (o: ArrestLawbreaker[]) => {
+        let arr = new FormArray([]);
+        let LawbreakerFullName;
+        o.map(x => {
+            LawbreakerFullName = x.LawbreakerTitleName == null ? '' : x.LawbreakerTitleName;
+            LawbreakerFullName += x.LawbreakerFirstName == null ? '' : ` ${x.LawbreakerFirstName}`;
+            LawbreakerFullName += x.LawbreakerLastName == null ? '' : ` ${x.LawbreakerLastName}`;
+            arr.push(this.fb.group({
+                LawbreakerFullName
+            }))
+        })
+        return arr;
+    }
+    // --- --- 1.1.2
+    private setArrestProductDetail = (o: ArrestProductDetail[]) => {
+        let arr = new FormArray([]);
+        o.map(x => arr.push(this.fb.group({ ProductDesc: x.ProductDesc })));
+        return arr;
     }
 
-    findRegion(subdistrict, district, province) {
-        let r = this.typeheadRegion.filter(v =>
-            (v.SubdistrictNameTH == subdistrict) &&
-            (v.DistrictNameTH == district) &&
-            (v.ProvinceNameTH == province)
-        ).reduce((obj, key) => {
-            obj['SubdistrictCode'] = key.SubdistrictCode;
-            obj['SubdistrictNameTH'] = key.SubdistrictNameTH;
-            obj['DistrictCode'] = key.SubdistrictCode;
-            obj['DistrictNameTH'] = key.DistrictNameTH;
-            obj['ProvinceCode'] = key.ProvinceCode;
-            obj['ProvinceNameTH'] = key.ProvinceNameTH;
-            return obj;
-        }, {});
-
-        return r as RegionModel;
+    // --- 2.1
+    private setArrestLawGuitbase = (o: ArrestLawGuitbase[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                GuiltBaseID: x.GuiltBaseID,
+                GuiltBaseName: x.GuiltBaseName,
+                IsCompare: x.IsCompare,
+                IsActive: x.IsActive,
+                IsProve: x.IsProve,
+                ArrestLawSubSectionRule: this.setArrestLawSubSectionRule(x.ArrestLawSubSectionRule)
+            }))
+        })
+        return arr;
+    }
+    // --- --- 2.1.1
+    private setArrestLawSubSectionRule = (o: ArrestLawSubSectionRule[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                SectionNo: x.SectionNo,
+                LawsuitLawSubSection: this.setLawsuitLawSubSection(x.LawsuitLawSubSection)
+            }))
+        })
+    }
+    // --- --- 2.1.2
+    private setLawsuitLawSubSection = (o: LawsuitLawSubSection[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                SubSectionNo: x.SubSectionNo,
+                SubSectionType: x.SubSectionType
+            }))
+        })
     }
 
     openModal(e) {
         this.modal = this.modelService.open(e, { size: 'lg', centered: true });
-        this.isEditIndicment = false;
-        this.indicmentIndex = null;
-    }
-
-    indictmentModal: ArrestIndictment;
-    isEditIndicment: boolean | false;
-    indicmentIndex: number | null;
-    editAllegation(index: number, e: any) {
-        this.modal = this.modelService.open(e, { size: 'lg', centered: true });
-        this.indictmentModal = new ArrestIndictment();
-        this.isEditIndicment = true;
-        this.indicmentIndex = index;
-        // this.indictmentModal = this.ArrestIndictment.at(index).value;
-    }
-
-    addLawbreaker(e: ArrestLawbreaker[]) {
-        e.map(item => {
-            item.ArrestCode = this.arrestCode;
-            item.IsNewItem = true;
-            item.LawbreakerRefID = item.LawbreakerID;
-            this.ArrestLawbreaker.push(this.fb.group(item));
-        })
     }
 
     addStaff() {
         const lastIndex = this.ArrestStaff.length - 1;
         let item = new ArrestStaff();
         item.ArrestCode = this.arrestCode;
-        item.IsNewItem = true;
+        item.IsModify = 'c'
         if (lastIndex < 0) {
+            item.RowId = 1;
             this.ArrestStaff.push(this.fb.group(item));
-        } else {
-            const lastDoc = this.ArrestStaff.at(lastIndex).value;
-            if (lastDoc.ContributorID) {
-                this.ArrestStaff.push(this.fb.group(item));
-            }
+            return;
+        }
+        const lastDoc = this.ArrestStaff.at(lastIndex).value;
+        if (lastDoc.ContributorID) {
+            item.RowId = lastDoc.RowId + 1;
+            this.ArrestStaff.push(this.fb.group(item));
         }
     }
 
@@ -861,99 +827,34 @@ export class ManageComponent implements OnInit, OnDestroy {
         const lastIndex = this.ArrestProduct.length - 1;
         let item = new ArrestProduct();
         item.ArrestCode = this.arrestCode;
-        item.IsNewItem = true;
+        item.IsModify = 'c';
         if (lastIndex < 0) {
+            item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
-        } else {
-            const lastDoc = this.ArrestProduct.at(lastIndex).value;
-            if (lastDoc.Qty && lastDoc.QtyUnit) {
-                this.ArrestProduct.push(this.fb.group(item));
-            }
+            return;
         }
-    }
-
-    addIndicment(e: ArrestIndictment[]) {
-
-        e.map(async item => {
-            let indictDetail = [];
-
-            await item.IndictmentLawbreaker.map(lb => {
-                let productDetail = [];
-
-                productDetail.push(
-                    this.fb.group({
-                        ProductID: new FormControl(lb.ProductID, Validators.required),
-                        IsProdcutCo: 1,
-                        Qty: new FormControl(lb.Qty, Validators.required),
-                        QtyUnit: new FormControl(lb.QtyUnit, Validators.required),
-                        Size: new FormControl(lb.Size),
-                        SizeUnit: new FormControl(lb.SizeUnit),
-                        Weight: new FormControl(lb.Weight),
-                        WeightUnit: new FormControl(lb.WeightUnit),
-                        MistreatRate: null,
-                        Fine: null,
-                        IndictmentDetailID: null
-                    })
-                )
-
-                indictDetail.push(
-                    this.fb.group({
-                        IndictmentID: null,
-                        ArrestCode: new FormControl(this.arrestCode, Validators.required),
-                        LawbreakerID: new FormControl(lb.LawbreakerID, Validators.required),
-                        GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),
-                        IsProve: 1,
-                        IsActive: 1,
-                        ArrestProductDetail: this.fb.array(productDetail)
-                    })
-                )
-            })
-
-            let FG = this.fb.group({
-                ArrestCode: new FormControl(this.arrestCode, Validators.required),
-                IndicmentID: new FormControl(item.IndicmentID),
-                IsProve: new FormControl(item.IsProve, Validators.required),
-                IsActive: new FormControl(item.IsActive, Validators.required),
-                GuiltBaseID: new FormControl(item.GuiltBaseID, Validators.required),
-                SectionNo: new FormControl(item.SectionNo),
-                SectionDesc1: item.SectionDesc1,
-                SectionName: item.SectionName,
-                IndictmentLawbreaker: this.fb.array(item.IndictmentLawbreaker),
-                ArrestIndictmentDetail: this.fb.array(indictDetail),
-                IsNewItem: item.IsNewItem == false ? false : true
-            })
-
-            this.ArrestIndictment.push(FG);
-        })
-    }
-
-    patchIndicment(e: ArrestIndictment) {
-        const isNewItem = this.ArrestIndictment.at(this.indicmentIndex).value.isNewItem;
-        this.ArrestIndictment.at(this.indicmentIndex).reset({
-            IsNewItem: isNewItem || true,
-            ArrestCode: this.arrestCode,
-            IsProve: 1,
-            IsActive: 1,
-            GuiltBaseID: e.GuiltBaseID,
-            SectionNo: e.SectionNo,
-            SectionDesc1: e.SectionDesc1,
-            SectionName: e.SectionName,
-            IndictmentLawbreaker: this.fb.array(e.IndictmentLawbreaker),
-        });
+        const lastDoc = this.ArrestProduct.at(lastIndex).value;
+        if (lastDoc.Qty && lastDoc.QtyUnit) {
+            item.RowId = lastDoc.RowId + 1;
+            this.ArrestProduct.push(this.fb.group(item));
+        }
     }
 
     addDocument() {
         const lastIndex = this.ArrestDocument.length - 1;
         let item = new ArrestDocument();
+        item.DocumentType = '3';
         item.ReferenceCode = this.arrestCode;
-        item.IsNewItem = true;
+        item.IsModify = 'c';
         if (lastIndex < 0) {
+            item.RowId = 1;
             this.ArrestDocument.push(this.fb.group(item));
-        } else {
-            const lastItem = this.ArrestDocument.at(lastIndex).value;
-            if (lastItem.DocumentName && lastItem.FilePath) {
-                this.ArrestDocument.push(this.fb.group(item));
-            }
+            return;
+        }
+        const lastItem = this.ArrestDocument.at(lastIndex).value;
+        if (lastItem.DocumentName && lastItem.FilePath) {
+            item.RowId = lastItem.RowId + 1;
+            this.ArrestDocument.push(this.fb.group(item));
         }
     }
 
@@ -961,154 +862,44 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
     }
 
-    async deleteNotice(indexForm: number, noticeCode: string) {
-        if (this.mode === 'C') {
-            this.ArrestStaff.removeAt(indexForm);
-
-        } else if (this.mode === 'R') {
-            const isNewItem = this.ArrestStaff.at(indexForm).value.IsNewItem;
-            if (isNewItem) { this.ArrestStaff.removeAt(indexForm); return; }
-
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
-                // await this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
-                //     if (IsSuccess) {
-                //         alert(Message.delStaffComplete)
-                //         this.ArrestStaff.removeAt(indexForm)
-                //     } else {
-                //         alert(Message.delStaffFail)
-                //     }
-                // })
-                this.preloader.setShowPreloader(false);
-            }
-        }
+    private async sortFormArray(arr: any[]) {
+        let a = await arr.sort((a, b) => {
+            if (a.RowId < b.RowId) return -1; // asc
+            if (a.RowId > b.RowId) return 1; // desc
+            return 0;
+        });
+        let i = 0;
+        a.map((x) => { if (x.RowId != 0) x.RowId = ++i; });
+        return a;
     }
 
-    async deleteStaff(indexForm: number, staffId: string) {
-        if (this.mode === 'C') {
-            this.ArrestStaff.removeAt(indexForm);
-
-        } else if (this.mode === 'R') {
-            const isNewItem = this.ArrestStaff.at(indexForm).value.IsNewItem;
-            if (isNewItem) { this.ArrestStaff.removeAt(indexForm); return; }
-
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
-                await this.arrestService.staffupdDelete(staffId).then(IsSuccess => {
-                    if (IsSuccess) {
-                        alert(Message.delStaffComplete)
-                        this.ArrestStaff.removeAt(indexForm)
-                    } else {
-                        alert(Message.delStaffFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
-        }
+    deleteNotice(i: number) {
+        this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        let notice = this.sortFormArray(this.ArrestNotice.value);
+        notice.then(x => this.ArrestNotice.patchValue(x));
     }
 
-    async deleteLawbreaker(indexForm: number, lawbreakerId: string) {
-        if (this.mode === 'C') {
-            this.ArrestLawbreaker.removeAt(indexForm);
-
-        } else if (this.mode === 'R') {
-            const isNewItem = this.ArrestLawbreaker.at(indexForm).value.IsNewItem;
-            if (isNewItem) { this.ArrestLawbreaker.removeAt(indexForm); return; }
-
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
-                await this.arrestService.lawbreakerupdDelete(lawbreakerId).then(IsSuccess => {
-                    if (IsSuccess) {
-                        alert(Message.delLawbreakerComplete)
-                        this.ArrestLawbreaker.removeAt(indexForm)
-                    } else {
-                        alert(Message.delLawbreakerFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
-        }
+    deleteStaff(i: number) {
+        this.ArrestStaff.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        let staff = this.sortFormArray(this.ArrestStaff.value);
+        staff.then(x => this.ArrestStaff.patchValue(x));
     }
 
-    async deleteProduct(indexForm: number, productId: string) {
-        if (this.mode === 'C') {
-            this.ArrestProduct.removeAt(indexForm);
-
-        } else if (this.mode === 'R') {
-            const isNewItem = this.ArrestProduct.at(indexForm).value.IsNewItem;
-
-            if (isNewItem) { this.ArrestProduct.removeAt(indexForm); return; }
-
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
-                await this.arrestService.productupdDelete(productId).then(IsSuccess => {
-                    if (IsSuccess) {
-                        alert(Message.delProductComplete)
-                        this.ArrestProduct.removeAt(indexForm)
-                    } else {
-                        alert(Message.delProductFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
-        }
+    deleteProduct(i: number) {
+        this.ArrestProduct.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        
     }
 
-    async deleteIndicment(indexForm: number, indicmtmentId: string) {
-        if (this.mode === 'C') {
-            this.ArrestIndictment.removeAt(indexForm);
-
-        } else if (this.mode === 'R') {
-
-            const isNewItem = this.ArrestIndictment.at(indexForm).value.IsNewItem;
-
-            if (isNewItem) { this.ArrestIndictment.removeAt(indexForm); return; }
-
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
-                await this.arrestService.indicmentupdDelete(indicmtmentId).then(IsSuccess => {
-                    if (IsSuccess) {
-                        alert(Message.delIndicmentComplete)
-                        this.ArrestIndictment.removeAt(indexForm)
-                    } else {
-                        alert(Message.delIndicmentFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
-        }
+    deleteIndicment(i: number) {
+        this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
     }
 
-    async deleteDocument(id: string, indexForm: number) {
-        if (this.mode === 'C') {
-            this.ArrestDocument.removeAt(indexForm);
-
-        } else if (this.mode === 'R') {
-
-            const isNewItem = this.ArrestDocument.at(indexForm).value.IsNewItem;
-
-            if (isNewItem) { this.ArrestDocument.removeAt(indexForm); return; }
-
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
-
-                await this.arrestService.documentUpDelete(id).then(isSuccess => {
-                    if (isSuccess === true) {
-                        this.ArrestDocument.removeAt(indexForm);
-                        alert(Message.delDocumentComplete)
-                    } else {
-                        alert(Message.delDocumentFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
-        }
+    deleteDocument(i: number) {
+        this.ArrestDocument.at(i).patchValue({ IsModify: 'd', RowId: 0 });
     }
 
     searchProduct = (text$: Observable<string>) =>
-        text$
-            .debounceTime(200)
-            .distinctUntilChanged()
+        text$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadProduct
                     .filter(v =>
@@ -1118,9 +909,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     ).slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
-        text3$
-            .debounceTime(200)
-            .distinctUntilChanged()
+        text3$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
@@ -1130,9 +919,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
-        text3$
-            .debounceTime(200)
-            .distinctUntilChanged()
+        text3$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadStaff
                     .filter(v =>
@@ -1142,14 +929,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>
-        text3$
-            .debounceTime(200)
-            .distinctUntilChanged()
+        text3$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadOffice
                     .filter(v =>
-                        (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
@@ -1161,7 +945,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
 
-    formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
+    formatterOffice = (x: { OfficeName: string }) => x.OfficeName
 
     selectItemLocaleRegion(e) {
         this.ArrestLocale.at(0).patchValue({
@@ -1175,10 +959,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemProductItem(e, i) {
-        const isNewItem = this.ArrestProduct.at(i).value.isNewItem;
+        const isModify = this.ArrestProduct.at(i).value.IsModify;
         this.ArrestProduct.at(i).reset(e.item);
         this.ArrestProduct.at(i).patchValue({
-            IsNewItem: isNewItem || true,
+            IsNewItem: isModify,
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || 1,
             IsDomestic: e.item.IsDomestic || 1
@@ -1186,10 +970,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemStaff(e, i) {
-        const isNewItem = this.ArrestStaff.at(i).value.isNewItem;
+        const staff = this.ArrestStaff.at(i).value;
         this.ArrestStaff.at(i).reset(e.item);
         this.ArrestStaff.at(i).patchValue({
-            IsNewItem: isNewItem || true,
+            IsModify: staff.IsModify,
+            RowId: staff.RowId,
             ProgramCode: this.programSpect,
             ProcessCode: '0002',
             ArrestCode: this.arrestCode,
@@ -1198,16 +983,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,
-            ContributorID: e.item.ContributorID || 2,
-            ContributorCode: e.item.ContributorCode || 2
-
+            ContributorID: e.item.ContributorID
         })
     }
 
     selectItemOffice(e) {
         this.arrestFG.patchValue({
             ArrestStationCode: e.item.OfficeCode,
-            ArrestStation: e.item.OfficeShortName
+            ArrestStation: e.item.OfficeName
         })
     }
 

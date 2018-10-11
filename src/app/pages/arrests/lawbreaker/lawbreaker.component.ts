@@ -19,7 +19,7 @@ import { Message } from 'app/config/message';
 import { MyDatePickerOptions, getDateMyDatepicker, setDateMyDatepicker, convertDateForSave } from '../../../config/dateFormat';
 import { ImageType } from '../../../config/imageType';
 import { MainMasterService } from '../../../services/main-master.service';
-import { ArrestLawbreakerFormControl } from '../arrest-lawbreaker';
+import { ArrestLawbreakerFormControl } from '../models/arrest-lawbreaker';
 
 
 @Component({

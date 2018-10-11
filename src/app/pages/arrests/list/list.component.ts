@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef 
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ArrestsService } from '../arrests.service';
-import { Arrest } from '../arrest';
+import { Arrest } from '../models/arrest';
 import { Message } from '../../../config/message';
 import { toLocalShort, compareDate, getDateMyDatepicker, convertDateForSave } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';

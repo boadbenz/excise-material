@@ -5,10 +5,12 @@ export class ArrestDocument {
     public ReferenceCode = '';
     public FilePath = '';
     public DataSource = '';
-    DocumentType = '';
-    DocumentName = '';
+    public DocumentType = '';
+    public DocumentName = '';
     public IsActive : number;
     public IsNewItem: boolean;
+    public IsModify: string;
+    public RowId: number;
 }
 
 export const ArrestDocumentFormControl = {

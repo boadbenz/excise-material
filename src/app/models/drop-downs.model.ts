@@ -72,8 +72,8 @@ export const GenderTypes: DropDown[] = [
 ]
 
 export const ContributorType: DropDown[] = [
-    { value: '1', text: 'ผู้กล่าวหา' },
-    { value: '2', text: 'ผู้ร่วมจับกุม' }
+    { value: '6', text: 'ผู้กล่าวหา' },
+    { value: '7', text: 'ผู้ร่วมจับกุม' }
 ]
 
 export const MaritalStatus: DropDown[] = [

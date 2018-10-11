@@ -1,9 +1,9 @@
 import { Message } from '../../../config/message';
 import {toLocalNumeric, toLocalShort, toTimeShort} from '../../../config/dateFormat';
 import { MasLawGroupSection } from '../models/mas_law_group_section';
-import { ArrestLawbreaker } from "../../arrests/arrest-lawbreaker";
+import { ArrestLawbreaker } from "../../arrests/models/arrest-lawbreaker";
 import { MasLawPenalty } from "../models/mas_law_penalty";
-import { Arrest } from "../../arrests/arrest";
+import { Arrest } from "../../arrests/models/arrest";
 import { MasLawGuitBase } from "../models/mas_law_guitbase";
 import { LawsuitService } from "../lawsuit.service";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
@@ -168,14 +168,14 @@ export class DetailComponent implements OnInit {
         });
 
         this.arrestList[0].ArrestIndictment.forEach(value => {
-          // Find lawbreakerID
-          value.OpsArrestIndicmentDetailCollection.forEach(data => {
-            this.lawbreakerID = data.LawbreakerID;
-          });
-          // Find guiltbaseID
-          if (value.IndicmentID == params.IndictmentID) {
-            this.guiltBaseID = value.GuiltBaseID;
-          }
+          // // Find lawbreakerID
+          // value.OpsArrestIndicmentDetailCollection.forEach(data => {
+          //   this.lawbreakerID = data.LawbreakerID;
+          // });
+          // // Find guiltbaseID
+          // if (value.IndicmentID == params.IndictmentID) {
+          //   this.guiltBaseID = value.GuiltBaseID;
+          // }
         });
 
         // ArrestLawbreakergetByCon on Table

@@ -8,7 +8,7 @@ import { Lawsuit } from "../models/lawsuit";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Component, OnInit ,ViewChild, ElementRef } from "@angular/core";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
-import { Arrest } from "../../arrests/arrest";
+import { Arrest } from "../../arrests/models/arrest";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormBuilder } from "@angular/forms";
 import { PreloaderService } from "../../../shared/preloader/preloader.component";
