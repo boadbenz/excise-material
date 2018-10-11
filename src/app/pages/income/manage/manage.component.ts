@@ -223,9 +223,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
             if (status) {
-                if (confirm(Message.confirmAction)) {
-                    await this.navService.setOnCancel(false);
+                this.navService.setOnCancel(false);
 
+                if (confirm(Message.confirmAction)) {
                     if (this.mode === 'C') {
                         this.router.navigate(['/income/list']);
                     } else if (this.mode === 'R') {
@@ -240,7 +240,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                         await this.ShowRevenue();
                     }
+                }
+                else {
+                    this.navService.setSaveButton(true);
+                    this.navService.setCancelButton(true);
 
+                    this.navService.setPrintButton(false);
+                    this.navService.setEditButton(false);
+                    this.navService.setDeleteButton(false);
+                    this.navService.setEditField(false);
                 }
             }
         })
@@ -254,7 +262,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onDelete() {
-        if(this.RevenueStatus == 1){
+        if (this.RevenueStatus == 1) {
             if (confirm(Message.confirmAction)) {
                 this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
                     if (IsSuccess) {
@@ -274,11 +282,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }, (error) => { console.error(error); return false; });
             }
         }
-        else if (this.RevenueStatus == 2)
-        {
+        else if (this.RevenueStatus == 2) {
             alert(Message.cannotDelete);
         }
-        
+
     }
 
     ShowRevenue() {
@@ -672,9 +679,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     StaffSendonAutoChange(value: string) {
+        this.ClearStaffSendData();
+
         if (value == '') {
             this.StaffSendoptions = [];
-            this.ClearStaffSendData();
         } else {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
@@ -751,9 +759,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     // ----- ผู้จัดทำ ---
     StaffonAutoChange(value: string) {
+        this.ClearStaffData();
+
         if (value == '') {
-            this.Staffoptions = [];
-            this.ClearStaffData();
+            this.Staffoptions = [];  
         } else {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
@@ -865,10 +874,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onAutoChange(value: string) {
-        // 
         if (value == '') {
-            this.options = [];
-
+            this.options = []; 
             this.oRevenue.StationCode = "";
             this.oRevenue.StationName = "";
         } else {

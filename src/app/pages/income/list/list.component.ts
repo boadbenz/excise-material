@@ -56,7 +56,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.3');
+        this.sidebarService.setVersion('Revenue 0.0.0.4');
 
         this.preloader.setShowPreloader(true);
 
@@ -97,6 +97,7 @@ export class ListComponent implements OnInit, OnDestroy {
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             alert(Message.noRecord);
+            this.RevenueList = [];
             this.preloader.setShowPreloader(true);
         });
     }
@@ -123,7 +124,6 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         }
 
-
         await this.incomeService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
@@ -138,6 +138,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (!list.length) {
             alert(Message.noRecord);
+            this.RevenueList = [];
+
             return false;
         }
 
@@ -238,7 +240,6 @@ export class ListComponent implements OnInit, OnDestroy {
             // this.oProve.ProveStation = "";
         } else {
             this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
-            debugger
         }
     }
 
