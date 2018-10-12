@@ -17,7 +17,7 @@ export class ArrestNotice {
 
     RowId: number;
     IsChecked: boolean;
-    isModify: string;
+    IsModify: string;
 }
 
 export class ArrestNoticeSuspect {

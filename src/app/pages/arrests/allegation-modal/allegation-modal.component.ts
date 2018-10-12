@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 import { ArrestLawbreaker } from '../models/arrest-lawbreaker';
 import { ArrestProduct } from '../models/arrest-product';
 import { ArrestIndictment, IndictmentLawbreaker } from '../models/arrest-indictment';
@@ -14,7 +14,7 @@ import { Message } from '../../../config/message';
     templateUrl: './allegation-modal.component.html',
     styleUrls: ['./allegation-modal.component.scss']
 })
-export class AllegationModalComponent implements OnInit {
+export class AllegationModalComponent implements OnInit, OnDestroy {
 
     isOpen = false;
     isCheckAll = false;
@@ -26,16 +26,16 @@ export class AllegationModalComponent implements OnInit {
 
     lawGroupFG: FormGroup;
 
-    @Input() mode: string;
-    @Input() lawbreaker = new Array<ArrestLawbreaker>();
-    @Input() product = new Array<ArrestProduct>();
-    @Input() indicment = new Array<ArrestIndictment>();
-    @Input() isEditIndicment: boolean | false;
+    // @Input() mode: string;
+    // @Input() lawbreaker = new Array<ArrestLawbreaker>();
+    // @Input() product = new Array<ArrestProduct>();
+    // @Input() indicment = new Array<ArrestIndictment>();
+    // @Input() isEditIndicment: boolean | false;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
-    @Output() setIndicment = new EventEmitter<ArrestIndictment[]>();
-    @Output() patchIndicment = new EventEmitter<ArrestIndictment>();
+    // @Output() setIndicment = new EventEmitter<ArrestIndictment[]>();
+    // @Output() patchIndicment = new EventEmitter<ArrestIndictment>();
 
     get LawGroupSection(): FormArray {
         return this.lawGroupFG.get('LawGroupSection') as FormArray
@@ -51,38 +51,15 @@ export class AllegationModalComponent implements OnInit {
         private preloader: PreloaderService
     ) { }
 
-    async ngOnInit() {
-        this.paginage.TotalItems = 0;
+    ngOnInit() {
         this.lawGroupFG = this.fb.group({
             LawGroupSection: this.fb.array([]),
             IndictmentLawbreaker: this.fb.array([])
         })
+    }
 
-        // console.log(this.isEditIndictment ? this.indicment : null);
-
-
-        let _indictmentLawbreaker = new Array<IndictmentLawbreaker>()
-        await this.lawbreaker.map(item => {
-            _indictmentLawbreaker.push(
-                {
-                    LawbreakerID: item.LawbreakerID.toString(),
-                    LawbreakerFullName: item.LawbreakerFullName,
-                    CompanyFullName: item.CompanyFullName,
-                    EntityType: item.EntityType,
-                    ProductID: null,
-                    ProductName: null,
-                    Qty: null,
-                    QtyUnit: null,
-                    Size: null,
-                    SizeUnit: null,
-                    Weight: null,
-                    WeightUnit: null,
-                    IsChecked: false
-                }
-            )
-        })
-
-        this.setItemFormArray(_indictmentLawbreaker, 'IndictmentLawbreaker')
+    ngOnDestroy(): void {
+        this.paginage.TotalItems = 0;
     }
 
     async onSearchByKey(f: any) {
@@ -123,76 +100,11 @@ export class AllegationModalComponent implements OnInit {
         })
     }
 
-    selectItemPorduct(e: any, i: number) {
-        const _product = this.product.find(item => item.ProductID == e.target.value);
-        this.IndictmentLawbreaker.at(i).patchValue({
-            ProductID: e.target.value,
-            ProductName: _product.ProductDesc,
-            Qty: _product.Qty,
-            QtyUnit: _product.QtyUnit,
-            Size: null,
-            SizeUnit: null,
-            Weight: _product.NetVolume,
-            WeightUnit: _product.NetVolumeUnit
-        })
-    }
-
-    checkAll() {
-        this.isCheckAll = !this.isCheckAll;
-    }
-
     dismiss(e: any) {
-        this.isEditIndicment = false;
         this.d.emit(e);
     }
 
     async close(e: any) {
-        let _indictmentLawbreaker = []
-        let _lawGroup = this.LawGroupSection.value.filter(item => item.IsChecked);
-
-        if (!_lawGroup.length)
-            return;
-
-        await this.IndictmentLawbreaker.value
-            .filter(item => item.IsChecked)
-            .map(item => {
-                _indictmentLawbreaker.push({
-                    LawbreakerID: item.LawbreakerID,
-                    LawbreakerFullName: item.LawbreakerFullName,
-                    CompanyFullName: item.CompanyFullName,
-                    EntityType: item.EntityType,
-                    ProductID: item.ProductID,
-                    ProductName: item.ProductName,
-                    Qty: item.Qty,
-                    QtyUnit: item.QtyUnit,
-                    Size: item.Size,
-                    SizeUnit: item.SizeUnit,
-                    Weight: item.Weight,
-                    WeightUnit: item.WeightUnit,
-                    IsChecked: false
-                })
-            });
-
-        let _indicmentArr = []
-        await _lawGroup.map((lg) => {
-            _indicmentArr.push({
-                IndictmentID: lg.IndictmentID,
-                IsProve: 1,
-                IsActive: 1,
-                GuiltBaseID: lg.GuiltBaseID,
-                SectionNo: lg.SectionNo,
-                SectionDesc1: lg.SectionDesc1,
-                SectionName: lg.SectionName,
-                IndictmentLawbreaker: _indictmentLawbreaker,
-            })
-        })
-
-        if (this.isEditIndicment) {
-            this.patchIndicment.emit(..._indicmentArr);
-            this.isEditIndicment = false;
-        } else {
-            this.setIndicment.emit(_indicmentArr);
-        }
         this.c.emit(e);
     }
 

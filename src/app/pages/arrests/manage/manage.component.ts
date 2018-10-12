@@ -553,7 +553,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             // })
 
         }, () => { IsSuccess = false; return false; });
-
         return IsSuccess;
     }
 
@@ -693,18 +692,24 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     // Set Array ArrestNoticeForm
     // 1
-    setNoticeForm(n: ArrestNotice) {
+    setNoticeForm(n: ArrestNotice[]) {
         let arrestNotice = this.ArrestNotice;
-        arrestNotice.push(
-            this.fb.group({
-                ArrestCode: this.arrestCode,
-                NoticeCode: n.NoticeCode,
-                NoticeDate: n.NoticeDate,
-                isModify: 'c',
-                ArrestNoticeStaff: this.setArrestNoticeStaff(n.ArrestNoticeStaff),
-                ArrestNoticeSuspect: this.setArrestNoticeSuspect(n.ArrestNoticeSuspect)
-            })
-        );
+        let i = 0;
+        n.map(x => {
+            const modify = arrestNotice.value.filter(x => x.IsModify != 'd');
+            i = (modify.length) && modify[modify.length - 1].RowId;
+            arrestNotice.push(
+                this.fb.group({
+                    ArrestCode: this.arrestCode,
+                    NoticeCode: x.NoticeCode,
+                    NoticeDate: x.NoticeDate,
+                    IsModify: x.IsModify || 'c',
+                    RowId: x.IsModify != 'd' && ++i,
+                    ArrestNoticeStaff: this.setArrestNoticeStaff(x.ArrestNoticeStaff),
+                    ArrestNoticeSuspect: this.setArrestNoticeSuspect(x.ArrestNoticeSuspect)
+                })
+            );
+        })
     }
     // 2
     private setArrestNoticeStaff(o: ArrestNoticeStaff[]) {
@@ -724,14 +729,16 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     // set FormArray ArrestIndictment
     // 1
-    setArrestIndictmentForm(o: ArrestIndictment) {
+    setArrestIndictmentForm(o: ArrestIndictment[]) {
         let arr = this.ArrestIndictment;
-        arr.push(
-            this.fb.group({
-                ArrestIndictmentDetail: this.setArrestIndictmentDetail(o.ArrestIndictmentDetail),
-                ArrestLawGuitbase: this.setArrestLawGuitbase(o.ArrestLawGuitbase)
-            })
-        )
+        o.map(x => {
+            arr.push(
+                this.fb.group({
+                    ArrestIndictmentDetail: this.setArrestIndictmentDetail(x.ArrestIndictmentDetail),
+                    ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase)
+                })
+            )
+        });
         return arr;
     }
     // --- 1.1
@@ -832,12 +839,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
             return;
-        }
+        } 
         const lastDoc = this.ArrestProduct.at(lastIndex).value;
         if (lastDoc.Qty && lastDoc.QtyUnit) {
             item.RowId = lastDoc.RowId + 1;
             this.ArrestProduct.push(this.fb.group(item));
         }
+    }
+
+    addAllegation() {
+        this.router.navigate([`arrest/allegation`, this.mode, this.arrestCode]);
     }
 
     addDocument() {
@@ -852,14 +863,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             return;
         }
         const lastItem = this.ArrestDocument.at(lastIndex).value;
-        if (lastItem.DocumentName && lastItem.FilePath) {
+        if (lastItem.DataSource && lastItem.FilePath) {
             item.RowId = lastItem.RowId + 1;
             this.ArrestDocument.push(this.fb.group(item));
         }
-    }
-
-    viewLawbreaker(id: number) {
-        this.router.navigate([`/arrest/lawbreaker`, 'R', id]);
     }
 
     private async sortFormArray(arr: any[]) {
@@ -873,29 +880,37 @@ export class ManageComponent implements OnInit, OnDestroy {
         return a;
     }
 
-    deleteNotice(i: number) {
-        this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let notice = this.sortFormArray(this.ArrestNotice.value);
-        notice.then(x => this.ArrestNotice.patchValue(x));
+    private deleteFormArray(o: FormArray, i: number, controls: string) {
+        o.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        let sort = this.sortFormArray(o.value);
+        o.value.map(() => o.removeAt(0));
+        sort.then(x => this.setItemFormArray(x, controls));
     }
 
     deleteStaff(i: number) {
-        this.ArrestStaff.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let staff = this.sortFormArray(this.ArrestStaff.value);
-        staff.then(x => this.ArrestStaff.patchValue(x));
+        this.deleteFormArray(this.ArrestStaff, i, 'ArrestStaff');
     }
 
     deleteProduct(i: number) {
-        this.ArrestProduct.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        
+        this.deleteFormArray(this.ArrestProduct, i, 'ArrestProduct');
+    }
+
+    deleteDocument(i: number) {
+        this.deleteFormArray(this.ArrestDocument, i, 'ArrestDocument');
+    }
+
+    deleteNotice(i: number) {
+        this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        let notice = this.sortFormArray(this.ArrestNotice.value);
+        this.ArrestNotice.value.map(() => this.ArrestNotice.removeAt(0));
+        notice.then(x => this.setNoticeForm(x));
     }
 
     deleteIndicment(i: number) {
         this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-    }
-
-    deleteDocument(i: number) {
-        this.ArrestDocument.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        let indictment = this.sortFormArray(this.ArrestIndictment.value);
+        this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
+        indictment.then((x) => this.setArrestIndictmentForm(x));
     }
 
     searchProduct = (text$: Observable<string>) =>
@@ -939,8 +954,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubdistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
 
-    formatterProduct = (x: { SubBrandNameTH: string, BrandNameTH: string, ModelName: string }) =>
-        `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;
+    formatterProduct = (x: { ProductDesc: string }) => x.ProductDesc;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
@@ -959,14 +973,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemProductItem(e, i) {
-        const isModify = this.ArrestProduct.at(i).value.IsModify;
+        const product = this.ArrestProduct.at(i).value;
         this.ArrestProduct.at(i).reset(e.item);
         this.ArrestProduct.at(i).patchValue({
-            IsNewItem: isModify,
+            IsModify: product.IsModify,
+            RowId: product.RowId,
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || 1,
             IsDomestic: e.item.IsDomestic || 1
-        })
+        })  
     }
 
     selectItemStaff(e, i) {
@@ -975,6 +990,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ArrestStaff.at(i).patchValue({
             IsModify: staff.IsModify,
             RowId: staff.RowId,
+            FullName: `${e.item.TitleName} ${e.item.FirstName} ${e.item.LastName}`,
             ProgramCode: this.programSpect,
             ProcessCode: '0002',
             ArrestCode: this.arrestCode,
@@ -999,7 +1015,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         let file = e.target.files[0];
         let fileName: string = file.name;
         let fileType: string = file.type;
-
         reader.readAsDataURL(file);
         reader.onload = () => {
             let dataSource = reader.result.split(',')[1];

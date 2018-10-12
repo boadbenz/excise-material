@@ -33,7 +33,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
-    @Output() outputNotice = new EventEmitter<ArrestNotice>();
+    @Output() outputNotice = new EventEmitter<ArrestNotice[]>();
 
     @ViewChild('noticeTable') noticeTable: ElementRef
 
@@ -129,11 +129,11 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         }
     }
 
-    setIsChecked(i: number) {
-        this.ArrestNotice.value.map((item, index) => {
-            item.IsChecked = i == index ? true : false;
-        })
-    }
+    // setIsChecked(i: number) {
+    //     this.ArrestNotice.value.map((item, index) => {
+    //         item.IsChecked = i == index ? true : false;
+    //     })
+    // }
 
     view(code: string) {
         this.dismiss('Cross click');
@@ -153,7 +153,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
     }
 
     async close(e: any) {
-        const n = this.ArrestNotice.value.find(item => item.IsChecked);
+        const n: ArrestNotice[] = this.ArrestNotice.value.filter(item => item.IsChecked);
         if (n) {
             this.outputNotice.emit(n);
             this.c.emit(e);

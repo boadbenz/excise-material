@@ -21,7 +21,8 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' },
-            { path: 'lawbreaker/:mode/:code', loadChildren: './pages/arrests/lawbreaker/lawbreaker.module#LawbreakerModule' }
+            { path: 'lawbreaker/:mode/:code', loadChildren: './pages/arrests/lawbreaker/lawbreaker.module#LawbreakerModule' },
+            { path: 'allegation/:mode/:code', loadChildren: './pages/arrests/allegation/allegation.module#AllegationModule' }
         ]
     }, {
         path: 'investigation', component: LayoutComponent, canActivate: [AuthGuard],
