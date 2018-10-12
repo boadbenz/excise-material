@@ -13,7 +13,7 @@ const routes: Routes = [
           urls: [
               { title: 'หน้าหลัก', url: '/' },
               { title: 'ค้นหางานจับกุม', url: '/arrest/list' },
-              { title: 'จัดการข้อมูลงานจับกุม', url: '/arrest/manage' },
+              { title: 'จัดการข้อมูลงานจับกุม', url: '/arrest/manage/C/NEW' },
               { title: 'จัดการข้อมูลข้อกล่าวหา'}
           ],
           codePage: 'ILG60-03-03-00-00',

@@ -8,7 +8,7 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="">
+                <a class="" (click)="card1 = !card1">
                     <i class="fa" [ngClass]="{'fa-chevron-down': card1, 'fa-chevron-up': !card1}"></i>
                 </a>
             </div>
@@ -218,7 +218,7 @@
         <div class="card-header unset-radius">
             <div class="card-actions">
                 <a class="" (click)="card3 = !card3">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card3, 'fa-chevron-up': !card3}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">สถานที่เกิดเหตุ</h4>
