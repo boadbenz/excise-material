@@ -65,7 +65,7 @@
                         <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField" required ></my-date-picker-th>
                     </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="time" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
 
@@ -102,7 +102,8 @@
                             matInput [matAutocomplete]="auto3" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                             [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         <mat-autocomplete #auto3="matAutocomplete">
-                            <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
+                            <mat-option *ngFor="let option of options" [value]="option.OfficeName" 
+                                (click)="onAutoSelecteWord(option)" (onSelectionChange)="onAutoSelecteWord(option)">
                                 {{ option.OfficeName }}
                             </mat-option>
                         </mat-autocomplete>
@@ -117,7 +118,7 @@
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
-                            (click)="StaffSendonAutoSelecteWord(ssOption)">
+                            (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
                             {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
                         </mat-option>
                     </mat-autocomplete>
@@ -150,7 +151,7 @@
                             [ngClass]="{'ng-touched':isRequired}" required [disabled]="mode=='R'">
                         <mat-autocomplete #auto2="matAutocomplete">
                             <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                (click)="StaffonAutoSelecteWord(sOption)">
+                                (click)="StaffonAutoSelecteWord(sOption)" (onSelectionChange)="StaffonAutoSelecteWord(sOption)">
                                 {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                             </mat-option>
                         </mat-autocomplete>
@@ -202,7 +203,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();">
+                                            <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();" [disabled]="showEditField">
                                             <label for="H_0" class="m-0"></label>
                                         </th>
                                         <th style="text-align: center">ลำดับ</th>
@@ -267,14 +268,14 @@
 
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินรางวัล :</label>
                     <div class="col-lg-4 col-md-7 form-group ">
-                        <input type="text" [(ngModel)]="RewardMoney" name="RewardMoney" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="TreasuryMoney" name="TreasuryMoney" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินส่งคลัง :</label>
                     <div class="form-group col-lg-4 col-md-7">
-                        <input type="text" [(ngModel)]="TreasuryMoney" name="TreasuryMoney" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="RewardMoney" name="RewardMoney" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
             </form>

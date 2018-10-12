@@ -56,12 +56,12 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.4');
+        this.sidebarService.setVersion('Revenue 0.0.0.5');
 
-        this.preloader.setShowPreloader(true);
+        //this.preloader.setShowPreloader(true);
 
-        this.getDepartmentRevenue();
-        this.onSearch({ Textsearch: "" });
+        //this.getDepartmentRevenue();
+        //this.onSearch({ Textsearch: "" });
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
@@ -123,7 +123,7 @@ export class ListComponent implements OnInit, OnDestroy {
                 form.value.DateStartTo = setZeroHours(eDateRevenue);
             }
         }
-
+        debugger
         await this.incomeService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
@@ -144,7 +144,6 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         await list.map((item) => {
-            debugger
             var StaffSendMoney;
             item.RevenueDate = toLocalShort(item.RevenueDate);
             StaffSendMoney = item.RevenueStaff.filter(item => item.ContributorID === 20);
@@ -154,7 +153,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
             if(StaffSendMoney.length > 0){
                 item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
-                item.RevenueOneStaffDept =  StaffSendMoney[0].DepartmentName;
+                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeName;
             }
 
             if (item.RevenueStatus == "1") {
@@ -232,21 +231,20 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onAutoChange(value: string) {
-        // 
-        if (value == '') {
-            this.options = [];
+        // if (value == '') {
+        //     this.options = [];
 
-            // this.oProve.ProveStationCode = "";
-            // this.oProve.ProveStation = "";
-        } else {
-            this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
-        }
+        //     // this.oProve.ProveStationCode = "";
+        //     // this.oProve.ProveStation = "";
+        // } else {
+        //     this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        // }
     }
 
     onAutoFocus(value: string) {
-        if (value == '') {
-            this.options = [];
-        }
+        // if (value == '') {
+        //     this.options = [];
+        // }
     }
 
     // onAutoSelecteWord(event) {

@@ -22,9 +22,9 @@ import { pagination } from '../../../config/pagination';
     templateUrl: './manage.component.html'
 })
 export class ManageComponent implements OnInit, OnDestroy {
-
     private sub: any;
     private onSaveSubscribe: any;
+    private onEditSubscribe: any;
     private onDeleSubscribe: any;
     private onPrintSubscribe: any;
     private onNextPageSubscribe: any;
@@ -166,8 +166,23 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private navigate_Service() {
+        
         this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
+        });
+
+        this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
+            if (this.RevenueStatus == 2) {
+                alert("ไม่สามารถแก้ไขรายการได้");
+    
+                this.navService.setSaveButton(false);
+                this.navService.setCancelButton(false);
+                // set true
+                this.navService.setPrintButton(true);
+                this.navService.setEditButton(true);
+                this.navService.setDeleteButton(true);
+                this.navService.setEditField(true);
+            }
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
@@ -256,6 +271,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.onCancelSubscribe.unsubscribe();
+        this.onEditSubscribe.unsubscribe();
         this.onSaveSubscribe.unsubscribe();
         this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
@@ -509,7 +525,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (item.length == 0) {
                 this.IncService.TransactionRunninginsAll(this.StaffDeptCode, "ops_revenue", "LC").then(async res => {
                     if (res.IsSuccess) {
-                        this.RevenueCode = "LC" + (this.RevenueDate.date.year + 543).toString().substring(4, 2) + "00001";
+                        this.RevenueCode = "LC" + this.oRevenueStaff.OfficeCode + (this.RevenueDate.date.year + 543).toString().substring(4, 2) + "00001";
                         this.oRevenue.RevenueCode = this.RevenueCode;
 
                         this.InsRevenue();
@@ -524,7 +540,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         var pad = "00000"
                         var RunningNo = pad.substring(0, pad.length - item[0].RunningNo.toString().length) + (+item[0].RunningNo + 1);
 
-                        this.RevenueCode = "LC" + (this.RevenueDate.date.year + 543).toString().substring(4, 2) + RunningNo;
+                        this.RevenueCode = "LC" + this.oRevenueStaff.OfficeCode + (this.RevenueDate.date.year + 543).toString().substring(4, 2) + RunningNo;
                         this.oRevenue.RevenueCode = this.RevenueCode;
 
                         this.InsRevenue();
@@ -762,7 +778,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ClearStaffData();
 
         if (value == '') {
-            this.Staffoptions = [];  
+            this.Staffoptions = [];
         } else {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
@@ -875,7 +891,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     onAutoChange(value: string) {
         if (value == '') {
-            this.options = []; 
+            this.options = [];
             this.oRevenue.StationCode = "";
             this.oRevenue.StationName = "";
         } else {
@@ -929,6 +945,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         let MistreatNoList = [];
         this.ListRevenueDetail.filter(item => item.IsCheck === true)
             .map(async item => {
+                CompareFine += +item.TotalFine;
                 BribeMoney += +item.BribeMoney;
                 RewardMoney += +item.RewardMoney;
                 TreasuryMoney += +item.TreasuryMoney;
@@ -939,7 +956,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         var MistreatNoUnique = Array.from(new Set(MistreatNoList));
 
         this.MistreatNo = MistreatNoUnique.length;
-        this.CompareFine = (BribeMoney + RewardMoney + TreasuryMoney).toLocaleString("en");
+        // this.CompareFine = (BribeMoney + RewardMoney + TreasuryMoney).toLocaleString("en");
+        this.CompareFine = CompareFine.toLocaleString("en");
         this.BribeMoney = BribeMoney.toLocaleString("en");
         this.RewardMoney = RewardMoney.toLocaleString("en");
         this.TreasuryMoney = TreasuryMoney.toLocaleString("en");
@@ -973,4 +991,5 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         }
     }
+
 }
