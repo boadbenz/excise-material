@@ -664,6 +664,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     InsRevenue() {
         this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
             if (item.IsSuccess) {
+                this.RevenueID = item.RevenueID;
                 this.oRevenue.RevenueDetail.map(async item => {
                     await this.IncService.RevenueCompareDetailReceiptupdByCon(item.CompareReceiptID.toString()).then(async item => {
                         if (item.IsSuccess) {
@@ -671,7 +672,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                             alert(Message.saveComplete);
                             this.oRevenue = {};
                             this.onComplete();
-                            this.router.navigate(['/income/list']);
+                            debugger
+                            //this.router.navigate(['/income/manage']);
+                            this.router.navigate([`/income/manage/R/${this.RevenueID}`]);
                         }
 
                         this.preloader.setShowPreloader(false);
@@ -739,7 +742,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsActive: "1"
         }
 
-        this.PosSend = event.PosLevelName;
+        this.PosSend = event.OperationPosName;
         this.DeptSend = event.OfficeName;
     }
 
@@ -818,7 +821,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsActive: "1"
         }
 
-        this.PosStaff = event.PosLevelName;
+        this.PosStaff = event.OperationPosName;
         this.DeptStaff = event.OfficeName;
         this.StaffDeptCode = event.OfficeCode;
 

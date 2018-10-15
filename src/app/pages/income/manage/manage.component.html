@@ -65,7 +65,7 @@
                         <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField" required ></my-date-picker-th>
                     </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 35px;" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
 
@@ -82,7 +82,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">เรียน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control" [(ngModel)]="InformTo" name="InformTo" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="InformTo" name="InformTo" placeholder="พิมพ์ข้อความ" aria-label="Number"
                     matInput [matAutocomplete]="auto4" (input)="InformToonAutoChange($event.target.value)"
                     [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                 <mat-autocomplete #auto4="matAutocomplete">
@@ -98,7 +98,7 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control" [(ngModel)]="RevenueStation" name="RevenueStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="RevenueStation" name="RevenueStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
                             matInput [matAutocomplete]="auto3" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                             [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         <mat-autocomplete #auto3="matAutocomplete">
@@ -113,7 +113,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ" aria-label="Number"
                         matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete #auto="matAutocomplete">
@@ -146,7 +146,7 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control" [(ngModel)]="StaffName" name="StaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffName" name="StaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
                             matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
                             [ngClass]="{'ng-touched':isRequired}" required [disabled]="mode=='R'">
                         <mat-autocomplete #auto2="matAutocomplete">

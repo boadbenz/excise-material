@@ -29,6 +29,7 @@ export class ListComponent implements OnInit, OnDestroy {
     StatusOption = [];
     options = [];
     rawOptions = [];
+    RevenueStatus: string;
 
     private subOnSearch: any;
     private subSetNextPage: any;
@@ -56,7 +57,9 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.5');
+        this.sidebarService.setVersion('Revenue 0.0.0.6');
+
+        this.RevenueStatus = "";
 
         //this.preloader.setShowPreloader(true);
 
