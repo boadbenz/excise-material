@@ -6,6 +6,8 @@ import { ArrestNotice } from '../../models/arrest-notice';
 import { MyDatePickerOptions, getDateMyDatepicker, compareDate, convertDateForSave, toLocalShort } from 'app/config/dateFormat';
 import { pagination } from 'app/config/pagination';
 import { Message } from 'app/config/message';
+import * as formService from '../../services';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'app-modal-notice',
@@ -24,6 +26,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
     paginage = pagination;
 
     noticeFG: FormGroup;
+    private destroy$: Subject<boolean> = new Subject<boolean>();
 
     get ArrestNotice(): FormArray {
         return this.noticeFG.get('ArrestNotice') as FormArray;
@@ -39,7 +42,8 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         // private arrestService: ArrestsService,
         private _router: Router,
         // private preLoaderService: PreloaderService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private s_arrestNotice: formService.ArrestNoticeService
     ) { }
 
     ngOnInit() {
@@ -51,9 +55,14 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.paginage.TotalItems = 0;
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 
     async onSearch(Textsearch: any) {
+        this.s_arrestNotice.ArrestNoticegetByKeyword(Textsearch)
+            .takeUntil(this.destroy$)
+            .subscribe(x => this.onSearchComplete(x))
         // this.preLoaderService.setShowPreloader(true);
         // await this.arrestService.ArrestNoticegetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
         // this.preLoaderService.setShowPreloader(false);
@@ -73,6 +82,9 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         form.value.DateStartFrom = convertDateForSave(sdate) || '';
         form.value.DateStartTo = convertDateForSave(edate) || '';
 
+        this.s_arrestNotice.ArrestNoticegetByConAdv(form)
+            .takeUntil(this.destroy$)
+            .subscribe(x => this.onSearchComplete(x))
         // this.preLoaderService.setShowPreloader(true);
 
         // await this.arrestService.ArrestNoticegetByConAdv(form.value).then(list => this.onSearchComplete(list));

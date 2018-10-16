@@ -9,7 +9,7 @@ export class ArrestNoticeService {
 
     ArrestNoticegetByKeyword(Textsearch: any) {
         const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-        const url = `${appConfig.api7788}/ArrestgetByKeyword`;
+        const url = `${appConfig.api7788}/ArrestNoticegetByKeyword`;
         return this.http.post(url, params).map(x => x.json());
     }
 
