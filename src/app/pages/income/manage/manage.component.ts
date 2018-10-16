@@ -351,9 +351,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.ShowRevenueCompare();
 
                 debugger
+                this.preloader.setShowPreloader(true);
                 if (res[0].RevenueDetail.length > 0) {
                     for (var a = 0; a < res[0].RevenueDetail.length; a += 1) {
                         await this.IncService.RevenueComparegetByCompareReceiptID(res[0].RevenueDetail[a].CompareReceiptID).then(async item => {
+                            this.preloader.setShowPreloader(false);
                             if (item.length > 0) {
                                 for (var j = 0; j < item.length; j += 1) {
                                     if (item[j].RevenueCompareDetail.length > 0) {
@@ -414,16 +416,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ShowRevenueCompare() {
-        this.ListRevenueDetail = [];
-
+        this.preloader.setShowPreloader(true);
         let DRate, cDateRevenue;
         DRate = this.RevenueDate.date;
 
         if (DRate != undefined) {
             cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
         }
-
+        
         await this.IncService.RevenueComparegetByCon(setZeroHours(cDateRevenue), this.StaffDeptCode).then(async res => {
+            this.preloader.setShowPreloader(false);
+            this.ListRevenueDetail = [];
+            this.ListRevenueDetailPaging = [];
+
             if (res.length > 0) {
                 for (var j = 0; j < res.length; j += 1) {
                     if (res[j].RevenueCompareDetail.length > 0) {
@@ -461,12 +466,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 }
 
-
+                // set total record
+                this.paginage.TotalItems = this.ListRevenueDetail.length;
+                this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
             }
-
-            // set total record
-            this.paginage.TotalItems = this.ListRevenueDetail.length;
-            this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
+            else{
+                this.ListRevenueDetail = [];
+                this.ListRevenueDetailPaging = [];
+            }
+            
 
         }, (err: HttpErrorResponse) => {
             alert(err.message);
@@ -782,6 +790,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (value == '') {
             this.Staffoptions = [];
+            this.ListRevenueDetailPaging = [];
         } else {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
@@ -793,6 +802,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     StaffonAutoFocus(value: string) {
         if (value == '') {
             this.Staffoptions = [];
+            this.ListRevenueDetailPaging = [];
             this.ClearStaffData();
         }
     }
@@ -922,7 +932,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     getCurrentTime() {
         let date = new Date();
         // 
-        return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+       // return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+       return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     }
 
     selectedChkAll() {

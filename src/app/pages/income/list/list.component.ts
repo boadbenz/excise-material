@@ -57,7 +57,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.6');
+        this.sidebarService.setVersion('Revenue 0.0.0.7');
 
         this.RevenueStatus = "";
 
@@ -126,6 +126,11 @@ export class ListComponent implements OnInit, OnDestroy {
                 form.value.DateStartTo = setZeroHours(eDateRevenue);
             }
         }
+
+        if(form.value.RevenueStatus == ""){
+            form.value.RevenueStatus = null;
+        }
+
         debugger
         await this.incomeService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);

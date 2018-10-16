@@ -62,10 +62,12 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <div style="width:45%">
-                        <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField" required ></my-date-picker-th>
+                        <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" 
+                        [ngClass]="{'ng-touched':isRequired}" [disabled]="mode=='R'" 
+                        (onSelectionChange)="ShowRevenueCompare()" required ></my-date-picker-th>
                     </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 35px;" class="form-control form-control-sm" [disabled]="showEditField">
+                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 35px;" class="form-control form-control-sm" [disabled]="mode=='R'">
                 </div>
             </div>
 
@@ -219,6 +221,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr *ngIf="!ListRevenueDetailPaging"><td colspan="11">ไม่พบข้อมูล</td></tr>
                                     <tr *ngFor="let item of ListRevenueDetailPaging; let i=index;">
                                         <td style="text-align: center">
                                             <input type="checkbox" class="filled-in chk-col-indigo" id="ListChK{{i}}" name="ListChK{{i}}" [(ngModel)]="item.IsCheck"
