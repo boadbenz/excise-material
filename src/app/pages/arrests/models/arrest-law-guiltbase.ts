@@ -8,6 +8,9 @@ export class ArrestLawGuitbase {
     IsCompare: number;
     SubSectionRuleID: number;
     ArrestLawSubSectionRule: ArrestLawSubSectionRule[]
+
+    RowId: number;
+    IsChecked: boolean;
 }
 
 export class ArrestLawSubSectionRule {

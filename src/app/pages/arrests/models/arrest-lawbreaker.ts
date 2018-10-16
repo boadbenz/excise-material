@@ -1,5 +1,6 @@
 import { ArrestLawbreakerAddress } from './arrest-lawbreaker-address';
 import { FormControl, Validators } from '@angular/forms';
+import { Acceptability } from './acceptability';
 
 export class ArrestLawbreaker {
     public LawbreakerID: number;
@@ -60,6 +61,27 @@ export class ArrestLawbreaker {
     IsChecked: boolean;
     RowId: number;
     IsNewItem: boolean;
+}
+
+export class ArrestLawbreakerAllegation {
+    public LawbreakerID: number;
+    public EntityType: number;
+    public EntityTypeName: string;
+    public LawbreakerType: number;
+    public LawbreakerTypeName: string;
+    public ReferenceNo: string;
+    public IDCard: string;
+    public PassportNo: string;
+    public CompanyName: string;
+    public CompanyRegistrationNo: string;
+    public LawbreakerTitleName: string;
+    public LawbreakerFirstName: string;
+    public LawbreakerLastName: string;
+    public LawbreakerFullName: string;
+    public ResultCount: any;
+
+    public RowId: number;
+    public IsChecked: Acceptability;
 }
 
 export const ArrestLawbreakerFormControl = {

@@ -44,20 +44,20 @@ export const BloodTypes: DropDown[] = [
 export const EntityTypes: DropDown[] = [
     {
         value: '0',
-        text: 'บุคคลธรรมดา'
+        text: 'นิติบุคคล'
     }, {
         value: '1',
-        text: 'นิติบุคคล'
+        text: 'บุคคลธรรมดา'
     }
 ]
 
 export const LawbreakerTypes: DropDown[] = [
     {
         value: '0',
-        text: 'ชาวไทย'
+        text: 'ชาวต่างชาติ'
     }, {
         value: '1',
-        text: 'ชาวต่างชาติ'
+        text: 'ชาวไทย'
     }
 ]
 

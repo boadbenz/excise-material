@@ -7,7 +7,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { InvestigateService } from '../investigate.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OffenseModalModule } from '../../arrests/offense-modal/offense-modal.module';
+// import { OffenseModalModule } from '../../arrests/offense-modal/offense-modal.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
 
@@ -39,7 +39,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CardActionsModule,
     ModalLawbreakerModule,
-    OffenseModalModule
+    // OffenseModalModule
   ],
   declarations: [DetailManageComponent],
   providers: [InvestigateService]

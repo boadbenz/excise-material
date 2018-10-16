@@ -5,7 +5,7 @@ import { Arrest } from './models/arrest';
 import { ArrestStaff } from './models/arrest-staff';
 import { ArrestLawbreaker } from './models/arrest-lawbreaker';
 import { ArrestProduct, ArrestProductDetail } from './models/arrest-product';
-import { ArrestIndictment, ArrestIndicmentDetail } from './models/arrest-indictment';
+import { ArrestIndictment, ArrestIndictmentDetail } from './models/arrest-indictment';
 import { ArrestLocale } from './models/arrest-locale';
 import { ArrestDocument } from './models/arrest-document';
 import { ArrestNotice } from './models/arrest-notice';
@@ -173,13 +173,13 @@ export class ArrestsService {
         return this.resposePromisGetList(JSON.stringify(params), url)
     }
 
-    indicmentDetailinsAll(indictment: ArrestIndicmentDetail): Promise<boolean> {
+    indicmentDetailinsAll(indictment: ArrestIndictmentDetail): Promise<boolean> {
         const params = indictment;
         const url = `${appConfig.api7788}/ArrestIndicmentDetailinsAll`
         return this.responsePromisModify(JSON.stringify(params), url)
     }
 
-    indicmentDetailgetByCon(IndicmentDetailID: string): Promise<ArrestIndicmentDetail> {
+    indicmentDetailgetByCon(IndicmentDetailID: string): Promise<ArrestIndictmentDetail> {
         const params = { IndicmentDetailID };
         const url = `${appConfig.api7788}/ArrestIndicmentDetailgetByCon`
         return this.resposePromisGet(JSON.stringify(params), url)

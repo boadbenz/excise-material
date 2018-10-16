@@ -5,11 +5,9 @@ import { ArrestIndictment } from "./models/arrest-indictment";
 import { ArrestLawbreaker } from "./models/arrest-lawbreaker";
 import { ArrestProduct } from "./models/arrest-product";
 import { ArrestDocument } from "./models/arrest-document";
+import { MasStaffModel } from "app/models";
 
 export interface ArrestStore {
-    // arrestNotice: ArrestNotice[];
-    // arrestStaff: ArrestStaff[];
-
     ArrestCode: string;
     ArrestDate: any;
     ArrestTime: string;
@@ -33,4 +31,6 @@ export interface ArrestStore {
     ArrestLawbreaker: Array<ArrestLawbreaker>;
     ArrestProduct: Array<ArrestProduct>;
     ArrestDocument: Array<ArrestDocument>;
+
+    MasStaff: Array<MasStaffModel>;
 }

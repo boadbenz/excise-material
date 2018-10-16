@@ -49,13 +49,13 @@ export class ArrestIndictment {
     IsProve: number;
     IsActive: number;
     IsLawsuitComplete:number;
-    ArrestIndictmentDetail: ArrestIndicmentDetail[];
+    ArrestIndictmentDetail: ArrestIndictmentDetail[];
     ArrestLawGuitbase: ArrestLawGuitbase[];
 
     IsModify: string;
 }
 
-export class ArrestIndicmentDetail{
+export class ArrestIndictmentDetail{
     IndictmentDetailID: number;
     LawsuitType: string;
     LawsuitEnd: number;

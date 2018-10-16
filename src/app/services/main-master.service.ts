@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from 'app/app.config';
+import { HttpService } from 'app/core/http.service';
 
 @Injectable()
 export class MainMasterService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private httpService: HttpService
+    ) { }
 
   private httpOptions = {
     headers: new HttpHeaders(
@@ -22,10 +26,48 @@ export class MainMasterService {
     return res
   }
 
+  MasStaffMaingetAll() {
+    const url = `${appConfig.api7789}/MasStaffMaingetAll`;
+    return this.httpService.post(url, '{}').map(x => x.json());
+  }
+  MasDepartmentMaingetAll() {
+    const url = `${appConfig.api7789}/MasDepartmentMaingetAll`;
+    return this.httpService.post(url, '{}').map(x => x.json());
+  }
+  MasOfficeMaingetAll() {
+    const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
+    return this.httpService.post(url, '{}').map(x => x.json());
+  }
+  MasDistrictMaingetAll() {
+    const url = `${appConfig.api7789}/MasDistrictMaingetAll`;
+    return this.httpService.post(url, '{}').map(x => x.json());
+  }
+  MasDutyUnitMaingetAll() {
+    const url = `${appConfig.api7789}/MasDutyUnitMaingetAll`;
+    return this.httpService.post(url, '{}').map(x => x.json());
+  }
+  MasProductMaingetAll() {
+    const url = `${appConfig.api7789}/MasProductMaingetAll`;
+    return this.httpService.post(url, '{}').map(x => x.json());
+  }
+  MasCourtMaingetAll() {
+    const url = `${appConfig.api7789}/MasCourtMaingetAll`;
+    return this.httpService.post(url, '{}').map(x => x.json());
+  }
+  MasCommunicationchanelMaingetAll() {
+    const url = `${appConfig.api7789}/MasCommunicationchanelMaingetAll`;
+    return this.httpService.post(url, '{}').map(x => x.json());
+  }
+
+
+
+
+
   masStaffMaingetAll(): Promise<any[]> {
     const url = `${appConfig.api7789}/MasStaffMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
+
   masDepartmentMaingetAll(): Promise<any[]> {
     const url = `${appConfig.api7789}/MasDepartmentMaingetAll`;
     return this.resposePromisGetList('{}', url);

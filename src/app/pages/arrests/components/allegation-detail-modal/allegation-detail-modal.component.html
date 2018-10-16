@@ -1,0 +1,227 @@
+<div class="modal-header bg-theme">
+  <div class="row">
+    <div class="col-lg-5">
+      <h4 class="modal-title text-white">รายละเอียดข้อกล่าวหา</h4>
+    </div>
+    <div class="col-lg-5 col-8">
+      <form autocomplete="off" class="app-search" #searchFrom="ngForm" (ngSubmit)="onSearchByKey(searchFrom.value)">
+        <input type="search" name="Textsearch" ngModel class="form-control form-control-sm">
+        <a class="srh-btn" (click)="onSearchByKey(searchFrom.value)" href="javaScript:void(0)">
+          <i class="ti-search"></i>
+        </a>
+      </form>
+    </div>
+    <div class="col-lg-2 col-4 p-0">
+      <a href="javaScript:void(0);" class="text-white" (click)="advSearch = !advSearch">ค้นหาขั้นสูง</a>
+    </div>
+
+    <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
+      <span aria-hidden="true">
+        <i class=" ti-close"></i>
+      </span>
+    </a>
+  </div>
+</div>
+<h5 class="text-right mt-3 pr-3">ILG60-03-03-02-00</h5>
+<div class="modal-body font-14">
+  <div *ngIf="advSearch">
+    <div class="card card-outline-bluish unset-radius m-b-15">
+      <div class="card-header unset-radius">
+        <div class="card-actions">
+          <a class="" (click)="advSearch = false">
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
+        <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
+      </div>
+      <div class="card-body">
+        <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onSearchAdv(advForm.value)">
+          <div class="row">
+            <label for="" class="col-lg-2 col-sm-4">ประเภทผู้ต้องหา :</label>
+            <div class="col-lg-4 col-sm-8 form-group">
+              <select name="EntityType" ngModel class="form-control form-control-sm">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of entityType" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+
+            <label for="" class="col-lg-2 col-sm-4">ประเภทบุคคล :</label>
+            <div class="col-lg-4 col-sm-8 form-group">
+              <select name="LawbreakerType" ngModel class="form-control form-control-sm">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of lawbreakerType" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="" class="col-lg-2 col-sm-4">เลขบัตรประชาชน :</label>
+            <div class="col-lg-4 col-sm-8 form-group">
+              <input type="text" name="IDCard" ngModel class="form-control form-control-sm">
+            </div>
+            <label for="" class="col-lg-2 col-sm-4">เลขหนังสือเดินทาง :</label>
+            <div class="col-lg-4 col-sm-8 form-group">
+              <input type="text" name="PassportNo" ngModel class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="" class="col-lg-2 col-sm-4">เลขนิติบุคคล :</label>
+            <div class="col-lg-4 col-sm-8 form-group">
+              <input type="text" name="CompanyRegistrationNo" ngModel class="form-control form-control-sm">
+            </div>
+            <label for="" class="col-lg-2 col-sm-4">ชื่อผู้ต้องสงสัย :</label>
+            <div class="col-lg-4 col-sm-8 form-group">
+              <input #fname type="text" name="LawbreakerFirstName" class="form-control form-control-sm">
+              <input type="hidden" name="LawbreakerTitleName" [value]="fname">
+              <input type="hidden" name="LawbreakerLastName" [value]="fname">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-10 col-sm-8"></div>
+            <div class="col-lg-2 col-sm-4">
+              <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div [formGroup]="allegationFG">
+    <div class="card unset-radius m-b-15">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table id="suspectModal" #suspectModal class="table table-sm table-striped">
+            <thead>
+              <tr>
+                <th></th>
+                <th class="text-center">ลำดับ</th>
+                <th>ประเภทผู้ต้องหา</th>
+                <th>ประเภทบุคคล</th>
+                <th>หมายเลขอ้างอิง</th>
+                <th>ชื่อ</th>
+                <th class="text-center">จำนวนครั้งการกระทำผิด</th>
+                <th></th>
+              </tr>
+            </thead>  
+            <tbody formArrayName="Lawbreaker">
+              <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
+                <td class="text-center">
+                  <input name="IsChecked" formControlName="IsChecked" type="radio" id="td{{i}}" [checked]="!item.get('IsChecked').value"
+                    class="with-gap radio-col-indigo" (change)="setIsChecked(i)">
+                  <label for="td{{i}}" class="m-0"></label>
+                </td>
+                <td class="text-center">{{item.get('RowId').value}}</td>
+                <td>{{item.get('LawbreakerTypeName').value}}</td>
+                <td>{{item.get('EntityTypeName').value}}</td>
+                <td>{{item.get('ReferenceNo').value}}</td>
+                <td>{{item.get('LawbreakerFullName').value}}</td>
+                <td class="text-center">{{item.get('ResultCount').value | async}}</td>
+                <td class="text-center">
+                  <a href="javaScript:void(0);" class="text-center text-secondary" (click)="view(item.value.LawbreakerID)">
+                    <i class="fa fa-eye fa-lg"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer card-footer-unset">
+        <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+          [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+        </app-pagination-table>
+      </div>
+    </div>
+
+    <div class="card card-outline-bluish unset-radius m-b-0">
+      <div class="card-header unset-radius">
+        <div class="card-actions">
+          <a class="" (click)="card1 = !card1">
+            <i class="fa" [ngClass]="{'fa-chevron-down': card1, 'fa-chevron-up': !card1}"></i>
+          </a>
+        </div>
+        <h4 class="card-title m-b-0">รายละเอียดการจับกุม</h4>
+      </div>
+      <div *ngIf="card1" class="card-body p-2">
+
+        <div *ngIf="showLawbreakerDetail" class="row m-b-10">
+          <div class="col-sm-12">
+            <div class="lawbreaker-detail">
+              <div class="lawbreaker-detail-head">
+                <div class="action">
+                  <a class="" (click)="closeLawbreakerDetail();"><i class="fa fa-times"></i></a>
+                </div>
+                <h5 class="title">{{LawbreakerDetail.get('LawbreakerFullName').value}}</h5>
+              </div>
+              <span>
+                {{LawbreakerDetail.get('LawbreakerDetail').value}}
+                จำนวนครั้งการกระทำผิด ({{Lawbreaker.at(lawbreakerIndex).get('ResultCount').value | async}}) ครั้ง
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="table-responsive" style="border:1px solid #d4dfe3;">
+              <table class="table table-sm table-striped">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th class="text-center">ลำดับ</th>
+                    <th>ของกลาง</th>
+                    <th>จำนวน</th>
+                    <th>หน่วย</th>
+                    <th>ปริมาณสุทธิ</th>
+                    <th>หน่วย</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="Product">
+                  <tr *ngFor="let item of Product.controls; let i=index;" [formGroupName]="i">
+                    <td class="text-center">
+                      <input formControlName="IsChecked" type="checkbox" [id]="'pd'+i" class="filled-in chk-col-indigo" 
+                      [value]="ACCEPTABILITY.INACCEPTABLE">
+                      <label [for]="'pd'+i" class="m-0"></label>
+                    </td>
+                    <td class="text-center">{{i+1}}</td>
+                    <td>{{item.get('ProductDesc').value}}</td>
+                    <td>
+                      <input formControlName="Qty" type="number" min="0" class="form-control form-control-sm" required>
+                    </td>
+                    <td>
+                      <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
+                        <option value="" disabled selected></option>
+                        <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input formControlName="NetVolume" type="number" min="0" class="form-control form-control-sm">
+                    </td>
+                    <td>
+                      <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}">
+                        <option value="" selected disabled></option>
+                        <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <div class="col-lg-2 col-4">
+    <button type="button" class="btn btn-block text-white" style="background-color: #f47023" (click)="close('Save click')">ลบ</button>
+  </div>
+  <div class="col-lg-2 col-4">
+    <button type="button" class="btn btn-block btn-themecolor" (click)="close('Save click')">บันทึก</button>
+  </div>
+</div>
