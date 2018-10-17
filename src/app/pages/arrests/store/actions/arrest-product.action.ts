@@ -26,4 +26,4 @@ export class RemoveArrestProduct implements Action {
     constructor(public payload: number) { }
 }
 
-export type Actions = CreateArrestProduct | AddArrestProduct | RemoveArrestProduct | UpdateArrestProduct
+export type ArrestProductActions = CreateArrestProduct | AddArrestProduct | RemoveArrestProduct | UpdateArrestProduct

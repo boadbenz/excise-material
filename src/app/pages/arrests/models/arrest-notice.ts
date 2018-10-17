@@ -69,20 +69,20 @@ export class ArrestNoticeStaff {
     FullName: string;
 }
 
-let fb: FormBuilder;
+// let fb: FormBuilder;
 
-export const ArrestNoticeFormControl = {
-    NoticeCode: new FormControl(null),
-    NoticeStationCode: new FormControl(null),
-    NoticeStation: new FormControl(null),
-    NoticeDate: new FormControl(null),
-    NoticeTime: new FormControl(null),
-    NoticeDue: new FormControl(null),
-    NoticeDueDate: new FormControl(null),
-    CommunicationChannelID: new FormControl(null),
-    ArrestCode: new FormControl(null),
-    IsArrest: new FormControl(null),
-    IsActive: new FormControl(null),
-    ArrestNoticeSuspect: fb.array([]),
-    ArrestNoticeStaff: fb.array([])
-}
+// export const ArrestNoticeFormControl = {
+//     NoticeCode: new FormControl(null),
+//     NoticeStationCode: new FormControl(null),
+//     NoticeStation: new FormControl(null),
+//     NoticeDate: new FormControl(null),
+//     NoticeTime: new FormControl(null),
+//     NoticeDue: new FormControl(null),
+//     NoticeDueDate: new FormControl(null),
+//     CommunicationChannelID: new FormControl(null),
+//     ArrestCode: new FormControl(null),
+//     IsArrest: new FormControl(null),
+//     IsActive: new FormControl(null),
+//     ArrestNoticeSuspect: fb.array([]),
+//     ArrestNoticeStaff: fb.array([])
+// }

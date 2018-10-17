@@ -4,8 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import 'rxjs/add/operator/takeUntil';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
-import { MainMasterService } from 'app/services/main-master.service';
-import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
+import { FormBuilder, Validators } from '@angular/forms';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import * as fromModels from '../../models';
+import * as fromStore from '../../store';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-allegation',
@@ -17,7 +20,9 @@ export class AllegationComponent implements OnInit, OnDestroy {
     private modelService: NgbModal,
     private activeRoute: ActivatedRoute,
     private navService: NavigationService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder,
+    private store: Store<fromStore.AppState>
   ) {
     this.navService.setPrintButton(false);
     this.navService.setPrevPageButton(true);
@@ -27,43 +32,72 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.navService.setInnerTextNextPageButton('รับคำกล่าวโทษ')
   }
   private destroy$: Subject<boolean> = new Subject<boolean>();
-  // sub: Subscription;
-  // onSaveSub: Subscription;
-  // onDeleSub: Subscription;
-  // onEditSub: Subscription;
 
   card1: boolean = true;
   card2: boolean = true;
 
+  // param: Params
   mode: string;
+  arrestCode: string;
+  indictmentDetailId: string;
+  guiltbaseId: string;
+
   modal: any;
   showEditField: boolean;
 
+  arrestIndictmentFG = this.fb.group({
+    IndictmentID: [''],
+    ArrestCode: ['', Validators.required],
+    GuiltBaseID: ['', Validators.required],
+    IsProve: ['1', Validators.required],
+    IsActive: ['1', Validators.required],
+    IsLawsuitComplete: ['0', Validators.required],
+    ArrestIndictmentDetail: [[]],
+    ArrestLawGuitbase: [[]],
+
+    IsModify: ['', Validators.required],
+    SubSectionType: ['', Validators.required],
+    GuiltBaseName: ['', Validators.required],
+    SectionNo: ['', Validators.required],
+    PenaltyDesc: ['', Validators.required],
+  });
+
   async ngOnInit() {
 
+    this.navService.showFieldEdit.takeUntil(this.destroy$).subscribe(p => this.showEditField = p.valueOf())
 
-    this.navService.showFieldEdit.subscribe(p => this.showEditField = p.valueOf())
-    this.activeRoute.params.takeUntil(this.destroy$).subscribe(p => {
-      this.mode = p['mode']
-      if (p['mode'] == 'C') {
-        // set false
-        this.navService.setEditButton(false);
-        this.navService.setDeleteButton(false);
-        this.navService.setEditField(false);
-        // set true
-        this.navService.setSaveButton(true);
-        this.navService.setCancelButton(true);
+    combineLatest(this.activeRoute.params, this.activeRoute.queryParams)
+      .map(results => ({ params: results[0], queryParams: results[1] }))
+      .takeUntil(this.destroy$)
+      .subscribe(results => {
+        this.mode = results.params.mode;
+        this.arrestCode = results.queryParams.arrestCode;
+        this.indictmentDetailId = results.queryParams.indictmentDetailId;
+        this.guiltbaseId = results.queryParams.guiltbaseId;
 
-      } else if (p['mode'] === 'R') {
-        // set false
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
-        // set true
-        this.navService.setEditButton(true);
-        this.navService.setDeleteButton(true);
-        this.navService.setEditField(true);
-      }
-    })
+        switch (this.mode) {
+          case 'C':
+            // set false
+            this.navService.setEditButton(false);
+            this.navService.setDeleteButton(false);
+            this.navService.setEditField(false);
+            // set true
+            this.navService.setSaveButton(true);
+            this.navService.setCancelButton(true);
+            break;
+
+          case 'R':
+            // set false
+            this.navService.setSaveButton(false);
+            this.navService.setCancelButton(false);
+            // set true
+            this.navService.setEditButton(true);
+            this.navService.setDeleteButton(true);
+            this.navService.setEditField(true);
+            break;
+        }
+      });
+
     this.navService.onSave.takeUntil(this.destroy$).subscribe(status => {
       if (status) {
         this.navService.setOnSave(false);
@@ -96,16 +130,42 @@ export class AllegationComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
-    // this.sub.unsubscribe();
-    // this.onSaveSub.unsubscribe();
-    // this.onEditSub.unsubscribe();
-    // this.onDeleSub.unsubscribe();
   }
 
   openModal(e) {
     this.modal = this.modelService.open(e, { size: 'lg', centered: true });
   }
 
+  setArrestLawGuiltbase(e: fromModels.ArrestLawGuitbase) {
 
+    if (!e) return;
+
+    let ArrestLawSubSectionRule = e.ArrestLawSubSectionRule
+      .find(x => x.SubSectionRuleID == e.SubSectionRuleID);
+
+    let ArrestLawSubSection = ArrestLawSubSectionRule
+      .ArrestLawSubSection
+      .find(x => x.SectionNo == ArrestLawSubSectionRule.SectionNo);
+
+    let ArrestLawSection = ArrestLawSubSectionRule
+      .ArrestLawSection
+      .find(x => x.SectionNo == ArrestLawSubSectionRule.SectionNo);
+
+    let ArrestLawPenalty = ArrestLawSection.ArrestLawPenalty
+      .find(x => x.SectionNo == ArrestLawSection.SectionNo)
+
+    this.arrestIndictmentFG.patchValue({
+      GuiltBaseID: e.GuiltBaseID,
+      ArrestLawGuitbase: e,
+      IsModify: this.mode == 'C' ? 'c' : 'r',
+      SubSectionType: ArrestLawSubSection.SubSectionType,
+      GuiltBaseName: e.GuiltBaseName,
+      SectionNo: ArrestLawSubSectionRule.SectionNo,
+      PenaltyDesc: ArrestLawPenalty.PenaltyDesc,
+    })
+
+    this.store.dispatch(new fromStore.CreateArrestIndictment([this.arrestIndictmentFG.value]));
+        
+  }
 
 }

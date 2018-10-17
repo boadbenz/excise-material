@@ -20,25 +20,12 @@ import { MatAutocompleteModule } from '@angular/material';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { AuthGuard } from './pages/login/auth.guard';
 import { CoreModule } from './core/core.module';
-import { StoreModule, MetaReducer } from '@ngrx/store';
-// import { EffectsModule } from '@ngrx/effects';
-
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-// import { storeFreeze } from 'ngrx-store-freeze';
+import { StoreModule } from '@ngrx/store';
 import { MainMasterService } from './services/main-master.service';
 import { HttpClientModule } from '@angular/common/http';
 
-import * as fromReducers from './pages/arrests/store/reducers/';
-import { CanDeactiveGuard } from './guard/can-deactive.guard';
-
-// const environment = {
-//     development: true,
-//     production: false,
-// };
-
-// export const metaReducers: MetaReducer<any>[] = !environment.production
-//     ? [storeFreeze]
-//     : [];
+import * as fromArrestReducers from './pages/arrests/store/reducers/';
+import { TransactionRunningService } from './services/transaction-running.service';
 
 @NgModule({
     declarations: [
@@ -62,17 +49,19 @@ import { CanDeactiveGuard } from './guard/can-deactive.guard';
         CoreModule,
         MatAutocompleteModule,
         StoreModule.forRoot(
-            {arrestProduct: fromReducers.productReducer}
-            ),
-        // EffectsModule.forRoot([]),
-        // environment.development ? StoreDevtoolsModule.instrument() : [],
+            {
+                arrest: fromArrestReducers.arrestReducer,
+                arrestProduct: fromArrestReducers.productReducer,
+                arrestIndictment: fromArrestReducers.indictmentReducer
+            })
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AuthGuard,
         NavigationService,
         SidebarService,
-        MainMasterService
+        MainMasterService,
+        TransactionRunningService
     ],
     exports: [MatAutocompleteModule],
     bootstrap: [AppComponent]

@@ -167,16 +167,16 @@ export class DetailComponent implements OnInit {
           // }
         });
 
-        this.arrestList[0].ArrestIndictment.forEach(value => {
-          // // Find lawbreakerID
-          // value.OpsArrestIndicmentDetailCollection.forEach(data => {
-          //   this.lawbreakerID = data.LawbreakerID;
-          // });
-          // // Find guiltbaseID
-          // if (value.IndicmentID == params.IndictmentID) {
-          //   this.guiltBaseID = value.GuiltBaseID;
-          // }
-        });
+        // this.arrestList[0].ArrestIndictment.forEach(value => {
+        //   // // Find lawbreakerID
+        //   // value.OpsArrestIndicmentDetailCollection.forEach(data => {
+        //   //   this.lawbreakerID = data.LawbreakerID;
+        //   // });
+        //   // // Find guiltbaseID
+        //   // if (value.IndicmentID == params.IndictmentID) {
+        //   //   this.guiltBaseID = value.GuiltBaseID;
+        //   // }
+        // });
 
         // ArrestLawbreakergetByCon on Table
         this.lawsuitService

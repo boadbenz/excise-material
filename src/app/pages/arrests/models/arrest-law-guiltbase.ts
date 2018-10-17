@@ -1,3 +1,4 @@
+
 export class ArrestLawGuitbase {
     GuiltBaseID: number;
     GuiltBaseName: string;
@@ -18,11 +19,11 @@ export class ArrestLawSubSectionRule {
     SubSectionID: number;
     SectionNo: number;
     IsActive: number;
-    LawsuitLawSubSection: LawsuitLawSubSection[];
-    LawsuitLawSection: LawsuitLawSection[];
+    ArrestLawSubSection: ArrestLawSubSection[];
+    ArrestLawSection: ArrestLawSection[];
 }
 
-export class LawsuitLawSubSection {
+export class ArrestLawSubSection {
     SubSectionID: number;
     SubSectionNo: number;
     SubSectionType: string;
@@ -31,7 +32,7 @@ export class LawsuitLawSubSection {
     IsActive: number;
 }
 
-export class LawsuitLawSection {
+export class ArrestLawSection {
     SectionNo: number;
     SectionName: string;
     SectionDesc1: string;
@@ -39,10 +40,10 @@ export class LawsuitLawSection {
     IsActive: number;
     SectionDesc2: string;
     SectionDesc3: string;
-    LawsuitLawPenalty: LawsuitLawPenalty[]
+    ArrestLawPenalty: ArrestLawPenalty[]
 }
 
-export class LawsuitLawPenalty {
+export class ArrestLawPenalty {
     PenaltyID: number;
     SectionNo: number;
     PenaltyDesc: string;

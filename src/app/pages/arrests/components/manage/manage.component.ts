@@ -19,20 +19,21 @@ import { MyDatePickerOptions, setDateMyDatepicker, setZero, getDateMyDatepicker,
 import { ArrestProduct, ArrestProductDetail } from '../../models/arrest-product';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import { MainMasterService } from 'app/services/main-master.service';
-import { ArrestLocaleFormControl } from '../../models/arrest-locale';
+// import { ArrestLocaleFormControl } from '../../models/arrest-locale';
 import { Message } from 'app/config/message';
-import { ArrestNotice, ArrestNoticeStaff, ArrestNoticeSuspect } from '../../models/arrest-notice';
-import { ArrestIndictment, ArrestIndictmentDetail } from '../../models/arrest-indictment';
-import { ArrestLawbreaker } from '../../models/arrest-lawbreaker';
-import { ArrestLawGuitbase, ArrestLawSubSectionRule, LawsuitLawSubSection } from '../../models/arrest-law-guiltbase';
+// import { ArrestNotice, ArrestNoticeStaff, ArrestNoticeSuspect } from '../../models/arrest-notice';
+// import { ArrestIndictment, ArrestIndictmentDetail } from '../../models/arrest-indictment';
+// import { ArrestLawbreaker } from '../../models/arrest-lawbreaker';
+// import { ArrestLawGuitbase, ArrestLawSubSectionRule, ArrestLawSubSection } from '../../models/arrest-law-guiltbase';
 import { ArrestStaff } from '../../models/arrest-staff';
 import { ArrestDocument } from '../../models/arrest-document';
 import { replaceFakePath } from 'app/config/dataString';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../store';
+import * as fromModels from '../../models';
 import { ArrestsService } from '../../arrests.service';
+// import { Acceptability, Arrest } from '../../models';
 
 @Component({
     selector: 'app-manage',
@@ -70,6 +71,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadRegion = new Array<RegionModel>();
     typeheadProduct = new Array<MasProductModel>();
     typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+    Acceptability: fromModels.Acceptability
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
@@ -157,7 +159,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navigate_Service();
 
         this.setStaffStore()
-        await this.setOfficeStore()
+        this.setOfficeStore()
         this.setProductStore()
         this.setProductUnitStore()
         this.setRegionStore()
@@ -201,8 +203,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private createLocalForm(): FormGroup {
-        ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
-        return this.fb.group(ArrestLocaleFormControl);
+        fromModels.ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
+        return this.fb.group(fromModels.ArrestLocaleFormControl);
     }
 
     private setItemFormArray(array: any[], formControl: string) {
@@ -222,10 +224,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
-                // set true
+                // set true 
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.arrestCode = p['code'] == 'NEW' ? `TN-${(new Date).getTime()}` : p['code'];
+                this.arrestCode = p['code'] //== 'NEW' ? `TN-${(new Date).getTime()}` : p['code'];
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -391,7 +393,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             });
 
             const notice = o.ArrestNotice;
-            notice.map((item: ArrestNotice) => {
+            notice.map((item: fromModels.ArrestNotice) => {
                 item.NoticeDate = toLocalShort(item.NoticeDate)
                 item.ArrestNoticeSuspect.map(suspect => {
                     suspect.FullName = `${suspect.SuspectTitleName || ''}`;
@@ -469,7 +471,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     // Set Array ArrestNoticeForm
     // 1
-    setNoticeForm(n: ArrestNotice[]) {
+    setNoticeForm(n: fromModels.ArrestNotice[]) {
         let arrestNotice = this.ArrestNotice;
         let i = 0;
         n.map(x => {
@@ -489,7 +491,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
     // 2
-    private setArrestNoticeStaff(o: ArrestNoticeStaff[]) {
+    private setArrestNoticeStaff(o: fromModels.ArrestNoticeStaff[]) {
         let arr = new FormArray([]);
         o.map(x => {
             arr.push(this.fb.group({ FullName: x.FullName, OfficeName: x.OfficeName }));
@@ -497,7 +499,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         return arr;
     }
     // 3
-    private setArrestNoticeSuspect(o: ArrestNoticeSuspect[]) {
+    private setArrestNoticeSuspect(o: fromModels.ArrestNoticeSuspect[]) {
         let arr = new FormArray([]);
         o.map(x => {
             arr.push(this.fb.group({ FullName: x.FullName }));
@@ -506,7 +508,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     // set FormArray ArrestIndictment
     // 1
-    setArrestIndictmentForm(o: ArrestIndictment[]) {
+    setArrestIndictmentForm(o: fromModels.ArrestIndictment[]) {
         let arr = this.ArrestIndictment;
         o.map(x => {
             arr.push(
@@ -519,7 +521,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         return arr;
     }
     // --- 1.1
-    private setArrestIndictmentDetail(o: ArrestIndictmentDetail[]) {
+    private setArrestIndictmentDetail(o: fromModels.ArrestIndictmentDetail[]) {
         let arr = new FormArray([]);
         o.map(x => {
             arr.push(this.fb.group({
@@ -530,7 +532,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         return arr;
     }
     // --- --- 1.1.1
-    private setArrestLawbreaker = (o: ArrestLawbreaker[]) => {
+    private setArrestLawbreaker = (o: fromModels.ArrestLawbreaker[]) => {
         let arr = new FormArray([]);
         let LawbreakerFullName;
         o.map(x => {
@@ -551,7 +553,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     // --- 2.1
-    private setArrestLawGuitbase = (o: ArrestLawGuitbase[]) => {
+    private setArrestLawGuitbase = (o: fromModels.ArrestLawGuitbase[]) => {
         let arr = new FormArray([]);
         o.map(x => {
             arr.push(this.fb.group({
@@ -566,17 +568,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         return arr;
     }
     // --- --- 2.1.1
-    private setArrestLawSubSectionRule = (o: ArrestLawSubSectionRule[]) => {
+    private setArrestLawSubSectionRule = (o: fromModels.ArrestLawSubSectionRule[]) => {
         let arr = new FormArray([]);
         o.map(x => {
             arr.push(this.fb.group({
                 SectionNo: x.SectionNo,
-                LawsuitLawSubSection: this.setLawsuitLawSubSection(x.LawsuitLawSubSection)
+                ArrestLawSubSection: this.setArrestLawSubSection(x.ArrestLawSubSection)
             }))
         })
     }
     // --- --- 2.1.2
-    private setLawsuitLawSubSection = (o: LawsuitLawSubSection[]) => {
+    private setArrestLawSubSection = (o: fromModels.ArrestLawSubSection[]) => {
         let arr = new FormArray([]);
         o.map(x => {
             arr.push(this.fb.group({
@@ -611,7 +613,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         const lastIndex = this.ArrestProduct.length - 1;
         let item = new ArrestProduct();
         item.ArrestCode = this.arrestCode;
+        item.ProductID = '';
         item.IsModify = 'c';
+        item.IsChecked = false;
         if (lastIndex < 0) {
             item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
@@ -625,12 +629,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addAllegation() {
-        let payload = this.ArrestProduct.value as ArrestProduct[];
-        payload = payload.filter(x => x.ProductID == '')
-        this.store.dispatch(new fromStore.CreateArrestProduct(payload));
+        let arrest = this.arrestFG.value as fromModels.Arrest;
+        this.store.dispatch(new fromStore.CreateArrest(arrest));
         this.router.navigate(
-            [`arrest/allegation`, 'C', this.arrestCode],
-            { queryParams: { indictmentDetailId: '', guiltbaseId: '' } });
+            [`arrest/allegation`, 'C'],
+            {
+                queryParams: {
+                    arrestCode: this.arrestCode == 'C' ? '' : this.arrestCode,
+                    indictmentDetailId: '',
+                    guiltbaseId: ''
+                }
+            });
     }
 
     addDocument() {

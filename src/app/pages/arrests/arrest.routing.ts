@@ -41,7 +41,7 @@ export const ROUTES: Routes = [
         component: fromComponents.LawbreakerComponent
     },
     {
-        path: 'allegation/:mode/:code',
+        path: 'allegation/:mode',
         data: {
             urls: [
                 { title: 'หน้าหลัก', url: '/' },

@@ -10,13 +10,14 @@ import { MainMasterService } from 'app/services/main-master.service';
 import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
 import { ArrestLawbreakerAllegation, ArrestLawbreaker } from '../../models/arrest-lawbreaker';
 import * as fromStore from '../../store';
-import { ArrestProduct } from '../../models/arrest-product';
 import * as fromService from '../../services'
 import * as fromModel from '../../models';
 import { Acceptability } from '../../models/acceptability';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { TransactionRunningService } from 'app/services/transaction-running.service';
+import { TransactionRunning } from 'app/models/transaction-running.model';
 
 @Component({
   selector: 'app-allegation-detail-modal',
@@ -26,10 +27,18 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
   // Redux based variables
-  obArrestProduct: Observable<ArrestProduct[]>;
+  obArrest: Observable<fromModel.Arrest>;
+  // obArrestProduct: Observable<fromModel.ArrestProduct[]>;
+  // obArrestLocal: Observable<fromModel.ArrestLocale[]>;
+  // obArrestStaff: Observable<fromModel.ArrestStaff[]>;
+
   private destroy$: Subject<boolean> = new Subject<boolean>();
   navigationSubscription;
   ACCEPTABILITY = Acceptability;
+
+  runningTable = 'ops_arrest';
+  runningOfficeCode = '90501';
+  runningPrefix = 'TN';
 
   constructor(
     private fb: FormBuilder,
@@ -39,9 +48,13 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     private s_mainMaster: MainMasterService,
     private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
     private s_ProductService: fromService.ArrestProductService,
-    private s_IndictmentDetail: fromService.ArrestIndictmentDetailService
+    private s_IndictmentDetail: fromService.ArrestIndictmentDetailService,
+    private s_ProductDetail: fromService.ArrestProductDetailService,
+    private s_Lawbreaker: fromService.ArrestLawbreakerService,
+    private s_transactionRunning: TransactionRunningService,
+    private s_arrest: fromService.ArrestService
   ) {
-    this.obArrestProduct = store.select(s => s.arrestProduct);
+    this.obArrest = store.select(s => s.arrest);
   }
 
   paginage = pagination;
@@ -104,7 +117,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
       .map(results => ({ params: results[0], queryParams: results[1] }))
       .subscribe(results => {
         this.mode = results.params.mode;
-        this.arrestCode = results.params.arrestCode;
+        this.arrestCode = results.queryParams.arrestCode;
         this.indictmentDetailId = results.queryParams.indictmentDetailId;
         this.guiltbaseId = results.queryParams.guiltbaseId;
 
@@ -113,7 +126,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
             if (this.arrestCode) {
               this.getArrestProduct(this.arrestCode);
             } else {
-              this.setArrestProductFromStore();
+              this.setArrestFromStore();
             }
             break;
 
@@ -137,7 +150,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
         if (x) {
           this.setItemFormArray(x, 'Product');
         } else {
-          this.setArrestProductFromStore();
+          this.setArrestFromStore();
         }
       })
   }
@@ -157,14 +170,20 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     })
   }
 
-  private setArrestProductFromStore() {
-    this.obArrestProduct.subscribe(x => {
-      this.setItemFormArray(x, 'Product');
-    })
+  private setArrestFromStore() {
+    this.obArrest
+      .takeUntil(this.destroy$)
+      .subscribe((x: fromModel.Arrest) => {
+        debugger
+        let product = x.ArrestProduct.filter(y => y.IsModify != 'd' && y.ProductID == '')
+        this.setItemFormArray(product, 'Product');
+      })
   }
 
   ngOnDestroy(): void {
     this.paginage.TotalItems = 0;
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   dismiss(e: any) {
@@ -300,6 +319,8 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   async close(e: any) {
     let law = this.Lawbreaker;
     let lawDesc = this.LawbreakerDetail;
+    let product = this.Product;
+    let productChecked = product.value.filter(x => x.IsChecked);
     law = law.value.filter(x => x.IsChecked == Acceptability.ACCEPTABLE);
 
     if (!law && lawDesc.invalid)
@@ -307,9 +328,59 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
     if (confirm(Message.confirmAction)) {
 
-      // if (this.params.arrestCode && this.params.mode == 'C')
+      if (this.arrestCode && this.mode == 'C') {
 
-      this.c.emit(e);
+        // this.s_IndictmentDetail.ArrestIndicmentDetailinsAll().subscribe(x => {
+        //   if (productChecked)
+        //     this.s_ProductDetail.ArrestProductDetailinsAll(x).subscribe()
+        // })
+
+        // if (product.value)
+        //   this.s_ProductService.ArrestProductinsAll(product.value).subscribe();
+
+        // if (lawDesc)
+        //   this.s_Lawbreaker.ArrestLawbreakerinsAll().subscribe();
+
+      } else if (!this.arrestCode && this.mode == 'C') {
+        this.s_transactionRunning.TransactionRunninggetByCon(this.runningTable, this.runningOfficeCode)
+          .takeUntil(this.destroy$)
+          .subscribe((x: TransactionRunning[]) => {
+            let _arrestCode;
+            if (x.length) {
+              let tr = x.sort((a, b) => {
+                if (a.RunningID > b.RunningID) return -1; // desc
+              })
+              let str = '' + (tr[0].RunningNo + 1)
+              let pad = '00000';
+              let ans = pad.substring(0, pad.length - str.length) + str
+              _arrestCode = `${tr[0].RunningPrefix}${tr[0].RunningOfficeCode}${tr[0].RunningYear}${ans}`
+            } else {
+              this.s_transactionRunning.TransactionRunninginsAll(this.runningOfficeCode, this.runningTable, this.runningPrefix)
+                .takeUntil(this.destroy$)
+                .subscribe(y => {
+                  let ans = '00001'
+                  let year = ((new Date).getFullYear() + 543).toString()
+                  year = year.substring(2, 4);
+                  this.arrestCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+                })
+            }
+
+            this.obArrest
+              .takeUntil(this.destroy$)
+              .subscribe((arrest: fromModel.Arrest) => {
+                this.s_arrest.ArrestinsAll(arrest);
+              })
+            // this.s_arrest.ArrestinsAll()
+
+          })
+
+      } else if (this.mode == 'U') {
+
+      }
+
+      // this.c.emit(e);
     }
   }
+
+
 }

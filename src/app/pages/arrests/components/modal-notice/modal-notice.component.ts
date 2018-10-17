@@ -63,9 +63,6 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         this.s_arrestNotice.ArrestNoticegetByKeyword(Textsearch)
             .takeUntil(this.destroy$)
             .subscribe(x => this.onSearchComplete(x))
-        // this.preLoaderService.setShowPreloader(true);
-        // await this.arrestService.ArrestNoticegetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
-        // this.preLoaderService.setShowPreloader(false);
     }
 
     async onAdvSearch(form: any) {
@@ -85,11 +82,6 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         this.s_arrestNotice.ArrestNoticegetByConAdv(form)
             .takeUntil(this.destroy$)
             .subscribe(x => this.onSearchComplete(x))
-        // this.preLoaderService.setShowPreloader(true);
-
-        // await this.arrestService.ArrestNoticegetByConAdv(form.value).then(list => this.onSearchComplete(list));
-
-        // this.preLoaderService.setShowPreloader(false);
     }
 
     async onSearchComplete(list: ArrestNotice[]) {

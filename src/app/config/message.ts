@@ -41,6 +41,8 @@ export const Message = {
     checkScienceDate: 'กรุณาตราวจสอบวันที่ตรวจพิสูจน์เริ่มต้น ต้องน้อยกว่า วันที่สิ้นสุด',
     confirmDeleteProduct: 'ยืนยันการลบข้อมูลของกลาง ใช่หรือไม่ ?',
 
-    checkImageType: 'ไฟล์รูปภาพที่สามารถอัพโหลดได้คือ ".png, .jpeg"'
+    checkImageType: 'ไฟล์รูปภาพที่สามารถอัพโหลดได้คือ ".png, .jpeg"',
+
+    alertSelectGuiltbase: 'กรุณาเลือกรายการข้อกล่าวหา'
 
 }

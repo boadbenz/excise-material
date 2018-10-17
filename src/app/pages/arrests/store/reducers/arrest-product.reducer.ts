@@ -3,7 +3,7 @@ import * as fromProductAction from '../actions';
 
 export function productReducer(
     state: ArrestProduct[], 
-    action: fromProductAction.Actions
+    action: fromProductAction.ArrestProductActions
 ) {
     switch (action.type) {
         case fromProductAction.CREATE_ARRESTPRODUCT:
@@ -20,16 +20,7 @@ export function productReducer(
         case fromProductAction.REMOVE_ARRESTPRODUCT:
             state.splice(action.payload, 1)
             return state;
-        // case fromProductAction.UPDATE_ARRESTPRODUCT:
-        // case fromProductAction.CREATE_ARRESTPRODUCT: {
-        //     const product = action.payload;
-        //     const entities = {
-        //         ...state.entities,
-        //         [product.ProductID]: product,
-        //     };
-
-        //     return { ...state, entities, };
-        // }
+            
         default:
             return state;
     }

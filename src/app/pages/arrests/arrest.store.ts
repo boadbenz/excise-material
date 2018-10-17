@@ -27,10 +27,10 @@ export interface ArrestStore {
     IsActive: number;
     ArrestStaff: Array<ArrestStaff>;
     ArrestLocale: Array<ArrestLocale>;
-    ArrestIndictment: Array<ArrestIndictment>;
-    ArrestLawbreaker: Array<ArrestLawbreaker>;
-    ArrestProduct: Array<ArrestProduct>;
-    ArrestDocument: Array<ArrestDocument>;
+    // ArrestIndictment: Array<ArrestIndictment>;
+    // ArrestLawbreaker: Array<ArrestLawbreaker>;
+    // ArrestProduct: Array<ArrestProduct>;
+    // ArrestDocument: Array<ArrestDocument>;
 
-    MasStaff: Array<MasStaffModel>;
+    // MasStaff: Array<MasStaffModel>;
 }

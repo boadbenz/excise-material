@@ -11,7 +11,7 @@ import { ArrestLawbreaker } from './arrest-lawbreaker';
 //     LawbreakerID: number;
 // }
 
-export class IndictmentLawbreaker {    
+export class IndictmentLawbreaker {
     LawbreakerID: string;
     LawbreakerFullName: string;
     CompanyFullName: string;
@@ -29,33 +29,23 @@ export class IndictmentLawbreaker {
 }
 
 export class ArrestIndictment {
-    // ArrestCode: string;
-    // IndicmentID: number;
-    // IsProve: number;
-    // IsActive: number;
-    // GuiltBaseID: number;
-    // SectionNo: string;
-    // SectionDesc1: string;    
-    // SectionName: string;
-    // IndictmentLawbreaker: IndictmentLawbreaker[];
-    // ArrestIndictmentDetail: ArrestIndicmentDetail[];
-    // OpsArrestIndicmentDetailCollection: OpsArrestIndicmentDetailCollection[];
-    
-    // IsNewItem: boolean;
-
     IndictmentID: number;
     ArrestCode: string;
     GuiltBaseID: number;
     IsProve: number;
     IsActive: number;
-    IsLawsuitComplete:number;
+    IsLawsuitComplete: number;
     ArrestIndictmentDetail: ArrestIndictmentDetail[];
     ArrestLawGuitbase: ArrestLawGuitbase[];
 
     IsModify: string;
+    SubSectionType: string;
+    GuiltBaseName: string;
+    SectionNo: string;
+    PenaltyDesc: string;
 }
 
-export class ArrestIndictmentDetail{
+export class ArrestIndictmentDetail {
     IndictmentDetailID: number;
     LawsuitType: string;
     LawsuitEnd: number;

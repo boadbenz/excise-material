@@ -34,7 +34,7 @@ export class ArrestProduct {
     public NetWeightUnit = '';
     
     public IsActive: number;
-    public IsChecked: Acceptability
+    public IsChecked: boolean;
     public IsNewItem: boolean;
     public ProductFullName = '';
     public IsModify: string;

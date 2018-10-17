@@ -34,21 +34,36 @@
                         <th>อัตราโทษ</th>
                     </tr>
                 </thead>
-                <tbody formArrayName="LawGroupSection">
-                    <tr *ngFor="let item of LawGroupSection.controls; let i=index;" [formGroupName]="i">
+                <tbody formArrayName="LawGuiltbase">
+                    <tr *ngFor="let item of LawGuiltbase.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
                             <input name="noticeRadio" name="IsChecked" formControlName="IsChecked" type="radio" id="td{{i}}"
                                 (change)="setIsChecked(i)" class="with-gap radio-col-indigo">
                             <label for="td{{i}}" class="m-0"></label>
                         </td>
                         <td class="text-center">{{item.get('RowId').value}}</td>
-                        <td>
-                            {{item.get('ArrestLawSubSectionRule').value}}
+                        <td class="text-center">
+                            <div *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
+                                <span *ngFor="let subSection of getArrestLawSubSection(subSectionRule)">
+                                    {{subSection.get('SubSectionType').value}}
+                                </span>
+                            </div>
                         </td>
-                        <td>{{item.get('GuiltBaseName').value}}</td>
-                        <td>
+                        <td style="max-width: 200px;">{{item.get('GuiltBaseName').value}}</td>
+                        <td class="text-center">
+                            <div *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
+                                {{subSectionRule.get('SectionNo').value}}
+                            </div>
                         </td>
-                        <td></td>
+                        <td style="max-width: 200px;">
+                            <div *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
+                                <span *ngFor="let section of getArrestLawSection(subSectionRule)">
+                                    <span *ngFor="let penalty of getArrestLawPenalty(section)">
+                                        {{penalty.get('PenaltyDesc').value}}
+                                    </span>
+                                </span>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>

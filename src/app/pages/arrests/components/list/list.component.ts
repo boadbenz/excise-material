@@ -53,6 +53,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
         this.navService.setNextPageButton(false);
+        this.navService.setPrevPageButton(false);
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);

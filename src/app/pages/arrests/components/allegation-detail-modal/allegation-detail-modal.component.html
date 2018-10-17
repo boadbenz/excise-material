@@ -182,8 +182,7 @@
                 <tbody formArrayName="Product">
                   <tr *ngFor="let item of Product.controls; let i=index;" [formGroupName]="i">
                     <td class="text-center">
-                      <input formControlName="IsChecked" type="checkbox" [id]="'pd'+i" class="filled-in chk-col-indigo" 
-                      [value]="ACCEPTABILITY.INACCEPTABLE">
+                      <input formControlName="IsChecked" type="checkbox" [id]="'pd'+i" class="filled-in chk-col-indigo">
                       <label [for]="'pd'+i" class="m-0"></label>
                     </td>
                     <td class="text-center">{{i+1}}</td>
