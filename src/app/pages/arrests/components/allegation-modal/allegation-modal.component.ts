@@ -190,13 +190,7 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
 
     async pageChanges(event: any) {
         const list = await this.arrestLawGuitbase.slice(event.startIndex - 1, event.endIndex);
-        this.lawGroupFG.patchValue({
-            LawGuiltbase: list
-        })
-
-        console.log(this.lawGroupFG.value);
-        
-        // const lawGuitbase = await this.setArrestLawGuitbase(list);
-        // this.lawGroupFG.setControl('LawGuiltbase', lawGuitbase);
+        const lawGuitbase = await this.setArrestLawGuitbase(list);
+        this.lawGroupFG.setControl('LawGuiltbase', lawGuitbase);
     }
 }
