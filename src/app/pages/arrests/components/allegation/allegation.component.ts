@@ -9,6 +9,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import * as fromModels from '../../models';
 import * as fromStore from '../../store';
 import { Store } from '@ngrx/store';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-allegation',
@@ -22,7 +23,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
     private navService: NavigationService,
     private router: Router,
     private fb: FormBuilder,
-    private store: Store<fromStore.AppState>
+    private store: Store<fromStore.AppState>,
+    private sidebarService: SidebarService
   ) {
     this.navService.setPrintButton(false);
     this.navService.setPrevPageButton(true);
@@ -63,6 +65,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
   });
 
   async ngOnInit() {
+
+    this.sidebarService.setVersion('0.0.0.18');
 
     this.navService.showFieldEdit.takeUntil(this.destroy$).subscribe(p => this.showEditField = p.valueOf())
 
