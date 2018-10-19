@@ -64,7 +64,7 @@
                     <div style="width:45%">
                         <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" 
                         [ngClass]="{'ng-touched':isRequired}" [disabled]="mode=='R'" 
-                        (onSelectionChange)="ShowRevenueCompare()" required ></my-date-picker-th>
+                        required ></my-date-picker-th>
                     </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 35px;" class="form-control form-control-sm" [disabled]="mode=='R'">
@@ -183,6 +183,14 @@
                         <option value="1">นำส่งเงินรายได้</option>
                         <option value="2">รับรายการนำส่งเงิน</option>
                     </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 col-md-7 col-sm-8">
+                </div>
+
+                <div class="form-group col-lg-2 col-md-7 col-sm-8">
+                    <button type="button" (click)="ShowRevenueCompare()" class="btn btn-block btn-themecolor">อัพเดตรายการนำส่ง</button>
                 </div>
             </div>
         </div>
