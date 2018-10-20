@@ -9,7 +9,7 @@ export class MainMasterService {
   constructor(
     private http: HttpClient,
     private httpService: HttpService
-    ) { }
+  ) { }
 
   private httpOptions = {
     headers: new HttpHeaders(
@@ -26,37 +26,33 @@ export class MainMasterService {
     return res
   }
 
+  callApi(url: string):Promise<any[]> {
+    return this.resposePromisGetList('{}', url);
+  }
+
   MasStaffMaingetAll() {
-    const url = `${appConfig.api7789}/MasStaffMaingetAll`;
-    return this.httpService.post(url, '{}').map(x => x.json());
+    return this.callApi(`${appConfig.api7789}/MasStaffMaingetAll`);
   }
   MasDepartmentMaingetAll() {
-    const url = `${appConfig.api7789}/MasDepartmentMaingetAll`;
-    return this.httpService.post(url, '{}').map(x => x.json());
+    return this.callApi(`${appConfig.api7789}/MasDepartmentMaingetAll`);
   }
   MasOfficeMaingetAll() {
-    const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
-    return this.httpService.post(url, '{}').map(x => x.json());
+    return this.callApi(`${appConfig.api7789}/MasOfficeMaingetAll`);
   }
   MasDistrictMaingetAll() {
-    const url = `${appConfig.api7789}/MasDistrictMaingetAll`;
-    return this.httpService.post(url, '{}').map(x => x.json());
+    return this.callApi(`${appConfig.api7789}/MasDistrictMaingetAll`);
   }
   MasDutyUnitMaingetAll() {
-    const url = `${appConfig.api7789}/MasDutyUnitMaingetAll`;
-    return this.httpService.post(url, '{}').map(x => x.json());
+    return this.callApi(`${appConfig.api7789}/MasDutyUnitMaingetAll`);
   }
   MasProductMaingetAll() {
-    const url = `${appConfig.api7789}/MasProductMaingetAll`;
-    return this.httpService.post(url, '{}').map(x => x.json());
+    return this.callApi(`${appConfig.api7789}/MasProductMaingetAll`);
   }
   MasCourtMaingetAll() {
-    const url = `${appConfig.api7789}/MasCourtMaingetAll`;
-    return this.httpService.post(url, '{}').map(x => x.json());
+    return this.callApi(`${appConfig.api7789}/MasCourtMaingetAll`);
   }
   MasCommunicationchanelMaingetAll() {
-    const url = `${appConfig.api7789}/MasCommunicationchanelMaingetAll`;
-    return this.httpService.post(url, '{}').map(x => x.json());
+    return this.callApi(`${appConfig.api7789}/MasCommunicationchanelMaingetAll`);
   }
 
 

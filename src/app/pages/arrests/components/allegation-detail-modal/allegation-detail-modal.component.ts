@@ -18,424 +18,537 @@ import 'rxjs/add/operator/takeUntil';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
+import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 
 @Component({
-   selector: 'app-allegation-detail-modal',
-   templateUrl: './allegation-detail-modal.component.html',
-   styleUrls: ['./allegation-detail-modal.component.scss']
+  selector: 'app-allegation-detail-modal',
+  templateUrl: './allegation-detail-modal.component.html',
+  styleUrls: ['./allegation-detail-modal.component.scss']
 })
 export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
-   // Redux based variables
-   obArrest: Observable<fromModel.Arrest>;
-   obArrestIndictment: Observable<fromModel.ArrestIndictment[]>
-   // obArrestProduct: Observable<fromModel.ArrestProduct[]>;
-   // obArrestLocal: Observable<fromModel.ArrestLocale[]>;
-   // obArrestStaff: Observable<fromModel.ArrestStaff[]>;
+  // Redux based variables
+  obArrest: Observable<fromModel.Arrest>;
+  obArrestIndictment: Observable<fromModel.ArrestIndictment[]>
+  // obArrestProduct: Observable<fromModel.ArrestProduct[]>;
+  // obArrestLocal: Observable<fromModel.ArrestLocale[]>;
+  // obArrestStaff: Observable<fromModel.ArrestStaff[]>;
 
-   private destroy$: Subject<boolean> = new Subject<boolean>();
-   navigationSubscription;
-   ACCEPTABILITY = Acceptability;
+  private destroy$: Subject<boolean> = new Subject<boolean>();
+  navigationSubscription;
+  ACCEPTABILITY = Acceptability;
 
-   runningTable = 'ops_arrest';
-   runningOfficeCode = '90501';
-   runningPrefix = 'TN';
+  runningTable = 'ops_arrest';
+  runningOfficeCode = '90501';
+  runningPrefix = 'TN';
 
-   constructor(
-      private fb: FormBuilder,
-      private router: Router,
-      private store: Store<fromStore.AppState>,
-      private activeRoute: ActivatedRoute,
-      private s_mainMaster: MainMasterService,
-      private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
-      private s_ProductService: fromService.ArrestProductService,
-      private s_Indictment: fromService.ArrestIndictmentService,
-      private s_IndictmentDetail: fromService.ArrestIndictmentDetailService,
-      private s_ProductDetail: fromService.ArrestProductDetailService,
-      private s_Lawbreaker: fromService.ArrestLawbreakerService,
-      private s_transactionRunning: TransactionRunningService,
-      private s_arrest: fromService.ArrestService
-   ) {
-      this.obArrest = store.select(s => s.arrest);
-      this.obArrestIndictment = store.select(s => s.arrestIndictment);
-   }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private store: Store<fromStore.AppState>,
+    private activeRoute: ActivatedRoute,
+    private s_mainMaster: MainMasterService,
+    private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
+    private s_ProductService: fromService.ArrestProductService,
+    private s_Indictment: fromService.ArrestIndictmentService,
+    private s_IndictmentDetail: fromService.ArrestIndictmentDetailService,
+    private s_ProductDetail: fromService.ArrestProductDetailService,
+    private s_Lawbreaker: fromService.ArrestLawbreakerService,
+    private s_transactionRunning: TransactionRunningService,
+    private s_arrest: fromService.ArrestService
+  ) {
+    this.obArrest = store.select(s => s.arrest);
+    this.obArrestIndictment = store.select(s => s.arrestIndictment);
+  }
 
-   paginage = pagination;
-   lawbreakerType = LawbreakerTypes;
-   entityType = EntityTypes;
-   lawbreaker = new Array<ArrestLawbreakerAllegation>();
-   advSearch: boolean;
-   showLawbreakerDetail: boolean;
-   lawbreakerIndex: number;
-   typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+  paginage = pagination;
+  lawbreakerType = LawbreakerTypes;
+  entityType = EntityTypes;
+  lawbreaker = new Array<ArrestLawbreakerAllegation>();
+  advSearch: boolean;
+  showLawbreakerDetail: boolean;
+  lawbreakerIndex: number;
+  typeheadProductUnit = new Array<MasDutyProductUnitModel>();
 
-   // param: Params
-   mode: string;
-   arrestCode: string;
-   indictmentDetailId: string;
-   guiltbaseId: string;
+  // param: Params
+  mode: string;
+  arrestCode: string;
+  indictmentDetailId: string;
+  guiltbaseId: string;
 
-   card1 = true;
+  _isSuccess: boolean;
 
-   @Output() d = new EventEmitter();
-   @Output() c = new EventEmitter();
+  card1 = true;
 
-   allegationFG: FormGroup;
+  @Output() d = new EventEmitter();
+  @Output() c = new EventEmitter();
+  @Output() OutputLawbreaker = new EventEmitter<fromModel.ArrestLawbreaker>();
 
-   productArray: FormArray;
+  allegationFG: FormGroup;
 
-   get Lawbreaker(): FormArray {
-      return this.allegationFG.get('Lawbreaker') as FormArray
-   }
+  productArray: FormArray;
 
-   get Product(): FormArray {
-      return this.allegationFG.get('Product') as FormArray
-   }
+  get Lawbreaker(): FormArray {
+    return this.allegationFG.get('Lawbreaker') as FormArray
+  }
 
-   get LawbreakerDetail(): FormGroup {
-      return this.allegationFG.get('LawbreakerDetail') as FormGroup
-   }
+  // get Product(): FormArray {
+  //   return this.allegationFG.get('Product') as FormArray
+  // }
 
-   // private onlyUnique(value, index, self) {
-   //   return self.indexOf(value) === index;
-   // }
+  // get LawbreakerDetail(): FormGroup {
+  //   return this.allegationFG.get('LawbreakerDetail') as FormGroup
+  // }
 
-   async ngOnInit() {
+  async ngOnInit() {
 
-      this.allegationFG = this.fb.group({
-         Lawbreaker: this.fb.array([]),
-         Product: this.fb.array([]),
-         LawbreakerDetail: this.fb.group({
-            LawbreakerFullName: ['', Validators.required],
-            LawbreakerDetail: ['', Validators.required]
-         })
-      });
-
-      // this.activeRoute.queryParams.subscribe(params => {
-      //   this.params.indictmentDetailId = params['indictmentDetailId'];
-      //   this.params.guiltbaseId = params['guiltbaseId'];
+    this.allegationFG = this.fb.group({
+      Lawbreaker: this.fb.array([]),
+      // Product: this.fb.array([]),
+      // LawbreakerDetail: this.fb.group({
+      //   LawbreakerFullName: ['', Validators.required],
+      //   LawbreakerDetail: ['', Validators.required]
       // })
+    });
 
-      combineLatest(this.activeRoute.params, this.activeRoute.queryParams)
-         .map(results => ({ params: results[0], queryParams: results[1] }))
-         .subscribe(results => {
-            this.mode = results.params.mode;
-            this.arrestCode = results.queryParams.arrestCode;
-            this.indictmentDetailId = results.queryParams.indictmentDetailId;
-            this.guiltbaseId = results.queryParams.guiltbaseId;
+    // combineLatest(this.activeRoute.params, this.activeRoute.queryParams)
+    //   .map(results => ({ params: results[0], queryParams: results[1] }))
+    //   .subscribe(results => {
+    //     this.mode = results.params.mode;
+    //     this.arrestCode = results.queryParams.arrestCode;
+    //     this.indictmentDetailId = results.queryParams.indictmentDetailId;
+    //     this.guiltbaseId = results.queryParams.guiltbaseId;
 
-            switch (this.mode) {
-               case 'C':
-                  if (this.arrestCode) {
-                     this.getArrestProduct(this.arrestCode);
-                  } else {
-                     this.setArrestFromStore();
-                  }
-                  break;
+    //     switch (this.mode) {
+    //       case 'C':
+    //         if (this.arrestCode) {
+    //           this.getArrestProduct(this.arrestCode);
+    //         } else {
+    //           this.setArrestFromStore();
+    //         }
+    //         break;
 
-               case 'U':
-                  this.getArrestIndictmentDetail(this.indictmentDetailId, this.arrestCode);
+    //       case 'U':
+    //         this.getArrestIndictmentDetail(this.indictmentDetailId, this.arrestCode);
 
-                  break;
+    //         break;
 
-               case 'R':
-                  break;
-            }
-         });
+    //       case 'R':
+    //         break;
+    //     }
+    //   });
 
-      await this.setProductUnitStore();
-   }
+    // await this.setProductUnitStore();
+  }
 
-   private getArrestProduct(arrestCode: string) {
-      this.s_ProductService.ArrestProductgetByArrestCode(arrestCode)
-         .takeUntil(this.destroy$)
-         .subscribe(x => {
-            if (x) {
-               this.setItemFormArray(x, 'Product');
-            } else {
-               this.setArrestFromStore();
-            }
-         })
-   }
-
-   private async getArrestIndictmentDetail(IndictmentDetailID: string, arrestCode: string) {
-      let indicitDetail: fromModel.ArrestIndictmentDetail[] =
-         await this.s_IndictmentDetail.ArrestIndicmentDetailgetByCon(IndictmentDetailID).toPromise();
-
-      let product: fromModel.ArrestProduct[] =
-         await this.s_ProductService.ArrestProductgetByArrestCode(arrestCode).toPromise();
-
-      indicitDetail.map(x => {
-         // let newProduct = [...x.ArrestProductDetail, ...product];
-         // let unique = newProduct.filter((value, index, self) => {
-         //   return self.filter.indexOf(value.ProductID) === index;
-         // }); // returns ['a', 1, 2, '1']
+  private getArrestProduct(arrestCode: string) {
+    this.s_ProductService.ArrestProductgetByArrestCode(arrestCode)
+      .takeUntil(this.destroy$)
+      .subscribe(x => {
+        if (x) {
+          this.setItemFormArray(x, 'Product');
+        } else {
+          this.setArrestFromStore();
+        }
       })
-   }
+  }
 
-   private setArrestFromStore() {
-      this.obArrest
-         .takeUntil(this.destroy$)
-         .subscribe((x: fromModel.Arrest) => {
-            debugger
-            let product = x.ArrestProduct.filter(y => y.IsModify != 'd' && y.ProductID == '')
-            this.setItemFormArray(product, 'Product');
-         })
-   }
+  private async getArrestIndictmentDetail(IndictmentDetailID: string, arrestCode: string) {
+    let indicitDetail: fromModel.ArrestIndictmentDetail[] =
+      await this.s_IndictmentDetail.ArrestIndicmentDetailgetByCon(IndictmentDetailID).toPromise();
 
-   ngOnDestroy(): void {
-      this.paginage.TotalItems = 0;
-      this.destroy$.next(true);
-      this.destroy$.unsubscribe();
-   }
+    let product: fromModel.ArrestProduct[] =
+      await this.s_ProductService.ArrestProductgetByArrestCode(arrestCode).toPromise();
 
-   dismiss(e: any) {
-      this.d.emit(e);
-   }
+    indicitDetail.map(x => {
+      // let newProduct = [...x.ArrestProductDetail, ...product];
+      // let unique = newProduct.filter((value, index, self) => {
+      //   return self.filter.indexOf(value.ProductID) === index;
+      // }); // returns ['a', 1, 2, '1']
+    })
+  }
 
-   view(id: number) {
-      this.dismiss('Cross click')
-      this.router.navigate([`/arrest/lawbreaker/R/${id}`])
-   }
-
-   private async setProductUnitStore() {
-      await this.s_mainMaster.masDutyUnitMaingetAll().then(res => {
-         this.typeheadProductUnit = res;
+  private setArrestFromStore() {
+    this.obArrest
+      .takeUntil(this.destroy$)
+      .subscribe((x: fromModel.Arrest) => {
+        let product = this.filterProductNoId(x.ArrestProduct);
+        this.setItemFormArray(product, 'Product');
       })
-   }
+  }
 
-   onSearchAdv(f: any) {
-      this.s_masLawbreaker.ArrestMasLawbreakergetByConAdv(f).subscribe(x => this.onSearchComplete(x));
-   }
+  private filterProductNoId(p: fromModel.ArrestProduct[]) {
+    return p.filter(y => y.IsModify != 'd' && y.ProductID == '');
+  }
 
-   onSearchByKey(f: any) {
-      this.s_masLawbreaker.ArrestMasLawbreakergetByKeyword(f).subscribe(x => this.onSearchComplete(x));
-   }
+  ngOnDestroy(): void {
+    this.paginage.TotalItems = 0;
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
 
-   private async onSearchComplete(list: ArrestLawbreaker[]) {
-      if (!list.length) {
-         alert(Message.noRecord);
-         return;
-      }
+  dismiss(e: any) {
+    this.d.emit(e);
+  }
 
-      let law = [];
-      await list.filter(item => item.IsActive == 1)
-         .map(async (item, i) => {
-            let l = new ArrestLawbreakerAllegation();
-            l.RowId = i + 1;
-            l.IsChecked = Acceptability.INACCEPTABLE;
-            l.LawbreakerID = item.LawbreakerID;
-            l.IDCard = item.IDCard;
-            l.PassportNo = item.PassportNo
-            l.LawbreakerType = item.LawbreakerType;
-            l.LawbreakerTypeName = this.lawbreakerType.find(key => parseInt(key.value) == item.LawbreakerType).text;
-            l.EntityType = item.EntityType;
-            l.EntityTypeName = this.entityType.find(key => parseInt(key.value) == item.EntityType).text;
-            l.CompanyName = item.CompanyFullName;
-            l.CompanyRegistrationNo = item.CompanyRegistrationNo;
-            l.LawbreakerTitleName = item.LawbreakerTitleName;
-            l.LawbreakerFirstName = item.LawbreakerFirstName;
-            l.LawbreakerLastName = item.LawbreakerLastName;
-            l.LawbreakerFullName = `${item.LawbreakerTitleName || ''}`;
-            l.LawbreakerFullName += ` ${item.LawbreakerFirstName || ''}`;
-            l.LawbreakerFullName += ` ${item.LawbreakerLastName || ''}`;
-            l.ResultCount = this.s_masLawbreaker.ArrestLawsuitResultCountgetByLawbreakerID(item.LawbreakerID.toString())
-            switch (item.EntityType) {
-               case 0: // นิติบุคคล
-                  l.ReferenceNo = item.CompanyRegistrationNo;
-                  break;
-               case 1: // บุคคลธรรมดา
-                  switch (item.LawbreakerType) {
-                     case 0: // ต่างชาติ
-                        l.ReferenceNo = item.PassportNo;
-                        break;
-                     case 1: // ชาวไทย
-                        l.ReferenceNo = item.IDCard;
-                        break;
-                  }
-            }
-            law.push(l);
-         })
+  view(id: number) {
+    this.dismiss('Cross click')
+    this.router.navigate([`/arrest/lawbreaker/R/${id}`])
+  }
 
-      this.lawbreaker = law;
-      // set total record
-      this.paginage.TotalItems = law.length;
-   }
+  private async setProductUnitStore() {
+    await this.s_mainMaster.masDutyUnitMaingetAll().then(res => {
+      this.typeheadProductUnit = res;
+    })
+  }
 
-   setIsChecked(i: number) {
-      this.lawbreakerIndex = i;
-      let law = this.Lawbreaker;
-      law.value.map((item, index) => {
-         item.IsChecked = (i == index) ? Acceptability.ACCEPTABLE : Acceptability.INACCEPTABLE;
-      })
-      this.setLawbreakerDetail(law.at(i).value)
-   }
+  onSearchAdv(f: any) {
+    this.s_masLawbreaker.ArrestMasLawbreakergetByConAdv(f).subscribe(x => this.onSearchComplete(x));
+  }
 
-   private setLawbreakerDetail(lawAtIndex: any) {
+  onSearchByKey(f: any) {
+    this.s_masLawbreaker.ArrestMasLawbreakergetByKeyword(f).subscribe(x => this.onSearchComplete(x));
+  }
 
-      let lawDesc = this.LawbreakerDetail;
+  private async onSearchComplete(list: ArrestLawbreaker[]) {
+    if (!list.length) {
+      alert(Message.noRecord);
+      return;
+    }
 
-      lawDesc.value.LawbreakerFullName = lawAtIndex.LawbreakerFullName
-      lawDesc.value.LawbreakerDetail = `ประเภทผู้ต้องหา (${lawAtIndex.EntityTypeName})`;
-      lawDesc.value.LawbreakerDetail += ` ประเภทบุคคล (${lawAtIndex.LawbreakerTypeName})`;
-
-      switch (lawAtIndex.EntityType) {
-         case 0: // นิติบุคคล
-            lawDesc.value.LawbreakerDetail += ` หมายเลขนิติบุคคล (${lawAtIndex.CompanyRegistrationNo})`;
+    let law = [];
+    await list.filter(item => item.IsActive == 1)
+      .map(async (item: fromModel.ArrestLawbreaker, i) => {
+        item.RowId = i + 1;
+        item.IsChecked = Acceptability.INACCEPTABLE;
+        item.LawbreakerTypeName = this.lawbreakerType.find(key => parseInt(key.value) == item.LawbreakerType).text;
+        item.EntityType = item.EntityType;
+        item.EntityTypeName = this.entityType.find(key => parseInt(key.value) == item.EntityType).text;
+        item.LawbreakerRefID = item.LawbreakerID;
+        item.LawbreakerFullName = `${item.LawbreakerTitleName || ''}`;
+        item.LawbreakerFullName += ` ${item.LawbreakerFirstName || ''}`;
+        item.LawbreakerFullName += ` ${item.LawbreakerLastName || ''}`;
+        item.ResultCount = this.s_masLawbreaker.ArrestLawsuitResultCountgetByLawbreakerID(item.LawbreakerID.toString())
+        switch (item.EntityType) {
+          case 0: // นิติบุคคล
+            item.ReferenceID = item.CompanyRegistrationNo;
             break;
-         case 1: // บุคคลธรรมดา
-            switch (lawAtIndex.LawbreakerType) {
-               case 0: // ต่างชาติ
-                  lawDesc.value.LawbreakerDetail += ` หมายเลขหนังสือเดินทาง (${lawAtIndex.PassportNo})`;
-                  break;
-               case 1: // ชาวไทย
-                  lawDesc.value.LawbreakerDetail += ` หมายเลขประจำตัวประชาชน (${lawAtIndex.IDCard})`;
-                  break;
+          case 1: // บุคคลธรรมดา
+            switch (item.LawbreakerType) {
+              case 0: // ต่างชาติ
+                item.ReferenceID = item.PassportNo;
+                break;
+              case 1: // ชาวไทย
+                item.ReferenceID = item.IDCard;
+                break;
             }
-      }
-      lawDesc.patchValue(lawDesc.value)
+        }
+        law.push(item);
+      })
 
-      this.showLawbreakerDetail = true;
-   }
+    this.lawbreaker = law;
+    // set total record
+    this.paginage.TotalItems = law.length;
+  }
 
-   private setItemFormArray(array: any[], formControl: string) {
-      if (array !== undefined && array.length) {
-         const itemFGs = array.map(item => this.fb.group(item));
-         const itemFormArray = this.fb.array(itemFGs);
-         this.allegationFG.setControl(formControl, itemFormArray);
-      }
-   }
+  setIsChecked(i: number) {
+    this.lawbreakerIndex = i;
+    let law = this.Lawbreaker;
+    law.value.map((item, index) => {
+      item.IsChecked = (i == index) ? Acceptability.ACCEPTABLE : Acceptability.INACCEPTABLE;
+    })
+    // this.setLawbreakerDetail(law.at(i).value)
+  }
 
-   async pageChanges(event: any) {
-      const list = await this.lawbreaker.slice(event.startIndex - 1, event.endIndex);
-      this.setItemFormArray(list, 'Lawbreaker');
-      this.showLawbreakerDetail = false;
-   }
+  // private setLawbreakerDetail(lawAtIndex: any) {
 
-   closeLawbreakerDetail() {
-      let law = this.Lawbreaker;
-      law.value.map(item => item.IsChecked = Acceptability.INACCEPTABLE);
-      law.patchValue(law.value);
-      this.showLawbreakerDetail = false;
-   }
+  //   let lawDesc = this.LawbreakerDetail;
 
-   async close(e: any) {
-      let law = this.Lawbreaker;
-      let lawDesc = this.LawbreakerDetail;
-      let product = this.Product;
-      let productChecked = product.value.filter(x => x.IsChecked);
-      law = law.value.filter(x => x.IsChecked == Acceptability.ACCEPTABLE);
+  //   lawDesc.value.LawbreakerFullName = lawAtIndex.LawbreakerFullName
+  //   lawDesc.value.LawbreakerDetail = `ประเภทผู้ต้องหา (${lawAtIndex.EntityTypeName})`;
+  //   lawDesc.value.LawbreakerDetail += ` ประเภทบุคคล (${lawAtIndex.LawbreakerTypeName})`;
 
-      if (!law && lawDesc.invalid)
-         return
+  //   switch (lawAtIndex.EntityType) {
+  //     case 0: // นิติบุคคล
+  //       lawDesc.value.LawbreakerDetail += ` หมายเลขนิติบุคคล (${lawAtIndex.CompanyRegistrationNo})`;
+  //       break;
+  //     case 1: // บุคคลธรรมดา
+  //       switch (lawAtIndex.LawbreakerType) {
+  //         case 0: // ต่างชาติ
+  //           lawDesc.value.LawbreakerDetail += ` หมายเลขหนังสือเดินทาง (${lawAtIndex.PassportNo})`;
+  //           break;
+  //         case 1: // ชาวไทย
+  //           lawDesc.value.LawbreakerDetail += ` หมายเลขประจำตัวประชาชน (${lawAtIndex.IDCard})`;
+  //           break;
+  //       }
+  //   }
+  //   lawDesc.patchValue(lawDesc.value)
 
-      if (confirm(Message.confirmAction)) {
+  //   this.showLawbreakerDetail = true;
+  // }
 
-         if (this.arrestCode && this.mode == 'C') {
+  private setItemFormArray(array: any[], formControl: string) {
+    if (array !== undefined && array.length) {
+      const itemFGs = array.map(item => this.fb.group(item));
+      const itemFormArray = this.fb.array(itemFGs);
+      this.allegationFG.setControl(formControl, itemFormArray);
+    }
+  }
 
-            // this.s_IndictmentDetail.ArrestIndicmentDetailinsAll().subscribe(x => {
-            //   if (productChecked)
-            //     this.s_ProductDetail.ArrestProductDetailinsAll(x).subscribe()
-            // })
+  async pageChanges(event: any) {
+    const list = await this.lawbreaker.slice(event.startIndex - 1, event.endIndex);
+    this.setItemFormArray(list, 'Lawbreaker');
+    this.showLawbreakerDetail = false;
+  }
 
-            // if (product.value)
-            //   this.s_ProductService.ArrestProductinsAll(product.value).subscribe();
+  closeLawbreakerDetail() {
+    let law = this.Lawbreaker;
+    law.value.map(item => item.IsChecked = Acceptability.INACCEPTABLE);
+    law.patchValue(law.value);
+    this.showLawbreakerDetail = false;
+  }
 
-            // if (lawDesc)
-            //   this.s_Lawbreaker.ArrestLawbreakerinsAll().subscribe();
+  close(e: any) {
+    // let law = this.Lawbreaker;
+    let law = this.Lawbreaker.value.filter(x => x.IsChecked == Acceptability.ACCEPTABLE);
 
-         } else if (!this.arrestCode && this.mode == 'C') {
+    if (!law) return;
 
-            let _arrestCode;
-            let _indictmentID: string;
-            let _isSuccess: boolean;
+    this.OutputLawbreaker.emit(...law);
+
+    this.c.emit(e);
+  }
+
+  // getTransactionRunning() {
+  //   this.s_transactionRunning
+  //     .TransactionRunninggetByCon(this.runningTable, this.runningOfficeCode)
+  //     .takeUntil(this.destroy$)
+  //     .subscribe((x: TransactionRunning[]) => {
+  //       let _arrestCode: string;
+  //       if (x.length) {
+  //         let tr = x.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
+  //         let str = '' + (tr.RunningNo + 1)
+  //         let pad = '00000';
+  //         let ans = pad.substring(0, pad.length - str.length) + str
+  //         _arrestCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
+
+  //         this.s_transactionRunning.
+  //           TransactionRunningupdByCon(tr.RunningID.toString())
+  //           .takeUntil(this.destroy$)
+  //           .subscribe(y => {
+  //             if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+
+  //             this.insertArrest(_arrestCode);
+  //           })
+
+  //       } else {
+  //         this.s_transactionRunning
+  //           .TransactionRunninginsAll(this.runningOfficeCode, this.runningTable, this.runningPrefix)
+  //           .takeUntil(this.destroy$)
+  //           .subscribe(y => {
+  //             if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+
+  //             let ans = '00001'
+  //             let year = ((new Date).getFullYear() + 543).toString()
+  //             year = year.substring(2, 4);
+  //             _arrestCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+
+  //             this.insertArrest(_arrestCode);
+  //           })
+  //       }
+  //     })
+  // }
+
+  // insertArrest(arrestCode: string) {
+  //   if (!arrestCode) { this.saveFail(); return; };
+
+  //   this.obArrest
+  //     .takeUntil(this.destroy$)
+  //     .subscribe((a: fromModel.Arrest) => {
+  //       a.ArrestCode = arrestCode;
+  //       if (this.isObject(a.ArrestDate)) {
+  //         let arrestDate = getDateMyDatepicker(a.ArrestDate);
+  //         a.ArrestDate = convertDateForSave(arrestDate);
+  //       }
+  //       if (this.isObject(a.OccurrenceDate)) {
+  //         let occurrenceDate = getDateMyDatepicker(a.OccurrenceDate);
+  //         a.OccurrenceDate = convertDateForSave(occurrenceDate);
+  //       }
+
+  //       let newArrest = {
+  //         ArrestCode: a.ArrestCode,
+  //         ArrestDate: a.ArrestDate,
+  //         ArrestTime: a.ArrestTime,
+  //         OccurrenceDate: a.OccurrenceDate,
+  //         OccurrenceTime: a.OccurrenceTime,
+  //         ArrestStationCode: a.ArrestStationCode,
+  //         ArrestStation: a.ArrestStation,
+  //         HaveCulprit: a.HaveCulprit,
+  //         Behaviour: a.Behaviour,
+  //         Testimony: a.Testimony,
+  //         Prompt: a.Prompt,
+  //         IsMatchNotice: a.IsMatchNotice,
+  //         ArrestDesc: a.ArrestDesc,
+  //         NoticeCode: a.NoticeCode,
+  //         InvestigationSurveyDocument: a.InvestigationSurveyDocument,
+  //         InvestigationCode: a.InvestigationCode,
+  //         IsActive: a.IsActive,
+  //         ArrestLocale: a.ArrestLocale
+  //           .map(x => {
+  //             x.ArrestCode = a.ArrestCode;
+  //             return x;
+  //           }),
+  //         ArrestStaff: a.ArrestStaff
+  //           .filter(x => x.IsModify != 'd')
+  //           .map(x => {
+  //             x.ArrestCode = a.ArrestCode;
+  //             return x;
+  //           })
+  //       }
+
+  //       console.log('Arrest : ', JSON.stringify(newArrest));
+
+  //       this.s_arrest.ArrestinsAll(newArrest)
+  //         .takeUntil(this.destroy$)
+  //         .subscribe(x => {
+  //           if (!this.checkIsSuccess(x)) { this.saveFail(); return; };
+
+  //           this.insertArrestIndictment(arrestCode);
+  //         },
+  //           () => { this.saveFail(); return; });
+  //     })
+  // }
+
+  // insertArrestIndictment(arrestCode: string) {
+  //   this.obArrestIndictment
+  //     .takeUntil(this.destroy$)
+  //     .subscribe((indictment: fromModel.ArrestIndictment[]) => {
+  //       indictment.map(y => {
+
+  //         y.ArrestCode = arrestCode;
+
+  //         console.log('ArrestIndictment : ', JSON.stringify(y));
+
+  //         this.s_Indictment.ArrestIndictmentinsAll(y)
+  //           .takeUntil(this.destroy$)
+  //           .subscribe(x => {
+  //             if (!this.checkIsSuccess(x)) { this.saveFail(); return; };
+
+  //             this.insertArrestIndictmentDetail(arrestCode, x.IndictmentID);
+
+  //             this.insertArrestLawbreaker(arrestCode);
+  //           },
+  //             () => { this.saveFail(); return; });
+  //       })
+  //     })
+  // }
+
+  // insertArrestIndictmentDetail(arrestCode: string, indictmentID: number) {
+  //   let indictmentDetail = new fromModel.ArrestIndictmentDetail();
+  //   let lawbreaker = this.Lawbreaker;
+  //   let _lawbreaker = lawbreaker.value.find(x => x.IsChecked == Acceptability.ACCEPTABLE) as fromModel.ArrestLawbreaker;
+  //   indictmentDetail.IndictmentID = indictmentID;
+  //   indictmentDetail.LawbreakerID = _lawbreaker.LawbreakerID;
+  //   indictmentDetail.IsActive = 1;
+  //   // indictmentDetail.LawsuitType;
+  //   // indictmentDetail.LawsuitEnd;
+  //   console.log('ArrestIndictmentDetail : ', JSON.stringify(indictmentDetail));
+
+  //   this.s_IndictmentDetail
+  //     .ArrestIndicmentDetailinsAll(indictmentDetail)
+  //     .takeUntil(this.destroy$)
+  //     .subscribe(x => {
+  //       if (!this.checkIsSuccess(x)) { this.saveFail(); return; }
+
+  //       this.insertArrestProduct(arrestCode, x.IndictmentDetailID);
+  //     },
+  //       () => { this.saveFail(); return; })
+  // }
+
+  // async insertArrestProduct(arrestCode: string, indictmentDetailID: number) {
+  //   let product: fromModel.ArrestProduct[] = this.Product.value;
+  //   let productNoId: fromModel.ArrestProduct[] = this.filterProductNoId(this.Product.value);
+
+  //   if (!productNoId.length) return;
+
+  //   product.map(w => {
+  //     w.ArrestCode = arrestCode;
+  //     w.GroupCode = w.GroupCode || '1';
+  //     w.IsDomestic = w.IsDomestic || '1';
+  //     w.ProductDesc = this.isObject(w.ProductDesc) ? w.ProductDesc['ProductDesc'] : w.ProductDesc;
+
+  //     console.log('ArrestProduct : ', JSON.stringify(w));
+
+  //     this.s_ProductService
+  //       .ArrestProductinsAll(w)
+  //       .takeUntil(this.destroy$)
+  //       .subscribe(x => {
+  //         if (!this.checkIsSuccess(x)) { this.saveFail(); return; }
+
+  //         this.insertArrestProductDetail(indictmentDetailID, x.ProductID, w);
+  //       },
+  //         () => { this.saveFail(); return; });
+  //   })
+  // }
+
+  insertArrestProductDetail(indictmentDetailID: number, productId: number, productNoId: fromModel.ArrestProduct) {
+    if (!productNoId.IsChecked) { return }
+
+    let pd = new fromModel.ArrestProductDetail();
+
+    pd.ProductID = productId;
+    pd.IsProdcutCo = '1';
+    pd.Qty = productNoId.Qty;
+    pd.QtyUnit = productNoId.QtyUnit;
+    pd.Size = productNoId.Size || '0';
+    pd.SizeUnit = productNoId.SizeUnitName || '-';
+    pd.Volume = productNoId.NetVolume;
+    pd.VolumeUnit = productNoId.NetVolumeUnit;
+    pd.MistreatRate = '';
+    pd.Fine = '';
+    pd.IndictmentDetailID = indictmentDetailID;
+    pd.ProductDesc = productNoId.ProductDesc;
+    pd.IsActive = 1;
+
+    console.log('ProductDetail : ', JSON.stringify(pd));
+
+    this.s_ProductDetail
+      .ArrestProductDetailinsAll(pd)
+      .takeUntil(this.destroy$)
+      .subscribe(y => {
+        if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+      },
+        () => { this.saveFail(); return; });
+  }
+
+  insertArrestLawbreaker(arrestCode) {
+    let lawbreaker = this.Lawbreaker.value.find(x => x.IsChecked);
+    lawbreaker.ArrestCode = arrestCode;
 
 
-            // if (!_arrestCode) { this.saveFail(); return; };
+    this.s_Lawbreaker
+      .ArrestLawbreakerinsAll(lawbreaker)
+      .takeUntil(this.destroy$)
+      .subscribe(y => {
+        if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+      },
+        () => { this.saveFail(); return; });
+  }
 
-            // this.obArrest
-            //    .takeUntil(this.destroy$)
-            //    .subscribe((arrest: fromModel.Arrest) => {
-            //       arrest.ArrestCode = _arrestCode;
-            //       this.s_arrest.ArrestinsAll(arrest)
-            //          .takeUntil(this.destroy$)
-            //          .subscribe(x => { _isSuccess = this.checkIsSuccess(x) },
-            //             () => { _isSuccess = this.saveFail(); return; });
-            //    })
+  isObject = (obj) => obj === Object(obj);
 
-            // if (!_isSuccess) { this.saveFail(); return; };
+  saveFail() {
+    alert(Message.saveFail);
+    return false;
+  }
 
-            // this.obArrestIndictment
-            //    .takeUntil(this.destroy$)
-            //    .subscribe((indictment: fromModel.ArrestIndictment[]) => {
-            //       indictment.map(x => {
-            //          x.ArrestCode = _arrestCode;
-            //          this.s_Indictment.ArrestIndictmentinsAll(x)
-            //             .takeUntil(this.destroy$)
-            //             .subscribe(x => {
-            //                _isSuccess = this.checkIsSuccess(x);
-            //                _indictmentID = x.IndictmentID;
-            //             },
-            //                () => { _isSuccess = this.saveFail(); return; });
-            //       })
-            //    })
-
-            // if (!_isSuccess) { this.saveFail(); return; }
-
-
-         } else if (this.mode == 'U') {
-
-         }
-
-         // this.c.emit(e);
-      }
-   }
-
-   // getTransactionRunning(): string {
-   //    this.s_transactionRunning
-   //       .TransactionRunninggetByCon(this.runningTable, this.runningOfficeCode)
-   //       .takeUntil(this.destroy$)
-   //       .subscribe((x: TransactionRunning[]) => {
-   //          let _arrestCode: string;
-   //          if (x.length) {
-   //             let tr = x.sort((a, b) => {
-   //                if (a.RunningID > b.RunningID) return -1; // desc
-   //             })
-   //             let str = '' + (tr[0].RunningNo + 1)
-   //             let pad = '00000';
-   //             let ans = pad.substring(0, pad.length - str.length) + str
-   //             _arrestCode = `${tr[0].RunningPrefix}${tr[0].RunningOfficeCode}${tr[0].RunningYear}${ans}`
-   //          } else {
-   //             this.s_transactionRunning
-   //                .TransactionRunninginsAll(this.runningOfficeCode, this.runningTable, this.runningPrefix)
-   //                .takeUntil(this.destroy$)
-   //                .subscribe(y => {
-   //                   let ans = '00001'
-   //                   let year = ((new Date).getFullYear() + 543).toString()
-   //                   year = year.substring(2, 4);
-   //                   _arrestCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
-   //                })
-   //          }
-   //          return _arrestCode;
-   //       })
-   // }
-
-   insertArrestIndictment() {
-      
-   }
-
-   saveFail() {
-      alert(Message.saveFail);
-      return false;
-   }
-
-   checkIsSuccess(res: any) {
-      switch (res.IsSuccess) {
-         case 'True':
-         case true:
-            return true;
-         default:
-            return false;
-      }
-   }
+  checkIsSuccess(res: any) {
+    switch (res.IsSuccess) {
+      case 'True':
+      case true:
+        return true;
+      default:
+        return false;
+    }
+  }
 }

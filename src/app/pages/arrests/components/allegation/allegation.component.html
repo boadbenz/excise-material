@@ -12,7 +12,7 @@
     <div *ngIf="card1" class="card-body">
       <div class="row">
         <label for="" class="col-lg-2 col-sm-4 control-label">ฐานความผิดมาตรา :</label>
-        <div class="form-group col-lg-4 col-md-7 col-sm-8" >
+        <div class="form-group col-lg-4 col-md-7 col-sm-8">
           <input formControlName="SubSectionType" type="text" class="form-control form-control-sm" [readOnly]="showEditField">
           <a href="javaScript:void(0);" class="more text-secondary" (click)="!showEditField && openModal(allegation)">
             <i class="ti-more-alt" aria-hidden="true"></i>
@@ -44,21 +44,84 @@
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
       <div class="card-actions">
+        <a class="" (click)="cardProduct = !cardProduct">
+          <i class="fa" [ngClass]="{'fa-chevron-down': cardProduct, 'fa-chevron-up': !cardProduct}"></i>
+        </a>
+      </div>
+      <h4 class="card-title m-b-0">ของกลาง</h4>
+    </div>
+    <div *ngIf="cardProduct" class="card-body">
+
+      <div class="table-responsive">
+        <table class="table table-sm table-striped table-set-border">
+          <thead>
+            <tr>
+              <th class="text-center">ลำดับ</th>
+              <th>ของกลาง</th>
+              <th>จำนวน</th>
+              <th>หน่วย</th>
+              <th>ปริมาณสุทธิ</th>
+              <th>หน่วย</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of ArrestProduct.controls; let i=index;" [formGroupName]="i" [ngSwitch]="item.get('IsModify').value">
+              <td *ngSwitchCase="'c','r'" class="text-center">{{item.get('RowId').value}}</td>
+              <td *ngSwitchCase="'c','r'" style="max-width: 200px;">
+                {{item.get('ProductDesc').value}}
+              </td>
+              <td *ngSwitchCase="'c','r'" style="max-width: 50px;">
+                <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" required
+                  [attr.disabled]="showEditField ? '' : null">
+              </td>
+              <td *ngSwitchCase="'c','r'">
+                <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                  required [attr.disabled]="showEditField ? '' : null">
+                  <option value="" disabled selected></option>
+                  <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                </select>
+              </td>
+              <td *ngSwitchCase="'c','r'" style="max-width: 50px;">
+                <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
+                  [attr.disabled]="showEditField ? '' : null">
+              </td>
+              <td *ngSwitchCase="'c','r'">
+                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                  [attr.disabled]="showEditField ? '' : null">
+                  <option value="" selected disabled></option>
+                  <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                </select>
+              </td>
+              <td *ngSwitchCase="'c','r'">
+                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
+                  <i class="fa fa-trash-o fa-lg"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+      <div class="card-actions">
         <a class="" (click)="card2 = !card2">
           <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>
         </a>
       </div>
-      <h4 class="card-title m-b-0">รายละเอียดข้อกล่าวหา</h4>
+      <h4 class="card-title m-b-0">ผู้ต้องหา</h4>
     </div>
     <div *ngIf="card2" class="card-body">
       <div class="row form-group">
         <div class="col-lg-10 col-md-9 col-sm-8"></div>
         <div class="col-lg-2 col-md-3 col-sm-4">
-          <button type="button" class="btn btn-block btn-themecolor" (click)="openModal(allegationDetail)" 
-          [disabled]="showEditField">เพิ่มรายการ</button>
+          <button type="button" class="btn btn-block btn-themecolor" (click)="openModal(allegationDetail)" [disabled]="showEditField">เพิ่มรายการ</button>
 
           <ng-template #allegationDetail let-c="close" let-d="dismiss">
-            <app-allegation-detail-modal (c)="modal.close()" (d)="modal.dismiss()"></app-allegation-detail-modal>
+            <app-allegation-detail-modal (c)="modal.close()" (d)="modal.dismiss()" (OutputLawbreaker)="addArrestLawbreaker($event)"></app-allegation-detail-modal>
           </ng-template>
         </div>
       </div>
@@ -72,30 +135,22 @@
               <th>ประเภทบุคคล</th>
               <th>หมายเลขอ้างอิง</th>
               <th>ชื่อ</th>
-              <th>ของกลาง</th>
-              <th></th>
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            <!-- <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <th>
-                <a class="text-danger" *ngIf="!showEditField" href="javaScript:void(0);">
-                  <i class="fa fa-edit fa-lg"></i>
-                </a>
-              </th>
-              <td>
-                <a class="text-warning" *ngIf="!showEditField" href="javaScript:void(0);">
+          <tbody formArrayName="ArrestLawbreaker">
+            <tr *ngFor="let item of ArrestLawbreaker.controls; let i=index;" [formGroupName]="i">
+              <td class="text-center">{{item.get('RowId').value}}</td>
+              <td>{{item.get('LawbreakerTypeName').value}}</td>
+              <td>{{item.get('EntityTypeName').value}}</td>
+              <td>{{item.get('ReferenceID').value}}</td>
+              <td>{{item.get('LawbreakerFullName').value}}</td>
+              <td class="text-center">
+                <a href="javaScript:void(0);" class="text-warning text-secondary">
                   <i class="fa fa-trash-o fa-lg"></i>
                 </a>
               </td>
-            </tr> -->
+            </tr>
           </tbody>
         </table>
       </div>

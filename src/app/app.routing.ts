@@ -58,6 +58,7 @@ export const routes: Routes = [
     }, {
         path: 'fine', component: LayoutComponent,
         children: [
+            { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
             { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
         ]

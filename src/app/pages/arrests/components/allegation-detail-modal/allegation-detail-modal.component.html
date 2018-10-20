@@ -1,7 +1,13 @@
 <div class="modal-header bg-theme">
   <div class="row">
     <div class="col-lg-5">
-      <h4 class="modal-title text-white">รายละเอียดข้อกล่าวหา</h4>
+      <!-- <h4 class="modal-title text-white">รายละเอียดข้อกล่าวหา</h4> -->
+      <h4 class="modal-title text-white">เพิ่มผู้ต้องหา
+        <a href="javaScript:void(0);" class="btn btn-ghost" (click)="dismiss('Cross click')" [routerLink]="['/arrest/lawbreaker/C/NEW']">
+          <i class="ti-plus"></i>
+          สร้างข้อมูล
+        </a>
+      </h4>
     </div>
     <div class="col-lg-5 col-8">
       <form autocomplete="off" class="app-search" #searchFrom="ngForm" (ngSubmit)="onSearchByKey(searchFrom.value)">
@@ -105,7 +111,7 @@
                 <th class="text-center">จำนวนครั้งการกระทำผิด</th>
                 <th></th>
               </tr>
-            </thead>  
+            </thead>
             <tbody formArrayName="Lawbreaker">
               <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
                 <td class="text-center">
@@ -116,7 +122,7 @@
                 <td class="text-center">{{item.get('RowId').value}}</td>
                 <td>{{item.get('LawbreakerTypeName').value}}</td>
                 <td>{{item.get('EntityTypeName').value}}</td>
-                <td>{{item.get('ReferenceNo').value}}</td>
+                <td>{{item.get('ReferenceID').value}}</td>
                 <td>{{item.get('LawbreakerFullName').value}}</td>
                 <td class="text-center">{{item.get('ResultCount').value | async}}</td>
                 <td class="text-center">
@@ -135,7 +141,7 @@
         </app-pagination-table>
       </div>
     </div>
-
+    <!-- 
     <div class="card card-outline-bluish unset-radius m-b-0">
       <div class="card-header unset-radius">
         <div class="card-actions">
@@ -212,14 +218,14 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 
 </div>
 <div class="modal-footer">
-  <div class="col-lg-2 col-4">
+  <!-- <div class="col-lg-2 col-4">
     <button type="button" class="btn btn-block text-white" style="background-color: #f47023" (click)="close('Save click')">ลบ</button>
-  </div>
+  </div> -->
   <div class="col-lg-2 col-4">
     <button type="button" class="btn btn-block btn-themecolor" (click)="close('Save click')">บันทึก</button>
   </div>
