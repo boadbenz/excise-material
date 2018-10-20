@@ -95,7 +95,8 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         await list.filter(item => item.IsActive == 1).map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;
-            item.NoticeDate = toLocalShort(item.NoticeDate);
+            item.NoticeDateString = toLocalShort(item.NoticeDate);
+            item.NoticeDate = item.NoticeDate;
             item.ArrestNoticeStaff.map(s => s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`);
             item.ArrestNoticeSuspect.map(s => s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`);
         })
@@ -170,6 +171,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
                 IsChecked: item.IsChecked,
                 RowId: item.RowId,
                 NoticeCode: item.NoticeCode,
+                NoticeDateString: item.NoticeDateString,
                 NoticeDate: item.NoticeDate,
                 ArrestNoticeStaff: this.fb.array(item.ArrestNoticeStaff),
                 ArrestNoticeSuspect: this.fb.array(item.ArrestNoticeSuspect)

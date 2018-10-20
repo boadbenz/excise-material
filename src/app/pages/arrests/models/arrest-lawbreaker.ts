@@ -56,11 +56,13 @@ export class ArrestLawbreaker {
     CompanyFullName: string;
     EntityTypeName: string;
     LawbreakerTypeName: string;
+    ReferenceID: string;
     ProductID: string;
     ProductName: string;
-    IsChecked: boolean;
+    IsChecked:  Acceptability;
     RowId: number;
     IsNewItem: boolean;
+    ResultCount: any;
 }
 
 export class ArrestLawbreakerAllegation {

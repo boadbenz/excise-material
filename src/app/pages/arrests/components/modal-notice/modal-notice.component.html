@@ -112,13 +112,10 @@
                                 <input type="checkbox" formControlName="IsChecked" [id]="'lb' + i" [checked]="isCheckAll"
                                     class="filled-in chk-col-indigo">
                                 <label [for]="'lb' + i" class="m-0"></label>
-                                <!-- <input name="IsChecked" formControlName="IsChecked" type="radio" id="td{{i}}" (change)="setIsChecked(i)"
-                                    class="with-gap radio-col-indigo">
-                                <label for="td{{i}}" class="m-0"></label> -->
                             </td>
                             <td class="text-center">{{item.get('RowId').value}}</td>
                             <td>{{item.get('NoticeCode').value}}</td>
-                            <td>{{item.get('NoticeDate').value}}</td>
+                            <td>{{item.get('NoticeDateString').value}}</td>
                             <td>
                                 <div *ngFor="let staff of item.value.ArrestNoticeStaff;">{{staff.FullName}}</div>
                             </td>

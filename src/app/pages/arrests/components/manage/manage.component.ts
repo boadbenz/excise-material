@@ -33,7 +33,10 @@ import { Store } from '@ngrx/store';
 import * as fromStore from '../../store';
 import * as fromModels from '../../models';
 import { ArrestsService } from '../../arrests.service';
-// import { Acceptability, Arrest } from '../../models';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { LoaderService } from 'app/core/loader/loader.service';
 
 @Component({
     selector: 'app-manage',
@@ -140,7 +143,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private sidebarService: SidebarService,
         private mainMasterService: MainMasterService,
         private store: Store<fromStore.AppState>,
-        private arrestService: ArrestsService
+        private arrestService: ArrestsService,
+        private loaderService: LoaderService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -153,16 +157,50 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
+        this.loaderService.show();
+
         this.sidebarService.setVersion('0.0.0.18');
         this.active_route();
         this.arrestFG = this.createForm();
         this.navigate_Service();
 
-        this.setStaffStore()
-        this.setOfficeStore()
-        this.setProductStore()
-        this.setProductUnitStore()
-        this.setRegionStore()
+        // await this.mainMasterService.MasStaffMaingetAll().then(x => this.typeheadStaff = x);
+        // await this.mainMasterService.MasOfficeMaingetAll().then(x => this.typeheadOffice = x);
+        // await this.mainMasterService.MasProductMaingetAll().then(x => this.typeheadProduct = x);
+        await this.mainMasterService.MasDutyUnitMaingetAll().then(x => this.typeheadProductUnit = x);
+        // await this.mainMasterService.MasDistrictMaingetAll().then(x => {
+        //     x.map(prov =>
+        //         prov.MasDistrict.map(dis =>
+        //             dis.MasSubDistrict.map(subdis => {
+        //                 this.typeheadRegion.push({
+        //                     SubdistrictCode: subdis.SubdistrictCode,
+        //                     SubdistrictNameTH: subdis.SubdistrictNameTH,
+        //                     DistrictCode: dis.DistrictCode,
+        //                     DistrictNameTH: dis.DistrictNameTH,
+        //                     ProvinceCode: prov.ProvinceCode,
+        //                     ProvinceNameTH: prov.ProvinceNameTH,
+        //                     ZipCode: null
+        //                 })
+        //             })
+        //         )
+        //     );
+        // });
+        this.loaderService.hide();
+
+        // Observable
+        //     .forkJoin(observables)
+        //     .do(() => this.loaderService.show())
+        //     .defaultIfEmpty([]) // or .toArray()
+        //     .mergeMap(results => Observable.of({
+        //         masStaff: results[0],
+        //         masOffice: results[1],
+        //         masProduct: results[2],
+        //         masDutyUnit: results[3],
+        //         masDistrict: results[4]
+        //     }))
+        //     .takeUntil(this.destroy$)
+        //     .do(() => this.loaderService.hide())
+        //     .subscribe(res => this.setMainMaster(res));
     }
 
     ngOnDestroy(): void {
@@ -173,7 +211,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     private createForm(): FormGroup {
         let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
         let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
-        let testCode = `test-${(new Date).getTime()}`;
         return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
             ArrestDate: new FormControl(ArrestDate, Validators.required),
@@ -190,7 +227,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestDesc: new FormControl('N/A'),
             NoticeCode: new FormControl(null, Validators.required),
             InvestigationSurveyDocument: new FormControl(null),
-            InvestigationCode: new FormControl(testCode, Validators.required),
+            InvestigationCode: new FormControl('NEW', Validators.required),
             IsActive: new FormControl(1),
             ArrestNotice: this.fb.array([]),
             ArrestStaff: this.fb.array([]),
@@ -317,53 +354,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         })
     }
-
-    private setOfficeStore() {
-        this.mainMasterService.MasOfficeMaingetAll()
-            .takeUntil(this.destroy$)
-            .subscribe((x: MasOfficeModel[]) => this.typeheadOffice = x);
-    }
-
-    private setStaffStore() {
-        this.mainMasterService.MasStaffMaingetAll()
-            .takeUntil(this.destroy$)
-            .subscribe((x: MasStaffModel[]) => this.typeheadStaff = x);
-    }
-
-    private setProductStore() {
-        this.mainMasterService.MasProductMaingetAll()
-            .takeUntil(this.destroy$)
-            .subscribe((x: MasProductModel[]) => this.typeheadProduct = x);
-    }
-
-    private setProductUnitStore() {
-        this.mainMasterService.MasDutyUnitMaingetAll()
-            .takeUntil(this.destroy$)
-            .subscribe((x: MasDutyProductUnitModel[]) => this.typeheadProductUnit = x);
-    }
-
-    private async setRegionStore() {
-        this.mainMasterService.MasDistrictMaingetAll()
-            .takeUntil(this.destroy$)
-            .subscribe((x: MasProvinceModel[]) => {
-                x.map(prov =>
-                    prov.MasDistrict.map(dis =>
-                        dis.MasSubDistrict.map(subdis => {
-                            this.typeheadRegion.push({
-                                SubdistrictCode: subdis.SubdistrictCode,
-                                SubdistrictNameTH: subdis.SubdistrictNameTH,
-                                DistrictCode: dis.DistrictCode,
-                                DistrictNameTH: dis.DistrictNameTH,
-                                ProvinceCode: prov.ProvinceCode,
-                                ProvinceNameTH: prov.ProvinceNameTH,
-                                ZipCode: null
-                            })
-                        })
-                    )
-                )
-            });
-    }
-
+    
     private getByCon(code: string) {
 
         this.arrestService.getByCon(code).then(async res => {
@@ -481,6 +472,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.fb.group({
                     ArrestCode: this.arrestCode,
                     NoticeCode: x.NoticeCode,
+                    NoticeDateString: x.NoticeDateString,
                     NoticeDate: x.NoticeDate,
                     IsModify: x.IsModify || 'c',
                     RowId: x.IsModify != 'd' && ++i,
@@ -635,7 +627,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             [`arrest/allegation`, 'C'],
             {
                 queryParams: {
-                    arrestCode: this.arrestCode == 'C' ? '' : this.arrestCode,
+                    arrestCode: this.arrestCode,
                     indictmentDetailId: '',
                     guiltbaseId: ''
                 }

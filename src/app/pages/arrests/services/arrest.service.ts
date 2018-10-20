@@ -26,7 +26,7 @@ export class ArrestService {
         return this.http.post(url, params).map(x => x.json());
     }
 
-    ArrestinsAll(Arrest: Arrest) {
+    ArrestinsAll(Arrest: any) {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestinsAll`;
         return this.http.post(url, params).map(x => x.json());

@@ -117,7 +117,7 @@
                         <tr *ngFor="let item of ArrestNotice.controls; let i=index" [formGroupName]="i" [ngSwitch]="item.get('IsModify').value">
                             <td *ngSwitchCase="'c','r'" class="text-center">{{item.get('RowId').value}}</td>
                             <td *ngSwitchCase="'c','r'">{{item.get('NoticeCode').value}}</td>
-                            <td *ngSwitchCase="'c','r'">{{item.get('NoticeDate').value}}</td>
+                            <td *ngSwitchCase="'c','r'">{{item.get('NoticeDateString').value}}</td>
                             <td *ngSwitchCase="'c','r'">
                                 <div *ngFor="let staff of item.value.ArrestNoticeStaff;">{{staff.FullName}}</div>
                             </td>

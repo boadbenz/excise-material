@@ -4,6 +4,7 @@ export class ArrestNotice {
     NoticeCode: string;
     NoticeStationCode: string;
     NoticeStation: string;
+    NoticeDateString: string;
     NoticeDate: string;
     NoticeTime: string;
     NoticeDue: number;

@@ -323,9 +323,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
+          <tr *ngFor="let item of AccusedTable; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
-            <td>{{item.LawBrakerName }} </td>
+            <td>{{item.AccusedName }} </td>
             <td class="text-center">{{item.PaymentFineAppointDate | date:'dd/MM/yyyy'}}</td>
             <td class="text-center">{{item.PaymentVatDate | date:'dd/MM/yyyy'}}</td>
             <td class="text-center">

@@ -1,15 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import 'rxjs/add/operator/takeUntil';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import * as fromModels from '../../models';
 import * as fromStore from '../../store';
 import { Store } from '@ngrx/store';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { MainMasterService } from 'app/services/main-master.service';
+import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
 
 @Component({
   selector: 'app-allegation',
@@ -17,6 +19,9 @@ import { SidebarService } from 'app/shared/sidebar/sidebar.component';
   styleUrls: ['./allegation.component.scss']
 })
 export class AllegationComponent implements OnInit, OnDestroy {
+
+  obArrest: Observable<fromModels.Arrest>;
+
   constructor(
     private modelService: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -24,8 +29,11 @@ export class AllegationComponent implements OnInit, OnDestroy {
     private router: Router,
     private fb: FormBuilder,
     private store: Store<fromStore.AppState>,
+    private s_mainMaster: MainMasterService,
     private sidebarService: SidebarService
   ) {
+    this.obArrest = store.select(s => s.arrest);
+
     this.navService.setPrintButton(false);
     this.navService.setPrevPageButton(true);
     this.navService.setNextPageButton(true);
@@ -37,36 +45,52 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   card1: boolean = true;
   card2: boolean = true;
+  cardProduct: boolean = true;
 
   // param: Params
   mode: string;
   arrestCode: string;
   indictmentDetailId: string;
   guiltbaseId: string;
+  typeheadProductUnit = new Array<MasDutyProductUnitModel>();
 
   modal: any;
   showEditField: boolean;
 
-  arrestIndictmentFG = this.fb.group({
-    IndictmentID: [''],
-    ArrestCode: ['', Validators.required],
-    GuiltBaseID: ['', Validators.required],
-    IsProve: ['1', Validators.required],
-    IsActive: ['1', Validators.required],
-    IsLawsuitComplete: ['0', Validators.required],
-    ArrestIndictmentDetail: [[]],
-    ArrestLawGuitbase: [[]],
+  get ArrestLawbreaker(): FormArray {
+    return this.arrestIndictmentFG.get('ArrestLawbreaker') as FormArray
+  }
 
-    IsModify: ['', Validators.required],
-    SubSectionType: ['', Validators.required],
-    GuiltBaseName: ['', Validators.required],
-    SectionNo: ['', Validators.required],
-    PenaltyDesc: ['', Validators.required],
-  });
+  get ArrestProduct(): FormArray {
+    return this.arrestIndictmentFG.get('ArrestProduct') as FormArray
+  }
+
+  arrestIndictmentFG: FormGroup
 
   async ngOnInit() {
 
     this.sidebarService.setVersion('0.0.0.18');
+
+    this.arrestIndictmentFG = this.fb.group({
+      IndictmentID: [''],
+      ArrestCode: ['', Validators.required],
+      GuiltBaseID: ['', Validators.required],
+      IsProve: ['1', Validators.required],
+      IsActive: ['1', Validators.required],
+      IsLawsuitComplete: ['0', Validators.required],
+      ArrestIndictmentDetail: [[]],
+      ArrestLawGuitbase: [[]],
+      ArrestProduct: this.fb.array([]),
+      ArrestLawbreaker: this.fb.array([]),
+
+      IsModify: ['', Validators.required],
+      SubSectionType: ['', Validators.required],
+      GuiltBaseName: ['', Validators.required],
+      SectionNo: ['', Validators.required],
+      PenaltyDesc: ['', Validators.required],
+    });
+
+    await this.setProductUnitStore();
 
     this.navService.showFieldEdit.takeUntil(this.destroy$).subscribe(p => this.showEditField = p.valueOf())
 
@@ -75,7 +99,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
       .takeUntil(this.destroy$)
       .subscribe(results => {
         this.mode = results.params.mode;
-        this.arrestCode = results.queryParams.arrestCode;
+        this.arrestCode = results.queryParams.arrestCode == 'NEW' ? '' : results.queryParams.arrestCode;
         this.indictmentDetailId = results.queryParams.indictmentDetailId;
         this.guiltbaseId = results.queryParams.guiltbaseId;
 
@@ -101,6 +125,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
             break;
         }
       });
+
+    this.setArrestFromStore();
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(status => {
       if (status) {
@@ -129,6 +155,44 @@ export class AllegationComponent implements OnInit, OnDestroy {
         this.router.navigate(['/arrest/manage', 'C', 'NEW']);
       }
     })
+  }
+
+  addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
+    let arrestLawbreaker = this.ArrestLawbreaker;
+    this.ArrestLawbreaker.push(
+      this.fb.group(lawbreaker)
+    )
+  }
+
+  private async setProductUnitStore() {
+    await this.s_mainMaster.masDutyUnitMaingetAll().then(res => {
+      this.typeheadProductUnit = res;
+    })
+  }
+
+  private setArrestFromStore() {
+    this.obArrest
+      .takeUntil(this.destroy$)
+      .subscribe((x: fromModels.Arrest) => {
+        if (!x) return;
+
+        let product = this.filterProductNoId(x.ArrestProduct);
+        console.log(product);
+
+        this.setItemFormArray(product, 'ArrestProduct');
+      })
+  }
+
+  private filterProductNoId(p: fromModels.ArrestProduct[]) {
+    return p.filter(y => y.IsModify != 'd' && y.ProductID == '');
+  }
+
+  private setItemFormArray(array: any[], formControl: string) {
+    if (array !== undefined && array.length) {
+      const itemFGs = array.map(item => this.fb.group(item));
+      const itemFormArray = this.fb.array(itemFGs);
+      this.arrestIndictmentFG.setControl(formControl, itemFormArray);
+    }
   }
 
   ngOnDestroy() {
@@ -169,7 +233,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     })
 
     this.store.dispatch(new fromStore.CreateArrestIndictment([this.arrestIndictmentFG.value]));
-        
+
   }
 
 }
