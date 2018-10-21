@@ -491,49 +491,49 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   //   })
   // }
 
-  insertArrestProductDetail(indictmentDetailID: number, productId: number, productNoId: fromModel.ArrestProduct) {
-    if (!productNoId.IsChecked) { return }
+  // insertArrestProductDetail(indictmentDetailID: number, productId: number, productNoId: fromModel.ArrestProduct) {
+  //   if (!productNoId.IsChecked) { return }
 
-    let pd = new fromModel.ArrestProductDetail();
+  //   let pd = new fromModel.ArrestProductDetail();
 
-    pd.ProductID = productId;
-    pd.IsProdcutCo = '1';
-    pd.Qty = productNoId.Qty;
-    pd.QtyUnit = productNoId.QtyUnit;
-    pd.Size = productNoId.Size || '0';
-    pd.SizeUnit = productNoId.SizeUnitName || '-';
-    pd.Volume = productNoId.NetVolume;
-    pd.VolumeUnit = productNoId.NetVolumeUnit;
-    pd.MistreatRate = '';
-    pd.Fine = '';
-    pd.IndictmentDetailID = indictmentDetailID;
-    pd.ProductDesc = productNoId.ProductDesc;
-    pd.IsActive = 1;
+  //   pd.ProductID = productId;
+  //   pd.IsProdcutCo = '1';
+  //   pd.Qty = productNoId.Qty;
+  //   pd.QtyUnit = productNoId.QtyUnit;
+  //   pd.Size = productNoId.Size || '0';
+  //   pd.SizeUnit = productNoId.SizeUnitName || '-';
+  //   pd.Volume = productNoId.NetVolume;
+  //   pd.VolumeUnit = productNoId.NetVolumeUnit;
+  //   pd.MistreatRate = '';
+  //   pd.Fine = '';
+  //   pd.IndictmentDetailID = indictmentDetailID;
+  //   pd.ProductDesc = productNoId.ProductDesc;
+  //   pd.IsActive = 1;
 
-    console.log('ProductDetail : ', JSON.stringify(pd));
+  //   console.log('ProductDetail : ', JSON.stringify(pd));
 
-    this.s_ProductDetail
-      .ArrestProductDetailinsAll(pd)
-      .takeUntil(this.destroy$)
-      .subscribe(y => {
-        if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
-      },
-        () => { this.saveFail(); return; });
-  }
+  //   this.s_ProductDetail
+  //     .ArrestProductDetailinsAll(pd)
+  //     .takeUntil(this.destroy$)
+  //     .subscribe(y => {
+  //       if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+  //     },
+  //       () => { this.saveFail(); return; });
+  // }
 
-  insertArrestLawbreaker(arrestCode) {
-    let lawbreaker = this.Lawbreaker.value.find(x => x.IsChecked);
-    lawbreaker.ArrestCode = arrestCode;
+  // insertArrestLawbreaker(arrestCode) {
+  //   let lawbreaker = this.Lawbreaker.value.find(x => x.IsChecked);
+  //   lawbreaker.ArrestCode = arrestCode;
 
 
-    this.s_Lawbreaker
-      .ArrestLawbreakerinsAll(lawbreaker)
-      .takeUntil(this.destroy$)
-      .subscribe(y => {
-        if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
-      },
-        () => { this.saveFail(); return; });
-  }
+  //   this.s_Lawbreaker
+  //     .ArrestLawbreakerinsAll(lawbreaker)
+  //     .takeUntil(this.destroy$)
+  //     .subscribe(y => {
+  //       if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+  //     },
+  //       () => { this.saveFail(); return; });
+  // }
 
   isObject = (obj) => obj === Object(obj);
 

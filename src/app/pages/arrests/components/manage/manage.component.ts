@@ -20,12 +20,7 @@ import { ArrestProduct, ArrestProductDetail } from '../../models/arrest-product'
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { MainMasterService } from 'app/services/main-master.service';
-// import { ArrestLocaleFormControl } from '../../models/arrest-locale';
 import { Message } from 'app/config/message';
-// import { ArrestNotice, ArrestNoticeStaff, ArrestNoticeSuspect } from '../../models/arrest-notice';
-// import { ArrestIndictment, ArrestIndictmentDetail } from '../../models/arrest-indictment';
-// import { ArrestLawbreaker } from '../../models/arrest-lawbreaker';
-// import { ArrestLawGuitbase, ArrestLawSubSectionRule, ArrestLawSubSection } from '../../models/arrest-law-guiltbase';
 import { ArrestStaff } from '../../models/arrest-staff';
 import { ArrestDocument } from '../../models/arrest-document';
 import { replaceFakePath } from 'app/config/dataString';
@@ -57,8 +52,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     card2: boolean = false;
     card3: boolean = false;
     card4: boolean = false;
-    card5: boolean = false;
-    card6: boolean = false;
+    card5: boolean = true;
+    card6: boolean = true;
     card7: boolean = false;
     card8: boolean = false;
 
@@ -163,44 +158,44 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.active_route();
         this.arrestFG = this.createForm();
         this.navigate_Service();
+        
+        // await this.mainMasterService.MasDutyUnitMaingetAll().then(x => this.typeheadProductUnit = x);
 
-        // await this.mainMasterService.MasStaffMaingetAll().then(x => this.typeheadStaff = x);
-        // await this.mainMasterService.MasOfficeMaingetAll().then(x => this.typeheadOffice = x);
-        // await this.mainMasterService.MasProductMaingetAll().then(x => this.typeheadProduct = x);
-        await this.mainMasterService.MasDutyUnitMaingetAll().then(x => this.typeheadProductUnit = x);
-        // await this.mainMasterService.MasDistrictMaingetAll().then(x => {
-        //     x.map(prov =>
-        //         prov.MasDistrict.map(dis =>
-        //             dis.MasSubDistrict.map(subdis => {
-        //                 this.typeheadRegion.push({
-        //                     SubdistrictCode: subdis.SubdistrictCode,
-        //                     SubdistrictNameTH: subdis.SubdistrictNameTH,
-        //                     DistrictCode: dis.DistrictCode,
-        //                     DistrictNameTH: dis.DistrictNameTH,
-        //                     ProvinceCode: prov.ProvinceCode,
-        //                     ProvinceNameTH: prov.ProvinceNameTH,
-        //                     ZipCode: null
-        //                 })
-        //             })
-        //         )
-        //     );
-        // });
+        const promises = [
+            await this.mainMasterService.MasStaffMaingetAll(),
+            await this.mainMasterService.MasOfficeMaingetAll(),
+            await this.mainMasterService.MasProductMaingetAll(),
+            await this.mainMasterService.MasDutyUnitMaingetAll(),
+            await this.mainMasterService.MasDistrictMaingetAll()
+        ]
+
+        Promise.all(promises)
+            .then(x => {
+                this.typeheadStaff = x[0]
+                this.typeheadOffice = x[1]
+                this.typeheadProduct = x[2]
+                this.typeheadProductUnit = x[3]
+                x[0].map(prov =>
+                    prov.MasDistrict.map(dis =>
+                        dis.MasSubDistrict.map(subdis => {
+                            this.typeheadRegion.push({
+                                SubdistrictCode: subdis.SubdistrictCode,
+                                SubdistrictNameTH: subdis.SubdistrictNameTH,
+                                DistrictCode: dis.DistrictCode,
+                                DistrictNameTH: dis.DistrictNameTH,
+                                ProvinceCode: prov.ProvinceCode,
+                                ProvinceNameTH: prov.ProvinceNameTH,
+                                ZipCode: null
+                            })
+                        })
+                    )
+                );
+            })
+            .catch((error) => {
+                console.log(error);
+                this.loaderService.hide();
+            })
         this.loaderService.hide();
-
-        // Observable
-        //     .forkJoin(observables)
-        //     .do(() => this.loaderService.show())
-        //     .defaultIfEmpty([]) // or .toArray()
-        //     .mergeMap(results => Observable.of({
-        //         masStaff: results[0],
-        //         masOffice: results[1],
-        //         masProduct: results[2],
-        //         masDutyUnit: results[3],
-        //         masDistrict: results[4]
-        //     }))
-        //     .takeUntil(this.destroy$)
-        //     .do(() => this.loaderService.hide())
-        //     .subscribe(res => this.setMainMaster(res));
     }
 
     ngOnDestroy(): void {
@@ -354,7 +349,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         })
     }
-    
+
     private getByCon(code: string) {
 
         this.arrestService.getByCon(code).then(async res => {
@@ -430,7 +425,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setItemFormArray(o.ArrestLocale, 'ArrestLocale');
             this.setItemFormArray(product, 'ArrestProduct');
             // this.setItemFormArray(indictment, 'ArrestIndictment');
-            this.setArrestIndictmentForm(indictment);
+            // this.setArrestIndictmentForm(indictment);
 
 
         })
@@ -628,7 +623,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             {
                 queryParams: {
                     arrestCode: this.arrestCode,
-                    indictmentDetailId: '',
+                    indictmentId: '',
                     guiltbaseId: ''
                 }
             });

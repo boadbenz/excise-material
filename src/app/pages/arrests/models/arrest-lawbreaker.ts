@@ -62,6 +62,7 @@ export class ArrestLawbreaker {
     IsChecked:  Acceptability;
     RowId: number;
     IsNewItem: boolean;
+    IsModify: string;
     ResultCount: any;
 }
 
