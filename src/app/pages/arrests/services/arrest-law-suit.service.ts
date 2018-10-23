@@ -1,11 +1,21 @@
 import { Injectable } from "@angular/core";
 import { appConfig } from "app/app.config";
 import { HttpService } from "app/core/http.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-@Injectable() 
+@Injectable()
 export class ArrestLawSuitService {
 
-    constructor(private http: HttpService) { }
+    constructor(private http: HttpService,
+        private httpClient: HttpClient
+    ) { }
+
+    private httpOptions = {
+        headers: new HttpHeaders(
+            {
+                'Content-Type': 'application/json'
+            })
+    };
 
     ArrestLawsuitgetByLawbreakerID(LawbreakerID: string) {
         const params = { LawbreakerID };

@@ -4,6 +4,7 @@ import { ArrestLocale, } from './arrest-locale';
 import { ArrestLawbreaker } from './arrest-lawbreaker';
 import { ArrestProduct } from './arrest-product';
 import { ArrestDocument } from './arrest-document';
+import { ArrestNotice } from './arrest-notice';
 
 export class Arrest {
     RowsId: number;
@@ -24,6 +25,7 @@ export class Arrest {
     InvestigationSurveyDocument: string;
     InvestigationCode: string;
     IsActive: number;
+    ArrestNotice: Array<ArrestNotice>;
     ArrestStaff: Array<ArrestStaff>;
     ArrestLocale: Array<ArrestLocale>;
     ArrestIndictment: Array<ArrestIndictment>;

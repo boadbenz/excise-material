@@ -22,24 +22,24 @@ export class ArrestProductService {
     ArrestProductgetByArrestCode(ArrestCode: string) {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestProductgetByArrestCode`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    ArrestProductinsAll(ArrestProduct: ArrestProduct) {
+    ArrestProductinsAll(ArrestProduct: any) {
         const params = ArrestProduct;
         const url = `${appConfig.api7788}/ArrestProductinsAll`;
         return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    ArrestProductupdByCon(ArrestProduct: ArrestProduct) {
+    ArrestProductupdByCon(ArrestProduct: any) {
         const params = ArrestProduct;
         const url = `${appConfig.api7788}/ArrestProductupdByCon`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     ArrestProductupdDelete(ProductID: string) {
         const params = { ProductID };
         const url = `${appConfig.api7788}/ArrestProductupdDelete`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 }

@@ -157,7 +157,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
     async close(e: any) {
         const n: ArrestNotice[] = this.ArrestNotice.value.filter(item => item.IsChecked);
-        if (n) {
+        if (n.length) {
             this.outputNotice.emit(n);
             this.c.emit(e);
         }

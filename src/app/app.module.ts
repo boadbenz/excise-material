@@ -26,6 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import * as fromArrestReducers from './pages/arrests/store/reducers/';
 import { TransactionRunningService } from './services/transaction-running.service';
+import { MasDocumentMainService } from './services/mas-document-main.service';
 
 @NgModule({
     declarations: [
@@ -61,6 +62,7 @@ import { TransactionRunningService } from './services/transaction-running.servic
         NavigationService,
         SidebarService,
         MainMasterService,
+        MasDocumentMainService,
         TransactionRunningService
     ],
     exports: [MatAutocompleteModule],

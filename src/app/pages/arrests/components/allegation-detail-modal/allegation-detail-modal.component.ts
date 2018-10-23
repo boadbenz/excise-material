@@ -141,32 +141,32 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     // await this.setProductUnitStore();
   }
 
-  private getArrestProduct(arrestCode: string) {
-    this.s_ProductService.ArrestProductgetByArrestCode(arrestCode)
-      .takeUntil(this.destroy$)
-      .subscribe(x => {
-        if (x) {
-          this.setItemFormArray(x, 'Product');
-        } else {
-          this.setArrestFromStore();
-        }
-      })
-  }
+  // private getArrestProduct(arrestCode: string) {
+  //   this.s_ProductService.ArrestProductgetByArrestCode(arrestCode)
+  //     .takeUntil(this.destroy$)
+  //     .subscribe(x => {
+  //       if (x) {
+  //         this.setItemFormArray(x, 'Product');
+  //       } else {
+  //         this.setArrestFromStore();
+  //       }
+  //     })
+  // }
 
-  private async getArrestIndictmentDetail(IndictmentDetailID: string, arrestCode: string) {
-    let indicitDetail: fromModel.ArrestIndictmentDetail[] =
-      await this.s_IndictmentDetail.ArrestIndicmentDetailgetByCon(IndictmentDetailID).toPromise();
+  // private async getArrestIndictmentDetail(IndictmentDetailID: string, arrestCode: string) {
+  //   let indicitDetail: fromModel.ArrestIndictmentDetail[] =
+  //     await this.s_IndictmentDetail.ArrestIndicmentDetailgetByCon(IndictmentDetailID).toPromise();
 
-    let product: fromModel.ArrestProduct[] =
-      await this.s_ProductService.ArrestProductgetByArrestCode(arrestCode).toPromise();
+  //   let product: fromModel.ArrestProduct[] =
+  //     await this.s_ProductService.ArrestProductgetByArrestCode(arrestCode).toPromise();
 
-    indicitDetail.map(x => {
-      // let newProduct = [...x.ArrestProductDetail, ...product];
-      // let unique = newProduct.filter((value, index, self) => {
-      //   return self.filter.indexOf(value.ProductID) === index;
-      // }); // returns ['a', 1, 2, '1']
-    })
-  }
+  //   indicitDetail.map(x => {
+  //     // let newProduct = [...x.ArrestProductDetail, ...product];
+  //     // let unique = newProduct.filter((value, index, self) => {
+  //     //   return self.filter.indexOf(value.ProductID) === index;
+  //     // }); // returns ['a', 1, 2, '1']
+  //   })
+  // }
 
   private setArrestFromStore() {
     this.obArrest

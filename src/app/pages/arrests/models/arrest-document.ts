@@ -7,6 +7,7 @@ export class ArrestDocument {
     public DataSource = '';
     public DocumentType = '';
     public DocumentName = '';
+    
     public IsActive : number;
     public IsNewItem: boolean;
     public IsModify: string;

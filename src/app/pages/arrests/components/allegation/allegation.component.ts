@@ -81,9 +81,11 @@ export class AllegationComponent implements OnInit, OnDestroy {
   // param: Params
   mode: string;
   arrestCode: string;
+  newArrestCode: string;
   indictmentId: string;
   guiltbaseId: string;
   typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+  _isSuccess: boolean = false;
 
   modal: any;
   showEditField: boolean;
@@ -100,7 +102,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.18');
+    this.sidebarService.setVersion('0.0.0.19');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -134,7 +136,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
       .takeUntil(this.destroy$)
       .subscribe(results => {
         this.mode = results.params.mode;
-        this.arrestCode = results.queryParams.arrestCode == 'NEW' ? '' : results.queryParams.arrestCode;
+        this.arrestCode = results.queryParams.arrestCode;
         this.indictmentId = results.queryParams.indictmentId;
         this.guiltbaseId = results.queryParams.guiltbaseId;
 
@@ -191,15 +193,16 @@ export class AllegationComponent implements OnInit, OnDestroy {
         this.router.navigate(['/lawsuit/manage', 'C', this.arrestIndictmentFG.value.IndictmentID]);
       }
     })
-    this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
+    this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
         await this.navService.setOnPrevPage(false);
-        this.router.navigate(['/arrest/manage', this.mode, this.arrestCode]);
+        this.router.navigate(['/arrest/manage', this.mode, this.newArrestCode || this.arrestCode]);
       }
     })
   }
 
   addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
+   
     this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
   }
 
@@ -241,10 +244,6 @@ export class AllegationComponent implements OnInit, OnDestroy {
     await this.s_mainMaster.masDutyUnitMaingetAll().then(res => {
       this.typeheadProductUnit = res;
     })
-  }
-
-  private getArrestFormStore() {
-
   }
 
   private filterProductIsModify(p: fromModels.ArrestProduct[]) {
@@ -290,9 +289,6 @@ export class AllegationComponent implements OnInit, OnDestroy {
       SectionNo: ArrestLawSubSectionRule.SectionNo,
       PenaltyDesc: ArrestLawPenalty.PenaltyDesc,
     })
-
-    // this.store.dispatch(new fromStore.CreateArrestIndictment([this.arrestIndictmentFG.value]));
-
   }
 
 
@@ -306,10 +302,10 @@ export class AllegationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.arrestCode && this.mode == 'C') {
+    if (this.arrestCode != 'NEW' && this.mode == 'C') {
       this.createWithArrestCode();
 
-    } else if (!this.arrestCode && this.mode == 'C') {
+    } else if (this.arrestCode == 'NEW' && this.mode == 'C') {
       this.createWithOutArrestCode();
 
     } else if (this.mode == 'R') {
@@ -328,10 +324,10 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
         if (confirm(Message.confirmAction)) {
           this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId).then(x => {
-            if (this.checkIsSuccess(x)) { 
+            if (this.checkIsSuccess(x)) {
               alert(Message.delComplete);
               this.router.navigate(['/arrest/manage', this.mode, this.arrestCode]);
-             }
+            }
           })
         }
       })
@@ -341,56 +337,78 @@ export class AllegationComponent implements OnInit, OnDestroy {
   private async createWithArrestCode() {
     this.loaderService.show();
     await this.insertArrestIndictment(this.arrestCode)
+    if (this._isSuccess) {
+      alert(Message.saveComplete)
+    } else {
+      alert(Message.saveFail)
+    }
     this.loaderService.hide();
   }
 
-  private createWithOutArrestCode() {
-    this.getTransactionRunning();
+  private async createWithOutArrestCode() {
+    this.loaderService.show();
+    await this.getTransactionRunning();
+    if (this._isSuccess) {
+      alert(Message.saveComplete)
+    } else {
+      alert(Message.saveFail)
+    }
+    this.loaderService.hide();
   }
 
-  private revised() {
-    this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId).then(y => {
+  private async revised() {
+    this.loaderService.show();
+    await this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId).then(y => {
       if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
 
       this.insertArrestIndictment(this.arrestCode)
     })
+    if (this._isSuccess) {
+      alert(Message.saveComplete)
+    } else {
+      alert(Message.saveFail)
+    }
+    this.loaderService.hide();
   }
 
-  private getTransactionRunning() {
-    this.s_transactionRunning
+  private async getTransactionRunning() {
+
+    let resRunning: any[] = await this.s_transactionRunning
       .TransactionRunninggetByCon(this.runningTable, this.runningOfficeCode)
-      .then((x: TransactionRunning[]) => {
-        let _arrestCode: string;
-        if (x.length) {
-          let tr = x.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
-          let str = '' + (tr.RunningNo + 1)
-          let pad = '00000';
-          let ans = pad.substring(0, pad.length - str.length) + str
-          _arrestCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
+      .then(async (x: TransactionRunning[]) => x);
 
-          this.s_transactionRunning.
-            TransactionRunningupdByCon(tr.RunningID.toString())
-            .then(y => {
-              if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+    if (resRunning.length) {
+      let tr = resRunning.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
+      let str = '' + (tr.RunningNo + 1)
+      let pad = '00000';
+      let ans = pad.substring(0, pad.length - str.length) + str
+      this.newArrestCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
 
-              this.insertArrest(_arrestCode);
-            })
+      await this.s_transactionRunning.
+        TransactionRunningupdByCon(tr.RunningID.toString())
+        .then(async y => {
+          if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+          return true;
+        },
+          () => { this.saveFail(); return; })
 
-        } else {
-          this.s_transactionRunning
-            .TransactionRunninginsAll(this.runningOfficeCode, this.runningTable, this.runningPrefix)
-            .then(y => {
-              if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+    } else {
+      await this.s_transactionRunning
+        .TransactionRunninginsAll(this.runningOfficeCode, this.runningTable, this.runningPrefix)
+        .then(async y => {
+          if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
 
-              let ans = '00001'
-              let year = ((new Date).getFullYear() + 543).toString()
-              year = year.substring(2, 4);
-              _arrestCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+          let ans = '00001'
+          let year = ((new Date).getFullYear() + 543).toString()
+          year = year.substring(2, 4);
+          this.newArrestCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+          return true;
+        },
+          () => { this.saveFail(); return; })
+    }
 
-              this.insertArrest(_arrestCode);
-            })
-        }
-      })
+    if (this.newArrestCode)
+      await this.insertArrest(this.newArrestCode);
   }
 
   async insertArrest(arrestCode: string) {
@@ -442,28 +460,29 @@ export class AllegationComponent implements OnInit, OnDestroy {
     await this.s_arrest.ArrestinsAll(newArrest)
       .then(async x => {
         if (!this.checkIsSuccess(x)) { this.saveFail(); return; };
-
         await this.insertArrestIndictment(arrestCode);
       },
         () => { this.saveFail(); return; });
   }
 
-  async insertArrestIndictment(arrestCode: string) {
+  private async insertArrestIndictment(arrestCode: string) {
 
-    let arrestIndictment = this.arrestIndictmentFG.value as fromModels.ArrestIndictment;
-    arrestIndictment.ArrestCode = arrestCode;
+    let i: fromModels.ArrestIndictment = this.arrestIndictmentFG.value;
+    let newIndictment = new fromModels.ArrestIndictment;
+    newIndictment.ArrestCode = arrestCode;
+    newIndictment.GuiltBaseID = i.GuiltBaseID
+    newIndictment.IsProve = i.IsProve || 1
+    newIndictment.IsActive = i.IsActive || 1
+    newIndictment.IsLawsuitComplete = i.IsLawsuitComplete || 0
 
-    console.log('ArrestIndictment : ', JSON.stringify(arrestIndictment));
+    console.log('ArrestIndictment : ', JSON.stringify(newIndictment));
 
-    await this.s_indictment.ArrestIndictmentinsAll(arrestIndictment)
+    await this.s_indictment.ArrestIndictmentinsAll(newIndictment)
       .then(async x => {
         if (!this.checkIsSuccess(x)) { this.saveFail(); return; };
-
-        await this.insertArrestIndictmentDetail(arrestCode, x.IndictmentID);
-
-        await this.insertArrestLawbreaker(arrestCode);
+        this.insertArrestIndictmentDetail(arrestCode, x.IndictmentID);
       },
-        () => { this.saveFail(); return; });
+        () => { this.saveFail(); return false; });
   }
 
   async insertArrestIndictmentDetail(arrestCode: string, indictmentID: number) {
@@ -480,20 +499,22 @@ export class AllegationComponent implements OnInit, OnDestroy {
     await this.s_indictmentDetail
       .ArrestIndicmentDetailinsAll(indictmentDetail)
       .then(async x => {
-        if (!this.checkIsSuccess(x)) { this.saveFail(); return; }
+        if (!this.checkIsSuccess(x)) { this.saveFail(); return; };
+        await this.insertArrestProduct(arrestCode, x.IndictmentDetailID)
 
-        await this.insertArrestProduct(arrestCode, x.IndictmentDetailID);
+        await this.insertArrestLawbreaker(arrestCode)
       },
         () => { this.saveFail(); return; })
   }
 
   async insertArrestProduct(arrestCode: string, indictmentDetailID: number) {
+
     let product: fromModels.ArrestProduct[] = this.ArrestProduct.value;
     let productNoId: fromModels.ArrestProduct[] = this.filterProductIsModify(this.ArrestProduct.value);
 
     if (!productNoId.length) return;
 
-    await product.map(async w => {
+    const prod = await product.map(async w => {
       w.ArrestCode = arrestCode;
       w.GroupCode = w.GroupCode || '1';
       w.IsDomestic = w.IsDomestic || '1';
@@ -510,6 +531,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         },
           () => { this.saveFail(); return; });
     })
+    return Promise.all(prod);
   }
 
   async insertArrestProductDetail(indictmentDetailID: number, productId: number, productNoId: fromModels.ArrestProduct) {
@@ -539,24 +561,33 @@ export class AllegationComponent implements OnInit, OnDestroy {
         if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
       },
         () => { this.saveFail(); return; });
+
   }
 
   async insertArrestLawbreaker(arrestCode) {
-    let lawbreaker = this.ArrestLawbreaker.value.find(x => x.IsChecked);
-    lawbreaker.ArrestCode = arrestCode;
+    let lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value;
+    let lawb = await lawbreaker.map(async e => {
+      e.ResultCount = "";
+      e.ArrestCode = arrestCode;
 
-    await this.s_lawbreaker
-      .ArrestLawbreakerinsAll(lawbreaker)
-      .then(y => {
-        if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
-      },
-        () => { this.saveFail(); return; });
+      console.log('Lawbreaker : ', JSON.stringify(e));
+
+      await this.s_lawbreaker
+        .ArrestLawbreakerinsAll(e)
+        .then(y => {
+          if (!this.checkIsSuccess(y)) { this.saveFail(); return; }
+          return true;
+        },
+          () => { this.saveFail(); return; });
+    })
+    return Promise.all(lawb);
   }
 
   isObject = (obj) => obj === Object(obj);
 
   saveFail() {
     alert(Message.saveFail);
+    this._isSuccess = false;
     return false;
   }
 
@@ -564,8 +595,10 @@ export class AllegationComponent implements OnInit, OnDestroy {
     switch (res.IsSuccess) {
       case 'True':
       case true:
+        this._isSuccess = true;
         return true;
       default:
+        this._isSuccess = false;
         return false;
     }
   }

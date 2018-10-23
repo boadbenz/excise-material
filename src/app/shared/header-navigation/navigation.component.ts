@@ -85,6 +85,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.navService.setOnNextPage(true);
     }
 
+    clickPrevPage() {
+        this.navService.setOnPrevPage(true);
+    }
+
     clickPrint() {
         this.navService.setOnPrint(true);
     }

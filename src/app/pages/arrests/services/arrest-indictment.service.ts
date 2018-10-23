@@ -30,7 +30,7 @@ export class ArrestIndictmentService {
     ArrestIndictmentgetByArrestCode(ArrestCode: string) {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestIndictmentgetByArrestCode`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     ArrestIndictmentgetByCon(IndictmentID: string) {
@@ -39,7 +39,7 @@ export class ArrestIndictmentService {
         return this.resposePromisGetList(JSON.stringify(params), url);
     }
 
-    async ArrestIndictmentinsAll(Indictment: ArrestIndictment) {
+    async ArrestIndictmentinsAll(Indictment: any) {
         const params = Indictment;
         const url = `${appConfig.api7788}/ArrestIndictmentinsAll`;
         return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();

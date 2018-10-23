@@ -4,9 +4,9 @@ import { Arrest } from "../models/arrest";
 import { HttpService } from "app/core/http.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-@Injectable() 
+@Injectable()
 export class ArrestService {
-    
+
     constructor(
         private http: HttpService,
         private httpClient: HttpClient
@@ -18,17 +18,17 @@ export class ArrestService {
                 'Content-Type': 'application/json'
             })
     };
-    
+
     ArrestgetByKeyword(Textsearch: any) {
         const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api7788}/ArrestgetByKeyword`;
         return this.http.post(url, params).map(x => x.json());
     }
 
-    ArrestgetByCon(ArrestCode: string) {
+    async ArrestgetByCon(ArrestCode: string) {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestgetByCon`;
-        return this.http.post(url, params).map(x => x.json());
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     ArrestgetByConAdv(form: any) {
@@ -37,21 +37,21 @@ export class ArrestService {
         return this.http.post(url, params).map(x => x.json());
     }
 
-    ArrestinsAll(Arrest: any) {
+    async ArrestinsAll(Arrest: any) {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestinsAll`;
-        return this.httpClient.post<any>(url, params).toPromise();
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    ArrestupdByCon(Arrest: Arrest) {
+    async ArrestupdByCon(Arrest: any) {
         const params = Arrest;
         const url = `${appConfig.api7788}/ArrestupdByCon`;
-        return this.http.post(url, params).map(x => x.json());
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    ArrestupdDelete(ArrestCode: string){
+    async ArrestupdDelete(ArrestCode: string) {
         const params = { ArrestCode };
         const url = `${appConfig.api7788}/ArrestupdDelete`;
-        return this.http.post(url, params).map(x => x.json());
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 }

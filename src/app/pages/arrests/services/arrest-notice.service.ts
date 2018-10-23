@@ -1,12 +1,22 @@
 import { Injectable } from "@angular/core";
 import { appConfig } from "app/app.config";
 import { HttpService } from "app/core/http.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable()
 export class ArrestNoticeService {
 
-    constructor(private http: HttpService) { }
+    constructor(private http: HttpService,
+        private httpClient: HttpClient
+    ) { }
 
+    private httpOptions = {
+        headers: new HttpHeaders(
+            {
+                'Content-Type': 'application/json'
+            })
+    };
+    
     ArrestNoticegetByKeyword(Textsearch: any) {
         const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api7788}/ArrestNoticegetByKeyword`;
@@ -19,15 +29,15 @@ export class ArrestNoticeService {
         return this.http.post(url, params).map(x => x.json());
     }
 
-    ArrestNoticeupdByCon(ArrestCode: string, NoticeCode: string) {
+    async ArrestNoticeupdByCon(ArrestCode: string, NoticeCode: string) {
         const params = { NoticeCode, ArrestCode };
         const url = `${appConfig.api7788}/ArrestNoticeupdByCon`;
-        return this.http.post(url, params).map(x => x.json());
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    ArrestNoticeupdDelete(NoticeCode: string) {
+    async ArrestNoticeupdDelete(NoticeCode: string) {
         const params = { NoticeCode };
         const url = `${appConfig.api7788}/ArrestNoticeupdDelete`;
-        return this.http.post(url, params).map(x => x.json());
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 }

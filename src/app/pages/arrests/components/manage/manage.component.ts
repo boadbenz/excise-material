@@ -15,8 +15,8 @@ import 'rxjs/add/operator/takeUntil';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { MasStaffModel, RegionModel, MasProductModel, LawbreakerTypes, EntityTypes, ContributorType, MasProvinceModel } from 'app/models';
 import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
-import { MyDatePickerOptions, setDateMyDatepicker, setZero, getDateMyDatepicker, convertDateForSave, toLocalShort } from 'app/config/dateFormat';
-import { ArrestProduct, ArrestProductDetail } from '../../models/arrest-product';
+import { MyDatePickerOptions, setDateMyDatepicker, setZero, getDateMyDatepicker, convertDateForSave, toLocalShort, compareDate } from 'app/config/dateFormat';
+import { ArrestProduct } from '../../models/arrest-product';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { MainMasterService } from 'app/services/main-master.service';
@@ -27,11 +27,11 @@ import { replaceFakePath } from 'app/config/dataString';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../store';
 import * as fromModels from '../../models';
+import * as fromServices from '../../services';
 import { ArrestsService } from '../../arrests.service';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { forkJoin } from 'rxjs/observable/forkJoin';
 import { LoaderService } from 'app/core/loader/loader.service';
+import { MasDocumentMainService } from 'app/services/mas-document-main.service';
+import { IMyDateModel } from 'mydatepicker-th';
 
 @Component({
     selector: 'app-manage',
@@ -39,13 +39,14 @@ import { LoaderService } from 'app/core/loader/loader.service';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
-    // FormGroup ตรวจสอบสถานะในการบันทึก
+    // FormGroup ตรวจสอบสถานะในการบันทึก TN905016100058
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
 
     // FormArray ตรวจสอบสถานะด้วย
     // c: รายการใหม่
-    // r: รายการอัพเดท
+    // r: รายการแสดง
+    // u: รายการอัพเดท
     // d: รายการที่ถูกลบ
     card1: boolean = true;
     noticeCard: boolean = false;
@@ -58,6 +59,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     card8: boolean = false;
 
     myDatePickerOptions = MyDatePickerOptions;
+    _isSuccess: boolean = false;
     mode: string;
     modal: any;
     arrestCode: string;
@@ -70,6 +72,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadProduct = new Array<MasProductModel>();
     typeheadProductUnit = new Array<MasDutyProductUnitModel>();
     Acceptability: fromModels.Acceptability
+
+    dateStartFrom: any;
+    dateStartTo: any;
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
@@ -107,13 +112,27 @@ export class ManageComponent implements OnInit, OnDestroy {
         return this.arrestFG.get('ArrestDocument') as FormArray;
     }
 
-    get ArrestInictmentDetail(): FormArray {
-        return this.arrestFG.get('ArrestInictmentDetail') as FormArray;
+    getArrestLawGuitbase(form: any) {
+        return form.controls.ArrestLawGuitbase.controls;
     }
 
-    get ArrestProductDetail(): FormArray {
-        return this.arrestFG.get('ArrestProductDetail') as FormArray;
+    // --- 1
+    getArrestLawSubSectionRule(form: any) {
+        return form.controls.ArrestLawSubSectionRule.controls;
     }
+    // --- --- 1.1
+    getArrestLawSubSection(form: any) {
+        return form.controls.ArrestLawSubSection.controls;
+    }
+    // --- --- 1.2
+    getArrestLawSection(form: any) {
+        return form.controls.ArrestLawSection.controls;
+    }
+    // --- --- --- 1.2.1
+    getArrestLawPenalty(form: any) {
+        return form.controls.ArrestLawPenalty.controls;
+    }
+
 
     getArrestNoticeSuspect(form: any) {
         return form.controls.ArrestNoticeSuspect.controls;
@@ -137,8 +156,15 @@ export class ManageComponent implements OnInit, OnDestroy {
         private router: Router,
         private sidebarService: SidebarService,
         private mainMasterService: MainMasterService,
+        private s_document: MasDocumentMainService,
         private store: Store<fromStore.AppState>,
         private arrestService: ArrestsService,
+        private s_arrest: fromServices.ArrestService,
+        private s_product: fromServices.ArrestProductService,
+        private s_indictment: fromServices.ArrestIndictmentService,
+        private s_notice: fromServices.ArrestNoticeService,
+        private s_staff: fromServices.ArrestStaffService,
+        private s_lawsuit: fromServices.ArrestLawSuitService,
         private loaderService: LoaderService
     ) {
         // set false
@@ -152,50 +178,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.loaderService.show();
-
-        this.sidebarService.setVersion('0.0.0.18');
+        this.sidebarService.setVersion('0.0.0.19');
         this.active_route();
         this.arrestFG = this.createForm();
         this.navigate_Service();
-        
-        // await this.mainMasterService.MasDutyUnitMaingetAll().then(x => this.typeheadProductUnit = x);
 
-        const promises = [
-            await this.mainMasterService.MasStaffMaingetAll(),
-            await this.mainMasterService.MasOfficeMaingetAll(),
-            await this.mainMasterService.MasProductMaingetAll(),
-            await this.mainMasterService.MasDutyUnitMaingetAll(),
-            await this.mainMasterService.MasDistrictMaingetAll()
-        ]
-
-        Promise.all(promises)
-            .then(x => {
-                this.typeheadStaff = x[0]
-                this.typeheadOffice = x[1]
-                this.typeheadProduct = x[2]
-                this.typeheadProductUnit = x[3]
-                x[0].map(prov =>
-                    prov.MasDistrict.map(dis =>
-                        dis.MasSubDistrict.map(subdis => {
-                            this.typeheadRegion.push({
-                                SubdistrictCode: subdis.SubdistrictCode,
-                                SubdistrictNameTH: subdis.SubdistrictNameTH,
-                                DistrictCode: dis.DistrictCode,
-                                DistrictNameTH: dis.DistrictNameTH,
-                                ProvinceCode: prov.ProvinceCode,
-                                ProvinceNameTH: prov.ProvinceNameTH,
-                                ZipCode: null
-                            })
-                        })
-                    )
-                );
-            })
-            .catch((error) => {
-                console.log(error);
-                this.loaderService.hide();
-            })
-        this.loaderService.hide();
     }
 
     ngOnDestroy(): void {
@@ -220,9 +207,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             Prompt: new FormControl(null, Validators.required),
             IsMatchNotice: new FormControl(null),
             ArrestDesc: new FormControl('N/A'),
-            NoticeCode: new FormControl(null, Validators.required),
+            NoticeCode: new FormControl(null),
             InvestigationSurveyDocument: new FormControl(null),
-            InvestigationCode: new FormControl('NEW', Validators.required),
+            InvestigationCode: new FormControl(null),
             IsActive: new FormControl(1),
             ArrestNotice: this.fb.array([]),
             ArrestStaff: this.fb.array([]),
@@ -248,34 +235,35 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private active_route() {
-        this.activeRoute.params.takeUntil(this.destroy$).subscribe(p => {
+        this.activeRoute.params.takeUntil(this.destroy$).subscribe(async p => {
             this.mode = p['mode'];
-            if (p['mode'] == 'C') {
-                // set false
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                this.navService.setEditField(false);
-                // set true 
-                this.navService.setSaveButton(true);
-                this.navService.setCancelButton(true);
-                this.arrestCode = p['code'] //== 'NEW' ? `TN-${(new Date).getTime()}` : p['code'];
+            this.arrestCode = p['code'];
 
-            } else if (p['mode'] === 'R') {
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                // set true
-                this.navService.setPrintButton(true);
-                this.navService.setEditButton(true);
-                this.navService.setDeleteButton(true);
-                this.navService.setEditField(true);
+            switch (this.mode) {
+                case 'C':
+                    // set false
+                    this.navService.setPrintButton(false);
+                    this.navService.setEditButton(false);
+                    this.navService.setDeleteButton(false);
+                    this.navService.setEditField(false);
+                    // set true 
+                    this.navService.setSaveButton(true);
+                    this.navService.setCancelButton(true);
+                    break;
 
-                if (p['code']) {
-                    this.arrestCode = p['code'];
-                    this.getByCon(p['code']);
-                }
+                case 'R':
+                    // set false
+                    this.navService.setSaveButton(false);
+                    this.navService.setCancelButton(false);
+                    // set true
+                    this.navService.setPrintButton(true);
+                    this.navService.setEditButton(true);
+                    this.navService.setDeleteButton(true);
+                    this.navService.setEditField(true);
+                    break;
             }
+
+            this.pageLoad(this.arrestCode);
         });
     }
 
@@ -295,29 +283,32 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                if (!this.ArrestLawbreaker.length) {
-                    alert(Message.checkData)
-                    return false;
-                }
-
                 const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
                 const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
-
-                if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-                    alert(Message.checkDate);
-                    return false;
-                }
-
                 this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
                 this.arrestFG.value.ArrestTime = (new Date()).toISOString();
 
-                if (this.mode === 'C') {
-                    this.onCreate();
+                if (this.arrestFG.invalid) return;
 
-                } else if (this.mode === 'R') {
-                    this.onReviced();
+                let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
+
+                if (staff.length < 3) {
+                    alert('ต้องมีรายการผู้จับกุมอย่างน้อย 3 รายการ')
+                    return
                 }
+
+                if (staff.filter(x => x.ContributorID == '6').length > 1) {
+                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการเท่านั้น');
+                    return;
+                }
+
+                if (!this.ArrestIndictment.value.length) {
+                    alert('“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ')
+                    return;
+                }
+
+                this.onSave();
             }
         });
 
@@ -331,7 +322,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                this.router.navigate(['/arrest/list']);
+                this.onCancel();
             }
         })
 
@@ -350,111 +341,152 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    private getByCon(code: string) {
-
-        this.arrestService.getByCon(code).then(async res => {
-            let o = res[0];
-            await this.arrestFG.reset({
-                ArrestCode: o.ArrestCode,
-                ArrestDate: setDateMyDatepicker(new Date(o.ArrestDate)),
-                ArrestTime: o.ArrestTime,
-                OccurrenceDate: setDateMyDatepicker(new Date(o.OccurrenceDate)),
-                OccurrenceTime: o.OccurrenceTime,
-                ArrestStationCode: o.ArrestStationCode,
-                ArrestStation: o.ArrestStation,
-                HaveCulprit: o.HaveCulprit,
-                Behaviour: o.Behaviour,
-                Testimony: o.Testimony,
-                Prompt: o.Prompt,
-                IsMatchNotice: o.IsMatchNotice,
-                ArrestDesc: o.ArrestDesc,
-                NoticeCode: o.NoticeCode,
-                InvestigationSurveyDocument: o.InvestigationSurveyDocument,
-                InvestigationCode: o.InvestigationCode,
-                IsActive: o.IsActive
-            });
-            o.ArrestLocale.map(item => {
-                item.ArrestCode = item.ArrestCode || code;
-                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`;
-            });
-
-            const notice = o.ArrestNotice;
-            notice.map((item: fromModels.ArrestNotice) => {
-                item.NoticeDate = toLocalShort(item.NoticeDate)
-                item.ArrestNoticeSuspect.map(suspect => {
-                    suspect.FullName = `${suspect.SuspectTitleName || ''}`;
-                    suspect.FullName += ` ${suspect.SuspectFirstName || ''}`;
-                    suspect.FullName += ` ${suspect.SuspectLastName || ''}`
-                });
-
-                item.ArrestNoticeStaff.map(staff => {
-                    staff.FullName = `${staff.TitleName || ''}`;
-                    staff.FullName += ` ${staff.FirstName || ''}`;
-                    staff.FullName += ` ${staff.LastName || ''}`
-                })
-            })
-
-            const staff = o.ArrestStaff.filter(item => item.IsActive == 1);
-            staff.map((item: ArrestStaff) => {
-                item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
-                item.FullName += ` ${item.FirstName == null ? '' : item.FirstName}`;
-                item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
-
-                item.IsNewItem = false;
-                item.ContributorID = item.ContributorID;
-            });
-
-            const product = o.ArrestProduct.filter(item => item.IsActive == 1);
-            product.map((item: ArrestProduct) => {
-                item.IsNewItem = false;
-                item.ProductFullName = `${item.SubBrandNameTH == null ? '' : item.SubBrandNameTH}`;
-                item.ProductFullName += ` ${item.BrandNameTH == null ? '' : item.BrandNameTH}`;
-                item.ProductFullName += ` ${item.ModelName == null ? '' : item.ModelName}`;
-            });
-
-            const indictment = o.ArrestIndictment.filter(item => item.IsActive == 1);
-
-            await this.arrestService.MasDocumentMaingetAll('3', this.arrestCode).then(res => {
-                const doc = res.filter(item => item.IsActive == 1);
-                doc.map(item => item.IsNewItem = false)
-                this.setItemFormArray(res, 'ArrestDocument');
-            })
-
-            this.setItemFormArray(notice, 'ArrestNotice');
-            this.setItemFormArray(staff, 'ArrestStaff');
-            this.setItemFormArray(o.ArrestLocale, 'ArrestLocale');
-            this.setItemFormArray(product, 'ArrestProduct');
-            // this.setItemFormArray(indictment, 'ArrestIndictment');
-            // this.setArrestIndictmentForm(indictment);
-
-
-        })
-    }
-
-    private async onCreate() {
-    }
-
-
-    private async onReviced() {
-
-    }
-
-    private async onDelete() {
-        if (confirm(Message.confirmAction)) {
-
+    private async pageLoad(arrestCode: string) {
+        switch (this.mode) {
+            case 'C':
+                await this.loadMasterData();
+                this.showEditField = false;
+                if (arrestCode != 'NEW') {
+                    this.loaderService.show();
+                    await this.pageRefresh(this.arrestCode);
+                    this.loaderService.hide();
+                }
+                break;
+            case 'R':
+                this.pageRefresh(arrestCode);
+                break;
         }
     }
 
-    private async onComplete() {
-        // set true
-        await this.navService.setEditField(true);
-        await this.navService.setEditButton(true);
-        await this.navService.setPrintButton(true);
-        await this.navService.setDeleteButton(true);
-        // set false
-        await this.navService.setSaveButton(false);
-        await this.navService.setCancelButton(false);
+    private async pageRefresh(arrestCode: string) {
+        this.loaderService.show();
+        await this.s_arrest.ArrestgetByCon(arrestCode)
+            .then(async (arr: fromModels.Arrest[]) => {
+
+                if (!this.checkResponse(arr)){
+                    alert(Message.noRecord)
+                    return
+                }
+
+                let _arr = arr[0];  
+                let arrestForm = this.arrestFG;
+
+                // if (!this.isObject(_arr.ArrestDate))
+                    _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
+                // if (!this.isObject(_arr.OccurrenceDate))
+                    _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
+
+                _arr.ArrestNotice.map((x, index) => {
+                    x.RowId = index + 1;
+                    x.IsModify = 'r';
+                })
+
+                _arr.ArrestStaff.map((x, index) => {
+                    x.RowId = index + 1;
+                    x.IsModify = 'r';
+                    x.ContributorID = x.ContributorID || ''
+                    x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`
+                });
+                this.setItemFormArray(_arr.ArrestStaff, 'ArrestStaff');
+
+                _arr.ArrestLocale.map(x => {
+                    if (x.SubDistrictCode && x.DistrictCode && x.ProvinceCode) {
+                        x.Region = `${x.SubDistrict} ${x.District} ${x.Province}`;
+                    }
+                })
+                arrestForm.patchValue(_arr);
+
+                await this.s_product.ArrestProductgetByArrestCode(arrestCode)
+                    .then((pro: fromModels.ArrestProduct[]) => {
+                        let _prod = pro;
+                        _prod.map((x, index) => {
+                            x.IsModify = 'r';
+                            x.RowId = index + 1;
+                        })
+                        this.setItemFormArray(_prod, 'ArrestProduct')
+                    })
+
+                await this.s_indictment.ArrestIndictmentgetByArrestCode(arrestCode)
+                    .then((ind: fromModels.ArrestIndictment[]) => this.setArrestIndictment(ind));
+            })
+        this.loaderService.hide();
     }
+
+    private async loadMasterData() {
+        this.loaderService.show();
+        const promises = [
+            await this.mainMasterService.MasStaffMaingetAll(),
+            await this.mainMasterService.MasOfficeMaingetAll(),
+            await this.mainMasterService.MasProductMaingetAll(),
+            await this.mainMasterService.MasDutyUnitMaingetAll(),
+            await this.mainMasterService.MasDistrictMaingetAll()
+        ]
+
+        Promise.all(promises)
+            .then(x => {
+                this.typeheadStaff = x[0]
+                this.typeheadOffice = x[1]
+                this.typeheadProduct = x[2]
+                this.typeheadProductUnit = x[3]
+                x[4].map(prov =>
+                    prov.MasDistrict.map(dis =>
+                        dis.MasSubDistrict.map(subdis => {
+                            this.typeheadRegion.push({
+                                SubdistrictCode: subdis.SubdistrictCode,
+                                SubdistrictNameTH: subdis.SubdistrictNameTH,
+                                DistrictCode: dis.DistrictCode,
+                                DistrictNameTH: dis.DistrictNameTH,
+                                ProvinceCode: prov.ProvinceCode,
+                                ProvinceNameTH: prov.ProvinceNameTH,
+                                ZipCode: null
+                            })
+                        })
+                    )
+                );
+            })
+            .catch((error) => {
+                console.log(error);
+                this.loaderService.hide();
+            })
+        this.loaderService.hide();
+    }
+
+    onSDateChange(event: IMyDateModel) {
+        this.dateStartFrom = event
+        this.dateStartTo = this.dateStartTo || this.arrestFG.value.OccurrenceDate
+        this.checkDate();
+    }
+
+    onEDateChange(event: IMyDateModel) {
+        this.dateStartFrom = this.dateStartFrom || this.arrestFG.value.ArrestDate
+        this.dateStartTo = event
+        this.checkDate()
+    }
+
+    private checkDate() {
+        debugger
+        if (this.dateStartFrom && this.dateStartTo) {
+
+            let sdate = this.isObject(this.dateStartFrom)
+                ? getDateMyDatepicker(this.dateStartFrom)
+                : new Date(this.dateStartFrom);
+            let edate = this.isObject(this.dateStartTo)
+                ? getDateMyDatepicker(this.dateStartTo)
+                : new Date(this.dateStartTo);
+
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.arrestFG.patchValue({
+                        OccurrenceDate: this.isObject(this.dateStartFrom)
+                            ? { date: this.dateStartFrom.date }
+                            : setDateMyDatepicker(this.dateStartFrom)
+                    })
+                }, 0);
+            }
+        }
+    }
+
     // Set Array ArrestNoticeForm
     // 1
     setNoticeForm(n: fromModels.ArrestNotice[]) {
@@ -494,85 +526,96 @@ export class ManageComponent implements OnInit, OnDestroy {
         return arr;
     }
     // set FormArray ArrestIndictment
-    // 1
-    setArrestIndictmentForm(o: fromModels.ArrestIndictment[]) {
-        let arr = this.ArrestIndictment;
+    private setArrestIndictment(o: fromModels.ArrestIndictment[]) {
+        let _indict = this.ArrestIndictment;
         o.map(x => {
-            arr.push(
+            _indict.push(
                 this.fb.group({
-                    ArrestIndictmentDetail: this.setArrestIndictmentDetail(x.ArrestIndictmentDetail),
+                    IndictmentID: x.IndictmentID,
+                    GuiltBaseID: x.GuiltBaseID,
                     ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase)
                 })
             )
         });
-        return arr;
     }
-    // --- 1.1
-    private setArrestIndictmentDetail(o: fromModels.ArrestIndictmentDetail[]) {
-        let arr = new FormArray([]);
-        o.map(x => {
-            arr.push(this.fb.group({
-                ArrestLawbreaker: this.setArrestLawbreaker(x.ArrestLawbreaker),
-                ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail)
-            }))
-        })
-        return arr;
-    }
-    // --- --- 1.1.1
-    private setArrestLawbreaker = (o: fromModels.ArrestLawbreaker[]) => {
-        let arr = new FormArray([]);
-        let LawbreakerFullName;
-        o.map(x => {
-            LawbreakerFullName = x.LawbreakerTitleName == null ? '' : x.LawbreakerTitleName;
-            LawbreakerFullName += x.LawbreakerFirstName == null ? '' : ` ${x.LawbreakerFirstName}`;
-            LawbreakerFullName += x.LawbreakerLastName == null ? '' : ` ${x.LawbreakerLastName}`;
-            arr.push(this.fb.group({
-                LawbreakerFullName
-            }))
-        })
-        return arr;
-    }
-    // --- --- 1.1.2
-    private setArrestProductDetail = (o: ArrestProductDetail[]) => {
-        let arr = new FormArray([]);
-        o.map(x => arr.push(this.fb.group({ ProductDesc: x.ProductDesc })));
-        return arr;
-    }
-
-    // --- 2.1
+    // --- 1
     private setArrestLawGuitbase = (o: fromModels.ArrestLawGuitbase[]) => {
         let arr = new FormArray([]);
-        o.map(x => {
+        o.map((x, index) => {
             arr.push(this.fb.group({
+                RowId: ++index,
+                IsChecked: false,
                 GuiltBaseID: x.GuiltBaseID,
                 GuiltBaseName: x.GuiltBaseName,
                 IsCompare: x.IsCompare,
                 IsActive: x.IsActive,
                 IsProve: x.IsProve,
+                SubSectionRuleID: x.SubSectionRuleID,
                 ArrestLawSubSectionRule: this.setArrestLawSubSectionRule(x.ArrestLawSubSectionRule)
             }))
         })
         return arr;
     }
-    // --- --- 2.1.1
+    // --- --- 1.1
     private setArrestLawSubSectionRule = (o: fromModels.ArrestLawSubSectionRule[]) => {
         let arr = new FormArray([]);
         o.map(x => {
             arr.push(this.fb.group({
+                SubSectionRuleID: x.SubSectionRuleID,
+                SubSectionID: x.SubSectionID,
                 SectionNo: x.SectionNo,
-                ArrestLawSubSection: this.setArrestLawSubSection(x.ArrestLawSubSection)
+                IsActive: x.IsActive,
+                ArrestLawSubSection: this.setArrestLawSubSection(x.ArrestLawSubSection),
+                ArrestLawSection: this.setArrestLawSection(x.ArrestLawSection)
             }))
         })
+        return arr;
     }
-    // --- --- 2.1.2
+    // --- --- --- 1.1.1
     private setArrestLawSubSection = (o: fromModels.ArrestLawSubSection[]) => {
         let arr = new FormArray([]);
         o.map(x => {
             arr.push(this.fb.group({
+                SubSectionID: x.SubSectionID,
                 SubSectionNo: x.SubSectionNo,
-                SubSectionType: x.SubSectionType
+                SubSectionType: x.SubSectionType,
+                SubSectionDesc: x.SubSectionDesc,
+                SectionNo: x.SectionNo
             }))
         })
+        return arr;
+    }
+    // --- --- --- 1.1.2
+    private setArrestLawSection = (o: fromModels.ArrestLawSection[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                SectionNo: x.SectionNo,
+                SectionName: x.SectionName,
+                SectionDesc1: x.SectionDesc1,
+                SectionDesc2: x.SectionDesc2,
+                SectionDesc3: x.SectionDesc3,
+                LawGroupID: x.LawGroupID,
+                ArrestLawPenalty: this.setArrestLawPenalty(x.ArrestLawPenalty)
+            }))
+        })
+        return arr;
+    }
+    // --- --- --- --- 1.1.2.1
+    private setArrestLawPenalty = (o: fromModels.ArrestLawPenalty[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                PenaltyID: x.PenaltyID,
+                SectionNo: x.SectionNo,
+                PenaltyDesc: x.PenaltyDesc,
+                FineMin: x.FineMin,
+                FineMax: x.FineMax,
+                IsFinePrison: x.IsFinePrison,
+                IsTaxPaid: x.IsTaxPaid
+            }))
+        })
+        return arr;
     }
 
     openModal(e) {
@@ -619,12 +662,26 @@ export class ManageComponent implements OnInit, OnDestroy {
         let arrest = this.arrestFG.value as fromModels.Arrest;
         this.store.dispatch(new fromStore.CreateArrest(arrest));
         this.router.navigate(
-            [`arrest/allegation`, 'C'],
+            [`arrest/allegation`, this.mode],
             {
                 queryParams: {
                     arrestCode: this.arrestCode,
                     indictmentId: '',
                     guiltbaseId: ''
+                }
+            });
+    }
+
+    viewAllegation(indictmentId: number, guiltbaseId: number) {
+        let arrest = this.arrestFG.value as fromModels.Arrest;
+        this.store.dispatch(new fromStore.CreateArrest(arrest));
+        this.router.navigate(
+            [`arrest/allegation`, 'R'],
+            {
+                queryParams: {
+                    arrestCode: this.arrestCode,
+                    indictmentId: indictmentId,
+                    guiltbaseId: guiltbaseId
                 }
             });
     }
@@ -688,7 +745,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
         let indictment = this.sortFormArray(this.ArrestIndictment.value);
         this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
-        indictment.then((x) => this.setArrestIndictmentForm(x));
+        // indictment.then((x) => this.setArrestIndictmentForm(x));
     }
 
     searchProduct = (text$: Observable<string>) =>
@@ -754,7 +811,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         const product = this.ArrestProduct.at(i).value;
         this.ArrestProduct.at(i).reset(e.item);
         this.ArrestProduct.at(i).patchValue({
-            IsModify: product.IsModify,
+            IsModify: product.IsModify == 'r' ? 'u' : product.IsModify,
             RowId: product.RowId,
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || 1,
@@ -763,10 +820,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemStaff(e, i) {
-        const staff = this.ArrestStaff.at(i).value;
+        let staff: fromModels.ArrestStaff = this.ArrestStaff.at(i).value;
         this.ArrestStaff.at(i).reset(e.item);
         this.ArrestStaff.at(i).patchValue({
-            IsModify: staff.IsModify,
+            IsModify: staff.IsModify == 'r' ? 'u' : staff.IsModify,
             RowId: staff.RowId,
             FullName: `${e.item.TitleName} ${e.item.FirstName} ${e.item.LastName}`,
             ProgramCode: 'ILG60-03-02-00-00',
@@ -795,5 +852,231 @@ export class ManageComponent implements OnInit, OnDestroy {
             FilePath: replaceFakePath(e.target.value),
             IsActive: 1
         })
+    }
+
+    isObject = (obj) => obj === Object(obj);
+
+    saveFail() {
+        alert(Message.saveFail);
+        this._isSuccess = false;
+        return false;
+    }
+
+    checkResponse(res: any) {
+        switch (res.IsSuccess) {
+            case 'True':
+            case true:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    checkIsSuccess(res: any) {
+        switch (res.IsSuccess) {
+            case 'True':
+            case true:
+                this._isSuccess = true;
+                return true;
+            default:
+                this._isSuccess = false;
+                alert(Message.saveFail);
+                return false;
+        }
+    }
+
+
+    private async onSave() {
+        this.loaderService.show();
+        await this.upateArrest();
+        await this.updateNotice();
+        await this.updateStaff();
+        await this.updateProduct();
+        await this.updateDocument();
+
+        if (this._isSuccess) {
+            alert(Message.saveComplete)
+            this.onComplete()
+        } else {
+            alert(Message.saveFail)
+        }
+        this.loaderService.hide();
+    }
+
+    private async onCancel() {
+        switch (this.mode) {
+            case 'C':
+                if (this.arrestCode != 'NEW') {
+                    this.deleteArrest();
+                } else {
+                    this.router.navigate([`arrest/list`]);
+                }
+                break;
+            case 'R':
+                this.pageLoad(this.arrestCode);
+                break;
+        }
+    }
+
+    private async onDelete() {
+        this.ArrestIndictment.value
+            .map((x: fromModels.ArrestIndictment) => {
+                this.s_lawsuit.ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
+                    .takeUntil(this.destroy$)
+                    .subscribe(y => {
+                        if (this.checkResponse(y)) {
+                            alert(Message.cannotDeleteRec);
+                        } else {
+
+                        }
+                    })
+            })
+    }
+
+    private async onComplete() {
+        // set true
+        await this.navService.setEditField(true);
+        await this.navService.setEditButton(true);
+        await this.navService.setPrintButton(true);
+        await this.navService.setDeleteButton(true);
+        // set false
+        await this.navService.setSaveButton(false);
+        await this.navService.setCancelButton(false);
+    }
+
+    private async upateArrest() {
+        let a: fromModels.Arrest = this.arrestFG.value;
+
+        let newArrest = {
+            ArrestCode: a.ArrestCode,
+            ArrestDate: a.ArrestDate,
+            ArrestTime: a.ArrestTime,
+            OccurrenceDate: a.OccurrenceDate,
+            OccurrenceTime: a.OccurrenceTime,
+            ArrestStationCode: a.ArrestStationCode,
+            ArrestStation: a.ArrestStation,
+            HaveCulprit: a.HaveCulprit,
+            Behaviour: a.Behaviour,
+            Testimony: a.Testimony,
+            Prompt: a.Prompt,
+            IsMatchNotice: a.IsMatchNotice,
+            ArrestDesc: a.ArrestDesc,
+            NoticeCode: a.NoticeCode,
+            InvestigationSurveyDocument: a.InvestigationSurveyDocument,
+            InvestigationCode: a.InvestigationCode,
+            IsActive: a.IsActive,
+            ArrestLocale: a.ArrestLocale
+                .map(x => {
+                    x.ArrestCode = a.ArrestCode;
+                    return x;
+                })
+        }
+        await this.s_arrest.ArrestupdByCon(newArrest).then(x => {
+            if (!this.checkIsSuccess(x)) return;
+        }, () => { this.saveFail(); return; })
+    }
+
+    private async deleteArrest() {
+        const msgError = 'ไม่สามารถยกเลิกการทำรายการได้'
+        this.s_arrest.ArrestupdDelete(this.arrestCode).then(x => {
+            if (this.checkResponse(x)) {
+                this.router.navigate([`arrest/list`]);
+            } else {
+                alert(msgError);
+            }
+        }, () => { alert(msgError); return; })
+    }
+
+    private async updateNotice() {
+        let noticePromise = await this.ArrestNotice.value
+            .map(async x => {
+                switch (x.IsModify) {
+                    case 'd':
+                        await this.s_notice.ArrestNoticeupdDelete(x.NoticeCode).then(x => {
+                            if (!this.checkIsSuccess(x)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+
+                    case 'c':
+                        await this.s_notice.ArrestNoticeupdByCon(x.ArrestCode, x.NoticeCode).then(x => {
+                            if (!this.checkIsSuccess(x)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                }
+            })
+        return Promise.all(noticePromise);
+    }
+
+    private async updateStaff() {
+        let staffPromise = await this.ArrestStaff.value
+            .map(async (x: fromModels.ArrestStaff) => {
+                switch (x.IsModify) {
+                    case 'd':
+                        await this.s_staff.ArrestStaffupdDelete(x.StaffID).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                    case 'c':
+                        await this.s_staff.ArrestStaffinsAll(x).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                    case 'u':
+                        await this.s_staff.ArrestStaffupdByCon(x).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                }
+            })
+        return Promise.all(staffPromise);
+    }
+
+    private async updateProduct() {
+        let productPromise = await this.ArrestProduct.value
+            .map(async (x: fromModels.ArrestProduct) => {
+                switch (x.IsModify) {
+                    case 'd':
+                        await this.s_product.ArrestProductupdDelete(x.ProductID).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                    case 'c':
+                        await this.s_product.ArrestProductinsAll(x).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                    case 'u':
+                        await this.s_product.ArrestProductupdByCon(x).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                }
+            })
+        return Promise.all(productPromise);
+    }
+
+    private async updateDocument() {
+        let docPromise = await this.ArrestDocument.value
+            .map(async (x: fromModels.ArrestDocument) => {
+                switch (x.IsModify) {
+                    case 'd':
+                        this.s_document.MasDocumentMainupdDelete(x.DocumentID).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                    case 'c':
+                        this.s_document.MasDocumentMaininsAll(x).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                    case 'u':
+                        this.s_document.MasDocumentMainupdByCon(x).then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                        }, () => { this.saveFail(); return; })
+                        break;
+                }
+            })
+
+        return Promise.all(docPromise);
     }
 }
