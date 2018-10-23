@@ -76,6 +76,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     dateStartFrom: any;
     dateStartTo: any;
 
+    documentType = '3';
+
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
     readonly contributerType = ContributorType;
@@ -276,41 +278,40 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
-
                 if (!this.arrestFG.valid) {
                     this.isRequired = true;
                     alert(Message.checkData)
                     return false;
                 }
-
                 const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
                 const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
                 this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
                 this.arrestFG.value.ArrestTime = (new Date()).toISOString();
-
                 if (this.arrestFG.invalid) return;
-
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
-
                 if (staff.length < 3) {
                     alert('ต้องมีรายการผู้จับกุมอย่างน้อย 3 รายการ')
                     return
                 }
-
                 if (staff.filter(x => x.ContributorID == '6').length > 1) {
                     alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการเท่านั้น');
                     return;
                 }
-
                 if (!this.ArrestIndictment.value.length) {
                     alert('“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ')
                     return;
                 }
-
                 this.onSave();
             }
         });
+
+        this.navService.onEdit.takeUntil(this.destroy$).subscribe(async status => {
+            if (status) {
+                await this.navService.setOnEdit(false);
+                this.onEdit();
+            }
+        })
 
         this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
@@ -363,18 +364,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.s_arrest.ArrestgetByCon(arrestCode)
             .then(async (arr: fromModels.Arrest[]) => {
 
-                if (!this.checkResponse(arr)){
+                if (!this.checkResponse(arr)) {
                     alert(Message.noRecord)
                     return
                 }
 
-                let _arr = arr[0];  
+                let _arr = arr[0];
                 let arrestForm = this.arrestFG;
 
                 // if (!this.isObject(_arr.ArrestDate))
-                    _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
+                _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
                 // if (!this.isObject(_arr.OccurrenceDate))
-                    _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
+                _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
 
                 _arr.ArrestNotice.map((x, index) => {
                     x.RowId = index + 1;
@@ -409,6 +410,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.s_indictment.ArrestIndictmentgetByArrestCode(arrestCode)
                     .then((ind: fromModels.ArrestIndictment[]) => this.setArrestIndictment(ind));
             })
+
+        await this.s_document.MasDocumentMaingetAll(this.documentType, this.arrestCode)
+            .then((x: fromModels.ArrestDocument[]) => {
+                x.map((y, index) => {
+                    y.RowId = index + 1;
+                    y.IsModify = 'r';
+                })
+                this.setItemFormArray(x, 'ArrestDocument');
+            });
         this.loaderService.hide();
     }
 
@@ -464,7 +474,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private checkDate() {
-        debugger
         if (this.dateStartFrom && this.dateStartTo) {
 
             let sdate = this.isObject(this.dateStartFrom)
@@ -885,7 +894,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-
     private async onSave() {
         this.loaderService.show();
         await this.upateArrest();
@@ -918,19 +926,50 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private async onDelete() {
+    private async onEdit() {
+        let isCheck = false;
+        let unCheck = false;
         this.ArrestIndictment.value
             .map((x: fromModels.ArrestIndictment) => {
                 this.s_lawsuit.ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
                     .takeUntil(this.destroy$)
                     .subscribe(y => {
                         if (this.checkResponse(y)) {
-                            alert(Message.cannotDeleteRec);
+                            isCheck = true;
                         } else {
-
+                            unCheck = true;
                         }
                     })
             })
+        if (isCheck) {
+            alert(Message.cannotModify);
+        }
+
+        if (unCheck) {
+            this.loadMasterData();
+        }
+    }
+
+    private async onDelete() {
+        let isCheck = false;
+        this.ArrestIndictment.value
+            .map((x: fromModels.ArrestIndictment) => {
+                this.s_lawsuit.ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
+                    .takeUntil(this.destroy$)
+                    .subscribe(async y => {
+                        if (this.checkResponse(y)) {
+                            isCheck = true;
+                        }
+                    })
+            })
+
+        if (isCheck) {
+            alert(Message.cannotDeleteRec);
+        } else {
+            if (confirm(Message.confirmAction)) {
+                this.deleteArrest();
+            }
+        }
     }
 
     private async onComplete() {
@@ -977,14 +1016,16 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async deleteArrest() {
-        const msgError = 'ไม่สามารถยกเลิกการทำรายการได้'
-        this.s_arrest.ArrestupdDelete(this.arrestCode).then(x => {
+        this.loaderService.show();
+        await this.s_arrest.ArrestupdDelete(this.arrestCode).then(x => {
             if (this.checkResponse(x)) {
+                alert(Message.delComplete);
                 this.router.navigate([`arrest/list`]);
             } else {
-                alert(msgError);
+                alert(Message.delFail);
             }
-        }, () => { alert(msgError); return; })
+        }, () => { alert(Message.delFail); return; })
+        this.loaderService.hide();
     }
 
     private async updateNotice() {

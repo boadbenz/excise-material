@@ -8,6 +8,7 @@ export const Message = {
     checkData: 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน!',
     cannotDelete: 'ไม่สามารถลบข้อมูลได้',
     cannotDeleteRec: 'ไม่สามารถลบรายการได้',
+    cannotModify: 'ไม่สามารถแก้ไขได้',
     confirmAction: 'ยืนยันการทำรายการหรือไม่',
 
     saveStaffComplete: 'บันทึกข้อมูลผู้จับกุมสำเร็จ',
