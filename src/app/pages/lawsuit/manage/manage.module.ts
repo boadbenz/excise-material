@@ -4,7 +4,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Routes, RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ManageComponent } from "./manage.component";
+import { ManageComponent, DialogJudgment } from "./manage.component";
 import { NavigationComponent } from "../../../shared/header-navigation/navigation.component";
 import { HttpClientModule } from "@angular/common/http";
 import { HttpModule } from "@angular/http";
@@ -13,9 +13,11 @@ import { SuspectModalModule } from "../../component/suspect-modal/suspect-modal.
 import { ModalLawbreakerModule } from "../../component/modal-lawbreaker/modal-lawbreaker.module";
 import { PrintLawsuitModalModule } from '../print-doc-modal/print-doc-modal.module';
 import { DatepickerI18nService } from "../../../services/datepicker-i18n.service";
-
+import { MatDialogModule } from '@angular/material/dialog';
 import { ArrestsService } from "../../arrests/arrests.service";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProveService } from "../../prove/prove.service";
+import { BrowserModule } from "@angular/platform-browser";
 
 const routes: Routes = [
   {
@@ -50,9 +52,12 @@ const routes: Routes = [
     SuspectModalModule,
     ModalLawbreakerModule,
     PrintLawsuitModalModule,
+    MatDialogModule,
   ],
+  entryComponents: [DialogJudgment],
   declarations: [
-    ManageComponent
+    ManageComponent,
+    DialogJudgment
   ], providers: [
     { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },
     LawsuitService,
@@ -60,4 +65,4 @@ const routes: Routes = [
     ProveService
   ]
 })
-export class ManageModule {}
+export class ManageModule { }

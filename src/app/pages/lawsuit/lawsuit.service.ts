@@ -1,14 +1,14 @@
-import {Injectable} from "@angular/core";
-import {appConfig} from "../../app.config";
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Lawsuit} from "./models/lawsuit";
-import {Arrest} from "../model/arrest";
-import {Notice} from "../notices/notice";
+import { Injectable } from "@angular/core";
+import { appConfig } from "../../app.config";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Lawsuit } from "./models/lawsuit";
+import { Arrest } from "../model/arrest";
+import { Notice } from "../notices/notice";
 
 @Injectable()
 export class LawsuitService {
 
-  private httpOptions = { headers: new HttpHeaders({'Content-Type': 'application/json'}) };
+  private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
   constructor(private http: HttpClient) { }
 
@@ -19,8 +19,15 @@ export class LawsuitService {
   }
 
   private async responsePromiseGetWithoutStatus(params: string, url: string) {
-    return await this.http.post<any>(url, params, this.httpOptions).toPromise() || [ ];
+    return await this.http.post<any>(url, params, this.httpOptions).toPromise() || [];
   }
+
+  private async responseGetMethod(params: string, url: string) {
+    const getUrl = url
+
+    return await this.http.get<any>(getUrl).toPromise() || [];
+  }
+
 
   async getByKeywordOnInt(): Promise<Lawsuit[]> {
     const params = { 'Textsearch': '' };
@@ -64,6 +71,12 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
+  async GetArrestIndicmentDetailgetByCon(indictmentDetailID: string) {
+    const params = { IndictmentDetailID: indictmentDetailID };
+    const url = `${appConfig.api7788}/LawsuitArrestIndicmentDetailgetByCon?IndictmentDetailID=`+indictmentDetailID;
+    return this.responseGetMethod(JSON.stringify(params), url);
+  }
+
   async LawsuitgetByCon(LawsuitID) {
     const params = { LawsuitID: LawsuitID };
     const url = `${appConfig.api8083}/LawsuitgetByCon`;
@@ -82,14 +95,14 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  async LawsuitArrestgetByCon(ArrestCode: string) {
-    const params = { ArrestCode: ArrestCode };
+  async LawsuitArrestgetByCon(ArrestCode: number) {
+    const params = { IndictmentID: ArrestCode };
     const url = `${appConfig.api8083}/LawsuitArrestgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  async MasDocumentMaingetAll(DocumentType: number,ReferenceCode: number) {
-    const params = { DocumentType: DocumentType,ReferenceCode: ReferenceCode };
+  async MasDocumentMaingetAll(DocumentType: number, ReferenceCode: number) {
+    const params = { DocumentType: DocumentType, ReferenceCode: ReferenceCode };
     const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
@@ -112,12 +125,12 @@ export class LawsuitService {
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
   async MasStaffMaingetAll() {
-    const params = { };
+    const params = {};
     const url = `${appConfig.api7788}/MasStaffMaingetAll`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
   async MasOfficeMaingetAll() {
-    const params = { };
+    const params = {};
     const url = `${appConfig.api7788}/MasStaffMaingetAll`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }

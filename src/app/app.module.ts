@@ -19,6 +19,7 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
 import { MatAutocompleteModule } from '@angular/material';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { AuthGuard } from './pages/login/auth.guard';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -30,9 +31,10 @@ import { AuthGuard } from './pages/login/auth.guard';
         LayoutComponent
     ],
     imports: [
-        CommonModule, 
+        CommonModule,
         ReactiveFormsModule,
         BrowserModule,
+        BrowserAnimationsModule,
         NgbModule.forRoot(),
         FormsModule,
         HttpModule,
