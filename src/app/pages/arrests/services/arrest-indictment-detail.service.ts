@@ -22,7 +22,7 @@ export class ArrestIndictmentDetailService {
     ArrestIndicmentDetailgetByIndictmentID(IndictmentID: string){
         const params = { IndictmentID };
         const url = `${appConfig.api7788}/ArrestIndicmentDetailgetByIndictmentID`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     ArrestIndicmentDetailgetByCon(IndictmentDetailID: string) {
