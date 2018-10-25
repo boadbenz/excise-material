@@ -976,7 +976,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 RewardMoney += +item.RewardMoney;
                 TreasuryMoney += +item.TreasuryMoney;
 
-                MistreatNoList.push(item.CompareID)
+                MistreatNoList.push(item.CompareCode)
             });
 
         var MistreatNoUnique = Array.from(new Set(MistreatNoList));
