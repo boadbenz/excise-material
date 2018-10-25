@@ -48,6 +48,7 @@ export class ManageComponent implements OnInit {
   LawsuitArrestIndictmentProduct: any = [];
   LawsuitArrestIndictmentProductTableListShow = false;
   LawsuitTableListShow = false;
+  officeCode = "";
   private getDataFromListPage: any;
   private onPrintSubscribe: any;
   private onSaveSubscribe: any;
@@ -190,11 +191,67 @@ export class ManageComponent implements OnInit {
 
 
   private async onSave() {
-    //console.log("ONSAVE CLICK");
     this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
+    /// save IsLawsuitComplete = 1
     if (IsLawsuitComplete == 1) {
-      this.lawsuitService.LawsuitupdByCon(this.lawsuitForm.value);
+      /// check LawsuitNo on exite
+      // await this.lawsuitService.LawsuitVerifyLawsuitNo(this.lawsuitForm.controls['LawsuitNo'].value, 
+      // this.officeCode, 
+      // this.lawsuitForm.controls['IsOutsideCheck'].value).then(async res=> {
+      //   if(res.length != 0 ){
+      //     alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
+      //     this.preLoaderService.setShowPreloader(false);
+      //     return;
+      //   }
+      // });
+
+      /// check LawsuitDate
+      if(!this.lawsuitForm.get('LawsuitDate').valid){
+        alert("กรุณากรอกวันที่รับคดีใหม่");
+        this.preLoaderService.setShowPreloader(false);
+        return;
+      }
+      /// check LawsuitTime
+      if(!this.lawsuitForm.get('LawsuitTime').valid){
+        alert("กรุณากรอกเวลาที่รับคดีใหม่");
+        this.preLoaderService.setShowPreloader(false);
+        return;
+      }
+
+      /// check StaffID on exite in this.masStaffList)
+      ///### if( this.lawsuitForm.get('FullName').value in this.masStaffList)
+
+      /// check PositionName
+      if(!this.lawsuitForm.get('PositionName').valid){
+        alert("กรุณากรอกตำแหน่งใหม่");
+        this.preLoaderService.setShowPreloader(false);
+        return;
+      }
+      /// check DepartmentName
+      if(!this.lawsuitForm.get('DepartmentName').valid){
+        alert("กรุณากรอกหน่วยงานใหม่");
+        this.preLoaderService.setShowPreloader(false);
+        return;
+      }
+      /// check LawsuitStation
+      if(!this.lawsuitForm.get('LawsuitStation').valid){
+        alert("กรุณากรอกสถานที่เขียนใหม่");
+        this.preLoaderService.setShowPreloader(false);
+        return;
+      }
+      /// check showEditField
+      if(!this.lawsuitForm.get('showEditField').valid){
+        alert("กรุณากรอกคำให้การใหม่");
+        this.preLoaderService.setShowPreloader(false);
+        return;
+      }
+
+
+
+    /// save IsLawsuitComplete = 0
+    } else {
+      
     }
     this.preLoaderService.setShowPreloader(false);
   }
@@ -296,6 +353,9 @@ export class ManageComponent implements OnInit {
       console.log(res);
       /// Check LawsuitComplete status
       if (res.length != 0) {
+        if(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length !=0 ){
+          this.officeCode = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0]['OfficeCode'];
+        }
         this.disabled = true;
         let IsLawsuitComplete = res[0]['IsLawsuitComplete'];
         /// LawsuitComplete status = 1
@@ -409,14 +469,13 @@ export class ManageComponent implements OnInit {
         
         /// LawsuitComplete status = 0
         } else {
-          console.log("sss");
           //console.log("LAWSUIT COMPLETE = 0");
           this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
-            //console.log(JSON.stringify(masstaff));
+            console.log(masstaff);
             this.masStaffList = masstaff || [];
           });
           this.lawsuitService.MasOfficeMaingetAll().then(masoffice => {
-            //console.log(JSON.stringify(masoffice));
+            console.log(masoffice);
             this.masOfficeList = masoffice || [];
           });
           this.navService.setSaveButton(true);
@@ -479,7 +538,7 @@ export class ManageComponent implements OnInit {
 
     reader.readAsDataURL(file);
     reader.onload = () => {
-      let dataSource = reader.result.split(',')[1];
+      let dataSource = (<string>reader.result).split(',')[1];
       if (dataSource && dataSource !== undefined) {
         this.LawsuitDocument.at(index).patchValue({
           ReferenceCode: this.LawsuitID,

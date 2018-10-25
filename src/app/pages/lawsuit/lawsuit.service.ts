@@ -120,6 +120,36 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
+  async LawsuitVerifyLawsuitNo(LawsuitNo: string, OfficeCode: string, IsOutside: number) {
+    const params = { LawsuitNo: LawsuitNo, OfficeCode: OfficeCode, IsOutside: IsOutside };
+    const url = `${appConfig.api8083}/LawsuitVerifyLawsuitNo`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }  
+
+  // async MasStaffMaingetAll() {
+  //   const params = {};
+  //   const url = `${appConfig.api8083}/MasStaffMaingetAll`;
+  //   return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  // }  
+
+  // async MasOfficeMaingetAll() {
+  //   const params = {};
+  //   const url = `${appConfig.api8083}/MasOfficeMaingetAll`;
+  //   return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  // }  
+
+  async MasStaffMaingetAll() {
+    const params = {};
+    const url = `${appConfig.api7788}/MasStaffMaingetAll`;
+    return await this.http.get<any>(url, this.httpOptions).toPromise();
+  }
+  async MasOfficeMaingetAll() {
+    const params = {};
+    const url = `${appConfig.api7788}/MasOfficeMaingetAll`;
+    return await this.http.get<any>(url, this.httpOptions).toPromise();
+  }
+
+
   async getByArrestCon(ArrestCode: string): Promise<Arrest> {
     const params = { ArrestCode };
     const url = `${appConfig.api7788}/ArrestgetByCon`;
@@ -137,16 +167,7 @@ export class LawsuitService {
     const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
-  async MasStaffMaingetAll() {
-    const params = {};
-    const url = `${appConfig.api7788}/MasStaffMaingetAll`;
-    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-  }
-  async MasOfficeMaingetAll() {
-    const params = {};
-    const url = `${appConfig.api7788}/MasStaffMaingetAll`;
-    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-  }
+
 
 
   async LawsuitupdByCon(LawsuitList) {
