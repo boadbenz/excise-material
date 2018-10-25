@@ -104,7 +104,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.active_Route();
         this.navigate_Service();
 
-        this.RevenueStatus = 1;
+        this.RevenueStatus = 0;
         this.RevenueNo = "";
         this.RevenueStation == "";
         this.StaffSendName == "";
@@ -306,7 +306,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ShowRevenue() {
         this.IncService.getByCon(this.RevenueID).then(async res => {
-            if (res != null) {
+            if (res.length > 0 && res != null) {
                 // if (res[0].RevenueDetail.length > 0) {
                 //     this.ReceiptBookNo = res[0].RevenueDetail[0].ReceiptBookNo;
                 // }
@@ -409,6 +409,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     this.checkIfAllChbSelected();
                 }
+            }else{
+                alert("พบปัญหาในการติดต่อ Server");
+                this.preloader.setShowPreloader(false);
+                this.router.navigate(['/income/list']);
             }
         }, (err: HttpErrorResponse) => {
             alert(err.message);
@@ -416,69 +420,76 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ShowRevenueCompare() {
-        this.preloader.setShowPreloader(true);
-        let DRate, cDateRevenue;
-        DRate = this.RevenueDate.date;
-
-        if (DRate != undefined) {
-            cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
-        }
-        
-        await this.IncService.RevenueComparegetByCon(setZeroHours(cDateRevenue), this.StaffDeptCode).then(async res => {
-            this.preloader.setShowPreloader(false);
-            this.ListRevenueDetail = [];
-            this.ListRevenueDetailPaging = [];
-
-            if (res.length > 0) {
-                for (var j = 0; j < res.length; j += 1) {
-                    if (res[j].RevenueCompareDetail.length > 0) {
-                        for (var i = 0; i < res[j].RevenueCompareDetail.length; i += 1) {
-                            try {
-                                if (res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
-                                    for (var k = 0; k < res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
-                                        this.oRevenueDetail = {
-                                            RevenueDetailID: "",
-                                            ReceiptBookNo: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
-                                            ReceiptNo: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
-                                            RevenueStatus: "1",
-                                            RevenueID: "",
-                                            CompareReceiptID: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
-                                            CompareID: res[j].CompareID,
-                                            CompareCode: res[j].CompareCode,
-                                            LawBreaker: res[j].RevenueCompareDetail[i].LawbreakerTitleName + res[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + res[j].RevenueCompareDetail[i].LawbreakerLastName,
-                                            StaffReceip: res[j].RevenueCompareStaff[i].TitleName + res[j].RevenueCompareStaff[i].FirstName + " " + res[j].RevenueCompareStaff[i].LastName,
-                                            PaymentDate: toLocalShort(res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
-                                            TotalFine: +`${res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
-                                            BribeMoney: +`${res[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : res[0].RevenueCompareDetail[i].BribeMoney}`,
-                                            TreasuryMoney: +`${res[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : res[0].RevenueCompareDetail[i].TreasuryMoney}`,
-                                            RewardMoney: +`${res[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : res[0].RevenueCompareDetail[i].RewardMoney}`,
-                                            IsCheck: false,
-                                            IsNewItem: true,
-                                            IsDelItem: false
-                                        }
-
-                                        this.ListRevenueDetail.push(this.oRevenueDetail);
-                                    }
-                                }
-                            } catch{ }
-                        }
-                    }
-
-                }
-
-                // set total record
-                this.paginage.TotalItems = this.ListRevenueDetail.length;
-                this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
-            }
-            else{
-                this.ListRevenueDetail = [];
-                this.ListRevenueDetailPaging = [];
+        if(this.RevenueDate != null && this.RevenueDate != "")
+        {
+            this.preloader.setShowPreloader(true);
+            let DRate, cDateRevenue;
+            DRate = this.RevenueDate.date;
+    
+            if (DRate != undefined) {
+                cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
             }
             
-
-        }, (err: HttpErrorResponse) => {
-            alert(err.message);
-        });
+            await this.IncService.RevenueComparegetByCon(setZeroHours(cDateRevenue), this.StaffDeptCode).then(async res => {
+                this.preloader.setShowPreloader(false);
+                this.ListRevenueDetail = [];
+                this.ListRevenueDetailPaging = [];
+    
+                if (res.length > 0) {
+                    for (var j = 0; j < res.length; j += 1) {
+                        if (res[j].RevenueCompareDetail.length > 0) {
+                            for (var i = 0; i < res[j].RevenueCompareDetail.length; i += 1) {
+                                try {
+                                    if (res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
+                                        for (var k = 0; k < res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
+                                            this.oRevenueDetail = {
+                                                RevenueDetailID: "",
+                                                ReceiptBookNo: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
+                                                ReceiptNo: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
+                                                RevenueStatus: "1",
+                                                RevenueID: "",
+                                                CompareReceiptID: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
+                                                CompareID: res[j].CompareID,
+                                                CompareCode: res[j].CompareCode,
+                                                LawBreaker: res[j].RevenueCompareDetail[i].LawbreakerTitleName + res[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + res[j].RevenueCompareDetail[i].LawbreakerLastName,
+                                                StaffReceip: res[j].RevenueCompareStaff[i].TitleName + res[j].RevenueCompareStaff[i].FirstName + " " + res[j].RevenueCompareStaff[i].LastName,
+                                                PaymentDate: toLocalShort(res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
+                                                TotalFine: +`${res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
+                                                BribeMoney: +`${res[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : res[0].RevenueCompareDetail[i].BribeMoney}`,
+                                                TreasuryMoney: +`${res[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : res[0].RevenueCompareDetail[i].TreasuryMoney}`,
+                                                RewardMoney: +`${res[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : res[0].RevenueCompareDetail[i].RewardMoney}`,
+                                                IsCheck: false,
+                                                IsNewItem: true,
+                                                IsDelItem: false
+                                            }
+    
+                                            this.ListRevenueDetail.push(this.oRevenueDetail);
+                                        }
+                                    }
+                                } catch{ }
+                            }
+                        }
+    
+                    }
+    
+                    // set total record
+                    this.paginage.TotalItems = this.ListRevenueDetail.length;
+                    this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
+                }
+                else{
+                    this.ListRevenueDetail = [];
+                    this.ListRevenueDetailPaging = [];
+                }
+                
+    
+            }, (err: HttpErrorResponse) => {
+                alert(err.message);
+            });
+        }
+        else{
+            alert("กรุณาระบุวันที่นำส่ง");
+            this.ListRevenueDetailPaging = [];
+        }       
     }
 
 
@@ -514,7 +525,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
         this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.InformTo = this.InformTo;
-        this.oRevenue.RevenueStatus = this.RevenueStatus.toString();
+        this.RevenueStatus = 1;
+        this.oRevenue.RevenueStatus = "1";
         this.oRevenue.ResultCount = this.MistreatNo.toString();
 
         this.oRevenue.RevenueStaff = [];
