@@ -23,6 +23,7 @@ import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Message } from '../../../config/message';
 import { replaceFakePath } from 'app/config/dataString';
 import { MatDialog } from '@angular/material';
+import { async } from "q";
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html"
@@ -44,6 +45,9 @@ export class ManageComponent implements OnInit {
   disabled: Boolean;
   isRequired: boolean;
   lawBrakerForm: FormArray;
+  LawsuitArrestIndictmentProduct: any = [];
+  LawsuitArrestIndictmentProductTableListShow = false;
+  LawsuitTableListShow = false;
   private getDataFromListPage: any;
   private onPrintSubscribe: any;
   private onSaveSubscribe: any;
@@ -111,7 +115,6 @@ export class ManageComponent implements OnInit {
   async ngOnInit() {
     this.sidebarService.setVersion('0.0.0.5');
     // this.preLoaderService.setShowPreloader(true);
-    this.disabled = true;
     await this.getParamFromActiveRoute();
     this.navigate_service();
     this.createForm();
@@ -187,7 +190,7 @@ export class ManageComponent implements OnInit {
 
 
   private async onSave() {
-    console.log("ONSAVE CLICK");
+    //console.log("ONSAVE CLICK");
     this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
     if (IsLawsuitComplete == 1) {
@@ -220,6 +223,9 @@ export class ManageComponent implements OnInit {
   }
   private createTableListForm(): FormGroup {
     return this.fb.group({
+      EntityType: new FormControl(null, Validators.required),
+      LawbreakerType: new FormControl(null, Validators.required),
+      LawsuitNoRef: new FormControl(null, Validators.required),
       LawBrakerFullName: new FormControl(null, Validators.required),
       LawsuitType: new FormControl(null, Validators.required),
       LawsuitEnd: new FormControl(null, Validators.required),
@@ -230,7 +236,7 @@ export class ManageComponent implements OnInit {
   private setItemFormArray(array: any[], formControl: string, formGroup: FormGroup) {
     if (array !== undefined && array.length) {
       const itemFGs = array.map(item => this.fb.group(item));
-      console.log("ITEMFGS" + itemFGs.values);
+      //console.log("ITEMFGS" + itemFGs.values);
       const itemFormArray = this.fb.array(itemFGs);
       formGroup.setControl(formControl, itemFormArray);
     }
@@ -252,15 +258,21 @@ export class ManageComponent implements OnInit {
       LawsuitStaff: this.fb.array([this.createStaffForm()]),
       LawsuitTableList: this.fb.array([this.createTableListForm()]),
       LawsuitDocument: this.fb.array([]),
-
     });
   }
   private async ArrestgetByCon(IndictmentID: string, LawsuitID: number) {
+    /// get LawsuitArrestIndictmentProduct
+    await this.lawsuitService.LawsuitArrestIndictmentProductgetByIndictmentID(IndictmentID).then(async res=> {
+      if(res.length != 0 ){
+        this.LawsuitArrestIndictmentProduct = res;  
+        this.LawsuitArrestIndictmentProductTableListShow = true;
+      }
+    });
+
+    ///get  LawsuitArrest
     await this.lawsuitService.LawsuitArrestGetByCon(IndictmentID).then(async res => {
       this.lawsuitList = res || [];
-      console.log("params" + IndictmentID);
-
-
+      /// set form lawsuitArrest
       await this.lawsuitArrestForm.reset({
         ArrestCode: res[0]['ArrestCode'],
         OccurrenceDate: res[0]['OccurrenceDate'],
@@ -272,40 +284,41 @@ export class ManageComponent implements OnInit {
         PenaltyDesc: res[0]['LawsuitArrestIndicment'][0]['LawsuitLawGuiltbase'][0]['LawsuitLawSubSectionRule'][0]['LawsuitLawSection'][0]['LawsuitLawPenalty'][0]['PenaltyDesc'],
 
       });
+
+      /// concat name
       const arreststaff = res[0]['LawsuitArrestStaff'].filter(item => item.IsActive == 1);
       await arreststaff.map(item => {
         item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
       });
-      console.log("arreststaff" + JSON.stringify(arreststaff));
+      /// set LawsuitArrestStaff to lawsuitArrestForm
       this.setItemFormArray(arreststaff, 'LawsuitArrestStaff', this.lawsuitArrestForm);
 
-      if (res) {
+      console.log(res);
+      /// Check LawsuitComplete status
+      if (res.length != 0) {
+        this.disabled = true;
         let IsLawsuitComplete = res[0]['IsLawsuitComplete'];
-        console.log("ISLAWSUIT:" + res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit']);
-        console.log("ISOUTSIDE:" + res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside']);
-        console.log("LAWSUIT NO:" + res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitNo']);
+        /// LawsuitComplete status = 1
         if (IsLawsuitComplete == 1) {
-          console.log("LAWSUIT COMPLETE = 1");
-          this.lawsuitService.MasDocumentMaingetAll(4, LawsuitID).then(masdoc => {
-            //this.masDocList = masdoc || [];
+          /// get MasDocumentMaingetAll
+          this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']).then(res => {
+            //insert doc to dosMacList
+
           });
+          /// get IsLawsuit check box (IsLawsuitCheck)
           let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
-          let IsLawsuitCheck;
+          let IsLawsuitCheck = false;
           if (islaw == 0) {
-            IsLawsuitCheck = 'true';
-          } else {
-            IsLawsuitCheck = '';
-          }
-          let isout = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'];
-          let IsOutsideCheck;
-          if (isout == 1) {
-            IsOutsideCheck = 'true';
-          } else {
-            IsOutsideCheck = '';
+            IsLawsuitCheck = true;
           }
 
-          console.log("ISLAWSUIT========" + IsLawsuitCheck);
-          console.log("IsOutside========" + IsOutsideCheck);
+          /// get IsOutside check box (IsOutsidetCheck)
+          let isout = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'];
+          let IsOutsideCheck = false;
+          if (isout == 1) {
+            IsOutsideCheck = true;
+          }
+
           await this.lawsuitForm.reset({
             IsLawsuitCheck: IsLawsuitCheck,
             ReasonDontLawsuit: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['ReasonDontLawsuit'],
@@ -316,7 +329,7 @@ export class ManageComponent implements OnInit {
             LawsuitStation: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStation'],
             AccuserTestimony: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['AccuserTestimony'],
           });
-          //console.log("LAWSUIT STAFF"+JSON.stringify(res[0]['LawsuitArrestIndicment'][0]['Lawsuit']));
+          ////console.log("LAWSUIT STAFF"+JSON.stringify(res[0]['LawsuitArrestIndicment'][0]['Lawsuit']));
           const staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'].filter(item => item.IsActive == 1);
           staff.map(item => {
             item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
@@ -325,58 +338,54 @@ export class ManageComponent implements OnInit {
           let arrList = [];
 
           await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].map(item => {
-            console.log("ITEM IN LAW BRAKER" + item);
+            this.LawsuitTableListShow = true;
             res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitArrestLawbreaker'].map(arrestLaw => {
               item.lawBrakerFullName = `${arrestLaw.LawbreakerTitleName} ${arrestLaw.LawbreakerFirstName} ${arrestLaw.LawbreakerLastName}`
             });
-            console.log("LAW BRAKER FULL NAME:" + item.lawBrakerFullName);
-            let lt = item.LawsuitType;
-            let ln = item.LawsuitEnd;
-            console.log("LAWSUIT TYPE" + lt);
-            console.log("LAWSUIT END" + ln);
-            /*if(lt == 0) {
-              item.LawsuitType = "ส่งฟ้องศาล";
-            } else if(lt == 1) {
-              item.LawsuitType = "เปรียบเทียบปรับ";
-            } else if(lt == 2) {
-              item.LawsuitType = "ไม่มีตัวตน";
-            }
-            if(ln == 0) {
-              item.LawsuitEnd = "กรมสรรพสามิต";
-            } else if(ln == 1) {
-              item.LawsuitEnd = "ศาล";
-            } else if(ln == 2) {
-              item.LawsuitEnd = "พนักงานฝ่ายปกครอง/พนักงำนอัยการ";
-            }*/
-            //this.lawsuitTypeSelected = item.LawsuitType;
-            console.log("LAWSUIT TYPE" + item.LawsuitType);
-            console.log("LAWSUIT END" + item.LawsuitEnd);
+            
+            /// add LawsuitTableList
             if (item.LawsuitArrestProductDetail != null && item.LawsuitArrestProductDetail.length) {
               item.ProductDesc = item.LawsuitArrestProductDetail.ProductDesc;
             } else {
               item.ProductDesc = '';
             }
-            console.log("Prod DESC" + item.ProductDesc);
             let a = {
+              'EntityType': "",
+              'LawbreakerType': "",
+              'LawsuitNoRef': "",
               'LawBrakerFullName': item.lawBrakerFullName,
               'LawsuitType': item.LawsuitType,
               'LawsuitEnd': item.LawsuitEnd,
               'ProductDesc': item.ProductDesc,
             };
+            /// add EntityType
+            if(item.ArrestLawbreaker == 1){
+              a.EntityType = 'บุคคลธรรมดา';
+            }else{
+              a.EntityType = 'นิติบุคคล';
+            }
+            /// add LawbreakerType
+            if(item.ArrestLawbreaker == 1){
+              a.LawbreakerType = 'คนไทย';
+            }else{
+              a.LawbreakerType = 'ต่างชำติ';
+            }
+            /// add LawsuitNoRef
+            if(item.ArrestLawbreaker == 1 && item.ArrestLawbreaker == 1){
+              a.LawsuitNoRef = a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].IDCard;
+            }else if(item.ArrestLawbreaker == 1 && item.ArrestLawbreaker == 0){
+              a.LawsuitNoRef = a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].PassportNo;
+            }else{
+              a.LawsuitNoRef = a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].CompanyRegistrationNo;
+            }
             arrList.push(a)
           });
-
-          console.log("LAWBRAKER:" + JSON.stringify(arrList));
           this.setItemFormArray(arrList, 'LawsuitTableList', this.lawsuitForm);
 
-
-
-
-
+          /// create data management button
           let isProve = res[0]['LawsuitArrestIndicment'][0]['IsProve'];
           let lawsuitType = res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'];
-          console.log("isProve" + isProve);
-          console.log("lawsuitType" + lawsuitType);
+
           if (isProve == 0) {
             if (lawsuitType == 1) {
               this.navService.setPrintButton(true);
@@ -397,15 +406,17 @@ export class ManageComponent implements OnInit {
             this.navService.setNextPageButton(true);
             this.navService.setInnerTextNextPageButton('เปรียบเทียบปรับ')
           }
-          //islawsuitcomplete!=1
+        
+        /// LawsuitComplete status = 0
         } else {
-          console.log("LAWSUIT COMPLETE = 0");
+          console.log("sss");
+          //console.log("LAWSUIT COMPLETE = 0");
           this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
-            console.log(JSON.stringify(masstaff));
+            //console.log(JSON.stringify(masstaff));
             this.masStaffList = masstaff || [];
           });
           this.lawsuitService.MasOfficeMaingetAll().then(masoffice => {
-            console.log(JSON.stringify(masoffice));
+            //console.log(JSON.stringify(masoffice));
             this.masOfficeList = masoffice || [];
           });
           this.navService.setSaveButton(true);
@@ -480,7 +491,7 @@ export class ManageComponent implements OnInit {
     };
   }
   editTable(item: any, index: number) {
-    console.log('item', item, index)
+    //console.log('item', item, index)
     // alert((item.get('LawsuitType').value));
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
@@ -488,7 +499,7 @@ export class ManageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      //console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -517,7 +528,7 @@ export class DialogJudgment {
 
   ngOnInit() {
     this.lawsuitService.GetArrestIndicmentDetailgetByCon('2').then(result => {
-      console.log('result====>', result);
+      //console.log('result====>', result);
     });
     this.lawsuitArrestForm = this.fb.group({
       arrestName: new FormControl(null, Validators.required),

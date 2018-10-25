@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Lawsuit } from "./models/lawsuit";
 import { Arrest } from "../model/arrest";
 import { Notice } from "../notices/notice";
+import { StringifyOptions } from "querystring";
 
 @Injectable()
 export class LawsuitService {
@@ -89,6 +90,12 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
+  async LawsuitArrestIndictmentProductgetByIndictmentID(IndictmentID) {
+    const params = { IndictmentID: IndictmentID };
+    const url = `${appConfig.api8083}/LawsuitArrestIndictmentProductgetByIndictmentID`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }
+
   async CompareMasLawgetByCon(GuiltBaseID) {
     const params = { GuiltBaseID: GuiltBaseID };
     const url = `${appConfig.api8881}/CompareMasLawgetByCon`;
@@ -102,6 +109,12 @@ export class LawsuitService {
   }
 
   async MasDocumentMaingetAll(DocumentType: number, ReferenceCode: number) {
+    const params = { DocumentType: DocumentType, ReferenceCode: ReferenceCode };
+    const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }
+
+  async MasDocumentMaingetAllString(DocumentType: number, ReferenceCode: string) {
     const params = { DocumentType: DocumentType, ReferenceCode: ReferenceCode };
     const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
