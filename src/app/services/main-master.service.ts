@@ -26,7 +26,7 @@ export class MainMasterService {
     return res
   }
 
-  callApi(url: string):Promise<any[]> {
+  callApi(url: string): Promise<any[]> {
     return this.resposePromisGetList('{}', url);
   }
 
@@ -54,7 +54,21 @@ export class MainMasterService {
   MasCommunicationchanelMaingetAll() {
     return this.callApi(`${appConfig.api7789}/MasCommunicationchanelMaingetAll`);
   }
-
+  MasTitleMaingetAll() {
+    return this.callApi(`${appConfig.api7789}/MasTitleMaingetAll`);
+  }
+  MasNationalityMaingetAll() {
+    return this.callApi(`${appConfig.api7789}/MasNationalityMaingetAll`);
+  }
+  MasRaceMaingetAll() {
+    return this.callApi(`${appConfig.api7789}/MasRaceMaingetAll`);
+  }
+  MasReligionMaingetAll() {
+    return this.callApi(`${appConfig.api7789}/MasReligionMaingetAll`);
+  }
+  MasCountryMaingetAll(){
+    return this.callApi(`${appConfig.api7789}/MasCountryMaingetAll`);
+  }
 
 
 

@@ -4,7 +4,7 @@ import { ArrestLawbreaker } from "../models/arrest-lawbreaker";
 import { appConfig } from "app/app.config";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-@Injectable() 
+@Injectable()
 export class ArrestLawbreakerService {
 
     constructor(
@@ -19,13 +19,13 @@ export class ArrestLawbreakerService {
             })
     };
 
-    ArrestLawbreakerinsAll(ArrestLawbreaker: ArrestLawbreaker){
+    ArrestLawbreakerinsAll(ArrestLawbreaker: ArrestLawbreaker) {
         const params = ArrestLawbreaker;
         const url = `${appConfig.api7788}/ArrestLawbreakerinsAll`;
         return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    ArrestLawbreakerupdByCon(ArrestLawbreaker: ArrestLawbreaker){
+    ArrestLawbreakerupdByCon(ArrestLawbreaker: ArrestLawbreaker) {
         const params = ArrestLawbreaker;
         const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
         return this.http.post(url, params).map(x => x.json());
@@ -35,5 +35,11 @@ export class ArrestLawbreakerService {
         const params = { LawbreakerID };
         const url = `${appConfig.api7788}/ArrestLawbreakerupdDelete`;
         return this.http.post(url, params).map(x => x.json());
+    }
+
+    ArrestMasLawbreakergetByCon(LawbreakerID: string) {
+        const params = { LawbreakerID };
+        const url = `${appConfig.api7788}/ArrestMasLawbreakergetByCon`;
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 }

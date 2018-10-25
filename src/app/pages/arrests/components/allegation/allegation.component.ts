@@ -249,13 +249,13 @@ export class AllegationComponent implements OnInit, OnDestroy {
     let _indict = this.arrestIndictmentFG;
     if (!o.length) return;
 
-    _indict.patchValue(o[0])
+    // _indict.patchValue(o[0])
 
-    // _indict.patchValue({
-    //   IndictmentID: o[0].IndictmentID,
-    //   GuiltBaseID: o[0].GuiltBaseID,
-    //   ArrestLawGuitbase: this.setArrestLawGuitbase(o[0].ArrestLawGuitbase)
-    // })
+    _indict.patchValue({
+      IndictmentID: o[0].IndictmentID,
+      GuiltBaseID: o[0].GuiltBaseID,
+      ArrestLawGuitbase: this.setArrestLawGuitbase(o[0].ArrestLawGuitbase)
+    })
   }
   // --- 1
   private setArrestLawGuitbase = (o: fromModels.ArrestLawGuitbase[]) => {
@@ -339,6 +339,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
     this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
+    let sort = this.sortFormArray(this.ArrestLawbreaker.value);
+    sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'));
   }
 
   productCheckAll() {
@@ -370,6 +372,10 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async deleteProduct(i: number) {
     await this.deleteFormArray(this.ArrestProduct, i, 'ArrestProduct');
+  }
+
+  async deleteLawbreaker(i: number) {
+    await this.deleteFormArray(this.ArrestLawbreaker, i, 'ArrestLawbreaker');
   }
 
   private async setProductUnitStore() {

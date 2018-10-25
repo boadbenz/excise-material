@@ -1,24 +1,27 @@
 <form [formGroup]="LawbreakerFG">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">
+                <a class="" (click)="card1 = !card1">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card1, 'fa-chevron-up': !card1}"></i>
+                </a>
+            </div>
             <h4 class="card-title m-b-0">ข้อมูลส่วนต้ว</h4>
         </div>
-        <div class="card-body">
-
+        <div class="card-body" *ngIf="card1">
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทผู้ต้องสงสัย :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="LawbreakerType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null"
-                        required>
+                    <select formControlName="LawbreakerType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                        [attr.disabled]="showEditField ? '' : null" required>
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of LawbreakerTypes; let i=index;" [value]="item.value">{{item.text}}</option>
                     </select>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทบุคคล :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="EntityType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null"
-                        required>
+                    <select formControlName="EntityType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                        [attr.disabled]="showEditField ? '' : null" required>
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of entityTypes; let i=index;" [value]="item.value">{{item.text}}</option>
                     </select>
@@ -31,27 +34,32 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">คำนำหน้าชื่อ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="LawbreakerTitleName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                        [attr.disabled]="showEditField ? '' : null" required>
-                        <option value="" selected disabled></option>
-                        <option *ngFor="let item of titleNames; let i=index;" [value]="item.value">{{item.text}}</option>
-                    </select>
+                    <ng-template #rt let-r="result" let-t="term">
+                        {{ r.TitleNameTH }}
+                    </ng-template>
+
+                    <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchTitleName"
+                        [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterTitleName"
+                        (selectItem)="selectItemTitleName($event)" [value]="LawbreakerFG.get('LawbreakerTitleName').value" />
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อจริง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="LawbreakerFirstName" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="LawbreakerFirstName" class="form-control form-control-sm"
+                        [readonly]="showEditField">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">นามสกุล :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="LawbreakerLastName" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="LawbreakerLastName" class="form-control form-control-sm"
+                        [readonly]="showEditField">
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ชื่ออื่น :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="LawbreakerOtherName" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="LawbreakerOtherName" class="form-control form-control-sm"
+                        [readonly]="showEditField">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันเกิด :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -61,44 +69,50 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">กรุ๊ปเลือด :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="BloodType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null"
-                        required>
+                    <select formControlName="BloodType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                        [attr.disabled]="showEditField ? '' : null" required>
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of bloodTypes; let i=index;" [value]="item.value">{{item.text}}</option>
                     </select>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">สัญชาติ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="NationalityNameTH" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null"
-                        required>
-                        <option value="" selected disabled></option>
-                        <option *ngFor="let item of nationnalitys; let i=index;" [value]="item.value">{{item.text}}</option>
-                    </select>
+                    <ng-template #rt let-r="result" let-t="term">
+                        {{ r.TitleNameTH }}
+                    </ng-template>
+
+                    <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchNationality"
+                        [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterNationality"
+                        (selectItem)="selectItemNationality($event)" [value]="LawbreakerFG.get('NationalityNameTH').value" />
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เชื่อชาติ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="RaceName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null"
-                        required>
-                        <option value="" selected disabled></option>
-                        <option *ngFor="let item of races; let i=index;" [value]="item.value">{{item.text}}</option>
-                    </select>
+                    <ng-template #rt let-r="result" let-t="term">
+                        {{ r.TitleNameTH }}
+                    </ng-template>
+
+                    <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRace"
+                        [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterRace" (selectItem)="selectItemRace($event)"
+                        [value]="LawbreakerFG.get('RaceName').value" />
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ศาสนา :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="ReligionName" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null"
-                        required>
-                        <option value="" selected disabled></option>
-                        <option *ngFor="let item of religions; let i=index;" [value]="item.value">{{item.text}}</option>
-                    </select>
+                    <ng-template #rt let-r="result" let-t="term">
+                        {{ r.TitleNameTH }}
+                    </ng-template>
+
+                    <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRace"
+                        [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterRace" (selectItem)="selectItemRace($event)"
+                        [value]="LawbreakerFG.get('RaceName').value" />
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">สถานะภาพ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="MaritalStatus" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null"
-                        required>
+                    <select formControlName="MaritalStatus" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                        [attr.disabled]="showEditField ? '' : null" required>
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of materialStatus; let i=index;" [value]="item.value">{{item.text}}</option>
                     </select>
@@ -154,10 +168,14 @@
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">
+                <a class="" (click)="card2 = !card2">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>
+                </a>
+            </div>
             <h4 class="card-title m-b-0">ที่อยู่/สถานที่ทำการ</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card2" class="card-body">
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">GPS :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -167,11 +185,13 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="Address" class="form-control form-control-sm" [readonly]="showEditField" required>
+                    <input type="text" formControlName="Address" class="form-control form-control-sm" [readonly]="showEditField"
+                        required>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField" required>
+                    <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField"
+                        required>
                 </div>
             </div>
             <div class="row">
@@ -197,7 +217,8 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField" required>
+                    <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField"
+                        required>
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ต./อ./จ. :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -205,14 +226,16 @@
                         {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                     </ng-template>
 
-                    <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion" [resultTemplate]="rt" [readOnly]="showEditField"
-                        [inputFormatter]="formatterRegion" (selectItem)="selectItemRegion($event)" required/>
+                    <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion"
+                        [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterRegion"
+                        (selectItem)="selectItemRegion($event)" required />
                 </div>
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">รหัสไปรษณีย์ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="ZipCode" class="form-control form-control-sm" [readonly]="showEditField" required>
+                    <input type="text" formControlName="ZipCode" class="form-control form-control-sm" [readonly]="showEditField"
+                        required>
                 </div>
             </div>
         </div>
@@ -220,10 +243,14 @@
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">
+                <a class="" (click)="card3 = !card3">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card3, 'fa-chevron-up': !card3}"></i>
+                </a>
+            </div>
             <h4 class="card-title m-b-0">ข้อมูลชาวต่างชาติ</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card3" class="card-body">
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขหนังสือเดินทาง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -231,7 +258,8 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเทศที่ออกหนังสือเดินทาง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="PassportCountryName" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="PassportCountryName" class="form-control form-control-sm"
+                        [readonly]="showEditField">
                 </div>
             </div>
             <div class="row">
@@ -247,8 +275,8 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทวีซ่า :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="VISAType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null"
-                        required>
+                    <select formControlName="VISAType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                        [attr.disabled]="showEditField ? '' : null" required>
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of visaTypes; let i=index;" [value]="item.value">{{item.text}}</option>
                     </select>
@@ -259,14 +287,19 @@
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
+            <div class="card-actions">
+                <a class="" (click)="card4 = !card4">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card4, 'fa-chevron-up': !card4}"></i>
+                </a>
+            </div>
             <h4 class="card-title m-b-0">ข้อมูลผู้ประกอบการ</h4>
         </div>
-        <div class="card-body">
+        <div *ngIf="card4" class="card-body">
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขทะเบียนนิติบุคคล :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="CompanyRegistrationNo" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input type="text" formControlName="CompanyRegistrationNo" class="form-control form-control-sm"
+                        [readonly]="showEditField">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขทะเบียนสรรพสามิต :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">

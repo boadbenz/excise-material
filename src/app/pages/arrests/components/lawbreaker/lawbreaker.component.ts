@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel } from '../../../../models';
-// import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import { DropDown, RegionModel } from '../../../../models';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -11,17 +10,17 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-// import { ArrestsService } from '../../arrests/arrests.service';
-import { ILawbreaker, Lawbreaker } from './lawbreaker.interface';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Message } from 'app/config/message';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { MyDatePickerOptions, getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 import { ImageType } from 'app/config/imageType';
 import { ArrestLawbreakerFormControl } from '../../models/arrest-lawbreaker';
-// import { ImageType } from '../../../config/imageType';
-// import { MainMasterService } from '../../../services/main-master.service';
-// import { ArrestLawbreakerFormControl } from '../models/arrest-lawbreaker';
+import { MainMasterService } from 'app/services/main-master.service';
+import { LoaderService } from 'app/core/loader/loader.service';
+import * as fromServices from '../../services';
+import * as fromModels from '../../models';
+import * as fromMasterModel from 'app/models'
 
 
 @Component({
@@ -33,43 +32,50 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     constructor(
         private ngModalService: NgbModal,
         private router: Router,
+        private s_mainMaster: MainMasterService,
+        private s_lawbreaker: fromServices.ArrestLawbreakerService,
         private activatedRoute: ActivatedRoute,
-        // private preloader: PreloaderService,
         private navService: NavigationService,
         private fb: FormBuilder,
-        // private arrestService: ArrestsService,
-        // private mainMasterService: MainMasterService
+        private loaderService: LoaderService
     ) {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
     }
 
+    card1 = true;
+    card2 = true;
+    card3 = true;
+    card4 = true;
+
     @ViewChild('imgNobody') imgNobody: ElementRef;
 
-    LawbreakerItem: Lawbreaker;
+    // LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
 
     private subActivedRoute: any;
     private onSaveSubscribe: any;
     private mode: any;
-    private lawbreakerId: number;
+    private lawbreakerId: string;
 
     myDatePickerOptions = MyDatePickerOptions;
     modal: any;
     showEditField: any;
     isRequired: boolean | false;
-    visaTypes: DropDown[] = VISATypes;
-    bloodTypes: DropDown[] = BloodTypes;
-    entityTypes: DropDown[] = EntityTypes;
-    genderTypes: DropDown[] = GenderTypes;
-    LawbreakerTypes: DropDown[] = LawbreakerTypes;
-    titleNames: DropDown[] = TitleNames;
-    nationnalitys: DropDown[] = Nationalitys;
-    races: DropDown[] = Races;
-    religions: DropDown[] = Religions;
-    materialStatus: DropDown[] = MaritalStatus;
+    visaTypes: DropDown[];
+    bloodTypes: DropDown[];
+    entityTypes: DropDown[];
+    genderTypes: DropDown[];
+    LawbreakerTypes: DropDown[];
+    materialStatus: DropDown[];
 
-    typeheadRegion: RegionModel[] = []
+    typeheadNationnalitys: DropDown[];
+    typeheadTitleNames = new Array<fromMasterModel.MasTitleModel>();
+    typeheadRaces = new Array<fromMasterModel.MasRaceModel>();
+    typeheadReligions = new Array<fromMasterModel.MasReligionModel>();
+    typeheadRegion = new Array<RegionModel>();
+    typeheadCountry = new Array<fromMasterModel.MasCountryModel>();
+    typeheadNationality = new Array<fromMasterModel.MasNationalityModel>();
 
     async ngOnInit() {
         // this.preloader.setShowPreloader(true);
@@ -95,6 +101,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     private active_route() {
         this.subActivedRoute = this.activatedRoute.params.subscribe(p => {
             this.mode = p['mode'];
+            this.lawbreakerId = p['code'];
+
             if (p['mode'] === 'C') {
                 // set false
                 this.navService.setEditButton(false);
@@ -114,12 +122,61 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setEditField(true);
 
-                if (p['code']) {
-                    this.lawbreakerId = p['code'];
-                    this.GetByCon(p['code']);
-                }
+                // if (p['code']) {
+                //     this.lawbreakerId = p['code'];
+                //     this.GetByCon(p['code']);
+                // }
             }
+
+            this.pageLoad();
         });
+    }
+
+    private async pageLoad() {
+        switch (this.mode) {
+            case 'C':
+
+                this.loaderService.show();
+                const promises = [
+                    await this.s_mainMaster.MasTitleMaingetAll(),
+                    await this.s_mainMaster.MasNationalityMaingetAll(),
+                    await this.s_mainMaster.MasRaceMaingetAll(),
+                    await this.s_mainMaster.MasReligionMaingetAll(),
+                    await this.s_mainMaster.MasCountryMaingetAll(),
+                    await this.s_mainMaster.MasDistrictMaingetAll()
+                ];
+                Promise.all(promises)
+                    .then((x) => {
+                        this.typeheadTitleNames = x[0];
+                        this.typeheadNationality = x[1];
+                        this.typeheadRaces = x[2];
+                        this.typeheadReligions = x[3];
+                        this.typeheadCountry = x[4];
+                        x[5].map(prov =>
+                            prov.MasDistrict.map(dis =>
+                                dis.MasSubDistrict.map(subdis => {
+                                    this.typeheadRegion.push({
+                                        SubdistrictCode: subdis.SubdistrictCode,
+                                        SubdistrictNameTH: subdis.SubdistrictNameTH,
+                                        DistrictCode: dis.DistrictCode,
+                                        DistrictNameTH: dis.DistrictNameTH,
+                                        ProvinceCode: prov.ProvinceCode,
+                                        ProvinceNameTH: prov.ProvinceNameTH,
+                                        ZipCode: null
+                                    })
+                                })
+                            )
+                        );
+                    })
+                this.loaderService.hide();
+                break;
+
+            case 'R':
+                this.loaderService.show();
+                this.ArrestLawbreakerGetByCon(this.lawbreakerId);
+                this.loaderService.hide();
+                break;
+        }
     }
 
     private navigate_service() {
@@ -149,81 +206,22 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         })
     }
 
-    async GetByCon(LawbreakerID: string) {
+    async ArrestLawbreakerGetByCon(LawbreakerID: string) {
+        await this.s_lawbreaker.ArrestMasLawbreakergetByCon(LawbreakerID)
+            .then((x: fromModels.ArrestLawbreaker) => {
+                if (x.LinkPhoto) {
+                    this.imgNobody.nativeElement.src = x.LinkPhoto;
+                }
+                if (x.EntityType == 1 && x.LawbreakerType == 1) {
+                    this.card3 = false;
+                    this.card4 = false;
+                } else if (x.EntityType == 1 && x.LawbreakerType == 0) {
+                    this.card4 = false;
+                } else if (x.EntityType == 0) {
+                    this.card3 = false;
+                }
+            })
 
-        // await this.arrestService.ArrestLawbreakergetByCon(LawbreakerID).then(res => {
-        //     this.LawbreakerFG.reset({
-        //         LawbreakerID: res.LawbreakerID,
-        //         EntityType: res.EntityType,
-        //         CompanyTitleCode: res.CompanyTitleCode,
-        //         CompanyTitle: res.CompanyTitle,
-        //         CompanyName: res.CompanyName,
-        //         CompanyOtherName: res.CompanyOtherName,
-        //         CompanyRegistrationNo: res.CompanyRegistrationNo,
-        //         CompanyLicenseNo: res.CompanyLicenseNo,
-        //         FoundedDate: res.FoundedDate,
-        //         LicenseDateForm: res.LicenseDateForm,
-        //         LicenseDateTo: res.LicenseDateTo,
-        //         TaxID: res.TaxID,
-        //         ExciseRegNo: res.ExciseRegNo,
-        //         LawbreakerType: res.LawbreakerType,
-        //         LawbreakerTitleCode: res.LawbreakerTitleCode,
-        //         LawbreakerTitleName: res.LawbreakerTitleName,
-        //         LawbreakerFirstName: res.LawbreakerFirstName,
-        //         LawbreakerMiddleName: res.LawbreakerMiddleName,
-        //         LawbreakerLastName: res.LawbreakerLastName,
-        //         LawbreakerOtherName: res.LawbreakerOtherName,
-        //         LawbreakerDesc: res.LawbreakerDesc,
-        //         IDCard: res.IDCard,
-        //         PassportNo: res.PassportNo,
-        //         VISAType: res.VISAType,
-        //         PassportCountryCode: res.PassportCountryCode,
-        //         PassportCountryName: res.PassportCountryName,
-        //         PassportDateIn: setDateMyDatepicker(res.PassportDateIn),
-        //         PassportDateOut: setDateMyDatepicker(res.PassportDateOut),
-        //         BirthDate: setDateMyDatepicker(res.BirthDate),
-        //         GenderType: res.GenderType,
-        //         BloodType: res.BloodType,
-        //         NationalityCode: res.NationalityCode,
-        //         NationalityNameTH: res.NationalityNameTH,
-        //         RaceCode: res.RaceCode,
-        //         RaceName: res.RaceName,
-        //         ReligionCode: res.ReligionCode,
-        //         ReligionName: res.ReligionName,
-        //         MaritalStatus: res.MaritalStatus,
-        //         Career: res.Career,
-
-        //         // GPS: res.GPS,
-        //         // Location: res.Location,
-        //         // Address: res.Address,
-        //         // Village: res.Village,
-        //         // Building: res.Building,
-        //         // Floor: res.Floor,
-        //         // Room: res.Room,
-        //         // Alley: res.Alley,
-        //         // Road: res.Road,
-        //         // SubDistrictCode: res.SubDistrictCode,
-        //         // SubDistrict: res.SubDistrict,
-        //         // DistrictCode: res.DistrictCode,
-        //         // District: res.District,
-        //         // ProvinceCode: res.ProvinceCode,
-        //         // Province: res.Province,
-        //         // ZipCode: res.ZipCode,
-        //         // TelephoneNo: res.TelephoneNo,
-        //         // Email: res.Email,
-
-        //         FatherName: res.FatherName,
-        //         MotherName: res.MotherName,
-        //         Remarks: res.Remarks,
-        //         LinkPhoto: res.LinkPhoto,
-        //         PhotoDesc: res.PhotoDesc,
-        //         IsActive: res.IsActive
-        //     })
-
-        //     if (res.LinkPhoto) {
-        //         this.imgNobody.nativeElement.src = res.LinkPhoto;
-        //     }
-        // })
 
     }
 
@@ -288,8 +286,48 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                         v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
+    searchTitleName = (text$: Observable<string>) =>
+        text$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term == '' ? []
+                : this.typeheadTitleNames
+                    .filter(v =>
+                        v.TitleShortNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.TitleNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                    ).slice(0, 10));
+
+    searchNationality = (text$: Observable<string>) =>
+        text$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term == '' ? []
+                : this.typeheadNationality.filter(v => v.NationalityNameTh.indexOf(term) > -1).slice(0, 10))
+
+    searchRace = (text$: Observable<string>) =>
+        text$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term == '' ? []
+                : this.typeheadRaces.filter(v => v.RaceNameTH.indexOf(term) > -1).slice(0, 10));
+
+    searchReligion = (text$: Observable<string>) =>
+        text$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term == '' ? []
+                : this.typeheadReligions.filter(v => v.ReligionNameTH.indexOf(term) > -1).slice(0, 10));
+
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
+
+    formatterTitleName = (x: { TitleNameTH: string }) => x.TitleNameTH;
+
+    formatterNationality = (x: { NationalityNameTh: string }) => x.NationalityNameTh;
+
+    formatterRace = (x: { RaceNameTH: string }) => x.RaceNameTH;
+
+    formatterReligion = (x: { ReligionNameTH: string }) => x.ReligionNameTH;
 
     selectItemRegion(ele: any) {
         this.LawbreakerFG.patchValue({
@@ -301,6 +339,26 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             Province: ele.item.ProvinceNameTH
         });
     }
+
+    selectItemTitleName = (e: any) => this.LawbreakerFG.patchValue({
+        LawbreakerTitleCode: e.item.TitleCode,
+        LawbreakerTitleName: e.item.TitleNameTH
+    });
+
+    selectItemNationality = (e: any) => this.LawbreakerFG.patchValue({
+        NationalityCode: e.item.NationalityCode,
+        NationalityNameTH: e.item.NationalityNameTh
+    })
+
+    selectItemRace = (e: any) => this.LawbreakerFG.patchValue({
+        RaceCode: e.item.RaceCode,
+        RaceName: e.item.RaceNameTH
+    })
+
+    selectItemReligion = (e: any) => this.LawbreakerFG.patchValue({
+        ReligionCode: e.item.ReligionCode,
+        ReligionName: e.item.ReligionNameTH
+    })
 
     changeImage(e: any, img: any) {
 
