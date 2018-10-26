@@ -211,8 +211,10 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   private async getArrestIndictment(indictmentId: string) {
     await this.s_indictment.ArrestIndictmentgetByCon(indictmentId)
-      .then(x => {
-        this.setArrestIndictment(x);
+      .then((x: fromModels.ArrestIndictment[]) => {
+        let indict = x[0]
+        let guiltbase =  indict.ArrestLawGuitbase.find(x => x.GuiltBaseID == indict.GuiltBaseID);
+        this.setArrestLawGuiltbase(guiltbase)
       })
   }
 
@@ -224,11 +226,17 @@ export class AllegationComponent implements OnInit, OnDestroy {
             let newProduct = new Array<fromModels.ArrestProduct>();
 
             await x.map(x1 => {
-              y.filter(y1 => y1.ProductID != x1.ProductID);
+              y.filter(y1 => y1.ProductID != x1.ProductID)
+                .map((y1, index) => {
+                  y1.RowId = index + 1;
+                  y1.IsModify = 'r';
+                  y1.IsChecked = true;
+                });
+                
               if (y.length)
                 newProduct.push(...y)
             })
-
+            // console.log(newProduct);
             this.setItemFormArray(newProduct, 'ArrestProduct');
           })
       });
