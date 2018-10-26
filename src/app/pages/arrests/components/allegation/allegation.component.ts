@@ -456,8 +456,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   private onDelete() {
     this.s_lawsuit.ArrestLawsuitgetByIndictmentID(this.indictmentId)
-      .takeUntil(this.destroy$)
-      .subscribe(x => {
+      .then(x => {
         if (this.checkResponse(x)) {
           alert(Message.cannotDeleteRec)
           return;
