@@ -21,9 +21,11 @@ const routes: Routes = [
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
                 { title: 'ค้นหารายการนำส่งเงินรายได้', url: '/income/list' },
-                { title: 'จัดการข้อมูลนำส่งเงินรายได้' }
+                { title: 'จัดการข้อมูลนำส่งเงินรายได้' },
+                
             ],
-            nextPage: { title: '', url: '' }
+            nextPage: { title: '', url: '' },
+            codePage: 'ILG60-07-02-00-00'
         },
         component: ManageComponent
     }

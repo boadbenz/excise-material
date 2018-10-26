@@ -52,8 +52,20 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
+<<<<<<< HEAD
                                 <input type="text" class="form-control" ngModel name="DepartmentName"  aria-label="Number">
                                 
+=======
+                                <input type="text" class="form-control" [(ngModel)]="OfficeName" name="OfficeName">
+                                <!-- <input type="text" class="form-control" [(ngModel)]="DepartmentName" name="DepartmentName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                                    matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
+                                    [disabled]="showEditField">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
+                                        {{ option.OfficeName }}
+                                    </mat-option>
+                                </mat-autocomplete> -->
+>>>>>>> Kat_Dev
                             </div>
                         </div>
                     </div>
@@ -63,9 +75,15 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
+<<<<<<< HEAD
                                 <select ngModel name="RevenueStatus" class="form-control form-control-sm" [disabled]="showEditField">
                                     <option value="">ไม่เลือกสถานะนำส่งเงิน</option>
                                     <option value="1">นำส่งเงิน</option>
+=======
+                                <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm" [disabled]="showEditField">
+                                    <option value="">ไม่เลือกสถานะนำส่งเงิน</option>
+                                    <option value="1">นำส่งเงินรายได้</option>
+>>>>>>> Kat_Dev
                                     <option value="2">รับรายการนำส่งเงิน</option>
                                 </select>
                             </div>
@@ -107,11 +125,17 @@
                         <td style="text-align: center">{{i + 1}}</td>
                         <td>{{item.RevenueCode}}</td>
                         <td>{{item.RevenueDate}}</td>
+<<<<<<< HEAD
                         <td>{{item.NameX}}</td>
                         <td>
                             {{item.OfficeName}}
                         </td>
                         <td style="text-align: center">{{item.Count}}</td>
+=======
+                        <td>{{item.RevenueOneStaff}}</td>
+                        <td>{{item.RevenueOneStaffDept}}</td>
+                        <td style="text-align: center">{{item.ResultCount}}</td>
+>>>>>>> Kat_Dev
                         <td class="text-center">{{item.RevenueStatus}}</td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueID)">

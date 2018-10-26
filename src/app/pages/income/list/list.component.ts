@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Revenue } from '../Revenue';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
-import { toLocalShort, compareDate, setZeroHours, getDateMyDatepicker, MyDatePickerOptions } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
@@ -26,21 +26,22 @@ export class ListComponent implements OnInit, OnDestroy {
     revenue = new Array<Revenue>();
     RevenueList = new Array<Revenue>();
     paginage = pagination;
-    DateStartFrom: any;
     DateStartTo: any;
     _dateStartFrom: any;
     _dateStartTo: any;
 
+<<<<<<< HEAD
     showEditField: any;
     DepartmentName: string;
     AdvRevenueCode: string;
 
     RevenueStatus: any = "";
+=======
+>>>>>>> Kat_Dev
     StatusOption = [];
     options = [];
     rawOptions = [];
-
-    myDatePickerOptions = MyDatePickerOptions;
+    RevenueStatus: string;
 
     private subOnSearch: any;
     private subSetNextPage: any;
@@ -73,12 +74,23 @@ export class ListComponent implements OnInit, OnDestroy {
 
     
     async ngOnInit() {
+<<<<<<< HEAD
         this.sidebarService.setVersion('Revenue 0.0.0.2');
+=======
+        this.sidebarService.setVersion('Revenue 0.0.0.10');
+>>>>>>> Kat_Dev
 
-        this.preloader.setShowPreloader(true);
+        this.RevenueStatus = "";
 
+<<<<<<< HEAD
         // this.getDepartmentRevenue();
         // this.onSearch({ Textsearch: "" });
+=======
+        //this.preloader.setShowPreloader(true);
+
+        //this.getDepartmentRevenue();
+        //this.onSearch({ Textsearch: "" });
+>>>>>>> Kat_Dev
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             this.preloader.setShowPreloader(true);
@@ -216,6 +228,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
+<<<<<<< HEAD
             alert(err.statusText);
             //console.log(err.statusText);
             // this.preloader.setShowPreloader(false);
@@ -228,6 +241,11 @@ export class ListComponent implements OnInit, OnDestroy {
             // this.paginage.TotalItems = 1;
             // this.RevenueList = this.revenue;
 
+=======
+            alert(Message.noRecord);
+            this.RevenueList = [];
+            this.preloader.setShowPreloader(true);
+>>>>>>> Kat_Dev
         });
     }
 
@@ -258,7 +276,11 @@ export class ListComponent implements OnInit, OnDestroy {
             form.value.DateStartTo = "";
         }
 
+        if(form.value.RevenueStatus == ""){
+            form.value.RevenueStatus = null;
+        }
 
+        debugger
         await this.incomeService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
@@ -273,11 +295,15 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (!list.length) {
             alert(Message.noRecord);
+            this.RevenueList = [];
+
             return false;
         }
 
         await list.map((item) => {
+            var StaffSendMoney;
             item.RevenueDate = toLocalShort(item.RevenueDate);
+<<<<<<< HEAD
             item.RevenueOneStaff = item.RevenueStaff.filter(item => item.ContributorID === 20);
 
             //alert(item.RevenueOneStaff.length);
@@ -310,6 +336,26 @@ export class ListComponent implements OnInit, OnDestroy {
                 else {
                     item.RevenueStatus = "รับรายการนำส่งเงิน"
                 }
+=======
+            StaffSendMoney = item.RevenueStaff.filter(item => item.ContributorID === 20);
+
+            item.RevenueOneStaff = "";
+            item.RevenueOneStaffDept = "";
+
+            if(StaffSendMoney.length > 0){
+                item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
+                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeName;
+            }
+
+            if (item.RevenueStatus == "1") {
+                item.RevenueStatus = "นำส่งเงินรายได้"
+            }
+            else if (item.RevenueStatus == "2") {
+                item.RevenueStatus = "รับรายการนำส่งเงิน"
+            }
+            else{
+                item.RevenueStatus = "";
+>>>>>>> Kat_Dev
             }
 
             
@@ -327,6 +373,82 @@ export class ListComponent implements OnInit, OnDestroy {
         this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
+<<<<<<< HEAD
     //#endregion
 
+=======
+    clickView(RevenueID: string) {
+        this._router.navigate([`/income/manage/R/${RevenueID}`]);
+    }
+
+    async pageChanges(event) {
+        this.RevenueList = await this.revenue.slice(event.startIndex - 1, event.endIndex);
+    }
+
+
+    getCurrentDate() {
+        let date = new Date();
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
+    }
+
+    onSDateChange(event: IMyDateModel) {
+        this._dateStartFrom = event.date;
+        this.checkDateDelivery();
+    }
+
+    onEDateChange(event: IMyDateModel) {
+        this._dateStartTo = event.date;
+        if (this.checkDateDelivery()) {
+
+        }
+    }
+
+    checkDateDelivery() {
+        if (this._dateStartFrom && this._dateStartTo) {
+            const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
+            const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
+
+            if (!compareDate(new Date(sdate), new Date(edate))) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.DateStartTo = { date: this._dateStartFrom };
+                }, 0);
+            }
+        }
+    }
+
+    // --- หน่วยงาน ---
+    async getDepartmentRevenue() {
+        await this.incomeService.getDepartment().then(async res => {
+            if (res) {
+                this.rawOptions = res;
+            }
+        }, (err: HttpErrorResponse) => {
+            this.preloader.setShowPreloader(false);
+        });
+    }
+
+    onAutoChange(value: string) {
+        // if (value == '') {
+        //     this.options = [];
+
+        //     // this.oProve.ProveStationCode = "";
+        //     // this.oProve.ProveStation = "";
+        // } else {
+        //     this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        // }
+    }
+
+    onAutoFocus(value: string) {
+        // if (value == '') {
+        //     this.options = [];
+        // }
+    }
+
+    // onAutoSelecteWord(event) {
+    //     // this.oProve.ProveStationCode = event.OfficeCode;
+    //     // this.oProve.ProveStation = event.OfficeName;
+    // }
+    // ----- End หน่วยงาน ---
+>>>>>>> Kat_Dev
 }
