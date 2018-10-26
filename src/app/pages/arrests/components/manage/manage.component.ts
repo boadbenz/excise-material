@@ -402,10 +402,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                         })
                         this.setItemFormArray(_prod, 'ArrestProduct')
                     })
+                    .catch((error) => this.catchError(error));
 
                 await this.s_indictment.ArrestIndictmentgetByArrestCode(arrestCode)
-                    .then((ind: fromModels.ArrestIndictment[]) => this.setArrestIndictment(ind));
-            })
+                    .then((ind: fromModels.ArrestIndictment[]) => this.setArrestIndictment(ind))
+                    .catch((error) => this.catchError(error));
+            }).catch((error) => this.catchError(error));
 
         await this.s_document.MasDocumentMaingetAll(this.documentType, this.arrestCode)
             .then((x: fromModels.ArrestDocument[]) => {
@@ -414,7 +416,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     y.IsModify = 'r';
                 })
                 this.setItemFormArray(x, 'ArrestDocument');
-            });
+            })
+            .catch((error) => this.catchError(error));
         this.loaderService.hide();
     }
 
@@ -449,10 +452,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         })
                     )
                 );
-            })
-            .catch((error) => {
-                this.loaderService.hide();
-            })
+            }).catch((error) => this.catchError(error));
         this.loaderService.hide();
     }
 
@@ -725,7 +725,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         o.at(i).patchValue({ IsModify: 'd', RowId: 0 });
         let sort = this.sortFormArray(o.value);
         o.value.map(() => o.removeAt(0));
-        sort.then(x => this.setItemFormArray(x, controls));
+        sort.then(x => this.setItemFormArray(x, controls))
+            .catch((error) => this.catchError(error));;
     }
 
     deleteStaff(i: number) {
@@ -744,7 +745,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
         let notice = this.sortFormArray(this.ArrestNotice.value);
         this.ArrestNotice.value.map(() => this.ArrestNotice.removeAt(0));
-        notice.then(x => this.setNoticeForm(x));
+        notice.then(x => this.setNoticeForm(x))
+            .catch((error) => this.catchError(error));
     }
 
     deleteIndicment(i: number) {
@@ -867,6 +869,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+    catchError(error: any) {
+        console.log(error);
+        this.endLoader();
+    }
+
+    endLoader = () => this.loaderService.hide();
+
     isObject = (obj) => obj === Object(obj);
 
     saveFail() {
@@ -937,6 +946,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.s_lawsuit
                     .ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
                     .then(y => isCheck = this.checkResponse(y))
+                    .catch((error) => this.catchError(error));
             })
 
         this.loaderService.hide();
@@ -946,7 +956,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             } else {
                 this.loadMasterData();
             }
-        })
+        }).catch((error) => this.catchError(error));
     }
 
     private async onDelete() {
@@ -957,6 +967,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.s_lawsuit
                     .ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
                     .then(y => isCheck = this.checkResponse(y))
+                    .catch((error) => this.catchError(error));
             })
 
         Promise.all(indict).then(() => {
@@ -968,7 +979,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.deleteArrest();
                 }
             }
-        })
+        }).catch((error) => this.catchError(error));
     }
 
     private async onComplete() {
@@ -1010,21 +1021,25 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
         }
 
-        await this.s_arrest.ArrestupdByCon(newArrest).then(x => {
-            if (!this.checkIsSuccess(x)) return;
-        }, () => { this.saveFail(); return; })
+        await this.s_arrest.ArrestupdByCon(newArrest)
+            .then(x => {
+                if (!this.checkIsSuccess(x)) return;
+            }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
     }
 
     private async deleteArrest() {
         this.loaderService.show();
-        await this.s_arrest.ArrestupdDelete(this.arrestCode).then(x => {
-            if (this.checkResponse(x)) {
-                alert(Message.delComplete);
-                this.router.navigate([`arrest/list`]);
-            } else {
-                alert(Message.delFail);
-            }
-        }, () => { alert(Message.delFail); return; })
+        await this.s_arrest.ArrestupdDelete(this.arrestCode)
+            .then(x => {
+                if (this.checkResponse(x)) {
+                    alert(Message.delComplete);
+                    this.router.navigate([`arrest/list`]);
+                } else {
+                    alert(Message.delFail);
+                }
+            }, () => { alert(Message.delFail); return; })
+            .catch((error) => this.catchError(error));
         this.loaderService.hide();
     }
 
@@ -1033,15 +1048,19 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(async x => {
                 switch (x.IsModify) {
                     case 'd':
-                        await this.s_notice.ArrestNoticeupdDelete(x.NoticeCode).then(x => {
-                            if (!this.checkIsSuccess(x)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_notice.ArrestNoticeupdDelete(x.NoticeCode)
+                            .then(x => {
+                                if (!this.checkIsSuccess(x)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
 
                     case 'c':
-                        await this.s_notice.ArrestNoticeupdByCon(x.ArrestCode, x.NoticeCode).then(x => {
-                            if (!this.checkIsSuccess(x)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_notice.ArrestNoticeupdByCon(x.ArrestCode, x.NoticeCode)
+                            .then(x => {
+                                if (!this.checkIsSuccess(x)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                 }
             })
@@ -1053,19 +1072,25 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(async (x: fromModels.ArrestStaff) => {
                 switch (x.IsModify) {
                     case 'd':
-                        await this.s_staff.ArrestStaffupdDelete(x.StaffID).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_staff.ArrestStaffupdDelete(x.StaffID)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        await this.s_staff.ArrestStaffinsAll(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_staff.ArrestStaffinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'u':
-                        await this.s_staff.ArrestStaffupdByCon(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_staff.ArrestStaffupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                 }
             })
@@ -1078,19 +1103,25 @@ export class ManageComponent implements OnInit, OnDestroy {
                 x.ProductDesc = this.isObject(x.ProductDesc) ? x.ProductDesc['ProductDesc'] : x.ProductDesc;
                 switch (x.IsModify) {
                     case 'd':
-                        await this.s_product.ArrestProductupdDelete(x.ProductID).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_product.ArrestProductupdDelete(x.ProductID)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        await this.s_product.ArrestProductinsAll(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_product.ArrestProductinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'u':
-                        await this.s_product.ArrestProductupdByCon(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_product.ArrestProductupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                 }
             })
@@ -1102,19 +1133,25 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(async (x: fromModels.ArrestDocument) => {
                 switch (x.IsModify) {
                     case 'd':
-                        this.s_document.MasDocumentMainupdDelete(x.DocumentID).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        this.s_document.MasDocumentMainupdDelete(x.DocumentID)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        this.s_document.MasDocumentMaininsAll(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        this.s_document.MasDocumentMaininsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'u':
-                        this.s_document.MasDocumentMainupdByCon(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        this.s_document.MasDocumentMainupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                 }
             })

@@ -213,9 +213,10 @@ export class AllegationComponent implements OnInit, OnDestroy {
     await this.s_indictment.ArrestIndictmentgetByCon(indictmentId)
       .then((x: fromModels.ArrestIndictment[]) => {
         let indict = x[0]
-        let guiltbase =  indict.ArrestLawGuitbase.find(x => x.GuiltBaseID == this.guiltbaseId);
+        let guiltbase = indict.ArrestLawGuitbase.find(x => x.GuiltBaseID == this.guiltbaseId);
         this.setArrestLawGuiltbase(guiltbase)
       })
+      .catch((error) => this.catchError(error));
   }
 
   private async getArrestIndictmentProduct(indictmentId: string, arrestCode: string) {
@@ -232,14 +233,14 @@ export class AllegationComponent implements OnInit, OnDestroy {
                   y1.IsModify = 'r';
                   y1.IsChecked = true;
                 });
-                
+
               if (y.length)
                 newProduct.push(...y)
             })
             // console.log(newProduct);
             this.setItemFormArray(newProduct, 'ArrestProduct');
-          })
-      });
+          }).catch((error) => this.catchError(error));
+      }).catch((error) => this.catchError(error));
   }
 
   private getArrestProductByArrest(arrestCode: string) {
@@ -352,7 +353,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
   addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
     this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
     let sort = this.sortFormArray(this.ArrestLawbreaker.value);
-    sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'));
+    sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
+      .catch((error) => this.catchError(error));
   }
 
   productCheckAll() {
@@ -379,7 +381,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
     o.at(i).patchValue({ IsModify: 'd', RowId: 0 });
     let sort = this.sortFormArray(o.value);
     o.value.map(() => o.removeAt(0));
-    sort.then(x => this.setItemFormArray(x, controls));
+    sort.then(x => this.setItemFormArray(x, controls))
+      .catch((error) => this.catchError(error));
   }
 
   async deleteProduct(i: number) {
@@ -391,9 +394,9 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private async setProductUnitStore() {
-    await this.s_mainMaster.masDutyUnitMaingetAll().then(res => {
-      this.typeheadProductUnit = res;
-    })
+    await this.s_mainMaster.masDutyUnitMaingetAll()
+      .then(res => this.typeheadProductUnit = res)
+      .catch((error) => this.catchError(error));
   }
 
   private filterProductIsModify(p: fromModels.ArrestProduct[]) {
@@ -471,14 +474,15 @@ export class AllegationComponent implements OnInit, OnDestroy {
         }
 
         if (confirm(Message.confirmAction)) {
-          this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId).then(x => {
-            if (this.checkResponse(x)) {
-              alert(Message.delComplete);
-              this.router.navigate(['/arrest/manage', this.mode, this.arrestCode]);
-            }
-          })
+          this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId)
+            .then(x => {
+              if (this.checkResponse(x)) {
+                alert(Message.delComplete);
+                this.router.navigate(['/arrest/manage', this.mode, this.arrestCode]);
+              }
+            }).catch((error) => this.catchError(error));
         }
-      })
+      }).catch((error) => this.catchError(error));
 
   }
 
@@ -506,11 +510,14 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   private async revised() {
     this.loaderService.show();
-    await this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId).then(y => {
-      if (!this.checkIsSuccess(y)) return;
+    await this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId)
+      .then(y => {
+        if (!this.checkIsSuccess(y)) return;
 
-      this.insertArrestIndictment(this.arrestCode)
-    })
+        this.insertArrestIndictment(this.arrestCode)
+      })
+      .catch((error) => this.catchError(error));
+
     if (this._isSuccess) {
       alert(Message.saveComplete)
     } else {
@@ -523,7 +530,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
     let resRunning: any[] = await this.s_transactionRunning
       .TransactionRunninggetByCon(this.runningTable, this.runningOfficeCode)
-      .then(async (x: TransactionRunning[]) => x);
+      .then(async (x: TransactionRunning[]) => x)
 
     if (resRunning.length) {
       let tr = resRunning.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
@@ -537,8 +544,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
         .then(async y => {
           if (!this.checkIsSuccess(y)) return;
           return true;
-        },
-          () => { this.saveFail(); return; })
+        }, () => { this.saveFail(); return; })
+        .catch((error) => this.catchError(error));
 
     } else {
       await this.s_transactionRunning
@@ -551,8 +558,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
           year = year.substring(2, 4);
           this.newArrestCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
           return true;
-        },
-          () => { this.saveFail(); return; })
+        }, () => { this.saveFail(); return; })
+        .catch((error) => this.catchError(error));
     }
 
     if (this.newArrestCode)
@@ -610,8 +617,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
         if (!this.checkIsSuccess(x)) return;
 
         await this.insertArrestIndictment(arrestCode);
-      },
-        () => { this.saveFail(); return; });
+      }, () => { this.saveFail(); return; })
+      .catch((error) => this.catchError(error));
   }
 
   private async insertArrestIndictment(arrestCode: string) {
@@ -631,8 +638,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
         if (!this.checkIsSuccess(x)) return;
 
         this.insertArrestIndictmentDetail(arrestCode, x.IndictmentID);
-      },
-        () => { this.saveFail(); return false; });
+      }, () => { this.saveFail(); return false; })
+      .catch((error) => this.catchError(error));
   }
 
   async insertArrestIndictmentDetail(arrestCode: string, indictmentID: number) {
@@ -654,8 +661,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
         await this.insertArrestProduct(arrestCode, x.IndictmentDetailID)
 
         await this.insertArrestLawbreaker(arrestCode)
-      },
-        () => { this.saveFail(); return; })
+      }, () => { this.saveFail(); return; })
+      .catch((error) => this.catchError(error));
   }
 
   async insertArrestProduct(arrestCode: string, indictmentDetailID: number) {
@@ -679,8 +686,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
           if (!this.checkIsSuccess(x)) return;
 
           await this.insertArrestProductDetail(indictmentDetailID, x.ProductID, w);
-        },
-          () => { this.saveFail(); return; });
+        }, () => { this.saveFail(); return; })
+        .catch((error) => this.catchError(error));
     })
     return Promise.all(prod);
   }
@@ -710,9 +717,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
       .ArrestProductDetailinsAll(pd)
       .then(y => {
         if (!this.checkIsSuccess(y)) return;
-      },
-        () => { this.saveFail(); return; });
-
+      }, () => { this.saveFail(); return; })
+      .catch((error) => this.catchError(error));
   }
 
   async insertArrestLawbreaker(arrestCode) {
@@ -728,8 +734,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
         .then(y => {
           if (!this.checkIsSuccess(y)) return;
           return true;
-        },
-          () => { this.saveFail(); return; });
+        }, () => { this.saveFail(); return; })
+        .catch((error) => this.catchError(error));
     })
     return Promise.all(lawb);
   }
@@ -762,6 +768,13 @@ export class AllegationComponent implements OnInit, OnDestroy {
         return false;
     }
   }
+
+  catchError(error: any) {
+    console.log(error);
+    this.endLoader();
+  }
+
+  endLoader = () => this.loaderService.hide();
 
   ngOnDestroy() {
     this.destroy$.next(true);
