@@ -163,7 +163,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="footable" *ngFor="let item of LawsuitArrestIndictmentProduct; let i=index;" [formGroupName]="i">
+            <tr class="footable" *ngFor="let item of LawsuitArrestIndictmentProduct; let i=index;">
               <td class="text-center">{{i+1}}</td>
               <td>{{item.ProductDesc}}</td>
               <td>{{item.IndictmentProductQty}}</td>
@@ -238,32 +238,30 @@
             </div>
           </div>
         </div>
-        <div formArrayName="LawsuitStaff">
-          <div class="row" *ngFor="let item of LawsuitStaff.controls; let i=index;" [formGroupName]="i">
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-form-label text-right col-md-4">ผู้รับคดี : </label>
-                <div class="col-md-8">
-                  <input class="form-control" formControlName="FullName" type="text" [readonly]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
-                </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label text-right col-md-4">ผู้รับคดี : </label>
+              <div class="col-md-8">
+                <input class="form-control" formControlName="FullName" type="text" [readonly]="showEditField"
+                  [ngClass]="{'ng-touched':isRequired}" required>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
-                <div class="col-md-9">
-                  <input class="form-control" type="text" formControlName="PositionName" disabled>
-                </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
+              <div class="col-md-9">
+                <input class="form-control" type="text" formControlName="PositionName" disabled>
               </div>
             </div>
+          </div>
 
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-form-label text-right col-md-4">หน่วยงาน : </label>
-                <div class="col-md-8">
-                  <input class="form-control" type="text" formControlName="DepartmentName" disabled>
-                </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label text-right col-md-4">หน่วยงาน : </label>
+              <div class="col-md-8">
+                <input class="form-control" type="text" formControlName="DepartmentName" disabled>
               </div>
             </div>
           </div>

@@ -48,7 +48,6 @@ export class ManageComponent implements OnInit {
   LawsuitArrestIndictmentProduct: any = [];
   LawsuitArrestIndictmentProductTableListShow = false;
   LawsuitTableListShow = false;
-  officeCode = "";
   private getDataFromListPage: any;
   private onPrintSubscribe: any;
   private onSaveSubscribe: any;
@@ -196,15 +195,15 @@ export class ManageComponent implements OnInit {
     /// save IsLawsuitComplete = 1
     if (IsLawsuitComplete == 1) {
       /// check LawsuitNo on exite
-      // await this.lawsuitService.LawsuitVerifyLawsuitNo(this.lawsuitForm.controls['LawsuitNo'].value, 
-      // this.officeCode, 
-      // this.lawsuitForm.controls['IsOutsideCheck'].value).then(async res=> {
-      //   if(res.length != 0 ){
-      //     alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
-      //     this.preLoaderService.setShowPreloader(false);
-      //     return;
-      //   }
-      // });
+      await this.lawsuitService.LawsuitVerifyLawsuitNo(this.lawsuitForm.controls['LawsuitNo'].value, 
+      this.lawsuitForm.controls['officeCode'].value,
+      this.lawsuitForm.controls['IsOutsideCheck'].value).then(async res=> {
+        if(res.length != 0 ){
+          alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
+          this.preLoaderService.setShowPreloader(false);
+          return;
+        }
+      });
 
       /// check LawsuitDate
       if(!this.lawsuitForm.get('LawsuitDate').valid){
@@ -240,13 +239,16 @@ export class ManageComponent implements OnInit {
         this.preLoaderService.setShowPreloader(false);
         return;
       }
-      /// check showEditField
-      if(!this.lawsuitForm.get('showEditField').valid){
+      /// check AccuserTestimony
+      if(!this.lawsuitForm.get('AccuserTestimony').valid){
         alert("กรุณากรอกคำให้การใหม่");
         this.preLoaderService.setShowPreloader(false);
         return;
       }
 
+      await this.lawsuitService.LawsuitupdByCon(this.lawsuitList).then(async res=>{
+        console.log(res);
+      })
 
 
     /// save IsLawsuitComplete = 0
@@ -349,22 +351,21 @@ export class ManageComponent implements OnInit {
       });
       /// set LawsuitArrestStaff to lawsuitArrestForm
       this.setItemFormArray(arreststaff, 'LawsuitArrestStaff', this.lawsuitArrestForm);
-
+      
       console.log(res);
       /// Check LawsuitComplete status
       if (res.length != 0) {
-        if(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length !=0 ){
-          this.officeCode = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0]['OfficeCode'];
-        }
         this.disabled = true;
         let IsLawsuitComplete = res[0]['IsLawsuitComplete'];
         /// LawsuitComplete status = 1
         if (IsLawsuitComplete == 1) {
           /// get MasDocumentMaingetAll
-          this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']).then(res => {
-            //insert doc to dosMacList
-
-          });
+          if(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length !=0 ){
+            await this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']).then(res => {
+              //insert doc to dosMacList
+  
+            });
+          }
           /// get IsLawsuit check box (IsLawsuitCheck)
           let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
           let IsLawsuitCheck = false;
@@ -379,6 +380,11 @@ export class ManageComponent implements OnInit {
             IsOutsideCheck = true;
           }
 
+          ///set lawsuitForm
+          const staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'].filter(item => item.IsActive == 1);
+          staff.map(item => {
+            item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+          });
           await this.lawsuitForm.reset({
             IsLawsuitCheck: IsLawsuitCheck,
             ReasonDontLawsuit: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['ReasonDontLawsuit'],
@@ -388,15 +394,13 @@ export class ManageComponent implements OnInit {
             LawsuitTime: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitTime'],
             LawsuitStation: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStation'],
             AccuserTestimony: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['AccuserTestimony'],
+            FullName: staff[0].FullName,
+            PositionName: staff[0].PositionName,
+            DepartmentName: staff[0].DepartmentName,
           });
-          ////console.log("LAWSUIT STAFF"+JSON.stringify(res[0]['LawsuitArrestIndicment'][0]['Lawsuit']));
-          const staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'].filter(item => item.IsActive == 1);
-          staff.map(item => {
-            item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-          });
-          this.setItemFormArray(staff, 'LawsuitStaff', this.lawsuitForm);
-          let arrList = [];
+          //this.setItemFormArray(staff, 'LawsuitStaff', this.lawsuitForm);
 
+          let arrList = [];
           await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].map(item => {
             this.LawsuitTableListShow = true;
             res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitArrestLawbreaker'].map(arrestLaw => {

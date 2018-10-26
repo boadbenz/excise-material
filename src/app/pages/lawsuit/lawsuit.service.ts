@@ -168,8 +168,6 @@ export class LawsuitService {
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
-
-
   async LawsuitupdByCon(LawsuitList) {
     const params = LawsuitList;
     const url = `${appConfig.api8083}/LawsuitupdByCon`;
