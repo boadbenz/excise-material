@@ -59,7 +59,6 @@ export class IncomeService {
   }
 
   async getByConAdv(form: any): Promise<any> {
-<<<<<<< HEAD
     
     const params = JSON.stringify(form);
     const url = `${appConfig.api8084}/RevenuegetByConAdv`;
@@ -68,12 +67,10 @@ export class IncomeService {
 
     debugger
 
-=======
     const params = JSON.stringify(form);
     const url = `${appConfig.api8084}/RevenuegetByConAdv`;
 
     debugger
->>>>>>> Kat_Dev
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res as any;
@@ -145,11 +142,9 @@ export class IncomeService {
     }
   }
 
-<<<<<<< HEAD
   async MasStaffMaingetAll(): Promise<any> {
     const params = { };
     const url = `${appConfig.api7789}/MasStaffMaingetAll`;
-=======
   async TransactionRunninggetByCon(RunningTable,RunningOfficeCode): Promise<any> {
     let pValue = {
       "RunningTable" : RunningTable,
@@ -189,12 +184,10 @@ export class IncomeService {
     const params = { RunningID };
     const url = `${appConfig.api8087}/TransactionRunningupdByCon`;
 
->>>>>>> Kat_Dev
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-<<<<<<< HEAD
       console.log(error);
       await alert(error);
     }
@@ -203,7 +196,6 @@ export class IncomeService {
   async RevenueComparegetByCon(RevenueDate: string, DepartmentCode: string): Promise<any> {
     const params = { RevenueDate, DepartmentCode};
     const url = `${appConfig.api8084}/RevenueComparegetByCon`;
-=======
       return [];
     }
   }
@@ -217,12 +209,10 @@ export class IncomeService {
     const params = JSON.stringify(pValue);
     const url = `${appConfig.api8084}/RevenueComparegetByCon`;
 
->>>>>>> Kat_Dev
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
     } catch (error) {
-<<<<<<< HEAD
       console.log(error);
       await alert(error);
     }
@@ -231,7 +221,6 @@ export class IncomeService {
   async RevenueCompareDetailReceiptupdByCon(CompareReceiptId: String): Promise<any> {
     const params = "{ \"CompareReceiptID\":"+CompareReceiptId+" }";
     const url = `${appConfig.api8084}/RevenueCompareDetailReceiptupdByCon`;
-=======
       return [];
     }
   }
@@ -239,7 +228,6 @@ export class IncomeService {
   async RevenueComparegetByCompareReceiptID(CompareReceiptID): Promise<any> {
     const params = { CompareReceiptID };
     const url = `${appConfig.api8084}/RevenueComparegetByCompareReceiptID`;
->>>>>>> Kat_Dev
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
