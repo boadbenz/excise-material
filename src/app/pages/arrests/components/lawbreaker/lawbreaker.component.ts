@@ -40,7 +40,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private loaderService: LoaderService
     ) {
         this.navService.setPrintButton(false);
-        this.navService.setDeleteButton(false);
+        this.navService.setDeleteButton(false); 
+        this.navService.setPrevPageButton(false);
     }
 
     card1 = true;
@@ -207,16 +208,18 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     async ArrestLawbreakerGetByCon(LawbreakerID: string) {
         await this.s_lawbreaker.ArrestMasLawbreakergetByCon(LawbreakerID)
-            .then((x: fromModels.ArrestLawbreaker) => {
-                if (x.LinkPhoto) {
-                    this.imgNobody.nativeElement.src = x.LinkPhoto;
+            .then((x: fromModels.ArrestLawbreaker[]) => {
+                let law = x[0];
+                this.LawbreakerFG.patchValue(law);
+                if (law.LinkPhoto) {
+                    this.imgNobody.nativeElement.src = law.LinkPhoto;
                 }
-                if (x.EntityType == 1 && x.LawbreakerType == 1) {
+                if (law.EntityType == 1 && law.LawbreakerType == 1) {
                     this.card3 = false;
                     this.card4 = false;
-                } else if (x.EntityType == 1 && x.LawbreakerType == 0) {
+                } else if (law.EntityType == 1 && law.LawbreakerType == 0) {
                     this.card4 = false;
-                } else if (x.EntityType == 0) {
+                } else if (law.EntityType == 0) {
                     this.card3 = false;
                 }
             })
