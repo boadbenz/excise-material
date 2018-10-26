@@ -451,7 +451,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 );
             })
             .catch((error) => {
-                console.log(error);
                 this.loaderService.hide();
             })
         this.loaderService.hide();
@@ -863,7 +862,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // let file = e.target.files[0];
         this.ArrestDocument.at(index).patchValue({
             ReferenceCode: this.arrestCode,
-            FilePath: replaceFakePath(e.target.value),
+            FilePath: 'C:\Document',
             IsActive: 1
         })
     }
@@ -931,49 +930,45 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onEdit() {
-        let isCheck = false;
-        let unCheck = false;
-        this.ArrestIndictment.value
-            .map((x: fromModels.ArrestIndictment) => {
-                this.s_lawsuit.ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
-                    .takeUntil(this.destroy$)
-                    .subscribe(y => {
-                        if (this.checkResponse(y)) {
-                            isCheck = true;
-                        } else {
-                            unCheck = true;
-                        }
-                    })
+        this.loaderService.show();
+        let isCheck: boolean;
+        let indict = await this.ArrestIndictment.value
+            .map(async (x: fromModels.ArrestIndictment) => {
+                await this.s_lawsuit
+                    .ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
+                    .then(y => isCheck = this.checkResponse(y))
             })
-        if (isCheck) {
-            alert(Message.cannotModify);
-        }
 
-        if (unCheck) {
-            this.loadMasterData();
-        }
+        this.loaderService.hide();
+        Promise.all(indict).then(() => {
+            if (isCheck) {
+                alert(Message.cannotModify);
+            } else {
+                this.loadMasterData();
+            }
+        })
     }
 
     private async onDelete() {
-        let isCheck = false;
-        this.ArrestIndictment.value
-            .map((x: fromModels.ArrestIndictment) => {
-                this.s_lawsuit.ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
-                    .takeUntil(this.destroy$)
-                    .subscribe(async y => {
-                        if (this.checkResponse(y)) {
-                            isCheck = true;
-                        }
-                    })
+        this.loaderService.show()
+        let isCheck: boolean;
+        let indict = await this.ArrestIndictment.value
+            .map(async (x: fromModels.ArrestIndictment) => {
+                await this.s_lawsuit
+                    .ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
+                    .then(y => isCheck = this.checkResponse(y))
             })
 
-        if (isCheck) {
-            alert(Message.cannotDeleteRec);
-        } else {
-            if (confirm(Message.confirmAction)) {
-                this.deleteArrest();
+        Promise.all(indict).then(() => {
+            this.loaderService.hide();
+            if (isCheck) {
+                alert(Message.cannotDeleteRec);
+            } else {
+                if (confirm(Message.confirmAction)) {
+                    this.deleteArrest();
+                }
             }
-        }
+        })
     }
 
     private async onComplete() {

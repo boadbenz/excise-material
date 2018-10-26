@@ -6,7 +6,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 @Injectable()
 export class ArrestLawSuitService {
 
-    constructor(private http: HttpService,
+    constructor(
+        private http: HttpService,
         private httpClient: HttpClient
     ) { }
 
@@ -20,12 +21,12 @@ export class ArrestLawSuitService {
     ArrestLawsuitgetByLawbreakerID(LawbreakerID: string) {
         const params = { LawbreakerID };
         const url = `${appConfig.api7788}/ArrestLawsuitgetByLawbreakerID`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     ArrestLawsuitgetByIndictmentID(IndictmentID: string) {
         const params = { IndictmentID };
         const url = `${appConfig.api7788}/ArrestLawsuitgetByIndictmentID`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 }
