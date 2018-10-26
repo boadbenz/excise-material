@@ -126,28 +126,28 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }  
 
-  // async MasStaffMaingetAll() {
-  //   const params = {};
-  //   const url = `${appConfig.api8083}/MasStaffMaingetAll`;
-  //   return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
-  // }  
-
-  // async MasOfficeMaingetAll() {
-  //   const params = {};
-  //   const url = `${appConfig.api8083}/MasOfficeMaingetAll`;
-  //   return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
-  // }  
-
   async MasStaffMaingetAll() {
     const params = {};
-    const url = `${appConfig.api7788}/MasStaffMaingetAll`;
-    return await this.http.get<any>(url, this.httpOptions).toPromise();
-  }
+    const url = `${appConfig.api7789}/MasStaffMaingetAll`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }  
+
   async MasOfficeMaingetAll() {
     const params = {};
-    const url = `${appConfig.api7788}/MasOfficeMaingetAll`;
-    return await this.http.get<any>(url, this.httpOptions).toPromise();
-  }
+    const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }  
+
+  // async MasStaffMaingetAll() {
+  //   const params = {};
+  //   const url = `${appConfig.api7788}/MasStaffMaingetAll`;
+  //   return await this.http.post<any>(url, this.httpOptions).toPromise();
+  // }
+  // async MasOfficeMaingetAll() {
+  //   const params = {};
+  //   const url = `${appConfig.api7788}/MasOfficeMaingetAll`;
+  //   return await this.http.get<any>(url, this.httpOptions).toPromise();
+  // }
 
 
   async getByArrestCon(ArrestCode: string): Promise<Arrest> {

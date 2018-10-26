@@ -244,7 +244,7 @@
               <label class="col-form-label text-right col-md-4">ผู้รับคดี : </label>
               <div class="col-md-8">
                 <input class="form-control" formControlName="FullName" type="text" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" required>
+                  [ngClass]="{'ng-touched':isRequired}" (input)="onChangeFullname($event.target.value)" required>
               </div>
             </div>
           </div>
