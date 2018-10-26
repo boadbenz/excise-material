@@ -146,7 +146,13 @@ export class ManageComponent implements OnInit {
         await this.navService.setOnCancel(false);
         this.onCancel();
       }
-    })
+    });
+    this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
+      if(status){
+        await this.navService.setOnNextPage(false);
+        this.onNextPage();
+      }
+    });
 
 
 
@@ -193,8 +199,19 @@ export class ManageComponent implements OnInit {
     this.onCancelSubscribe.unsubscribe();
   }
 
+  private async onNextPage(){
+    console.log(this.LawsuitID);
+    await this.lawsuitService.LawsuitComparegetByLawsuitID(1).then(res => {
+      if(res.length == 0){ /// if not found data
+
+      }else{ ///if found data 
+
+      }
+      console.log(res);
+    })
+  }
+
   private async onCancel(){
-    console.log(this.lawsuitList[0]['IsLawsuitComplete']);
     if(!confirm("ยืนยันการทำรายการหรือไม่")) {
       return;
     }

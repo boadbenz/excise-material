@@ -186,6 +186,12 @@ export class LawsuitService {
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
+  async LawsuitComparegetByLawsuitID(LawsuitID) {
+    const params = { LawsuitID: LawsuitID };
+    const url = `${appConfig.api8083}/LawsuitComparegetByLawsuitID`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+  
 
 
 
