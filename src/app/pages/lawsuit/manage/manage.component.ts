@@ -200,15 +200,27 @@ export class ManageComponent implements OnInit {
   }
 
   private async onNextPage(){
-    console.log(this.LawsuitID);
-    await this.lawsuitService.LawsuitComparegetByLawsuitID(1).then(res => {
-      if(res.length == 0){ /// if not found data
+    console.log(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['IsProve']);
 
-      }else{ ///if found data 
+    if(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['IsProve'] == 0){/// IdProve = 0 (goto ILG60-06-02-00-00)
+      await this.lawsuitService.LawsuitComparegetByLawsuitID(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['IsProve']).then(res => {
+        if(res.length == 0){ /// if not found data
 
-      }
-      console.log(res);
-    })
+        }else{ ///if found data 
+
+        }
+        console.log(res);
+      })
+    } else { /// IdProve = 1 (goto ILG60-05-02-00-00)
+      await this.lawsuitService.LawsuitProvegetByLawsuitID(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['IsProve']).then(res => {
+        if(res.length == 0){ /// if not found data
+
+        }else{ ///if found data 
+
+        }
+        console.log(res);
+      })
+    }
   }
 
   private async onCancel(){
@@ -502,7 +514,7 @@ export class ManageComponent implements OnInit {
             this.navService.setDeleteButton(true);
             this.navService.setEditButton(true);
             this.navService.setNextPageButton(true);
-            this.navService.setInnerTextNextPageButton('เปรียบเทียบปรับ')
+            this.navService.setInnerTextNextPageButton('งานพิสูจน์')
           }
         
         /// LawsuitComplete status = 0
