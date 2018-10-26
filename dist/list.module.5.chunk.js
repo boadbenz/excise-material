@@ -1,13 +1,13 @@
 webpackJsonp(["list.module.5"],{
 
-/***/ "./src/app/pages/notices/list/list.component.html":
+/***/ "./src/app/pages/income/list/list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"advSearch | async\" class=\"card card-outline-bluish unset-radius\">\r\n    <div class=\"card-header unset-radius\">\r\n        <app-card-actions-close></app-card-actions-close>\r\n        <h4 class=\"card-title m-b-0\">ค้นหา</h4>\r\n    </div>\r\n    <div class=\"card-body\">\r\n        <form class=\"form-horizontal\" autocomplete=\"off\" #advForm=\"ngForm\" (ngSubmit)=\"onAdvSearch(advForm)\">\r\n            <div>\r\n                <div class=\"row\">\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3\">เลขที่ใบแจ้งความ :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group\">\r\n                            <input type=\"text\" name=\"NoticeCode\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3\">วันที่รับแจ้งความ :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group input-group\">\r\n                            <my-date-picker-th class=\"form-control form-control-sm unset-form-control\" \r\n                            name=\"DateStartFrom\" [options]=\"myDatePickerOptions\"\r\n                            (dateChanged)=\"onSDateChange($event)\" [(ngModel)]=\"dateStartFrom\"></my-date-picker-th>\r\n                            <label for=\"\">&nbsp;ถึง&nbsp;</label>\r\n                            <my-date-picker-th class=\"form-control form-control-sm unset-form-control\"\r\n                            name=\"DateStartTo\" [options]=\"myDatePickerOptions\"\r\n                            (dateChanged)=\"onEDateChange($event)\" [(ngModel)]=\"dateStartTo\"></my-date-picker-th>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"row\">\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3\">ชื่อผู้รับแจ้ง :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group\">\r\n                            <input type=\"text\" name=\"StaffName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3\">หน่วยงาน :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group\">\r\n                            <input type=\"text\" name=\"DepartmentName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"row\">\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3\">ผู้ต้องสงสัย :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group\">\r\n                            <input type=\"text\" name=\"SuspectName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"row form-group\">\r\n                    <div class=\"col-lg-10 col-8\"></div>\r\n                    <div class=\"col-lg-2 col-4\">\r\n                        <button type=\"submit\" class=\"btn btn-block btn-themecolor\">ค้นข้อมูล</button>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </form>\r\n    </div>\r\n\r\n</div>\r\n\r\n<div class=\"card unset-radius\">\r\n    <div class=\"card-body p-0\">\r\n        <div class=\"table-responsive table-sm table-striped\">\r\n            <table class=\"table\">\r\n                <thead>\r\n                    <tr>\r\n                        <th class=\"text-center\">ลำดับ</th>\r\n                        <th>เลขที่ใบแจ้งความ</th>\r\n                        <th>วันที่แจ้งความ</th>\r\n                        <th>ผู้รับแจ้ง</th>\r\n                        <th>หน่วยงาน</th>\r\n                        <th>ผู้ต้องสงสัย</th>\r\n                        <th></th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr *ngFor=\"let item of noticeList; let i=index;\">\r\n                        <td class=\"text-center\">{{item.RowId}}</td>\r\n                        <td>{{item.NoticeCode}}</td>\r\n                        <td>{{item.NoticeDate}}</td>\r\n                        <td>\r\n                            <div *ngFor=\"let staff of item.NoticeStaff;\">{{staff.StaffFullName}}</div>\r\n                        </td>\r\n                        <td>\r\n                            <div *ngFor=\"let staff of item.NoticeStaff;\">{{staff.DepartmentName}}</div>\r\n                        </td>\r\n                        <td>\r\n                            <div *ngFor=\"let suspect of item.NoticeSuspect;\">{{suspect.SuspectFullName}}</div>\r\n                        </td>\r\n                        <td class=\"text-center\">\r\n                            <a href=\"javaScript:void(0);\" class=\"text-secondary\" (click)=\"view(item.NoticeCode)\">\r\n                                <i class=\"fa fa-eye fa-lg\"></i>\r\n                            </a>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    </div>\r\n    <div class=\"card-footer card-footer-unset\">\r\n        <app-pagination-table [TotalItems]=\"paginage.TotalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\r\n            [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\r\n        </app-pagination-table>\r\n    </div>\r\n</div>"
+module.exports = "<!-- <app-horizontal-timeline></app-horizontal-timeline> -->\r\n\r\n<div *ngIf=\"advSearch | async\" class=\"card card-outline-bluish unset-radius\">\r\n    <div class=\"card-header unset-radius\">\r\n        <app-card-actions-close></app-card-actions-close>\r\n        <h4 class=\"card-title m-b-0\">ค้นหา</h4>\r\n    </div>\r\n\r\n    <div class=\"card-body\">\r\n        <form class=\"form-horizontal\" #advForm=\"ngForm\" (ngSubmit)=\"onAdvSearch(advForm)\">\r\n            <div>\r\n                <div class=\"row\">\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3 control-label\">เลขที่นำส่งเงิน :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group\">\r\n                            <div class=\"form-line\">\r\n                                <input type=\"text\" name=\"RevenueCode\" ngModel class=\"form-control\" placeholder=\"\">\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3 control-label\">วันที่นำส่ง :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group input-group form-line\">\r\n                            <div style=\"width:45%\">\r\n                                <my-date-picker-th name=\"DateStartFrom\" [options]=\"myDatePickerOptions\" (dateChanged)=\"onSDateChange($event)\" [(ngModel)]=\"DateStartFrom\"></my-date-picker-th>\r\n                            </div>\r\n                            <!-- <input type=\"date\" name=\"DateStartFrom\" ngModel class=\"form-control form-control-sm\" placeholder=\"วว/ดด/ปปปป\"> -->\r\n\r\n                            <div style=\"margin:10px;\">\r\n                                <label for=\"\">&nbsp;ถึง&nbsp;</label>\r\n                            </div>\r\n\r\n                            <div style=\"width:45%\">\r\n                                <my-date-picker-th name=\"DateStartTo\" [options]=\"myDatePickerOptions\" (dateChanged)=\"onEDateChange($event)\" [(ngModel)]=\"DateStartTo\"></my-date-picker-th>\r\n                            </div>\r\n                            <!-- <input type=\"date\" name=\"DateStartTo\" ngModel class=\"form-control form-control-sm\" placeholder=\"วว/ดด/ปปปป\"> -->\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"row\">\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3 control-label\">ผู้นำส่งเงิน :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group\">\r\n                            <div class=\"form-line\">\r\n                                <input type=\"text\" name=\"StaffName\" ngModel class=\"form-control\" placeholder=\"\">\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3 control-label\">หน่วยงาน :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group\">\r\n                            <div class=\"form-line\">\r\n                                <input type=\"text\" class=\"form-control\" [(ngModel)]=\"OfficeName\" name=\"OfficeName\">\r\n                                <!-- <input type=\"text\" class=\"form-control\" [(ngModel)]=\"DepartmentName\" name=\"DepartmentName\" placeholder=\"พิมพ์ข้อความ\" aria-label=\"Number\"\r\n                                    matInput [matAutocomplete]=\"auto\" (input)=\"onAutoChange($event.target.value)\" (focus)=\"onAutoFocus($event.target.value)\"\r\n                                    [disabled]=\"showEditField\">\r\n                                <mat-autocomplete #auto=\"matAutocomplete\">\r\n                                    <mat-option *ngFor=\"let option of options\" [value]=\"option.OfficeName\" (click)=\"onAutoSelecteWord(option)\">\r\n                                        {{ option.OfficeName }}\r\n                                    </mat-option>\r\n                                </mat-autocomplete> -->\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"row\">\r\n                    <label for=\"\" class=\"col-lg-2 col-sm-3 control-label\">สถานะนำส่งเงิน :</label>\r\n                    <div class=\"col-lg-4 col-md-7 col-sm-9\">\r\n                        <div class=\"form-group\">\r\n                            <div class=\"form-line\">\r\n                                <select [(ngModel)]=\"RevenueStatus\" name=\"RevenueStatus\" class=\"form-control form-control-sm\" [disabled]=\"showEditField\">\r\n                                    <option value=\"\">ไม่เลือกสถานะนำส่งเงิน</option>\r\n                                    <option value=\"1\">นำส่งเงินรายได้</option>\r\n                                    <option value=\"2\">รับรายการนำส่งเงิน</option>\r\n                                </select>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"row form-group\">\r\n                    <div class=\"col-10\"></div>\r\n                    <div class=\"col-2\">\r\n                        <button type=\"submit\" class=\"btn btn-block btn-themecolor\">ค้นข้อมูล</button>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </form>\r\n    </div>\r\n\r\n</div>\r\n\r\n<div class=\"card\">\r\n    <div class=\"card-body\">\r\n\r\n        <div class=\"table-responsive table-striped \">\r\n            <table #revenueTable class=\"table\">\r\n                <thead>\r\n                    <tr>\r\n                        <th style=\"text-align: center;width:5%\">ลำดับ</th>\r\n                        <th style=\"width:10%\">เลขที่นำส่งเงิน</th>\r\n                        <th style=\"width:10%\">วันที่นำส่ง</th>\r\n                        <th style=\"width:15%\">ผู้นำส่งเงิน</th>\r\n                        <th style=\"width:30%\">หน่วยงาน</th>\r\n                        <th style=\"text-align: center;width:10%\">จำนวนคดี</th>\r\n                        <th style=\"width:20%\" class=\"text-center\">สถานะนำส่งเงิน</th>\r\n                        <th></th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr *ngFor=\"let item of RevenueList; let i=index;\">\r\n                        <td style=\"text-align: center\">{{i + 1}}</td>\r\n                        <td>{{item.RevenueCode}}</td>\r\n                        <td>{{item.RevenueDate}}</td>\r\n                        <td>{{item.RevenueOneStaff}}</td>\r\n                        <td>{{item.RevenueOneStaffDept}}</td>\r\n                        <td style=\"text-align: center\">{{item.ResultCount}}</td>\r\n                        <td class=\"text-center\">{{item.RevenueStatus}}</td>\r\n                        <td class=\"text-center\">\r\n                            <a href=\"javaScript:void(0);\" class=\"text-secondary\" (click)=\"clickView(item.RevenueID)\">\r\n                                <i class=\"mdi mdi-eye fa-lg\"></i>\r\n                            </a>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n\r\n        <div class=\"card-footer card-footer-unset\">\r\n            <app-pagination-table [TotalItems]=\"paginage.TotalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\r\n                [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\r\n            </app-pagination-table>\r\n        </div>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
-/***/ "./src/app/pages/notices/list/list.component.ts":
+/***/ "./src/app/pages/income/list/list.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15,12 +15,12 @@ module.exports = "<div *ngIf=\"advSearch | async\" class=\"card card-outline-blu
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_header_navigation_navigation_service__ = __webpack_require__("./src/app/shared/header-navigation/navigation.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__notice_service__ = __webpack_require__("./src/app/pages/notices/notice.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__config_message__ = __webpack_require__("./src/app/config/message.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__config_pagination__ = __webpack_require__("./src/app/config/pagination.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__income_service__ = __webpack_require__("./src/app/pages/income/income.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__config_pagination__ = __webpack_require__("./src/app/config/pagination.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__config_message__ = __webpack_require__("./src/app/config/message.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config_dateFormat__ = __webpack_require__("./src/app/config/dateFormat.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__ = __webpack_require__("./src/app/shared/sidebar/sidebar.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_sidebar_sidebar_component__ = __webpack_require__("./src/app/shared/sidebar/sidebar.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -75,123 +75,143 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 
 var ListComponent = /** @class */ (function () {
-    function ListComponent(_router, navservice, noticeService, preLoaderService, sidebarService) {
+    function ListComponent(_router, navService, sidebarService, incomeService, preloader) {
         this._router = _router;
-        this.navservice = navservice;
-        this.noticeService = noticeService;
-        this.preLoaderService = preLoaderService;
+        this.navService = navService;
         this.sidebarService = sidebarService;
-        this.isRequired = false;
-        this.paginage = __WEBPACK_IMPORTED_MODULE_5__config_pagination__["a" /* pagination */];
-        this.notice = new Array();
-        this.noticeList = new Array();
-        this.myDatePickerOptions = {
-            dateFormat: 'dd mmm yyyy',
-            showClearDateBtn: false,
-            height: '30px'
-        };
+        this.incomeService = incomeService;
+        this.preloader = preloader;
+        this.revenue = new Array();
+        this.RevenueList = new Array();
+        this.paginage = __WEBPACK_IMPORTED_MODULE_4__config_pagination__["a" /* pagination */];
+        this.StatusOption = [];
+        this.options = [];
+        this.rawOptions = [];
         // set false
-        this.navservice.setEditButton(false);
-        this.navservice.setDeleteButton(false);
-        this.navservice.setPrintButton(false);
-        this.navservice.setSaveButton(false);
-        this.navservice.setCancelButton(false);
-        this.navservice.setNextPageButton(false);
+        this.navService.setEditButton(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setPrintButton(false);
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
+        this.navService.setNextPageButton(false);
         // set true
-        this.navservice.setSearchBar(true);
-        this.navservice.setNewButton(true);
-        this.advSearch = this.navservice.showAdvSearch;
+        this.navService.setSearchBar(true);
+        this.navService.setNewButton(true);
+        this.advSearch = this.navService.showAdvSearch;
     }
     ListComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _a;
             var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        this.sidebarService.setVersion('0.0.2.12');
-                        this.paginage.TotalItems = 0;
-                        this.preLoaderService.setShowPreloader(true);
-                        return [4 /*yield*/, this.noticeService.getByKeywordOnInt().then(function (list) { return _this.onSearchComplete(list); })];
+                        this.sidebarService.setVersion('Revenue 0.0.0.10');
+                        this.RevenueStatus = "";
+                        //this.preloader.setShowPreloader(true);
+                        //this.getDepartmentRevenue();
+                        //this.onSearch({ Textsearch: "" });
+                        _a = this;
+                        return [4 /*yield*/, this.navService.searchByKeyword.subscribe(function (Textsearch) { return __awaiter(_this, void 0, void 0, function () {
+                                var ts;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!Textsearch) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, this.navService.setOnSearch('')];
+                                        case 1:
+                                            _a.sent();
+                                            ts = void 0;
+                                            ts = { Textsearch: "" };
+                                            ts = Textsearch;
+                                            if (ts.Textsearch == null) {
+                                                this.onSearch({ Textsearch: "" });
+                                            }
+                                            else {
+                                                this.onSearch(Textsearch);
+                                            }
+                                            _a.label = 2;
+                                        case 2: return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
                     case 1:
-                        _a.sent();
-                        this.subOnsearchByKeyword = this.navservice.searchByKeyword.subscribe(function (Textsearch) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        if (!Textsearch) return [3 /*break*/, 2];
-                                        return [4 /*yield*/, this.navservice.setOnSearch('')];
-                                    case 1:
-                                        _a.sent();
-                                        this.onSearch(Textsearch);
-                                        _a.label = 2;
-                                    case 2: return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        this.subSetNextPage = this.navservice.onNextPage.subscribe(function (status) { return __awaiter(_this, void 0, void 0, function () {
+                        //this.preloader.setShowPreloader(true);
+                        //this.getDepartmentRevenue();
+                        //this.onSearch({ Textsearch: "" });
+                        _a.subOnSearch = _b.sent();
+                        this.subSetNextPage = this.navService.onNextPage.subscribe(function (status) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         if (!status) return [3 /*break*/, 2];
-                                        return [4 /*yield*/, this.navservice.setOnNextPage(false)];
+                                        return [4 /*yield*/, this.navService.setOnNextPage(false)];
                                     case 1:
                                         _a.sent();
-                                        this._router.navigate(['/notice/manage', 'C', 'NEW']);
+                                        this._router.navigate(['/income/manage', 'C', 'NEW']);
                                         _a.label = 2;
                                     case 2: return [2 /*return*/];
                                 }
                             });
                         }); });
-                        this.preLoaderService.setShowPreloader(false);
                         return [2 /*return*/];
                 }
             });
         });
     };
     ListComponent.prototype.ngOnDestroy = function () {
-        if (this.subOnsearchByKeyword)
-            this.subOnsearchByKeyword.unsubscribe();
-        if (this.subSetNextPage)
-            this.subSetNextPage.unsubscribe();
+        this.subOnSearch.unsubscribe();
+        this.subSetNextPage.unsubscribe();
     };
     ListComponent.prototype.onSearch = function (Textsearch) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.preLoaderService.setShowPreloader(true);
-                        return [4 /*yield*/, this.noticeService.getByKeyword(Textsearch).then(function (list) { return _this.onSearchComplete(list); })];
-                    case 1:
-                        _a.sent();
-                        this.preLoaderService.setShowPreloader(false);
-                        return [2 /*return*/];
-                }
-            });
+        var _this = this;
+        this.incomeService.getByKeyword(Textsearch).subscribe(function (list) {
+            _this.onSearchComplete(list);
+            _this.preloader.setShowPreloader(false);
+        }, function (err) {
+            alert(__WEBPACK_IMPORTED_MODULE_5__config_message__["a" /* Message */].noRecord);
+            _this.RevenueList = [];
+            _this.preloader.setShowPreloader(true);
         });
     };
     ListComponent.prototype.onAdvSearch = function (form) {
         return __awaiter(this, void 0, void 0, function () {
-            var sdate, edate;
+            var sDate, eDate, sDateRevenue, eDateRevenue;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (form.value.DateStartFrom && form.value.DateStartTo) {
-                            sdate = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["d" /* getDateMyDatepicker */])(form.value.dateStartFrom);
-                            edate = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["d" /* getDateMyDatepicker */])(form.value.dateStartTo);
-                            if (!Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["b" /* compareDate */])(sdate, edate)) {
-                                alert(__WEBPACK_IMPORTED_MODULE_4__config_message__["a" /* Message */].checkDate);
-                                return [2 /*return*/, false];
+                        this.preloader.setShowPreloader(true);
+                        if (form.value.DateStartFrom) {
+                            sDate = form.value.DateStartFrom.date;
+                            if (sDate != undefined) {
+                                sDateRevenue = new Date(sDate.year + "-" + sDate.month + "-" + sDate.day);
+                                form.value.DateStartFrom = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["h" /* setZeroHours */])(sDateRevenue);
                             }
-                            form.value.DateStartFrom = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["h" /* setZeroHours */])(sdate);
-                            form.value.DateStartTo = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["h" /* setZeroHours */])(edate);
                         }
-                        this.preLoaderService.setShowPreloader(true);
-                        return [4 /*yield*/, this.noticeService.getByConAdv(form.value).then(function (list) { return _this.onSearchComplete(list); })];
+                        if (form.value.DateStartTo) {
+                            eDate = form.value.DateStartTo.date;
+                            if (sDate != undefined) {
+                                eDateRevenue = new Date(eDate.year + "-" + eDate.month + "-" + eDate.day);
+                                form.value.DateStartTo = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["h" /* setZeroHours */])(eDateRevenue);
+                            }
+                        }
+                        if (form.value.RevenueStatus == "") {
+                            form.value.RevenueStatus = null;
+                        }
+                        debugger;
+                        return [4 /*yield*/, this.incomeService.getByConAdv(form.value).then(function (list) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    this.onSearchComplete(list);
+                                    this.preloader.setShowPreloader(false);
+                                    return [2 /*return*/];
+                                });
+                            }); }, function (err) {
+                                alert(err.message);
+                                _this.preloader.setShowPreloader(false);
+                            })];
                     case 1:
                         _a.sent();
-                        this.preLoaderService.setShowPreloader(false);
                         return [2 /*return*/];
                 }
             });
@@ -202,61 +222,50 @@ var ListComponent = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.revenue = [];
                         if (!list.length) {
-                            alert(__WEBPACK_IMPORTED_MODULE_4__config_message__["a" /* Message */].noRecord);
+                            alert(__WEBPACK_IMPORTED_MODULE_5__config_message__["a" /* Message */].noRecord);
+                            this.RevenueList = [];
                             return [2 /*return*/, false];
                         }
-                        this.notice = [];
-                        return [4 /*yield*/, list
-                                .filter(function (item) { return item.IsActive == 1; })
-                                .map(function (item, i) {
-                                item.RowId = i + 1;
-                                item.NoticeDate = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["j" /* toLocalShort */])(item.NoticeDate);
-                                item.NoticeStaff
-                                    .filter(function (_s) { return _s.IsActive == 1; })
-                                    .map(function (s) {
-                                    s.StaffFullName = s.TitleName + " " + s.FirstName + " " + s.LastName;
-                                });
-                                item.NoticeSuspect
-                                    .filter(function (_s) { return _s.IsActive == 1; })
-                                    .map(function (s) {
-                                    s.SuspectFullName = s.SuspectTitleName + " " + s.SuspectFirstName + " " + s.SuspectLastName;
-                                });
+                        return [4 /*yield*/, list.map(function (item) {
+                                var StaffSendMoney;
+                                item.RevenueDate = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["j" /* toLocalShort */])(item.RevenueDate);
+                                StaffSendMoney = item.RevenueStaff.filter(function (item) { return item.ContributorID === 20; });
+                                item.RevenueOneStaff = "";
+                                item.RevenueOneStaffDept = "";
+                                if (StaffSendMoney.length > 0) {
+                                    item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
+                                    item.RevenueOneStaffDept = StaffSendMoney[0].OfficeName;
+                                }
+                                if (item.RevenueStatus == "1") {
+                                    item.RevenueStatus = "นำส่งเงินรายได้";
+                                }
+                                else if (item.RevenueStatus == "2") {
+                                    item.RevenueStatus = "รับรายการนำส่งเงิน";
+                                }
+                                else {
+                                    item.RevenueStatus = "";
+                                }
                             })];
                     case 1:
                         _a.sent();
-                        this.notice = list;
+                        if (Array.isArray(list)) {
+                            this.revenue = list;
+                        }
+                        else {
+                            this.revenue.push(list);
+                        }
                         // set total record
-                        this.paginage.TotalItems = this.notice.length;
+                        this.paginage.TotalItems = this.revenue.length;
+                        this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
                         return [2 /*return*/];
                 }
             });
         });
     };
-    ListComponent.prototype.onSDateChange = function (event) {
-        this.dateStartFrom = event;
-        this.checkDate();
-    };
-    ListComponent.prototype.onEDateChange = function (event) {
-        this.dateStartTo = event;
-        this.checkDate();
-    };
-    ListComponent.prototype.checkDate = function () {
-        var _this = this;
-        if (this.dateStartFrom && this.dateStartTo) {
-            var _sdate_1 = this.dateStartFrom;
-            var sdate = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["d" /* getDateMyDatepicker */])(this.dateStartFrom);
-            var edate = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["d" /* getDateMyDatepicker */])(this.dateStartTo);
-            if (!Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["b" /* compareDate */])(sdate, edate)) {
-                alert(__WEBPACK_IMPORTED_MODULE_4__config_message__["a" /* Message */].checkDate);
-                setTimeout(function () {
-                    _this.dateStartTo = { date: _sdate_1.date };
-                }, 0);
-            }
-        }
-    };
-    ListComponent.prototype.view = function (noticeCode) {
-        this._router.navigate(["/notice/manage/R/" + noticeCode]);
+    ListComponent.prototype.clickView = function (RevenueID) {
+        this._router.navigate(["/income/manage/R/" + RevenueID]);
     };
     ListComponent.prototype.pageChanges = function (event) {
         return __awaiter(this, void 0, void 0, function () {
@@ -265,24 +274,91 @@ var ListComponent = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4 /*yield*/, this.notice.slice(event.startIndex - 1, event.endIndex)];
+                        return [4 /*yield*/, this.revenue.slice(event.startIndex - 1, event.endIndex)];
                     case 1:
-                        _a.noticeList = _b.sent();
+                        _a.RevenueList = _b.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
+    ListComponent.prototype.getCurrentDate = function () {
+        var date = new Date();
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
+    };
+    ListComponent.prototype.onSDateChange = function (event) {
+        this._dateStartFrom = event.date;
+        this.checkDateDelivery();
+    };
+    ListComponent.prototype.onEDateChange = function (event) {
+        this._dateStartTo = event.date;
+        if (this.checkDateDelivery()) {
+        }
+    };
+    ListComponent.prototype.checkDateDelivery = function () {
+        var _this = this;
+        if (this._dateStartFrom && this._dateStartTo) {
+            var sdate = this._dateStartFrom.year + "-" + this._dateStartFrom.month + "-" + this._dateStartFrom.day;
+            var edate = this._dateStartTo.year + "-" + this._dateStartTo.month + "-" + this._dateStartTo.day;
+            if (!Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["b" /* compareDate */])(new Date(sdate), new Date(edate))) {
+                alert(__WEBPACK_IMPORTED_MODULE_5__config_message__["a" /* Message */].checkDate);
+                setTimeout(function () {
+                    _this.DateStartTo = { date: _this._dateStartFrom };
+                }, 0);
+            }
+        }
+    };
+    // --- หน่วยงาน ---
+    ListComponent.prototype.getDepartmentRevenue = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.incomeService.getDepartment().then(function (res) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                if (res) {
+                                    this.rawOptions = res;
+                                }
+                                return [2 /*return*/];
+                            });
+                        }); }, function (err) {
+                            _this.preloader.setShowPreloader(false);
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ListComponent.prototype.onAutoChange = function (value) {
+        // if (value == '') {
+        //     this.options = [];
+        //     // this.oProve.ProveStationCode = "";
+        //     // this.oProve.ProveStation = "";
+        // } else {
+        //     this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        // }
+    };
+    ListComponent.prototype.onAutoFocus = function (value) {
+        // if (value == '') {
+        //     this.options = [];
+        // }
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])('revenueTable'),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */])
+    ], ListComponent.prototype, "revenueTable", void 0);
     ListComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-list',
-            template: __webpack_require__("./src/app/pages/notices/list/list.component.html")
+            template: __webpack_require__("./src/app/pages/income/list/list.component.html")
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
             __WEBPACK_IMPORTED_MODULE_2__shared_header_navigation_navigation_service__["a" /* NavigationService */],
-            __WEBPACK_IMPORTED_MODULE_3__notice_service__["a" /* NoticeService */],
-            __WEBPACK_IMPORTED_MODULE_7__shared_preloader_preloader_component__["b" /* PreloaderService */],
-            __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__["b" /* SidebarService */]])
+            __WEBPACK_IMPORTED_MODULE_7__shared_sidebar_sidebar_component__["b" /* SidebarService */],
+            __WEBPACK_IMPORTED_MODULE_3__income_service__["a" /* IncomeService */],
+            __WEBPACK_IMPORTED_MODULE_8__shared_preloader_preloader_component__["b" /* PreloaderService */]])
     ], ListComponent);
     return ListComponent;
 }());
@@ -291,7 +367,7 @@ var ListComponent = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/pages/notices/list/list.module.ts":
+/***/ "./src/app/pages/income/list/list.module.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -299,15 +375,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ListModule", function() { return ListModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("./node_modules/@angular/common/esm5/common.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__list_component__ = __webpack_require__("./src/app/pages/notices/list/list.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__list_component__ = __webpack_require__("./src/app/pages/income/list/list.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__component_card_actions_card_actions_module__ = __webpack_require__("./src/app/pages/component/card-actions/card-actions.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__notice_service__ = __webpack_require__("./src/app/pages/notices/notice.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__income_service__ = __webpack_require__("./src/app/pages/income/income.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__component_pagination_table_pagination_table_module__ = __webpack_require__("./src/app/pages/component/pagination-table/pagination-table.module.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_mydatepicker_th__ = __webpack_require__("./node_modules/mydatepicker-th/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__angular_material_autocomplete__ = __webpack_require__("./node_modules/@angular/material/esm5/autocomplete.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -325,15 +402,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var routes = [
     {
         path: '',
         data: {
-            urls: [
-                { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหาใบแจ้งความนำจับ' }
-            ],
-            codePage: 'XCS60-02-01-00'
+            // title: 'ค้นหาข้อมูล',
+            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหารายการนำส่งเงินรายได้' }],
+            nextPage: { title: 'จัดการข้อมูลนำส่งเงินรายได้', url: '/income/manage' },
+            codePage: 'ILG60-07-01-00-00'
         },
         component: __WEBPACK_IMPORTED_MODULE_2__list_component__["a" /* ListComponent */]
     }
@@ -344,21 +421,19 @@ var ListModule = /** @class */ (function () {
     ListModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
             imports: [
-                __WEBPACK_IMPORTED_MODULE_4__angular_forms__["g" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_7__angular_http__["d" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_7__angular_http__["b" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_8__angular_common_http__["b" /* HttpClientModule */],
+                __WEBPACK_IMPORTED_MODULE_4__angular_forms__["f" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_3__angular_router__["d" /* RouterModule */].forChild(routes),
                 __WEBPACK_IMPORTED_MODULE_5__component_card_actions_card_actions_module__["a" /* CardActionsModule */],
                 __WEBPACK_IMPORTED_MODULE_9__component_pagination_table_pagination_table_module__["a" /* PaginationTableModule */],
-                __WEBPACK_IMPORTED_MODULE_10_mydatepicker_th__["a" /* MyDatePickerTHModule */]
+                __WEBPACK_IMPORTED_MODULE_10_mydatepicker_th__["a" /* MyDatePickerTHModule */],
+                __WEBPACK_IMPORTED_MODULE_11__angular_material_autocomplete__["a" /* MatAutocompleteModule */],
             ],
-            declarations: [
-                __WEBPACK_IMPORTED_MODULE_2__list_component__["a" /* ListComponent */],
-            ],
-            providers: [
-                __WEBPACK_IMPORTED_MODULE_6__notice_service__["a" /* NoticeService */]
-            ]
+            declarations: [__WEBPACK_IMPORTED_MODULE_2__list_component__["a" /* ListComponent */]],
+            providers: [__WEBPACK_IMPORTED_MODULE_6__income_service__["a" /* IncomeService */]],
+            exports: [__WEBPACK_IMPORTED_MODULE_11__angular_material_autocomplete__["a" /* MatAutocompleteModule */]]
         })
     ], ListModule);
     return ListModule;

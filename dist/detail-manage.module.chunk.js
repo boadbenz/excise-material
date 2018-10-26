@@ -1,5 +1,121 @@
 webpackJsonp(["detail-manage.module"],{
 
+/***/ "./src/app/pages/arrests/offense-modal/offense-modal.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"modal-header bg-theme\">\r\n    <h4 class=\"modal-title text-white\">รายละเอียดการกระทำผิด</h4>\r\n    <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n        <span aria-hidden=\"true\">\r\n            <i class=\" ti-close\"></i>\r\n        </span>\r\n    </a>\r\n</div>\r\n<div class=\"modal-body font-14\">\r\n    <div class=\"card p-0 unset-radius\">\r\n        <div class=\"card-body p-0\">\r\n\r\n            <table class=\"table table-sm table-striped\">\r\n                <thead>\r\n                    <tr>\r\n                        <th class=\"text-center\">ลำดับ</th>\r\n                        <th>เลขที่รับ</th>\r\n                        <th>มาตรา</th>\r\n                        <th>ข้อ</th>\r\n                        <th>ข้อกล่าวหา</th>\r\n                        <th>สถานที่จับกุม</th>\r\n                        <th>หน่วยงาน</th>\r\n                        <th>วันที่จับกุม</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr>\r\n                        <td class=\"text-center\"></td>\r\n                        <td>1</td>\r\n                        <td>1</td>\r\n                        <td>1</td>\r\n                        <td>1</td>\r\n                        <td>1</td>\r\n                        <td>1</td>\r\n                        <td>1</td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        <div class=\"card-footer card-footer-unset\">\r\n            <div class=\"row justify-content-between m-l-5\">\r\n                <div clas=\"col\">\r\n                    <a class=\"icn-pagination\"> |<< </a>\r\n                            <label> หน้าที่\r\n                                <select>\r\n                                    <option value=\"1\">1</option>\r\n                                    <option value=\"2\">2</option>\r\n                                </select> จาก 2 หน้า</label>\r\n                            <a class=\"icn-pagination m-r-10\"> >>| </a>\r\n                            รายการที่ 1 - 5 จาก 5 รายการ\r\n                </div>\r\n                <div class=\"col col-lg-3 text-right\">\r\n                    <label>แสดง\r\n                        <select>\r\n                            <option>5</option>\r\n                            <option>10</option>\r\n                            <option>15</option>\r\n                            <option>20</option>\r\n                        </select> รายการ</label>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/pages/arrests/offense-modal/offense-modal.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/pages/arrests/offense-modal/offense-modal.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OffenseModalComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var OffenseModalComponent = /** @class */ (function () {
+    function OffenseModalComponent(_chRef) {
+        this._chRef = _chRef;
+        this.d = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
+        this.c = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
+    }
+    OffenseModalComponent.prototype.ngOnInit = function () {
+        this.onDetactTable();
+    };
+    OffenseModalComponent.prototype.onDetactTable = function () {
+        // const table: any = $('table');
+        // if ($.fn.dataTable.isDataTable('table')) {
+        //   this.dataTable = table.DataTable();
+        //   this.dataTable.destroy();
+        // }
+        // this._chRef.detectChanges();
+        // this.dataTable = table.DataTable(dataTableOptions);
+    };
+    OffenseModalComponent.prototype.dismiss = function (e) {
+        this.d.emit(e);
+    };
+    OffenseModalComponent.prototype.close = function (e) {
+        this.c.emit(e);
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
+        __metadata("design:type", Object)
+    ], OffenseModalComponent.prototype, "d", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
+        __metadata("design:type", Object)
+    ], OffenseModalComponent.prototype, "c", void 0);
+    OffenseModalComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'app-offense-modal',
+            template: __webpack_require__("./src/app/pages/arrests/offense-modal/offense-modal.component.html"),
+            styles: [__webpack_require__("./src/app/pages/arrests/offense-modal/offense-modal.component.scss")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* ChangeDetectorRef */]])
+    ], OffenseModalComponent);
+    return OffenseModalComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/arrests/offense-modal/offense-modal.module.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OffenseModalModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("./node_modules/@angular/common/esm5/common.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__offense_modal_component__ = __webpack_require__("./src/app/pages/arrests/offense-modal/offense-modal.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__component_card_actions_card_actions_module__ = __webpack_require__("./src/app/pages/component/card-actions/card-actions.module.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+var OffenseModalModule = /** @class */ (function () {
+    function OffenseModalModule() {
+    }
+    OffenseModalModule = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
+            imports: [
+                __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
+                __WEBPACK_IMPORTED_MODULE_3__component_card_actions_card_actions_module__["a" /* CardActionsModule */]
+            ],
+            declarations: [__WEBPACK_IMPORTED_MODULE_2__offense_modal_component__["a" /* OffenseModalComponent */]],
+            exports: [__WEBPACK_IMPORTED_MODULE_2__offense_modal_component__["a" /* OffenseModalComponent */]]
+        })
+    ], OffenseModalModule);
+    return OffenseModalModule;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/pages/investigation/detail-manage/detail-manage.component.html":
 /***/ (function(module, exports) {
 
@@ -304,15 +420,15 @@ var DetailManageComponent = /** @class */ (function () {
     };
     DetailManageComponent.prototype.createForm = function () {
         this.investigateFG = this.fb.group({
-            InvestigateCode: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](this.investCode, __WEBPACK_IMPORTED_MODULE_10__angular_forms__["m" /* Validators */].required),
-            InvestigateSeq: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](null),
-            StationCode: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](null),
-            StationName: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](null),
-            InvestigateDateStart: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](null),
-            InvestigateDateEnd: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](null),
-            ConfidenceOfNews: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](null),
-            ValueOfNews: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](null),
-            InvestigateDetail: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](null),
+            InvestigateCode: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](this.investCode, __WEBPACK_IMPORTED_MODULE_10__angular_forms__["l" /* Validators */].required),
+            InvestigateSeq: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](null),
+            StationCode: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](null),
+            StationName: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](null),
+            InvestigateDateStart: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](null),
+            InvestigateDateEnd: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](null),
+            ConfidenceOfNews: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](null),
+            ValueOfNews: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](null),
+            InvestigateDetail: new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](null),
             InvestigateDetailStaff: this.fb.array([this.createStaffForm()]),
             InvestigateDetailProduct: this.fb.array([this.createProductForm()]),
             InvestigateDetailLocal: this.fb.array([this.createLocalForm()]),
@@ -320,19 +436,19 @@ var DetailManageComponent = /** @class */ (function () {
         });
     };
     DetailManageComponent.prototype.createStaffForm = function () {
-        __WEBPACK_IMPORTED_MODULE_6__investigate_detail_staff__["a" /* InvestigateStaffFormControl */].InvestigateCode = new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](this.investCode);
+        __WEBPACK_IMPORTED_MODULE_6__investigate_detail_staff__["a" /* InvestigateStaffFormControl */].InvestigateCode = new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](this.investCode);
         return this.fb.group(__WEBPACK_IMPORTED_MODULE_6__investigate_detail_staff__["a" /* InvestigateStaffFormControl */]);
     };
     DetailManageComponent.prototype.createSuspectForm = function () {
-        __WEBPACK_IMPORTED_MODULE_7__investigate_detail_suspect__["a" /* InvestigateSuspectFormControl */].InvestigateCode = new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](this.investCode);
+        __WEBPACK_IMPORTED_MODULE_7__investigate_detail_suspect__["a" /* InvestigateSuspectFormControl */].InvestigateCode = new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](this.investCode);
         return this.fb.group(__WEBPACK_IMPORTED_MODULE_7__investigate_detail_suspect__["a" /* InvestigateSuspectFormControl */]);
     };
     DetailManageComponent.prototype.createProductForm = function () {
-        __WEBPACK_IMPORTED_MODULE_9__investigate_detail_product__["a" /* InvestigateProductFormControl */].InvestigateCode = new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](this.investCode);
+        __WEBPACK_IMPORTED_MODULE_9__investigate_detail_product__["a" /* InvestigateProductFormControl */].InvestigateCode = new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](this.investCode);
         return this.fb.group(__WEBPACK_IMPORTED_MODULE_7__investigate_detail_suspect__["a" /* InvestigateSuspectFormControl */]);
     };
     DetailManageComponent.prototype.createLocalForm = function () {
-        __WEBPACK_IMPORTED_MODULE_8__investigate_detail_local__["a" /* InvestigateLocalFormControl */].InvestigateCode = new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["d" /* FormControl */](this.investCode);
+        __WEBPACK_IMPORTED_MODULE_8__investigate_detail_local__["a" /* InvestigateLocalFormControl */].InvestigateCode = new __WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormControl */](this.investCode);
         return this.fb.group(__WEBPACK_IMPORTED_MODULE_7__investigate_detail_suspect__["a" /* InvestigateSuspectFormControl */]);
     };
     DetailManageComponent.prototype.selectItemStaff = function (e, i) {
@@ -366,7 +482,7 @@ var DetailManageComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/pages/investigation/detail-manage/detail-manage.component.html"),
             styles: [__webpack_require__("./src/app/pages/investigation/detail-manage/detail-manage.component.scss")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_10__angular_forms__["c" /* FormBuilder */],
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_10__angular_forms__["b" /* FormBuilder */],
             __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */],
             __WEBPACK_IMPORTED_MODULE_4__investigate_service__["a" /* InvestigateService */],
             __WEBPACK_IMPORTED_MODULE_1__ng_bootstrap_ng_bootstrap__["d" /* NgbModal */],
@@ -395,8 +511,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__investigate_service__ = __webpack_require__("./src/app/pages/investigation/investigate.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ng_bootstrap_ng_bootstrap__ = __webpack_require__("./node_modules/@ng-bootstrap/ng-bootstrap/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__component_modal_lawbreaker_modal_lawbreaker_module__ = __webpack_require__("./src/app/pages/component/modal-lawbreaker/modal-lawbreaker.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__arrests_offense_modal_offense_modal_module__ = __webpack_require__("./src/app/pages/arrests/offense-modal/offense-modal.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ng_bootstrap_ng_bootstrap__ = __webpack_require__("./node_modules/@ng-bootstrap/ng-bootstrap/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__component_modal_lawbreaker_modal_lawbreaker_module__ = __webpack_require__("./src/app/pages/component/modal-lawbreaker/modal-lawbreaker.module.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -412,7 +529,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-// import { OffenseModalModule } from '../../arrests/offense-modal/offense-modal.module';
+
 
 
 var routes = [
@@ -438,14 +555,15 @@ var DetailManageModule = /** @class */ (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
             imports: [
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_http__["d" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_http__["b" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_6__angular_common_http__["b" /* HttpClientModule */],
-                __WEBPACK_IMPORTED_MODULE_8__angular_forms__["g" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_8__angular_forms__["l" /* ReactiveFormsModule */],
-                __WEBPACK_IMPORTED_MODULE_9__ng_bootstrap_ng_bootstrap__["e" /* NgbModule */].forRoot(),
+                __WEBPACK_IMPORTED_MODULE_8__angular_forms__["f" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_8__angular_forms__["k" /* ReactiveFormsModule */],
+                __WEBPACK_IMPORTED_MODULE_10__ng_bootstrap_ng_bootstrap__["e" /* NgbModule */].forRoot(),
                 __WEBPACK_IMPORTED_MODULE_4__angular_router__["d" /* RouterModule */].forChild(routes),
                 __WEBPACK_IMPORTED_MODULE_3__component_card_actions_card_actions_module__["a" /* CardActionsModule */],
-                __WEBPACK_IMPORTED_MODULE_10__component_modal_lawbreaker_modal_lawbreaker_module__["a" /* ModalLawbreakerModule */],
+                __WEBPACK_IMPORTED_MODULE_11__component_modal_lawbreaker_modal_lawbreaker_module__["a" /* ModalLawbreakerModule */],
+                __WEBPACK_IMPORTED_MODULE_9__arrests_offense_modal_offense_modal_module__["a" /* OffenseModalModule */]
             ],
             declarations: [__WEBPACK_IMPORTED_MODULE_2__detail_manage_component__["a" /* DetailManageComponent */]],
             providers: [__WEBPACK_IMPORTED_MODULE_7__investigate_service__["a" /* InvestigateService */]]
@@ -473,27 +591,27 @@ var InvestigateDetailLocal = /** @class */ (function () {
 }());
 
 var InvestigateLocalFormControl = {
-    LocalDetailID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LocalID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    InvestigateCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    GPS: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Location: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Address: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Village: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Building: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Floor: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Room: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Alley: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Road: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubDistrictCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubDistrict: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    DistrictCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    District: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProvinceCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Province: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ZipCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Phone: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
+    LocalDetailID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    LocalID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    InvestigateCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    GPS: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Location: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Address: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Village: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Building: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Floor: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Room: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Alley: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Road: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SubDistrictCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SubDistrict: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    DistrictCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    District: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ProvinceCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Province: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ZipCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Phone: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
 };
 
 
@@ -514,37 +632,37 @@ var InvestigateDetailProduct = /** @class */ (function () {
 }());
 
 var InvestigateProductFormControl = {
-    SuspectID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProductID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    InvestigateCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    GroupName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    GroupCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsDomestic: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProductCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    BrandCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    BrandNameTH: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    BrandNameEN: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubBrandCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubBrandNameTH: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubBrandNameEN: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ModelCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ModelName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    FixNo1: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    DegreeCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Degree: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SizeCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Size: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SizeUnitCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SizeUnitName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    FixNo2: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SequenceNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProductDesc: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CarNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Qty: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    QtyUnit: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    NetVolume: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    NetVolumeUnit: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
+    SuspectID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ProductID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    InvestigateCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    GroupName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    GroupCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    IsDomestic: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ProductCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    BrandCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    BrandNameTH: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    BrandNameEN: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SubBrandCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SubBrandNameTH: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SubBrandNameEN: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ModelCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ModelName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    FixNo1: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    DegreeCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Degree: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SizeCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Size: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SizeUnitCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SizeUnitName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    FixNo2: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SequenceNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ProductDesc: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    CarNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    Qty: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    QtyUnit: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    NetVolume: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    NetVolumeUnit: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
 };
 
 
@@ -586,29 +704,29 @@ var InvestigateDetailStaff = /** @class */ (function () {
 }());
 
 var InvestigateStaffFormControl = {
-    StaffID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProgramCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */]('XCS60-02-02'),
-    ProcessCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */]('0001'),
-    InvestigateCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].required),
-    StaffCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].required),
-    TitleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    FirstName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].required),
-    LastName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PositionCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].required),
-    PositionName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PosLevel: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PosLevelName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    DepartmentCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    DepartmentName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    DepartmentLevel: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    OfficeCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    OfficeName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    OfficeShortName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ContributorCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ContributorID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].required),
-    FullName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsNewItem: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](false)
+    StaffID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ProgramCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */]('XCS60-02-02'),
+    ProcessCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */]('0001'),
+    InvestigateCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["l" /* Validators */].required),
+    StaffCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["l" /* Validators */].required),
+    TitleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    FirstName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["l" /* Validators */].required),
+    LastName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    PositionCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["l" /* Validators */].required),
+    PositionName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    PosLevel: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    PosLevelName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    DepartmentCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    DepartmentName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    DepartmentLevel: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    OfficeCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    OfficeName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    OfficeShortName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ContributorCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    ContributorID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["l" /* Validators */].required),
+    FullName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    IsNewItem: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](false)
 };
 
 
@@ -630,18 +748,18 @@ var InvestigateDetailSuspect = /** @class */ (function () {
 }());
 
 var InvestigateSuspectFormControl = {
-    SuspectID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SuspectReferenceID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    InvestigateDetailID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    InvestigateCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SuspecTitleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SuspectFirstName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SuspectLastName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyTitleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyOtherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    FullName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
+    SuspectID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SuspectReferenceID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    InvestigateDetailID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    InvestigateCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SuspecTitleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SuspectFirstName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    SuspectLastName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    CompanyTitleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    CompanyName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    CompanyOtherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
+    FullName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["c" /* FormControl */](null),
 };
 
 

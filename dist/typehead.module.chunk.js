@@ -115,7 +115,7 @@ var WikipediaService = /** @class */ (function () {
             return __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__["a" /* Observable */].of([]);
         }
         var wikiUrl = 'https://en.wikipedia.org/w/api.php';
-        var params = new __WEBPACK_IMPORTED_MODULE_2__angular_http__["h" /* URLSearchParams */]();
+        var params = new __WEBPACK_IMPORTED_MODULE_2__angular_http__["e" /* URLSearchParams */]();
         params.set('search', term);
         params.set('action', 'opensearch');
         params.set('format', 'json');
@@ -126,7 +126,7 @@ var WikipediaService = /** @class */ (function () {
     };
     WikipediaService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_http__["e" /* Jsonp */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_http__["c" /* Jsonp */]])
     ], WikipediaService);
     return WikipediaService;
 }());
@@ -223,10 +223,10 @@ var TypeheadModule = /** @class */ (function () {
     TypeheadModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
             imports: [
-                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["g" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_6__angular_http__["d" /* HttpModule */],
-                __WEBPACK_IMPORTED_MODULE_6__angular_http__["f" /* JsonpModule */],
+                __WEBPACK_IMPORTED_MODULE_6__angular_http__["b" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_6__angular_http__["d" /* JsonpModule */],
                 __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__["e" /* NgbModule */].forRoot(),
                 __WEBPACK_IMPORTED_MODULE_3__angular_router__["d" /* RouterModule */].forChild(routes)
             ],

@@ -4,10 +4,15 @@ webpackJsonp(["main"],{
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./pages/arrests/arrest.module": [
-		"./src/app/pages/arrests/arrest.module.ts",
-		"arrest.module",
-		"common"
+	"./pages/arrests/list/list.module": [
+		"./src/app/pages/arrests/list/list.module.ts",
+		"common",
+		"list.module.6"
+	],
+	"./pages/arrests/manage/manage.module": [
+		"./src/app/pages/arrests/manage/manage.module.ts",
+		"common",
+		"manage.module.0"
 	],
 	"./pages/component/accordion/accordion.module": [
 		"./src/app/pages/component/accordion/accordion.module.ts",
@@ -15,6 +20,7 @@ var map = {
 	],
 	"./pages/component/alert/alert.module": [
 		"./src/app/pages/component/alert/alert.module.ts",
+		"common",
 		"alert.module"
 	],
 	"./pages/component/carousel/carousel.module": [
@@ -59,22 +65,8 @@ var map = {
 	],
 	"./pages/component/typehead/typehead.module": [
 		"./src/app/pages/component/typehead/typehead.module.ts",
+		"common",
 		"typehead.module"
-	],
-	"./pages/fine/detail/detail.module": [
-		"./src/app/pages/fine/detail/detail.module.ts",
-		"common",
-		"detail.module.0"
-	],
-	"./pages/fine/list/list.module": [
-		"./src/app/pages/fine/list/list.module.ts",
-		"common",
-		"list.module.3"
-	],
-	"./pages/fine/manage/manage.module": [
-		"./src/app/pages/fine/manage/manage.module.ts",
-		"common",
-		"manage.module.1"
 	],
 	"./pages/icons/fontawesome/fontawesome.module": [
 		"./src/app/pages/icons/fontawesome/fontawesome.module.ts",
@@ -91,12 +83,12 @@ var map = {
 	"./pages/income/list/list.module": [
 		"./src/app/pages/income/list/list.module.ts",
 		"common",
-		"list.module.6"
+		"list.module.5"
 	],
 	"./pages/income/manage/manage.module": [
 		"./src/app/pages/income/manage/manage.module.ts",
 		"common",
-		"manage.module.0"
+		"manage.module.4"
 	],
 	"./pages/investigation/detail-manage/detail-manage.module": [
 		"./src/app/pages/investigation/detail-manage/detail-manage.module.ts",
@@ -111,7 +103,7 @@ var map = {
 	"./pages/investigation/manage/manage.module": [
 		"./src/app/pages/investigation/manage/manage.module.ts",
 		"common",
-		"manage.module.3"
+		"manage.module.2"
 	],
 	"./pages/lawsuit/detail/detail.module": [
 		"./src/app/pages/lawsuit/detail/detail.module.ts",
@@ -132,15 +124,20 @@ var map = {
 		"./src/app/pages/login/login.module.ts",
 		"login.module"
 	],
+	"./pages/notices/lawbreaker/lawbreaker.module": [
+		"./src/app/pages/notices/lawbreaker/lawbreaker.module.ts",
+		"common",
+		"lawbreaker.module"
+	],
 	"./pages/notices/list/list.module": [
 		"./src/app/pages/notices/list/list.module.ts",
 		"common",
-		"list.module.5"
+		"list.module.4"
 	],
 	"./pages/notices/manage/manage.module": [
 		"./src/app/pages/notices/manage/manage.module.ts",
 		"common",
-		"manage.module"
+		"manage.module.3"
 	],
 	"./pages/notices/suspect/suspect.module": [
 		"./src/app/pages/notices/suspect/suspect.module.ts",
@@ -150,12 +147,12 @@ var map = {
 	"./pages/prove/list/list.module": [
 		"./src/app/pages/prove/list/list.module.ts",
 		"common",
-		"list.module.4"
+		"list.module.3"
 	],
 	"./pages/prove/manage/manage.module": [
 		"./src/app/pages/prove/manage/manage.module.ts",
 		"common",
-		"manage.module.2"
+		"manage.module.1"
 	],
 	"./pages/reduction/list/list.module": [
 		"./src/app/pages/reduction/list/list.module.ts",
@@ -183,8 +180,8 @@ var map = {
 	],
 	"./pages/reward/manage/manage.module": [
 		"./src/app/pages/reward/manage/manage.module.ts",
-		"common",
-		"manage.module.4"
+		"manage.module",
+		"common"
 	],
 	"./pages/reward/reward/reward.module": [
 		"./src/app/pages/reward/reward/reward.module.ts",
@@ -212,21 +209,6 @@ module.exports = webpackAsyncContext;
 
 /***/ }),
 
-/***/ "./src/app/_factories/http-service.factory.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return httpServiceFactory; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_http_service__ = __webpack_require__("./src/app/core/http.service.ts");
-
-function httpServiceFactory(backend, options, loaderService) {
-    return new __WEBPACK_IMPORTED_MODULE_0__core_http_service__["a" /* HttpService */](backend, options, loaderService);
-}
-
-
-
-/***/ }),
-
 /***/ "./src/app/app.component.css":
 /***/ (function(module, exports) {
 
@@ -237,7 +219,7 @@ module.exports = ""
 /***/ "./src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-loader></app-loader>\r\n\r\n<router-outlet></router-outlet>"
+module.exports = "<router-outlet></router-outlet>"
 
 /***/ }),
 
@@ -262,7 +244,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var AppComponent = /** @class */ (function () {
     function AppComponent() {
         this.title = 'app';
-        this.myControl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* FormControl */]();
+        this.myControl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */]();
         this.options = ['One', 'Two', 'Three'];
     }
     AppComponent.prototype.ngOnInit = function () {
@@ -278,29 +260,6 @@ var AppComponent = /** @class */ (function () {
     return AppComponent;
 }());
 
-
-
-/***/ }),
-
-/***/ "./src/app/app.config.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return appConfig; });
-var appConfig = {
-    apiUrl: 'http://103.233.193.62:8888/XCS60',
-    api8888: 'http://103.233.193.62:8888/XCS60',
-    api7788: 'http://103.233.193.62:7788/XCS60',
-    api7789: 'http://103.233.193.62:7789/XCS60',
-    api8881: 'http://103.233.193.62:8881/XCS60',
-    api8082: 'http://103.233.193.62:8082/XCS60',
-    api8083: 'http://103.233.193.62:8083/XCS60',
-    api8084: 'http://103.233.193.62:8084/XCS60',
-    api8882: 'http://103.233.193.62:8882/XCS60',
-    api8883: 'http://103.233.193.62:8883/XCS60',
-    api8087: 'http://103.233.193.62:8087/XCS60',
-    mockapi: 'http://demo1735762.mockable.io/XCS60'
-};
 
 
 /***/ }),
@@ -328,13 +287,6 @@ var appConfig = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__shared_layout_layout_component__ = __webpack_require__("./src/app/shared/layout/layout.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_login_auth_guard__ = __webpack_require__("./src/app/pages/login/auth.guard.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__core_core_module__ = __webpack_require__("./src/app/core/core.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__ngrx_store__ = __webpack_require__("./node_modules/@ngrx/store/@ngrx/store.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__services_main_master_service__ = __webpack_require__("./src/app/services/main-master.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__pages_arrests_store_reducers___ = __webpack_require__("./src/app/pages/arrests/store/reducers/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__services_transaction_running_service__ = __webpack_require__("./src/app/services/transaction-running.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__services_mas_document_main_service__ = __webpack_require__("./src/app/services/mas-document-main.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -342,13 +294,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 // import * as $ from 'jquery';
-
-
-
-
-
-
-
 
 
 
@@ -382,30 +327,20 @@ var AppModule = /** @class */ (function () {
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_5__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["l" /* ReactiveFormsModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["k" /* ReactiveFormsModule */],
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
                 __WEBPACK_IMPORTED_MODULE_6__ng_bootstrap_ng_bootstrap__["e" /* NgbModule */].forRoot(),
-                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["g" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_http__["d" /* HttpModule */],
-                __WEBPACK_IMPORTED_MODULE_21__angular_common_http__["b" /* HttpClientModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_4__angular_router__["d" /* RouterModule */].forRoot(__WEBPACK_IMPORTED_MODULE_12__app_routing__["a" /* routes */]),
                 __WEBPACK_IMPORTED_MODULE_14__shared_preloader_preloader_module__["a" /* PreloaderModule */],
-                __WEBPACK_IMPORTED_MODULE_18__core_core_module__["a" /* CoreModule */],
-                __WEBPACK_IMPORTED_MODULE_15__angular_material__["a" /* MatAutocompleteModule */],
-                __WEBPACK_IMPORTED_MODULE_19__ngrx_store__["b" /* StoreModule */].forRoot({
-                    arrest: __WEBPACK_IMPORTED_MODULE_22__pages_arrests_store_reducers___["a" /* arrestReducer */],
-                    arrestProduct: __WEBPACK_IMPORTED_MODULE_22__pages_arrests_store_reducers___["c" /* productReducer */],
-                    arrestIndictment: __WEBPACK_IMPORTED_MODULE_22__pages_arrests_store_reducers___["b" /* indictmentReducer */]
-                })
+                __WEBPACK_IMPORTED_MODULE_15__angular_material__["a" /* MatAutocompleteModule */]
             ],
             providers: [
                 { provide: __WEBPACK_IMPORTED_MODULE_5__angular_common__["g" /* LocationStrategy */], useClass: __WEBPACK_IMPORTED_MODULE_5__angular_common__["d" /* HashLocationStrategy */] },
                 __WEBPACK_IMPORTED_MODULE_17__pages_login_auth_guard__["a" /* AuthGuard */],
                 __WEBPACK_IMPORTED_MODULE_13__shared_header_navigation_navigation_service__["a" /* NavigationService */],
-                __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__["b" /* SidebarService */],
-                __WEBPACK_IMPORTED_MODULE_20__services_main_master_service__["a" /* MainMasterService */],
-                __WEBPACK_IMPORTED_MODULE_24__services_mas_document_main_service__["a" /* MasDocumentMainService */],
-                __WEBPACK_IMPORTED_MODULE_23__services_transaction_running_service__["a" /* TransactionRunningService */]
+                __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__["b" /* SidebarService */]
             ],
             exports: [__WEBPACK_IMPORTED_MODULE_15__angular_material__["a" /* MatAutocompleteModule */]],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */]]
@@ -439,17 +374,15 @@ var routes = [
         children: [
             { path: 'list', loadChildren: './pages/notices/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/notices/manage/manage.module#ManageModule' },
+            { path: 'lawbreaker/:mode/:code', loadChildren: './pages/notices/lawbreaker/lawbreaker.module#LawbreakerModule' },
             { path: 'suspect/:mode/:code', loadChildren: './pages/notices/suspect/suspect.module#SuspectModule' }
         ]
     }, {
         path: 'arrest', component: __WEBPACK_IMPORTED_MODULE_0__shared_layout_layout_component__["a" /* LayoutComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_1__pages_login_auth_guard__["a" /* AuthGuard */]],
-        loadChildren: './pages/arrests/arrest.module#ArrestModule'
-        // [
-        //     { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
-        //     { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' },
-        //     { path: 'lawbreaker/:mode/:code', loadChildren: './pages/arrests/lawbreaker/lawbreaker.module#LawbreakerModule' },
-        //     { path: 'allegation/:mode/:code', loadChildren: './pages/arrests/allegation/allegation.module#AllegationModule' }
-        // ]
+        children: [
+            { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' }
+        ]
     }, {
         path: 'investigation', component: __WEBPACK_IMPORTED_MODULE_0__shared_layout_layout_component__["a" /* LayoutComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_1__pages_login_auth_guard__["a" /* AuthGuard */]],
         children: [
@@ -479,13 +412,6 @@ var routes = [
             { path: 'list', loadChildren: './pages/lawsuit/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/lawsuit/manage/manage.module#ManageModule' },
             { path: 'detail/:mode', loadChildren: './pages/lawsuit/detail/detail.module#DetailModule' }
-        ]
-    }, {
-        path: 'fine', component: __WEBPACK_IMPORTED_MODULE_0__shared_layout_layout_component__["a" /* LayoutComponent */],
-        children: [
-            { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
-            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
         ]
     }, {
         path: 'reward', component: __WEBPACK_IMPORTED_MODULE_0__shared_layout_layout_component__["a" /* LayoutComponent */],
@@ -557,599 +483,6 @@ var routes = [
 
 /***/ }),
 
-/***/ "./src/app/core/angular-redux-request.options.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AngularReduxRequestOptions; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-var AngularReduxRequestOptions = /** @class */ (function (_super) {
-    __extends(AngularReduxRequestOptions, _super);
-    function AngularReduxRequestOptions(angularReduxOptions) {
-        var _this = _super.call(this) || this;
-        var user = JSON.parse(localStorage.getItem('user'));
-        _this.token = user && user.token;
-        _this.headers.append('Content-Type', 'application/json');
-        _this.headers.append('Authorization', 'Bearer ' + _this.token);
-        if (angularReduxOptions != null) {
-            for (var option in angularReduxOptions) {
-                var optionValue = angularReduxOptions[option];
-                _this[option] = optionValue;
-            }
-        }
-        return _this;
-    }
-    return AngularReduxRequestOptions;
-}(__WEBPACK_IMPORTED_MODULE_0__angular_http__["a" /* BaseRequestOptions */]));
-
-
-
-/***/ }),
-
-/***/ "./src/app/core/core.module.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CoreModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("./node_modules/@angular/common/esm5/common.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__http_service__ = __webpack_require__("./src/app/core/http.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__factories_http_service_factory__ = __webpack_require__("./src/app/_factories/http-service.factory.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__loader_loader_service__ = __webpack_require__("./src/app/core/loader/loader.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__loader_loader_component__ = __webpack_require__("./src/app/core/loader/loader.component.ts");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
-
-
-
-
-
-
-var CoreModule = /** @class */ (function () {
-    function CoreModule() {
-    }
-    CoreModule = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
-            imports: [
-                __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */]
-            ],
-            exports: [
-                __WEBPACK_IMPORTED_MODULE_6__loader_loader_component__["a" /* LoaderComponent */]
-            ],
-            declarations: [
-                __WEBPACK_IMPORTED_MODULE_6__loader_loader_component__["a" /* LoaderComponent */]
-            ],
-            providers: [
-                __WEBPACK_IMPORTED_MODULE_5__loader_loader_service__["a" /* LoaderService */],
-                {
-                    provide: __WEBPACK_IMPORTED_MODULE_3__http_service__["a" /* HttpService */],
-                    useFactory: __WEBPACK_IMPORTED_MODULE_4__factories_http_service_factory__["a" /* httpServiceFactory */],
-                    deps: [__WEBPACK_IMPORTED_MODULE_2__angular_http__["i" /* XHRBackend */], __WEBPACK_IMPORTED_MODULE_2__angular_http__["g" /* RequestOptions */], __WEBPACK_IMPORTED_MODULE_5__loader_loader_service__["a" /* LoaderService */]]
-                }
-            ]
-        })
-    ], CoreModule);
-    return CoreModule;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/core/http.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HttpService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__ = __webpack_require__("./node_modules/rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__("./node_modules/rxjs/_esm5/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_redux_request_options__ = __webpack_require__("./src/app/core/angular-redux-request.options.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__loader_loader_service__ = __webpack_require__("./src/app/core/loader/loader.service.ts");
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-var HttpService = /** @class */ (function (_super) {
-    __extends(HttpService, _super);
-    function HttpService(backend, defaultOptions, loaderService) {
-        var _this = _super.call(this, backend, defaultOptions) || this;
-        _this.loaderService = loaderService;
-        return _this;
-    }
-    HttpService.prototype.get = function (url, options) {
-        var _this = this;
-        this.showLoader();
-        return _super.prototype.get.call(this, url, this.requestOptions(options))
-            .catch(this.onCatch)
-            .do(function (res) {
-            _this.onSuccess(res);
-        }, function (error) {
-            _this.onError(error);
-        })
-            .finally(function () {
-            _this.onEnd();
-        });
-    };
-    HttpService.prototype.post = function (url, body, options) {
-        var _this = this;
-        this.showLoader();
-        return _super.prototype.post.call(this, url, body, this.requestOptions(options))
-            .catch(this.onCatch)
-            .do(function (res) {
-            _this.onSuccess(res);
-        }, function (error) {
-            _this.onError(error);
-        })
-            .finally(function () {
-            _this.onEnd();
-        });
-    };
-    HttpService.prototype.requestOptions = function (options) {
-        if (options == null) {
-            options = new __WEBPACK_IMPORTED_MODULE_4__angular_redux_request_options__["a" /* AngularReduxRequestOptions */]();
-        }
-        if (options.headers == null) {
-            options.headers = new __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* Headers */]();
-        }
-        return options;
-    };
-    HttpService.prototype.onCatch = function (error, caught) {
-        return __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__["a" /* Observable */].throw(error);
-    };
-    HttpService.prototype.onSuccess = function (res) {
-        console.log('Request successful');
-    };
-    HttpService.prototype.onError = function (res) {
-        console.log('Error, status code: ' + res.status);
-    };
-    HttpService.prototype.onEnd = function () {
-        this.hideLoader();
-    };
-    HttpService.prototype.showLoader = function () {
-        this.loaderService.show();
-    };
-    HttpService.prototype.hideLoader = function () {
-        this.loaderService.hide();
-    };
-    HttpService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3__angular_http__["i" /* XHRBackend */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_redux_request_options__["a" /* AngularReduxRequestOptions */],
-            __WEBPACK_IMPORTED_MODULE_5__loader_loader_service__["a" /* LoaderService */]])
-    ], HttpService);
-    return HttpService;
-}(__WEBPACK_IMPORTED_MODULE_3__angular_http__["c" /* Http */]));
-
-
-
-/***/ }),
-
-/***/ "./src/app/core/loader/loader.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<div class=\"loading\" [ngClass]=\"{'is-active': show}\" >\r\n    <!-- [ngStyle]=\"{'display': show ? 'block' : 'none'}\" -->\r\n  <svg class=\"circular\" viewBox=\"25 25 50 50\">\r\n    <circle class=\"path\" cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke-width=\"2\" stroke-miterlimit=\"10\" /> </svg>\r\n</div>"
-
-/***/ }),
-
-/***/ "./src/app/core/loader/loader.component.scss":
-/***/ (function(module, exports) {
-
-module.exports = ".loading {\n  width: 100%;\n  height: 100%;\n  top: 0px;\n  position: fixed;\n  z-index: 99999;\n  background: rgba(255, 255, 255, 0.7);\n  display: none; }\n\n.is-active {\n  display: block; }\n"
-
-/***/ }),
-
-/***/ "./src/app/core/loader/loader.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoaderComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loader_service__ = __webpack_require__("./src/app/core/loader/loader.service.ts");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var LoaderComponent = /** @class */ (function () {
-    function LoaderComponent(loaderService) {
-        this.loaderService = loaderService;
-        this.show = false;
-    }
-    LoaderComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.subscription = this.loaderService.loaderState
-            .subscribe(function (state) {
-            _this.show = state;
-        });
-    };
-    LoaderComponent.prototype.ngOnDestroy = function () {
-        this.subscription.unsubscribe();
-    };
-    LoaderComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-            selector: 'app-loader',
-            template: __webpack_require__("./src/app/core/loader/loader.component.html"),
-            styles: [__webpack_require__("./src/app/core/loader/loader.component.scss")]
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__loader_service__["a" /* LoaderService */]])
-    ], LoaderComponent);
-    return LoaderComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/core/loader/loader.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoaderService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__ = __webpack_require__("./node_modules/rxjs/_esm5/Subject.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var LoaderService = /** @class */ (function () {
-    function LoaderService() {
-        this.loaderSubject = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["b" /* Subject */]();
-        this.loaderState = this.loaderSubject.asObservable();
-    }
-    LoaderService.prototype.show = function () {
-        this.loaderSubject.next(true);
-    };
-    LoaderService.prototype.hide = function () {
-        this.loaderSubject.next(false);
-    };
-    LoaderService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [])
-    ], LoaderService);
-    return LoaderService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/store/actions/arrest-indictment.action.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return CREATE_ARRESTINDICTMENT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ADD_ARRESTINDICTMENT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return REMOVE_ARRESTINDICTMENT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return UPDATE_ARRESTINDICTMENT; });
-/* unused harmony export CreateArrestIndictment */
-/* unused harmony export AddArrestIndictment */
-/* unused harmony export UpdateArrestIndictment */
-/* unused harmony export RemoveArrestIndictment */
-var CREATE_ARRESTINDICTMENT = '[ARRESTINDICTMENT] Create';
-var ADD_ARRESTINDICTMENT = '[ARRESTINDICTMENT] Add';
-var REMOVE_ARRESTINDICTMENT = '[ARRESTINDICTMENT] Remove';
-var UPDATE_ARRESTINDICTMENT = '[ARRESTINDICTMENT] Update';
-var CreateArrestIndictment = /** @class */ (function () {
-    function CreateArrestIndictment(payload) {
-        this.payload = payload;
-        this.type = CREATE_ARRESTINDICTMENT;
-    }
-    return CreateArrestIndictment;
-}());
-
-var AddArrestIndictment = /** @class */ (function () {
-    function AddArrestIndictment(payload) {
-        this.payload = payload;
-        this.type = ADD_ARRESTINDICTMENT;
-    }
-    return AddArrestIndictment;
-}());
-
-var UpdateArrestIndictment = /** @class */ (function () {
-    function UpdateArrestIndictment(payload) {
-        this.payload = payload;
-        this.type = UPDATE_ARRESTINDICTMENT;
-    }
-    return UpdateArrestIndictment;
-}());
-
-var RemoveArrestIndictment = /** @class */ (function () {
-    function RemoveArrestIndictment(payload) {
-        this.payload = payload;
-        this.type = REMOVE_ARRESTINDICTMENT;
-    }
-    return RemoveArrestIndictment;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/store/actions/arrest-product.action.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return CREATE_ARRESTPRODUCT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ADD_ARRESTPRODUCT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return REMOVE_ARRESTPRODUCT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return UPDATE_ARRESTPRODUCT; });
-/* unused harmony export CreateArrestProduct */
-/* unused harmony export AddArrestProduct */
-/* unused harmony export UpdateArrestProduct */
-/* unused harmony export RemoveArrestProduct */
-var CREATE_ARRESTPRODUCT = '[ARRESTPRODUCT] Create';
-var ADD_ARRESTPRODUCT = '[ARRESTPRODUCT] Add';
-var REMOVE_ARRESTPRODUCT = '[ARRESTPRODUCT] Remove';
-var UPDATE_ARRESTPRODUCT = '[ARRESTPRODUCT] Update';
-var CreateArrestProduct = /** @class */ (function () {
-    function CreateArrestProduct(payload) {
-        this.payload = payload;
-        this.type = CREATE_ARRESTPRODUCT;
-    }
-    return CreateArrestProduct;
-}());
-
-var AddArrestProduct = /** @class */ (function () {
-    function AddArrestProduct(payload) {
-        this.payload = payload;
-        this.type = ADD_ARRESTPRODUCT;
-    }
-    return AddArrestProduct;
-}());
-
-var UpdateArrestProduct = /** @class */ (function () {
-    function UpdateArrestProduct(payload) {
-        this.payload = payload;
-        this.type = UPDATE_ARRESTPRODUCT;
-    }
-    return UpdateArrestProduct;
-}());
-
-var RemoveArrestProduct = /** @class */ (function () {
-    function RemoveArrestProduct(payload) {
-        this.payload = payload;
-        this.type = REMOVE_ARRESTPRODUCT;
-    }
-    return RemoveArrestProduct;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/store/actions/arrest.action.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return CREATE_ARREST; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ADD_ARREST; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return REMOVE_ARREST; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return UPDATE_ARREST; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return CreateArrest; });
-/* unused harmony export AddArrest */
-/* unused harmony export UpdateArrest */
-/* unused harmony export RemoveArrest */
-var CREATE_ARREST = '[ARREST] Create';
-var ADD_ARREST = '[ARREST] Add';
-var REMOVE_ARREST = '[ARREST] Remove';
-var UPDATE_ARREST = '[ARREST] Update';
-var CreateArrest = /** @class */ (function () {
-    function CreateArrest(payload) {
-        this.payload = payload;
-        this.type = CREATE_ARREST;
-    }
-    return CreateArrest;
-}());
-
-var AddArrest = /** @class */ (function () {
-    function AddArrest(payload) {
-        this.payload = payload;
-        this.type = ADD_ARREST;
-    }
-    return AddArrest;
-}());
-
-var UpdateArrest = /** @class */ (function () {
-    function UpdateArrest(payload) {
-        this.payload = payload;
-        this.type = UPDATE_ARREST;
-    }
-    return UpdateArrest;
-}());
-
-var RemoveArrest = /** @class */ (function () {
-    function RemoveArrest(payload) {
-        this.payload = payload;
-        this.type = REMOVE_ARREST;
-    }
-    return RemoveArrest;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/store/actions/index.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrest_product_action__ = __webpack_require__("./src/app/pages/arrests/store/actions/arrest-product.action.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__arrest_product_action__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_0__arrest_product_action__["b"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_0__arrest_product_action__["c"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "m", function() { return __WEBPACK_IMPORTED_MODULE_0__arrest_product_action__["d"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__arrest_action__ = __webpack_require__("./src/app/pages/arrests/store/actions/arrest.action.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__arrest_action__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_1__arrest_action__["b"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "g", function() { return __WEBPACK_IMPORTED_MODULE_1__arrest_action__["c"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_1__arrest_action__["d"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_1__arrest_action__["e"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__arrest_indictment_action__ = __webpack_require__("./src/app/pages/arrests/store/actions/arrest-indictment.action.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__arrest_indictment_action__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_2__arrest_indictment_action__["b"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_2__arrest_indictment_action__["c"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_2__arrest_indictment_action__["d"]; });
-
-
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/store/reducers/arrest-indictment.reducer.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = indictmentReducer;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions__ = __webpack_require__("./src/app/pages/arrests/store/actions/index.ts");
-
-function indictmentReducer(state, action) {
-    switch (action.type) {
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["e" /* CREATE_ARRESTINDICTMENT */]:
-            return action.payload;
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["b" /* ADD_ARRESTINDICTMENT */]:
-            return state.concat([action.payload]);
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["l" /* UPDATE_ARRESTINDICTMENT */]:
-            return state.map(function (product) {
-                return Object.assign({}, product, action.payload);
-            });
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["i" /* REMOVE_ARRESTINDICTMENT */]:
-            state.splice(action.payload, 1);
-            return state;
-        default:
-            return state;
-    }
-}
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/store/reducers/arrest-product.reducer.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = productReducer;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions__ = __webpack_require__("./src/app/pages/arrests/store/actions/index.ts");
-
-function productReducer(state, action) {
-    switch (action.type) {
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["f" /* CREATE_ARRESTPRODUCT */]:
-            return action.payload;
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["c" /* ADD_ARRESTPRODUCT */]:
-            return state.concat([action.payload]);
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["m" /* UPDATE_ARRESTPRODUCT */]:
-            return state.map(function (product) {
-                return Object.assign({}, product, action.payload);
-            });
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["j" /* REMOVE_ARRESTPRODUCT */]:
-            state.splice(action.payload, 1);
-            return state;
-        default:
-            return state;
-    }
-}
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/store/reducers/arrest.reducer.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = arrestReducer;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions__ = __webpack_require__("./src/app/pages/arrests/store/actions/index.ts");
-
-function arrestReducer(state, action) {
-    switch (action.type) {
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["d" /* CREATE_ARREST */]:
-            return action.payload;
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["a" /* ADD_ARREST */]:
-            return state.concat([action.payload]);
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["k" /* UPDATE_ARREST */]:
-            return state.map(function (arrest) {
-                return Object.assign({}, arrest, action.payload);
-            });
-        case __WEBPACK_IMPORTED_MODULE_0__actions__["h" /* REMOVE_ARREST */]:
-            state.splice(action.payload, 1);
-            return state;
-        default:
-            return state;
-    }
-}
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/store/reducers/index.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrest_reducer__ = __webpack_require__("./src/app/pages/arrests/store/reducers/arrest.reducer.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__arrest_reducer__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__arrest_product_reducer__ = __webpack_require__("./src/app/pages/arrests/store/reducers/arrest-product.reducer.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__arrest_product_reducer__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__arrest_indictment_reducer__ = __webpack_require__("./src/app/pages/arrests/store/reducers/arrest-indictment.reducer.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__arrest_indictment_reducer__["a"]; });
-
-
-
-
-
-/***/ }),
-
 /***/ "./src/app/pages/login/auth.guard.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1187,352 +520,6 @@ var AuthGuard = /** @class */ (function () {
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]])
     ], AuthGuard);
     return AuthGuard;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/services/main-master.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MainMasterService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_app_app_config__ = __webpack_require__("./src/app/app.config.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_app_core_http_service__ = __webpack_require__("./src/app/core/http.service.ts");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-
-
-
-var MainMasterService = /** @class */ (function () {
-    function MainMasterService(http, httpService) {
-        this.http = http;
-        this.httpService = httpService;
-        this.httpOptions = {
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
-    MainMasterService.prototype.resposePromisGetList = function (params, url) {
-        return __awaiter(this, void 0, void 0, function () {
-            var res;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1:
-                        res = _a.sent();
-                        if (!res.length || res.IsSuccess == 'False') {
-                            return [2 /*return*/, []];
-                        }
-                        return [2 /*return*/, res];
-                }
-            });
-        });
-    };
-    MainMasterService.prototype.callApi = function (url) {
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService.prototype.MasStaffMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasStaffMaingetAll");
-    };
-    MainMasterService.prototype.MasDepartmentMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDepartmentMaingetAll");
-    };
-    MainMasterService.prototype.MasOfficeMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasOfficeMaingetAll");
-    };
-    MainMasterService.prototype.MasDistrictMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDistrictMaingetAll");
-    };
-    MainMasterService.prototype.MasDutyUnitMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDutyUnitMaingetAll");
-    };
-    MainMasterService.prototype.MasProductMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasProductMaingetAll");
-    };
-    MainMasterService.prototype.MasCourtMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasCourtMaingetAll");
-    };
-    MainMasterService.prototype.MasCommunicationchanelMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasCommunicationchanelMaingetAll");
-    };
-    MainMasterService.prototype.MasTitleMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasTitleMaingetAll");
-    };
-    MainMasterService.prototype.MasNationalityMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasNationalityMaingetAll");
-    };
-    MainMasterService.prototype.MasRaceMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasRaceMaingetAll");
-    };
-    MainMasterService.prototype.MasReligionMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasReligionMaingetAll");
-    };
-    MainMasterService.prototype.MasCountryMaingetAll = function () {
-        return this.callApi(__WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasCountryMaingetAll");
-    };
-    MainMasterService.prototype.masStaffMaingetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasStaffMaingetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService.prototype.masDepartmentMaingetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDepartmentMaingetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService.prototype.masOfficeMaingetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasOfficeMaingetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService.prototype.masDistrictMaingetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDistrictMaingetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService.prototype.masDutyUnitMaingetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDutyUnitMaingetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService.prototype.masProductMaingetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasProductMaingetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService.prototype.masCourtMaingetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasCourtMaingetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService.prototype.masCommunicationchanelMaingetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasCommunicationchanelMaingetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    MainMasterService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */],
-            __WEBPACK_IMPORTED_MODULE_3_app_core_http_service__["a" /* HttpService */]])
-    ], MainMasterService);
-    return MainMasterService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/services/mas-document-main.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MasDocumentMainService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_app_app_config__ = __webpack_require__("./src/app/app.config.ts");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var MasDocumentMainService = /** @class */ (function () {
-    function MasDocumentMainService(httpClient) {
-        this.httpClient = httpClient;
-        this.httpOptions = {
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
-    MasDocumentMainService.prototype.MasDocumentMaininsAll = function (document) {
-        var params = document;
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDocumentMaininsAll";
-        return this.httpClient.post(url, params, this.httpOptions).toPromise();
-    };
-    MasDocumentMainService.prototype.MasDocumentMaingetAll = function (DocumentType, ReferenceCode) {
-        var params = { DocumentType: DocumentType, ReferenceCode: ReferenceCode };
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDocumentMaingetAll";
-        return this.httpClient.post(url, params, this.httpOptions).toPromise();
-    };
-    MasDocumentMainService.prototype.MasDocumentMainupdByCon = function (document) {
-        var params = document;
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDocumentMainupdByCon";
-        return this.httpClient.post(url, params, this.httpOptions).toPromise();
-    };
-    MasDocumentMainService.prototype.MasDocumentMainupdDelete = function (DocumentID) {
-        var params = { DocumentID: DocumentID };
-        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDocumentMainupdDelete";
-        return this.httpClient.post(url, params, this.httpOptions).toPromise();
-    };
-    MasDocumentMainService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
-    ], MasDocumentMainService);
-    return MasDocumentMainService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/services/transaction-running.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TransactionRunningService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_app_app_config__ = __webpack_require__("./src/app/app.config.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-
-
-var TransactionRunningService = /** @class */ (function () {
-    function TransactionRunningService(http) {
-        this.http = http;
-        this.httpOptions = {
-            headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["c" /* HttpHeaders */]({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
-    TransactionRunningService.prototype.TransactionRunninggetByCon = function (RunningTable, RunningOfficeCode) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { RunningTable: RunningTable, RunningOfficeCode: RunningOfficeCode };
-                        url = __WEBPACK_IMPORTED_MODULE_1_app_app_config__["a" /* appConfig */].api8087 + "/TransactionRunninggetByCon";
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    TransactionRunningService.prototype.TransactionRunninginsAll = function (RunningOfficeCode, RunningTable, RunningPrefix) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { RunningTable: RunningTable, RunningOfficeCode: RunningOfficeCode, RunningPrefix: RunningPrefix };
-                        url = __WEBPACK_IMPORTED_MODULE_1_app_app_config__["a" /* appConfig */].api8087 + "/TransactionRunninginsAll";
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    TransactionRunningService.prototype.TransactionRunningupdByCon = function (RunningID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { RunningID: RunningID };
-                        url = __WEBPACK_IMPORTED_MODULE_1_app_app_config__["a" /* appConfig */].api8087 + "/TransactionRunningupdByCon";
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    TransactionRunningService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_common_http__["a" /* HttpClient */]])
-    ], TransactionRunningService);
-    return TransactionRunningService;
 }());
 
 
@@ -1601,9 +588,6 @@ var BreadcrumbComponent = /** @class */ (function () {
             _this.pageInfo = event;
             _this.titleService.setTitle(event['title']);
         });
-        if (!this.pageInfo) {
-            this.pageInfo = this.activatedRoute.firstChild.snapshot.data;
-        }
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
@@ -1629,7 +613,7 @@ var BreadcrumbComponent = /** @class */ (function () {
 /***/ "./src/app/shared/header-navigation/navigation.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!-- ============================================================== -->\r\n<!-- Topbar header - style you can find in pages.scss -->\r\n<!-- ============================================================== -->\r\n<header class=\"topbar\">\r\n    <nav class=\"navbar top-navbar navbar-expand-md navbar-light\">\r\n        <!-- ============================================================== -->\r\n        <!-- Logo -->\r\n        <!-- ============================================================== -->\r\n        <div class=\"navbar-header\">\r\n            <a class=\"navbar-brand\" [routerLink]=\"['/']\">\r\n                <!-- Logo icon -->\r\n                <b>\r\n                    <!--You can put here icon as well // <i class=\"wi wi-sunset\"></i> //-->\r\n                    <!-- Dark Logo icon -->\r\n                    <img src=\"assets/images/logo-excise.png\" alt=\"homepage\" class=\"dark-logo\" style=\"height: 60px;\" />\r\n                    <!-- Light Logo icon -->\r\n                    <img src=\"assets/images/logo-excise.png\" alt=\"homepage\" class=\"light-logo\" style=\"height: 60px;\" />\r\n                </b>\r\n                <!--End Logo icon -->\r\n                <!-- Logo text -->\r\n                <span class=\"text-white heading\">\r\n                    กรมสรรพสามิต\r\n                </span>\r\n                <br>\r\n                <span class=\"text-white sub-heading\">THE EXCISE DEPARTMENT</span>\r\n            </a>\r\n        </div>\r\n        <!-- ============================================================== -->\r\n        <!-- End Logo -->\r\n        <!-- ============================================================== -->\r\n        <div class=\"navbar-collapse\">\r\n            <!-- ============================================================== -->\r\n            <!-- toggle and nav items -->\r\n            <!-- ============================================================== -->\r\n            <ul class=\"navbar-nav mr-auto mt-md-0\">\r\n                <!-- This is  -->\r\n                <li class=\"nav-item\">\r\n                    <a class=\"nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark\" href=\"javascript:void(0)\">\r\n                        <i class=\"mdi mdi-menu\"></i>\r\n                    </a>\r\n                </li>\r\n                <li class=\"nav-item\">\r\n                    <a class=\"nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark\" href=\"javascript:void(0)\">\r\n                        <i class=\"ti-menu\"></i>\r\n                    </a>\r\n                </li>\r\n\r\n                <li *ngIf=\"prevPageButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickPrevPage()\">\r\n                            << {{prevPageTitle | async}}\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                \r\n                <li *ngIf=\"newButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickNew()\">\r\n                            <i class=\"ti-plus\"></i>\r\n                            สร้างข้อมูล\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <!-- ============================================================== -->\r\n                <!-- Manage -->\r\n                <!-- ============================================================== -->\r\n                <li *ngIf=\"printButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickPrint()\">\r\n                            <i class=\"ti-printer\"></i>\r\n                            พิมพ์\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <li *ngIf=\"editButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickEdit()\">\r\n                            <i class=\"fa fa-edit\"></i>\r\n                            แก้ไข\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <li *ngIf=\"deleteButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickDelete()\" style=\"background-color: #f47023\">\r\n                            <i class=\"ti-trash\"></i>\r\n                            ลบ\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <li *ngIf=\"saveButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickSave()\">\r\n                            <i class=\"ti-save\"></i>\r\n                            บันทึก\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <li *ngIf=\"cancelButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickCancel()\">\r\n                            <i class=\"ti-close\"></i>\r\n                            ยกเลิก\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n            </ul>\r\n            <!-- <ul *ngIf=\"searchBar | async\" class=\"navbar-nav my-lg-0\">\r\n\r\n            </ul> -->\r\n            <!-- ============================================================== -->\r\n            <!-- search -->\r\n            <!-- ============================================================== -->\r\n            <ul *ngIf=\"searchBar | async\" class=\"navbar-nav my-lg-0\">\r\n                <li class=\"nav-item col-8\">\r\n                    <form autocomplete=\"off\" class=\"app-search\" #formSearch=\"ngForm\" (ngSubmit)=\"clickSearch(formSearch)\">\r\n                        <input type=\"search\" name=\"Textsearch\" id=\"\" ngModel class=\"form-control\">\r\n                        <a href=\"javaScript:void(0);\" (click)=\"clickSearch(formSearch)\" class=\"srh-btn\">\r\n                            <i class=\"ti-search\"></i>\r\n                        </a>\r\n                    </form>\r\n                </li>\r\n                <li class=\"nav-item col-9\">\r\n                    <a href=\"javaScript:void(0);\" class=\"btn text-white\" (click)=\"clickAdvSearch()\">\r\n                        ค้นหาขั้นสูง\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n            <div *ngIf=\"nextPageButton | async\" class=\"navbar-nav my-lg-0\">\r\n                <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                    <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickNextPage()\">\r\n                        {{nextPageTitle | async}} >>\r\n                    </a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </nav>\r\n</header>\r\n<!-- ============================================================== -->\r\n<!-- End Topbar header -->\r\n<!-- ============================================================== -->"
+module.exports = "<!-- ============================================================== -->\r\n<!-- Topbar header - style you can find in pages.scss -->\r\n<!-- ============================================================== -->\r\n<header class=\"topbar\">\r\n    <nav class=\"navbar top-navbar navbar-expand-md navbar-light\">\r\n        <!-- ============================================================== -->\r\n        <!-- Logo -->\r\n        <!-- ============================================================== -->\r\n        <div class=\"navbar-header\">\r\n            <a class=\"navbar-brand\" [routerLink]=\"['/']\">\r\n                <!-- Logo icon -->\r\n                <b>\r\n                    <!--You can put here icon as well // <i class=\"wi wi-sunset\"></i> //-->\r\n                    <!-- Dark Logo icon -->\r\n                    <img src=\"assets/images/logo-excise.png\" alt=\"homepage\" class=\"dark-logo\" style=\"height: 60px;\" />\r\n                    <!-- Light Logo icon -->\r\n                    <img src=\"assets/images/logo-excise.png\" alt=\"homepage\" class=\"light-logo\" style=\"height: 60px;\" />\r\n                </b>\r\n                <!--End Logo icon -->\r\n                <!-- Logo text -->\r\n                <span class=\"text-white heading\">\r\n                    กรมสรรพสามิต\r\n                </span>\r\n                <br>\r\n                <span class=\"text-white sub-heading\">THE EXCISE DEPARTMENT</span>\r\n            </a>\r\n        </div>\r\n        <!-- ============================================================== -->\r\n        <!-- End Logo -->\r\n        <!-- ============================================================== -->\r\n        <div class=\"navbar-collapse\">\r\n            <!-- ============================================================== -->\r\n            <!-- toggle and nav items -->\r\n            <!-- ============================================================== -->\r\n            <ul class=\"navbar-nav mr-auto mt-md-0\">\r\n                <!-- This is  -->\r\n                <li class=\"nav-item\">\r\n                    <a class=\"nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark\" href=\"javascript:void(0)\">\r\n                        <i class=\"mdi mdi-menu\"></i>\r\n                    </a>\r\n                </li>\r\n                <li class=\"nav-item\">\r\n                    <a class=\"nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark\" href=\"javascript:void(0)\">\r\n                        <i class=\"ti-menu\"></i>\r\n                    </a>\r\n                </li>\r\n                <li *ngIf=\"newButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickNew()\">\r\n                            <i class=\"ti-plus\"></i>\r\n                            สร้างข้อมูล\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <!-- ============================================================== -->\r\n                <!-- Manage -->\r\n                <!-- ============================================================== -->\r\n                <li *ngIf=\"printButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickPrint()\">\r\n                            <i class=\"ti-printer\"></i>\r\n                            พิมพ์\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <li *ngIf=\"editButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickEdit()\">\r\n                            <i class=\"fa fa-edit\"></i>\r\n                            แก้ไข\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <li *ngIf=\"deleteButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickDelete()\" style=\"background-color: #f47023\">\r\n                            <i class=\"ti-trash\"></i>\r\n                            ลบ\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <li *ngIf=\"saveButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickSave()\">\r\n                            <i class=\"ti-save\"></i>\r\n                            บันทึก\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n                <li *ngIf=\"cancelButton | async\" class=\"nav-item\">\r\n                    <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                        <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickCancel()\">\r\n                            <i class=\"ti-close\"></i>\r\n                            ยกเลิก\r\n                        </a>\r\n                    </div>\r\n                </li>\r\n            </ul>\r\n            <!-- <ul *ngIf=\"searchBar | async\" class=\"navbar-nav my-lg-0\">\r\n\r\n            </ul> -->\r\n            <!-- ============================================================== -->\r\n            <!-- search -->\r\n            <!-- ============================================================== -->\r\n            <ul *ngIf=\"searchBar | async\" class=\"navbar-nav my-lg-0\">\r\n                <li class=\"nav-item col-8\">\r\n                    <form autocomplete=\"off\" class=\"app-search\" #formSearch=\"ngForm\" (ngSubmit)=\"clickSearch(formSearch)\">\r\n                        <input type=\"search\" name=\"Textsearch\" id=\"\" ngModel class=\"form-control\" >\r\n                        <a href=\"javaScript:void(0);\" (click)=\"clickSearch(formSearch)\" class=\"srh-btn\">\r\n                            <i class=\"ti-search\"></i>\r\n                        </a>\r\n                    </form>\r\n                </li>\r\n                <li class=\"nav-item col-9\">\r\n                    <a href=\"javaScript:void(0);\" class=\"btn text-white\" (click)=\"clickAdvSearch()\">\r\n                        ค้นหาขั้นสูง\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n            <div *ngIf=\"nextPageButton | async\" class=\"navbar-nav my-lg-0\">\r\n                <div class=\"nav-link text-muted waves-effect waves-dark\">\r\n                    <a class=\"btn btn-ghost\" href=\"javascript:void(0)\" (click)=\"clickNextPage()\">\r\n                        {{nextPageTitle | async}} >>\r\n                    </a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </nav>\r\n</header>\r\n<!-- ============================================================== -->\r\n<!-- End Topbar header -->\r\n<!-- ============================================================== -->"
 
 /***/ }),
 
@@ -1676,8 +660,6 @@ var NavigationComponent = /** @class */ (function () {
         this.searchBar = this.navService.showSearchBar;
         this.nextPageButton = this.navService.showNextPageButton;
         this.nextPageTitle = this.navService.innerTextNextPageButton;
-        this.prevPageButton = this.navService.showPrevPageButton;
-        this.prevPageTitle = this.navService.innerTextPrevPageButton;
     }
     NavigationComponent.prototype.ngOnInit = function () {
         this.router.events.subscribe(function (evt) {
@@ -1710,14 +692,11 @@ var NavigationComponent = /** @class */ (function () {
     NavigationComponent.prototype.clickNextPage = function () {
         this.navService.setOnNextPage(true);
     };
-    NavigationComponent.prototype.clickPrevPage = function () {
-        this.navService.setOnPrevPage(true);
-    };
     NavigationComponent.prototype.clickPrint = function () {
         this.navService.setOnPrint(true);
     };
     NavigationComponent.prototype.clickEdit = function () {
-        // // set false
+        // set false
         this.navService.setEditField(false);
         this.navService.setEditButton(false);
         this.navService.setPrintButton(false);
@@ -1730,13 +709,13 @@ var NavigationComponent = /** @class */ (function () {
     };
     NavigationComponent.prototype.clickCancel = function () {
         // // set true
-        // this.navService.setEditField(true);
-        // this.navService.setEditButton(true);
-        // this.navService.setPrintButton(true);
-        // this.navService.setDeleteButton(true);
-        // // set false
-        // this.navService.setSaveButton(false);
-        // this.navService.setCancelButton(false);
+        this.navService.setEditField(true);
+        this.navService.setEditButton(true);
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        // set false
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
         // set event click cancel
         this.navService.setOnCancel(true);
     };
@@ -1788,7 +767,6 @@ var NavigationService = /** @class */ (function () {
         // modeSource = new BehaviorSubject<string>('');
         this.showAdvSearch = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
         this.showNewButton = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
-        this.showPrevPageButton = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
         this.showNextPageButton = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
         this.showPrintButton = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
         this.showEditButton = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
@@ -1805,16 +783,11 @@ var NavigationService = /** @class */ (function () {
         this.onSearch = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
         this.onPrint = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
         this.onNextPage = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
-        this.onPrevPage = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
         this.innerTextNextPageButton = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](null);
-        this.innerTextPrevPageButton = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](null);
         this.searchByKeyword = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](null);
     }
     NavigationService.prototype.setInnerTextNextPageButton = function (text) {
         this.innerTextNextPageButton.next(text);
-    };
-    NavigationService.prototype.setInnerTextPrevPageButton = function (text) {
-        this.innerTextPrevPageButton.next(text);
     };
     // -- Set Element --
     NavigationService.prototype.setAdvSearch = function () {
@@ -1852,9 +825,6 @@ var NavigationService = /** @class */ (function () {
     NavigationService.prototype.setNextPageButton = function (status) {
         this.showNextPageButton.next(status);
     };
-    NavigationService.prototype.setPrevPageButton = function (status) {
-        this.showPrevPageButton.next(status);
-    };
     // -- End Set Element --
     // -- Set Event --
     NavigationService.prototype.setOnEdit = function (status) {
@@ -1879,9 +849,6 @@ var NavigationService = /** @class */ (function () {
     };
     NavigationService.prototype.setOnNextPage = function (status) {
         this.onNextPage.next(status);
-    };
-    NavigationService.prototype.setOnPrevPage = function (status) {
-        this.onPrevPage.next(status);
     };
     NavigationService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),

@@ -101,10 +101,10 @@ var ListComponent = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.sidebarService.setVersion('0.0.0.4');
+                        this.sidebarService.setVersion('0.0.0.3');
                         this.paginage.TotalItems = 0;
                         this.preLoaderService.setShowPreloader(true);
-                        return [4 /*yield*/, this.lawsuitService.LawsuitArrestGetByKeyword('').then(function (list) { return _this.onSearchComplete(list); })];
+                        return [4 /*yield*/, this.lawsuitService.getByKeywordOnInt().then(function (list) { return _this.onSearchComplete(list); })];
                     case 1:
                         _a.sent();
                         this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(function (Textsearch) { return __awaiter(_this, void 0, void 0, function () {
@@ -152,7 +152,7 @@ var ListComponent = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         this.preLoaderService.setShowPreloader(true);
-                        return [4 /*yield*/, this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(function (list) { return _this.onSearchComplete(list); })];
+                        return [4 /*yield*/, this.lawsuitService.getByKeyword(Textsearch).then(function (list) { return _this.onSearchComplete(list); })];
                     case 1:
                         _a.sent();
                         this.preLoaderService.setShowPreloader(false);
@@ -179,7 +179,7 @@ var ListComponent = /** @class */ (function () {
                             form.value.LawsuitDateTo = eDateCompare.toISOString();
                         }
                         this.preLoaderService.setShowPreloader(true);
-                        return [4 /*yield*/, this.lawsuitService.LawsuitArrestGetByConAdv(form.value).then(function (list) { return _this.onSearchComplete(list); })];
+                        return [4 /*yield*/, this.lawsuitService.LawsuitgetByConAdv(form.value).then(function (list) { return _this.onSearchComplete(list); })];
                     case 1:
                         _a.sent();
                         this.preLoaderService.setShowPreloader(false);
@@ -206,22 +206,14 @@ var ListComponent = /** @class */ (function () {
         this.results = list.map(function (item, i) {
             item.RowsId = i + 1;
             item.LawsuitDate = Object(__WEBPACK_IMPORTED_MODULE_6__config_dateFormat__["j" /* toLocalShort */])(item.LawsuitDate);
-            //item.LawsuitID = list.LawsuitArrestIndicment[0];
-            //console.log("Check LIST:"+JSON.stringify(item));
             return item;
         });
         /* Set Total Record */
         this.paginage.TotalItems = this.results.length;
     };
     ListComponent.prototype.viewData = function (item) {
-        if (item.LawsuitArrestIndicment[0].Lawsuit[0]) {
-            item.LawsuitID = item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID;
-        }
-        else {
-            item.LawsuitID = '';
-        }
         this.router.navigate(['/lawsuit/manage', 'R'], {
-            queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+            queryParams: { id: item.LawsuitID, code: item.ArrestCode }
         });
     };
     ListComponent.prototype.closeAdvSearch = function () {
@@ -310,9 +302,9 @@ var ListModule = /** @class */ (function () {
     ListModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["L" /* NgModule */])({
             imports: [
-                __WEBPACK_IMPORTED_MODULE_5__angular_forms__["g" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_forms__["f" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_2__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_8__angular_http__["d" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_8__angular_http__["b" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_9__angular_common_http__["b" /* HttpClientModule */],
                 __WEBPACK_IMPORTED_MODULE_4__angular_router__["d" /* RouterModule */].forChild(routes),
                 __WEBPACK_IMPORTED_MODULE_10__component_card_actions_card_actions_module__["a" /* CardActionsModule */],

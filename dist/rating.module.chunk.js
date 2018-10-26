@@ -30,7 +30,7 @@ var NgbdratingBasic = /** @class */ (function () {
         this.hovered = 0;
         this.readonly = false;
         // for form integration
-        this.ctrl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["m" /* Validators */].required);
+        this.ctrl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["l" /* Validators */].required);
     }
     NgbdratingBasic.prototype.toggle = function () {
         if (this.ctrl.disabled) {
@@ -92,9 +92,9 @@ var RatingModule = /** @class */ (function () {
     RatingModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
             imports: [
-                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["g" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["l" /* ReactiveFormsModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["k" /* ReactiveFormsModule */],
                 __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__["e" /* NgbModule */].forRoot(),
                 __WEBPACK_IMPORTED_MODULE_3__angular_router__["d" /* RouterModule */].forChild(routes)
             ],

@@ -51,7 +51,7 @@ var FocusDirective = (function () {
 
 
 var MYDP_VALUE_ACCESSOR = {
-    provide: __WEBPACK_IMPORTED_MODULE_1__angular_forms__["i" /* NG_VALUE_ACCESSOR */],
+    provide: __WEBPACK_IMPORTED_MODULE_1__angular_forms__["h" /* NG_VALUE_ACCESSOR */],
     useExisting: Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_20" /* forwardRef */])(function () { return MyDatePickerTH; }),
     multi: true
 };
@@ -812,7 +812,7 @@ var MyDatePickerTHModule = (function () {
     }
     MyDatePickerTHModule.decorators = [
         { type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["L" /* NgModule */], args: [{
-                    imports: [__WEBPACK_IMPORTED_MODULE_0__angular_common__["b" /* CommonModule */], __WEBPACK_IMPORTED_MODULE_1__angular_forms__["g" /* FormsModule */]],
+                    imports: [__WEBPACK_IMPORTED_MODULE_0__angular_common__["b" /* CommonModule */], __WEBPACK_IMPORTED_MODULE_1__angular_forms__["f" /* FormsModule */]],
                     declarations: [__WEBPACK_IMPORTED_MODULE_3__my_date_picker_component__["a" /* MyDatePickerTH */], __WEBPACK_IMPORTED_MODULE_4__directives_my_date_picker_focus_directive__["a" /* FocusDirective */]],
                     exports: [__WEBPACK_IMPORTED_MODULE_3__my_date_picker_component__["a" /* MyDatePickerTH */], __WEBPACK_IMPORTED_MODULE_4__directives_my_date_picker_focus_directive__["a" /* FocusDirective */]]
                 },] },
@@ -1304,13 +1304,749 @@ var UtilService = (function () {
 
 /***/ }),
 
+/***/ "./node_modules/rxjs/_esm5/add/observable/of.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Observable__ = __webpack_require__("./node_modules/rxjs/_esm5/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__observable_of__ = __webpack_require__("./node_modules/rxjs/_esm5/observable/of.js");
+/** PURE_IMPORTS_START .._.._Observable,.._.._observable_of PURE_IMPORTS_END */
+
+
+__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */].of = __WEBPACK_IMPORTED_MODULE_1__observable_of__["a" /* of */];
+//# sourceMappingURL=of.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/add/operator/catch.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Observable__ = __webpack_require__("./node_modules/rxjs/_esm5/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__operator_catch__ = __webpack_require__("./node_modules/rxjs/_esm5/operator/catch.js");
+/** PURE_IMPORTS_START .._.._Observable,.._.._operator_catch PURE_IMPORTS_END */
+
+
+__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */].prototype.catch = __WEBPACK_IMPORTED_MODULE_1__operator_catch__["a" /* _catch */];
+__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */].prototype._catch = __WEBPACK_IMPORTED_MODULE_1__operator_catch__["a" /* _catch */];
+//# sourceMappingURL=catch.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/add/operator/debounceTime.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Observable__ = __webpack_require__("./node_modules/rxjs/_esm5/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__operator_debounceTime__ = __webpack_require__("./node_modules/rxjs/_esm5/operator/debounceTime.js");
+/** PURE_IMPORTS_START .._.._Observable,.._.._operator_debounceTime PURE_IMPORTS_END */
+
+
+__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */].prototype.debounceTime = __WEBPACK_IMPORTED_MODULE_1__operator_debounceTime__["a" /* debounceTime */];
+//# sourceMappingURL=debounceTime.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/add/operator/distinctUntilChanged.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Observable__ = __webpack_require__("./node_modules/rxjs/_esm5/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__operator_distinctUntilChanged__ = __webpack_require__("./node_modules/rxjs/_esm5/operator/distinctUntilChanged.js");
+/** PURE_IMPORTS_START .._.._Observable,.._.._operator_distinctUntilChanged PURE_IMPORTS_END */
+
+
+__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */].prototype.distinctUntilChanged = __WEBPACK_IMPORTED_MODULE_1__operator_distinctUntilChanged__["a" /* distinctUntilChanged */];
+//# sourceMappingURL=distinctUntilChanged.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/add/operator/do.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Observable__ = __webpack_require__("./node_modules/rxjs/_esm5/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__operator_do__ = __webpack_require__("./node_modules/rxjs/_esm5/operator/do.js");
+/** PURE_IMPORTS_START .._.._Observable,.._.._operator_do PURE_IMPORTS_END */
+
+
+__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */].prototype.do = __WEBPACK_IMPORTED_MODULE_1__operator_do__["a" /* _do */];
+__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */].prototype._do = __WEBPACK_IMPORTED_MODULE_1__operator_do__["a" /* _do */];
+//# sourceMappingURL=do.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/add/operator/switchMap.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Observable__ = __webpack_require__("./node_modules/rxjs/_esm5/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__operator_switchMap__ = __webpack_require__("./node_modules/rxjs/_esm5/operator/switchMap.js");
+/** PURE_IMPORTS_START .._.._Observable,.._.._operator_switchMap PURE_IMPORTS_END */
+
+
+__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */].prototype.switchMap = __WEBPACK_IMPORTED_MODULE_1__operator_switchMap__["a" /* switchMap */];
+//# sourceMappingURL=switchMap.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/operator/debounceTime.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = debounceTime;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scheduler_async__ = __webpack_require__("./node_modules/rxjs/_esm5/scheduler/async.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__operators_debounceTime__ = __webpack_require__("./node_modules/rxjs/_esm5/operators/debounceTime.js");
+/** PURE_IMPORTS_START .._scheduler_async,.._operators_debounceTime PURE_IMPORTS_END */
+
+
+/**
+ * Emits a value from the source Observable only after a particular time span
+ * has passed without another source emission.
+ *
+ * <span class="informal">It's like {@link delay}, but passes only the most
+ * recent value from each burst of emissions.</span>
+ *
+ * <img src="./img/debounceTime.png" width="100%">
+ *
+ * `debounceTime` delays values emitted by the source Observable, but drops
+ * previous pending delayed emissions if a new value arrives on the source
+ * Observable. This operator keeps track of the most recent value from the
+ * source Observable, and emits that only when `dueTime` enough time has passed
+ * without any other value appearing on the source Observable. If a new value
+ * appears before `dueTime` silence occurs, the previous value will be dropped
+ * and will not be emitted on the output Observable.
+ *
+ * This is a rate-limiting operator, because it is impossible for more than one
+ * value to be emitted in any time window of duration `dueTime`, but it is also
+ * a delay-like operator since output emissions do not occur at the same time as
+ * they did on the source Observable. Optionally takes a {@link IScheduler} for
+ * managing timers.
+ *
+ * @example <caption>Emit the most recent click after a burst of clicks</caption>
+ * var clicks = Rx.Observable.fromEvent(document, 'click');
+ * var result = clicks.debounceTime(1000);
+ * result.subscribe(x => console.log(x));
+ *
+ * @see {@link auditTime}
+ * @see {@link debounce}
+ * @see {@link delay}
+ * @see {@link sampleTime}
+ * @see {@link throttleTime}
+ *
+ * @param {number} dueTime The timeout duration in milliseconds (or the time
+ * unit determined internally by the optional `scheduler`) for the window of
+ * time required to wait for emission silence before emitting the most recent
+ * source value.
+ * @param {Scheduler} [scheduler=async] The {@link IScheduler} to use for
+ * managing the timers that handle the timeout for each value.
+ * @return {Observable} An Observable that delays the emissions of the source
+ * Observable by the specified `dueTime`, and may drop some values if they occur
+ * too frequently.
+ * @method debounceTime
+ * @owner Observable
+ */
+function debounceTime(dueTime, scheduler) {
+    if (scheduler === void 0) {
+        scheduler = __WEBPACK_IMPORTED_MODULE_0__scheduler_async__["a" /* async */];
+    }
+    return Object(__WEBPACK_IMPORTED_MODULE_1__operators_debounceTime__["a" /* debounceTime */])(dueTime, scheduler)(this);
+}
+//# sourceMappingURL=debounceTime.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/operator/distinctUntilChanged.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = distinctUntilChanged;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__operators_distinctUntilChanged__ = __webpack_require__("./node_modules/rxjs/_esm5/operators/distinctUntilChanged.js");
+/** PURE_IMPORTS_START .._operators_distinctUntilChanged PURE_IMPORTS_END */
+
+/* tslint:enable:max-line-length */
+/**
+ * Returns an Observable that emits all items emitted by the source Observable that are distinct by comparison from the previous item.
+ *
+ * If a comparator function is provided, then it will be called for each item to test for whether or not that value should be emitted.
+ *
+ * If a comparator function is not provided, an equality check is used by default.
+ *
+ * @example <caption>A simple example with numbers</caption>
+ * Observable.of(1, 1, 2, 2, 2, 1, 1, 2, 3, 3, 4)
+ *   .distinctUntilChanged()
+ *   .subscribe(x => console.log(x)); // 1, 2, 1, 2, 3, 4
+ *
+ * @example <caption>An example using a compare function</caption>
+ * interface Person {
+ *    age: number,
+ *    name: string
+ * }
+ *
+ * Observable.of<Person>(
+ *     { age: 4, name: 'Foo'},
+ *     { age: 7, name: 'Bar'},
+ *     { age: 5, name: 'Foo'})
+ *     { age: 6, name: 'Foo'})
+ *     .distinctUntilChanged((p: Person, q: Person) => p.name === q.name)
+ *     .subscribe(x => console.log(x));
+ *
+ * // displays:
+ * // { age: 4, name: 'Foo' }
+ * // { age: 7, name: 'Bar' }
+ * // { age: 5, name: 'Foo' }
+ *
+ * @see {@link distinct}
+ * @see {@link distinctUntilKeyChanged}
+ *
+ * @param {function} [compare] Optional comparison function called to test if an item is distinct from the previous item in the source.
+ * @return {Observable} An Observable that emits items from the source Observable with distinct values.
+ * @method distinctUntilChanged
+ * @owner Observable
+ */
+function distinctUntilChanged(compare, keySelector) {
+    return Object(__WEBPACK_IMPORTED_MODULE_0__operators_distinctUntilChanged__["a" /* distinctUntilChanged */])(compare, keySelector)(this);
+}
+//# sourceMappingURL=distinctUntilChanged.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/operators/distinctUntilChanged.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = distinctUntilChanged;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Subscriber__ = __webpack_require__("./node_modules/rxjs/_esm5/Subscriber.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_tryCatch__ = __webpack_require__("./node_modules/rxjs/_esm5/util/tryCatch.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_errorObject__ = __webpack_require__("./node_modules/rxjs/_esm5/util/errorObject.js");
+/** PURE_IMPORTS_START .._Subscriber,.._util_tryCatch,.._util_errorObject PURE_IMPORTS_END */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b)
+        if (b.hasOwnProperty(p))
+            d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+
+
+
+/* tslint:enable:max-line-length */
+/**
+ * Returns an Observable that emits all items emitted by the source Observable that are distinct by comparison from the previous item.
+ *
+ * If a comparator function is provided, then it will be called for each item to test for whether or not that value should be emitted.
+ *
+ * If a comparator function is not provided, an equality check is used by default.
+ *
+ * @example <caption>A simple example with numbers</caption>
+ * Observable.of(1, 1, 2, 2, 2, 1, 1, 2, 3, 3, 4)
+ *   .distinctUntilChanged()
+ *   .subscribe(x => console.log(x)); // 1, 2, 1, 2, 3, 4
+ *
+ * @example <caption>An example using a compare function</caption>
+ * interface Person {
+ *    age: number,
+ *    name: string
+ * }
+ *
+ * Observable.of<Person>(
+ *     { age: 4, name: 'Foo'},
+ *     { age: 7, name: 'Bar'},
+ *     { age: 5, name: 'Foo'})
+ *     { age: 6, name: 'Foo'})
+ *     .distinctUntilChanged((p: Person, q: Person) => p.name === q.name)
+ *     .subscribe(x => console.log(x));
+ *
+ * // displays:
+ * // { age: 4, name: 'Foo' }
+ * // { age: 7, name: 'Bar' }
+ * // { age: 5, name: 'Foo' }
+ *
+ * @see {@link distinct}
+ * @see {@link distinctUntilKeyChanged}
+ *
+ * @param {function} [compare] Optional comparison function called to test if an item is distinct from the previous item in the source.
+ * @return {Observable} An Observable that emits items from the source Observable with distinct values.
+ * @method distinctUntilChanged
+ * @owner Observable
+ */
+function distinctUntilChanged(compare, keySelector) {
+    return function (source) { return source.lift(new DistinctUntilChangedOperator(compare, keySelector)); };
+}
+var DistinctUntilChangedOperator = /*@__PURE__*/ (/*@__PURE__*/ function () {
+    function DistinctUntilChangedOperator(compare, keySelector) {
+        this.compare = compare;
+        this.keySelector = keySelector;
+    }
+    DistinctUntilChangedOperator.prototype.call = function (subscriber, source) {
+        return source.subscribe(new DistinctUntilChangedSubscriber(subscriber, this.compare, this.keySelector));
+    };
+    return DistinctUntilChangedOperator;
+}());
+/**
+ * We need this JSDoc comment for affecting ESDoc.
+ * @ignore
+ * @extends {Ignored}
+ */
+var DistinctUntilChangedSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
+    __extends(DistinctUntilChangedSubscriber, _super);
+    function DistinctUntilChangedSubscriber(destination, compare, keySelector) {
+        _super.call(this, destination);
+        this.keySelector = keySelector;
+        this.hasKey = false;
+        if (typeof compare === 'function') {
+            this.compare = compare;
+        }
+    }
+    DistinctUntilChangedSubscriber.prototype.compare = function (x, y) {
+        return x === y;
+    };
+    DistinctUntilChangedSubscriber.prototype._next = function (value) {
+        var keySelector = this.keySelector;
+        var key = value;
+        if (keySelector) {
+            key = Object(__WEBPACK_IMPORTED_MODULE_1__util_tryCatch__["a" /* tryCatch */])(this.keySelector)(value);
+            if (key === __WEBPACK_IMPORTED_MODULE_2__util_errorObject__["a" /* errorObject */]) {
+                return this.destination.error(__WEBPACK_IMPORTED_MODULE_2__util_errorObject__["a" /* errorObject */].e);
+            }
+        }
+        var result = false;
+        if (this.hasKey) {
+            result = Object(__WEBPACK_IMPORTED_MODULE_1__util_tryCatch__["a" /* tryCatch */])(this.compare)(this.key, key);
+            if (result === __WEBPACK_IMPORTED_MODULE_2__util_errorObject__["a" /* errorObject */]) {
+                return this.destination.error(__WEBPACK_IMPORTED_MODULE_2__util_errorObject__["a" /* errorObject */].e);
+            }
+        }
+        else {
+            this.hasKey = true;
+        }
+        if (Boolean(result) === false) {
+            this.key = key;
+            this.destination.next(value);
+        }
+    };
+    return DistinctUntilChangedSubscriber;
+}(__WEBPACK_IMPORTED_MODULE_0__Subscriber__["a" /* Subscriber */]));
+//# sourceMappingURL=distinctUntilChanged.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/operators/pluck.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = pluck;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__map__ = __webpack_require__("./node_modules/rxjs/_esm5/operators/map.js");
+/** PURE_IMPORTS_START ._map PURE_IMPORTS_END */
+
+/**
+ * Maps each source value (an object) to its specified nested property.
+ *
+ * <span class="informal">Like {@link map}, but meant only for picking one of
+ * the nested properties of every emitted object.</span>
+ *
+ * <img src="./img/pluck.png" width="100%">
+ *
+ * Given a list of strings describing a path to an object property, retrieves
+ * the value of a specified nested property from all values in the source
+ * Observable. If a property can't be resolved, it will return `undefined` for
+ * that value.
+ *
+ * @example <caption>Map every click to the tagName of the clicked target element</caption>
+ * var clicks = Rx.Observable.fromEvent(document, 'click');
+ * var tagNames = clicks.pluck('target', 'tagName');
+ * tagNames.subscribe(x => console.log(x));
+ *
+ * @see {@link map}
+ *
+ * @param {...string} properties The nested properties to pluck from each source
+ * value (an object).
+ * @return {Observable} A new Observable of property values from the source values.
+ * @method pluck
+ * @owner Observable
+ */
+function pluck() {
+    var properties = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        properties[_i - 0] = arguments[_i];
+    }
+    var length = properties.length;
+    if (length === 0) {
+        throw new Error('list of properties cannot be empty.');
+    }
+    return function (source) { return Object(__WEBPACK_IMPORTED_MODULE_0__map__["a" /* map */])(plucker(properties, length))(source); };
+}
+function plucker(props, length) {
+    var mapper = function (x) {
+        var currentProp = x;
+        for (var i = 0; i < length; i++) {
+            var p = currentProp[props[i]];
+            if (typeof p !== 'undefined') {
+                currentProp = p;
+            }
+            else {
+                return undefined;
+            }
+        }
+        return currentProp;
+    };
+    return mapper;
+}
+//# sourceMappingURL=pluck.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/operators/withLatestFrom.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = withLatestFrom;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__OuterSubscriber__ = __webpack_require__("./node_modules/rxjs/_esm5/OuterSubscriber.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_subscribeToResult__ = __webpack_require__("./node_modules/rxjs/_esm5/util/subscribeToResult.js");
+/** PURE_IMPORTS_START .._OuterSubscriber,.._util_subscribeToResult PURE_IMPORTS_END */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b)
+        if (b.hasOwnProperty(p))
+            d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+
+
+/* tslint:enable:max-line-length */
+/**
+ * Combines the source Observable with other Observables to create an Observable
+ * whose values are calculated from the latest values of each, only when the
+ * source emits.
+ *
+ * <span class="informal">Whenever the source Observable emits a value, it
+ * computes a formula using that value plus the latest values from other input
+ * Observables, then emits the output of that formula.</span>
+ *
+ * <img src="./img/withLatestFrom.png" width="100%">
+ *
+ * `withLatestFrom` combines each value from the source Observable (the
+ * instance) with the latest values from the other input Observables only when
+ * the source emits a value, optionally using a `project` function to determine
+ * the value to be emitted on the output Observable. All input Observables must
+ * emit at least one value before the output Observable will emit a value.
+ *
+ * @example <caption>On every click event, emit an array with the latest timer event plus the click event</caption>
+ * var clicks = Rx.Observable.fromEvent(document, 'click');
+ * var timer = Rx.Observable.interval(1000);
+ * var result = clicks.withLatestFrom(timer);
+ * result.subscribe(x => console.log(x));
+ *
+ * @see {@link combineLatest}
+ *
+ * @param {ObservableInput} other An input Observable to combine with the source
+ * Observable. More than one input Observables may be given as argument.
+ * @param {Function} [project] Projection function for combining values
+ * together. Receives all values in order of the Observables passed, where the
+ * first parameter is a value from the source Observable. (e.g.
+ * `a.withLatestFrom(b, c, (a1, b1, c1) => a1 + b1 + c1)`). If this is not
+ * passed, arrays will be emitted on the output Observable.
+ * @return {Observable} An Observable of projected values from the most recent
+ * values from each input Observable, or an array of the most recent values from
+ * each input Observable.
+ * @method withLatestFrom
+ * @owner Observable
+ */
+function withLatestFrom() {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i - 0] = arguments[_i];
+    }
+    return function (source) {
+        var project;
+        if (typeof args[args.length - 1] === 'function') {
+            project = args.pop();
+        }
+        var observables = args;
+        return source.lift(new WithLatestFromOperator(observables, project));
+    };
+}
+var WithLatestFromOperator = /*@__PURE__*/ (/*@__PURE__*/ function () {
+    function WithLatestFromOperator(observables, project) {
+        this.observables = observables;
+        this.project = project;
+    }
+    WithLatestFromOperator.prototype.call = function (subscriber, source) {
+        return source.subscribe(new WithLatestFromSubscriber(subscriber, this.observables, this.project));
+    };
+    return WithLatestFromOperator;
+}());
+/**
+ * We need this JSDoc comment for affecting ESDoc.
+ * @ignore
+ * @extends {Ignored}
+ */
+var WithLatestFromSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
+    __extends(WithLatestFromSubscriber, _super);
+    function WithLatestFromSubscriber(destination, observables, project) {
+        _super.call(this, destination);
+        this.observables = observables;
+        this.project = project;
+        this.toRespond = [];
+        var len = observables.length;
+        this.values = new Array(len);
+        for (var i = 0; i < len; i++) {
+            this.toRespond.push(i);
+        }
+        for (var i = 0; i < len; i++) {
+            var observable = observables[i];
+            this.add(Object(__WEBPACK_IMPORTED_MODULE_1__util_subscribeToResult__["a" /* subscribeToResult */])(this, observable, observable, i));
+        }
+    }
+    WithLatestFromSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
+        this.values[outerIndex] = innerValue;
+        var toRespond = this.toRespond;
+        if (toRespond.length > 0) {
+            var found = toRespond.indexOf(outerIndex);
+            if (found !== -1) {
+                toRespond.splice(found, 1);
+            }
+        }
+    };
+    WithLatestFromSubscriber.prototype.notifyComplete = function () {
+        // noop
+    };
+    WithLatestFromSubscriber.prototype._next = function (value) {
+        if (this.toRespond.length === 0) {
+            var args = [value].concat(this.values);
+            if (this.project) {
+                this._tryProject(args);
+            }
+            else {
+                this.destination.next(args);
+            }
+        }
+    };
+    WithLatestFromSubscriber.prototype._tryProject = function (args) {
+        var result;
+        try {
+            result = this.project.apply(this, args);
+        }
+        catch (err) {
+            this.destination.error(err);
+            return;
+        }
+        this.destination.next(result);
+    };
+    return WithLatestFromSubscriber;
+}(__WEBPACK_IMPORTED_MODULE_0__OuterSubscriber__["a" /* OuterSubscriber */]));
+//# sourceMappingURL=withLatestFrom.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/scheduler/QueueAction.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QueueAction; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AsyncAction__ = __webpack_require__("./node_modules/rxjs/_esm5/scheduler/AsyncAction.js");
+/** PURE_IMPORTS_START ._AsyncAction PURE_IMPORTS_END */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b)
+        if (b.hasOwnProperty(p))
+            d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+
+/**
+ * We need this JSDoc comment for affecting ESDoc.
+ * @ignore
+ * @extends {Ignored}
+ */
+var QueueAction = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
+    __extends(QueueAction, _super);
+    function QueueAction(scheduler, work) {
+        _super.call(this, scheduler, work);
+        this.scheduler = scheduler;
+        this.work = work;
+    }
+    QueueAction.prototype.schedule = function (state, delay) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        if (delay > 0) {
+            return _super.prototype.schedule.call(this, state, delay);
+        }
+        this.delay = delay;
+        this.state = state;
+        this.scheduler.flush(this);
+        return this;
+    };
+    QueueAction.prototype.execute = function (state, delay) {
+        return (delay > 0 || this.closed) ?
+            _super.prototype.execute.call(this, state, delay) :
+            this._execute(state, delay);
+    };
+    QueueAction.prototype.requestAsyncId = function (scheduler, id, delay) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        // If delay exists and is greater than 0, or if the delay is null (the
+        // action wasn't rescheduled) but was originally scheduled as an async
+        // action, then recycle as an async action.
+        if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
+            return _super.prototype.requestAsyncId.call(this, scheduler, id, delay);
+        }
+        // Otherwise flush the scheduler starting with this action.
+        return scheduler.flush(this);
+    };
+    return QueueAction;
+}(__WEBPACK_IMPORTED_MODULE_0__AsyncAction__["a" /* AsyncAction */]));
+//# sourceMappingURL=QueueAction.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/scheduler/QueueScheduler.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QueueScheduler; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AsyncScheduler__ = __webpack_require__("./node_modules/rxjs/_esm5/scheduler/AsyncScheduler.js");
+/** PURE_IMPORTS_START ._AsyncScheduler PURE_IMPORTS_END */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b)
+        if (b.hasOwnProperty(p))
+            d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+
+var QueueScheduler = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
+    __extends(QueueScheduler, _super);
+    function QueueScheduler() {
+        _super.apply(this, arguments);
+    }
+    return QueueScheduler;
+}(__WEBPACK_IMPORTED_MODULE_0__AsyncScheduler__["a" /* AsyncScheduler */]));
+//# sourceMappingURL=QueueScheduler.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/scheduler/queue.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return queue; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__QueueAction__ = __webpack_require__("./node_modules/rxjs/_esm5/scheduler/QueueAction.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__QueueScheduler__ = __webpack_require__("./node_modules/rxjs/_esm5/scheduler/QueueScheduler.js");
+/** PURE_IMPORTS_START ._QueueAction,._QueueScheduler PURE_IMPORTS_END */
+
+
+/**
+ *
+ * Queue Scheduler
+ *
+ * <span class="informal">Put every next task on a queue, instead of executing it immediately</span>
+ *
+ * `queue` scheduler, when used with delay, behaves the same as {@link async} scheduler.
+ *
+ * When used without delay, it schedules given task synchronously - executes it right when
+ * it is scheduled. However when called recursively, that is when inside the scheduled task,
+ * another task is scheduled with queue scheduler, instead of executing immediately as well,
+ * that task will be put on a queue and wait for current one to finish.
+ *
+ * This means that when you execute task with `queue` scheduler, you are sure it will end
+ * before any other task scheduled with that scheduler will start.
+ *
+ * @examples <caption>Schedule recursively first, then do something</caption>
+ *
+ * Rx.Scheduler.queue.schedule(() => {
+ *   Rx.Scheduler.queue.schedule(() => console.log('second')); // will not happen now, but will be put on a queue
+ *
+ *   console.log('first');
+ * });
+ *
+ * // Logs:
+ * // "first"
+ * // "second"
+ *
+ *
+ * @example <caption>Reschedule itself recursively</caption>
+ *
+ * Rx.Scheduler.queue.schedule(function(state) {
+ *   if (state !== 0) {
+ *     console.log('before', state);
+ *     this.schedule(state - 1); // `this` references currently executing Action,
+ *                               // which we reschedule with new state
+ *     console.log('after', state);
+ *   }
+ * }, 0, 3);
+ *
+ * // In scheduler that runs recursively, you would expect:
+ * // "before", 3
+ * // "before", 2
+ * // "before", 1
+ * // "after", 1
+ * // "after", 2
+ * // "after", 3
+ *
+ * // But with queue it logs:
+ * // "before", 3
+ * // "after", 3
+ * // "before", 2
+ * // "after", 2
+ * // "before", 1
+ * // "after", 1
+ *
+ *
+ * @static true
+ * @name queue
+ * @owner Scheduler
+ */
+var queue = /*@__PURE__*/ new __WEBPACK_IMPORTED_MODULE_1__QueueScheduler__["a" /* QueueScheduler */](__WEBPACK_IMPORTED_MODULE_0__QueueAction__["a" /* QueueAction */]);
+//# sourceMappingURL=queue.js.map
+
+
+/***/ }),
+
+/***/ "./src/app/app.config.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return appConfig; });
+var appConfig = {
+    apiUrl: 'http://103.233.193.62:8888/XCS60',
+    api8888: 'http://103.233.193.62:8888/XCS60',
+    api7788: 'http://103.233.193.62:7788/XCS60',
+    api7789: 'http://103.233.193.62:7789/XCS60',
+    api8881: 'http://103.233.193.62:8881/XCS60',
+    api8082: 'http://103.233.193.62:8082/XCS60',
+    api8083: 'http://103.233.193.62:8083/XCS60',
+    api8084: 'http://103.233.193.62:8084/XCS60',
+    api8882: 'http://103.233.193.62:8882/XCS60',
+    api8883: 'http://103.233.193.62:8883/XCS60',
+    api8087: 'http://103.233.193.62:8087/XCS60',
+};
+
+
+/***/ }),
+
 /***/ "./src/app/config/dataString.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = replaceFakePath;
 function replaceFakePath(str) {
-    return str.replace(/fakepath/i, "Document");
+    return str.replace(/fakepath/i, "XCS60");
 }
 
 
@@ -1436,10 +2172,8 @@ var Message = {
     delFail: 'ลบข้อมูลไม่สำเร็จ',
     delComplete: 'ลบข้อมูลสำเร็จ',
     checkDate: 'กรุณาตราวจสอบวันที่สิ้นสุด ต้องไม่น้อยกว่า วันที่เริ่มต้น',
-    checkData: 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน!',
+    checkData: 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ่วน!',
     cannotDelete: 'ไม่สามารถลบข้อมูลได้',
-    cannotDeleteRec: 'ไม่สามารถลบรายการได้',
-    cannotModify: 'ไม่สามารถแก้ไขได้',
     confirmAction: 'ยืนยันการทำรายการหรือไม่',
     saveStaffComplete: 'บันทึกข้อมูลผู้จับกุมสำเร็จ',
     saveStaffFail: 'บันทึกข้อมูลผู้จับกุมไม่สำเร็จ',
@@ -1467,8 +2201,7 @@ var Message = {
     checkReceiveDate: 'กรุณาตราวจสอบวันที่ตรวจรับเริ่มต้น ต้องน้อยกว่า วันที่สิ้นสุด',
     checkScienceDate: 'กรุณาตราวจสอบวันที่ตรวจพิสูจน์เริ่มต้น ต้องน้อยกว่า วันที่สิ้นสุด',
     confirmDeleteProduct: 'ยืนยันการลบข้อมูลของกลาง ใช่หรือไม่ ?',
-    checkImageType: 'ไฟล์รูปภาพที่สามารถอัพโหลดได้คือ ".png, .jpeg"',
-    alertSelectGuiltbase: 'กรุณาเลือกรายการข้อกล่าวหา'
+    checkImageType: 'ไฟล์รูปภาพที่สามารถอัพโหลดได้คือ ".png, .jpeg"'
 };
 
 
@@ -1528,7 +2261,7 @@ var communicate = [
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return LawbreakerTypes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return GenderTypes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ContributorType; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return MaritalStatuType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return MaritalStatus; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return TitleNames; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Nationalitys; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Races; });
@@ -1580,19 +2313,19 @@ var BloodTypes = [
 var EntityTypes = [
     {
         value: '0',
-        text: 'นิติบุคคล'
+        text: 'บุคคลธรรมดา'
     }, {
         value: '1',
-        text: 'บุคคลธรรมดา'
+        text: 'นิติบุคคล'
     }
 ];
 var LawbreakerTypes = [
     {
         value: '0',
-        text: 'ชาวต่างชาติ'
+        text: 'ชาวไทย'
     }, {
         value: '1',
-        text: 'ชาวไทย'
+        text: 'ชาวต่างชาติ'
     }
 ];
 var GenderTypes = [
@@ -1605,10 +2338,10 @@ var GenderTypes = [
     }
 ];
 var ContributorType = [
-    { value: '6', text: 'ผู้กล่าวหา' },
-    { value: '7', text: 'ผู้ร่วมจับกุม' }
+    { value: '1', text: 'ผู้กล่าวหา' },
+    { value: '2', text: 'ผู้ร่วมจับกุม' }
 ];
-var MaritalStatuType = [
+var MaritalStatus = [
     {
         value: '1',
         text: 'โสด'
@@ -1753,133 +2486,7 @@ var CostofNews = [
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_1__drop_downs_model__["k"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_1__drop_downs_model__["l"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "m", function() { return __WEBPACK_IMPORTED_MODULE_1__drop_downs_model__["m"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mas_court_model__ = __webpack_require__("./src/app/models/mas-court.model.ts");
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mas_communicationchanel_model__ = __webpack_require__("./src/app/models/mas-communicationchanel.model.ts");
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mas_title_model__ = __webpack_require__("./src/app/models/mas-title.model.ts");
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mas_race_model__ = __webpack_require__("./src/app/models/mas-race.model.ts");
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__mas_religion_model__ = __webpack_require__("./src/app/models/mas-religion.model.ts");
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mas_country_model__ = __webpack_require__("./src/app/models/mas-country.model.ts");
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mas_nationality_model__ = __webpack_require__("./src/app/models/mas-nationality.model.ts");
-/* unused harmony namespace reexport */
 
-
-
-
-
-
-
-
-
-
-
-/***/ }),
-
-/***/ "./src/app/models/mas-communicationchanel.model.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export MasCommunicationchanelModel */
-var MasCommunicationchanelModel = /** @class */ (function () {
-    function MasCommunicationchanelModel() {
-    }
-    return MasCommunicationchanelModel;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/models/mas-country.model.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export MasCountryModel */
-var MasCountryModel = /** @class */ (function () {
-    function MasCountryModel() {
-    }
-    return MasCountryModel;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/models/mas-court.model.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export MasCourtModel */
-var MasCourtModel = /** @class */ (function () {
-    function MasCourtModel() {
-    }
-    return MasCourtModel;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/models/mas-nationality.model.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export MasNationalityModel */
-var MasNationalityModel = /** @class */ (function () {
-    function MasNationalityModel() {
-    }
-    return MasNationalityModel;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/models/mas-race.model.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export MasRaceModel */
-var MasRaceModel = /** @class */ (function () {
-    function MasRaceModel() {
-    }
-    return MasRaceModel;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/models/mas-religion.model.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export MasReligionModel */
-var MasReligionModel = /** @class */ (function () {
-    function MasReligionModel() {
-    }
-    return MasReligionModel;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/models/mas-title.model.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export MasTitleModel */
-var MasTitleModel = /** @class */ (function () {
-    function MasTitleModel() {
-    }
-    return MasTitleModel;
-}());
 
 
 
@@ -1893,7 +2500,6 @@ var MasTitleModel = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_config__ = __webpack_require__("./src/app/app.config.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_arrest_lawbreaker__ = __webpack_require__("./src/app/pages/arrests/models/arrest-lawbreaker.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1941,10 +2547,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 
 
-
+// import { Observable } from 'rxjs/Observable';
+// const options = { year: 'numeric', month: 'short', day: 'numeric' };
 var ArrestsService = /** @class */ (function () {
     function ArrestsService(http) {
         this.http = http;
+        // tslint:disable-next-line:member-ordering
         this.httpOptions = {
             headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({
                 'Content-Type': 'application/json'
@@ -1959,7 +2567,6 @@ var ArrestsService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
                     case 1:
                         res = _a.sent();
-                        debugger;
                         if (!res || res.IsSuccess == 'False') {
                             return [2 /*return*/, false];
                         }
@@ -2023,7 +2630,7 @@ var ArrestsService = /** @class */ (function () {
     ArrestsService.prototype.getByCon = function (ArrestCode) {
         var params = { ArrestCode: ArrestCode };
         var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestgetByCon";
-        return this.resposePromisGetList(JSON.stringify(params), url);
+        return this.resposePromisGet(JSON.stringify(params), url);
     };
     ArrestsService.prototype.updDelete = function (ArrestCode) {
         var params = { ArrestCode: ArrestCode };
@@ -2131,123 +2738,87 @@ var ArrestsService = /** @class */ (function () {
         return this.responsePromisModify(JSON.stringify(params), url);
     };
     //-- Arrest Notice --//
-    ArrestsService.prototype.ArrestNoticegetByConAdv = function (form) {
+    ArrestsService.prototype.noticegetByConAdv = function (form) {
         var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestNoticegetByConAdv";
         return this.resposePromisGetList(JSON.stringify(form), url);
     };
-    ArrestsService.prototype.ArrestNoticegetByKeyword = function (Textsearch) {
+    ArrestsService.prototype.noticegetByKeyword = function (Textsearch) {
         var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestNoticegetByKeyword";
         return this.resposePromisGetList(Textsearch, url);
     };
     //-- Arrest Notice --//
-    ArrestsService.prototype.ArrestLawbreakerinsAll = function (lawbreaker) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, IsSuccess;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = lawbreaker;
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestLawbreakerinsAll";
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1:
-                        res = _a.sent();
-                        IsSuccess = new Boolean(res.IsSuccess);
-                        if (!IsSuccess || !res.ResponseData) {
-                            return [2 /*return*/, new __WEBPACK_IMPORTED_MODULE_3__models_arrest_lawbreaker__["a" /* ArrestLawbreaker */]()];
-                        }
-                        return [2 /*return*/, res.ResponseData];
-                }
-            });
-        });
-    };
-    ArrestsService.prototype.ArrestLawbreakergetByCon = function (LawbreakerID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, IsSuccess;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { LawbreakerID: LawbreakerID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestLawbreakergetByCon";
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1:
-                        res = _a.sent();
-                        IsSuccess = new Boolean(res.IsSuccess);
-                        if (!IsSuccess || !res.ResponseData) {
-                            return [2 /*return*/, new __WEBPACK_IMPORTED_MODULE_3__models_arrest_lawbreaker__["a" /* ArrestLawbreaker */]()];
-                        }
-                        return [2 /*return*/, res.ResponseData];
-                }
-            });
-        });
-    };
-    ArrestsService.prototype.ArrestLawbreakerupdByCon = function (lawbreaker) {
-        var params = lawbreaker;
-        var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestLawbreakerupdByCon";
-        return this.responsePromisModify(JSON.stringify(params), url);
-    };
     //-- Document --//
-    ArrestsService.prototype.MasDocumentMaingetAll = function (DocumentType, ReferenceCode) {
+    ArrestsService.prototype.getDocument = function (ReferenceCode) {
         return __awaiter(this, void 0, void 0, function () {
-            var params, url;
+            var params, url, res;
             return __generator(this, function (_a) {
-                params = { DocumentType: DocumentType, ReferenceCode: ReferenceCode };
-                url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7789 + "/MasDocumentMaingetAll";
-                return [2 /*return*/, this.resposePromisGetList(JSON.stringify(params), url)];
+                switch (_a.label) {
+                    case 0:
+                        params = { ReferenceCode: ReferenceCode };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8883 + "/DocumentRequestgetByCon";
+                        return [4 /*yield*/, this.http.post(url, JSON.stringify(params), this.httpOptions).toPromise()];
+                    case 1:
+                        res = _a.sent();
+                        if (!res.length) {
+                            return [2 /*return*/, new Array()];
+                        }
+                        return [2 /*return*/, res];
+                }
             });
         });
     };
-    ArrestsService.prototype.MasDocumentMainupdByCon = function (form) {
+    ArrestsService.prototype.insDocument = function (document) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url;
             return __generator(this, function (_a) {
-                params = JSON.stringify(form);
-                url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7789 + "/MasDocumentMainupdByCon";
-                return [2 /*return*/, this.responsePromisModify(params, url)];
+                switch (_a.label) {
+                    case 0:
+                        params = document;
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8883 + "/DocumentRequestinsAll";
+                        return [4 /*yield*/, this.responsePromisModify(JSON.stringify(params), url)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };
-    ArrestsService.prototype.MasDocumentMainupdDelete = function (DocumentID) {
+    ArrestsService.prototype.updDocument = function (document) {
         return __awaiter(this, void 0, void 0, function () {
-            var params, url;
+            var params, url, res;
             return __generator(this, function (_a) {
-                params = JSON.stringify({ DocumentID: DocumentID });
-                url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7789 + "/MasDocumentMainupdDelete";
-                return [2 /*return*/, this.responsePromisModify(params, url)];
+                switch (_a.label) {
+                    case 0:
+                        params = document;
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8882 + "/DocumentupdByCon";
+                        return [4 /*yield*/, this.http.post(url, JSON.stringify(params), this.httpOptions).toPromise()];
+                    case 1:
+                        res = _a.sent();
+                        if (!res.IsSuccess) {
+                            return [2 /*return*/, false];
+                        }
+                        return [2 /*return*/, true];
+                }
             });
         });
     };
-    // async getDocument(ReferenceCode: string): Promise<ArrestDocument[]> {
-    //     const params = { ReferenceCode };
-    //     const url = `${appConfig.api8883}/DocumentRequestgetByCon`;
-    //     const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-    //     if (!res.length) {
-    //         return new Array<ArrestDocument>()
-    //     }
-    //     return res;
-    // }
-    // async insDocument(document: ArrestDocument): Promise<any> {
-    //     const params = document;
-    //     const url = `${appConfig.api8883}/DocumentRequestinsAll`;
-    //     return await this.responsePromisModify(JSON.stringify(params), url);
-    // }
-    // async updDocument(document: ArrestDocument): Promise<any> {
-    //     const params = document;
-    //     const url = `${appConfig.api8882}/DocumentupdByCon`;
-    //     const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-    //     if (!res.IsSuccess) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
-    // async documentUpDelete(DocumentID: string): Promise<any> {
-    //     const params = { DocumentID };
-    //     const url = `${appConfig.api8882}/DocumentupdDelete`;
-    //     const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-    //     if (!res.IsSuccess) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
+    ArrestsService.prototype.documentUpDelete = function (DocumentID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params, url, res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        params = { DocumentID: DocumentID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8882 + "/DocumentupdDelete";
+                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
+                    case 1:
+                        res = _a.sent();
+                        if (!res.IsSuccess) {
+                            return [2 /*return*/, false];
+                        }
+                        return [2 /*return*/, true];
+                }
+            });
+        });
+    };
     //-- Document --//
     //-- Mas --//
     ArrestsService.prototype.masLawbreakergetByConAdv = function (Textsearch) {
@@ -2298,105 +2869,6 @@ var ArrestsService = /** @class */ (function () {
     return ArrestsService;
 }());
 
-
-
-/***/ }),
-
-/***/ "./src/app/pages/arrests/models/arrest-lawbreaker.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ArrestLawbreaker; });
-/* unused harmony export ArrestLawbreakerAllegation */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ArrestLawbreakerFormControl; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
-
-var ArrestLawbreaker = /** @class */ (function () {
-    function ArrestLawbreaker() {
-    }
-    return ArrestLawbreaker;
-}());
-
-var ArrestLawbreakerAllegation = /** @class */ (function () {
-    function ArrestLawbreakerAllegation() {
-    }
-    return ArrestLawbreakerAllegation;
-}());
-
-var ArrestLawbreakerFormControl = {
-    LawbreakerID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].required),
-    ArrestCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].required),
-    LawbreakerRefID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    EntityType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyTitleCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyTitle: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyOtherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyRegistrationNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyLicenseNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyFullName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    FoundedDate: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LicenseDateForm: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LicenseDateTo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    TaxID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ExciseRegNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerTitleCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerTitleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerFirstName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerMiddleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerLastName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerOtherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerDesc: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerFullName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IDCard: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    VISAType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportCountryCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportCountryName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportDateIn: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportDateOut: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    BirthDate: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    GenderType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    BloodType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    NationalityCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    NationalityNameTH: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    RaceCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    RaceName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ReligionCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ReligionName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    MaritalStatus: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Career: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    GPS: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Location: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Address: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Village: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Building: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Floor: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Room: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Alley: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Road: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubDistrictCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubDistrict: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    DistrictCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProvinceCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Province: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ZipCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    TelephoneNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Email: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    FatherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    MotherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Remarks: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LinkPhoto: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PhotoDesc: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    EntityTypeName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerTypeName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProductID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProductName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsChecked: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsNewItem: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null)
-};
 
 
 /***/ }),
@@ -2535,7 +3007,7 @@ var CardActionsModule = /** @class */ (function () {
 /***/ "./src/app/pages/component/modal-lawbreaker/modal-lawbreaker.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-header bg-theme\">\r\n    <div class=\"row\">\r\n        <div class=\"col-lg-5\">\r\n            <h4 class=\"modal-title text-white\">เพิ่มผู้ต้องหา\r\n                <a href=\"javaScript:void(0);\" class=\"btn btn-ghost\" (click)=\"dismiss('Cross click')\" [routerLink]=\"['/arrest/lawbreaker/C/NEW']\">\r\n                    <i class=\"ti-plus\"></i>\r\n                    สร้างข้อมูล\r\n                </a>\r\n            </h4>\r\n        </div>\r\n        <div class=\"col-lg-5 col-8\">\r\n            <form class=\"app-search\" #searchFrom=\"ngForm\" (ngSubmit)=\"onSearchByKey(searchFrom.value)\">\r\n                <input type=\"search\" name=\"Textsearch\" ngModel id=\"\" class=\"form-control form-control-sm\">\r\n                <a class=\"srh-btn\" (click)=\"onSearchByKey(searchFrom.value)\" href=\"javaScript:void(0);\">\r\n                    <i class=\"ti-search\"></i>\r\n                </a>\r\n            </form>\r\n        </div>\r\n        <div class=\"col-lg-2 col-4 p-0\">\r\n            <a href=\"javaScript:void(0);\" class=\"text-white\" (click)=\"toggle()\">ค้นหาขั้นสูง</a>\r\n        </div>\r\n\r\n        <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n            <span aria-hidden=\"true\">\r\n                <i class=\" ti-close\"></i>\r\n            </span>\r\n        </a>\r\n    </div>\r\n</div>\r\n\r\n\r\n<h5 class=\"text-right mt-3 pr-3\">ILG60-03-02-03-00</h5>\r\n<div class=\"modal-body font-14\">\r\n    <div *ngIf=\"advSearch\">\r\n        <div class=\"card card-outline-bluish unset-radius\">\r\n            <div class=\"card-header unset-radius\">\r\n                <div class=\"card-actions\">\r\n                    <a class=\"\" (click)=\"toggle()\">\r\n                        <i class=\"fa fa-times\"></i>\r\n                    </a>\r\n                </div>\r\n                <h4 class=\"card-title m-b-0\">ค้นหาขั้นสูง</h4>\r\n            </div>\r\n            <div class=\"card-body\">\r\n                <form class=\"form-horizontal\" #advForm=\"ngForm\" (ngSubmit)=\"onSearchAdv(advForm.value)\">\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ประเภทผู้ต้องหา :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <select name=\"EntityType\" ngModel class=\"form-control form-control-sm\">\r\n                                <option value=\"\" selected disabled></option>\r\n                                <option *ngFor=\"let item of entityType\" [value]=\"item.value\">{{item.text}}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ประเภทบุคคล :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <select name=\"LawbreakerType\" ngModel class=\"form-control form-control-sm\">\r\n                                <option value=\"\" selected disabled></option>\r\n                                <option *ngFor=\"let item of lawbreakerType\" [value]=\"item.value\">{{item.text}}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขบัตรประชาชน :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"IDCard\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขหนังสือเดินทาง :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"PassportNo\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขนิติบุคคล :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"CompanyRegistrationNo\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ชื่อสถานประกอบการ :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"CompanyName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ชื่อผู้ต้องสงสัย :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input #fname type=\"text\" name=\"LawbreakerFirstName\" class=\"form-control form-control-sm\">\r\n                            <input type=\"hidden\" name=\"LawbreakerTitleName\" [value]=\"fname\">\r\n                            <input type=\"hidden\" name=\"LawbreakerLastName\" [value]=\"fname\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <div class=\"col-lg-10 col-sm-8\"></div>\r\n                        <div class=\"col-lg-2 col-sm-4\">\r\n                            <button type=\"submit\" class=\"btn btn-block btn-themecolor\">ค้นข้อมูล</button>\r\n                        </div>\r\n                    </div>\r\n                </form>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"card unset-radius\">\r\n        <div class=\"card-body p-0\">\r\n            <div class=\"table-responsive\">\r\n                <table id=\"suspectModal\" #suspectModal class=\"table table-sm table-striped\" [formGroup]=\"lawbreakerFG\">\r\n                    <thead>\r\n                        <tr>\r\n                            <th class=\"text-center\">\r\n                                <input type=\"checkbox\" id=\"th\" class=\"filled-in chk-col-indigo\" (change)=\"checkAll()\" [checked]=\"isCheckAll\">\r\n                                <label for=\"th\" class=\"m-t-10 m-b-0\"></label>\r\n                            </th>\r\n                            <th>ลำดับ</th>\r\n                            <th>ประเภทผู้ต้องหา</th>\r\n                            <th>ประเภทบุคคล</th>\r\n                            <th>หมายเลขอ้างอิง</th>\r\n                            <th>ชื่อ</th>\r\n                            <th>จำนวนครั้งการกระทำผิด</th>\r\n                            <th></th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody formArrayName=\"Lawbreaker\">\r\n                        <tr *ngFor=\"let item of Lawbreaker.controls; let i=index;\" [formGroupName]=\"i\">\r\n                            <td class=\"text-center\">\r\n                                <input type=\"checkbox\" formControlName=\"IsChecked\" [id]=\"'td'+i\" class=\"filled-in chk-col-indigo\" [checked]=\"isCheckAll\">\r\n                                <label [for]=\"'td'+i\" class=\"m-0\"></label>\r\n                            </td>\r\n                            <td>{{item.get('RowId').value}}</td>\r\n                            <td>{{item.get('LawbreakerTypeName').value}}</td>\r\n                            <td>{{item.get('EntityTypeName').value}}</td>\r\n                            <td>{{item.get('LawbreakerID').value}}</td>\r\n                            <td>\r\n                                <span *ngIf=\"item.get('EntityType').value == 0\">\r\n                                    {{item.get('LawbreakerFullName').value}}\r\n                                </span>\r\n                                <span *ngIf=\"item.get('EntityType').value == 1\">\r\n                                    {{item.get('CompanyFullName').value}}\r\n                                </span>\r\n                            </td>\r\n                            <td>{{i+1}}</td>\r\n                            <td class=\"text-center\">\r\n                                <a href=\"javaScript:void(0);\" class=\"text-center text-secondary\" (click)=\"view(item.value.LawbreakerID)\">\r\n                                    <i class=\"fa fa-eye fa-lg\"></i>\r\n                                </a>\r\n                            </td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n        </div>\r\n        <div class=\"card-footer card-footer-unset\">\r\n            <app-pagination-table [TotalItems]=\"paginage.TotalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\r\n                [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\r\n            </app-pagination-table>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"modal-footer\">\r\n    <div class=\"col-lg-2 col-sm-4\">\r\n        <button type=\"button\" class=\"btn btn-block btn-themecolor\" (click)=\"close('Save click')\">บันทึก</button>\r\n    </div>\r\n</div>"
+module.exports = "<div class=\"modal-header bg-theme\">\r\n    <div class=\"row\">\r\n        <div class=\"col-lg-5\">\r\n            <h4 class=\"modal-title text-white\">เพิ่มผู้ต้องหา\r\n                <a href=\"javaScript:void(0);\" class=\"btn btn-ghost\" (click)=\"dismiss('Cross click')\" [routerLink]=\"['/arrest/lawbreaker/c/new']\">\r\n                    <i class=\"ti-plus\"></i>\r\n                    สร้างข้อมูล\r\n                </a>\r\n            </h4>\r\n        </div>\r\n        <div class=\"col-lg-5 col-8\">\r\n            <form class=\"app-search\" #searchFrom=\"ngForm\" (ngSubmit)=\"onSearchByKey(searchFrom.value)\">\r\n                <input type=\"search\" name=\"Textsearch\" ngModel id=\"\" class=\"form-control form-control-sm\">\r\n                <a class=\"srh-btn\" (click)=\"onSearchByKey(searchFrom.value)\" href=\"javaScript:void(0);\">\r\n                    <i class=\"ti-search\"></i>\r\n                </a>\r\n            </form>\r\n        </div>\r\n        <div class=\"col-lg-2 col-4 p-0\">\r\n            <a href=\"javaScript:void(0);\" class=\"text-white\" (click)=\"toggle()\">ค้นหาขั้นสูง</a>\r\n        </div>\r\n\r\n        <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n            <span aria-hidden=\"true\">\r\n                <i class=\" ti-close\"></i>\r\n            </span>\r\n        </a>\r\n    </div>\r\n</div>\r\n<div class=\"modal-body font-14\">\r\n    <div *ngIf=\"advSearch\">\r\n        <div class=\"card card-outline-bluish unset-radius\">\r\n            <div class=\"card-header unset-radius\">\r\n                <div class=\"card-actions\">\r\n                    <a class=\"\" (click)=\"toggle()\">\r\n                        <i class=\"fa fa-times\"></i>\r\n                    </a>\r\n                </div>\r\n                <h4 class=\"card-title m-b-0\">ค้นหาขั้นสูง</h4>\r\n            </div>\r\n            <div class=\"card-body\">\r\n                <form class=\"form-horizontal\" #advForm=\"ngForm\" (ngSubmit)=\"onSearchAdv(advForm.value)\">\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ประเภทผู้ต้องหา :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <select name=\"EntityType\" ngModel class=\"form-control form-control-sm\">\r\n                                <option value=\"\" selected disabled></option>\r\n                                <option *ngFor=\"let item of entityType\" [value]=\"item.value\">{{item.text}}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ประเภทบุคคล :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <select name=\"LawbreakerType\" ngModel class=\"form-control form-control-sm\">\r\n                                <option value=\"\" selected disabled></option>\r\n                                <option *ngFor=\"let item of lawbreakerType\" [value]=\"item.value\">{{item.text}}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขบัตรประชาชน :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"IDCard\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขหนังสือเดินทาง :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"PassportNo\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขนิติบุคคล :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"CompanyRegistrationNo\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ชื่อสถานประกอบการ :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"CompanyName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ชื่อผู้ต้องสงสัย :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"\" class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <div class=\"col-lg-10 col-sm-8\"></div>\r\n                        <div class=\"col-lg-2 col-sm-4\">\r\n                            <button type=\"submit\" class=\"btn btn-block btn-themecolor\">ค้นข้อมูล</button>\r\n                        </div>\r\n                    </div>\r\n                </form>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"card unset-radius\">\r\n        <div class=\"card-body p-0\">\r\n            <div class=\"table-responsive\">\r\n                <table id=\"suspectModal\" #suspectModal class=\"table table-sm table-striped\" [formGroup]=\"lawbreakerFG\">\r\n                    <thead>\r\n                        <tr>\r\n                            <th class=\"text-center\">\r\n                                <input type=\"checkbox\" id=\"th\" class=\"filled-in chk-col-indigo\" (change)=\"checkAll()\" [checked]=\"isCheckAll\">\r\n                                <label for=\"th\" class=\"m-t-10 m-b-0\"></label>\r\n                            </th>\r\n                            <th>ลำดับ</th>\r\n                            <th>ประเภทผู้ต้องสงสัย</th>\r\n                            <th>ประเภทบุคคล</th>\r\n                            <th>หมายเลขอ้างอิง</th>\r\n                            <th>ชื่อผู้ต้องสงสัย</th>\r\n                            <th>จำนวนครั้งการกระทำความผิด</th>\r\n                            <th></th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody formArrayName=\"Lawbreaker\">\r\n                        <tr *ngFor=\"let item of Lawbreaker.controls; let i=index;\" [formGroupName]=\"i\">\r\n                            <td class=\"text-center\">\r\n                                <input type=\"checkbox\" formControlName=\"IsChecked\" [id]=\"'td'+i\" class=\"filled-in chk-col-indigo\" \r\n                                [checked]=\"isCheckAll\">\r\n                                <label [for]=\"'td'+i\" class=\"m-0\"></label>\r\n                            </td>\r\n                            <td>{{item.get('RowId').value}}</td>\r\n                            <td>{{item.get('LawbreakerTypeName').value}}</td>\r\n                            <td>{{item.get('EntityTypeName').value}}</td>\r\n                            <td>{{item.get('LawbreakerID').value}}</td>\r\n                            <td>\r\n                                <span *ngIf=\"item.get('EntityType').value == 0\">\r\n                                    {{item.get('CompanyFullName').value}}\r\n                                </span>\r\n                                <span *ngIf=\"item.get('EntityType').value == 1\">\r\n                                    {{item.get('LawbreakerFullName').value}}\r\n                                </span>\r\n                            </td>\r\n                            <td>{{i+1}}</td>\r\n                            <td class=\"text-center\">\r\n                                <a href=\"javaScript:void(0);\" class=\"text-center text-secondary\" (click)=\"view(item.value.LawbreakerID)\">\r\n                                    <i class=\"fa fa-eye fa-lg\"></i>\r\n                                </a>\r\n                            </td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n        </div>\r\n        <div class=\"card-footer card-footer-unset\">\r\n            <app-pagination-table [TotalItems]=\"paginage.TotalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\r\n                [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\r\n            </app-pagination-table>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"modal-footer\">\r\n    <div class=\"col-lg-2 col-sm-4\">\r\n        <button type=\"button\" class=\"btn btn-block btn-themecolor\" (click)=\"close('Save click')\">บันทึก</button>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -2543,25 +3015,15 @@ module.exports = "<div class=\"modal-header bg-theme\">\r\n    <div class=\"row\
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LawbreakerService; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ModalLawbreakerComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ModalLawbreakerComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config_pagination__ = __webpack_require__("./src/app/config/pagination.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models__ = __webpack_require__("./src/app/models/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config_message__ = __webpack_require__("./src/app/config/message.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_app_app_config__ = __webpack_require__("./src/app/app.config.ts");
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__arrests_arrests_service__ = __webpack_require__("./src/app/pages/arrests/arrests.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models__ = __webpack_require__("./src/app/models/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__config_message__ = __webpack_require__("./src/app/config/message.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2606,15 +3068,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-            t[p[i]] = s[p[i]];
-    return t;
-};
 
 
 
@@ -2622,101 +3075,10 @@ var __rest = (this && this.__rest) || function (s, e) {
 
 
 
-
-
-var renameProp = function (oldProp, newProp, _a) {
-    var _b = oldProp, old = _a[_b], others = __rest(_a, [typeof _b === "symbol" ? _b : _b + ""]);
-    var _c;
-    return __assign((_c = {}, _c[newProp] = old, _c), others);
-};
-var LawbreakerService = /** @class */ (function () {
-    function LawbreakerService(http) {
-        this.http = http;
-        this.httpOptions = {
-            headers: new __WEBPACK_IMPORTED_MODULE_7__angular_common_http__["c" /* HttpHeaders */]({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
-    LawbreakerService.prototype.searchByKeyword = function (Textsearch) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, lawbreakerUrl, suspectUrl, url;
-            return __generator(this, function (_a) {
-                params = JSON.stringify(Textsearch);
-                lawbreakerUrl = __WEBPACK_IMPORTED_MODULE_8_app_app_config__["a" /* appConfig */].api8082 + "/NoticeLawbreakergetByKeyword";
-                suspectUrl = __WEBPACK_IMPORTED_MODULE_8_app_app_config__["a" /* appConfig */].api8082 + "/NoticeMasSuspectgetByKeyword";
-                url = { lawbreakerUrl: lawbreakerUrl, suspectUrl: suspectUrl };
-                return [2 /*return*/, this.response(params, url, 'keyword')];
-            });
-        });
-    };
-    LawbreakerService.prototype.searchAdv = function (form) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, lawbreakerUrl, suspectUrl, url;
-            return __generator(this, function (_a) {
-                params = form;
-                lawbreakerUrl = __WEBPACK_IMPORTED_MODULE_8_app_app_config__["a" /* appConfig */].api8082 + "/NoticeLawbreakergetByConAdv";
-                suspectUrl = __WEBPACK_IMPORTED_MODULE_8_app_app_config__["a" /* appConfig */].api8082 + "/NoticeMasSuspectgetByConAdv";
-                url = { lawbreakerUrl: lawbreakerUrl, suspectUrl: suspectUrl };
-                return [2 /*return*/, this.response(params, url, 'adv')];
-            });
-        });
-    };
-    LawbreakerService.prototype.response = function (params, url, mode) {
-        return __awaiter(this, void 0, void 0, function () {
-            var lawbreaker, obj, suspect, response_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.http.post(url.lawbreakerUrl, params, this.httpOptions).toPromise()];
-                    case 1:
-                        lawbreaker = _a.sent();
-                        if (!lawbreaker.NoticeLawbreaker.length) return [3 /*break*/, 2];
-                        return [2 /*return*/, lawbreaker.NoticeLawbreaker];
-                    case 2:
-                        obj = params;
-                        if (mode == 'adv') {
-                            obj = renameProp('LawbreakerType', 'SuspectType', obj);
-                            obj = renameProp('LawbreakerTitleName', 'SuspectTitleName', obj);
-                            obj = renameProp('LawbreakerFirstName', 'SuspectFirstName', obj);
-                            obj = renameProp('LawbreakerLastName', 'SuspectLastName', obj);
-                        }
-                        return [4 /*yield*/, this.http.post(url.suspectUrl, obj, this.httpOptions).toPromise()];
-                    case 3:
-                        suspect = _a.sent();
-                        if (!suspect.ResponseData.length) {
-                            return [2 /*return*/, new Array()];
-                        }
-                        response_1 = [];
-                        suspect.ResponseData.map(function (item) {
-                            var obj = item;
-                            obj = renameProp('SuspectID', 'LawbreakerID', obj);
-                            obj = renameProp('SuspectType', 'LawbreakerType', obj);
-                            obj = renameProp('SuspectTitleCode', 'LawbreakerTitleCode', obj);
-                            obj = renameProp('SuspectTitleName', 'LawbreakerTitleName', obj);
-                            obj = renameProp('SuspectFirstName', 'LawbreakerFirstName', obj);
-                            obj = renameProp('SuspectMiddleName', 'LawbreakerMiddleName', obj);
-                            obj = renameProp('SuspectLastName', 'LawbreakerLastName', obj);
-                            obj = renameProp('SuspectOtherName', 'LawbreakerOtherName', obj);
-                            obj = renameProp('SuspectDesc', 'LawbreakerDesc', obj);
-                            response_1.push(obj);
-                        });
-                        return [2 /*return*/, response_1];
-                }
-            });
-        });
-    };
-    LawbreakerService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7__angular_common_http__["a" /* HttpClient */]])
-    ], LawbreakerService);
-    return LawbreakerService;
-}());
 
 var ModalLawbreakerComponent = /** @class */ (function () {
-    function ModalLawbreakerComponent(
-    // private arrestService: ArrestsService,
-    lawbreakerService, fb, preloader, router) {
-        this.lawbreakerService = lawbreakerService;
+    function ModalLawbreakerComponent(arrestService, fb, preloader, router) {
+        this.arrestService = arrestService;
         this.fb = fb;
         this.preloader = preloader;
         this.router = router;
@@ -2725,8 +3087,8 @@ var ModalLawbreakerComponent = /** @class */ (function () {
         this.advSearch = false;
         this.lawbreaker = new Array();
         this.lawbreakerList = new Array();
-        this.lawbreakerType = __WEBPACK_IMPORTED_MODULE_5__models__["f" /* LawbreakerTypes */];
-        this.entityType = __WEBPACK_IMPORTED_MODULE_5__models__["d" /* EntityTypes */];
+        this.lawbreakerType = __WEBPACK_IMPORTED_MODULE_6__models__["f" /* LawbreakerTypes */];
+        this.entityType = __WEBPACK_IMPORTED_MODULE_6__models__["d" /* EntityTypes */];
         this.paginage = __WEBPACK_IMPORTED_MODULE_1__config_pagination__["a" /* pagination */];
         this.d = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
         this.c = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
@@ -2752,8 +3114,8 @@ var ModalLawbreakerComponent = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         this.preloader.setShowPreloader(true);
-                        return [4 /*yield*/, this.lawbreakerService
-                                .searchAdv(f)
+                        return [4 /*yield*/, this.arrestService
+                                .masLawbreakergetByConAdv(f)
                                 .then(function (res) { return _this.onSearchComplete(res); })];
                     case 1:
                         _a.sent();
@@ -2770,8 +3132,8 @@ var ModalLawbreakerComponent = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         this.preloader.setShowPreloader(true);
-                        return [4 /*yield*/, this.lawbreakerService
-                                .searchByKeyword(f)
+                        return [4 /*yield*/, this.arrestService
+                                .masLawbreakergetByKeyword(f)
                                 .then(function (res) { return _this.onSearchComplete(res); })];
                     case 1:
                         _a.sent();
@@ -2788,7 +3150,7 @@ var ModalLawbreakerComponent = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!list.length) {
-                            alert(__WEBPACK_IMPORTED_MODULE_6__config_message__["a" /* Message */].noRecord);
+                            alert(__WEBPACK_IMPORTED_MODULE_7__config_message__["a" /* Message */].noRecord);
                             return [2 /*return*/];
                         }
                         return [4 /*yield*/, list.filter(function (item) { return item.IsActive == 1; }).map(function (item, i) {
@@ -2881,10 +3243,10 @@ var ModalLawbreakerComponent = /** @class */ (function () {
             selector: 'app-modal-lawbreaker',
             template: __webpack_require__("./src/app/pages/component/modal-lawbreaker/modal-lawbreaker.component.html")
         }),
-        __metadata("design:paramtypes", [LawbreakerService,
-            __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormBuilder */],
-            __WEBPACK_IMPORTED_MODULE_3__shared_preloader_preloader_component__["b" /* PreloaderService */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_router__["c" /* Router */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__arrests_arrests_service__["a" /* ArrestsService */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_forms__["b" /* FormBuilder */],
+            __WEBPACK_IMPORTED_MODULE_4__shared_preloader_preloader_component__["b" /* PreloaderService */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_router__["c" /* Router */]])
     ], ModalLawbreakerComponent);
     return ModalLawbreakerComponent;
 }());
@@ -2928,16 +3290,16 @@ var ModalLawbreakerModule = /** @class */ (function () {
             imports: [
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
                 __WEBPACK_IMPORTED_MODULE_4__angular_router__["d" /* RouterModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_forms__["g" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_forms__["l" /* ReactiveFormsModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_forms__["f" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_forms__["k" /* ReactiveFormsModule */],
                 __WEBPACK_IMPORTED_MODULE_3__card_actions_card_actions_module__["a" /* CardActionsModule */],
                 __WEBPACK_IMPORTED_MODULE_6__pagination_table_pagination_table_module__["a" /* PaginationTableModule */]
             ],
-            declarations: [__WEBPACK_IMPORTED_MODULE_2__modal_lawbreaker_component__["b" /* ModalLawbreakerComponent */]],
+            declarations: [__WEBPACK_IMPORTED_MODULE_2__modal_lawbreaker_component__["a" /* ModalLawbreakerComponent */]],
             exports: [
-                __WEBPACK_IMPORTED_MODULE_2__modal_lawbreaker_component__["b" /* ModalLawbreakerComponent */]
+                __WEBPACK_IMPORTED_MODULE_2__modal_lawbreaker_component__["a" /* ModalLawbreakerComponent */]
             ],
-            providers: [__WEBPACK_IMPORTED_MODULE_7__arrests_arrests_service__["a" /* ArrestsService */], __WEBPACK_IMPORTED_MODULE_2__modal_lawbreaker_component__["a" /* LawbreakerService */]]
+            providers: [__WEBPACK_IMPORTED_MODULE_7__arrests_arrests_service__["a" /* ArrestsService */]]
         })
     ], ModalLawbreakerModule);
     return ModalLawbreakerModule;
@@ -3118,7 +3480,7 @@ var PaginationTableModule = /** @class */ (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
             imports: [
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["g" /* FormsModule */]
+                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* FormsModule */]
             ],
             declarations: [__WEBPACK_IMPORTED_MODULE_2__pagination_table_component__["a" /* PaginationTableComponent */]],
             exports: [__WEBPACK_IMPORTED_MODULE_2__pagination_table_component__["a" /* PaginationTableComponent */]]
@@ -3233,7 +3595,7 @@ var StepWizardModule = /** @class */ (function () {
 /***/ "./src/app/pages/component/suspect-modal/suspect-modal.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-header bg-theme\">\r\n    <div class=\"row\">\r\n        <div class=\"col-lg-5\">\r\n            <h4 class=\"modal-title text-white\">เพิ่มผู้ต้องสงสัย\r\n                <a href=\"javaScript:void(0);\" class=\"btn btn-ghost\" (click)=\"dismiss('Cross click')\" [routerLink]=\"['/notice/suspect/C/NEW']\">\r\n                    <i class=\"ti-plus\"></i>\r\n                    สร้างข้อมูล\r\n                </a>\r\n            </h4>\r\n        </div>\r\n        <div class=\"col-lg-5 col-8\">\r\n            <form class=\"app-search\" #searchForm=\"ngForm\" (ngSubmit)=\"onSearchByKeyword(searchForm.value)\">\r\n                <input type=\"search\" name=\"Textsearch\" ngModel class=\"form-control form-control-sm\">\r\n                <a class=\"srh-btn\" (click)=\"onSearchByKeyword(searchForm.value)\" href=\"javaScript:void(0)\">\r\n                    <i class=\"ti-search\"></i>\r\n                </a>\r\n            </form>\r\n        </div>\r\n        <div class=\"col-lg-2 col-4 p-0\">\r\n            <a href=\"javaScript:void(0);\" class=\"text-white\" (click)=\"toggle()\">ค้นหาขั้นสูง</a>\r\n        </div>\r\n\r\n        <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n            <span aria-hidden=\"true\">\r\n                <i class=\" ti-close\"></i>\r\n            </span>\r\n        </a>\r\n    </div>\r\n</div>\r\n<h5 class=\"text-right mt-3 pr-3\">XCS60-02-02-02-00</h5>\r\n<div class=\"modal-body font-14\">\r\n    <div *ngIf=\"advSearch\">\r\n        <div class=\"card card-outline-bluish unset-radius\">\r\n            <div class=\"card-header unset-radius\">\r\n                <div class=\"card-actions\">\r\n                    <a class=\"\" (click)=\"toggle()\">\r\n                        <i class=\"fa fa-times\"></i>\r\n                    </a>\r\n                </div>\r\n                <h4 class=\"card-title m-b-0\">ค้นหาขั้นสูง</h4>\r\n            </div>\r\n            <div class=\"card-body\">\r\n                <form class=\"form-horizontal\" #advForm=\"ngForm\" (ngSubmit)=\"onSearchAdv(advForm.value)\">\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ประเภทผู้ต้องหา :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <select name=\"EntityType\" ngModel class=\"form-control form-control-sm\">\r\n                                <option value=\"\" selected disabled></option>\r\n                                <option *ngFor=\"let item of entityType\" [value]=\"item.value\">{{item.text}}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ประเภทบุคคล :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <select name=\"SuspectType\" ngModel class=\"form-control form-control-sm\">\r\n                                <option value=\"\" selected disabled></option>\r\n                                <option *ngFor=\"let item of suspectTypes\" [value]=\"item.value\">{{item.text}}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขบัตรประชาชน :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"IDCard\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขหนังสือเดินทาง :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"PassportNo\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขนิติบุคคล :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"CompanyRegistrationNo\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ชื่อสถานประกอบการ :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"hidden\" name=\"CompanyTitleCode\" ngModel>\r\n                            <input type=\"text\" name=\"CompanyName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ชื่อผู้ต้องสงสัย :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"hidden\" name=\"SuspectTitleName\" ngModel [value]=\"fname\">\r\n                            <input type=\"hidden\" name=\"SuspectLastName\" ngModel [value]=\"fname\">\r\n                            <input #fname type=\"text\" name=\"SuspectFirstName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <div class=\"col-lg-10 col-sm-8\"></div>\r\n                        <div class=\"col-lg-2 col-sm-4\">\r\n                            <button type=\"submit\" class=\"btn btn-block btn-themecolor\">ค้นข้อมูล</button>\r\n                        </div>\r\n                    </div>\r\n                </form>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"card unset-radius\">\r\n        <div class=\"card-body p-0\">\r\n            <div class=\"table-responsive\">\r\n                <table [formGroup]=\"suspectFormGroup\" id=\"suspectModal\" #suspectModal class=\"table table-sm table-striped\">\r\n                    <thead>\r\n                        <tr>\r\n                            <th class=\"text-center\">\r\n                                <input type=\"checkbox\" id=\"th\" class=\"filled-in chk-col-indigo\" (change)=\"checkAll()\" [checked]=\"isCheckAll\">\r\n                                <label for=\"th\" class=\"m-t-10 m-b-0\"></label>\r\n                            </th>\r\n                            <th>ลำดับ</th>\r\n                            <th>ประเภทผู้ต้องสงสัย</th>\r\n                            <th>ประเภทบุคคล</th>\r\n                            <th>หมายเลขอ้างอิง</th>\r\n                            <th>ชื่อผู้ต้องสงสัย</th>\r\n                            <th>จำนวนครั้งการกระทำความผิด</th>\r\n                            <th></th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody formArrayName=\"Suspect\">\r\n                        <tr *ngFor=\"let item of Suspect.controls; let i=index;\" [formGroupName]=\"i\">\r\n                            <td class=\"text-center\">\r\n                                <input type=\"checkbox\" formControlName=\"IsChecked\" [id]=\"'td'+i\" class=\"filled-in chk-col-indigo\" [checked]=\"isCheckAll\">\r\n                                <label [for]=\"'td'+i\" class=\"m-0\"></label>\r\n                            </td>\r\n                            <td>{{item.get('RowId').value}}</td>\r\n                            <td>{{item.get('SuspectTypeName').value}}</td>\r\n                            <td>{{item.get('EntityTypeName').value}}</td>\r\n                            <td>{{item.get('SuspectID').value}}</td>\r\n                            <td>\r\n                                <span *ngIf=\"item.get('EntityType').value == 0\">\r\n                                    {{item.get('SuspectFullName').value}}\r\n                                </span>\r\n                                <span *ngIf=\"item.get('EntityType').value == 1\">\r\n                                    {{item.get('CompanyFullName').value}}\r\n                                </span>\r\n                            </td>\r\n                            <td>{{i+1}}</td>\r\n                            <td class=\"text-center\">\r\n                                <a href=\"javaScript:void(0);\" class=\"text-center text-secondary\">\r\n                                    <i class=\"fa fa-eye fa-lg\"></i>\r\n                                </a>\r\n                            </td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n        </div>\r\n        <div class=\"card-footer card-footer-unset\">\r\n            <app-pagination-table [TotalItems]=\"paginage.TotalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\r\n                [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\r\n            </app-pagination-table>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"modal-footer\">\r\n    <div class=\"col-lg-2 col-sm-4\">\r\n        <button type=\"button\" class=\"btn btn-block btn-themecolor\" (click)=\"exportData()\">บันทึก</button>\r\n    </div>\r\n</div>"
+module.exports = "<div class=\"modal-header bg-theme\">\r\n    <div class=\"row\">\r\n        <div class=\"col-lg-5\">\r\n            <h4 class=\"modal-title text-white\">เพิ่มผู้ต้องสงสัย\r\n                <a href=\"javaScript:void(0);\" class=\"btn btn-ghost\" (click)=\"dismiss('Cross click')\" [routerLink]=\"['/notice/suspect/C/NEW']\">\r\n                    <i class=\"ti-plus\"></i>\r\n                    สร้างข้อมูล\r\n                </a>\r\n            </h4>\r\n        </div>\r\n        <div class=\"col-lg-5 col-8\">\r\n            <form class=\"app-search\" #searchForm=\"ngForm\" (ngSubmit)=\"onSearchByKeyword(searchForm.value)\">\r\n                <input type=\"search\" name=\"Textsearch\" ngModel class=\"form-control form-control-sm\">\r\n                <a class=\"srh-btn\" (click)=\"onSearchByKeyword(searchForm.value)\" href=\"javaScript:void(0)\">\r\n                    <i class=\"ti-search\"></i>\r\n                </a>\r\n            </form>\r\n        </div>\r\n        <div class=\"col-lg-2 col-4 p-0\">\r\n            <a href=\"javaScript:void(0);\" class=\"text-white\" (click)=\"toggle()\">ค้นหาขั้นสูง</a>\r\n        </div>\r\n\r\n        <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n            <span aria-hidden=\"true\">\r\n                <i class=\" ti-close\"></i>\r\n            </span>\r\n        </a>\r\n    </div>\r\n</div>\r\n<h5 class=\"text-right mt-3 pr-3\">XCS60-02-02-02-00</h5>\r\n<div class=\"modal-body font-14\">\r\n    <div *ngIf=\"advSearch\">\r\n        <div class=\"card card-outline-bluish unset-radius\">\r\n            <div class=\"card-header unset-radius\">\r\n                <div class=\"card-actions\">\r\n                    <a class=\"\" (click)=\"toggle()\">\r\n                        <i class=\"fa fa-times\"></i>\r\n                    </a>\r\n                </div>\r\n                <h4 class=\"card-title m-b-0\">ค้นหาขั้นสูง</h4>\r\n            </div>\r\n            <div class=\"card-body\">\r\n                <form class=\"form-horizontal\" #advForm=\"ngForm\" (ngSubmit)=\"onSearchAdv(advForm.value)\">\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ประเภทผู้ต้องหา :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <select name=\"EntityType\" ngModel class=\"form-control form-control-sm\">\r\n                                <option value=\"\" selected disabled></option>\r\n                                <option *ngFor=\"let item of entityType\" [value]=\"item.value\">{{item.text}}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ประเภทบุคคล :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <select name=\"SuspectType\" ngModel class=\"form-control form-control-sm\">\r\n                                <option value=\"\" selected disabled></option>\r\n                                <option *ngFor=\"let item of suspectTypes\" [value]=\"item.value\">{{item.text}}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขบัตรประชาชน :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"IDCard\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขหนังสือเดินทาง :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"PassportNo\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">เลขนิติบุคคล :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"text\" name=\"CompanyRegistrationNo\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ชื่อสถานประกอบการ :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"hidden\" name=\"CompanyTitleCode\" ngModel>\r\n                            <input type=\"text\" name=\"CompanyName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <label for=\"\" class=\"col-lg-2 col-sm-4\">ชื่อผู้ต้องสงสัย :</label>\r\n                        <div class=\"col-lg-4 col-sm-8 form-group\">\r\n                            <input type=\"hidden\" name=\"SuspectTitleName\" ngModel>\r\n                            <input type=\"hidden\" name=\"SuspectLastName\" ngModel>\r\n                            <input type=\"text\" name=\"SuspectFirstName\" ngModel class=\"form-control form-control-sm\">\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"row\">\r\n                        <div class=\"col-lg-10 col-sm-8\"></div>\r\n                        <div class=\"col-lg-2 col-sm-4\">\r\n                            <button type=\"submit\" class=\"btn btn-block btn-themecolor\">ค้นข้อมูล</button>\r\n                        </div>\r\n                    </div>\r\n                </form>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"card unset-radius\">\r\n        <div class=\"card-body p-0\">\r\n            <div class=\"table-responsive\">\r\n                <table [formGroup]=\"suspectFormGroup\" id=\"suspectModal\" #suspectModal class=\"table table-sm table-striped\">\r\n                    <thead>\r\n                        <tr>\r\n                            <th class=\"text-center\">\r\n                                <input type=\"checkbox\" id=\"th\" class=\"filled-in chk-col-indigo\" (change)=\"checkAll()\" [checked]=\"isCheckAll\">\r\n                                <label for=\"th\" class=\"m-t-10 m-b-0\"></label>\r\n                            </th>\r\n                            <th>ลำดับ</th>\r\n                            <th>ประเภทผู้ต้องสงสัย</th>\r\n                            <th>ประเภทบุคคล</th>\r\n                            <th>หมายเลขอ้างอิง</th>\r\n                            <th>ชื่อผู้ต้องสงสัย</th>\r\n                            <th>จำนวนครั้งการกระทำความผิด</th>\r\n                            <th></th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody formArrayName=\"Suspect\">\r\n                        <tr *ngFor=\"let item of Suspect.controls; let i=index;\" [formGroupName]=\"i\">\r\n                            <td class=\"text-center\">\r\n                                <input type=\"checkbox\" formControlName=\"IsChecked\" [id]=\"'td'+i\" class=\"filled-in chk-col-indigo\" [checked]=\"isCheckAll\">\r\n                                <label [for]=\"'td'+i\" class=\"m-0\"></label>\r\n                            </td>\r\n                            <td>{{item.get('RowId').value}}</td>\r\n                            <td>{{item.get('SuspectTypeName').value}}</td>\r\n                            <td>{{item.get('EntityTypeName').value}}</td>\r\n                            <td>{{item.get('SuspectID').value}}</td>\r\n                            <td>\r\n                                <span *ngIf=\"item.get('EntityType').value == 0\">\r\n                                    {{item.get('SuspectFullName').value}}\r\n                                </span>\r\n                                <span *ngIf=\"item.get('EntityType').value == 1\">\r\n                                    {{item.get('CompanyFullName').value}}\r\n                                </span>\r\n                            </td>\r\n                            <td>{{i+1}}</td>\r\n                            <td class=\"text-center\">\r\n                                <a href=\"javaScript:void(0);\" class=\"text-center text-secondary\">\r\n                                    <i class=\"fa fa-eye fa-lg\"></i>\r\n                                </a>\r\n                            </td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n        </div>\r\n        <div class=\"card-footer card-footer-unset\">\r\n            <app-pagination-table [TotalItems]=\"paginage.TotalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\r\n                [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\r\n            </app-pagination-table>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"modal-footer\">\r\n    <div class=\"col-lg-2 col-sm-4\">\r\n        <button type=\"button\" class=\"btn btn-block btn-themecolor\" (click)=\"exportData()\">บันทึก</button>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -3574,7 +3936,7 @@ var SuspectModalComponent = /** @class */ (function () {
             styles: [__webpack_require__("./src/app/pages/component/suspect-modal/suspect-modal.component.scss")]
         }),
         __metadata("design:paramtypes", [SuspectService,
-            __WEBPACK_IMPORTED_MODULE_4__angular_forms__["c" /* FormBuilder */],
+            __WEBPACK_IMPORTED_MODULE_4__angular_forms__["b" /* FormBuilder */],
             __WEBPACK_IMPORTED_MODULE_6__shared_preloader_preloader_component__["b" /* PreloaderService */]])
     ], SuspectModalComponent);
     return SuspectModalComponent;
@@ -3617,8 +3979,8 @@ var SuspectModalModule = /** @class */ (function () {
             imports: [
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
                 __WEBPACK_IMPORTED_MODULE_3__angular_router__["d" /* RouterModule */],
-                __WEBPACK_IMPORTED_MODULE_4__angular_forms__["g" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_4__angular_forms__["l" /* ReactiveFormsModule */],
+                __WEBPACK_IMPORTED_MODULE_4__angular_forms__["f" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_4__angular_forms__["k" /* ReactiveFormsModule */],
                 __WEBPACK_IMPORTED_MODULE_5__card_actions_card_actions_module__["a" /* CardActionsModule */],
                 __WEBPACK_IMPORTED_MODULE_6__pagination_table_pagination_table_module__["a" /* PaginationTableModule */]
             ],
@@ -3628,480 +3990,6 @@ var SuspectModalModule = /** @class */ (function () {
         })
     ], SuspectModalModule);
     return SuspectModalModule;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/fine/fine.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FineService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_config__ = __webpack_require__("./src/app/app.config.ts");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-
-
-var FineService = /** @class */ (function () {
-    function FineService(http) {
-        this.http = http;
-        this.httpOptions = {
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
-    FineService.prototype.getByKeyword = function (Textsearch) {
-        var params = Textsearch;
-        var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/ComparegetByKeyword";
-        return this.http.post(url, params, this.httpOptions);
-    };
-    // getByCon(form: any) {
-    //     const params = JSON.stringify(form);
-    //     const url = `${appConfig.api8881}/ComparegetByCon`;
-    //     return this.http.post<Compare[]>(url, params, this.httpOptions);
-    // }
-    FineService.prototype.getByCon = function (CompareID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { CompareID: CompareID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/ComparegetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_1 = _a.sent();
-                        return [4 /*yield*/, alert(error_1)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.getByConAdv = function (form) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = JSON.stringify(form);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/ComparegetByConAdv";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_2 = _a.sent();
-                        return [4 /*yield*/, alert(error_2)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.getByArrestCon = function (ArrestCode) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { ArrestCode: ArrestCode };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res.ResponseData];
-                    case 3:
-                        error_3 = _a.sent();
-                        return [4 /*yield*/, alert(error_3)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.getByDoc = function (ReferenceCode) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { ReferenceCode: ReferenceCode };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareDocumentgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res.ResponseData];
-                    case 3:
-                        error_4 = _a.sent();
-                        return [4 /*yield*/, alert(error_4)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.LawsuitegetByCon = function (LawsuitID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_5;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { LawsuitID: LawsuitID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8083 + "/LawsuitgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res.ResponseData];
-                    case 3:
-                        error_5 = _a.sent();
-                        return [4 /*yield*/, alert(error_5)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.MistreatgetByCon = function (Misterat) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_6;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = JSON.stringify(Misterat);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareCountMistreatgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_6 = _a.sent();
-                        return [4 /*yield*/, alert(error_6)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.RateMistreatgetByCon = function (Misterat) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_7;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = JSON.stringify(Misterat);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareCountRateMistreatgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_7 = _a.sent();
-                        return [4 /*yield*/, alert(error_7)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.DivisionRategetByCon = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_8;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareMasDivisionRategetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_8 = _a.sent();
-                        return [4 /*yield*/, alert(error_8)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.insAll = function (Compare) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_9;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = Compare;
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareinsAll";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_9 = _a.sent();
-                        return [4 /*yield*/, alert(error_9)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.CompareupdByCon = function (oCompare) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_10;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = JSON.stringify(oCompare);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareupdByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_10 = _a.sent();
-                        return [4 /*yield*/, alert(error_10)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.insDetailAll = function (Compare) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_11;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        debugger;
-                        params = JSON.stringify(Compare);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareDetailinsAll";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_11 = _a.sent();
-                        return [4 /*yield*/, alert(error_11)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.updDetailAll = function (Compare) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_12;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = JSON.stringify(Compare);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareDetailupdByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_12 = _a.sent();
-                        return [4 /*yield*/, alert(error_12)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.getStation = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_13;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        debugger;
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareMasOfficegetByKeyword";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_13 = _a.sent();
-                        return [4 /*yield*/, alert(error_13)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.getStaff = function (Textsearch) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_14;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { Textsearch: Textsearch };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareMasStaffgetByKeyword";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_14 = _a.sent();
-                        return [4 /*yield*/, alert(error_14)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FineService.prototype.masOfficegetAll = function () {
-        var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestgetMasOfficegetAll";
-        return this.resposePromisGetList('{}', url);
-    };
-    FineService.prototype.resposePromisGetList = function (params, url) {
-        return __awaiter(this, void 0, void 0, function () {
-            var res;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1:
-                        res = _a.sent();
-                        if (res.IsSuccess === false) {
-                            return [2 /*return*/, []];
-                        }
-                        if (!res.ResponseData.length) {
-                            return [2 /*return*/, []];
-                        }
-                        return [2 /*return*/, res.ResponseData];
-                }
-            });
-        });
-    };
-    FineService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
-    ], FineService);
-    return FineService;
 }());
 
 
@@ -4173,7 +4061,6 @@ var IncomeService = /** @class */ (function () {
         };
     }
     IncomeService.prototype.getByKeyword = function (Textsearch) {
-        debugger;
         var params = Textsearch;
         var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenuegetByKeyword";
         return this.http.post(url, params, this.httpOptions);
@@ -4201,14 +4088,15 @@ var IncomeService = /** @class */ (function () {
             });
         });
     };
-    IncomeService.prototype.RevenueupdDelete = function (RevenueID) {
+    IncomeService.prototype.getByConAdv = function (form) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        params = { RevenueID: RevenueID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueupdDelete";
+                        params = JSON.stringify(form);
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenuegetByConAdv";
+                        debugger;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -4218,54 +4106,6 @@ var IncomeService = /** @class */ (function () {
                         return [2 /*return*/, res];
                     case 3:
                         error_2 = _a.sent();
-                        return [2 /*return*/, []];
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    IncomeService.prototype.getRevenueComparegetByCompareReceiptID = function (CompareReceiptID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { CompareReceiptID: CompareReceiptID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueComparegetByCompareReceiptID";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_3 = _a.sent();
-                        return [2 /*return*/, []];
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    IncomeService.prototype.getByConAdv = function (form) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = JSON.stringify(form);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenuegetByConAdv";
-                        console.log(params);
-                        debugger;
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_4 = _a.sent();
                         // await alert(error);
                         return [2 /*return*/, []];
                     case 4: return [2 /*return*/];
@@ -4275,13 +4115,64 @@ var IncomeService = /** @class */ (function () {
     };
     IncomeService.prototype.getStatus = function (RevenueDetailID) {
         return __awaiter(this, void 0, void 0, function () {
+            var params, url, res, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        params = { RevenueDetailID: RevenueDetailID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueDetailgetByCon";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 5]);
+                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
+                    case 2:
+                        res = _a.sent();
+                        return [2 /*return*/, res];
+                    case 3:
+                        error_3 = _a.sent();
+                        return [4 /*yield*/, alert(error_3)];
+                    case 4:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    IncomeService.prototype.getDepartment = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var params, url, res, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        params = {};
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7789 + "/MasOfficeMaingetAll";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 5]);
+                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
+                    case 2:
+                        res = _a.sent();
+                        return [2 /*return*/, res];
+                    case 3:
+                        error_4 = _a.sent();
+                        return [4 /*yield*/, alert(error_4)];
+                    case 4:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    IncomeService.prototype.StaffgetByKeyword = function () {
+        return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        debugger;
-                        params = { RevenueDetailID: RevenueDetailID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueDetailgetByCon";
+                        params = {};
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7789 + "/MasStaffMaingetAll";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 5]);
@@ -4300,175 +4191,165 @@ var IncomeService = /** @class */ (function () {
             });
         });
     };
-    IncomeService.prototype.RevenueCompareDetailReceiptupdDelete = function (CompareReceiptID) {
+    IncomeService.prototype.TransactionRunninggetByCon = function (RunningTable, RunningOfficeCode) {
         return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_6;
+            var pValue, params, url, res, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        debugger;
-                        params = { CompareReceiptID: CompareReceiptID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueCompareDetailReceiptupdDelete";
+                        pValue = {
+                            "RunningTable": RunningTable,
+                            "RunningOfficeCode": RunningOfficeCode
+                        };
+                        params = JSON.stringify(pValue);
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8087 + "/TransactionRunninggetByCon";
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 5]);
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
                     case 2:
                         res = _a.sent();
                         return [2 /*return*/, res];
                     case 3:
                         error_6 = _a.sent();
-                        return [4 /*yield*/, alert(error_6)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/, []];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    IncomeService.prototype.RevenueDetailupdDelete = function (RevenueDetailID) {
+    IncomeService.prototype.TransactionRunninginsAll = function (RunningOfficeCode, RunningTable, RunningPrefix) {
         return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_7;
+            var pValue, params, url, res, error_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        debugger;
-                        params = { RevenueDetailID: RevenueDetailID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueDetailupdDelete";
+                        pValue = {
+                            "RunningOfficeCode": RunningOfficeCode,
+                            "RunningTable": RunningTable,
+                            "RunningPrefix": RunningPrefix
+                        };
+                        params = JSON.stringify(pValue);
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8087 + "/TransactionRunninginsAll";
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 5]);
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
                     case 2:
                         res = _a.sent();
                         return [2 /*return*/, res];
                     case 3:
                         error_7 = _a.sent();
-                        return [4 /*yield*/, alert(error_7)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/, []];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    IncomeService.prototype.getDepartment = function () {
+    IncomeService.prototype.TransactionRunningupdByCon = function (RunningID) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueDepartmentgetAll";
+                        params = { RunningID: RunningID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8087 + "/TransactionRunningupdByCon";
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 5]);
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
                     case 2:
                         res = _a.sent();
                         return [2 /*return*/, res];
                     case 3:
                         error_8 = _a.sent();
-                        return [4 /*yield*/, alert(error_8)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/, []];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    IncomeService.prototype.StaffgetByKeyword = function () {
+    IncomeService.prototype.RevenueComparegetByCon = function (RevenueDate, OfficeCode) {
         return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_9;
+            var pValue, params, url, res, error_9;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueStaffgetAll";
+                        pValue = {
+                            "RevenueDate": RevenueDate,
+                            "OfficeCode": OfficeCode
+                        };
+                        params = JSON.stringify(pValue);
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueComparegetByCon";
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 5]);
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
                     case 2:
                         res = _a.sent();
                         return [2 /*return*/, res];
                     case 3:
                         error_9 = _a.sent();
-                        console.log(error_9);
-                        return [4 /*yield*/, alert(error_9)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/, []];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    IncomeService.prototype.MasStaffMaingetAll = function () {
+    IncomeService.prototype.RevenueComparegetByCompareReceiptID = function (CompareReceiptID) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7789 + "/MasStaffMaingetAll";
+                        params = { CompareReceiptID: CompareReceiptID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueComparegetByCompareReceiptID";
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 5]);
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
                     case 2:
                         res = _a.sent();
                         return [2 /*return*/, res];
                     case 3:
                         error_10 = _a.sent();
-                        console.log(error_10);
-                        return [4 /*yield*/, alert(error_10)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/, []];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    IncomeService.prototype.RevenueComparegetByCon = function (RevenueDate, DepartmentCode) {
+    IncomeService.prototype.RevenueinsAll = function (oRevenue) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        params = { RevenueDate: RevenueDate, DepartmentCode: DepartmentCode };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueComparegetByCon";
+                        params = JSON.stringify(oRevenue);
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueinsAll";
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 5]);
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
                     case 2:
                         res = _a.sent();
                         return [2 /*return*/, res];
                     case 3:
                         error_11 = _a.sent();
-                        console.log(error_11);
-                        return [4 /*yield*/, alert(error_11)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/, []];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    IncomeService.prototype.RevenueCompareDetailReceiptupdByCon = function (CompareReceiptId) {
+    IncomeService.prototype.RevenueUdp = function (oRevenue) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        params = "{ \"CompareReceiptID\":" + CompareReceiptId + " }";
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueCompareDetailReceiptupdByCon";
+                        params = JSON.stringify(oRevenue);
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueupdByCon";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -4484,15 +4365,14 @@ var IncomeService = /** @class */ (function () {
             });
         });
     };
-    IncomeService.prototype.RevenueinsAll = function (oRevenue) {
+    IncomeService.prototype.RevenueDetailinsAll = function (oRevenueDetail) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_13;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        debugger;
-                        params = JSON.stringify(oRevenue);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueinsAll";
+                        params = JSON.stringify(oRevenueDetail);
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueDetailinsAll";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -4508,15 +4388,14 @@ var IncomeService = /** @class */ (function () {
             });
         });
     };
-    IncomeService.prototype.RevenueDetailinsAll = function (ReceiptBookNo, ReceiptNo, RevenueStatus, RevenueID, CompareReceiptID, IsActive) {
+    IncomeService.prototype.RevenueDetailupdDelete = function (RevenueDetailID) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_14;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        debugger;
-                        params = { ReceiptBookNo: ReceiptBookNo, ReceiptNo: ReceiptNo, RevenueStatus: RevenueStatus, RevenueID: RevenueID, CompareReceiptID: CompareReceiptID, IsActive: IsActive };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueDetailinsAll";
+                        params = { RevenueDetailID: RevenueDetailID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueDetailupdDelete";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -4532,15 +4411,14 @@ var IncomeService = /** @class */ (function () {
             });
         });
     };
-    IncomeService.prototype.RevenueUdp = function (oRevenue) {
+    IncomeService.prototype.RevenueCompareDetailReceiptupdByCon = function (CompareReceiptID) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res, error_15;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        debugger;
-                        params = JSON.stringify(oRevenue);
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueupdByCon";
+                        params = { CompareReceiptID: CompareReceiptID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueCompareDetailReceiptupdByCon";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -4550,6 +4428,52 @@ var IncomeService = /** @class */ (function () {
                         return [2 /*return*/, res];
                     case 3:
                         error_15 = _a.sent();
+                        return [2 /*return*/, []];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    IncomeService.prototype.RevenueCompareDetailReceiptupdDelete = function (CompareReceiptID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params, url, res, error_16;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        params = { CompareReceiptID: CompareReceiptID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueCompareDetailReceiptupdDelete";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
+                    case 2:
+                        res = _a.sent();
+                        return [2 /*return*/, res];
+                    case 3:
+                        error_16 = _a.sent();
+                        return [2 /*return*/, []];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    IncomeService.prototype.RevenueupdDelete = function (RevenueID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params, url, res, error_17;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        params = { RevenueID: RevenueID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8084 + "/RevenueupdDelete";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
+                    case 2:
+                        res = _a.sent();
+                        return [2 /*return*/, res];
+                    case 3:
+                        error_17 = _a.sent();
                         return [2 /*return*/, []];
                     case 4: return [2 /*return*/];
                 }
@@ -4720,110 +4644,6 @@ var InvestigateService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/pages/investigation/printdoc-modal/printdoc-modal.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<form action=\"\" #form=\"ngForm\" (ngSubmit)=\"onPrint(form)\">\r\n    <div class=\"modal-header bg-theme\">\r\n        <div class=\"row\">\r\n            <div class=\"col-lg-5\">\r\n                <h4 class=\"modal-title text-white\">พิมพ์เอกสาร</h4>\r\n            </div>\r\n            <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n                <span aria-hidden=\"true\">\r\n                    <i class=\" ti-close\"></i>\r\n                </span>\r\n            </a>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-body font-14\">\r\n\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-sm table-striped table-set-border\">\r\n                <thead>\r\n                    <tr>\r\n                        <th></th>\r\n                        <th class=\"text-center\">ลำดับ</th>\r\n                        <th>ชื่อเอกสาร</th>\r\n                        <th>ประเภทเอกสาร</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr *ngFor=\"let item of investDetail; let i=index;\">\r\n                        <td class=\"text-center\">\r\n                            <input type=\"hidden\" name=\"InvestigateDetailID\" [(ngModel)]=\"item.InvestigateDetailID\">\r\n                            <input type=\"checkbox\" [id]=\"'td'+i\" name=\"checking\" ngModel class=\"filled-in chk-col-indigo\">\r\n                            <label [for]=\"'td'+i\" class=\"m-0\"></label>\r\n                        </td>\r\n                        <td class=\"text-center\">{{i+1}}</td>\r\n                        <td>รายงานการ{{item.InvestigateDetail}}</td>\r\n                        <td></td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-footer\">\r\n        <div class=\"col-lg-2 col-4\">\r\n            <button type=\"submit\" class=\"btn btn-block btn-themecolor\">พิมพ์</button>\r\n        </div>\r\n    </div>\r\n</form>"
-
-/***/ }),
-
-/***/ "./src/app/pages/investigation/printdoc-modal/printdoc-modal.component.scss":
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
-/***/ "./src/app/pages/investigation/printdoc-modal/printdoc-modal.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PrintdocModalComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__investigate_service__ = __webpack_require__("./src/app/pages/investigation/investigate.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var PrintdocModalComponent = /** @class */ (function () {
-    function PrintdocModalComponent(investService, fb) {
-        this.investService = investService;
-        this.fb = fb;
-        this.investDetail = new Array();
-        this.d = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.c = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-    }
-    PrintdocModalComponent.prototype.ngOnInit = function () {
-        // this.createFrom();
-        var _this = this;
-        this.investService.detailGetByCon(this.investCode).then(function (result) {
-            _this.investDetail = new Array();
-            _this.investDetail = result;
-            // this.setInvestDetail(result);
-        });
-    };
-    PrintdocModalComponent.prototype.createFrom = function () {
-        this.investigate = this.fb.group({
-            InvestigateDetail: this.fb.array([])
-        });
-    };
-    // get InvestigateDetail(): FormArray {
-    //     return this.investigate.get('InvestigateDetail') as FormArray;
-    // }
-    // setInvestDetail(detail: InvestigateDetail[]) {
-    //     if (detail) {
-    //         const detailFGs = detail.map(item => this.fb.group(item));
-    //         const detailFormArray = this.fb.array(detailFGs);
-    //         this.investigate.setControl('InvestigateDetail', detailFormArray);
-    //     }
-    // }
-    PrintdocModalComponent.prototype.onPrint = function (form) {
-        console.log(form.value);
-        this.close('Save click');
-    };
-    PrintdocModalComponent.prototype.dismiss = function (e) {
-        this.d.emit(e);
-    };
-    PrintdocModalComponent.prototype.close = function (e) {
-        this.c.emit(e);
-    };
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
-        __metadata("design:type", String)
-    ], PrintdocModalComponent.prototype, "investCode", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
-        __metadata("design:type", Object)
-    ], PrintdocModalComponent.prototype, "d", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
-        __metadata("design:type", Object)
-    ], PrintdocModalComponent.prototype, "c", void 0);
-    PrintdocModalComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-            selector: 'app-printdoc-modal',
-            template: __webpack_require__("./src/app/pages/investigation/printdoc-modal/printdoc-modal.component.html"),
-            styles: [__webpack_require__("./src/app/pages/investigation/printdoc-modal/printdoc-modal.component.scss")]
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__investigate_service__["a" /* InvestigateService */],
-            __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormBuilder */]])
-    ], PrintdocModalComponent);
-    return PrintdocModalComponent;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/pages/lawsuit/lawsuit.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4925,30 +4745,11 @@ var LawsuitService = /** @class */ (function () {
         var url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api8083 + "/LawsuitgetByKeyword";
         return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
     };
-    LawsuitService.prototype.LawsuitArrestGetByKeyword = function (Textsearch) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-                url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api8083 + "/LawsuitArrestgetByKeyword";
-                return [2 /*return*/, this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)];
-            });
-        });
-    };
     LawsuitService.prototype.LawsuitgetByConAdv = function (form) {
         return __awaiter(this, void 0, void 0, function () {
             var url;
             return __generator(this, function (_a) {
                 url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api8083 + "/LawsuitgetByConAdv";
-                return [2 /*return*/, this.responsePromiseGetWithoutStatus(JSON.stringify(form), url)];
-            });
-        });
-    };
-    LawsuitService.prototype.LawsuitArrestGetByConAdv = function (form) {
-        return __awaiter(this, void 0, void 0, function () {
-            var url;
-            return __generator(this, function (_a) {
-                url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api8083 + "/LawsuitArrestgetByConAdv";
                 return [2 /*return*/, this.responsePromiseGetWithoutStatus(JSON.stringify(form), url)];
             });
         });
@@ -4973,16 +4774,6 @@ var LawsuitService = /** @class */ (function () {
             });
         });
     };
-    LawsuitService.prototype.LawsuitArrestGetByCon = function (IndictmentID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                params = { IndictmentID: IndictmentID };
-                url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api8083 + "/LawsuitArrestgetByCon";
-                return [2 /*return*/, this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)];
-            });
-        });
-    };
     LawsuitService.prototype.CompareMasLawgetByCon = function (GuiltBaseID) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url;
@@ -4999,16 +4790,6 @@ var LawsuitService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 params = { ArrestCode: ArrestCode };
                 url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api8083 + "/LawsuitArrestgetByCon";
-                return [2 /*return*/, this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)];
-            });
-        });
-    };
-    LawsuitService.prototype.MasDocumentMaingetAll = function (DocumentType, ReferenceCode) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                params = { DocumentType: DocumentType, ReferenceCode: ReferenceCode };
-                url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api7789 + "/MasDocumentMaingetAll";
                 return [2 /*return*/, this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)];
             });
         });
@@ -5053,34 +4834,6 @@ var LawsuitService = /** @class */ (function () {
             });
         });
     };
-    LawsuitService.prototype.MasStaffMaingetAll = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api7788 + "/MasStaffMaingetAll";
-                        return [4 /*yield*/, this.http.post(url, JSON.stringify(params), this.httpOptions).toPromise()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    LawsuitService.prototype.MasOfficeMaingetAll = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api7788 + "/MasStaffMaingetAll";
-                        return [4 /*yield*/, this.http.post(url, JSON.stringify(params), this.httpOptions).toPromise()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
     LawsuitService.prototype.LawsuitupdByCon = function (LawsuitList) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url;
@@ -5109,20 +4862,6 @@ var LawsuitService = /** @class */ (function () {
             });
         });
     };
-    LawsuitService.prototype.LawsuitCompareDocumentgetByCon = function (LawsuitID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { LawsuitID: LawsuitID };
-                        url = __WEBPACK_IMPORTED_MODULE_1__app_config__["a" /* appConfig */].api8083 + "/LawsuitCompareDocumentgetByCon";
-                        return [4 /*yield*/, this.http.post(url, JSON.stringify(params), this.httpOptions).toPromise()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
     LawsuitService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_common_http__["a" /* HttpClient */]])
@@ -5134,525 +4873,15 @@ var LawsuitService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<form #form=\"ngForm\" (ngSubmit)=\"onPrint(form)\">\r\n    <div class=\"modal-header bg-theme\">\r\n        <div class=\"row\">\r\n            <div class=\"col-lg-5\">\r\n                <h4 class=\"modal-title text-white\">พิมพ์เอกสาร</h4>\r\n            </div>\r\n            <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n                <span aria-hidden=\"true\">\r\n                    <i class=\" ti-close\"></i>\r\n                </span>\r\n            </a>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-body font-14\">\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-sm table-striped table-set-border\">\r\n                <thead>\r\n                    <tr>\r\n                        <th></th>\r\n                        <th class=\"text-center\">ลำดับ</th>\r\n                        <th>ชื่อเอกสาร</th>\r\n                        <th>ประเภทเอกสาร</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr *ngFor=\"let item of printDoc; let i=index;\">\r\n                        <td class=\"text-center\">\r\n                            <input type=\"checkbox\" [id]=\"'td'+i\" name=\"ischeck\" ngModel class=\"filled-in chk-col-indigo\">\r\n                            <label [for]=\"'td'+i\" class=\"m-0\"></label>\r\n                        </td>\r\n                        <td class=\"text-center\">{{i+1}}</td>\r\n                        <td>{{item.DocName}}</td>\r\n                        <td>{{item.DocType}}</td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-footer\">\r\n        <div class=\"col-lg-2 col-4\">\r\n            <button type=\"submit\" class=\"btn btn-block btn-themecolor\">พิมพ์</button>\r\n        </div>\r\n    </div>\r\n</form>"
-
-/***/ }),
-
-/***/ "./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.scss":
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
-/***/ "./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.ts":
+/***/ "./src/app/pages/notices/lawbreaker/lawbreaker.interface.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PrintLawsuitModalComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-var PrintLawsuitModalComponent = /** @class */ (function () {
-    function PrintLawsuitModalComponent() {
-        this.printDoc = [
-            {
-                DocName: 'บันทึกจับกุม (ส.ส. 2/39)',
-                DocType: 'แบบฟอร์ม'
-            }, {
-                DocName: 'บันทึกจับกุม (ส.ส. 2/39)',
-                DocType: 'เอกสารแนบภายใน'
-            }
-        ];
-        this.d = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.c = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Lawbreaker; });
+var Lawbreaker = /** @class */ (function () {
+    function Lawbreaker() {
     }
-    PrintLawsuitModalComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.lawsuitService.LawsuitArrestgetByCon(this.ArrestCode).then(function (data) {
-            _this.printDoc = data || [];
-            return true;
-        });
-        this.lawsuitService.LawsuitCompareDocumentgetByCon(this.lawsuitid).then(function (data) {
-            _this.printDoc = data || [];
-            return true;
-        });
-        /*this.lawsuitService.LawsuitCompareDocumentgetByCon(this.lawsuitid).then(res => {
-          this.printDoc = res || [ ];
-        });*/
-    };
-    PrintLawsuitModalComponent.prototype.onPrint = function (f) {
-    };
-    PrintLawsuitModalComponent.prototype.dismiss = function (e) {
-        this.d.emit(e);
-    };
-    PrintLawsuitModalComponent.prototype.close = function (e) {
-        this.c.emit(e);
-    };
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
-        __metadata("design:type", String)
-    ], PrintLawsuitModalComponent.prototype, "ArrestCode", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
-        __metadata("design:type", Object)
-    ], PrintLawsuitModalComponent.prototype, "d", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
-        __metadata("design:type", Object)
-    ], PrintLawsuitModalComponent.prototype, "c", void 0);
-    PrintLawsuitModalComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-            selector: 'app-print-lawsuit-modal',
-            template: __webpack_require__("./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.html"),
-            styles: [__webpack_require__("./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.scss")]
-        }),
-        __metadata("design:paramtypes", [])
-    ], PrintLawsuitModalComponent);
-    return PrintLawsuitModalComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.module.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PrintLawsuitModalModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("./node_modules/@angular/common/esm5/common.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__ = __webpack_require__("./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
-
-
-
-var PrintLawsuitModalModule = /** @class */ (function () {
-    function PrintLawsuitModalModule() {
-    }
-    PrintLawsuitModalModule = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
-            imports: [
-                __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["g" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["l" /* ReactiveFormsModule */]
-            ],
-            declarations: [__WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__["a" /* PrintLawsuitModalComponent */]],
-            exports: [__WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__["a" /* PrintLawsuitModalComponent */]]
-        })
-    ], PrintLawsuitModalModule);
-    return PrintLawsuitModalModule;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/model/arrest.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ArrestService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_config__ = __webpack_require__("./src/app/app.config.ts");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-
-
-var ArrestService = /** @class */ (function () {
-    function ArrestService(http) {
-        this.http = http;
-        this.httpOptions = {
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
-    ArrestService.prototype.getByArrestCon = function (ArrestCode) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { ArrestCode: ArrestCode };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_1 = _a.sent();
-                        return [2 /*return*/, []];
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    ArrestService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
-    ], ArrestService);
-    return ArrestService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/model/lawsuit.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LawsuitService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_config__ = __webpack_require__("./src/app/app.config.ts");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-
-
-var LawsuitService = /** @class */ (function () {
-    function LawsuitService(http) {
-        this.http = http;
-        this.httpOptions = {
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
-    LawsuitService.prototype.LawsuitegetByCon = function (LawsuitID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { LawsuitID: LawsuitID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8083 + "/LawsuitgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_1 = _a.sent();
-                        return [4 /*yield*/, alert(error_1)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    LawsuitService.prototype.LawsuitegetByCon2 = function (LawsuitID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log(LawsuitID);
-                        params = { LawsuitID: LawsuitID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8083 + "/LawsuitgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_2 = _a.sent();
-                        return [4 /*yield*/, alert(error_2)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    LawsuitService.prototype.getGuiltBaseByCon = function (GuiltBaseID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { GuiltBaseID: GuiltBaseID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareMasLawgetByCon";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 5]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_3 = _a.sent();
-                        return [4 /*yield*/, alert(error_3)];
-                    case 4:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    LawsuitService.prototype.CompareMasLawgetByCon = function (GuiltBaseID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { GuiltBaseID: GuiltBaseID };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareMasLawgetByCon";
-                        return [4 /*yield*/, this.http.post(url, JSON.stringify(params), this.httpOptions).toPromise()];
-                    case 1:
-                        res = _a.sent();
-                        // if (res.IsSuccess) {
-                        //   return res.ResponseData
-                        // }
-                        return [2 /*return*/, res];
-                }
-            });
-        });
-    };
-    LawsuitService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
-    ], LawsuitService);
-    return LawsuitService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pages/model/master.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MasterService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_config__ = __webpack_require__("./src/app/app.config.ts");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-
-
-var MasterService = /** @class */ (function () {
-    function MasterService(http) {
-        this.http = http;
-        this.httpOptions = {
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
-    MasterService.prototype.getStation = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareMasOfficegetByKeyword";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_1 = _a.sent();
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    MasterService.prototype.getStaff = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res, error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = {};
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8881 + "/CompareMasStaffgetByKeyword";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 2:
-                        res = _a.sent();
-                        return [2 /*return*/, res];
-                    case 3:
-                        error_2 = _a.sent();
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    MasterService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
-    ], MasterService);
-    return MasterService;
+    return Lawbreaker;
 }());
 
 
@@ -5669,7 +4898,8 @@ var MasterService = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_config__ = __webpack_require__("./src/app/app.config.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__notice__ = __webpack_require__("./src/app/pages/notices/notice.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__suspect_suspect_interface__ = __webpack_require__("./src/app/pages/notices/suspect/suspect.interface.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lawbreaker_lawbreaker_interface__ = __webpack_require__("./src/app/pages/notices/lawbreaker/lawbreaker.interface.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__suspect_suspect_interface__ = __webpack_require__("./src/app/pages/notices/suspect/suspect.interface.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5714,6 +4944,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+
 
 
 
@@ -5765,42 +4996,19 @@ var NoticeService = /** @class */ (function () {
     };
     NoticeService.prototype.getByKeywordOnInt = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var params, url, res;
+            var params, url;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        params = { 'Textsearch': '' };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8082 + "/NoticegetByKeyword";
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1:
-                        res = _a.sent();
-                        if (res.IsSuccess == 'False' || !res.Notice.length) {
-                            return [2 /*return*/, new Array()];
-                        }
-                        return [2 /*return*/, res.Notice];
-                }
+                params = { 'Textsearch': '' };
+                url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8082 + "/NoticegetByKeyword";
+                return [2 /*return*/, this.resposePromisGet(JSON.stringify(params), url)];
             });
         });
     };
     NoticeService.prototype.getByKeyword = function (Textsearch) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, url, res;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        debugger;
-                        params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8082 + "/NoticegetByKeyword";
-                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
-                    case 1:
-                        res = _a.sent();
-                        if (res.IsSuccess == 'False' || !res.Notice.length) {
-                            return [2 /*return*/, new Array()];
-                        }
-                        return [2 /*return*/, res.Notice];
-                }
-            });
-        });
+        debugger;
+        var params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
+        var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8082 + "/NoticegetByKeyword";
+        return this.resposePromisGet(JSON.stringify(params), url);
     };
     NoticeService.prototype.getByConAdv = function (form) {
         var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8082 + "/NoticegetByConAdv";
@@ -5817,24 +5025,34 @@ var NoticeService = /** @class */ (function () {
                         return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
                     case 1:
                         res = _a.sent();
-                        if (!res.Notice) {
+                        if (!res.ResponseData) {
                             return [2 /*return*/, new __WEBPACK_IMPORTED_MODULE_3__notice__["a" /* Notice */]()];
                         }
-                        return [2 /*return*/, res.Notice];
+                        return [2 /*return*/, res.ResponseData];
                 }
             });
         });
     };
-    // async getLawbreakerByCon(LawbreakerID: string): Promise<Lawbreaker> {
-    //     const params = { LawbreakerID };
-    //     const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
-    //     const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-    //     const IsSuccess = new Boolean(res.IsSuccess);
-    //     if (!IsSuccess || !res.ResponseData) {
-    //         return new Lawbreaker();
-    //     }
-    //     return res.ResponseData;
-    // }
+    NoticeService.prototype.getLawbreakerByCon = function (LawbreakerID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params, url, res, IsSuccess;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        params = { LawbreakerID: LawbreakerID };
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestLawbreakergetByCon";
+                        return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
+                    case 1:
+                        res = _a.sent();
+                        IsSuccess = new Boolean(res.IsSuccess);
+                        if (!IsSuccess || !res.ResponseData) {
+                            return [2 /*return*/, new __WEBPACK_IMPORTED_MODULE_5__lawbreaker_lawbreaker_interface__["a" /* Lawbreaker */]()];
+                        }
+                        return [2 /*return*/, res.ResponseData];
+                }
+            });
+        });
+    };
     NoticeService.prototype.noticeSuspectgetByCon = function (SuspectID) {
         return __awaiter(this, void 0, void 0, function () {
             var params, url, res;
@@ -5847,7 +5065,7 @@ var NoticeService = /** @class */ (function () {
                     case 1:
                         res = _a.sent();
                         if (res.IsSuccess == 'False' || !res.ResponseData) {
-                            return [2 /*return*/, new __WEBPACK_IMPORTED_MODULE_5__suspect_suspect_interface__["a" /* Suspect */]()];
+                            return [2 /*return*/, new __WEBPACK_IMPORTED_MODULE_6__suspect_suspect_interface__["a" /* Suspect */]()];
                         }
                         return [2 /*return*/, res.ResponseData];
                 }
@@ -5859,11 +5077,11 @@ var NoticeService = /** @class */ (function () {
         var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8082 + "/NoticeinsAll";
         return this.responsePromisModify(JSON.stringify(params), url);
     };
-    // updLawbreaker(lawbreaker: Lawbreaker): Promise<boolean> {
-    //     const params = lawbreaker;
-    //     const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
-    //     return this.responsePromisModify(JSON.stringify(params), url);
-    // }
+    NoticeService.prototype.updLawbreaker = function (lawbreaker) {
+        var params = lawbreaker;
+        var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api7788 + "/ArrestLawbreakerupdByCon";
+        return this.responsePromisModify(JSON.stringify(params), url);
+    };
     NoticeService.prototype.updSuspect = function (suspect) {
         var params = suspect;
         var url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8082 + "/SuspectupdByCon";
@@ -6001,7 +5219,7 @@ var NoticeService = /** @class */ (function () {
     NoticeService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_http__["c" /* Http */]])
+            __WEBPACK_IMPORTED_MODULE_4__angular_http__["a" /* Http */]])
     ], NoticeService);
     return NoticeService;
 }());
@@ -6019,6 +5237,130 @@ var Notice = /** @class */ (function () {
     function Notice() {
     }
     return Notice;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/notices/print-doc-modal/print-doc-modal.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<form action=\"\" #form=\"ngForm\" (ngSubmit)=\"onPrint(form)\">\r\n    <div class=\"modal-header bg-theme\">\r\n        <div class=\"row\">\r\n            <div class=\"col-lg-5\">\r\n                <h4 class=\"modal-title text-white\">พิมพ์เอกสาร</h4>\r\n            </div>\r\n            <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n                <span aria-hidden=\"true\">\r\n                    <i class=\" ti-close\"></i>\r\n                </span>\r\n            </a>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-body font-14\">\r\n\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-sm table-striped table-set-border\">\r\n                <thead>\r\n                    <tr>\r\n                        <th></th>\r\n                        <th class=\"text-center\">ลำดับ</th>\r\n                        <th>ชื่อเอกสาร</th>\r\n                        <th>ประเภทเอกสาร</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr *ngFor=\"let item of printDoc; let i=index;\">\r\n                        <td class=\"text-center\">\r\n                            <input type=\"checkbox\" [id]=\"'td'+i\" name=\"ischeck\" ngModel class=\"filled-in chk-col-indigo\">\r\n                            <label [for]=\"'td'+i\" class=\"m-0\"></label>\r\n                        </td>\r\n                        <td class=\"text-center\">{{i+1}}</td>\r\n                        <td>{{item.DocName}}</td>\r\n                        <td>{{item.DocType}}</td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-footer\">\r\n        <div class=\"col-lg-2 col-4\">\r\n            <button type=\"submit\" class=\"btn btn-block btn-themecolor\">พิมพ์</button>\r\n        </div>\r\n    </div>\r\n</form>\r\n"
+
+/***/ }),
+
+/***/ "./src/app/pages/notices/print-doc-modal/print-doc-modal.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/pages/notices/print-doc-modal/print-doc-modal.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PrintDocModalComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var PrintDocModalComponent = /** @class */ (function () {
+    function PrintDocModalComponent() {
+        this.printDoc = [
+            {
+                DocName: 'ใบแจ้งความนำจับตามแบบ รว.1',
+                DocType: 'แบบฟอร์ม'
+            }, {
+                DocName: 'ใบแจ้งความนำจับตามแบบ รว.1',
+                DocType: 'เอกสารแนบภายใน'
+            }, {
+                DocName: 'ภาพหน้าจอแสดงข้อความจากผู้แจ้งความ',
+                DocType: 'หลักฐานการแจ้งความ'
+            }
+        ];
+        this.d = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
+        this.c = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
+    }
+    PrintDocModalComponent.prototype.ngOnInit = function () {
+    };
+    PrintDocModalComponent.prototype.onPrint = function (f) {
+    };
+    PrintDocModalComponent.prototype.dismiss = function (e) {
+        this.d.emit(e);
+    };
+    PrintDocModalComponent.prototype.close = function (e) {
+        this.c.emit(e);
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
+        __metadata("design:type", String)
+    ], PrintDocModalComponent.prototype, "NoticeCode", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
+        __metadata("design:type", Object)
+    ], PrintDocModalComponent.prototype, "d", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
+        __metadata("design:type", Object)
+    ], PrintDocModalComponent.prototype, "c", void 0);
+    PrintDocModalComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'app-print-doc-modal',
+            template: __webpack_require__("./src/app/pages/notices/print-doc-modal/print-doc-modal.component.html"),
+            styles: [__webpack_require__("./src/app/pages/notices/print-doc-modal/print-doc-modal.component.scss")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], PrintDocModalComponent);
+    return PrintDocModalComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/notices/print-doc-modal/print-doc-modal.module.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PrintDocModalModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("./node_modules/@angular/common/esm5/common.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__ = __webpack_require__("./src/app/pages/notices/print-doc-modal/print-doc-modal.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+var PrintDocModalModule = /** @class */ (function () {
+    function PrintDocModalModule() {
+    }
+    PrintDocModalModule = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
+            imports: [
+                __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["k" /* ReactiveFormsModule */]
+            ],
+            declarations: [__WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__["a" /* PrintDocModalComponent */]],
+            exports: [__WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__["a" /* PrintDocModalComponent */]]
+        })
+    ], PrintDocModalModule);
+    return PrintDocModalModule;
 }());
 
 
@@ -6151,8 +5493,8 @@ var ProveService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        params = { Textsearch: Textsearch };
-                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8882 + "/ProveMasProductUnitgetByKeyword";
+                        params = {};
+                        url = __WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].api8882 + "/ProveMasProductUnitgetAll";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -6730,32 +6072,123 @@ var DatepickerI18nService = /** @class */ (function (_super) {
 
 /***/ }),
 
-/***/ "./src/app/shared/pipe/IsActivePipe.ts":
+/***/ "./src/app/services/main-master.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return IsActivePipe; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MainMasterService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_app_app_config__ = __webpack_require__("./src/app/app.config.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
-var IsActivePipe = /** @class */ (function () {
-    function IsActivePipe() {
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-    IsActivePipe.prototype.transform = function (items) {
-        return items.filter(function (item) { return item.IsAction != 'D' && item.IsAction != 'DI'; });
+};
+
+
+
+var MainMasterService = /** @class */ (function () {
+    function MainMasterService(http) {
+        this.http = http;
+        this.httpOptions = {
+            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({
+                'Content-Type': 'application/json'
+            })
+        };
+    }
+    MainMasterService.prototype.resposePromisGetList = function (params, url) {
+        return __awaiter(this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.http.post(url, params, this.httpOptions).toPromise()];
+                    case 1:
+                        res = _a.sent();
+                        if (!res.length || res.IsSuccess == 'False') {
+                            return [2 /*return*/, []];
+                        }
+                        return [2 /*return*/, res];
+                }
+            });
+        });
     };
-    IsActivePipe = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Pipe */])({
-            name: 'IsActivePipe',
-            pure: false
-        })
-    ], IsActivePipe);
-    return IsActivePipe;
+    MainMasterService.prototype.masStaffMaingetAll = function () {
+        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasStaffMaingetAll";
+        return this.resposePromisGetList('{}', url);
+    };
+    MainMasterService.prototype.masDepartmentMaingetAll = function () {
+        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDepartmentMaingetAll";
+        return this.resposePromisGetList('{}', url);
+    };
+    MainMasterService.prototype.masOfficeMaingetAll = function () {
+        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasOfficeMaingetAll";
+        return this.resposePromisGetList('{}', url);
+    };
+    MainMasterService.prototype.masDistrictMaingetAll = function () {
+        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDistrictMaingetAll";
+        return this.resposePromisGetList('{}', url);
+    };
+    MainMasterService.prototype.masDutyUnitMaingetAll = function () {
+        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasDutyUnitMaingetAll";
+        return this.resposePromisGetList('{}', url);
+    };
+    MainMasterService.prototype.masProductMaingetAll = function () {
+        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasProductMaingetAll";
+        return this.resposePromisGetList('{}', url);
+    };
+    MainMasterService.prototype.masCourtMaingetAll = function () {
+        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasCourtMaingetAll";
+        return this.resposePromisGetList('{}', url);
+    };
+    MainMasterService.prototype.masCommunicationchanelMaingetAll = function () {
+        var url = __WEBPACK_IMPORTED_MODULE_2_app_app_config__["a" /* appConfig */].api7789 + "/MasCommunicationchanelMaingetAll";
+        return this.resposePromisGetList('{}', url);
+    };
+    MainMasterService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
+    ], MainMasterService);
+    return MainMasterService;
 }());
 
 

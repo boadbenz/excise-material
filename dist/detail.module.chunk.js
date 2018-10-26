@@ -248,16 +248,16 @@ var DetailComponent = /** @class */ (function () {
                         // });
                         // LawsuitgetByCon
                         _a.sent();
-                        // this.arrestList[0].ArrestIndictment.forEach(value => {
-                        //   // // Find lawbreakerID
-                        //   // value.OpsArrestIndicmentDetailCollection.forEach(data => {
-                        //   //   this.lawbreakerID = data.LawbreakerID;
-                        //   // });
-                        //   // // Find guiltbaseID
-                        //   // if (value.IndicmentID == params.IndictmentID) {
-                        //   //   this.guiltBaseID = value.GuiltBaseID;
-                        //   // }
-                        // });
+                        this.arrestList[0].ArrestIndictment.forEach(function (value) {
+                            // Find lawbreakerID
+                            value.OpsArrestIndicmentDetailCollection.forEach(function (data) {
+                                _this.lawbreakerID = data.LawbreakerID;
+                            });
+                            // Find guiltbaseID
+                            if (value.IndictmentID == params.IndictmentID) {
+                                _this.guiltBaseID = value.GuiltBaseID;
+                            }
+                        });
                         // ArrestLawbreakergetByCon on Table
                         this.lawsuitService
                             .ArrestLawbreakergetByCon(this.lawbreakerID)
@@ -325,7 +325,7 @@ var DetailComponent = /** @class */ (function () {
     // }
     DetailComponent.prototype.attachFile = function (file) { };
     __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_5__angular_core__["_13" /* ViewChild */])('printLawsuitModal'),
+        Object(__WEBPACK_IMPORTED_MODULE_5__angular_core__["_13" /* ViewChild */])('printDocModal'),
         __metadata("design:type", __WEBPACK_IMPORTED_MODULE_5__angular_core__["u" /* ElementRef */])
     ], DetailComponent.prototype, "printDocModel", void 0);
     DetailComponent = __decorate([
@@ -419,16 +419,16 @@ var DetailModule = /** @class */ (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
             imports: [
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["g" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["l" /* ReactiveFormsModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["k" /* ReactiveFormsModule */],
                 __WEBPACK_IMPORTED_MODULE_10__node_modules_angular_common_http__["b" /* HttpClientModule */],
-                __WEBPACK_IMPORTED_MODULE_11__angular_http__["d" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_11__angular_http__["b" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_12__ng_bootstrap_ng_bootstrap__["e" /* NgbModule */].forRoot(),
                 __WEBPACK_IMPORTED_MODULE_2__angular_router__["d" /* RouterModule */].forChild(routes),
                 __WEBPACK_IMPORTED_MODULE_7__component_card_actions_card_actions_module__["a" /* CardActionsModule */],
                 __WEBPACK_IMPORTED_MODULE_13__component_suspect_modal_suspect_modal_module__["a" /* SuspectModalModule */],
                 __WEBPACK_IMPORTED_MODULE_14__component_modal_lawbreaker_modal_lawbreaker_module__["a" /* ModalLawbreakerModule */],
-                __WEBPACK_IMPORTED_MODULE_8__print_doc_modal_print_doc_modal_module__["a" /* PrintLawsuitModalModule */],
+                __WEBPACK_IMPORTED_MODULE_8__print_doc_modal_print_doc_modal_module__["a" /* PrintDocModalModule */],
                 __WEBPACK_IMPORTED_MODULE_5__component_pagination_table_pagination_table_module__["a" /* PaginationTableModule */],
                 __WEBPACK_IMPORTED_MODULE_9__component_step_wizard_step_wizard_module__["a" /* StepWizardModule */]
             ],
@@ -443,6 +443,127 @@ var DetailModule = /** @class */ (function () {
         })
     ], DetailModule);
     return DetailModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<form #form=\"ngForm\" (ngSubmit)=\"onPrint(form)\">\r\n    <div class=\"modal-header bg-theme\">\r\n        <div class=\"row\">\r\n            <div class=\"col-lg-5\">\r\n                <h4 class=\"modal-title text-white\">พิมพ์เอกสาร</h4>\r\n            </div>\r\n            <a href=\"javaScript:void(0);\" class=\"close text-white font-14\" aria-label=\"Close\" (click)=\"dismiss('Cross click')\">\r\n                <span aria-hidden=\"true\">\r\n                    <i class=\" ti-close\"></i>\r\n                </span>\r\n            </a>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-body font-14\">\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-sm table-striped table-set-border\">\r\n                <thead>\r\n                    <tr>\r\n                        <th></th>\r\n                        <th class=\"text-center\">ลำดับ</th>\r\n                        <th>ชื่อเอกสาร</th>\r\n                        <th>ประเภทเอกสาร</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr *ngFor=\"let item of printDoc; let i=index;\">\r\n                        <td class=\"text-center\">\r\n                            <input type=\"checkbox\" [id]=\"'td'+i\" name=\"ischeck\" ngModel class=\"filled-in chk-col-indigo\">\r\n                            <label [for]=\"'td'+i\" class=\"m-0\"></label>\r\n                        </td>\r\n                        <td class=\"text-center\">{{i+1}}</td>\r\n                        <td>{{item.DocName}}</td>\r\n                        <td>{{item.DocType}}</td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-footer\">\r\n        <div class=\"col-lg-2 col-4\">\r\n            <button type=\"submit\" class=\"btn btn-block btn-themecolor\">พิมพ์</button>\r\n        </div>\r\n    </div>\r\n</form>"
+
+/***/ }),
+
+/***/ "./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PrintDocModalComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var PrintDocModalComponent = /** @class */ (function () {
+    function PrintDocModalComponent() {
+        this.printDoc = [
+            {
+                DocName: 'บันทึกจับกุม (ส.ส. 2/39)',
+                DocType: 'แบบฟอร์ม'
+            }, {
+                DocName: 'บันทึกจับกุม (ส.ส. 2/39)',
+                DocType: 'เอกสารแนบภายใน'
+            }
+        ];
+        this.d = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
+        this.c = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
+    }
+    PrintDocModalComponent.prototype.ngOnInit = function () {
+    };
+    PrintDocModalComponent.prototype.onPrint = function (f) {
+    };
+    PrintDocModalComponent.prototype.dismiss = function (e) {
+        this.d.emit(e);
+    };
+    PrintDocModalComponent.prototype.close = function (e) {
+        this.c.emit(e);
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
+        __metadata("design:type", String)
+    ], PrintDocModalComponent.prototype, "ArrestCode", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
+        __metadata("design:type", Object)
+    ], PrintDocModalComponent.prototype, "d", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* Output */])(),
+        __metadata("design:type", Object)
+    ], PrintDocModalComponent.prototype, "c", void 0);
+    PrintDocModalComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'app-print-doc-modal',
+            template: __webpack_require__("./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.html"),
+            styles: [__webpack_require__("./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.scss")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], PrintDocModalComponent);
+    return PrintDocModalComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.module.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PrintDocModalModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("./node_modules/@angular/common/esm5/common.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__ = __webpack_require__("./src/app/pages/lawsuit/print-doc-modal/print-doc-modal.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+var PrintDocModalModule = /** @class */ (function () {
+    function PrintDocModalModule() {
+    }
+    PrintDocModalModule = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
+            imports: [
+                __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["k" /* ReactiveFormsModule */]
+            ],
+            declarations: [__WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__["a" /* PrintDocModalComponent */]],
+            exports: [__WEBPACK_IMPORTED_MODULE_2__print_doc_modal_component__["a" /* PrintDocModalComponent */]]
+        })
+    ], PrintDocModalModule);
+    return PrintDocModalModule;
 }());
 
 

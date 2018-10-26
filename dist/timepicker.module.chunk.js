@@ -35,7 +35,7 @@ var NgbdtimepickerBasic = /** @class */ (function () {
         this.hourStep = 1;
         this.minuteStep = 15;
         this.secondStep = 30;
-        this.ctrl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* FormControl */]('', function (control) {
+        this.ctrl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */]('', function (control) {
             var value = control.value;
             if (!value) {
                 return null;
@@ -109,9 +109,9 @@ var TimepickerModule = /** @class */ (function () {
     TimepickerModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
             imports: [
-                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["g" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["l" /* ReactiveFormsModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["k" /* ReactiveFormsModule */],
                 __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__["e" /* NgbModule */].forRoot(),
                 __WEBPACK_IMPORTED_MODULE_3__angular_router__["d" /* RouterModule */].forChild(routes)
             ],
