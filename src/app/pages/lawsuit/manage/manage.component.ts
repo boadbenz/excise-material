@@ -518,22 +518,21 @@ export class ManageComponent implements OnInit {
         
         /// LawsuitComplete status = 0
         } else {
+          /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
+          await this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
+            const _masstaff = masstaff;
+            _masstaff.map(item => {
+              item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+            });
+            this.masStaffList = _masstaff || [];
+          });
+          await this.lawsuitService.MasOfficeMaingetAll().then(masoffice => {
+            this.masOfficeList = masoffice || [];
+          });
           this.navService.setSaveButton(true);
           this.navService.setCancelButton(true);
         }
         
-        /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
-        await this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
-          const _masstaff = masstaff;
-          _masstaff.map(item => {
-            item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-          });
-          this.masStaffList = _masstaff || [];
-        });
-        await this.lawsuitService.MasOfficeMaingetAll().then(masoffice => {
-          this.masOfficeList = masoffice || [];
-        });
-
       }
     });
   
