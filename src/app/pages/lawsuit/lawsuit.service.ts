@@ -138,6 +138,13 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }  
 
+  async LawsuitPaymentFinegetByJudgementID(JudgementID) {
+    const params = {JudgementID: JudgementID};
+    const url = `${appConfig.api7789}/LawsuitPaymentFinegetByJudgementID`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }  
+  
+
   // async MasStaffMaingetAll() {
   //   const params = {};
   //   const url = `${appConfig.api7788}/MasStaffMaingetAll`;
