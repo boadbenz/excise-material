@@ -862,7 +862,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // let file = e.target.files[0];
         this.ArrestDocument.at(index).patchValue({
             ReferenceCode: this.arrestCode,
-            FilePath: 'C:\Document',
+            FilePath: replaceFakePath(e.target.value),
             IsActive: 1
         })
     }
@@ -1078,19 +1078,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                 x.ProductDesc = this.isObject(x.ProductDesc) ? x.ProductDesc['ProductDesc'] : x.ProductDesc;
                 switch (x.IsModify) {
                     case 'd':
-                        console.log(JSON.stringify(x));
                         await this.s_product.ArrestProductupdDelete(x.ProductID).then(y => {
                             if (!this.checkIsSuccess(y)) return;
                         }, () => { this.saveFail(); return; })
                         break;
                     case 'c':
-                        console.log(JSON.stringify(x));
                         await this.s_product.ArrestProductinsAll(x).then(y => {
                             if (!this.checkIsSuccess(y)) return;
                         }, () => { this.saveFail(); return; })
                         break;
                     case 'u':
-                        console.log(JSON.stringify(x));
                         await this.s_product.ArrestProductupdByCon(x).then(y => {
                             if (!this.checkIsSuccess(y)) return;
                         }, () => { this.saveFail(); return; })
