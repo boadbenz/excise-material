@@ -179,7 +179,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-
         this.sidebarService.setVersion('0.0.0.21');
         this.active_route();
         this.arrestFG = this.createForm();
@@ -287,7 +286,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
                 this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
-                this.arrestFG.value.ArrestTime = (new Date()).toISOString();
                 if (this.arrestFG.invalid) return;
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
                 if (staff.length < 3) {
@@ -364,7 +362,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.s_arrest.ArrestgetByCon(arrestCode)
             .then(async (arr: fromModels.Arrest[]) => {
 
-                if (!this.checkResponse(arr)) {
+                if (!arr.length) {
                     alert(Message.noRecord)
                     return
                 }
@@ -372,9 +370,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 let _arr = arr[0];
                 let arrestForm = this.arrestFG;
 
-                // if (!this.isObject(_arr.ArrestDate))
                 _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
-                // if (!this.isObject(_arr.OccurrenceDate))
                 _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
 
                 _arr.ArrestNotice.map((x, index) => {
@@ -655,6 +651,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         item.ProductID = '';
         item.IsModify = 'c';
         item.IsChecked = false;
+        item.GroupCode = '1';
+        item.IsDomestic = '1';
         if (lastIndex < 0) {
             item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
@@ -820,11 +818,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         const product = this.ArrestProduct.at(i).value;
         this.ArrestProduct.at(i).reset(e.item);
         this.ArrestProduct.at(i).patchValue({
+            ProductID: product.ProductID || e.item.ProductID,
             IsModify: product.IsModify == 'r' ? 'u' : product.IsModify,
             RowId: product.RowId,
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || 1,
             IsDomestic: e.item.IsDomestic || 1
+        })
+    }
+
+    onChangeProductDesc(e, i) {
+        this.ArrestProduct.at(i).patchValue({
+            ProductDesc: e.target.value
         })
     }
 
@@ -889,7 +894,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 return true;
             default:
                 this._isSuccess = false;
-                alert(Message.saveFail);
                 return false;
         }
     }
@@ -1010,6 +1014,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return x;
                 })
         }
+
         await this.s_arrest.ArrestupdByCon(newArrest).then(x => {
             if (!this.checkIsSuccess(x)) return;
         }, () => { this.saveFail(); return; })
@@ -1075,18 +1080,22 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async updateProduct() {
         let productPromise = await this.ArrestProduct.value
             .map(async (x: fromModels.ArrestProduct) => {
+                x.ProductDesc = this.isObject(x.ProductDesc) ? x.ProductDesc['ProductDesc'] : x.ProductDesc;
                 switch (x.IsModify) {
                     case 'd':
+                        console.log(JSON.stringify(x));
                         await this.s_product.ArrestProductupdDelete(x.ProductID).then(y => {
                             if (!this.checkIsSuccess(y)) return;
                         }, () => { this.saveFail(); return; })
                         break;
                     case 'c':
+                        console.log(JSON.stringify(x));
                         await this.s_product.ArrestProductinsAll(x).then(y => {
                             if (!this.checkIsSuccess(y)) return;
                         }, () => { this.saveFail(); return; })
                         break;
                     case 'u':
+                        console.log(JSON.stringify(x));
                         await this.s_product.ArrestProductupdByCon(x).then(y => {
                             if (!this.checkIsSuccess(y)) return;
                         }, () => { this.saveFail(); return; })

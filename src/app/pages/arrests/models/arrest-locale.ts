@@ -26,6 +26,7 @@ export class ArrestLocale {
 }
 
 export const ArrestLocaleFormControl = {
+    LocaleID: new FormControl(null),
     IsArrest: new FormControl(null),
     ArrestCode: new FormControl(null, Validators.required),
     GPS: new FormControl(null),

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DropDown, RegionModel } from '../../../../models';
+import { DropDown, RegionModel, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, MaritalStatuType } from '../../../../models';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -61,15 +61,14 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     myDatePickerOptions = MyDatePickerOptions;
     modal: any;
     showEditField: any;
-    isRequired: boolean | false;
-    visaTypes: DropDown[];
-    bloodTypes: DropDown[];
-    entityTypes: DropDown[];
-    genderTypes: DropDown[];
-    LawbreakerTypes: DropDown[];
-    materialStatus: DropDown[];
+    isRequired = false;
+    visaTypes: DropDown[] = VISATypes;
+    bloodTypes: DropDown[] = BloodTypes;
+    entityTypes: DropDown[] = EntityTypes;
+    genderTypes: DropDown[] = GenderTypes;
+    LawbreakerTypes: DropDown[] = LawbreakerTypes;
+    materialStatus: DropDown[] = MaritalStatuType;
 
-    typeheadNationnalitys: DropDown[];
     typeheadTitleNames = new Array<fromMasterModel.MasTitleModel>();
     typeheadRaces = new Array<fromMasterModel.MasRaceModel>();
     typeheadReligions = new Array<fromMasterModel.MasReligionModel>();

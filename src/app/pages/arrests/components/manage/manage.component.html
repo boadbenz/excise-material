@@ -227,6 +227,7 @@
         </div>
         <div *ngIf="card3" class="card-body" formArrayName="ArrestLocale">
             <div *ngFor="let item of ArrestLocale.controls; let i = index;" [formGroupName]="i">
+                <!-- <input type="text" formControlName="LocaleID" class="hidden"> -->
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group">
@@ -360,7 +361,10 @@
                                 </ng-template>
                                 <input type="text" class="form-control form-control-sm" [readonly]="showEditField"
                                     [ngbTypeahead]="searchProduct" [resultTemplate]="rt" [inputFormatter]="formatterProduct"
-                                    (selectItem)="selectItemProductItem($event, i)" [value]="item.value.ProductDesc" />
+                                    (selectItem)="selectItemProductItem($event, i)" 
+                                    [value]="item.value.ProductDesc" 
+                                    (change)="onChangeProductDesc($event, i)"/>
+                                <input style="display: none" type="text" formControlName="ProductDesc">
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
                                 <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm"

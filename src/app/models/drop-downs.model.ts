@@ -76,7 +76,7 @@ export const ContributorType: DropDown[] = [
     { value: '7', text: 'ผู้ร่วมจับกุม' }
 ]
 
-export const MaritalStatus: DropDown[] = [
+export const MaritalStatuType: DropDown[] = [
     {
         value: '1',
         text: 'โสด'

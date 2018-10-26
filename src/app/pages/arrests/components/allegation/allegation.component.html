@@ -70,39 +70,39 @@
             </tr>
           </thead>
           <tbody formArrayName="ArrestProduct">
-            <tr *ngFor="let item of ArrestProduct.controls; let i=index;" [formGroupName]="i" [ngSwitch]="item.get('IsModify').value">
-              <td *ngSwitchCase="'c','r'" class="text-center">
+            <tr *ngFor="let item of ArrestProduct.controls; let i=index;" [formGroupName]="i">
+              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
                 <input type="checkbox" formControlName="IsChecked" [id]="'productTd'+i" class="filled-in chk-col-indigo"
                   (change)="isCheckAll && isCheckAll = false">
                 <label [for]="'productTd'+i" class="m-0"></label>
               </td>
-              <td *ngSwitchCase="'c','r'" class="text-center">{{item.get('RowId').value}}</td>
-              <td *ngSwitchCase="'c','r'" style="max-width: 200px;">
+              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
+              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 200px;">
                 {{item.get('ProductDesc').value}}
               </td>
-              <td *ngSwitchCase="'c','r'" style="max-width: 50px;">
+              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
                 <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" required
                   [attr.disabled]="showEditField ? '' : null">
               </td>
-              <td *ngSwitchCase="'c','r'">
+              <td *ngIf="item.get('IsModify').value != 'd'">
                 <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
                   required [attr.disabled]="showEditField ? '' : null">
                   <option value="" disabled selected></option>
                   <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
                 </select>
               </td>
-              <td *ngSwitchCase="'c','r'" style="max-width: 50px;">
+              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
                 <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
                   [attr.disabled]="showEditField ? '' : null">
               </td>
-              <td *ngSwitchCase="'c','r'">
+              <td *ngIf="item.get('IsModify').value != 'd'">
                 <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
                   [attr.disabled]="showEditField ? '' : null">
                   <option value="" selected disabled></option>
                   <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
                 </select>
               </td>
-              <td *ngSwitchCase="'c','r'">
+              <td *ngIf="item.get('IsModify').value != 'd'">
                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
                   <i class="fa fa-trash-o fa-lg"></i>
                 </a>
