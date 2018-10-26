@@ -367,10 +367,9 @@
             <td>
               <div class="input-group">
                 <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"
-                  [readonly]="showEditField">
+                  [readonly]="showEditField" disabled>
                 <div class="input-group-append">
-                  <input [id]="'lawsuitAttach'+j" type="file" (input)="changeLawsuitDoc($event, j)" hidden
-                    [attr.disabled]="showEditField ? '' : null">
+                  <input [id]="'lawsuitAttach'+j" type="file" (input)="changeNoticeDoc($event, j)" hidden [attr.disabled]="showEditField ? '' : null">
                   <label [for]="'lawsuitAttach'+j" class="input-group-text custom-file-upload text-secondary">
                     <i class="ti-more-alt"></i>
                   </label>

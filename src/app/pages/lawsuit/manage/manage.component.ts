@@ -228,7 +228,6 @@ export class ManageComponent implements OnInit {
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
     /// save IsLawsuitComplete = 1
     if (IsLawsuitComplete == 1) {
-      console.log(this.masStaffList);
       /// check LawsuitNo on exite
       await this.lawsuitService.LawsuitVerifyLawsuitNo(this.lawsuitForm.controls['LawsuitNo'].value, 
       this.lawsuitForm.controls['officeCode'].value,
@@ -255,7 +254,13 @@ export class ManageComponent implements OnInit {
 
       /// check StaffID on exite in this.masStaffList)
       // if( this.lawsuitForm.get('FullName').value in this.masStaffList)
-
+      let _masStaffList = this.masStaffList;
+      let result = _masStaffList.filter(item => (item.FullName == this.lawsuitForm.get('FullName').value));
+      if(!result){
+        alert("กรุณากรอกผู้รับคดีใหม่");
+        this.preLoaderService.setShowPreloader(false);
+        return;
+      }
 
       /// check PositionName
       if(!this.lawsuitForm.get('PositionName').valid){
@@ -601,7 +606,7 @@ export class ManageComponent implements OnInit {
   changeNoticeDoc(e: any, index: number) {
     let reader = new FileReader();
     let file = e.target.files[0];
-
+    console.log(file);
     reader.readAsDataURL(file);
     reader.onload = () => {
       let dataSource = (<string>reader.result).split(',')[1];
