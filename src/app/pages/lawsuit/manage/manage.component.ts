@@ -48,6 +48,8 @@ export class ManageComponent implements OnInit {
   LawsuitArrestIndictmentProduct: any = [];
   LawsuitArrestIndictmentProductTableListShow = false;
   LawsuitTableListShow = false;
+  fileToUpload: File = null;
+  fileToUploadList: File[] = [];
   private getDataFromListPage: any;
   private onPrintSubscribe: any;
   private onSaveSubscribe: any;
@@ -580,6 +582,8 @@ export class ManageComponent implements OnInit {
     const lastIndex = this.LawsuitDocument.length - 1;
     let document = new LawsuitDocument();
     document.IsNewItem = true;
+    document.DocumentName = "";
+    document.FilePath = "";
     if (lastIndex < 0) {
       this.LawsuitDocument.push(this.fb.group(document));
     } else {
@@ -589,6 +593,11 @@ export class ManageComponent implements OnInit {
       }
     }
   }
+
+  onDeleteDocument(index){
+    this.LawsuitDocument.removeAt(index);
+  }
+
   changeNoticeDoc(e: any, index: number) {
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -608,21 +617,19 @@ export class ManageComponent implements OnInit {
   }
 
   viewData(item) {
-    console.log(item);
-    if (item.LawsuitNo) {
-      this.router.navigate(["/lawsuit/detail", "R"], {
-        queryParams: {
-          ArrestCode: this.arrestList[0].ArrestCode,
-          IndictmentID: item.IndictmentID,
-          LawsuitID: item.LawsuitID
-        }
-      });
-    }
+    ///###change path to lawsuit detail
+    this.router.navigate(["/lawsuit/detail", "R"], {
+      queryParams: {
+        ArrestCode: this.lawsuitList[0].ArrestCode,
+        IndictmentDetailID: item.controls['IndictmentDetailID'].value,
+        IndictmentID: this.IndictmentID,
+      }
+    });
   }
 
   editTable(item: any, index: number) {
-    //console.log('item', item, index)
-    // alert((item.get('LawsuitType').value));
+    ///####use this value to get api
+    ///item.controls['IndictmentDetailID'].value
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
       maxWidth: 'none',
