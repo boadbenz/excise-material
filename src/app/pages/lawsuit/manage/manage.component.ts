@@ -180,17 +180,6 @@ export class ManageComponent implements OnInit {
     );
   }
   
-  viewData(item) {
-    if (item.LawsuitNo) {
-      this.router.navigate(["/lawsuit/detail", "R"], {
-        queryParams: {
-          ArrestCode: this.arrestList[0].ArrestCode,
-          IndictmentID: item.IndictmentID,
-          LawsuitID: item.LawsuitID
-        }
-      });
-    }
-  }
 
   ngOnDestroy() {
     this.getDataFromListPage.unsubscribe();
@@ -465,6 +454,7 @@ export class ManageComponent implements OnInit {
               'EntityType': "",
               'LawbreakerType': "",
               'LawsuitNoRef': "",
+              'IndictmentDetailID': item.IndictmentDetailID,
               'LawBrakerFullName': item.lawBrakerFullName,
               'LawsuitType': item.LawsuitType,
               'LawsuitEnd': item.LawsuitEnd,
@@ -549,7 +539,7 @@ export class ManageComponent implements OnInit {
     let _masStaffList = this.masStaffList;
     let result = _masStaffList.filter(item => (item.FullName.includes(textSearch))).slice(0, 10);
     console.log(result);
-    
+
   }
 
 
@@ -616,6 +606,20 @@ export class ManageComponent implements OnInit {
       }
     };
   }
+
+  viewData(item) {
+    console.log(item);
+    if (item.LawsuitNo) {
+      this.router.navigate(["/lawsuit/detail", "R"], {
+        queryParams: {
+          ArrestCode: this.arrestList[0].ArrestCode,
+          IndictmentID: item.IndictmentID,
+          LawsuitID: item.LawsuitID
+        }
+      });
+    }
+  }
+
   editTable(item: any, index: number) {
     //console.log('item', item, index)
     // alert((item.get('LawsuitType').value));
@@ -678,6 +682,8 @@ export class DialogJudgment {
 
     });
   }
+
+
 
 
 }

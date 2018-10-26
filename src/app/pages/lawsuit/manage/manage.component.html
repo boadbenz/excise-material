@@ -307,11 +307,11 @@
           <tbody formArrayName="LawsuitTableList">
             <tr class="footable" *ngFor="let item of LawsuitTableList.controls; let i=index;" [formGroupName]="i">
               <td class="text-center">{{i+1}}</td>
-              <td><input type="text" formControlName="EntityType" class="form-control form-control-sm" [readonly]="true"></td>
-              <td><input type="text" formControlName="LawbreakerType" class="form-control form-control-sm" [readonly]="true"></td>
-              <td><input type="text" formControlName="LawsuitNoRef" class="form-control form-control-sm" [readonly]="true"></td>
-              <td><input type="text" formControlName="LawBrakerFullName" class="form-control form-control-sm" [readonly]="true"></td>
-              <td>
+              <td>{{item.controls['EntityType'].value}}</td>
+              <td>{{item.controls['LawbreakerType'].value}}</td>
+              <td>{{item.controls['LawsuitNoRef'].value}}</td>
+              <td>{{item.controls['LawBrakerFullName'].value}}</td>
+             <td>
                 <select formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
                   <option [value]="type.id" *ngFor="let type of lstype">{{type.name}}</option>
                 </select>
