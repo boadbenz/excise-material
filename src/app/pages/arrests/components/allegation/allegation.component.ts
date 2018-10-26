@@ -751,7 +751,6 @@ export class AllegationComponent implements OnInit, OnDestroy {
         this._isSuccess = true;
         return true;
       default:
-        alert(Message.saveFail);
         this._isSuccess = false;
         return false;
     }
