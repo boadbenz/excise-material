@@ -83,7 +83,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   arrestCode: string;
   newArrestCode: string;
   indictmentId: string;
-  guiltbaseId: string;
+  guiltbaseId: number;
   typeheadProductUnit = new Array<MasDutyProductUnitModel>();
   _isSuccess: boolean = false;
 
@@ -213,7 +213,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     await this.s_indictment.ArrestIndictmentgetByCon(indictmentId)
       .then((x: fromModels.ArrestIndictment[]) => {
         let indict = x[0]
-        let guiltbase =  indict.ArrestLawGuitbase.find(x => x.GuiltBaseID == indict.GuiltBaseID);
+        let guiltbase =  indict.ArrestLawGuitbase.find(x => x.GuiltBaseID == this.guiltbaseId);
         this.setArrestLawGuiltbase(guiltbase)
       })
   }
