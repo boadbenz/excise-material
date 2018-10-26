@@ -28,7 +28,7 @@ export class PrintLawsuitModalComponent implements OnInit {
     // }
   ];
   printDocData = [];
-
+  @Input() IndictmentID: string;
   @Input() ArrestCode: string;
 
   @Output() d = new EventEmitter();
@@ -38,6 +38,7 @@ export class PrintLawsuitModalComponent implements OnInit {
   // private lawsuitService: LawsuitService
 
   ngOnInit() {
+    console.log(this.IndictmentID);
     // console.log('malawwww', this.lawsuitService)
     this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(
       data => {

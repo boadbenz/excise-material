@@ -51,6 +51,9 @@ export class ManageComponent implements OnInit {
   private getDataFromListPage: any;
   private onPrintSubscribe: any;
   private onSaveSubscribe: any;
+  private onCancelSubscribe: any;
+  private onNextPageSubscribe: any;
+  
   private LawsuitID: number;
   private IndictmentID: string;
   @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -135,14 +138,15 @@ export class ManageComponent implements OnInit {
     this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
       if (status) {
         await this.navService.setOnSave(false);
-        // if (!this.lawsuitForm.valid) {
-        //   this.isRequired = true;
-        //   alert(Message.checkData)
-        //   return false;
-        // }
         this.onSave();
       }
     });
+    this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
+      if(status){
+        await this.navService.setOnCancel(false);
+        this.onCancel();
+      }
+    })
 
 
 
@@ -186,8 +190,20 @@ export class ManageComponent implements OnInit {
     this.getDataFromListPage.unsubscribe();
     this.onPrintSubscribe.unsubscribe();
     this.onSaveSubscribe.unsubscribe();
+    this.onCancelSubscribe.unsubscribe();
   }
 
+  private async onCancel(){
+    console.log(this.lawsuitList[0]['IsLawsuitComplete']);
+    if(!confirm("ยืนยันการทำรายการหรือไม่")) {
+      return;
+    }
+    if(this.lawsuitList[0]['IsLawsuitComplete'] == 1){
+      this.ngOnInit();
+    } else {
+
+    }
+  }
 
   private async onSave() {
     this.preLoaderService.setShowPreloader(true);
@@ -245,8 +261,8 @@ export class ManageComponent implements OnInit {
         this.preLoaderService.setShowPreloader(false);
         return;
       }
-
-      await this.lawsuitService.LawsuitupdByCon(this.lawsuitList).then(async res=>{
+      ///edit LawsuitNo
+      await this.lawsuitService.LawsuitupdByCon(this.LawsuitID, this.lawsuitForm.controls['LawsuitNo'].value).then(async res=>{
         console.log(res);
       })
 
@@ -317,6 +333,7 @@ export class ManageComponent implements OnInit {
       LawsuitStaff: this.fb.array([this.createStaffForm()]),
       LawsuitTableList: this.fb.array([this.createTableListForm()]),
       LawsuitDocument: this.fb.array([]),
+      officeCode: new FormControl(null, Validators.required),
     });
   }
   private async ArrestgetByCon(IndictmentID: string, LawsuitID: number) {
@@ -365,7 +382,6 @@ export class ManageComponent implements OnInit {
               //insert doc to dosMacList
   
             });
-          }
           /// get IsLawsuit check box (IsLawsuitCheck)
           let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
           let IsLawsuitCheck = false;
@@ -397,9 +413,10 @@ export class ManageComponent implements OnInit {
             FullName: staff[0].FullName,
             PositionName: staff[0].PositionName,
             DepartmentName: staff[0].DepartmentName,
+            officeCode: staff[0].officeCode,
           });
           //this.setItemFormArray(staff, 'LawsuitStaff', this.lawsuitForm);
-
+          }
           let arrList = [];
           await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].map(item => {
             this.LawsuitTableListShow = true;
