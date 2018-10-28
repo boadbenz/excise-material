@@ -16,6 +16,7 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { async } from '../../../../../node_modules/@angular/core/testing';
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-manage',
@@ -90,7 +91,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private IncService: IncomeService,
         private preloader: PreloaderService,
-        private router: Router
+        private router: Router,
+        private sidebarService: SidebarService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -100,6 +102,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
+        this.sidebarService.setVersion('Revenue 0.0.0.11 (M)');
 
         this.active_Route();
         this.navigate_Service();
@@ -166,7 +169,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private navigate_Service() {
-        
+
         this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
@@ -174,7 +177,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
             if (this.RevenueStatus == 2) {
                 alert("ไม่สามารถแก้ไขรายการได้");
-    
+
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
                 // set true
@@ -282,16 +285,22 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (confirm(Message.confirmAction)) {
                 this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
                     if (IsSuccess) {
+                        var isSuccess = true;
                         this.ListRevenueDetail.filter(item => (item.IsCheck === true))
                             .map(async item => {
                                 await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
-                                    if (IsSuccess) {
-                                        this.oRevenue = {};
-                                        alert(Message.saveComplete);
-                                        this.router.navigate(['/income/list']);
+                                    if (!item.IsSuccess) {
+                                        isSuccess = item.IsSuccess;
+                                        return false;
                                     }
                                 }, (error) => { console.error(error); return false; });
                             });
+
+                        if (isSuccess) {
+                            this.oRevenue = {};
+                            alert(Message.saveComplete);
+                            this.router.navigate(['/income/list']);
+                        }
                     } else {
                         alert(Message.saveFail);
                     }
@@ -409,7 +418,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     this.checkIfAllChbSelected();
                 }
-            }else{
+            } else {
                 alert("พบปัญหาในการติดต่อ Server");
                 this.preloader.setShowPreloader(false);
                 this.router.navigate(['/income/list']);
@@ -420,21 +429,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ShowRevenueCompare() {
-        if(this.RevenueDate != null && this.RevenueDate != "")
-        {
+        if (this.RevenueDate != null && this.RevenueDate != "") {
             this.preloader.setShowPreloader(true);
             let DRate, cDateRevenue;
             DRate = this.RevenueDate.date;
-    
+
             if (DRate != undefined) {
                 cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
             }
-            
+
             await this.IncService.RevenueComparegetByCon(setZeroHours(cDateRevenue), this.StaffDeptCode).then(async res => {
                 this.preloader.setShowPreloader(false);
                 this.ListRevenueDetail = [];
                 this.ListRevenueDetailPaging = [];
-    
+
                 if (res.length > 0) {
                     for (var j = 0; j < res.length; j += 1) {
                         if (res[j].RevenueCompareDetail.length > 0) {
@@ -462,34 +470,34 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                 IsNewItem: true,
                                                 IsDelItem: false
                                             }
-    
+
                                             this.ListRevenueDetail.push(this.oRevenueDetail);
                                         }
                                     }
                                 } catch{ }
                             }
                         }
-    
+
                     }
-    
+
                     // set total record
                     this.paginage.TotalItems = this.ListRevenueDetail.length;
                     this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
                 }
-                else{
+                else {
                     this.ListRevenueDetail = [];
                     this.ListRevenueDetailPaging = [];
                 }
-                
-    
+
+
             }, (err: HttpErrorResponse) => {
                 alert(err.message);
             });
         }
-        else{
+        else {
             alert("กรุณาระบุวันที่นำส่ง");
             this.ListRevenueDetailPaging = [];
-        }       
+        }
     }
 
 
@@ -685,21 +693,27 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
             if (item.IsSuccess) {
                 this.RevenueID = item.RevenueID;
+                var isSuccess = true;
                 this.oRevenue.RevenueDetail.map(async item => {
                     await this.IncService.RevenueCompareDetailReceiptupdByCon(item.CompareReceiptID.toString()).then(async item => {
-                        if (item.IsSuccess) {
-                            //alert("Insert");
-                            alert(Message.saveComplete);
-                            this.oRevenue = {};
-                            this.onComplete();
-                            debugger
-                            //this.router.navigate(['/income/manage']);
-                            this.router.navigate([`/income/manage/R/${this.RevenueID}`]);
+                        if (!item.IsSuccess) {
+                            isSuccess = item.IsSuccess;
+                            return false;
                         }
 
                         this.preloader.setShowPreloader(false);
                     }, (error) => { console.error(error); return false; });
                 });
+
+                if (isSuccess) {
+                    //alert("Insert");
+                    alert(Message.saveComplete);
+                    this.oRevenue = {};
+                    this.onComplete();
+                    debugger
+                    //this.router.navigate(['/income/manage']);
+                    this.router.navigate([`/income/manage/R/${this.RevenueID}`]);
+                }
             } else {
                 alert(Message.saveFail);
             }
@@ -713,7 +727,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.rawStaffSendOptions = res;
             }
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            alert("พบปัญหาในการติดต่อ Server");
         });
     }
 
@@ -909,7 +923,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            alert("พบปัญหาในการติดต่อ Server");
         });
         // this.preloader.setShowPreloader(false);
     }
@@ -944,8 +958,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     getCurrentTime() {
         let date = new Date();
         // 
-       // return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
-       return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        // return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+        return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     }
 
     selectedChkAll() {
