@@ -132,11 +132,11 @@ export class ManageComponent implements OnInit {
     this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
       if (status) {
         await this.navService.setOnSave(false);
-        // if (!this.lawsuitForm.valid) {
-        //   this.isRequired = true;
-        //   alert(Message.checkData)
-        //   return false;
-        // }
+        if (!this.lawsuitForm.valid) {
+          this.isRequired = true;
+          alert(Message.checkData)
+          return false;
+        }
         this.onSave();
       }
     });
@@ -500,23 +500,25 @@ export class ManageComponent implements OnInit {
 })
 export class DialogJudgment {
   lawsuitArrestForm: FormGroup;
-
+  private indictmentID: string;
+  private lawsuitID: number;
   constructor(
     private fb: FormBuilder,
-    private navService: NavigationService,
-    private ngbModel: NgbModal,
-    private sidebarService: SidebarService,
-    private preLoaderService: PreloaderService,
     private lawsuitService: LawsuitService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private activatedRoute: ActivatedRoute
 
   ) {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.indictmentID = params['IndictmentID'];
+      this.lawsuitID = params['LawsuitID'];
+    });
 
   }
   public isPayAll = null;
 
   ngOnInit() {
-    this.lawsuitService.GetArrestIndicmentDetailgetByCon('2').then(result => {
+    this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.indictmentID).then(result => {
       console.log('result====>', result);
     });
     this.lawsuitArrestForm = this.fb.group({
