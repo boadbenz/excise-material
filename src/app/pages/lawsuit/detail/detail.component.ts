@@ -77,7 +77,7 @@ export class DetailComponent implements OnInit {
     this.navService.onSave.subscribe(async status => {
       if (status) {
         await this.navService.setOnSave(false);
-        this.lawsuitService.LawsuitupdByCon(this.lawsuitList[0]).then(res => {
+        this.lawsuitService.LawsuitupdByCon(this.lawsuitList[0],1).then(res => {
           if (res.IsSuccess) {
             this.navService.setEditField(true);
             alert(Message.saveComplete);
