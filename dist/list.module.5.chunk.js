@@ -106,7 +106,7 @@ var ListComponent = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        this.sidebarService.setVersion('Revenue 0.0.0.10');
+                        this.sidebarService.setVersion('Revenue 0.0.0.11 (L)');
                         this.RevenueStatus = "";
                         //this.preloader.setShowPreloader(true);
                         //this.getDepartmentRevenue();
