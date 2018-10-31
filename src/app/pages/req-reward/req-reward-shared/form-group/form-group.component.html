@@ -1,0 +1,32 @@
+<form [formGroup]="formGroup" [class]="'form-row'" (submit)="submitHandle(formGroup)">
+
+  <ng-container *ngFor="let c of columns; trackBy: c?.field">
+    <ng-container *ngIf="c?.field">
+      <div [class]="c?.class ? c?.class : 'col-md-6'">
+        <div class="form-group">
+          <label class="col-md-4">{{c?.title}} <strong *ngIf="c?.isRequired" class="text-danger">*</strong>
+            :</label>
+          <ng-container *ngIf="c?.inputType === 'date';else textArea;">
+            <mat-form-field class="col-md-8 form-control">
+              <input matInput [formControlName]="c?.field">
+            </mat-form-field>
+          </ng-container>
+          <ng-template #textArea>
+            <ng-container *ngIf="c?.inputType === 'textArea';else text;">
+              <mat-form-field class="col-md-8 form-control">
+                <input matInput [formControlName]="c?.field">
+              </mat-form-field>
+            </ng-container>
+          </ng-template>
+
+          <ng-template #text>
+
+            <mat-form-field>
+              <input matInput [formControlName]="c?.field">
+            </mat-form-field>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</form>
