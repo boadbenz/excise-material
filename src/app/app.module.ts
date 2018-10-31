@@ -19,7 +19,6 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
 import { MatAutocompleteModule } from '@angular/material';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { AuthGuard } from './pages/login/auth.guard';
-<<<<<<< HEAD
 import { CoreModule } from './core/core.module';
 import { StoreModule } from '@ngrx/store';
 import { MainMasterService } from './services/main-master.service';
@@ -28,9 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
 import * as fromArrestReducers from './pages/arrests/store/reducers/';
 import { TransactionRunningService } from './services/transaction-running.service';
 import { MasDocumentMainService } from './services/mas-document-main.service';
-=======
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
->>>>>>> TEAM_DEER_DEV
 
 @NgModule({
     declarations: [
