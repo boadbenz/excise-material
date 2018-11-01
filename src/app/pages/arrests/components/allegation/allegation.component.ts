@@ -30,6 +30,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   obArrest: Observable<fromModels.Arrest>;
   Arrest: fromModels.Arrest;
   ACCEPTABILITY = Acceptability;
+  typeheadQtyUnit = new Array<MasDutyProductUnitModel>();
 
   constructor(
     private modelService: NgbModal,
@@ -84,7 +85,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   newArrestCode: string;
   indictmentId: string;
   guiltbaseId: number;
-  typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+  // typeheadProductUnit = new Array<MasDutyProductUnitModel>();
   _isSuccess: boolean = false;
 
   modal: any;
@@ -102,7 +103,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.22');
+    this.sidebarService.setVersion('0.0.0.23');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -209,6 +210,28 @@ export class AllegationComponent implements OnInit, OnDestroy {
     })
   }
 
+  searchUnit = (text$: Observable<string>) =>
+    text$.debounceTime(200).distinctUntilChanged()
+      .map(term => term == '' ? []
+        : this.typeheadQtyUnit
+          .filter(v => v.DutyCode.toLowerCase().indexOf(term.toLowerCase()) > -1)
+          .slice(0, 10)
+      );
+
+  formatterUnit = (DutyCode: string) => DutyCode;
+
+  selectItemQtyUnit(e: any, i: number) {
+    this.ArrestProduct.at(i).patchValue({
+      QtyUnit: e.item.DutyCode,
+    })
+  }
+
+  selectItemNetVolumeUnit(e: any, i: number) {
+    this.ArrestProduct.at(i).patchValue({
+      NetVolumeUnit: e.item.DutyCode,
+    })
+  }
+
   private async getArrestIndictment(indictmentId: string) {
     await this.s_indictment.ArrestIndictmentgetByCon(indictmentId)
       .then((x: fromModels.ArrestIndictment[]) => {
@@ -261,8 +284,6 @@ export class AllegationComponent implements OnInit, OnDestroy {
   private setArrestIndictment(o: fromModels.ArrestIndictment[]) {
     let _indict = this.arrestIndictmentFG;
     if (!o.length) return;
-
-    // _indict.patchValue(o[0])
 
     _indict.patchValue({
       IndictmentID: o[0].IndictmentID,
@@ -394,8 +415,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private async setProductUnitStore() {
-    await this.s_mainMaster.masDutyUnitMaingetAll()
-      .then(res => this.typeheadProductUnit = res)
+    await this.s_mainMaster.MasDutyUnitMaingetAll()
+      .then(res => this.typeheadQtyUnit = res)
       .catch((error) => this.catchError(error));
   }
 
@@ -699,12 +720,12 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
     pd.ProductID = productId;
     pd.IsProdcutCo = '1';
-    pd.Qty = productNoId.Qty;
-    pd.QtyUnit = productNoId.QtyUnit;
+    pd.Qty = productNoId.Qty || '0';
+    pd.QtyUnit = productNoId.QtyUnit || '-';
     pd.Size = productNoId.Size || '0';
     pd.SizeUnit = productNoId.SizeUnitName || '-';
-    pd.Volume = productNoId.NetVolume;
-    pd.VolumeUnit = productNoId.NetVolumeUnit;
+    pd.Volume = productNoId.NetVolume || '0';
+    pd.VolumeUnit = productNoId.NetVolumeUnit || '-';
     pd.MistreatRate = '';
     pd.Fine = '';
     pd.IndictmentDetailID = indictmentDetailID;

@@ -57,7 +57,8 @@
           <thead>
             <tr>
               <th class="text-center">
-                <input type="checkbox" id="productTh" class="filled-in chk-col-indigo" (change)="productCheckAll()" [checked]="isCheckAll">
+                <input type="checkbox" id="productTh" class="filled-in chk-col-indigo" (change)="productCheckAll()"
+                  [checked]="isCheckAll">
                 <label for="productTh" class="m-t-10 m-b-0"></label>
               </th>
               <th class="text-center">ลำดับ</th>
@@ -84,23 +85,25 @@
                 <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" required
                   [attr.disabled]="showEditField ? '' : null">
               </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                  required [attr.disabled]="showEditField ? '' : null">
-                  <option value="" disabled selected></option>
-                  <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
-                </select>
-              </td>
+              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
+                <ng-template #qtyUnit let-r="result" let-t="term">
+                    {{ r.DutyCode }}
+                </ng-template>
+                <input type="text" class="form-control form-control-sm" 
+                    [ngbTypeahead]="searchUnit" [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit"
+                    (selectItem)="selectItemQtyUnit($event, i)" [value]="item.value.QtyUnit" />
+            </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
                 <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
                   [attr.disabled]="showEditField ? '' : null">
               </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                  [attr.disabled]="showEditField ? '' : null">
-                  <option value="" selected disabled></option>
-                  <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
-                </select>
+              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
+                <ng-template #netVolumeUnit let-r="result" let-t="term">
+                  {{ r.DutyCode }}
+                </ng-template>
+                <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchUnit"
+                  [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
+                  [value]="item.value.NetVolumeUnit" />
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'">
                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">

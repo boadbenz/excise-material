@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -15,7 +15,7 @@ import 'rxjs/add/operator/takeUntil';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { MasStaffModel, RegionModel, MasProductModel, LawbreakerTypes, EntityTypes, ContributorType } from 'app/models';
 import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
-import { MyDatePickerOptions, setDateMyDatepicker, setZero, getDateMyDatepicker, convertDateForSave, compareDate } from 'app/config/dateFormat';
+import { MyDatePickerOptions, setDateMyDatepicker, setZero, getDateMyDatepicker, convertDateForSave, compareDate, toLocalShort } from 'app/config/dateFormat';
 import { ArrestProduct } from '../../models/arrest-product';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
@@ -53,8 +53,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     card2: boolean = false;
     card3: boolean = false;
     card4: boolean = false;
-    card5: boolean = true;
-    card6: boolean = true;
+    card5: boolean = false;
+    card6: boolean = false;
     card7: boolean = false;
     card8: boolean = false;
 
@@ -70,7 +70,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadStaff = new Array<MasStaffModel>();
     typeheadRegion = new Array<RegionModel>();
     typeheadProduct = new Array<MasProductModel>();
-    typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+    typeheadQtyUnit = new Array<MasDutyProductUnitModel>();
+    typeheadNetVolumeUnit = new Array<MasDutyProductUnitModel>();
     Acceptability: fromModels.Acceptability
 
     dateStartFrom: any;
@@ -179,7 +180,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.22');
+        this.sidebarService.setVersion('0.0.0.23');
         this.active_route();
         this.arrestFG = this.createForm();
         this.navigate_Service();
@@ -189,11 +190,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
+        this.arrestFG.reset();
     }
 
     private createForm(): FormGroup {
-        let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
-        let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
+        let ArrestDate = setDateMyDatepicker(new Date());
+        let ArrestTime = `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`;
         return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
             ArrestDate: new FormControl(ArrestDate, Validators.required),
@@ -222,6 +224,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+    static resetForm(formGroup: FormGroup) {
+        let control: AbstractControl = null;
+        formGroup.reset();
+        formGroup.markAsUntouched();
+        Object.keys(formGroup.controls).forEach((name) => {
+          control = formGroup.controls[name];
+          control.setErrors(null);
+        });
+      }
+
     private createLocalForm(): FormGroup {
         fromModels.ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(fromModels.ArrestLocaleFormControl);
@@ -239,31 +251,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.activeRoute.params.takeUntil(this.destroy$).subscribe(async p => {
             this.mode = p['mode'];
             this.arrestCode = p['code'];
-
-            switch (this.mode) {
-                case 'C':
-                    // set false
-                    this.navService.setPrintButton(false);
-                    this.navService.setEditButton(false);
-                    this.navService.setDeleteButton(false);
-                    this.navService.setEditField(false);
-                    // set true 
-                    this.navService.setSaveButton(true);
-                    this.navService.setCancelButton(true);
-                    break;
-
-                case 'R':
-                    // set false
-                    this.navService.setSaveButton(false);
-                    this.navService.setCancelButton(false);
-                    // set true
-                    this.navService.setPrintButton(true);
-                    this.navService.setEditButton(true);
-                    this.navService.setDeleteButton(true);
-                    this.navService.setEditField(true);
-                    break;
-            }
-
             this.pageLoad(this.arrestCode);
         });
     }
@@ -291,6 +278,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (staff.length < 3) {
                     alert('ต้องมีรายการผู้จับกุมอย่างน้อย 3 รายการ')
                     return
+                }
+                if (staff.filter(x => x.ContributorID == '').length > 0) {
+                    alert('กรุณาเลือกฐานะของผู้จับกุม');
+                    return;
                 }
                 if (staff.filter(x => x.ContributorID == '6').length > 1) {
                     alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการเท่านั้น');
@@ -343,6 +334,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async pageLoad(arrestCode: string) {
         switch (this.mode) {
             case 'C':
+                // set false
+                this.navService.setPrintButton(false);
+                this.navService.setEditButton(false);
+                this.navService.setDeleteButton(false);
+                this.navService.setEditField(false);
+                // set true 
+                this.navService.setSaveButton(true);
+                this.navService.setCancelButton(true);
+
                 await this.loadMasterData();
                 this.showEditField = false;
                 if (arrestCode != 'NEW') {
@@ -351,7 +351,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.loaderService.hide();
                 }
                 break;
+
             case 'R':
+                // set false
+                this.navService.setSaveButton(false);
+                this.navService.setCancelButton(false);
+                // set true
+                this.navService.setPrintButton(true);
+                this.navService.setEditButton(true);
+                this.navService.setDeleteButton(true);
+                this.navService.setEditField(true);
+
                 this.pageRefresh(arrestCode);
                 break;
         }
@@ -359,6 +369,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async pageRefresh(arrestCode: string) {
         this.loaderService.show();
+
         await this.s_arrest.ArrestgetByCon(arrestCode)
             .then(async (arr: fromModels.Arrest[]) => {
 
@@ -366,7 +377,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.noRecord)
                     return
                 }
-
                 let _arr = arr[0];
                 let arrestForm = this.arrestFG;
 
@@ -376,7 +386,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 _arr.ArrestNotice.map((x, index) => {
                     x.RowId = index + 1;
                     x.IsModify = 'r';
+                    x.NoticeDateString = toLocalShort(x.NoticeDate);
+                    x.ArrestNoticeStaff.map(s => s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`);
+                    x.ArrestNoticeSuspect.map(s => s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`);
                 })
+                this.setNoticeForm(_arr.ArrestNotice);
 
                 _arr.ArrestStaff.map((x, index) => {
                     x.RowId = index + 1;
@@ -436,7 +450,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.typeheadStaff = x[0]
                 this.typeheadOffice = x[1]
                 this.typeheadProduct = x[2]
-                this.typeheadProductUnit = x[3]
+                this.typeheadQtyUnit = x[3]
+                this.typeheadNetVolumeUnit = x[3]
                 x[4].map(prov =>
                     prov.MasDistrict.map(dis =>
                         dis.MasSubDistrict.map(subdis => {
@@ -531,23 +546,25 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     // set FormArray ArrestIndictment
     private setArrestIndictment(o: fromModels.ArrestIndictment[]) {
-        let _indict = this.ArrestIndictment;
-        o.map(x => {
-            _indict.push(
+        let arr = new FormArray([]);
+        o.map((x, index) => {
+            arr.push(
                 this.fb.group({
+                    RowId: index + 1,
                     IndictmentID: x.IndictmentID,
                     GuiltBaseID: x.GuiltBaseID,
                     ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase)
                 })
             )
         });
+        this.arrestFG.setControl('ArrestIndictment', arr);
     }
     // --- 1
     private setArrestLawGuitbase = (o: fromModels.ArrestLawGuitbase[]) => {
         let arr = new FormArray([]);
         o.map((x, index) => {
             arr.push(this.fb.group({
-                RowId: ++index,
+                // RowId: index + 1,
                 IsChecked: false,
                 GuiltBaseID: x.GuiltBaseID,
                 GuiltBaseName: x.GuiltBaseName,
@@ -658,7 +675,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             return;
         }
         const lastDoc = this.ArrestProduct.at(lastIndex).value;
-        if (lastDoc.Qty && lastDoc.QtyUnit) {
+        if (lastDoc.ProductDesc) {
             item.RowId = lastDoc.RowId + 1;
             this.ArrestProduct.push(this.fb.group(item));
         }
@@ -790,9 +807,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         text3$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadOffice
-                    .filter(v =>
-                        (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1)
-                    ).slice(0, 10));
+                    .filter(v => (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1))
+                    .slice(0, 10)
+            );
+
+    searchUnit = (text$: Observable<string>) =>
+        text$.debounceTime(200).distinctUntilChanged()
+            .map(term => term == '' ? []
+                : this.typeheadQtyUnit
+                    .filter(v => v.DutyCode.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .slice(0, 10)
+            );
 
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubdistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
@@ -802,7 +827,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
 
-    formatterOffice = (x: { OfficeName: string }) => x.OfficeName
+    formatterOffice = (x: { OfficeName: string }) => x.OfficeName;
+
+    formatterUnit = (DutyCode: string) => DutyCode;
 
     selectItemLocaleRegion(e) {
         this.ArrestLocale.at(0).patchValue({
@@ -857,6 +884,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.arrestFG.patchValue({
             ArrestStationCode: e.item.OfficeCode,
             ArrestStation: e.item.OfficeName
+        })
+    }
+
+    selectItemQtyUnit(e: any, i: number) {
+        this.ArrestProduct.at(i).patchValue({
+            QtyUnit: e.item.DutyCode,
+        })
+    }
+
+    selectItemNetVolumeUnit(e: any, i: number) {
+        this.ArrestProduct.at(i).patchValue({
+            NetVolumeUnit: e.item.DutyCode,
         })
     }
 
@@ -932,7 +971,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.router.navigate([`arrest/list`]);
                 }
                 break;
+
             case 'R':
+                this.arrestFG.reset();
                 this.pageLoad(this.arrestCode);
                 break;
         }

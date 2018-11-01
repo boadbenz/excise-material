@@ -21,6 +21,7 @@ import { LoaderService } from 'app/core/loader/loader.service';
 import * as fromServices from '../../services';
 import * as fromModels from '../../models';
 import * as fromMasterModel from 'app/models'
+import { Subject } from 'rxjs/Subject';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private loaderService: LoaderService
     ) {
         this.navService.setPrintButton(false);
-        this.navService.setDeleteButton(false); 
+        this.navService.setDeleteButton(false);
         this.navService.setPrevPageButton(false);
     }
 
@@ -54,10 +55,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     // LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
 
-    private subActivedRoute: any;
-    private onSaveSubscribe: any;
-    private mode: any;
-    private lawbreakerId: string;
+    private destroy$: Subject<boolean> = new Subject<boolean>();
+    private mode: string;
+    private lawbreakerId: number;
 
     myDatePickerOptions = MyDatePickerOptions;
     modal: any;
@@ -78,20 +78,16 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     typeheadNationality = new Array<fromMasterModel.MasNationalityModel>();
 
     async ngOnInit() {
-        // this.preloader.setShowPreloader(true);
-
         this.LawbreakerFG = this.createForm();
 
         await this.active_route();
         await this.navigate_service();
         await this.setRegionStore();
-
-        // this.preloader.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
-        this.subActivedRoute.unsubscribe();
-        this.onSaveSubscribe.unsubscribe();
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 
     private createForm(): FormGroup {
@@ -99,7 +95,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     private active_route() {
-        this.subActivedRoute = this.activatedRoute.params.subscribe(p => {
+        this.activatedRoute.params.takeUntil(this.destroy$).subscribe(p => {
             this.mode = p['mode'];
             this.lawbreakerId = p['code'];
 
@@ -117,15 +113,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
                 // set true
-                // this.navService.setPrintButton(true);
                 this.navService.setNextPageButton(false);
                 this.navService.setEditButton(true);
                 this.navService.setEditField(true);
-
-                // if (p['code']) {
-                //     this.lawbreakerId = p['code'];
-                //     this.GetByCon(p['code']);
-                // }
             }
 
             this.pageLoad();
@@ -173,18 +163,18 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
             case 'R':
                 this.loaderService.show();
-                this.ArrestLawbreakerGetByCon(this.lawbreakerId);
+                this.ArrestLawbreakerGetByCon(this.lawbreakerId.toString());
                 this.loaderService.hide();
                 break;
         }
     }
 
     private navigate_service() {
-        this.navService.showFieldEdit.subscribe(p => {
+        this.navService.showFieldEdit.takeUntil(this.destroy$).subscribe(p => {
             this.showEditField = p.valueOf();
         });
 
-        this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
+        this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnSave(false);
 
@@ -202,6 +192,13 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 } else if (this.mode === 'R') {
                     this.OnRevice();
                 }
+            }
+        })
+
+        this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
+            if (status) {
+                await this.navService.setOnCancel(false);
+                this.onCancel();
             }
         })
     }
@@ -223,8 +220,6 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     this.card3 = false;
                 }
             })
-
-
     }
 
     OnCreate() {
@@ -384,5 +379,28 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         };
 
         reader.readAsDataURL(file);
+    }
+
+    onCancel() {
+        if (!confirm(Message.confirmAction))
+            return
+
+        switch (this.mode) {
+            case 'C':
+            this.router.navigate(
+                [`arrest/allegation`, 'C'],
+                {
+                    queryParams: {
+                        arrestCode: '',
+                        indictmentId: '',
+                        guiltbaseId: ''
+                    }
+                });
+                break;
+
+            case 'R':
+                this.pageLoad();
+                break;
+        }
     }
 }

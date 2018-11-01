@@ -2,8 +2,8 @@ export class MasDutyProductUnitModel {
     public DutyUnitCode: string;
     public DutyCode: string;
     public DutyStatus: string;
-    public EffectiveDate: string;
-    public ExpirationDate: string;
+    public EffectiveDate: Date;
+    public ExpirationDate: Date;
     public IsActive: string;
-    public EventDatetime: string;
+    public EventDatetime: Date;
 }
