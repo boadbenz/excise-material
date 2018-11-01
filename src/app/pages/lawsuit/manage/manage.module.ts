@@ -18,6 +18,7 @@ import { ArrestsService } from "../../arrests/arrests.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProveService } from "../../prove/prove.service";
 import { BrowserModule } from "@angular/platform-browser";
+import { DetailModule } from "../detail/detail.module";
 
 const routes: Routes = [
   {
@@ -53,6 +54,7 @@ const routes: Routes = [
     ModalLawbreakerModule,
     PrintLawsuitModalModule,
     MatDialogModule,
+    // DetailModule,
   ],
   entryComponents: [DialogJudgment],
   declarations: [

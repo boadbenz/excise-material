@@ -1,4 +1,9 @@
 <div class="card card-outline-bluish unset-radius">
+  <div class="card-actions">
+    <a (click)="closePopup()"  style="float:right">
+      <i class="ti-close"></i>
+    </a>
+  </div>
   <div class="card-header unset-radius">
     <h5 class="card-title m-b-0">ข้อมูลการจับกุม</h5>
   </div>
@@ -169,23 +174,23 @@
             </div>
 
             <div class="row" *ngIf="isPayAll == false">
-                <div class="col-md-6">
-                  <div class="form-group row">
-                    <label class="col-form-label text-right col-md-3">จำนวนงาด: </label>
-                    <div class="col-md-9">
-                      <input class="form-control" type="text" formControlName="roundPay">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group row">
-                    <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
-                    <div class="col-md-9">
-                      <input class="form-control" type="text" formControlName="payUnit">
-                    </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-right col-md-3">จำนวนงาด: </label>
+                  <div class="col-md-9">
+                    <input class="form-control" type="text" formControlName="roundPay">
                   </div>
                 </div>
               </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
+                  <div class="col-md-9">
+                    <input class="form-control" type="text" formControlName="payUnit">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

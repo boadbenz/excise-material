@@ -1,22 +1,22 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Routes, RouterModule } from "@angular/router";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { LawsuitService } from "../lawsuit.service";
 import { PaginationTableModule } from "../../component/pagination-table/pagination-table.module";
 import { DetailComponent } from "./detail.component";
 import { CardActionsModule } from "../../component/card-actions/card-actions.module";
 import { PrintLawsuitModalModule } from "../print-doc-modal/print-doc-modal.module";
 import { StepWizardModule } from "../../component/step-wizard/step-wizard.module";
-import {HttpClientModule} from "../../../../../node_modules/@angular/common/http";
-import {HttpModule} from "@angular/http";
-import {NgbDatepickerI18n, NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {SuspectModalModule} from "../../component/suspect-modal/suspect-modal.module";
-import {ModalLawbreakerModule} from "../../component/modal-lawbreaker/modal-lawbreaker.module";
-import {ManageComponent} from "../manage/manage.component";
-import {DatepickerI18nService} from "../../../services/datepicker-i18n.service";
-import {ArrestsService} from "../../arrests/arrests.service";
-import {ProveService} from "../../prove/prove.service";
+import { HttpClientModule } from "../../../../../node_modules/@angular/common/http";
+import { HttpModule } from "@angular/http";
+import { NgbDatepickerI18n, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { SuspectModalModule } from "../../component/suspect-modal/suspect-modal.module";
+import { ModalLawbreakerModule } from "../../component/modal-lawbreaker/modal-lawbreaker.module";
+import { ManageComponent } from "../manage/manage.component";
+import { DatepickerI18nService } from "../../../services/datepicker-i18n.service";
+import { ArrestsService } from "../../arrests/arrests.service";
+import { ProveService } from "../../prove/prove.service";
 
 const routes: Routes = [
   {
@@ -51,6 +51,7 @@ const routes: Routes = [
     PaginationTableModule,
     StepWizardModule
   ],
+  // exports: [DetailComponent],
   declarations: [
     DetailComponent
   ], providers: [
