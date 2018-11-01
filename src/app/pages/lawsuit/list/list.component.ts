@@ -44,12 +44,12 @@ export class ListComponent implements OnInit, OnDestroy {
   public LawsuitDateFromOptions: IMyDpOptions = {
     // other options...
     dateFormat: 'dd/mmm/yyyy',
-    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() },
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() +1 },
   };
   public LawsuitDateToOptions: IMyDpOptions = {
     // other options...
     dateFormat: 'dd/mmm/yyyy',
-    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() },
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() +1 },
     // disableUntil: { year: this.today.getFullYear(), month: this.today.getMonth(), day: this.today.getDate() },
   };
   onDateChanged(event) {
