@@ -1,27 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { ColumnsInterface } from '../req-reward-shared/interfaces/columns-interface';
+import { RequestListConfig } from './request-list.config';
 
 @Component({
   selector: 'app-request-list',
   templateUrl: './request-list.component.html',
   styleUrls: ['./request-list.component.scss']
 })
-export class RequestListComponent implements OnInit {
-  public columns: ColumnsInterface[] = [
+export class RequestListComponent extends RequestListConfig implements OnInit {
+  dataTest = [
     {
-        title: 'firstName',
-        field: 'firstName',
-        inputType: 'email',
-        default: 'ssssss'
+      firstName: '11',
+      lastName: '11'
     },
     {
-        title: 'lastName',
-        field: 'lastName',
-        inputType: 'email',
-        default: 'ssssss'
+      firstName: '22',
+      lastName: ''
+    },
+    {
+      firstName: '',
+      lastName: '33'
     }
-]
-  constructor() {}
+  ];
+  constructor() {
+    super();
+  }
 
   ngOnInit() {}
+  submit($event) {
+    console.log('form', $event);
+  }
 }

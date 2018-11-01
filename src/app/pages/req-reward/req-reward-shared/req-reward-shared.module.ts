@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {MatButtonModule, MatCheckboxModule, MatInputModule} from '@angular/material';
 import { REQ_REWARD_SHARED_COMPONENTS } from '.';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { PaginationTableModule } from 'app/pages/component/pagination-table/pagination-table.module';
 
 const SHARED_MODULES = [
   CommonModule,
@@ -11,6 +12,7 @@ const SHARED_MODULES = [
   MatButtonModule,
   MatCheckboxModule,
   MatInputModule,
+  PaginationTableModule,
 ];
 @NgModule({
   imports: [

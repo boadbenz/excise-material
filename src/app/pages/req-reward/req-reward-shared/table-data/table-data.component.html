@@ -1,0 +1,35 @@
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table #rewardTable class="dataTable table table-sm table-striped table-hover">
+        <thead>
+          <tr>
+            <ng-container *ngFor="let column of columns">
+                <th [class]="column?.class">{{column?.title}}</th>
+            </ng-container>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of (data$ | async); let i = index;">
+              <ng-container *ngFor="let column of columns">
+                  <td [class]="column?.class">{{ item[column?.field] || '-' }}</td>
+              </ng-container>
+            
+            <td>
+              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.ArrestCode)">
+                <i class="mdi mdi-eye fa-lg"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <div class="card-footer card-footer-unset">
+    <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+      [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+    </app-pagination-table>
+  </div>
+</div>

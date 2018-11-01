@@ -1,4 +1,5 @@
 <p>
   request-list works!
 </p>
-<app-form-group [columns]="columns"></app-form-group>
+<app-table-data [columns]="columns" [data]="dataTest"></app-table-data>
+<app-form-group [columns]="columns" (outputSubmit)="submit($event)"></app-form-group>
