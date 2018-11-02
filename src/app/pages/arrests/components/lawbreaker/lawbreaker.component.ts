@@ -95,7 +95,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     private createForm(): FormGroup {
-        ArrestLawbreakerFormControl.LinkPhoto = new FormControl('C:\Image');
+        ArrestLawbreakerFormControl.LinkPhoto = new FormControl("C:\\Image");
         return new FormGroup(ArrestLawbreakerFormControl);
     }
 
@@ -184,19 +184,6 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnSave(false);
 
-                const birthDay = this.isObject(this.LawbreakerFG.value.BirthDate)
-                    && getDateMyDatepicker(this.LawbreakerFG.value.BirthDate)
-
-                const passportDateIn = this.isObject(this.LawbreakerFG.value.PassportDateIn)
-                    && getDateMyDatepicker(this.LawbreakerFG.value.PassportDateIn)
-
-                const passportDateOut = this.isObject(this.LawbreakerFG.value.PassportDateOut)
-                    && getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut)
-
-                this.LawbreakerFG.value.BirthDate = convertDateForSave(birthDay) || '';
-                this.LawbreakerFG.value.PassportDateIn = convertDateForSave(passportDateIn) || '';
-                this.LawbreakerFG.value.passportDateOut = convertDateForSave(passportDateOut) || '';
-
                 if (this.LawbreakerFG.invalid) {
                     this.isRequired = true;
                     if (this.LawbreakerFG.controls.PassportNo.invalid) {
@@ -208,6 +195,38 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     }
                     return;
                 }
+
+                let _Lfg = this.LawbreakerFG.value;
+                const birthDay = this.isObject(_Lfg.BirthDate)
+                    && getDateMyDatepicker(_Lfg.BirthDate)
+
+                const passportDateIn = this.isObject(_Lfg.PassportDateIn)
+                    && getDateMyDatepicker(_Lfg.PassportDateIn)
+
+                const passportDateOut = this.isObject(_Lfg.PassportDateOut)
+                    && getDateMyDatepicker(_Lfg.PassportDateOut)
+
+                _Lfg.BirthDate = convertDateForSave(birthDay) || '';
+                _Lfg.PassportDateIn = convertDateForSave(passportDateIn) || '';
+                _Lfg.PassportDateOut = convertDateForSave(passportDateOut) || '';
+
+                _Lfg.LawbreakerTitleName = _Lfg.LawbreakerTitleCode &&
+                    this.typeheadTitleNames
+                        .find(x => x.TitleCode == _Lfg.LawbreakerTitleCode).TitleShortNameTH;
+
+                _Lfg.NationalityNameTH = _Lfg.ReligionCode &&
+                    this.typeheadNationality
+                        .find(x => x.NationalityCode == _Lfg.NationalityCode).NationalityNameTh;
+
+                _Lfg.ReligionName = _Lfg.ReligionCode &&
+                    this.typeheadReligions
+                        .find(x => x.ReligionCode == _Lfg.ReligionCode).ReligionNameTH;
+
+                _Lfg.RaceName = _Lfg.RaceCode &&
+                    this.typeheadRaces
+                        .find(x => x.RaceCode == _Lfg.RaceCode).RaceNameTH;
+
+                this.LawbreakerFG.patchValue(_Lfg);
 
                 if (this.mode === 'C') {
                     this.OnCreate();
@@ -258,7 +277,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         } else if (e == '2') {
             this.requiredCompanyRegister = true;
             this.card4 = true;
-        } 
+        }
     }
 
     private async setRegionStore() {
@@ -431,7 +450,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     OnCreate() {
         console.log(JSON.stringify(this.LawbreakerFG.value));
-        
+
         this.s_masLawbreaker.ArrestMasLawbreakerinsAll(this.LawbreakerFG.value)
             .takeUntil(this.destroy$)
             .subscribe(res => {

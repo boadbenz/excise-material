@@ -97,7 +97,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เชื่อชาติ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="RaceCode" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
+                    <select #race formControlName="RaceCode" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of typeheadRaces; let i=index;" [value]="item.RaceCode">{{item.RaceNameTH}}</option>
                     </select>
@@ -266,8 +266,8 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขหนังสือเดินทาง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <!-- <div *ngIf="requiredPassport; else notShow"> -->
-                        <input type="text" formControlName="PassportNo" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                            [required]="requiredPassport" [readonly]="showEditField">
+                    <input type="text" formControlName="PassportNo" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                        [required]="requiredPassport" [readonly]="showEditField">
                     <!-- </div>
                     <ng-template #notShow>
                         <input type="text" formControlName="PassportNo" class="form-control form-control-sm"
@@ -321,8 +321,8 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขทะเบียนนิติบุคคล :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <!-- <div *ngIf="requiredCompanyRegister; else notShow"> -->
-                        <input type="text" formControlName="CompanyRegistrationNo" class="form-control form-control-sm"
-                            [ngClass]="{'ng-touched':isRequired}" [required]="requiredCompanyRegister" [readonly]="showEditField">
+                    <input type="text" formControlName="CompanyRegistrationNo" class="form-control form-control-sm"
+                        [ngClass]="{'ng-touched':isRequired}" [required]="requiredCompanyRegister" [readonly]="showEditField">
                     <!-- </div> -->
                     <!-- <ng-template #notShow>
                         <input type="text" formControlName="CompanyRegistrationNo" class="form-control form-control-sm"
