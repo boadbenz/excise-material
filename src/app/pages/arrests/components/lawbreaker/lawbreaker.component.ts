@@ -10,7 +10,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Message } from 'app/config/message';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { MyDatePickerOptions, getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
@@ -35,6 +35,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private router: Router,
         private s_mainMaster: MainMasterService,
         private s_lawbreaker: fromServices.ArrestLawbreakerService,
+        private s_masLawbreaker: fromServices.ArrestMasLawbreakerService,
         private activatedRoute: ActivatedRoute,
         private navService: NavigationService,
         private fb: FormBuilder,
@@ -47,13 +48,15 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     card1 = true;
     card2 = true;
-    card3 = true;
-    card4 = true;
+    card3 = false;
+    card4 = false;
 
     @ViewChild('imgNobody') imgNobody: ElementRef;
 
     // LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
+    requiredPassport = false;
+    requiredCompanyRegister = false;
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
     private mode: string;
@@ -88,9 +91,11 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
+        this.LawbreakerFG.reset();
     }
 
     private createForm(): FormGroup {
+        ArrestLawbreakerFormControl.LinkPhoto = new FormControl('C:\Image');
         return new FormGroup(ArrestLawbreakerFormControl);
     }
 
@@ -123,42 +128,43 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     private async pageLoad() {
+
+        this.loaderService.show();
+        const promises = [
+            await this.s_mainMaster.MasTitleMaingetAll(),
+            await this.s_mainMaster.MasNationalityMaingetAll(),
+            await this.s_mainMaster.MasRaceMaingetAll(),
+            await this.s_mainMaster.MasReligionMaingetAll(),
+            await this.s_mainMaster.MasCountryMaingetAll(),
+            await this.s_mainMaster.MasDistrictMaingetAll()
+        ];
+        Promise.all(promises)
+            .then((x) => {
+                this.typeheadTitleNames = x[0];
+                this.typeheadNationality = x[1];
+                this.typeheadRaces = x[2];
+                this.typeheadReligions = x[3];
+                this.typeheadCountry = x[4];
+                x[5].map(prov =>
+                    prov.MasDistrict.map(dis =>
+                        dis.MasSubDistrict.map(subdis => {
+                            this.typeheadRegion.push({
+                                SubdistrictCode: subdis.SubdistrictCode,
+                                SubdistrictNameTH: subdis.SubdistrictNameTH,
+                                DistrictCode: dis.DistrictCode,
+                                DistrictNameTH: dis.DistrictNameTH,
+                                ProvinceCode: prov.ProvinceCode,
+                                ProvinceNameTH: prov.ProvinceNameTH,
+                                ZipCode: null
+                            })
+                        })
+                    )
+                );
+            })
+        this.loaderService.hide();
+
         switch (this.mode) {
             case 'C':
-
-                this.loaderService.show();
-                const promises = [
-                    await this.s_mainMaster.MasTitleMaingetAll(),
-                    await this.s_mainMaster.MasNationalityMaingetAll(),
-                    await this.s_mainMaster.MasRaceMaingetAll(),
-                    await this.s_mainMaster.MasReligionMaingetAll(),
-                    await this.s_mainMaster.MasCountryMaingetAll(),
-                    await this.s_mainMaster.MasDistrictMaingetAll()
-                ];
-                Promise.all(promises)
-                    .then((x) => {
-                        this.typeheadTitleNames = x[0];
-                        this.typeheadNationality = x[1];
-                        this.typeheadRaces = x[2];
-                        this.typeheadReligions = x[3];
-                        this.typeheadCountry = x[4];
-                        x[5].map(prov =>
-                            prov.MasDistrict.map(dis =>
-                                dis.MasSubDistrict.map(subdis => {
-                                    this.typeheadRegion.push({
-                                        SubdistrictCode: subdis.SubdistrictCode,
-                                        SubdistrictNameTH: subdis.SubdistrictNameTH,
-                                        DistrictCode: dis.DistrictCode,
-                                        DistrictNameTH: dis.DistrictNameTH,
-                                        ProvinceCode: prov.ProvinceCode,
-                                        ProvinceNameTH: prov.ProvinceNameTH,
-                                        ZipCode: null
-                                    })
-                                })
-                            )
-                        );
-                    })
-                this.loaderService.hide();
                 break;
 
             case 'R':
@@ -178,13 +184,30 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnSave(false);
 
-                const birthDay = getDateMyDatepicker(this.LawbreakerFG.value.BirthDate);
-                const passportDateIn = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateIn);
-                const passportDateOut = getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut);
+                const birthDay = this.isObject(this.LawbreakerFG.value.BirthDate)
+                    && getDateMyDatepicker(this.LawbreakerFG.value.BirthDate)
 
-                this.LawbreakerFG.value.BirthDate = convertDateForSave(birthDay);
-                this.LawbreakerFG.value.PassportDateIn = convertDateForSave(passportDateIn);
-                this.LawbreakerFG.value.passportDateOut = convertDateForSave(passportDateOut);
+                const passportDateIn = this.isObject(this.LawbreakerFG.value.PassportDateIn)
+                    && getDateMyDatepicker(this.LawbreakerFG.value.PassportDateIn)
+
+                const passportDateOut = this.isObject(this.LawbreakerFG.value.PassportDateOut)
+                    && getDateMyDatepicker(this.LawbreakerFG.value.PassportDateOut)
+
+                this.LawbreakerFG.value.BirthDate = convertDateForSave(birthDay) || '';
+                this.LawbreakerFG.value.PassportDateIn = convertDateForSave(passportDateIn) || '';
+                this.LawbreakerFG.value.passportDateOut = convertDateForSave(passportDateOut) || '';
+
+                if (this.LawbreakerFG.invalid) {
+                    this.isRequired = true;
+                    if (this.LawbreakerFG.controls.PassportNo.invalid) {
+                        alert('กรุณาระบุ เลขหนังสือเดินทาง');
+                    } else if (this.LawbreakerFG.controls.CompanyRegistrationNo.invalid) {
+                        alert('กรุณาระบุ เลขทะเบียนนิติบุคคล')
+                    } else {
+                        alert(Message.checkData)
+                    }
+                    return;
+                }
 
                 if (this.mode === 'C') {
                     this.OnCreate();
@@ -222,28 +245,20 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             })
     }
 
-    OnCreate() {
+    toggleCard() {
+        const e = this.LawbreakerFG.value.EntityType;
+        const l = this.LawbreakerFG.value.LawbreakerType;
 
-    }
+        this.requiredCompanyRegister = false;
+        this.requiredPassport = false;
 
-    async OnRevice() {
-        // Set Preloader
-        // this.preloader.setShowPreloader(true);
-
-        // let IsSuccess: boolean | false;
-        // await this.arrestService
-        //     .ArrestLawbreakerupdByCon(this.LawbreakerFG.value)
-        //     .then(isSuccess => {
-        //         IsSuccess = isSuccess;
-        //     }, () => { IsSuccess = false; })
-
-        // if (IsSuccess) {
-        //     alert(Message.saveComplete)
-        // } else {
-        //     alert(Message.saveFail)
-        // }
-        // // Set Preloader
-        // this.preloader.setShowPreloader(false);
+        if (e == '1' && l == '0') {
+            this.requiredPassport = true;
+            this.card3 = true;
+        } else if (e == '2') {
+            this.requiredCompanyRegister = true;
+            this.card4 = true;
+        } 
     }
 
     private async setRegionStore() {
@@ -315,6 +330,13 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .map(term => term == '' ? []
                 : this.typeheadReligions.filter(v => v.ReligionNameTH.indexOf(term) > -1).slice(0, 10));
 
+    searchCountry = (text$: Observable<string>) =>
+        text$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term == '' ? []
+                : this.typeheadCountry.filter(v => v.CountryNameEN.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
+
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
@@ -325,6 +347,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     formatterRace = (x: { RaceNameTH: string }) => x.RaceNameTH;
 
     formatterReligion = (x: { ReligionNameTH: string }) => x.ReligionNameTH;
+
+    formatterCountry = (CountryNameTH: string) => CountryNameTH;
 
     selectItemRegion(ele: any) {
         this.LawbreakerFG.patchValue({
@@ -357,6 +381,11 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         ReligionName: e.item.ReligionNameTH
     })
 
+    selectItemCountry = (e: any) => this.LawbreakerFG.patchValue({
+        PassportCountryCode: e.item.CountryCode,
+        PassportCountryName: e.item.CountryNameEN
+    })
+
     changeImage(e: any, img: any) {
 
         let file = e.target.files[0];
@@ -381,21 +410,67 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         reader.readAsDataURL(file);
     }
 
+    catchError(error: any) {
+        console.log(error);
+        this.endLoader();
+    }
+
+    endLoader = () => this.loaderService.hide();
+
+    isObject = (obj) => obj === Object(obj);
+
+    checkResponse(res: any) {
+        switch (res.IsSuccess) {
+            case 'True':
+            case true:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    OnCreate() {
+        console.log(JSON.stringify(this.LawbreakerFG.value));
+        
+        this.s_masLawbreaker.ArrestMasLawbreakerinsAll(this.LawbreakerFG.value)
+            .takeUntil(this.destroy$)
+            .subscribe(res => {
+                if (!this.checkResponse(res)) {
+                    alert(Message.saveFail);
+                    return;
+                }
+                alert(Message.saveComplete);
+                this.router.navigate([`/arrest/lawbreaker/R/${res.LawbreakerID}`])
+            });
+    }
+
+    async OnRevice() {
+        this.s_masLawbreaker.ArrestMasLawbreakerupdByCon(this.LawbreakerFG.value)
+            .takeUntil(this.destroy$)
+            .subscribe(res => {
+                if (!this.checkResponse(res)) {
+                    alert(Message.saveFail);
+                    return;
+                }
+                alert(Message.saveComplete);
+            })
+    }
+
     onCancel() {
         if (!confirm(Message.confirmAction))
             return
 
         switch (this.mode) {
             case 'C':
-            this.router.navigate(
-                [`arrest/allegation`, 'C'],
-                {
-                    queryParams: {
-                        arrestCode: '',
-                        indictmentId: '',
-                        guiltbaseId: ''
-                    }
-                });
+                this.router.navigate(
+                    [`arrest/allegation`, 'C'],
+                    {
+                        queryParams: {
+                            arrestCode: '',
+                            indictmentId: '',
+                            guiltbaseId: ''
+                        }
+                    });
                 break;
 
             case 'R':
