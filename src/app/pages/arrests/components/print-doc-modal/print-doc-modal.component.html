@@ -21,10 +21,12 @@
                         <th></th>
                         <th class="text-center">ลำดับ</th>
                         <th>ชื่อเอกสาร</th>
-                        <th [ngSwitch]="sort" style="cursor: pointer;" (click)="sort = (sort == 'asc' ? 'desc' : 'asc'); sortPrintDoc()">
-                            ประเภทเอกสาร
-                            <i *ngSwitchCase="'desc'" class="fa fa-sort-amount-desc"></i>
-                            <i *ngSwitchCase="'asc'" class="fa fa-sort-amount-asc"></i>
+                        <th [ngSwitch]="sort" style="cursor: pointer;">
+                            <div (click)="sortPrintDoc()">
+                                ประเภทเอกสาร
+                                <i *ngSwitchCase="'desc'" class="fa fa-sort-amount-desc"></i>
+                                <i *ngSwitchCase="'asc'" class="fa fa-sort-amount-asc"></i>
+                            </div>
                         </th>
                     </tr>
                 </thead>

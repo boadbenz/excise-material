@@ -41,16 +41,9 @@ export class PrintDocModalComponent implements OnInit {
   }
 
   sortPrintDoc() {
+    this.sort = (this.sort == 'asc' ? 'desc' : 'asc'); 
     this.printDoc.sort((a, b) => {
-      switch (this.sort) {
-        case 'asc':
-          return -1;
-        case 'desc':
-          return 1; // desc
-      }
-      // if (a.DocType < b.DocType) return -1; // asc
-      // if (a.DocType > b.DocType) return 1; // desc
-      // return 0;
+      return -1; // asc
     });
   }
 
