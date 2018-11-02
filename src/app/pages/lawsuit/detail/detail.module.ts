@@ -17,6 +17,7 @@ import { ManageComponent } from "../manage/manage.component";
 import { DatepickerI18nService } from "../../../services/datepicker-i18n.service";
 import { ArrestsService } from "../../arrests/arrests.service";
 import { ProveService } from "../../prove/prove.service";
+import { ManageModule } from "app/pages/lawsuit/manage/manage.module";
 
 const routes: Routes = [
   {
@@ -49,7 +50,8 @@ const routes: Routes = [
     ModalLawbreakerModule,
     PrintLawsuitModalModule,
     PaginationTableModule,
-    StepWizardModule
+    StepWizardModule,
+    ManageModule
   ],
   exports: [DetailComponent],
   declarations: [

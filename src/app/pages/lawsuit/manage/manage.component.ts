@@ -24,6 +24,7 @@ import { Message } from '../../../config/message';
 import { replaceFakePath } from 'app/config/dataString';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { async } from "q";
+import { JudgmentModel } from "../models/judgment";
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html"
@@ -142,11 +143,11 @@ export class ManageComponent implements OnInit {
     this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
       if (status) {
         await this.navService.setOnSave(false);
-        // if (!this.lawsuitForm.valid) {
-        //   this.isRequired = true;
-        //   alert(Message.checkData)
-        //   return false;
-        // }
+        if (!this.lawsuitForm.valid) {
+          this.isRequired = true;
+          alert(Message.checkData)
+          return false;
+        }
         this.onSave();
       }
     });
@@ -742,18 +743,7 @@ export class ManageComponent implements OnInit {
 
   viewData(item) {
     ///###change path to lawsuit detail
-    this.router.navigate(["/lawsuit/detail", "R"], {
-      queryParams: {
-        ArrestCode: this.lawsuitList[0].ArrestCode,
-        IndictmentDetailID: item.controls['IndictmentDetailID'].value,
-        IndictmentID: this.IndictmentID,
-      }
-    });
-  }
-
-  editTable(item: any, index: number) {
-    ///####use this value to get api
-    ///item.controls['IndictmentDetailID'].value
+    console.log('viewData===>', item);
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
       maxWidth: 'none',
@@ -761,6 +751,33 @@ export class ManageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(`Dialog result: ${result}`);
+    });
+    // this.router.navigate(["/lawsuit/detail", "R"], {
+    //   queryParams: {
+    //     ArrestCode: this.lawsuitList[0].ArrestCode,
+    //     IndictmentDetailID: item.controls['IndictmentDetailID'].value,
+    //     IndictmentID: this.IndictmentID,
+    //   }
+    // });
+  }
+
+  editTable(item: any, index: number) {
+    ///####use this value to get api
+    ///item.controls['IndictmentDetailID'].value
+    // const dialogRef = this.dialog.open(DialogJudgment, {
+    //   width: '90%',
+    //   maxWidth: 'none',
+    // });
+
+    // dialogRef.afterClosed().subscribe(result => {
+    //   //console.log(`Dialog result: ${result}`);
+    // });
+    this.router.navigate(["/lawsuit/detail", "R"], {
+      queryParams: {
+        ArrestCode: this.lawsuitList[0].ArrestCode,
+        IndictmentDetailID: item.controls['IndictmentDetailID'].value,
+        IndictmentID: this.IndictmentID,
+      }
     });
   }
 
@@ -772,16 +789,17 @@ export class ManageComponent implements OnInit {
   templateUrl: 'dialog-judgment.html',
 })
 export class DialogJudgment {
-  lawsuitArrestForm: FormGroup;
+
   private indictmentID: string;
   private lawsuitID: number;
+  public judgmentModel = new JudgmentModel();
+
   constructor(
     private fb: FormBuilder,
     private lawsuitService: LawsuitService,
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private dialogRef: MatDialogRef<DialogJudgment>
-
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.indictmentID = params['IndictmentID'];
@@ -790,32 +808,39 @@ export class DialogJudgment {
 
   }
   public isPayAll = null;
-
+  public arrestData = [];
+  lawsuitArrestFormDialog: FormGroup;
   ngOnInit() {
-    this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.indictmentID).then(result => {
-      console.log('result====>', result);
-    });
-    this.lawsuitArrestForm = this.fb.group({
-      arrestName: new FormControl(null, Validators.required),
-      justicName: new FormControl(null, Validators.required),
-      numberBlackList: new FormControl(null, Validators.required),
-      numberRedList: new FormControl(null, Validators.required),
-      location: new FormControl(null, Validators.required),
-      dateJustic: new FormControl(null, Validators.required),
-      fine: new FormControl(null),
-      fineRate: new FormControl(null),
-      isPrison: new FormControl(null),
-      prisonDay: new FormControl(null),
-      unit: new FormControl(null),
-      payRadio1: new FormControl(null),
-      payRadio2: new FormControl(null),
-      payDate: new FormControl(null),
-      quantityPay: new FormControl(null),
-      startPayDate: new FormControl(null),
-      roundPay: new FormControl(null),
-      payUnit: new FormControl(null),
+    this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.indictmentID).then(async result => {
+      await console.log('result====>', result);
+      this.arrestData = result;
 
+      this.lawsuitArrestFormDialog = this.fb.group({
+        arrestName: new FormControl(null, Validators.required),
+        justicName: new FormControl(null, Validators.required),
+        numberBlackList: new FormControl(null, Validators.required),
+        numberRedList: new FormControl(null, Validators.required),
+        location: new FormControl(null, Validators.required),
+        dateJustic: new FormControl(null, Validators.required),
+        fine: new FormControl(null),
+        fineRate: new FormControl(null),
+        isPrison: new FormControl(null),
+        prisonDay: new FormControl(null),
+        unit: new FormControl(null),
+        payRadio1: new FormControl(null),
+        payRadio2: new FormControl(null),
+        payDate: new FormControl(null),
+        quantityPay: new FormControl(null),
+        startPayDate: new FormControl(null),
+        roundPay: new FormControl(null),
+        payUnit: new FormControl(null),
+
+      });
+      this.judgmentModel.arrestName = this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName;
+      console.log('this.judgmentModel.arrestName', this.judgmentModel.arrestName);
+      console.log('this.judgmentModel.arrestName', this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName);
     });
+
   }
   public closePopup = function () {
     this.dialogRef.close(DialogJudgment);

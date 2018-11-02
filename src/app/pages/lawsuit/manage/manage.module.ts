@@ -54,7 +54,7 @@ const routes: Routes = [
     ModalLawbreakerModule,
     PrintLawsuitModalModule,
     MatDialogModule,
-    // DetailComponent,
+    // DetailModule,
   ],
   entryComponents: [DialogJudgment],
   declarations: [

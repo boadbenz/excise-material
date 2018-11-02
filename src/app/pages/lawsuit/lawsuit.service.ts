@@ -74,8 +74,8 @@ export class LawsuitService {
 
   async GetArrestIndicmentDetailgetByCon(indictmentDetailID: string) {
     const params = { IndictmentDetailID: indictmentDetailID };
-    const url = `${appConfig.api7788}/LawsuitArrestIndicmentDetailgetByCon?IndictmentDetailID=`+indictmentDetailID;
-    return this.responseGetMethod(JSON.stringify(params), url);
+    const url = `${appConfig.api8083}/LawsuitArrestIndicmentDetailgetByCon`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitgetByCon(LawsuitID) {
@@ -124,26 +124,26 @@ export class LawsuitService {
     const params = { LawsuitNo: LawsuitNo, OfficeCode: OfficeCode, IsOutside: IsOutside };
     const url = `${appConfig.api8083}/LawsuitVerifyLawsuitNo`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
-  }  
+  }
 
   async MasStaffMaingetAll() {
     const params = {};
     const url = `${appConfig.api7789}/MasStaffMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
-  }  
+  }
 
   async MasOfficeMaingetAll() {
     const params = {};
     const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
-  }  
+  }
 
   async LawsuitPaymentFinegetByJudgementID(JudgementID) {
     const params = {JudgementID: JudgementID};
     const url = `${appConfig.api7789}/LawsuitPaymentFinegetByJudgementID`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
-  }  
-  
+  }
+
 
   // async MasStaffMaingetAll() {
   //   const params = {};
@@ -198,13 +198,13 @@ export class LawsuitService {
     const url = `${appConfig.api8083}/LawsuitComparegetByLawsuitID`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
-  
+
   async LawsuitProvegetByLawsuitID(LawsuitID) {
     const params = { LawsuitID: LawsuitID };
     const url = `${appConfig.api8083}/LawsuitProvegetByLawsuitID`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
-  
+
 
 
   // async getByKeyword(filterValue) {
