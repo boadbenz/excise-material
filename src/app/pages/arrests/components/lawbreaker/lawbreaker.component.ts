@@ -44,6 +44,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
         this.navService.setPrevPageButton(false);
+        this.navService.setInnerTextNextPageButton('ข้อกล่าวหา');
     }
 
     card1 = true;
@@ -118,9 +119,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
                 // set true
-                this.navService.setNextPageButton(false);
                 this.navService.setEditButton(true);
                 this.navService.setEditField(true);
+                this.navService.setNextPageButton(true);
             }
 
             this.pageLoad();
@@ -241,6 +242,21 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnCancel(false);
                 this.onCancel();
+            }
+        })
+
+        this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
+            if (status) {
+                await this.navService.setOnNextPage(false);
+                this.router.navigate(
+                    [`arrest/allegation`, 'C'],
+                    {
+                        queryParams: {
+                            arrestCode: '',
+                            indictmentId: '',
+                            guiltbaseId: ''
+                        }
+                    });
             }
         })
     }

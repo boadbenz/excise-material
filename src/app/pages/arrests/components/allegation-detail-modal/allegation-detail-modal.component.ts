@@ -74,6 +74,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   mode: string;
   arrestCode: string;
   indictmentDetailId: string;
+  indictmentId: string;
   guiltbaseId: string;
 
   _isSuccess: boolean;
@@ -111,7 +112,15 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
   view(id: number) {
     this.dismiss('Cross click')
-    this.router.navigate([`/arrest/lawbreaker/R/${id}`])
+    this.router.navigate(
+      [`/arrest/lawbreaker/R/${id}`],
+      {
+        queryParams: {
+            arrestCode: this.arrestCode,
+            indictmentId: this.indictmentId,
+            guiltbaseId: this.guiltbaseId
+        }
+    })
   }
 
   onSearchAdv(f: any) {
