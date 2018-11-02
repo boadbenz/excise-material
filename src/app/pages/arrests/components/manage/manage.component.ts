@@ -230,16 +230,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    static resetForm(formGroup: FormGroup) {
-        let control: AbstractControl = null;
-        formGroup.reset();
-        formGroup.markAsUntouched();
-        Object.keys(formGroup.controls).forEach((name) => {
-            control = formGroup.controls[name];
-            control.setErrors(null);
-        });
-    }
-
     private createLocalForm(): FormGroup {
         fromModels.ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
         return this.fb.group(fromModels.ArrestLocaleFormControl);

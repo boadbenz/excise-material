@@ -90,7 +90,8 @@
                   {{ r.DutyCode }}
                 </ng-template>
                 <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchUnit" [resultTemplate]="qtyUnit"
-                  [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)" [value]="item.value.QtyUnit" />
+                  [readonly]="showEditField" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
+                  [value]="item.value.QtyUnit" />
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
                 <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
@@ -101,7 +102,8 @@
                   {{ r.DutyCode }}
                 </ng-template>
                 <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchUnit" [resultTemplate]="netVolumeUnit"
-                  [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)" [value]="item.value.NetVolumeUnit" />
+                  [readonly]="showEditField" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
+                  [value]="item.value.NetVolumeUnit" />
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'">
                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
