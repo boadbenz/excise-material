@@ -194,7 +194,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
   close(e: any) {
     // let law = this.Lawbreaker;
-    let law = this.Lawbreaker.value.filter(x => x.IsChecked == Acceptability.ACCEPTABLE);
+    let law = this.Lawbreaker.value.filter(x => x.IsChecked == Acceptability.ACCEPTABLE)
 
     if (!law) return;
 

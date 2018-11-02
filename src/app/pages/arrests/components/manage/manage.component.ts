@@ -148,7 +148,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
     // Redux based variables
-    arrestProduct: Observable<ArrestProduct[]>;
+    obArrest: Observable<fromModels.Arrest>;
+    stateArrest: fromModels.Arrest;
 
     constructor(
         private fb: FormBuilder,
@@ -176,7 +177,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setPrevPageButton(false);
         // set true
         this.navService.setNextPageButton(true);
-        this.navService.setInnerTextNextPageButton("รับคำกล่าวโทษ")
+        this.navService.setInnerTextNextPageButton("รับคำกล่าวโทษ");
+
+        this.obArrest = store.select(s => s.arrest);
+        this.obArrest
+            .takeUntil(this.destroy$)
+            .subscribe((x: fromModels.Arrest) => this.stateArrest = x)
     }
 
     async ngOnInit() {
@@ -229,10 +235,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         formGroup.reset();
         formGroup.markAsUntouched();
         Object.keys(formGroup.controls).forEach((name) => {
-          control = formGroup.controls[name];
-          control.setErrors(null);
+            control = formGroup.controls[name];
+            control.setErrors(null);
         });
-      }
+    }
 
     private createLocalForm(): FormGroup {
         fromModels.ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
@@ -345,10 +351,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 await this.loadMasterData();
                 this.showEditField = false;
-                if (arrestCode != 'NEW') {
-                    this.loaderService.show();
+                if (this.stateArrest) {
                     await this.pageRefresh(this.arrestCode);
-                    this.loaderService.hide();
                 }
                 break;
 
@@ -370,69 +374,115 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async pageRefresh(arrestCode: string) {
         this.loaderService.show();
 
-        await this.s_arrest.ArrestgetByCon(arrestCode)
-            .then(async (arr: fromModels.Arrest[]) => {
+        let arr = new Array<fromModels.Arrest>();
+        if (arrestCode != 'NEW') {
+            await this.s_arrest.ArrestgetByCon(arrestCode)
+                .then((a) => {
+                    if (this.checkResponse(a)) arr = a;
+                }).catch((error) => this.catchError(error));
+        } else {
+            arr = [this.stateArrest];
+        }
 
-                if (!arr.length) {
-                    alert(Message.noRecord)
-                    return
-                }
-                let _arr = arr[0];
-                let arrestForm = this.arrestFG;
+        if (!arr.length) return;
 
-                _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
-                _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
+        let _arr = arr[0];
+        this.pageRefreshArrest(_arr);
 
-                _arr.ArrestNotice.map((x, index) => {
-                    x.RowId = index + 1;
-                    x.IsModify = 'r';
-                    x.NoticeDateString = toLocalShort(x.NoticeDate);
-                    x.ArrestNoticeStaff.map(s => s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`);
-                    x.ArrestNoticeSuspect.map(s => s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`);
-                })
-                this.setNoticeForm(_arr.ArrestNotice);
+        await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
 
-                _arr.ArrestStaff.map((x, index) => {
-                    x.RowId = index + 1;
-                    x.IsModify = 'r';
-                    x.ContributorID = x.ContributorID || ''
-                    x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`
-                });
-                this.setItemFormArray(_arr.ArrestStaff, 'ArrestStaff');
+        await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
 
-                _arr.ArrestLocale.map(x => {
-                    if (x.SubDistrictCode && x.DistrictCode && x.ProvinceCode) {
-                        x.Region = `${x.SubDistrict} ${x.District} ${x.Province}`;
-                    }
-                })
-                arrestForm.patchValue(_arr);
+        await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
 
-                await this.s_product.ArrestProductgetByArrestCode(arrestCode)
-                    .then((pro: fromModels.ArrestProduct[]) => {
-                        let _prod = pro;
-                        _prod.map((x, index) => {
-                            x.IsModify = 'r';
-                            x.RowId = index + 1;
-                        })
-                        this.setItemFormArray(_prod, 'ArrestProduct')
-                    })
-                    .catch((error) => this.catchError(error));
-
-                await this.s_indictment.ArrestIndictmentgetByArrestCode(arrestCode)
-                    .then((ind: fromModels.ArrestIndictment[]) => this.setArrestIndictment(ind))
-                    .catch((error) => this.catchError(error));
-            }).catch((error) => this.catchError(error));
-
-        await this.s_document.MasDocumentMaingetAll(this.documentType, this.arrestCode)
-            .then((x: fromModels.ArrestDocument[]) => {
-                x.map((y, index) => {
-                    y.RowId = index + 1;
-                    y.IsModify = 'r';
-                })
-                this.setItemFormArray(x, 'ArrestDocument');
-            })
-            .catch((error) => this.catchError(error));
         this.loaderService.hide();
+    }
+
+    private pageRefreshArrest(_arr: fromModels.Arrest) {
+        let arrestForm = this.arrestFG;
+
+        _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
+        _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
+
+        _arr.ArrestNotice.map((x, index) => {
+            x.RowId = index + 1;
+            x.IsModify = x.IsModify || 'r';
+            x.NoticeDateString = toLocalShort(x.NoticeDate);
+            x.ArrestNoticeStaff.map(s => s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`);
+            x.ArrestNoticeSuspect.map(s => s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`);
+        })
+        this.setNoticeForm(_arr.ArrestNotice);
+
+        _arr.ArrestStaff.map((x, index) => {
+            x.RowId = index + 1;
+            x.IsModify = x.IsModify || 'r';
+            x.ContributorID = x.ContributorID || ''
+            x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`
+        });
+        this.setItemFormArray(_arr.ArrestStaff, 'ArrestStaff');
+
+        _arr.ArrestLocale.map(x => {
+            if (x.SubDistrictCode && x.DistrictCode && x.ProvinceCode) {
+                x.Region = `${x.SubDistrict} ${x.District} ${x.Province}`;
+            }
+        })
+        arrestForm.patchValue(_arr);
+    }
+
+    private async pageRefreshProduct(_arrProd: fromModels.ArrestProduct[], arrestCode: string) {
+        let _prod = new Array<fromModels.ArrestProduct>();
+        if (arrestCode != 'NEW') {
+            await this.s_product.ArrestProductgetByArrestCode(arrestCode)
+                .then((pro) => {
+                    if (this.checkResponse(pro)) _prod = pro;
+                }).catch((error) => this.catchError(error));
+        } else {
+            _prod = _arrProd;
+        }
+
+        if (!_prod.length) return;
+
+        _prod.map((x, index) => {
+            x.IsModify = x.IsModify || 'r';
+            x.RowId = index + 1;
+        })
+        this.setItemFormArray(_prod, 'ArrestProduct');
+    }
+
+    private async pageRefreshIndictment(_arrIndict: fromModels.ArrestIndictment[], arrestCode) {
+        let _indict = new Array<fromModels.ArrestIndictment>();
+        if (arrestCode != 'NEW') {
+            await this.s_indictment.ArrestIndictmentgetByArrestCode(arrestCode)
+                .then((ind) => {
+                    if (this.checkResponse(ind)) _indict = ind;
+                }).catch((error) => this.catchError(error));
+        } else {
+            _indict = _arrIndict;
+        }
+
+        if (!_indict.length) return;
+
+        this.setArrestIndictment(_indict);
+    }
+
+    private async pageRefreshDocument(_arrDoc: fromModels.ArrestDocument[], arrestCode) {
+        let _doc = new Array<fromModels.ArrestDocument>();
+        if (arrestCode != 'NEW') {
+            await this.s_document.MasDocumentMaingetAll(this.documentType, arrestCode)
+                .then((x) => {
+                    if (this.checkResponse(x)) _doc = x;
+                }).catch((error) => this.catchError(error));
+        } else {
+            _doc = _arrDoc;
+        }
+
+        if (!_doc.length) return;
+
+        _doc.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = y.IsModify || 'r';
+        })
+        this.setItemFormArray(_doc, 'ArrestDocument');
     }
 
     private async loadMasterData() {
@@ -551,6 +601,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             arr.push(
                 this.fb.group({
                     RowId: index + 1,
+                    IsModify: x.IsModify || 'r',
                     IndictmentID: x.IndictmentID,
                     GuiltBaseID: x.GuiltBaseID,
                     ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase)

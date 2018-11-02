@@ -199,7 +199,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
         await this.navService.setOnNextPage(false);
-        this.router.navigate(['/lawsuit/manage', 'C', this.arrestIndictmentFG.value.IndictmentID]);
+        this.router.navigate(['/lawsuit/manage', 'C']);
       }
     })
     this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(async status => {
@@ -372,6 +372,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
+    lawbreaker.RowId = 1;
+    lawbreaker.IsModify = 'c';
     this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
     let sort = this.sortFormArray(this.ArrestLawbreaker.value);
     sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
@@ -744,20 +746,22 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async insertArrestLawbreaker(arrestCode) {
     let lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value;
-    let lawb = await lawbreaker.map(async e => {
-      e.ResultCount = "";
-      e.ArrestCode = arrestCode;
+    let lawb = await lawbreaker
+      .filter(e => e.IsModify == 'c')
+      .map(async e => {
+        e.ResultCount = "";
+        e.ArrestCode = arrestCode;
 
-      console.log('Lawbreaker : ', JSON.stringify(e));
+        console.log('Lawbreaker : ', JSON.stringify(e));
 
-      await this.s_lawbreaker
-        .ArrestLawbreakerinsAll(e)
-        .then(y => {
-          if (!this.checkIsSuccess(y)) return;
-          return true;
-        }, () => { this.saveFail(); return; })
-        .catch((error) => this.catchError(error));
-    })
+        await this.s_lawbreaker
+          .ArrestLawbreakerinsAll(e)
+          .then(y => {
+            if (!this.checkIsSuccess(y)) return;
+            return true;
+          }, () => { this.saveFail(); return; })
+          .catch((error) => this.catchError(error));
+      })
     return Promise.all(lawb);
   }
 
