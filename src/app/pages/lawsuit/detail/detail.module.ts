@@ -51,7 +51,7 @@ const routes: Routes = [
     PaginationTableModule,
     StepWizardModule
   ],
-  // exports: [DetailComponent],
+  exports: [DetailComponent],
   declarations: [
     DetailComponent
   ], providers: [

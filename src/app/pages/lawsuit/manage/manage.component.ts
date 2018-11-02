@@ -291,16 +291,32 @@ export class ManageComponent implements OnInit {
       return;
     }
     if (IsLawsuitComplete == 1) {
-      this.ngOnInit();
+      // this.ngOnInit();
+      this.navService.setCancelButton(false);
+      this.navService.setSaveButton(false);
+      this.navService.setEditField(true);
+      this.navService.showFieldEdit.subscribe(async p => {
+        this.showEditField = true;
+        this.ngOnInit();
+      });
     } else {
       this.lawsuitService.GetArrestIndicmentDetailgetByCon(indictmentID).then(result => {
         console.log('result====>', result);
         if (result.LawsuitJudgement) {
 
         } else {
-          this.ngOnInit();
+          // this.ngOnInit();
+          this.navService.setEditField(true);
+          this.navService.showFieldEdit.subscribe(async p => {
+            this.showEditField = true;
+
+            this.ngOnInit();
+          });
         }
       });
+      this.navService.setCancelButton(false);
+      this.navService.setSaveButton(false);
+
     }
   }
 
@@ -597,6 +613,7 @@ export class ManageComponent implements OnInit {
           if (IsLawsuitComplete == 0) {
             this.navService.setSaveButton(true);
             this.navService.setCancelButton(true);
+            this.showEditField = false;
           } else if (isProve == 0) {
             if (lawsuitType == 1) {
               this.navService.setPrintButton(true);
