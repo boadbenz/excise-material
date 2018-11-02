@@ -401,8 +401,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private pageRefreshArrest(_arr: fromModels.Arrest) {
         let arrestForm = this.arrestFG;
 
-        _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
-        _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
+        _arr.ArrestDate = !this.isObject(this.dateStartFrom) || setDateMyDatepicker(_arr.ArrestDate);
+        _arr.OccurrenceDate = !this.isObject(this.dateStartFrom) || setDateMyDatepicker(_arr.OccurrenceDate);
 
         _arr.ArrestNotice.map((x, index) => {
             x.RowId = index + 1;
