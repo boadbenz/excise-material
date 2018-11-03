@@ -1,5 +1,18 @@
-<p>
-  request-list works!
-</p>
-<app-table-data [columns]="columns" [data]="dataTest"></app-table-data>
-<app-form-group [columns]="columns" (outputSubmit)="submit($event)"></app-form-group>
+<ng-container *ngIf="isShowAdvSearch">
+  <div class="card">
+    <div class="card-header unset-radius">
+      ค้นหาขั้นสูง
+      <div class="card-actions">
+        <a (click)="isShowAdvSearch=!isShowAdvSearch">
+          <i class="ti-close"></i>
+        </a>
+      </div>
+    </div>
+    <div class="card-body">
+      <app-form-group [columns]="columns" (outputSubmit)="submit($event)" [options]="{type: 'FILTER'}"></app-form-group>
+    </div>
+  </div>
+</ng-container>
+
+
+<app-table-data [columns]="columns" [data]="dataTest" [options]="TableDataOptions"></app-table-data>

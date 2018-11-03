@@ -5,30 +5,40 @@
         <thead>
           <tr>
             <ng-container *ngFor="let column of columns">
-                <th [class]="column?.class">{{column?.title}}</th>
+              <ng-container *ngIf="!c?.isHidden && !c?.isFilter">
+                <th >{{column?.title}}</th>
+              </ng-container>
             </ng-container>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of (data$ | async); let i = index;">
-              <ng-container *ngFor="let column of columns">
-                  <td [class]="column?.class">{{ item[column?.field] || '-' }}</td>
+          <tr *ngFor="let item of pagedItems; let i = index;">
+            <ng-container *ngFor="let column of columns">
+              <ng-container *ngIf="!c?.isHidden && !c?.isFilter">
+                <td>{{ item[column?.field] || '-' }}</td>
               </ng-container>
-            
+
+            </ng-container>
+
             <td>
-              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.ArrestCode)">
-                <i class="mdi mdi-eye fa-lg"></i>
-              </a>
+              <ng-container *ngIf="options?.action === 'VIEW'">
+                <a href="javaScript:void(0);" class="text-secondary" [routerLink]="[options?.actionUrl, item[options?.actionFieldParams]]">
+                  <i class="mdi mdi-eye fa-lg"></i>
+                </a>
+              </ng-container>
+
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
+    <!-- <pre>
+      {{pager | json}}
+    </pre> -->
   </div>
   <div class="card-footer card-footer-unset">
-    <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+    <app-pagination-table [TotalItems]="pager?.totalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
       [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
     </app-pagination-table>
   </div>

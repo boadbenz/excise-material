@@ -65,6 +65,7 @@ export interface ColumnsInterface {
   isCustomColumns?: boolean;
   isHidden?: boolean;
   isDisabled?: boolean;
+  isFilter?: boolean;
   // ===== condition =====
   // ===== column in column in column =====
   children?: Array<ColumnsInterface>;

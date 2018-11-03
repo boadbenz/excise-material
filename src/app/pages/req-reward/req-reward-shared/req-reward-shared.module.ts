@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatButtonModule, MatCheckboxModule, MatInputModule} from '@angular/material';
-import { REQ_REWARD_SHARED_COMPONENTS } from '.';
+import { REQ_REWARD_SHARED_COMPONENTS, REQ_REWARD_SHARED_SERVICES } from '.';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PaginationTableModule } from 'app/pages/component/pagination-table/pagination-table.module';
+import { RouterModule } from '@angular/router';
 
 const SHARED_MODULES = [
   CommonModule,
@@ -13,6 +14,7 @@ const SHARED_MODULES = [
   MatCheckboxModule,
   MatInputModule,
   PaginationTableModule,
+  RouterModule
 ];
 @NgModule({
   imports: [
@@ -24,6 +26,9 @@ const SHARED_MODULES = [
   ],
   declarations: [
     ...REQ_REWARD_SHARED_COMPONENTS
+  ],
+  providers: [
+    ...REQ_REWARD_SHARED_SERVICES
   ]
 })
 export class ReqRewardSharedModule { }
