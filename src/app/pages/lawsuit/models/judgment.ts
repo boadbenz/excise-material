@@ -1,8 +1,9 @@
 export class JudgmentModel {
   public arrestName: string;
+  public justicName: string;
   public numberBlackList: string;
   public numberRedList: string;
-  public location: string;
+  public judgementNo: string;
   public dateJustic: string;
   public fine: string;
   public fineRate: string;

@@ -204,10 +204,11 @@ export class ManageComponent implements OnInit {
   }
 
   private async onEdit() {
+    console.log("this.lawsuitList===?", this.lawsuitList)
     if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['IsProve'] == 0) {/// IdProve = 0
       if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {/// LawsuitType = 0
-        await this.lawsuitService.LawsuitPaymentFinegetByJudgementID(1).then(res => {
-
+        await this.lawsuitService.LawsuitPaymentFinegetByJudgementID(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitJudgement'][0]['JudgementID']).then(res => {
+          console.log('res judgment===>', res)
         })
         //JudgementID
       } else {
@@ -231,6 +232,15 @@ export class ManageComponent implements OnInit {
           // console.log("_masstaff",this.masStaffList);
         } else { ///if found data
           alert('ไม่สามารถทำรายการได้');
+          // // set false
+          this.navService.setEditField(true);
+          this.navService.setEditButton(true);
+          this.navService.setPrintButton(true);
+          this.navService.setDeleteButton(true);
+          // set true
+          this.navService.setSaveButton(false);
+          this.navService.setCancelButton(false);
+          return;
         }
       })
     }
@@ -301,6 +311,8 @@ export class ManageComponent implements OnInit {
         this.ngOnInit();
       });
     } else {
+      return;
+      // wait for logical IsLawsuitComplete == 0
       this.lawsuitService.GetArrestIndicmentDetailgetByCon(indictmentID).then(result => {
         console.log('result====>', result);
         if (result.LawsuitJudgement) {
@@ -311,14 +323,18 @@ export class ManageComponent implements OnInit {
           this.navService.showFieldEdit.subscribe(async p => {
             this.showEditField = true;
 
-            this.ngOnInit();
+            // this.ngOnInit();
           });
         }
       });
+      this.navService.setEditField(true);
       this.navService.setCancelButton(false);
       this.navService.setSaveButton(false);
 
     }
+    this.navService.setPrintButton(true);
+    this.navService.setDeleteButton(true);
+    this.navService.setEditButton(true);
   }
 
   private async onSave() {
@@ -807,6 +823,7 @@ export class DialogJudgment {
     });
 
   }
+
   public isPayAll = null;
   public arrestData = [];
   lawsuitArrestFormDialog: FormGroup;
@@ -820,7 +837,7 @@ export class DialogJudgment {
         justicName: new FormControl(null, Validators.required),
         numberBlackList: new FormControl(null, Validators.required),
         numberRedList: new FormControl(null, Validators.required),
-        location: new FormControl(null, Validators.required),
+        judgementNo: new FormControl(null, Validators.required),
         dateJustic: new FormControl(null, Validators.required),
         fine: new FormControl(null),
         fineRate: new FormControl(null),
@@ -836,14 +853,35 @@ export class DialogJudgment {
         payUnit: new FormControl(null),
 
       });
-      this.judgmentModel.arrestName = this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName;
+      this.judgmentModel.arrestName = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName +
+        this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerFirstName + this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerLastName);
+      this.judgmentModel.justicName = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].CourtName);
+      this.judgmentModel.numberBlackList = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].UndecidedCaseNo);
+      this.judgmentModel.numberRedList = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].DecidedCaseNo);
+      this.judgmentModel.judgementNo = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].JudgementNo);
+      this.judgmentModel.dateJustic = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].JudgementDate);
+      this.judgmentModel.fine = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].IsFine);
+      this.judgmentModel.fineRate = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].CourtFire);
+      this.judgmentModel.isPrison = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].IsImPrison);
+      this.judgmentModel.prisonDay = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].ImPrisonTime);
+      this.judgmentModel.unit = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].ImPrisonUnit);
+      this.judgmentModel.payDate = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].PaymentPeroid);
+      this.judgmentModel.payRadio1 = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].IsPayOnce);
+      this.judgmentModel.startPayDate = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].PaymentPeroidStartDate);
+      this.judgmentModel.roundPay = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].PaymentPeroidRound);
+      this.judgmentModel.payUnit = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].PaymentUnit);
       console.log('this.judgmentModel.arrestName', this.judgmentModel.arrestName);
-      console.log('this.judgmentModel.arrestName', this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName);
     });
 
   }
   public closePopup = function () {
     this.dialogRef.close(DialogJudgment);
+  }
+  public validateData = function (data) {
+    if (data) {
+      return data;
+    }
+    return '';
   }
 
 
