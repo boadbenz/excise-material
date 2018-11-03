@@ -4,9 +4,10 @@
       <table #rewardTable class="dataTable table table-sm table-striped table-hover">
         <thead>
           <tr>
-            <ng-container *ngFor="let column of columns">
-              <ng-container *ngIf="!c?.isHidden && !c?.isFilter">
-                <th >{{column?.title}}</th>
+            <th *ngIf="showIndex">ลำดับ</th>
+            <ng-container *ngFor="let column of columns;trackBy: column?.field">
+              <ng-container *ngIf="!column?.isHiddenTable">
+                <th>{{column?.title}}</th>
               </ng-container>
             </ng-container>
             <th></th>
@@ -14,8 +15,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of pagedItems; let i = index;">
-            <ng-container *ngFor="let column of columns">
-              <ng-container *ngIf="!c?.isHidden && !c?.isFilter">
+            <td *ngIf="showIndex">{{i + 1}}</td>
+            <ng-container *ngFor="let column of columns; trackBy: column?.field">
+              <ng-container *ngIf="!column?.isHiddenTable">
                 <td>{{ item[column?.field] || '-' }}</td>
               </ng-container>
 

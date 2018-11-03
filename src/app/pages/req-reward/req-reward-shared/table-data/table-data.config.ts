@@ -21,6 +21,7 @@ export class TableDataConfig extends ReqRewardHelper {
     return this.data$.asObservable();
   }
   @Input() public options: ITableDataOptions;
+  @Input() public showIndex = true;
 
   public data$ = new BehaviorSubject<any>(null);
 }

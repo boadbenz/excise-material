@@ -1,15 +1,16 @@
 <form [formGroup]="formGroup" [class]="'form-row'" (submit)="submitHandle(formGroup)">
 
-  <ng-container *ngFor="let c of columns; trackBy: c?.field">
+  <ng-container *ngFor="let c of columns">
     <ng-container *ngIf="options?.type === 'FILTER';else TypeAny">
       <ng-container *ngIf="c?.field &&  c?.isFilter && !c?.isHidden">
         <div [class]="c?.class ? c?.class : 'col-md-6'">
           <div class="form-group row">
-            <label class="col-xs-12 col-sm-6 col-md-5 col-lg-4">{{c?.title}} <strong *ngIf="c?.isRequired" class="text-danger">*</strong>
+            <label [for]="c?.field" class="col-sm-4 col-form-label">{{c?.title}} <strong *ngIf="c?.isRequired" class="text-danger">*</strong>
               :</label>
-            <span class="col-xs-12 col-sm-6 col-md-7 col-lg-8">
-              <input type="{{c?.inputType ? c?.inputType : 'text'}}" [formControlName]="c?.field" class="form-control">
-            </span>
+              <div class="col-sm-8">
+                  <input type="{{c?.inputType ? c?.inputType : 'text'}}" [id]="c?.field" [formControlName]="c?.field" class="form-control">
+              </div>
+            
           </div>
         </div>
       </ng-container>
@@ -18,11 +19,11 @@
     <ng-template #TypeAny>
       <div [class]="c?.class ? c?.class : 'col-md-6'">
         <div class="form-group row">
-          <label class="col-xs-12 col-sm-6 col-md-5 col-lg-4">{{c?.title}} <strong *ngIf="c?.isRequired" class="text-danger">*</strong>
-            :</label>
-          <span class="col-xs-12 col-sm-6 col-md-7 col-lg-8">
-            <input type="{{c?.inputType ? c?.inputType : 'text'}}" [formControlName]="c?.field" class="form-control">
-          </span>
+            <label [for]="c?.field" class="col-sm-4 col-form-label">{{c?.title}} <strong *ngIf="c?.isRequired" class="text-danger">*</strong>
+              :</label>
+            <div class="col-sm-8">
+                <input type="{{c?.inputType ? c?.inputType : 'text'}}" [id]="c?.field" [formControlName]="c?.field" class="form-control">
+            </div>
         </div>
       </div>
     </ng-template>

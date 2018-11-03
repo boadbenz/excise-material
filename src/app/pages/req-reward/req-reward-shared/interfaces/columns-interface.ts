@@ -63,7 +63,7 @@ export interface ColumnsInterface {
   isNumber?: boolean;
   isRequired?: boolean;
   isCustomColumns?: boolean;
-  isHidden?: boolean;
+  isHiddenTable?: boolean;
   isDisabled?: boolean;
   isFilter?: boolean;
   // ===== condition =====
