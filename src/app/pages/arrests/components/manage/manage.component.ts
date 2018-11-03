@@ -186,7 +186,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.23');
+        this.sidebarService.setVersion('0.0.0.24');
         this.active_route();
         this.arrestFG = this.createForm();
         this.navigate_Service();

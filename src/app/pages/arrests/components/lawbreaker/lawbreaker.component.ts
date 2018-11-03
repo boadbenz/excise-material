@@ -22,6 +22,7 @@ import * as fromServices from '../../services';
 import * as fromModels from '../../models';
 import * as fromMasterModel from 'app/models'
 import { Subject } from 'rxjs/Subject';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 
 @Component({
@@ -39,6 +40,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private navService: NavigationService,
         private fb: FormBuilder,
+        private sidebarService: SidebarService,
         private loaderService: LoaderService
     ) {
         this.navService.setPrintButton(false);
@@ -83,6 +85,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.LawbreakerFG = this.createForm();
+        this.sidebarService.setVersion('0.0.0.24');
 
         await this.active_route();
         await this.navigate_service();
