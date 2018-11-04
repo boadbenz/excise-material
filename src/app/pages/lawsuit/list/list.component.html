@@ -35,11 +35,14 @@
                 <div class="form-group row">
                   <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
                   <div class="col-md-4">
-                    <input class="form-control" type="date" ngModel name="LawsuitDateFrom">
+                    <my-date-picker ngModel name="LawsuitDateFrom" placeholder="dd/mm/yyyy" locale="th" [options]="LawsuitDateFromOptions"></my-date-picker>
+                    <!-- <input class="form-control" type="date" ngModel name="LawsuitDateFrom" id="LawsuitDateFrom"> -->
                   </div>
                   <label class="col-form-label text-right col-md-1 px-0">ถึง : </label>
                   <div class="col-md-4">
-                    <input class="form-control" type="date" ngModel name="LawsuitDateTo">
+                    <my-date-picker ngModel name="LawsuitDateTo" placeholder="dd/mm/yyyy" locale="th" [options]="LawsuitDateToOptions"
+                      (dateChanged)="onDateChanged($event)"></my-date-picker>
+                    <!-- <input class="form-control" type="date" ngModel name="LawsuitDateTo"> -->
                   </div>
                 </div>
               </div>
@@ -91,12 +94,12 @@
                 <td>{{ item.LawsuitNo || '-' }}</td>
                 <td>{{ item.LawsuitDate || '-' }}</td>
                 <td>
-                  <div *ngFor="let staff of item.LawsuiteStaff;">
+                  <div *ngFor="let staff of item.LawsuitArrestStaff;">
                     {{ (staff.TitleName || '') + (staff.FullName || '') + ' ' + (staff.LastName || '')}}
                   </div>
                 </td>
                 <td>
-                  <div *ngFor="let staff of item.LawsuiteStaff;">
+                  <div *ngFor="let staff of item.LawsuitArrestStaff;">
                     {{ (staff.DepartmentName || '-') }}
                   </div>
                 </td>
