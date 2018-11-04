@@ -1,8 +1,13 @@
 <div class="card card-outline-bluish unset-radius">
+  <div class="card-actions">
+    <a (click)="closePopup()" style="float:right">
+      <i class="ti-close"></i>
+    </a>
+  </div>
   <div class="card-header unset-radius">
     <h5 class="card-title m-b-0">ข้อมูลการจับกุม</h5>
   </div>
-  <form [formGroup]="lawsuitArrestForm">
+  <form [formGroup]="lawsuitArrestFormDialog">
     <div class="card-body">
       <div class="form-body">
         <div class="row">
@@ -11,7 +16,8 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ชื่อผู้ต้องหา : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="arrestName">
+                <input class="form-control" formControlName="arrestName" type="text" [attr.disabled]="disabled ? '' : null"
+                  [(ngModel)]="this.judgmentModel.arrestName" name="arrestName">
               </div>
             </div>
           </div>
@@ -20,7 +26,8 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ชื่อศาล: </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="justicName">
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="justicName"
+                  [(ngModel)]="this.judgmentModel.justicName">
               </div>
             </div>
           </div>
@@ -169,23 +176,23 @@
             </div>
 
             <div class="row" *ngIf="isPayAll == false">
-                <div class="col-md-6">
-                  <div class="form-group row">
-                    <label class="col-form-label text-right col-md-3">จำนวนงาด: </label>
-                    <div class="col-md-9">
-                      <input class="form-control" type="text" formControlName="roundPay">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group row">
-                    <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
-                    <div class="col-md-9">
-                      <input class="form-control" type="text" formControlName="payUnit">
-                    </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-right col-md-3">จำนวนงาด: </label>
+                  <div class="col-md-9">
+                    <input class="form-control" type="text" formControlName="roundPay">
                   </div>
                 </div>
               </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
+                  <div class="col-md-9">
+                    <input class="form-control" type="text" formControlName="payUnit">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

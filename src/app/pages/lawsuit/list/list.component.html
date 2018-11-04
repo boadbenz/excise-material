@@ -80,6 +80,7 @@
               <tr>
                 <th class="footable-sortable text-center">ลำดับ</th>
                 <th class="footable-sortable">เลขที่ใบงาน</th>
+                <th class="footable-sortable">ฐานความผิดมาตรา</th>
                 <th class="footable-sortable">เลขที่คดีรับคำกล่าวโทษ</th>
                 <th class="footable-sortable">วันที่รับคดี</th>
                 <th class="footable-sortable">ชื่อผู้รับคดี</th>
@@ -91,15 +92,16 @@
               <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
                 <td class="text-center">{{ item.RowsId || '' }}</td>
                 <td>{{ item.ArrestCode || '-' }}</td>
+                <td>{{ item.LawsuitArrestIndicment[0].GuiltBaseID || '-' }}</td>
                 <td>{{ item.LawsuitNo || '-' }}</td>
                 <td>{{ item.LawsuitDate || '-' }}</td>
                 <td>
-                  <div *ngFor="let staff of item.LawsuitArrestStaff;">
-                    {{ (staff.TitleName || '') + (staff.FullName || '') + ' ' + (staff.LastName || '')}}
+                  <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
+                    {{ (staff.TitleName || '') + (staff.FirstName || '') + ' ' + (staff.LastName || '')}}
                   </div>
                 </td>
                 <td>
-                  <div *ngFor="let staff of item.LawsuitArrestStaff;">
+                  <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
                     {{ (staff.DepartmentName || '-') }}
                   </div>
                 </td>
