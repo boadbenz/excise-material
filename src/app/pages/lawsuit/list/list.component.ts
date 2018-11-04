@@ -4,12 +4,14 @@ import { Message } from "../../../config/message";
 import { LawsuitService } from "../lawsuit.service";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Lawsuit } from "../models/lawsuit";
 import { toLocalShort } from "../../../config/dateFormat";
 import { Notice } from "../../notices/notice";
-import {PreloaderService} from "../../../shared/preloader/preloader.component";
-import {SidebarService} from "../../../shared/sidebar/sidebar.component";
+import { PreloaderService } from "../../../shared/preloader/preloader.component";
+import { SidebarService } from "../../../shared/sidebar/sidebar.component";
+import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import { IMyDpOptions } from 'mydatepicker';
 
 @Component({
   selector: "app-list",
@@ -27,21 +29,44 @@ export class ListComponent implements OnInit, OnDestroy {
   advSearch: any;
   // advSearchSub: any;
 
+  @ViewChild('advForm') advForm: NgForm;
+
   paginage = pagination;
 
+  private today = new Date();
+
   constructor(private router: Router, private navService: NavigationService, private preLoaderService: PreloaderService
-              , private lawsuitService: LawsuitService, private sidebarService: SidebarService
+    , private lawsuitService: LawsuitService, private sidebarService: SidebarService
   ) {
     this.setShowButton();
     this.advSearch = this.navService.showAdvSearch;
   }
+  public LawsuitDateFromOptions: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd/mmm/yyyy',
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() },
+  };
+  public LawsuitDateToOptions: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd/mmm/yyyy',
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() },
+    // disableUntil: { year: this.today.getFullYear(), month: this.today.getMonth(), day: this.today.getDate() },
+  };
+  onDateChanged(event) {
+    let checkDate = new Date(event.jsdate);
 
+    let date: Date = new Date()
+    this.LawsuitDateFromOptions = {
+      dateFormat: 'dd/mmm/yyyy',
+      disableSince: { year: checkDate.getFullYear(), month: checkDate.getMonth() + 1, day: checkDate.getDate() + 1 }
+    }
+  }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.3');
+    this.sidebarService.setVersion('0.0.0.4');
     this.paginage.TotalItems = 0;
 
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
 
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       if (Textsearch) {
@@ -67,12 +92,16 @@ export class ListComponent implements OnInit, OnDestroy {
 
   async onSearch(Textsearch: any) {
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
 
   async onAdvSearch(form: any) {
-    if (form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
+    if (form.value.LawsuitDateFrom) {
+      let lawsuitDateToValue = form.value.LawsuitDateTo
+      if (!lawsuitDateToValue) {
+        lawsuitDateToValue = form.value.LawsuitDateFrom;
+      }
       const sDateCompare = new Date(form.value.LawsuitDateFrom);
       const eDateCompare = new Date(form.value.LawsuitDateTo);
       if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
@@ -83,7 +112,7 @@ export class ListComponent implements OnInit, OnDestroy {
       form.value.LawsuitDateTo = eDateCompare.toISOString();
     }
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.LawsuitgetByConAdv(form.value).then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitArrestGetByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
 
@@ -96,7 +125,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setSaveButton(false);
   }
 
-  private onSearchComplete(list: Lawsuit[]) {
+  private onSearchComplete(list: any) {
     /* Alert When No Data To Show */
     if (!list.length) {
       alert(Message.noRecord);
@@ -105,7 +134,13 @@ export class ListComponent implements OnInit, OnDestroy {
     /* Adjust Another Column */
     this.results = list.map((item, i) => {
       item.RowsId = i + 1;
-      item.LawsuitDate = toLocalShort(item.LawsuitDate);
+      try {
+        item.LawsuitDate = toLocalShort(item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitDate);
+      } catch (error) {
+
+      }
+      //item.LawsuitID = list.LawsuitArrestIndicment[0];
+      //console.log("Check LIST:"+JSON.stringify(item));
       return item;
     });
     /* Set Total Record */
@@ -113,8 +148,14 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private viewData(item) {
+    console.log('item==>',item)
+    if (item.LawsuitArrestIndicment[0].Lawsuit[0]) {
+      item.LawsuitID = item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID;
+    } else {
+      item.LawsuitID = '';
+    }
     this.router.navigate(['/lawsuit/manage', 'R'], {
-      queryParams: { id: item.LawsuitID, code: item.ArrestCode }
+      queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
     });
   }
 
@@ -124,6 +165,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   async pageChanges(event) {
     this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
+    console.log('this.resultsPerPage', this.resultsPerPage);
   }
 
 }

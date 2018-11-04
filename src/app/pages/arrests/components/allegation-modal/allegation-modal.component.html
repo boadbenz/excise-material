@@ -1,0 +1,83 @@
+
+<div class="modal-header bg-theme">
+    <div class="row">
+        <div class="col-lg-5">
+            <h4 class="modal-title text-white">เลือกข้อกล่าวหา</h4>
+        </div>
+        <div class="col-lg-6 col-md-5 col-8">
+            <form autocomplete="off" class="app-search" #searchFrom="ngForm" (ngSubmit)="onSearchByKey(searchFrom.value)">
+                <input type="search" name="Textsearch" ngModel class="form-control form-control-sm" placeholder="ค้นหาฐานความผิดมาตรา/ฐานความผิด">
+                <a class="srh-btn" (click)="onSearchByKey(searchFrom.value)" href="javaScript:void(0)">
+                    <i class="ti-search"></i>
+                </a>
+            </form>
+        </div>
+
+        <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
+            <span aria-hidden="true">
+                <i class=" ti-close"></i>
+            </span>
+        </a>
+    </div>
+</div>
+<h5 class="text-right mt-3 pr-3">ILG60-03-03-01-00</h5>
+<div class="modal-body font-14" [formGroup]="lawGroupFG">
+    <div class="card unset-radius">
+        <div class="card-body p-0">
+            <table id="allegation" class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th class="text-center"></th>
+                        <th class="text-center">ลำดับ</th>
+                        <th>ฐานความผิดมาตรา</th>
+                        <th>ฐานความผิด</th>
+                        <th>บทกำหนดโทษ</th>
+                        <th>อัตราโทษ</th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="LawGuiltbase">
+                    <tr *ngFor="let item of LawGuiltbase.controls; let i=index;" [formGroupName]="i">
+                        <td class="text-center">
+                            <input name="noticeRadio" name="IsChecked" formControlName="IsChecked" type="radio" id="td{{i}}"
+                                (change)="setIsChecked(i)" class="with-gap radio-col-indigo">
+                            <label for="td{{i}}" class="m-0"></label>
+                        </td>
+                        <td class="text-center">{{item.get('RowId').value}}</td>
+                        <td class="text-center">
+                            <div *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
+                                <span *ngFor="let subSection of getArrestLawSubSection(subSectionRule)">
+                                    {{subSection.get('SubSectionType').value}}
+                                </span>
+                            </div>
+                        </td>
+                        <td style="max-width: 200px;">{{item.get('GuiltBaseName').value}}</td>
+                        <td class="text-center">
+                            <div *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
+                                {{subSectionRule.get('SectionNo').value}}
+                            </div>
+                        </td>
+                        <td style="max-width: 200px;">
+                            <div *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
+                                <span *ngFor="let section of getArrestLawSection(subSectionRule)">
+                                    <span *ngFor="let penalty of getArrestLawPenalty(section)">
+                                        {{penalty.get('PenaltyDesc').value}}
+                                    </span>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer card-footer-unset">
+            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+            </app-pagination-table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="col-lg-2 col-4">
+        <button type="button" class="btn btn-block btn-themecolor" (click)="close('Save click')">บันทึก</button>
+    </div>
+</div>

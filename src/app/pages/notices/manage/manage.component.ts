@@ -589,9 +589,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async setStaffStore() {
-        await this.mainMasterService.masStaffMaingetAll().then(res =>
-            this.typeheadStaff = res
-        )
+        // await this.mainMasterService.masStaffMaingetAll().then(res =>
+        //     this.typeheadStaff = res
+        // )
     }
 
     private async setProductStore() {
