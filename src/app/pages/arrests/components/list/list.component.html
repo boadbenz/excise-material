@@ -75,7 +75,6 @@
                 <thead>
                     <tr>
                         <th class="text-center">ลำดับ</th>
-                        <th>เลขที่ใบแจ้งความ</th>
                         <th>เลขที่ใบงาน</th>
                         <th>วันที่จับกุม</th>
                         <th>ชื่อผู้กล่าวหา</th>
@@ -87,7 +86,6 @@
                 <tbody>
                     <tr *ngFor="let item of arrestList; let i=index">
                         <td class="text-center">{{item.RowsId}}</td>
-                        <td>{{item.NoticeCode}}</td>
                         <td>{{item.ArrestCode}}</td>
                         <td class="text-center">{{item.OccurrenceDate}}</td>
                         <td>

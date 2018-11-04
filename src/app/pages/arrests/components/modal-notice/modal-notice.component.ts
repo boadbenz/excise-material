@@ -66,8 +66,8 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
     }
 
     async onAdvSearch(form: any) {
-        const sdate = getDateMyDatepicker(form.value.dateStartFrom);
-        const edate = getDateMyDatepicker(form.value.dateStartTo);
+        const sdate = getDateMyDatepicker(form.dateStartFrom);
+        const edate = getDateMyDatepicker(form.dateStartTo);
 
         if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
@@ -76,8 +76,8 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
             }
         }
 
-        form.value.DateStartFrom = convertDateForSave(sdate) || '';
-        form.value.DateStartTo = convertDateForSave(edate) || '';
+        form.DateStartFrom = convertDateForSave(sdate) || '';
+        form.DateStartTo = convertDateForSave(edate) || '';
 
         this.s_arrestNotice.ArrestNoticegetByConAdv(form)
             .takeUntil(this.destroy$)

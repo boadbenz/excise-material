@@ -62,7 +62,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.22');
+        this.sidebarService.setVersion('0.0.0.24');
 
         this.navService.searchByKeyword
             .takeUntil(this.destroy$)
@@ -119,12 +119,14 @@ export class ListComponent implements OnInit, OnDestroy {
         list.map((p, i) => {
             p.RowsId = i + 1;
             p.OccurrenceDate = toLocalShort(p.OccurrenceDate);
-            p.ArrestStaff.map(staff => {
-                staff.FullName = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
-            });
+            p.ArrestStaff
+                .filter(staff => staff.ContributorID == '6')
+                .map(staff => {
+                    staff.FullName = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
+                });
         })
         this.arrest = list;
-        // set total record
+        // set total record     
         this.paginage.TotalItems = this.arrest.length;
 
     }

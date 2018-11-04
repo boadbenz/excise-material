@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -15,7 +15,7 @@ import 'rxjs/add/operator/takeUntil';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { MasStaffModel, RegionModel, MasProductModel, LawbreakerTypes, EntityTypes, ContributorType } from 'app/models';
 import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
-import { MyDatePickerOptions, setDateMyDatepicker, setZero, getDateMyDatepicker, convertDateForSave, compareDate } from 'app/config/dateFormat';
+import { MyDatePickerOptions, setDateMyDatepicker, setZero, getDateMyDatepicker, convertDateForSave, compareDate, toLocalShort } from 'app/config/dateFormat';
 import { ArrestProduct } from '../../models/arrest-product';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
@@ -53,8 +53,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     card2: boolean = false;
     card3: boolean = false;
     card4: boolean = false;
-    card5: boolean = true;
-    card6: boolean = true;
+    card5: boolean = false;
+    card6: boolean = false;
     card7: boolean = false;
     card8: boolean = false;
 
@@ -70,7 +70,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     typeheadStaff = new Array<MasStaffModel>();
     typeheadRegion = new Array<RegionModel>();
     typeheadProduct = new Array<MasProductModel>();
-    typeheadProductUnit = new Array<MasDutyProductUnitModel>();
+    typeheadQtyUnit = new Array<MasDutyProductUnitModel>();
+    typeheadNetVolumeUnit = new Array<MasDutyProductUnitModel>();
     Acceptability: fromModels.Acceptability
 
     dateStartFrom: any;
@@ -147,7 +148,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
     // Redux based variables
-    arrestProduct: Observable<ArrestProduct[]>;
+    obArrest: Observable<fromModels.Arrest>;
+    stateArrest: fromModels.Arrest;
 
     constructor(
         private fb: FormBuilder,
@@ -175,11 +177,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setPrevPageButton(false);
         // set true
         this.navService.setNextPageButton(true);
-        this.navService.setInnerTextNextPageButton("รับคำกล่าวโทษ")
+        this.navService.setInnerTextNextPageButton("รับคำกล่าวโทษ");
+
+        this.obArrest = store.select(s => s.arrest);
+        this.obArrest
+            .takeUntil(this.destroy$)
+            .subscribe((x: fromModels.Arrest) => this.stateArrest = x)
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.22');
+        this.sidebarService.setVersion('0.0.0.24');
         this.active_route();
         this.arrestFG = this.createForm();
         this.navigate_Service();
@@ -189,11 +196,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
+        this.arrestFG.reset();
     }
 
     private createForm(): FormGroup {
-        let ArrestDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
-        let ArrestTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
+        let ArrestDate = setDateMyDatepicker(new Date());
+        let ArrestTime = `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`;
         return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
             ArrestDate: new FormControl(ArrestDate, Validators.required),
@@ -239,31 +247,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.activeRoute.params.takeUntil(this.destroy$).subscribe(async p => {
             this.mode = p['mode'];
             this.arrestCode = p['code'];
-
-            switch (this.mode) {
-                case 'C':
-                    // set false
-                    this.navService.setPrintButton(false);
-                    this.navService.setEditButton(false);
-                    this.navService.setDeleteButton(false);
-                    this.navService.setEditField(false);
-                    // set true 
-                    this.navService.setSaveButton(true);
-                    this.navService.setCancelButton(true);
-                    break;
-
-                case 'R':
-                    // set false
-                    this.navService.setSaveButton(false);
-                    this.navService.setCancelButton(false);
-                    // set true
-                    this.navService.setPrintButton(true);
-                    this.navService.setEditButton(true);
-                    this.navService.setDeleteButton(true);
-                    this.navService.setEditField(true);
-                    break;
-            }
-
             this.pageLoad(this.arrestCode);
         });
     }
@@ -291,6 +274,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (staff.length < 3) {
                     alert('ต้องมีรายการผู้จับกุมอย่างน้อย 3 รายการ')
                     return
+                }
+                if (staff.filter(x => x.ContributorID == '').length > 0) {
+                    alert('กรุณาเลือกฐานะของผู้จับกุม');
+                    return;
                 }
                 if (staff.filter(x => x.ContributorID == '6').length > 1) {
                     alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการเท่านั้น');
@@ -343,15 +330,32 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async pageLoad(arrestCode: string) {
         switch (this.mode) {
             case 'C':
+                // set false
+                this.navService.setPrintButton(false);
+                this.navService.setEditButton(false);
+                this.navService.setDeleteButton(false);
+                this.navService.setEditField(false);
+                // set true 
+                this.navService.setSaveButton(true);
+                this.navService.setCancelButton(true);
+
                 await this.loadMasterData();
                 this.showEditField = false;
-                if (arrestCode != 'NEW') {
-                    this.loaderService.show();
+                if (this.stateArrest) {
                     await this.pageRefresh(this.arrestCode);
-                    this.loaderService.hide();
                 }
                 break;
+
             case 'R':
+                // set false
+                this.navService.setSaveButton(false);
+                this.navService.setCancelButton(false);
+                // set true
+                this.navService.setPrintButton(true);
+                this.navService.setEditButton(true);
+                this.navService.setDeleteButton(true);
+                this.navService.setEditField(true);
+
                 this.pageRefresh(arrestCode);
                 break;
         }
@@ -359,63 +363,116 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async pageRefresh(arrestCode: string) {
         this.loaderService.show();
-        await this.s_arrest.ArrestgetByCon(arrestCode)
-            .then(async (arr: fromModels.Arrest[]) => {
 
-                if (!arr.length) {
-                    alert(Message.noRecord)
-                    return
-                }
+        let arr = new Array<fromModels.Arrest>();
+        if (arrestCode != 'NEW') {
+            await this.s_arrest.ArrestgetByCon(arrestCode)
+                .then((a) => {
+                    if (this.checkResponse(a)) arr = a;
+                }).catch((error) => this.catchError(error));
+        } else {
+            arr = [this.stateArrest];
+        }
 
-                let _arr = arr[0];
-                let arrestForm = this.arrestFG;
+        if (!arr.length) return;
 
-                _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
-                _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
+        let _arr = arr[0];
+        this.pageRefreshArrest(_arr);
 
-                _arr.ArrestNotice.map((x, index) => {
-                    x.RowId = index + 1;
-                    x.IsModify = 'r';
-                })
+        await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
 
-                _arr.ArrestStaff.map((x, index) => {
-                    x.RowId = index + 1;
-                    x.IsModify = 'r';
-                    x.ContributorID = x.ContributorID || ''
-                    x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`
-                });
-                this.setItemFormArray(_arr.ArrestStaff, 'ArrestStaff');
+        await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
 
-                _arr.ArrestLocale.map(x => {
-                    if (x.SubDistrictCode && x.DistrictCode && x.ProvinceCode) {
-                        x.Region = `${x.SubDistrict} ${x.District} ${x.Province}`;
-                    }
-                })
-                arrestForm.patchValue(_arr);
+        await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
 
-                await this.s_product.ArrestProductgetByArrestCode(arrestCode)
-                    .then((pro: fromModels.ArrestProduct[]) => {
-                        let _prod = pro;
-                        _prod.map((x, index) => {
-                            x.IsModify = 'r';
-                            x.RowId = index + 1;
-                        })
-                        this.setItemFormArray(_prod, 'ArrestProduct')
-                    })
-
-                await this.s_indictment.ArrestIndictmentgetByArrestCode(arrestCode)
-                    .then((ind: fromModels.ArrestIndictment[]) => this.setArrestIndictment(ind));
-            })
-
-        await this.s_document.MasDocumentMaingetAll(this.documentType, this.arrestCode)
-            .then((x: fromModels.ArrestDocument[]) => {
-                x.map((y, index) => {
-                    y.RowId = index + 1;
-                    y.IsModify = 'r';
-                })
-                this.setItemFormArray(x, 'ArrestDocument');
-            });
         this.loaderService.hide();
+    }
+
+    private pageRefreshArrest(_arr: fromModels.Arrest) {
+        let arrestForm = this.arrestFG;
+
+        _arr.ArrestDate = !this.isObject(this.dateStartFrom) || setDateMyDatepicker(_arr.ArrestDate);
+        _arr.OccurrenceDate = !this.isObject(this.dateStartFrom) || setDateMyDatepicker(_arr.OccurrenceDate);
+
+        _arr.ArrestNotice.map((x, index) => {
+            x.RowId = index + 1;
+            x.IsModify = x.IsModify || 'r';
+            x.NoticeDateString = toLocalShort(x.NoticeDate);
+            x.ArrestNoticeStaff.map(s => s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`);
+            x.ArrestNoticeSuspect.map(s => s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`);
+        })
+        this.setNoticeForm(_arr.ArrestNotice);
+
+        _arr.ArrestStaff.map((x, index) => {
+            x.RowId = index + 1;
+            x.IsModify = x.IsModify || 'r';
+            x.ContributorID = x.ContributorID || ''
+            x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`
+        });
+        this.setItemFormArray(_arr.ArrestStaff, 'ArrestStaff');
+
+        _arr.ArrestLocale.map(x => {
+            if (x.SubDistrictCode && x.DistrictCode && x.ProvinceCode) {
+                x.Region = `${x.SubDistrict} ${x.District} ${x.Province}`;
+            }
+        })
+        arrestForm.patchValue(_arr);
+    }
+
+    private async pageRefreshProduct(_arrProd: fromModels.ArrestProduct[], arrestCode: string) {
+        let _prod = new Array<fromModels.ArrestProduct>();
+        if (arrestCode != 'NEW') {
+            await this.s_product.ArrestProductgetByArrestCode(arrestCode)
+                .then((pro) => {
+                    if (this.checkResponse(pro)) _prod = pro;
+                }).catch((error) => this.catchError(error));
+        } else {
+            _prod = _arrProd;
+        }
+
+        if (!_prod.length) return;
+
+        _prod.map((x, index) => {
+            x.IsModify = x.IsModify || 'r';
+            x.RowId = index + 1;
+        })
+        this.setItemFormArray(_prod, 'ArrestProduct');
+    }
+
+    private async pageRefreshIndictment(_arrIndict: fromModels.ArrestIndictment[], arrestCode) {
+        let _indict = new Array<fromModels.ArrestIndictment>();
+        if (arrestCode != 'NEW') {
+            await this.s_indictment.ArrestIndictmentgetByArrestCode(arrestCode)
+                .then((ind) => {
+                    if (this.checkResponse(ind)) _indict = ind;
+                }).catch((error) => this.catchError(error));
+        } else {
+            _indict = _arrIndict;
+        }
+
+        if (!_indict.length) return;
+
+        this.setArrestIndictment(_indict);
+    }
+
+    private async pageRefreshDocument(_arrDoc: fromModels.ArrestDocument[], arrestCode) {
+        let _doc = new Array<fromModels.ArrestDocument>();
+        if (arrestCode != 'NEW') {
+            await this.s_document.MasDocumentMaingetAll(this.documentType, arrestCode)
+                .then((x) => {
+                    if (this.checkResponse(x)) _doc = x;
+                }).catch((error) => this.catchError(error));
+        } else {
+            _doc = _arrDoc;
+        }
+
+        if (!_doc.length) return;
+
+        _doc.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = y.IsModify || 'r';
+        })
+        this.setItemFormArray(_doc, 'ArrestDocument');
     }
 
     private async loadMasterData() {
@@ -433,7 +490,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.typeheadStaff = x[0]
                 this.typeheadOffice = x[1]
                 this.typeheadProduct = x[2]
-                this.typeheadProductUnit = x[3]
+                this.typeheadQtyUnit = x[3]
+                this.typeheadNetVolumeUnit = x[3]
                 x[4].map(prov =>
                     prov.MasDistrict.map(dis =>
                         dis.MasSubDistrict.map(subdis => {
@@ -449,10 +507,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         })
                     )
                 );
-            })
-            .catch((error) => {
-                this.loaderService.hide();
-            })
+            }).catch((error) => this.catchError(error));
         this.loaderService.hide();
     }
 
@@ -531,23 +586,26 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     // set FormArray ArrestIndictment
     private setArrestIndictment(o: fromModels.ArrestIndictment[]) {
-        let _indict = this.ArrestIndictment;
-        o.map(x => {
-            _indict.push(
+        let arr = new FormArray([]);
+        o.map((x, index) => {
+            arr.push(
                 this.fb.group({
+                    RowId: index + 1,
+                    IsModify: x.IsModify || 'r',
                     IndictmentID: x.IndictmentID,
                     GuiltBaseID: x.GuiltBaseID,
                     ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase)
                 })
             )
         });
+        this.arrestFG.setControl('ArrestIndictment', arr);
     }
     // --- 1
     private setArrestLawGuitbase = (o: fromModels.ArrestLawGuitbase[]) => {
         let arr = new FormArray([]);
         o.map((x, index) => {
             arr.push(this.fb.group({
-                RowId: ++index,
+                // RowId: index + 1,
                 IsChecked: false,
                 GuiltBaseID: x.GuiltBaseID,
                 GuiltBaseName: x.GuiltBaseName,
@@ -658,7 +716,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             return;
         }
         const lastDoc = this.ArrestProduct.at(lastIndex).value;
-        if (lastDoc.Qty && lastDoc.QtyUnit) {
+        if (lastDoc.ProductDesc) {
             item.RowId = lastDoc.RowId + 1;
             this.ArrestProduct.push(this.fb.group(item));
         }
@@ -725,7 +783,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         o.at(i).patchValue({ IsModify: 'd', RowId: 0 });
         let sort = this.sortFormArray(o.value);
         o.value.map(() => o.removeAt(0));
-        sort.then(x => this.setItemFormArray(x, controls));
+        sort.then(x => this.setItemFormArray(x, controls))
+            .catch((error) => this.catchError(error));;
     }
 
     deleteStaff(i: number) {
@@ -744,7 +803,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
         let notice = this.sortFormArray(this.ArrestNotice.value);
         this.ArrestNotice.value.map(() => this.ArrestNotice.removeAt(0));
-        notice.then(x => this.setNoticeForm(x));
+        notice.then(x => this.setNoticeForm(x))
+            .catch((error) => this.catchError(error));
     }
 
     deleteIndicment(i: number) {
@@ -788,9 +848,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         text3$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadOffice
-                    .filter(v =>
-                        (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1)
-                    ).slice(0, 10));
+                    .filter(v => (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1))
+                    .slice(0, 10)
+            );
+
+    searchUnit = (text$: Observable<string>) =>
+        text$.debounceTime(200).distinctUntilChanged()
+            .map(term => term == '' ? []
+                : this.typeheadQtyUnit
+                    .filter(v => v.DutyCode.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .slice(0, 10)
+            );
 
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
         `${x.SubdistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
@@ -800,7 +868,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
 
-    formatterOffice = (x: { OfficeName: string }) => x.OfficeName
+    formatterOffice = (x: { OfficeName: string }) => x.OfficeName;
+
+    formatterUnit = (DutyCode: string) => DutyCode;
 
     selectItemLocaleRegion(e) {
         this.ArrestLocale.at(0).patchValue({
@@ -858,6 +928,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+    selectItemQtyUnit(e: any, i: number) {
+        this.ArrestProduct.at(i).patchValue({
+            QtyUnit: e.item.DutyCode,
+        })
+    }
+
+    selectItemNetVolumeUnit(e: any, i: number) {
+        this.ArrestProduct.at(i).patchValue({
+            NetVolumeUnit: e.item.DutyCode,
+        })
+    }
+
     changeArrestDoc(e: any, index: number) {
         // let file = e.target.files[0];
         this.ArrestDocument.at(index).patchValue({
@@ -866,6 +948,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsActive: 1
         })
     }
+
+    catchError(error: any) {
+        console.log(error);
+        this.endLoader();
+    }
+
+    endLoader = () => this.loaderService.hide();
 
     isObject = (obj) => obj === Object(obj);
 
@@ -923,7 +1012,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.router.navigate([`arrest/list`]);
                 }
                 break;
+
             case 'R':
+                this.arrestFG.reset();
                 this.pageLoad(this.arrestCode);
                 break;
         }
@@ -937,6 +1028,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.s_lawsuit
                     .ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
                     .then(y => isCheck = this.checkResponse(y))
+                    .catch((error) => this.catchError(error));
             })
 
         this.loaderService.hide();
@@ -946,7 +1038,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             } else {
                 this.loadMasterData();
             }
-        })
+        }).catch((error) => this.catchError(error));
     }
 
     private async onDelete() {
@@ -957,6 +1049,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.s_lawsuit
                     .ArrestLawsuitgetByIndictmentID(x.IndictmentID.toString())
                     .then(y => isCheck = this.checkResponse(y))
+                    .catch((error) => this.catchError(error));
             })
 
         Promise.all(indict).then(() => {
@@ -968,7 +1061,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.deleteArrest();
                 }
             }
-        })
+        }).catch((error) => this.catchError(error));
     }
 
     private async onComplete() {
@@ -1010,21 +1103,25 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
         }
 
-        await this.s_arrest.ArrestupdByCon(newArrest).then(x => {
-            if (!this.checkIsSuccess(x)) return;
-        }, () => { this.saveFail(); return; })
+        await this.s_arrest.ArrestupdByCon(newArrest)
+            .then(x => {
+                if (!this.checkIsSuccess(x)) return;
+            }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
     }
 
     private async deleteArrest() {
         this.loaderService.show();
-        await this.s_arrest.ArrestupdDelete(this.arrestCode).then(x => {
-            if (this.checkResponse(x)) {
-                alert(Message.delComplete);
-                this.router.navigate([`arrest/list`]);
-            } else {
-                alert(Message.delFail);
-            }
-        }, () => { alert(Message.delFail); return; })
+        await this.s_arrest.ArrestupdDelete(this.arrestCode)
+            .then(x => {
+                if (this.checkResponse(x)) {
+                    alert(Message.delComplete);
+                    this.router.navigate([`arrest/list`]);
+                } else {
+                    alert(Message.delFail);
+                }
+            }, () => { alert(Message.delFail); return; })
+            .catch((error) => this.catchError(error));
         this.loaderService.hide();
     }
 
@@ -1033,15 +1130,19 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(async x => {
                 switch (x.IsModify) {
                     case 'd':
-                        await this.s_notice.ArrestNoticeupdDelete(x.NoticeCode).then(x => {
-                            if (!this.checkIsSuccess(x)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_notice.ArrestNoticeupdDelete(x.NoticeCode)
+                            .then(x => {
+                                if (!this.checkIsSuccess(x)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
 
                     case 'c':
-                        await this.s_notice.ArrestNoticeupdByCon(x.ArrestCode, x.NoticeCode).then(x => {
-                            if (!this.checkIsSuccess(x)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_notice.ArrestNoticeupdByCon(x.ArrestCode, x.NoticeCode)
+                            .then(x => {
+                                if (!this.checkIsSuccess(x)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                 }
             })
@@ -1053,19 +1154,25 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(async (x: fromModels.ArrestStaff) => {
                 switch (x.IsModify) {
                     case 'd':
-                        await this.s_staff.ArrestStaffupdDelete(x.StaffID).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_staff.ArrestStaffupdDelete(x.StaffID)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        await this.s_staff.ArrestStaffinsAll(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_staff.ArrestStaffinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'u':
-                        await this.s_staff.ArrestStaffupdByCon(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_staff.ArrestStaffupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                 }
             })
@@ -1078,19 +1185,25 @@ export class ManageComponent implements OnInit, OnDestroy {
                 x.ProductDesc = this.isObject(x.ProductDesc) ? x.ProductDesc['ProductDesc'] : x.ProductDesc;
                 switch (x.IsModify) {
                     case 'd':
-                        await this.s_product.ArrestProductupdDelete(x.ProductID).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_product.ArrestProductupdDelete(x.ProductID)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        await this.s_product.ArrestProductinsAll(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_product.ArrestProductinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'u':
-                        await this.s_product.ArrestProductupdByCon(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        await this.s_product.ArrestProductupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                 }
             })
@@ -1102,19 +1215,25 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(async (x: fromModels.ArrestDocument) => {
                 switch (x.IsModify) {
                     case 'd':
-                        this.s_document.MasDocumentMainupdDelete(x.DocumentID).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        this.s_document.MasDocumentMainupdDelete(x.DocumentID)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        this.s_document.MasDocumentMaininsAll(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        this.s_document.MasDocumentMaininsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'u':
-                        this.s_document.MasDocumentMainupdByCon(x).then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }, () => { this.saveFail(); return; })
+                        this.s_document.MasDocumentMainupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
                         break;
                 }
             })

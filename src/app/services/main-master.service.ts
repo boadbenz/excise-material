@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from 'app/app.config';
 import { HttpService } from 'app/core/http.service';
+import { MasDocumentModel } from 'app/models/mas-document.model';
 
 @Injectable()
 export class MainMasterService {
@@ -66,10 +67,13 @@ export class MainMasterService {
   MasReligionMaingetAll() {
     return this.callApi(`${appConfig.api7789}/MasReligionMaingetAll`);
   }
-  MasCountryMaingetAll(){
+  MasCountryMaingetAll() {
     return this.callApi(`${appConfig.api7789}/MasCountryMaingetAll`);
   }
-
+  MasDocumentMaingetAll(DocumentType: string, ReferenceCode: string): Promise<MasDocumentModel[]> {
+    const params = { DocumentType, ReferenceCode }
+    return this.resposePromisGetList(JSON.stringify(params), `${appConfig.api7789}/MasDocumentMaingetAll`);
+  }
 
 
 

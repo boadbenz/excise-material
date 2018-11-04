@@ -3,7 +3,7 @@
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
       <div class="card-actions">
-        <a class="">
+        <a class="" (click)="card1 = !card1">
           <i class="fa" [ngClass]="{'fa-chevron-down': card1, 'fa-chevron-up': !card1}"></i>
         </a>
       </div>
@@ -33,7 +33,7 @@
           <input formControlName="SectionNo" type="text" class="form-control form-control-sm" required readonly>
         </div>
 
-        <label for="" class="col-lg-2 col-sm-4 control-label">บทกำหนดโทษ :</label>
+        <label for="" class="col-lg-2 col-sm-4 control-label">อัตราโทษ :</label>
         <div class="form-group col-lg-4 col-md-7 col-sm-8">
           <input formControlName="PenaltyDesc" type="text" class="form-control form-control-sm" required readonly>
         </div>
@@ -57,7 +57,8 @@
           <thead>
             <tr>
               <th class="text-center">
-                <input type="checkbox" id="productTh" class="filled-in chk-col-indigo" (change)="productCheckAll()" [checked]="isCheckAll">
+                <input type="checkbox" id="productTh" class="filled-in chk-col-indigo" (change)="productCheckAll()"
+                  [checked]="isCheckAll">
                 <label for="productTh" class="m-t-10 m-b-0"></label>
               </th>
               <th class="text-center">ลำดับ</th>
@@ -84,23 +85,25 @@
                 <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" required
                   [attr.disabled]="showEditField ? '' : null">
               </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                  required [attr.disabled]="showEditField ? '' : null">
-                  <option value="" disabled selected></option>
-                  <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
-                </select>
+              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
+                <ng-template #qtyUnit let-r="result" let-t="term">
+                  {{ r.DutyCode }}
+                </ng-template>
+                <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchUnit" [resultTemplate]="qtyUnit"
+                  [readonly]="showEditField" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
+                  [value]="item.value.QtyUnit" />
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
                 <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
                   [attr.disabled]="showEditField ? '' : null">
               </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                  [attr.disabled]="showEditField ? '' : null">
-                  <option value="" selected disabled></option>
-                  <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
-                </select>
+              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
+                <ng-template #netVolumeUnit let-r="result" let-t="term">
+                  {{ r.DutyCode }}
+                </ng-template>
+                <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchUnit" [resultTemplate]="netVolumeUnit"
+                  [readonly]="showEditField" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
+                  [value]="item.value.NetVolumeUnit" />
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'">
                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
@@ -149,12 +152,12 @@
           </thead>
           <tbody formArrayName="ArrestLawbreaker">
             <tr *ngFor="let item of ArrestLawbreaker.controls; let i=index;" [formGroupName]="i">
-              <td class="text-center">{{item.get('RowId').value}}</td>
-              <td>{{item.get('LawbreakerTypeName').value}}</td>
-              <td>{{item.get('EntityTypeName').value}}</td>
-              <td>{{item.get('ReferenceID').value}}</td>
-              <td>{{item.get('LawbreakerFullName').value}}</td>
-              <td class="text-center">
+              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
+              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('LawbreakerTypeName').value}}</td>
+              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('EntityTypeName').value}}</td>
+              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('ReferenceID').value}}</td>
+              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('LawbreakerFullName').value}}</td>
+              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
                 <a href="javaScript:void(0);" class="text-warning text-secondary" (click)="deleteLawbreaker(i)">
                   <i class="fa fa-trash-o fa-lg"></i>
                 </a>

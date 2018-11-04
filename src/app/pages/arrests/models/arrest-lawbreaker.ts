@@ -88,8 +88,8 @@ export class ArrestLawbreakerAllegation {
 }
 
 export const ArrestLawbreakerFormControl = {
-    LawbreakerID: new FormControl(null, Validators.required),
-    ArrestCode: new FormControl(null, Validators.required),
+    LawbreakerID: new FormControl(null),
+    ArrestCode: new FormControl(null),
     LawbreakerRefID: new FormControl(null),
     EntityType: new FormControl(null),
     CompanyTitleCode: new FormControl(null),
