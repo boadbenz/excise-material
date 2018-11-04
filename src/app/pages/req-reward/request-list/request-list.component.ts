@@ -4,6 +4,7 @@ import { NavigationService } from 'app/shared/header-navigation/navigation.servi
 import { RequestListService } from '../services/RequestList.service';
 import { IRequestListgetByConAdv, IRequestList } from './request-list.interface';
 import { FormGroup } from '@angular/forms';
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
 
 @Component({
   selector: 'app-request-list',
@@ -12,14 +13,15 @@ import { FormGroup } from '@angular/forms';
 })
 export class RequestListComponent extends RequestListConfig implements OnInit {
   constructor(
-    public navService: NavigationService,
-    private requestListService: RequestListService
+    private navService: NavigationService,
+    private requestListService: RequestListService,
+    private preloaderService: PreloaderService
   ) {
     super();
     this.advSearch = this.navService.showAdvSearch;
     this.navService.searchByKeyword.subscribe((res) => {
       if (res) {
-        this.fetchData(res['Textsearch'] ? res['Textsearch'] : '');
+        this.fetchData(res['Textsearch'] ||  '');
       }
     });
   }
@@ -33,10 +35,12 @@ export class RequestListComponent extends RequestListConfig implements OnInit {
   }
 
   public fetchData(Textsearch) {
+    this.preloaderService.setShowPreloader(true);
     this.requestListService
       .RequestListgetByKeyword({Textsearch: Textsearch})
       .subscribe((res: IRequestList[]) => {
         this.gridData = this.newData(res);
+        this.preloaderService.setShowPreloader(false);
       });
   }
   private setShowButton() {
@@ -46,11 +50,13 @@ export class RequestListComponent extends RequestListConfig implements OnInit {
     return data.map((m: IRequestList) => ({...m, StaffName: `${m.TitleName}${m.FirstName} ${m.LastName}`}));
   }
   public submitAdvSearch($event: FormGroup) {
+    this.preloaderService.setShowPreloader(true);
     const formData: IRequestListgetByConAdv =  $event.value;
     this.requestListService
       .RequestListgetByConAdv(formData)
       .subscribe(res => {
         this.gridData = this.gridData = this.newData(res);
+        this.preloaderService.setShowPreloader(false);
       });
   }
 }

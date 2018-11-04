@@ -3,12 +3,29 @@ import { DropdownInterface } from './dropdown-interface';
 export interface ColumnsInterface {
   // ===== default =====
   title?: string;
+  title2?: string;
   field?: string;
+  field2?: string;
   width?: any;
   default?: any;
+  default2?: any;
   primaryKey?: boolean;
   class?: string;
+  mergeField?: string[];
   inputType?:
+    | 'date'
+    | 'datetime-local'
+    | 'email'
+    | 'month'
+    | 'number'
+    | 'password'
+    | 'search'
+    | 'tel'
+    | 'text'
+    | 'time'
+    | 'url'
+    | 'week';
+    inputType2?:
     | 'date'
     | 'datetime-local'
     | 'email'
@@ -58,13 +75,13 @@ export interface ColumnsInterface {
   needCheckAll?: boolean;
 
   useIcon?: boolean;
-
   isEmail?: boolean;
   isNumber?: boolean;
   isRequired?: boolean;
   isCustomColumns?: boolean;
   isHiddenTable?: boolean;
   isDisabled?: boolean;
+  isDisabled2?: boolean;
   isFilter?: boolean;
   // ===== condition =====
   // ===== column in column in column =====

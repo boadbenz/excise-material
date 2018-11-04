@@ -11,11 +11,24 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'request-list'
+        redirectTo: 'list'
       },
       {
-        path: 'request-list',
-        component: RequestListComponent
+        path: 'list',
+        component: RequestListComponent,
+        data: [
+          {
+            urls: [
+              { title: 'หน้าหลัก', url: '/' },
+              { title: 'ค้นหาคำร้องขอรับเงินสินบนรางวัล' }
+            ],
+            pageType: 'list',
+            nextPage: {
+              title: 'จัดการข้อมูลคำร้องขอรับเงินสินบนรางวัล',
+              url: '/reward/manage'
+            }
+          }
+        ]
       },
       {
         path: 'request-arrest-lawsuit/:IndictmentID',

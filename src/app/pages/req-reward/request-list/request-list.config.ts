@@ -9,7 +9,7 @@ export class RequestListConfig extends ReqRewardHelper {
   public gridData: IRequestList[] = [];
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
-    actionUrl: '/req-reward/request-arrest-lawsuit',
+    actionUrl: '/reward/request-arrest-lawsuit',
     actionFieldParams: 'IndictmentID'
   }
   public columns: ColumnsInterface[] = [
@@ -39,17 +39,11 @@ export class RequestListConfig extends ReqRewardHelper {
       title: 'วันที่จับกุม',
       field: 'OccurrenceDateFrom',
       inputType: 'date',
+      title2: 'ถึง',
+      field2: 'OccurrenceDateTo',
+      inputType2: 'date',
       default: '',
-      class: 'col-md-3',
-      isFilter: true,
-      isHiddenTable: true
-    },
-    {
-      title: 'ถึง',
-      field: 'OccurrenceDateTo',
-      inputType: 'date',
-      default: '',
-      class: 'col-md-3',
+      class: 'col-md-6',
       isFilter: true,
       isHiddenTable: true
     },
@@ -63,20 +57,23 @@ export class RequestListConfig extends ReqRewardHelper {
       title: 'วันที่รับคดี',
       field: 'LawsuitDateFrom',
       inputType: 'date',
+      title2: 'ถึง',
+      field2: 'LawsuitDateTo',
+      inputType2: 'date',
       default: '',
-      class: 'col-md-3',
+      class: 'col-md-6',
       isFilter: true,
       isHiddenTable: true,
     },
-    {
-      title: 'ถึง',
-      field: 'LawsuitDateTo',
-      inputType: 'date',
-      default: '',
-      class: 'col-md-3',
-      isFilter: true,
-      isHiddenTable: true
-    },
+    // {
+    //   title: 'ถึง',
+    //   field: 'LawsuitDateTo',
+    //   inputType: 'date',
+    //   default: '',
+    //   class: 'col-md-3',
+    //   isFilter: true,
+    //   isHiddenTable: true
+    // },
     {
       title: 'ชื่อผู้กล่าวหา',
       field: 'StaffName',

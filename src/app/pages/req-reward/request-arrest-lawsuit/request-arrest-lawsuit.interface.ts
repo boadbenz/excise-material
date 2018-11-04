@@ -20,3 +20,6 @@ export interface IRequestArrestLawsuit {
   SectionNo: string;
   PenaltyDesc: string;
 }
+export interface IRequestArrestLawsuitGetByIndictmentId {
+  IndictmentID: number;
+}

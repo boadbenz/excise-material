@@ -6,6 +6,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PaginationTableModule } from 'app/pages/component/pagination-table/pagination-table.module';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { CardActionsModule } from 'app/pages/component/card-actions/card-actions.module';
 
 const SHARED_MODULES = [
   CommonModule,
@@ -16,7 +17,8 @@ const SHARED_MODULES = [
   MatCheckboxModule,
   MatInputModule,
   PaginationTableModule,
-  RouterModule
+  RouterModule,
+  CardActionsModule
 ];
 @NgModule({
   imports: [

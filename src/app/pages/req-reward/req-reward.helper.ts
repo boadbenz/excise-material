@@ -39,11 +39,17 @@ export class ReqRewardHelper {
         val.children.forEach(val2 => {
           if (!val2.primaryKey && !val2.doNotEditor) {
             obj[val2.field] = this.validateSetting(val);
+            if (val2.field2) {
+              obj[val2.field2] = this.validateSetting(val);
+            }
           }
         });
       } else {
         if (!val.primaryKey && !val.doNotEditor) {
           obj[val.field] = this.validateSetting(val);
+          if (val.field2) {
+            obj[val.field2] = this.validateSetting(val);
+          }
         }
       }
     });
@@ -65,10 +71,23 @@ export class ReqRewardHelper {
             ? defaultData[x.field]
             : Date.now
         );
+
+        if (x.field2) {
+          columns[index].default2 = new Date(
+            defaultData[x.field2] && typeof defaultData[x.field2] === 'string'
+              ? defaultData[x.field2]
+              : Date.now
+          );
+        }
       } else {
         columns[index].default = defaultData[x.field]
           ? defaultData[x.field]
           : null;
+        if (x.field2) {
+          columns[index].default2 = defaultData[x.field2]
+            ? defaultData[x.field2]
+            : null;
+        }
       }
     });
     return columns;
