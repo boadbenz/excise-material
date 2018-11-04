@@ -21,6 +21,7 @@ export const LawsuitDocumentFormControl = {
   // IsActive: new FormControl(null),
   // IsNewItem: new FormControl(null)
   DocumentID: new FormControl(null),
+  DocumentName: new FormControl(null),
   ReferenceCode: new FormControl(null),
   FilePath: new FormControl(null),
   DataSource: new FormControl(null),
