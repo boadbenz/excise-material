@@ -3,11 +3,15 @@ export class Revenue {
     public RevenueCode?: string;
     public RevenueNo?: string;
     public RevenueDate?: string;
+    public RevenueTime?: string;
     public StationCode?: string;
     public StationName?: string;
     public InformTo?: string;
     public ISACTIVE?: number;
-    public RevenueOneStaff?: RevenueStaff[];
+    public RevenueStatus?: string;
+    public RevenueOneStaff?: string;
+    public ResultCount?: string;
+    public RevenueOneStaffDept?: string;
     public RevenueDetail?: RevenueDetail[];
     public RevenueStaff?: RevenueStaff[];
 }
@@ -42,6 +46,7 @@ export class RevenueDetail {
     public RevenueStatus?: string;
     public RevenueID?: string;
     public CompareReceiptID ?: number;
+    public CompareID?: string;
     public CompareCode?: string;
     public LawBreaker?: string;
     public StaffReceip?: string;
@@ -51,4 +56,6 @@ export class RevenueDetail {
     public RewardMoney?: number;
     public TreasuryMoney?: number;
     public IsCheck?: boolean;
+    public IsNewItem?: boolean;
+    public IsDelItem?: boolean;
 }

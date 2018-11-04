@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Revenue } from '../Revenue';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
-import { toLocalShort, compareDate, setZeroHours, getDateMyDatepicker, MyDatePickerOptions } from '../../../config/dateFormat';
+import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
@@ -22,20 +22,14 @@ export class ListComponent implements OnInit, OnDestroy {
     revenue = new Array<Revenue>();
     RevenueList = new Array<Revenue>();
     paginage = pagination;
-    DateStartFrom: any;
     DateStartTo: any;
     _dateStartFrom: any;
     _dateStartTo: any;
 
-    showEditField: any;
-    DepartmentName: string;
-
-    RevenueStatus: any;
     StatusOption = [];
     options = [];
     rawOptions = [];
-
-    myDatePickerOptions = MyDatePickerOptions;
+    RevenueStatus: string;
 
     private subOnSearch: any;
     private subSetNextPage: any;
@@ -63,12 +57,14 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.1');
+        this.sidebarService.setVersion('Revenue 0.0.0.11 (L)');
 
-        this.preloader.setShowPreloader(true);
+        this.RevenueStatus = "";
 
-        this.getDepartmentRevenue();
-        this.onSearch({ Textsearch: "" });
+        //this.preloader.setShowPreloader(true);
+
+        //this.getDepartmentRevenue();
+        //this.onSearch({ Textsearch: "" });
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
@@ -104,6 +100,7 @@ export class ListComponent implements OnInit, OnDestroy {
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             alert(Message.noRecord);
+            this.RevenueList = [];
             this.preloader.setShowPreloader(true);
         });
     }
@@ -130,7 +127,11 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         }
 
+        if(form.value.RevenueStatus == ""){
+            form.value.RevenueStatus = null;
+        }
 
+        debugger
         await this.incomeService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
@@ -145,24 +146,32 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (!list.length) {
             alert(Message.noRecord);
+            this.RevenueList = [];
+
             return false;
         }
 
         await list.map((item) => {
+            var StaffSendMoney;
             item.RevenueDate = toLocalShort(item.RevenueDate);
-            item.RevenueOneStaff = item.RevenueStaff.filter(item => item.ContributorCode === '20');
+            StaffSendMoney = item.RevenueStaff.filter(item => item.ContributorID === 20);
 
-            debugger
-            if (item.RevenueDetail.length > 0) {
-                if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    item.RevenueDetail[0].RevenueStatus = "ยังไม่นำส่งเงินรายได้"
-                }
-                else if (item.RevenueDetail[0].RevenueStatus == "0") {
-                    item.RevenueDetail[0].RevenueStatus = "นำส่งเงินรายได้"
-                }
-                else {
-                    item.RevenueDetail[0].RevenueStatus = "รับรายการนำส่งเงิน"
-                }
+            item.RevenueOneStaff = "";
+            item.RevenueOneStaffDept = "";
+
+            if(StaffSendMoney.length > 0){
+                item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
+                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeName;
+            }
+
+            if (item.RevenueStatus == "1") {
+                item.RevenueStatus = "นำส่งเงินรายได้"
+            }
+            else if (item.RevenueStatus == "2") {
+                item.RevenueStatus = "รับรายการนำส่งเงิน"
+            }
+            else{
+                item.RevenueStatus = "";
             }
 
         })
@@ -178,8 +187,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
-    clickView(RevenueCode: string) {
-        this._router.navigate([`/income/manage/R/${RevenueCode}`]);
+    clickView(RevenueID: string) {
+        this._router.navigate([`/income/manage/R/${RevenueID}`]);
     }
 
     async pageChanges(event) {
@@ -206,13 +215,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
     checkDateDelivery() {
         if (this._dateStartFrom && this._dateStartTo) {
-            const sdate = getDateMyDatepicker(this._dateStartFrom);
-            const edate = getDateMyDatepicker(this._dateStartTo);
+            const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
+            const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
 
             if (!compareDate(new Date(sdate), new Date(edate))) {
                 alert(Message.checkDate)
                 setTimeout(() => {
-                    this.DateStartTo = { date: this._dateStartFrom.date };
+                    this.DateStartTo = { date: this._dateStartFrom };
                 }, 0);
             }
         }
@@ -230,27 +239,25 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onAutoChange(value: string) {
-        // 
-        if (value == '') {
-            this.options = [];
+        // if (value == '') {
+        //     this.options = [];
 
-            // this.oProve.ProveStationCode = "";
-            // this.oProve.ProveStation = "";
-        } else {
-            this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
-            debugger
-        }
+        //     // this.oProve.ProveStationCode = "";
+        //     // this.oProve.ProveStation = "";
+        // } else {
+        //     this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        // }
     }
 
     onAutoFocus(value: string) {
-        if (value == '') {
-            this.options = [];
-        }
+        // if (value == '') {
+        //     this.options = [];
+        // }
     }
 
-    onAutoSelecteWord(event) {
-        // this.oProve.ProveStationCode = event.OfficeCode;
-        // this.oProve.ProveStation = event.OfficeName;
-    }
+    // onAutoSelecteWord(event) {
+    //     // this.oProve.ProveStationCode = event.OfficeCode;
+    //     // this.oProve.ProveStation = event.OfficeName;
+    // }
     // ----- End หน่วยงาน ---
 }

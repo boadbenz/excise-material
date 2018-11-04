@@ -19,6 +19,14 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
 import { MatAutocompleteModule } from '@angular/material';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { AuthGuard } from './pages/login/auth.guard';
+import { CoreModule } from './core/core.module';
+import { StoreModule } from '@ngrx/store';
+import { MainMasterService } from './services/main-master.service';
+import { HttpClientModule } from '@angular/common/http';
+
+import * as fromArrestReducers from './pages/arrests/store/reducers/';
+import { TransactionRunningService } from './services/transaction-running.service';
+import { MasDocumentMainService } from './services/mas-document-main.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -38,19 +46,30 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         NgbModule.forRoot(),
         FormsModule,
         HttpModule,
+        HttpClientModule,
         RouterModule.forRoot(routes),
         PreloaderModule,
-        MatAutocompleteModule
+        CoreModule,
+        MatAutocompleteModule,
+        StoreModule.forRoot(
+            {
+                arrest: fromArrestReducers.arrestReducer,
+                arrestProduct: fromArrestReducers.productReducer,
+                arrestIndictment: fromArrestReducers.indictmentReducer
+            })
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AuthGuard,
         NavigationService,
-        SidebarService
+        SidebarService,
+        MainMasterService,
+        MasDocumentMainService,
+        TransactionRunningService
     ],
     exports: [MatAutocompleteModule],
     bootstrap: [AppComponent]
 })
 
-export class AppModule {}
+export class AppModule { }
 

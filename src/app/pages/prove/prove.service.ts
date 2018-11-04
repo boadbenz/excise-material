@@ -52,8 +52,8 @@ export class ProveService {
   }
 
   async getProveProductUnit(Textsearch: string): Promise<any> {
-    const params = { Textsearch };
-    const url = `${appConfig.api8882}/ProveMasProductUnitgetByKeyword`;
+    const params = {  };
+    const url = `${appConfig.api8882}/ProveMasProductUnitgetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

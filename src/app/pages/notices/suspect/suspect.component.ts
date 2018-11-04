@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, MaritalStatus, RegionModel } from '../../../models';
+import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, RegionModel } from '../../../models';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Suspect } from './suspect.interface';
 import { Observable } from 'rxjs/Observable';
@@ -60,7 +60,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
     nationnalitys: DropDown[] = Nationalitys;
     races: DropDown[] = Races;
     religions: DropDown[] = Religions;
-    materialStatus: DropDown[] = MaritalStatus;
+    materialStatus: DropDown[] ;
 
     typeheadRegion: RegionModel[] = []
 

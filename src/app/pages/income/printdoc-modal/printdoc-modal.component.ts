@@ -11,42 +11,25 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 })
 
 export class PrintDocModalComponent implements OnInit {
+    printDoc = [
+        {
+            DocName: 'รายงานนำส่งรายได้',
+            DocType: 'แบบฟอร์ม'
+        }
+    ]
 
-    revenueForm: FormGroup;
-    document = new Array<Document>();
-
-    @Input() DocumentID: string;
+    @Input() ArrestCode: string;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
 
-    constructor(
-        private incomeService: IncomeService,
-        private fb: FormBuilder,
-        private _router: Router
-    ) { }
-
+    constructor() { }
 
     ngOnInit() {
-        debugger
-
-        // this.incomeService.DocumentgetByCon(this.DocumentID).subscribe(result => {
-        //     this.document = new Array<Document>();
-        //     this.document = result;
-        // })
     }
 
-    createFrom() {
-        this.revenueForm = this.fb.group({
-            document: this.fb.array([])
-        })
-    }
+    onPrint(f: any) {
 
-    onPrint(form: any) {
-        // console.log(form.value);
-        // this.close('Save click')
-        // this.c.emit(form);
-        this._router.navigate([`/income/list`]);
     }
 
     dismiss(e: any) {
@@ -55,6 +38,5 @@ export class PrintDocModalComponent implements OnInit {
 
     close(e: any) {
         this.c.emit(e);
-        this._router.navigate([`/income/list`]);
     }
 }

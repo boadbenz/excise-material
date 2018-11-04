@@ -17,8 +17,10 @@ const routes: Routes = [
         data: {
             // title: 'ค้นหาข้อมูล',
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหารายการนำส่งเงินรายได้' }],
-            nextPage: { title: 'จัดการข้อมูลนำส่งเงินรายได้', url: '/income/manage' }
+            nextPage: { title: 'จัดการข้อมูลนำส่งเงินรายได้', url: '/income/manage' },
+            codePage: 'ILG60-07-01-00-00'
         },
+        
         component: ListComponent
     }
 ]

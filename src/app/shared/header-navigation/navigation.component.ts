@@ -22,9 +22,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
     saveButton: any;
     searchBar: any;
     nextPageButton: any;
+    prevPageButton: any;
 
     nextPage: string = '';
     nextPageTitle: any;
+    prevPageTitle: any;
 
     constructor(
         private router: Router,
@@ -40,6 +42,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.searchBar = this.navService.showSearchBar;
         this.nextPageButton = this.navService.showNextPageButton;
         this.nextPageTitle = this.navService.innerTextNextPageButton;
+
+        this.prevPageButton = this.navService.showPrevPageButton;
+        this.prevPageTitle = this.navService.innerTextPrevPageButton;
     }
 
     ngOnInit() {
@@ -78,6 +83,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     clickNextPage() {
         this.navService.setOnNextPage(true);
+    }
+
+    clickPrevPage() {
+        this.navService.setOnPrevPage(true);
     }
 
     clickPrint() {

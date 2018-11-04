@@ -43,21 +43,21 @@ export const BloodTypes: DropDown[] = [
 
 export const EntityTypes: DropDown[] = [
     {
-        value: '0',
-        text: 'บุคคลธรรมดา'
+        value: '2',
+        text: 'นิติบุคคล'
     }, {
         value: '1',
-        text: 'นิติบุคคล'
+        text: 'บุคคลธรรมดา'
     }
 ]
 
 export const LawbreakerTypes: DropDown[] = [
     {
         value: '0',
-        text: 'ชาวไทย'
+        text: 'ชาวต่างชาติ'
     }, {
         value: '1',
-        text: 'ชาวต่างชาติ'
+        text: 'ชาวไทย'
     }
 ]
 
@@ -72,11 +72,11 @@ export const GenderTypes: DropDown[] = [
 ]
 
 export const ContributorType: DropDown[] = [
-    { value: '1', text: 'ผู้กล่าวหา' },
-    { value: '2', text: 'ผู้ร่วมจับกุม' }
+    { value: '6', text: 'ผู้กล่าวหา' },
+    { value: '7', text: 'ผู้ร่วมจับกุม' }
 ]
 
-export const MaritalStatus: DropDown[] = [
+export const MaritalStatuType: DropDown[] = [
     {
         value: '1',
         text: 'โสด'
