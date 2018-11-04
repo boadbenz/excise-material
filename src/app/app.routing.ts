@@ -128,12 +128,12 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'req-reward',
+    path: 'reward',
     component: LayoutComponent,
     loadChildren: './pages/req-reward/req-reward.module#ReqRewardModule'
   },
   {
-    path: 'reward',
+    path: 'reward_old',
     component: LayoutComponent,
     children: [
       {
