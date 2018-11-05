@@ -21,8 +21,9 @@ export class Prove {
     public LawsuitID?: number;
     public LawsuitNo?: string;
     public IsActive?: number;
-    public ProveOneStaff?: Array<ProveStaff>;
-    public ProveOneStaffScience?: Array<ProveStaff>;
+    public ProveOneStaff?: string;
+    public ProveOneStaffScience?: string;
+    public ProveOneDeptScience?: string;
     public ProveProduct?: Array<ProveProduct>;
     public ProveStaff?: Array<ProveStaff>;
     public ProveScience?: Array<ProveScience>;

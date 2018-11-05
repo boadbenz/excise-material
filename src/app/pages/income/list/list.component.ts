@@ -57,7 +57,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.11 (L)');
+        this.sidebarService.setVersion('Revenue 0.0.0.12 (L)');
 
         this.RevenueStatus = "";
 
@@ -67,7 +67,7 @@ export class ListComponent implements OnInit, OnDestroy {
         //this.onSearch({ Textsearch: "" });
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {
+            if (Textsearch) {               
                 await this.navService.setOnSearch('');
 
                 let ts;
@@ -94,6 +94,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearch(Textsearch: any) {
+        this.preloader.setShowPreloader(true);
+
         this.incomeService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
 
@@ -101,7 +103,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, (err: HttpErrorResponse) => {
             alert(Message.noRecord);
             this.RevenueList = [];
-            this.preloader.setShowPreloader(true);
+            this.preloader.setShowPreloader(false);
         });
     }
 
@@ -131,7 +133,6 @@ export class ListComponent implements OnInit, OnDestroy {
             form.value.RevenueStatus = null;
         }
 
-        debugger
         await this.incomeService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
@@ -208,9 +209,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onEDateChange(event: IMyDateModel) {
         this._dateStartTo = event.date;
-        if (this.checkDateDelivery()) {
-
-        }
+        this.checkDateDelivery();
     }
 
     checkDateDelivery() {

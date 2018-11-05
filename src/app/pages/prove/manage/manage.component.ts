@@ -737,7 +737,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.DeliveryDate = setDateMyDatepicker(new Date(PSDate[0]));
                 this.DeliveryTime = PSDate[1] + ".000";
 
-                var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "14");
+                var PStaff = this.oProve.ProveStaff.filter(f => f.ContributorID == "14");
                 if (PStaff.length > 0) {
                     this.ProveStaffName = PStaff[0].TitleName + PStaff[0].FirstName + ' ' + PStaff[0].LastName;
                     this.PosExaminer = PStaff[0].PositionName;
@@ -747,7 +747,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
 
 
-                var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorCode == "15");
+                var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorID == "15");
                 if (PScienceStaff.length) {
                     this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
                     this.PosScience = PScienceStaff[0].PositionName;
@@ -1077,7 +1077,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: event.OfficeCode,
             OfficeName: event.OfficeName,
             OfficeShortName: event.OfficeShortName,
-            ContributorCode: "14"
+            ContributorID: "14"
         }
 
         this.PosExaminer = event.PosLevelName;
@@ -1127,7 +1127,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: event.OfficeCode,
             OfficeName: event.OfficeName,
             OfficeShortName: event.OfficeShortName,
-            ContributorCode: "15"
+            ContributorID: "15"
         }
 
         this.PosScience = event.PosLevelName;
@@ -1282,7 +1282,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorCode: "14"
+            ContributorID: "14"
         }
     }
 
@@ -1309,7 +1309,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorCode: "15"
+            ContributorID: "15"
         }
     }
     // ----- End Clear -----

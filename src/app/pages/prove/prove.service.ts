@@ -20,7 +20,7 @@ export class ProveService {
 
   getByKeyword(Textsearch: string) {
     const params = Textsearch;
-    const url = `${appConfig.api8882}/ProvegetByKeyword`;
+    const url = `${appConfig.api8882}/ProveListgetByKeyword`;
     return this.http.post<Prove[]>(url, params, this.httpOptions);
   }
 
@@ -40,7 +40,7 @@ export class ProveService {
   async getByConAdv(form: any): Promise<any> {
     debugger
     const params = JSON.stringify(form);
-    const url = `${appConfig.api8882}/ProvegetByConAdv`;
+    const url = `${appConfig.api8882}/ProveListgetByConAdv`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
