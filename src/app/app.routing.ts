@@ -83,13 +83,13 @@ export const routes: Routes = [
       }
     ]
   },
-  // {
-  //     path: 'income', component: LayoutComponent,
-  //     children: [
-  //         { path: 'list', loadChildren: './pages/income/list/list.module#ListModule' },
-  //         { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
-  //     ]
-  // },
+  {
+      path: 'income', component: LayoutComponent,
+      children: [
+          { path: 'list', loadChildren: './pages/income/list/list.module#ListModule' },
+          { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
+      ]
+  },
   {
     path: 'lawsuit',
     component: LayoutComponent,
