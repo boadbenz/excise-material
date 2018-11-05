@@ -216,9 +216,12 @@ export class ListComponent implements OnInit {
         if(ProveID == "" || ProveID == undefined)
         {
             ProveID = "0";
+            this._router.navigate([`/prove/manage/C/${ProveID}/${IndictmentID}`]);
         }
-
-        this._router.navigate([`/prove/manage/R/${ProveID}/${IndictmentID}`]);
+        else
+        {
+            this._router.navigate([`/prove/manage/R/${ProveID}/${IndictmentID}`]);
+        }
     }
 
     getCurrentDate() {
