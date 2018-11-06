@@ -33,8 +33,9 @@ export class RewardHelper {
   }
 
   createForm(columns: Array<ColumnsInterface>) {
+    const allColumns = this.mergeField(columns);
     const obj = {};
-    columns.forEach(val => {
+    allColumns.forEach(val => {
       if (val.children) {
         val.children.forEach(val2 => {
           if (!val2.primaryKey && !val2.doNotEditor) {
@@ -57,6 +58,23 @@ export class RewardHelper {
   }
   // ===== create form =====
 
+  mergeField(columns: Array<ColumnsInterface>): ColumnsInterface[] {
+    const fieldNew: ColumnsInterface[] = columns;
+    // columns.forEach((x, index) => {
+    //   if (x.mergeField) {
+    //     x.mergeField.forEach(e => {
+    //       if (e.substring(0, 1) !== '&') {
+    //         fieldNew.push({
+    //           field: e,
+    //           inputType: 'hidden'
+    //         })
+    //       }
+    //     });
+    //   }
+    // });
+    return fieldNew;
+  }
+  // ===== merge Field =====
   // ===== setDefault Columns ======
   public setDefaultDataColumns(
     columns: Array<ColumnsInterface>,

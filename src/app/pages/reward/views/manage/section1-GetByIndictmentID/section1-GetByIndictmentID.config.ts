@@ -1,10 +1,40 @@
 import { Input } from '@angular/core';
 import { ManageConfig } from '../manage.config';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
+import { IRequestArrestLawsuit } from 'app/pages/reward/interfaces/RequestArrestLawsuit.interface';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class Section1GetByIndictmentIDConfig extends ManageConfig {
   @Input()
   public IndictmentID: number;
-  public columns: ColumnsInterface[] = [
+
+  public defaultData: IRequestArrestLawsuit;
+
+  public columnsDefault: ColumnsInterface[] = [
+    {
+      field: 'TitleName',
+      inputType: 'hidden'
+    },
+    {
+      field: 'FirstName',
+      inputType: 'hidden'
+    },
+    {
+      field: 'LastName',
+      inputType: 'hidden'
+    },
+
+    {
+      field: 'SubDistrict',
+      inputType: 'hidden'
+    },
+    {
+      field: 'District',
+      inputType: 'hidden'
+    },
+    {
+      field: 'Province',
+      inputType: 'hidden'
+    },
     {
       title: 'เลขที่ใบงาน',
       field: 'ArrestCode',
@@ -74,4 +104,5 @@ export class Section1GetByIndictmentIDConfig extends ManageConfig {
       isDisabled: true
     }
   ];
+  public columns$ = new BehaviorSubject<any>(null);
 }

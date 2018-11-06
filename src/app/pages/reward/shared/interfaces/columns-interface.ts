@@ -24,7 +24,8 @@ export interface ColumnsInterface {
     | 'text'
     | 'time'
     | 'url'
-    | 'week';
+    | 'week'
+    | 'hidden';
     inputType2?:
     | 'date'
     | 'datetime-local'
@@ -37,7 +38,8 @@ export interface ColumnsInterface {
     | 'text'
     | 'time'
     | 'url'
-    | 'week';
+    | 'week'
+    | 'hidden';
   validMassage?: string;
   case?: string;
   matchValue?: any;

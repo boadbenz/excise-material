@@ -1,6 +1,6 @@
 import { RewardHelper } from '../../reward.helper';
-import { ColumnsInterface } from '../interfaces/columns-interface';
 import { Input, EventEmitter, Output } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IFormGroup {
@@ -9,13 +9,20 @@ export interface IFormGroup {
 
 export class FormGroupConfig extends RewardHelper {
   @Input()
-  public columns: ColumnsInterface[];
-
-  @Input()
   public options: IFormGroup;
 
   @Input()
   public needSearchBtn: boolean;
+
+  @Input()
+  set columns(val) {
+    this.columns$.next(val);
+  }
+  get columns() {
+    return this.columns$.asObservable();
+  }
+
+  public columns$ = new BehaviorSubject<any>(null);
 
   @Output()
   public outputSubmit = new EventEmitter();
