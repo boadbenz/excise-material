@@ -130,7 +130,7 @@ export const routes: Routes = [
   {
     path: 'reward',
     component: LayoutComponent,
-    loadChildren: './pages/req-reward/req-reward.module#ReqRewardModule'
+    loadChildren: './pages/reward/reward.module#RewardModule'
   },
   {
     path: 'reward_old',
@@ -138,19 +138,19 @@ export const routes: Routes = [
     children: [
       {
         path: 'list',
-        loadChildren: './pages/reward/list/list.module#ListModule'
+        loadChildren: './pages/reward_old/list/list.module#ListModule'
       },
       {
         path: 'manage/:mode/:code',
-        loadChildren: './pages/reward/manage/manage.module#ManageModule'
+        loadChildren: './pages/reward_old/manage/manage.module#ManageModule'
       },
       {
         path: 'bribe/:mode',
-        loadChildren: './pages/reward/bribe/bribe.module#BribeModule'
+        loadChildren: './pages/reward_old/bribe/bribe.module#BribeModule'
       },
       {
         path: 'reward/:mode/:caseSelect',
-        loadChildren: './pages/reward/reward/reward.module#RewardModule'
+        loadChildren: './pages/reward_old/reward/reward.module#RewardModule'
       }
     ]
   },
