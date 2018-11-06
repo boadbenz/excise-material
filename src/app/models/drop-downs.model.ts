@@ -43,7 +43,7 @@ export const BloodTypes: DropDown[] = [
 
 export const EntityTypes: DropDown[] = [
     {
-        value: '0',
+        value: '2',
         text: 'นิติบุคคล'
     }, {
         value: '1',

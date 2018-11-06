@@ -207,7 +207,7 @@
             <div class="row form-group">
               <div class="col">
                 <input [attr.disabled]="showEditField ? '' : null" formControlName="IsOutsideCheck" type="checkbox" id="IsOutSide"
-                  class="filled-in chk-col-indigo"  [readonly]="showEditField">
+                  class="filled-in chk-col-indigo" [readonly]="showEditField">
                 <label for="IsOutSide">คดีรับคำกล่าวโทษนอกสถานที่</label>
               </div>
             </div>
@@ -243,8 +243,8 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-4">ผู้รับคดี : </label>
               <div class="col-md-8">
-                <input class="form-control" formControlName="FullName" type="text" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" (input)="onChangeFullname($event.target.value)" required>
+                <input class="form-control" formControlName="FullName" type="text" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                  (input)="onChangeFullname($event.target.value)" required>
               </div>
             </div>
           </div>
@@ -307,10 +307,10 @@
           <tbody formArrayName="LawsuitTableList">
             <tr class="footable" *ngFor="let item of LawsuitTableList.controls; let i=index;" [formGroupName]="i">
               <td class="text-center">{{i+1}}</td>
-              <td><input type="text" formControlName="EntityType" class="form-control form-control-sm" [readonly]="true"></td>
-              <td><input type="text" formControlName="LawbreakerType" class="form-control form-control-sm" [readonly]="true"></td>
-              <td><input type="text" formControlName="LawsuitNoRef" class="form-control form-control-sm" [readonly]="true"></td>
-              <td><input type="text" formControlName="LawBrakerFullName" class="form-control form-control-sm" [readonly]="true"></td>
+              <td>{{item.controls['EntityType'].value}}</td>
+              <td>{{item.controls['LawbreakerType'].value}}</td>
+              <td>{{item.controls['LawsuitNoRef'].value}}</td>
+              <td>{{item.controls['LawBrakerFullName'].value}}</td>
               <td>
                 <select formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
                   <option [value]="type.id" *ngFor="let type of lstype">{{type.name}}</option>
@@ -322,12 +322,19 @@
                 </select>
               </td>
               <td>
-                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.value.LawsuitEnd == 1" (click)="editTable(item, i)">
+                <a href="javaScript:void(0);" class="text-danger" (click)="editTable(item, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a>
-                <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="!showEditField && item.value.LawsuitEnd == 1" >
+                <!-- <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['IsProve'].value == 0"
+                    (click)="editTable(item, i)">
+                    <i class="fa fa-edit fa-lg"></i>
+                  </a> -->
+                <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="item.controls['LawsuitType'].value == 0">
                   <i class="mdi mdi-eye fa-lg"></i>
                 </a>
+                <!-- <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="!showEditField && item.value.LawsuitEnd == 1" >
+                  <i class="mdi mdi-eye fa-lg"></i>
+                </a> -->
               </td>
             </tr>
           </tbody>
@@ -367,9 +374,9 @@
             <td>
               <div class="input-group">
                 <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"
-                  [readonly]="showEditField">
+                  [readonly]="showEditField" disabled>
                 <div class="input-group-append">
-                  <input [id]="'lawsuitAttach'+j" type="file" (input)="changeLawsuitDoc($event, j)" hidden
+                  <input [id]="'lawsuitAttach'+j" type="file" (input)="changeNoticeDoc($event, j)" hidden
                     [attr.disabled]="showEditField ? '' : null">
                   <label [for]="'lawsuitAttach'+j" class="input-group-text custom-file-upload text-secondary">
                     <i class="ti-more-alt"></i>
@@ -378,7 +385,7 @@
               </div>
             </td>
             <td class="text-center">
-              <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteDocument(item.get('DocumentID').value, j)">
+              <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteDocument(j)">
                 <i class="fa fa-trash-o fa-lg"></i>
               </a>
             </td>

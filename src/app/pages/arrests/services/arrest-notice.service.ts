@@ -24,9 +24,10 @@ export class ArrestNoticeService {
     }
 
     ArrestNoticegetByConAdv(form: any) {
+        debugger
         const params = form;
         const url = `${appConfig.api7788}/ArrestNoticegetByConAdv`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.http.post(url, params).map(x => x.json() || []);
     }
 
     async ArrestNoticeupdByCon(ArrestCode: string, NoticeCode: string) {

@@ -60,7 +60,7 @@ export const MyDatePickerOptions: IMyOptions = {
 
 export function setDateMyDatepicker(date: Date) {
     if (!date)
-        return null;
+        return { myDate: null };
 
     date = new Date(date);
     return { date: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } }
@@ -77,7 +77,7 @@ export function getDateMyDatepicker(date: any) {
 export function convertDateForSave(date: Date) {
     if (!date)
         return null;
-        
+
     date.setHours(0, -date.getTimezoneOffset(), 0, 0);
     let d = date.toISOString();
     d = d.replace('T', ' ').split('.')[0];
