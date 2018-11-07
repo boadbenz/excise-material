@@ -68,6 +68,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     private destroy$: Subject<boolean> = new Subject<boolean>();
     // param: Params
     private mode: string;
+    private arrestMode: string;
     private arrestCode: string;
     private indictmentDetailId: string;
     private indictmentId: string;
@@ -120,6 +121,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .takeUntil(this.destroy$)
             .subscribe(async results => {
                 this.mode = results.params.mode;
+                this.arrestMode = results.queryParams.arrestMode;
                 this.arrestCode = results.queryParams.arrestCode;
                 this.indictmentId = results.queryParams.indictmentId;
                 this.guiltbaseId = results.queryParams.guiltbaseId;
@@ -531,10 +533,10 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     [`arrest/allegation`, 'C'],
                     {
                         queryParams: {
-                            
+                            arrestMode: this.arrestMode,
                             arrestCode: this.arrestCode,
-                            indictmentId: '',
-                            guiltbaseId: ''
+                            indictmentId: this.indictmentId,
+                            guiltbaseId: this.guiltbaseId
                         }
                     });
                 break;
