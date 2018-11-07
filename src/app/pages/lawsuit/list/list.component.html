@@ -99,13 +99,17 @@
                 <td>{{ item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitNo || '' }}</td>
                 <td>{{ item.LawsuitDate || '' }}</td>
                 <td>
-                  <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
-                    {{ (staff.TitleName || '') + (staff.FirstName || '') + ' ' + (staff.LastName || '')}}
+                  <div *ngIf="item.LawsuitArrestIndicment[0].Lawsuit[0]">
+                    <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
+                      {{ (staff.TitleName || '') + (staff.FirstName || '') + ' ' + (staff.LastName || '')}}
+                    </div>
                   </div>
                 </td>
                 <td>
-                  <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
-                    {{ (staff.OfficeShortName || '') }}
+                  <div *ngIf="item.LawsuitArrestIndicment[0].Lawsuit[0]">
+                    <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
+                      {{ (staff.OfficeShortName || '') }}
+                    </div>
                   </div>
                 </td>
                 <td>
