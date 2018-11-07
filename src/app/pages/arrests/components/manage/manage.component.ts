@@ -186,7 +186,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.24');
+        this.sidebarService.setVersion('0.0.0.25');
         this.active_route();
         this.arrestFG = this.createForm();
         this.navigate_Service();
@@ -368,7 +368,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (arrestCode != 'NEW') {
             await this.s_arrest.ArrestgetByCon(arrestCode)
                 .then((a) => {
-                    if (this.checkResponse(a)) arr = a;
+                    if (this.checkResponse(a))
+                        arr = a;
                 }).catch((error) => this.catchError(error));
         } else {
             arr = [this.stateArrest];
@@ -406,8 +407,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         _arr.ArrestStaff.map((x, index) => {
             x.RowId = index + 1;
             x.IsModify = x.IsModify || 'r';
-            x.ContributorID = x.ContributorID || ''
-            x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`
+            x.ContributorID = x.ContributorID || x.ContributorCode;
+            x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`;
         });
         this.setItemFormArray(_arr.ArrestStaff, 'ArrestStaff');
 
@@ -887,12 +888,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         const product = this.ArrestProduct.at(i).value;
         this.ArrestProduct.at(i).reset(e.item);
         this.ArrestProduct.at(i).patchValue({
+            ProductType: e.item.ProductID ? '1' : '2',
             ProductID: product.ProductID || e.item.ProductID,
             IsModify: product.IsModify == 'r' ? 'u' : product.IsModify,
             RowId: product.RowId,
             ArrestCode: this.arrestCode,
-            GroupCode: e.item.GroupCode || 1,
-            IsDomestic: e.item.IsDomestic || 1
+            GroupCode: e.item.GroupCode || product.GroupCode,
+            IsDomestic: e.item.IsDomestic || product.IsDomestic
         })
     }
 
@@ -966,11 +968,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     checkResponse(res: any) {
         switch (res.IsSuccess) {
-            case 'True':
-            case true:
-                return true;
-            default:
+            case 'False':
+            case false:
                 return false;
+            default:
+                return true;
         }
     }
 

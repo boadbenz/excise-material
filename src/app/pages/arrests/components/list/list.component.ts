@@ -120,7 +120,7 @@ export class ListComponent implements OnInit, OnDestroy {
             p.RowsId = i + 1;
             p.OccurrenceDate = toLocalShort(p.OccurrenceDate);
             p.ArrestStaff
-                .filter(staff => staff.ContributorID == '6')
+                .filter(staff => staff.ContributorID == '6' || staff.ContributorCode == '6')
                 .map(staff => {
                     staff.FullName = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
                 });
