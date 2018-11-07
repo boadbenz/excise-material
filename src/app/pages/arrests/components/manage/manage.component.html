@@ -380,7 +380,7 @@
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 30px;">
                                 <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
-                                    [readonly]="showEditField">
+                                [readonly]="showEditField">
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
                                 <ng-template #netVolumeUnit let-r="result" let-t="term">

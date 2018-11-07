@@ -30,8 +30,6 @@ export class ArrestProduct {
     public QtyUnit = '';
     public NetVolume = '';
     public NetVolumeUnit = '';
-    public NetWeight = '';
-    public NetWeightUnit = '';
     
     public IsActive: number;
     public IsChecked: boolean;

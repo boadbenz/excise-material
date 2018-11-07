@@ -65,7 +65,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     arrestCode: string;
     showEditField: boolean;
     isRequired: boolean;
-    arrestFG = this.createForm();
+    arrestFG: FormGroup;
     typeheadOffice = new Array<MasOfficeModel>();
     typeheadStaff = new Array<MasStaffModel>();
     typeheadRegion = new Array<RegionModel>();
@@ -188,7 +188,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.sidebarService.setVersion('0.0.0.25');
         this.active_route();
-        // this.arrestFG = this.createForm();
+        if (this.arrestFG) {
+            this.arrestFG.reset();
+        }
+        this.arrestFG = this.createForm();
         this.navigate_Service();
 
     }
@@ -432,7 +435,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (arrestCode != 'NEW') {
             await this.s_product.ArrestProductgetByArrestCode(arrestCode)
                 .then((pro) => {
-                    if (this.checkResponse(pro)) _prod = pro;
+                    if (this.checkResponse(pro)) {
+                        _prod = pro.map(x => {
+                            x.IsModify = 'r';
+                            return x;
+                        })
+                    };
                 }).catch((error) => this.catchError(error));
         } else {
             _prod = _arrProd;
@@ -440,11 +448,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (!_prod.length) return;
 
-        _prod.map((x, index) => {
-            x.IsModify = x.IsModify || 'r';
-            x.RowId = index + 1;
-            x.ProductFrom = 'arrest-product'
-        })
+        _prod.map((x, index) => x.RowId = index + 1);
+
         this.setItemFormArray(_prod, 'ArrestProduct');
     }
 
@@ -469,7 +474,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (arrestCode != 'NEW') {
             await this.s_document.MasDocumentMaingetAll(this.documentType, arrestCode)
                 .then((x) => {
-                    if (this.checkResponse(x)) _doc = x;
+                    if (this.checkResponse(x)) {
+                        _doc = x.map(y => {
+                            y.IsModify = 'r';
+                            return y;
+                        });
+                    };
                 }).catch((error) => this.catchError(error));
         } else {
             _doc = _arrDoc;
@@ -477,10 +487,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (!_doc.length) return;
 
-        _doc.map((y, index) => {
-            y.RowId = index + 1;
-            y.IsModify = y.IsModify || 'r';
-        })
+        _doc.map((y, index) => y.RowId = index + 1);
+
         this.setItemFormArray(_doc, 'ArrestDocument');
     }
 
@@ -734,6 +742,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addAllegation() {
+        debugger
         let arrest = this.arrestFG.value as fromModels.Arrest;
         this.store.dispatch(new fromStore.CreateArrest(arrest));
         this.router.navigate(
@@ -907,7 +916,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || product.GroupCode,
             IsDomestic: e.item.IsDomestic || product.IsDomestic,
-            ProductFrom: product.IsModify == 'c' ? 'mas-product' : product.ProductFrom
+            // ProductFrom: product.IsModify == 'c' ? 'mas-product' : product.ProductFrom
         })
     }
 
@@ -1140,6 +1149,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .then(x => {
                 if (this.checkResponse(x)) {
                     alert(Message.delComplete);
+                    this.arrestFG.reset();
                     this.router.navigate([`arrest/list`]);
                 } else {
                     alert(Message.delFail);
