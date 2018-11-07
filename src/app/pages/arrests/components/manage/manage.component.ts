@@ -175,9 +175,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
         this.navService.setPrevPageButton(false);
-        // set true
-        this.navService.setNextPageButton(true);
-        this.navService.setInnerTextNextPageButton("รับคำกล่าวโทษ");
+        this.navService.setNextPageButton(false);
 
         this.obArrest = store.select(s => s.arrest);
         this.obArrest
@@ -186,10 +184,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.25');
+        this.sidebarService.setVersion('0.0.0.26');
         this.active_route();
         if (this.arrestFG) {
-            this.arrestFG.reset();
+            setTimeout(() => {
+                this.arrestFG.reset();
+            }, 300);
         }
         this.arrestFG = this.createForm();
         this.navigate_Service();
@@ -345,6 +345,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
+                    if (this.arrestCode != this.stateArrest.ArrestCode) {
+                        this.stateArrest = null;
+                    }
                     await this.pageRefresh(this.arrestCode);
                 }
                 break;

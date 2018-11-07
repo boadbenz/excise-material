@@ -1,7 +1,5 @@
 import { ArrestProductDetail } from './arrest-product';
-import { FormControl, Validators, FormArray } from '@angular/forms';
-import { ArrestLawGuitbase } from "./arrest-law-guiltbase";
-import { ArrestLawbreaker } from './arrest-lawbreaker';
+import { ArrestLawGuitbase, ArrestLawbreaker } from '.';
 
 // class OpsArrestIndicmentDetailCollection {
 //     IndictmentDetailID: number;
@@ -54,4 +52,20 @@ export class ArrestIndictmentDetail {
     LawbreakerID: number;
     ArrestLawbreaker: ArrestLawbreaker[]
     ArrestProductDetail: ArrestProductDetail[];
+}
+
+export class ArrestIndictmentProduct {
+    IndictmentProductID: number;
+    IndictmentID: number;
+    ProductID: number;
+    IsProdcutCo: string;
+    IndictmentProductQty: string;
+    IndictmentProductQtyUnit: string;
+    IndictmentProductSize: string;
+    IndictmentProductSizeUnit: string;
+    IndictmentProductVolume: string;
+    IndictmentProductVolumeUnit: string;
+    IndictmentProductMistreatRate: string;
+    IndictmentProductFine: string;
+    ProductDetailIsActive: number;
 }
