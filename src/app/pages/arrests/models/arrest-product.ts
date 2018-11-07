@@ -39,6 +39,7 @@ export class ArrestProduct {
     public ProductFullName = '';
     public IsModify: string;
     public RowId: number;
+    ProductFrom: string;
 }
 
 
