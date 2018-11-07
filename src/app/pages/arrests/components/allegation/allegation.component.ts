@@ -150,7 +150,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
             if (this.arrestCode != 'NEW') {
               this.getArrestProductByArrest(this.arrestCode);
             } else {
-              let _prod = this.filterProductIsModify(this.Arrest.ArrestProduct);
+              let _prod = this.Arrest.ArrestProduct;
               this.setItemFormArray(_prod, 'ArrestProduct');
             }
             break;
