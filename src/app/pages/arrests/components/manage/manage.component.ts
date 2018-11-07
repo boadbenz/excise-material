@@ -184,7 +184,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.26');
+        this.sidebarService.setVersion('0.0.0.27');
         this.active_route();
         if (this.arrestFG) {
             setTimeout(() => {
@@ -345,10 +345,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
-                    if (this.arrestCode != this.stateArrest.ArrestCode) {
+                    if (this.arrestCode == this.stateArrest.ArrestCode) {
+                        await this.pageRefresh(this.arrestCode);
+                    } else {
                         this.stateArrest = null;
                     }
-                    await this.pageRefresh(this.arrestCode);
                 }
                 break;
 
@@ -397,16 +398,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private pageRefreshArrest(_arr: fromModels.Arrest) {
         let arrestForm = this.arrestFG;
-        console.log(_arr.ArrestDate);
 
-        _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
-        // this.isObject(_arr.ArrestDate)
-        //     ? setDateMyDatepicker(_arr.ArrestDate)
-        //     : _arr.ArrestDate;
-        _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
-        // this.isObject(_arr.OccurrenceDate)
-        //     ? setDateMyDatepicker(_arr.OccurrenceDate)
-        //     : _arr.OccurrenceDate;
+        _arr.ArrestDate = this.isObject(_arr.ArrestDate)
+            ? _arr.ArrestDate
+            : setDateMyDatepicker(_arr.ArrestDate);
+        _arr.OccurrenceDate = this.isObject(_arr.OccurrenceDate)
+            ? _arr.OccurrenceDate
+            : setDateMyDatepicker(_arr.OccurrenceDate);
 
         _arr.ArrestNotice.map((x, index) => {
             x.RowId = index + 1;
