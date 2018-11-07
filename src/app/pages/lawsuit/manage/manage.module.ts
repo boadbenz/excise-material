@@ -19,6 +19,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProveService } from "../../prove/prove.service";
 import { BrowserModule } from "@angular/platform-browser";
 import { DetailModule } from "../detail/detail.module";
+import { MyDatePickerTHModule } from "mydatepicker-th";
+import { MyDatePickerModule } from "mydatepicker";
 
 const routes: Routes = [
   {
@@ -54,6 +56,8 @@ const routes: Routes = [
     ModalLawbreakerModule,
     PrintLawsuitModalModule,
     MatDialogModule,
+    MyDatePickerTHModule,
+    MyDatePickerModule,
     // DetailModule,
   ],
   entryComponents: [DialogJudgment],
