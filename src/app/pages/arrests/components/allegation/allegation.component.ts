@@ -62,8 +62,6 @@ export class AllegationComponent implements OnInit, OnDestroy {
       })
 
     this.navService.setPrintButton(false);
-    this.navService.setPrevPageButton(true);
-    this.navService.setNextPageButton(true);
 
     this.navService.setInnerTextPrevPageButton('งานจับกุม')
     this.navService.setInnerTextNextPageButton('รับคำกล่าวโทษ')
@@ -82,6 +80,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   // param: Params
   mode: string;
+  arrestMode: string;
   arrestCode: string;
   newArrestCode: string;
   indictmentId: string;
@@ -134,6 +133,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
       .takeUntil(this.destroy$)
       .subscribe(async results => {
         this.mode = results.params.mode;
+        this.arrestMode = results.queryParams.arrestMode;
         this.arrestCode = results.queryParams.arrestCode;
         this.indictmentId = results.queryParams.indictmentId;
         this.guiltbaseId = results.queryParams.guiltbaseId;
@@ -144,6 +144,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
             this.navService.setEditButton(false);
             this.navService.setDeleteButton(false);
             this.navService.setEditField(false);
+            this.navService.setPrevPageButton(false);
+            this.navService.setNextPageButton(false);
             // set true
             this.navService.setSaveButton(true);
             this.navService.setCancelButton(true);
@@ -164,6 +166,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
             this.navService.setEditButton(true);
             this.navService.setDeleteButton(true);
             this.navService.setEditField(true);
+            this.navService.setPrevPageButton(true);
+            this.navService.setNextPageButton(true);
 
             this.loaderService.show();
             await this.getArrestIndictment(this.indictmentId);
@@ -194,7 +198,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
         await this.navService.setOnCancel(false);
-        this.router.navigate(['/arrest/manage', this.mode, this.arrestCode]);
+        this.router.navigate(['/arrest/manage', this.arrestMode, this.arrestCode]);
       }
     })
     this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
@@ -206,7 +210,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
         await this.navService.setOnPrevPage(false);
-        this.router.navigate(['/arrest/manage', 'R', this.newArrestCode || this.arrestCode]);
+        this.router.navigate(['/arrest/manage', this.mode, this.newArrestCode || this.arrestCode]);
       }
     })
   }
@@ -513,22 +517,18 @@ export class AllegationComponent implements OnInit, OnDestroy {
   private async createWithArrestCode() {
     this.loaderService.show();
     await this.insertArrestIndictment(this.arrestCode)
-    if (this._isSuccess) {
-      alert(Message.saveComplete)
-    } else {
-      alert(Message.saveFail)
-    }
+
+    this.onComplete();
+
     this.loaderService.hide();
   }
 
   private async createWithOutArrestCode() {
     this.loaderService.show();
     await this.getTransactionRunning();
-    if (this._isSuccess) {
-      alert(Message.saveComplete)
-    } else {
-      alert(Message.saveFail)
-    }
+
+    this.onComplete();
+
     this.loaderService.hide();
   }
 
@@ -542,12 +542,26 @@ export class AllegationComponent implements OnInit, OnDestroy {
       })
       .catch((error) => this.catchError(error));
 
+    this.onComplete();
+
+    this.loaderService.hide();
+  }
+
+  private onComplete() {
     if (this._isSuccess) {
       alert(Message.saveComplete)
+      // set false
+      this.navService.setSaveButton(false);
+      this.navService.setCancelButton(false);
+      // set true
+      this.navService.setEditButton(true);
+      this.navService.setDeleteButton(true);
+      this.navService.setEditField(true);
+      this.navService.setPrevPageButton(true);
+      this.navService.setNextPageButton(true);
     } else {
       alert(Message.saveFail)
     }
-    this.loaderService.hide();
   }
 
   private async getTransactionRunning() {
@@ -656,8 +670,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   private async updateArrestNotice(arrestNotice: fromModels.ArrestNotice[]) {
     let n = arrestNotice.map(async x => {
-      console.log('ArrestNotice : ', JSON.stringify({ArrestCode: x.ArrestCode, NoticeCode: x.NoticeCode}));
-      
+      console.log('ArrestNotice : ', JSON.stringify({ ArrestCode: x.ArrestCode, NoticeCode: x.NoticeCode }));
+
       await this.s_notice.ArrestNoticeupdByCon(x.ArrestCode, x.NoticeCode)
         .then(x => {
           if (!this.checkIsSuccess(x)) return;
@@ -665,7 +679,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         .catch((error) => this.catchError(error));
     });
 
-   return Promise.all(n);
+    return Promise.all(n);
   }
 
   private async insertArrestIndictment(arrestCode: string) {

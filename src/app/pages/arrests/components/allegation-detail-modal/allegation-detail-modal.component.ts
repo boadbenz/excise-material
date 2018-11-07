@@ -95,6 +95,16 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
+    combineLatest(this.activeRoute.params, this.activeRoute.queryParams)
+      .map(results => ({ params: results[0], queryParams: results[1] }))
+      .takeUntil(this.destroy$)
+      .subscribe(async results => {
+        this.mode = results.params.mode;
+        this.arrestCode = results.queryParams.arrestCode;
+        this.indictmentId = results.queryParams.indictmentId;
+        this.guiltbaseId = results.queryParams.guiltbaseId;
+      });
+
     this.allegationFG = this.fb.group({
       Lawbreaker: this.fb.array([])
     });
@@ -110,12 +120,28 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     this.d.emit(e);
   }
 
+  onClickNewLawbreaker(){
+    debugger
+    this.dismiss('Cross click')
+    this.router.navigate(
+      [`/arrest/lawbreaker`, 'C', 'NEW'],
+      {
+        queryParams: {
+            allegationMode: this.mode,
+            arrestCode: this.arrestCode,
+            indictmentId: this.indictmentId,
+            guiltbaseId: this.guiltbaseId
+        }
+    })
+  }
+
   view(id: number) {
     this.dismiss('Cross click')
     this.router.navigate(
-      [`/arrest/lawbreaker/R/${id}`],
+      [`/arrest/lawbreaker`, 'R', id],
       {
         queryParams: {
+            allegationMode: this.mode,
             arrestCode: this.arrestCode,
             indictmentId: this.indictmentId,
             guiltbaseId: this.guiltbaseId

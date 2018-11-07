@@ -65,7 +65,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     arrestCode: string;
     showEditField: boolean;
     isRequired: boolean;
-    arrestFG: FormGroup;
+    arrestFG = this.createForm();
     typeheadOffice = new Array<MasOfficeModel>();
     typeheadStaff = new Array<MasStaffModel>();
     typeheadRegion = new Array<RegionModel>();
@@ -188,7 +188,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.sidebarService.setVersion('0.0.0.25');
         this.active_route();
-        this.arrestFG = this.createForm();
+        // this.arrestFG = this.createForm();
         this.navigate_Service();
 
     }
@@ -391,9 +391,16 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private pageRefreshArrest(_arr: fromModels.Arrest) {
         let arrestForm = this.arrestFG;
+        console.log(_arr.ArrestDate);
 
-        _arr.ArrestDate = !this.isObject(this.dateStartFrom) || setDateMyDatepicker(_arr.ArrestDate);
-        _arr.OccurrenceDate = !this.isObject(this.dateStartFrom) || setDateMyDatepicker(_arr.OccurrenceDate);
+        _arr.ArrestDate = setDateMyDatepicker(_arr.ArrestDate);
+        // this.isObject(_arr.ArrestDate)
+        //     ? setDateMyDatepicker(_arr.ArrestDate)
+        //     : _arr.ArrestDate;
+        _arr.OccurrenceDate = setDateMyDatepicker(_arr.OccurrenceDate);
+        // this.isObject(_arr.OccurrenceDate)
+        //     ? setDateMyDatepicker(_arr.OccurrenceDate)
+        //     : _arr.OccurrenceDate;
 
         _arr.ArrestNotice.map((x, index) => {
             x.RowId = index + 1;
@@ -436,6 +443,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         _prod.map((x, index) => {
             x.IsModify = x.IsModify || 'r';
             x.RowId = index + 1;
+            x.ProductFrom = 'arrest-product'
         })
         this.setItemFormArray(_prod, 'ArrestProduct');
     }
@@ -551,11 +559,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     // 1
     setNoticeForm(n: fromModels.ArrestNotice[]) {
         let arrestNotice = this.ArrestNotice;
+        let arr = new FormArray([]);
         let i = 0;
         n.map(x => {
             const modify = arrestNotice.value.filter(x => x.IsModify != 'd');
             i = (modify.length) && modify[modify.length - 1].RowId;
-            arrestNotice.push(
+            arr.push(
                 this.fb.group({
                     ArrestCode: this.arrestCode,
                     NoticeCode: x.NoticeCode,
@@ -568,6 +577,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             );
         })
+        this.arrestFG.setControl('ArrestNotice', arr);
     }
     // 2
     private setArrestNoticeStaff(o: fromModels.ArrestNoticeStaff[]) {
@@ -727,9 +737,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         let arrest = this.arrestFG.value as fromModels.Arrest;
         this.store.dispatch(new fromStore.CreateArrest(arrest));
         this.router.navigate(
-            [`arrest/allegation`, this.mode],
+            [`arrest/allegation`, 'C'],
             {
                 queryParams: {
+                    arrestMode: this.mode,
                     arrestCode: this.arrestCode,
                     indictmentId: '',
                     guiltbaseId: ''
@@ -744,6 +755,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             [`arrest/allegation`, 'R'],
             {
                 queryParams: {
+                    arrestMode: this.mode,
                     arrestCode: this.arrestCode,
                     indictmentId: indictmentId,
                     guiltbaseId: guiltbaseId
@@ -894,7 +906,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             RowId: product.RowId,
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || product.GroupCode,
-            IsDomestic: e.item.IsDomestic || product.IsDomestic
+            IsDomestic: e.item.IsDomestic || product.IsDomestic,
+            ProductFrom: product.IsModify == 'c' ? 'mas-product' : product.ProductFrom
         })
     }
 
@@ -920,6 +933,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,
             ContributorID: e.item.ContributorID
+        })
+    }
+
+    onChangeContributer(e: any, i: number) {
+        let contributerId = e.target.value;
+        let staff = this.ArrestStaff.at(i).value;
+        this.ArrestStaff.at(i).patchValue({
+            ContributorCode: contributerId,
+            IsModify: staff.IsModify == 'r' ? 'u' : staff.IsModify
         })
     }
 
