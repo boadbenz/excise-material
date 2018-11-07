@@ -103,7 +103,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.26');
+    this.sidebarService.setVersion('0.0.0.27');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -260,7 +260,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
                 .map((y1, index) => {
                   y1.RowId = index + 1;
                   y1.IsModify = 'r';
-                  // y1.IsChecked = true;
+                  y1.IsChecked = false;
                 });
 
               if (y.length)
@@ -275,16 +275,19 @@ export class AllegationComponent implements OnInit, OnDestroy {
   private getArrestProductByArrest(arrestCode: string) {
     this.s_productService.ArrestProductgetByArrestCode(arrestCode)
       .then((x: fromModels.ArrestProduct[]) => {
+        let _product;
+        if (this.checkResponse(x)) {
+          x.map((y, index) => {
+            y.IsChecked = false;
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+          })
+          let product = this.filterProductIsModify(this.Arrest.ArrestProduct)
+          _product = [...x, ...product];
+        } else {
+          _product = this.filterProductIsModify(this.Arrest.ArrestProduct)
+        }
 
-
-
-        x.map((y, index) => {
-          y.IsChecked = false;
-          y.RowId = index + 1;
-          y.IsModify = 'r';
-        })
-        let product = this.filterProductIsModify(this.Arrest.ArrestProduct)
-        let _product = [...product, ...x];
         this.setItemFormArray(_product, 'ArrestProduct');
       })
   }
@@ -510,7 +513,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
             .then(x => {
               if (this.checkResponse(x)) {
                 alert(Message.delComplete);
-                this.router.navigate(['/arrest/manage', this.mode, this.arrestCode]);
+                this.router.navigate(['/arrest/manage', this.arrestMode, this.arrestCode]);
               }
             }).catch((error) => this.catchError(error));
         }
@@ -565,6 +568,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   private onComplete() {
     if (this._isSuccess) {
+      this.isCheckAll = false;
       alert(Message.saveComplete)
       if (this.mode == 'C') {
         this.router.navigate(
@@ -876,11 +880,11 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   checkResponse(res: any) {
     switch (res.IsSuccess) {
-      case 'True':
-      case true:
-        return true;
-      default:
+      case 'False':
+      case false:
         return false;
+      default:
+        return true;
     }
   }
 
