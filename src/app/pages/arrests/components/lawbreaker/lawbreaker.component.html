@@ -12,7 +12,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทผู้ต้องสงสัย :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select #lawbreakerType formControlName="LawbreakerType" class="form-control form-control-sm"
+                    <select formControlName="LawbreakerType" class="form-control form-control-sm"
                         [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required
                         (change)="toggleCard()">
                         <option value="" selected disabled></option>
@@ -21,7 +21,7 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทบุคคล :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select #entityType formControlName="EntityType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                    <select formControlName="EntityType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
                         [attr.disabled]="showEditField ? '' : null" required (change)="toggleCard()">
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of entityTypes; let i=index;" [value]="item.value">{{item.text}}</option>
@@ -192,10 +192,17 @@
         </div>
         <div *ngIf="card2" class="card-body">
             <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">GPS :</label>
+                <label for="" class="col-lg-2 col-sm-4 control-label">ละติจูด :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="GPS" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input #latitude ngModel type="text" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">ลองจิจูด :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input #longitude ngModel type="text" class="form-control form-control-sm" [readonly]="showEditField">
+                </div>
+
+                <input type="text" formControlName="GPS" name="" id=""  [value]="latitude.value+','+longitude.value">
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>

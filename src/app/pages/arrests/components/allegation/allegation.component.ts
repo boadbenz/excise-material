@@ -41,6 +41,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     private store: Store<fromStore.AppState>,
     private sidebarService: SidebarService,
     private s_mainMaster: MainMasterService,
+    private s_notice: fromService.ArrestNoticeService,
     private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
     private s_productService: fromService.ArrestProductService,
     private s_indictment: fromService.ArrestIndictmentService,
@@ -103,7 +104,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.24');
+    this.sidebarService.setVersion('0.0.0.25');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -205,7 +206,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
         await this.navService.setOnPrevPage(false);
-        this.router.navigate(['/arrest/manage', this.mode, this.newArrestCode || this.arrestCode]);
+        this.router.navigate(['/arrest/manage', 'R', this.newArrestCode || this.arrestCode]);
       }
     })
   }
@@ -423,7 +424,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private filterProductIsModify(p: fromModels.ArrestProduct[]) {
-    return p.filter(y => y.IsModify == 'c' );
+    return p.filter(y => y.IsModify == 'c');
   }
 
   private filterLawbreakerIsModify(o: fromModels.ArrestLawbreaker[]) {
@@ -639,9 +640,32 @@ export class AllegationComponent implements OnInit, OnDestroy {
       .then(async x => {
         if (!this.checkIsSuccess(x)) return;
 
+        let newNotice = a.ArrestNotice.filter(x => x.IsModify != 'd')
+          .map(x => {
+            x.ArrestCode = a.ArrestCode;
+            return x;
+          });
+
+        await this.updateArrestNotice(newNotice);
+
         await this.insertArrestIndictment(arrestCode);
+
       }, () => { this.saveFail(); return; })
       .catch((error) => this.catchError(error));
+  }
+
+  private async updateArrestNotice(arrestNotice: fromModels.ArrestNotice[]) {
+    let n = arrestNotice.map(async x => {
+      console.log('ArrestNotice : ', JSON.stringify({ArrestCode: x.ArrestCode, NoticeCode: x.NoticeCode}));
+      
+      await this.s_notice.ArrestNoticeupdByCon(x.ArrestCode, x.NoticeCode)
+        .then(x => {
+          if (!this.checkIsSuccess(x)) return;
+        }, () => { this.saveFail(); return; })
+        .catch((error) => this.catchError(error));
+    });
+
+   return Promise.all(n);
   }
 
   private async insertArrestIndictment(arrestCode: string) {
@@ -702,6 +726,11 @@ export class AllegationComponent implements OnInit, OnDestroy {
       w.ProductDesc = this.isObject(w.ProductDesc) ? w.ProductDesc['ProductDesc'] : w.ProductDesc;
 
       console.log('ArrestProduct : ', JSON.stringify(w));
+
+      if (!this._isSuccess) {
+        alert(Message.saveFail);
+        return;
+      }
 
       await this.s_productService
         .ArrestProductinsAll(w)
