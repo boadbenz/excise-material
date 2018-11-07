@@ -449,6 +449,50 @@ export class ManageComponent implements OnInit {
             this.preLoaderService.setShowPreloader(false);
             return;
           }
+          // console.log('LawsuitDate', toLocalShort(this.lawsuitForm.controls['LawsuitDate'].value))
+          const _lawDate = (this.lawsuitForm.controls['LawsuitDate'].value)
+          const json =
+          {
+            "LawsuitID": this.LawsuitID,
+            "IndictmentID": this.IndictmentID,
+            "IsLawsuit": this.lawsuitForm.controls['IsLawsuitCheck'].value,
+            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value,
+            "LawsuitNo": this.lawsuitForm.controls['LawsuitNo'].value,
+            "LawsuitDate": (_lawDate.date) + '/' + _lawDate.month + '/' + _lawDate.year,
+            "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
+            "LawsuitStationCode": '',
+            "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
+            "IsOutside": isOut,
+            "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
+            "LawsuitResult": '',
+            "DeliveryDocNo": '',
+            "DeliveryDate": (_lawDate.date) + '/' + _lawDate.month + '/' + _lawDate.year,
+            "IsActive": 1,
+            "LawsuitType": this.LawsuitTableList.controls['LawsuitType'],
+            "LawsuitEnd": this.LawsuitTableList.controls['LawsuitEnd'],
+            // "LawsuiteStaff": [{
+            //   "StaffID": '1',
+            //   "ProgramCode": "XCS-60",
+            //   "ProcessCode": "XCS-60-001",
+            //   "LawsuitID": '',
+            //   "StaffCode": "S000",
+            //   "TitleName": "นาย",
+            //   "FirstName": "ธวัชชัย", "LastName": "บิงขุนทด",
+            //   "PositionCode": "P001", "PositionName": "ผู้ช านาญการ",
+            //   "PosLevel": "01", "PosLevelName": "ระดับสูง",
+            //   "DepartmentCode": "V001",
+            //   "DepartmentName": "สตป",
+            //   "DepartmentLevel": "1",
+            //   "OfficeCode": "T001",
+            //   "OfficeName": "สตป",
+            //   "OfficeShortName": "สตป",
+            //   "ContributorCode": "001",
+            //   "IsActive": ''
+            // }]
+          }
+          await this.lawsuitService.LawsuitinsAll(json).then(async response => {
+            console.log('response', response);
+          });
         });
     }
     this.preLoaderService.setShowPreloader(false);
@@ -672,7 +716,7 @@ export class ManageComponent implements OnInit {
             }
             /// add LawsuitNoRef
             console.log('item.LawsuitArrestLawbreaker[0]===>', item.LawsuitArrestLawbreaker[0])
-            if (item.LawsuitArrestLawbreaker[0] == 1 && item.LawsuitArrestLawbreaker[0].LawbreakerType == 1) {
+            if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 1) {
               a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].IDCard;
             } else if (item.LawsuitArrestLawbreaker[0] == 1 && item.LawsuitArrestLawbreaker[0].LawbreakerType == 0) {
               a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].PassportNo;
@@ -725,6 +769,10 @@ export class ManageComponent implements OnInit {
 
           /// LawsuitComplete status = 0
         } else {
+          let IsProve = res[0]['LawsuitArrestIndicment'][0].IsProve;
+          let IsLawsuitComplete = res[0]['LawsuitArrestIndicment'][0].IsLawsuitComplete;
+          let arrList = [];
+          console.log('LawsuitArrestIndicment', res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
           await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].map(item => {
             this.LawsuitTableListShow = true;
             res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitArrestLawbreaker'].map(arrestLaw => {
@@ -732,7 +780,54 @@ export class ManageComponent implements OnInit {
               console.log('middleName', middleName)
               item.lawBrakerFullName = `${arrestLaw.LawbreakerTitleName} ${arrestLaw.LawbreakerFirstName} ${middleName} ${arrestLaw.LawbreakerLastName}`
             });
+
+            /// add LawsuitTableList
+            if (item.LawsuitArrestProductDetail != null && item.LawsuitArrestProductDetail.length) {
+              item.ProductDesc = item.LawsuitArrestProductDetail.ProductProductDesc;
+            } else {
+              item.ProductDesc = '';
+            }
+
+            let a = {
+              'EntityType': "",
+              'LawbreakerType': "",
+              'LawsuitNoRef': "",
+              'IndictmentDetailID': item.IndictmentDetailID,
+              'LawBrakerFullName': item.lawBrakerFullName,
+              'LawsuitType': item.LawsuitType,
+              'LawsuitEnd': item.LawsuitEnd,
+              'ProductDesc': item.ProductProductDesc,
+              'IsProve': IsProve,
+              'IsLawsuitComplete': IsLawsuitComplete,
+            };
+            /// add EntityType
+            console.log('item EntityType===>', item)
+
+            if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].EntityType == 1) {
+              a.EntityType = 'บุคคลธรรมดา';
+            } else if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].EntityType == 2) {
+              a.EntityType = 'นิติบุคคล';
+            }
+            /// add LawbreakerType
+            if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 1) {
+              a.LawbreakerType = 'คนไทย';
+            } else if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 0) {
+              a.LawbreakerType = 'ต่างชาติ';
+            }
+            /// add LawsuitNoRef
+            console.log('item.LawsuitArrestLawbreaker[0]===>', item.LawsuitArrestLawbreaker[0])
+            if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 1) {
+              a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].IDCard;
+            } else if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 0) {
+              a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].PassportNo;
+            } else {
+              if (item.LawsuitArrestLawbreaker[0]) {
+                a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].CompanyRegistrationNo;
+              }
+            }
+            arrList.push(a)
           });
+          this.setItemFormArray(arrList, 'LawsuitTableList', this.lawsuitForm);
           /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
           await this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
             const _masstaff = masstaff;
