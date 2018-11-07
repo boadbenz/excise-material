@@ -150,7 +150,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
             if (this.arrestCode != 'NEW') {
               this.getArrestProductByArrest(this.arrestCode);
             } else {
-              let _prod = this.Arrest.ArrestProduct;
+              let _prod = this.filterProductIsModify(this.Arrest.ArrestProduct);
               this.setItemFormArray(_prod, 'ArrestProduct');
             }
             break;
@@ -423,7 +423,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private filterProductIsModify(p: fromModels.ArrestProduct[]) {
-    return p.filter(y => y.IsModify != 'd' && y.ProductID == '');
+    return p.filter(y => y.IsModify == 'c' );
   }
 
   private filterLawbreakerIsModify(o: fromModels.ArrestLawbreaker[]) {
