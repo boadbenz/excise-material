@@ -423,7 +423,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private filterProductIsModify(p: fromModels.ArrestProduct[]) {
-    return p.filter(y => y.IsModify != 'd' && y.ProductID == '');
+    return p.filter(y => y.IsModify == 'c' );
   }
 
   private filterLawbreakerIsModify(o: fromModels.ArrestLawbreaker[]) {
