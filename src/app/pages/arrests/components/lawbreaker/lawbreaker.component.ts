@@ -23,6 +23,8 @@ import * as fromModels from '../../models';
 import * as fromMasterModel from 'app/models'
 import { Subject } from 'rxjs/Subject';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import 'rxjs/add/operator/takeUntil';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 
 @Component({
@@ -55,6 +57,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     card4 = false;
 
     @ViewChild('imgNobody') imgNobody: ElementRef;
+    @ViewChild('latitude') latitude: ElementRef;
+    @ViewChild('longitude') longitude: ElementRef;
 
     // LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
@@ -62,7 +66,13 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     requiredCompanyRegister = false;
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
+    // param: Params
     private mode: string;
+    private arrestCode: string;
+    private indictmentDetailId: string;
+    private indictmentId: string;
+    private guiltbaseId: string;
+    private allegationMode: string;
     private lawbreakerId: number;
 
     myDatePickerOptions = MyDatePickerOptions;
@@ -104,31 +114,38 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     private active_route() {
-        this.activatedRoute.params.takeUntil(this.destroy$).subscribe(p => {
-            this.mode = p['mode'];
-            this.lawbreakerId = p['code'];
 
-            if (p['mode'] === 'C') {
-                // set false
-                this.navService.setEditButton(false);
-                this.navService.setEditField(false);
-                this.navService.setNextPageButton(false);
-                // set true
-                this.navService.setSaveButton(true);
-                this.navService.setCancelButton(true);
+        combineLatest(this.activatedRoute.params, this.activatedRoute.queryParams)
+            .map(results => ({ params: results[0], queryParams: results[1] }))
+            .takeUntil(this.destroy$)
+            .subscribe(async results => {
+                this.mode = results.params.mode;
+                this.arrestCode = results.queryParams.arrestCode;
+                this.indictmentId = results.queryParams.indictmentId;
+                this.guiltbaseId = results.queryParams.guiltbaseId;
+                this.allegationMode = results.queryParams.allegationMode;
 
-            } else if (p['mode'] === 'R') {
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                // set true
-                this.navService.setEditButton(true);
-                this.navService.setEditField(true);
-                this.navService.setNextPageButton(true);
-            }
-
-            this.pageLoad();
-        });
+                if (this.mode === 'C') {
+                    // set false
+                    this.navService.setEditButton(false);
+                    this.navService.setEditField(false);
+                    this.navService.setNextPageButton(false);
+                    // set true
+                    this.navService.setSaveButton(true);
+                    this.navService.setCancelButton(true);
+    
+                } else if (this.mode === 'R') {
+                    // set false
+                    this.navService.setSaveButton(false);
+                    this.navService.setCancelButton(false);
+                    // set true
+                    this.navService.setEditButton(true);
+                    this.navService.setEditField(true);
+                    this.navService.setNextPageButton(true);
+                }
+    
+                this.pageLoad();
+            });
     }
 
     private async pageLoad() {
@@ -230,10 +247,12 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     this.typeheadRaces
                         .find(x => x.RaceCode == _Lfg.RaceCode).RaceNameTH;
 
-                this.LawbreakerFG.patchValue(_Lfg);
+                this.LawbreakerFG.patchValue(_Lfg); 
 
                 if (this.mode === 'C') {
-                    this.OnCreate();
+                    // this.OnCreate();
+                    console.log(this.LawbreakerFG.value);
+                    
 
                 } else if (this.mode === 'R') {
                     this.OnRevice();
@@ -252,12 +271,12 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnNextPage(false);
                 this.router.navigate(
-                    [`arrest/allegation`, 'C'],
+                    [`arrest/allegation`, this.allegationMode],
                     {
                         queryParams: {
-                            arrestCode: '',
-                            indictmentId: '',
-                            guiltbaseId: ''
+                            arrestCode: this.arrestCode,
+                            indictmentId: this.indictmentId,
+                            guiltbaseId: this.guiltbaseId
                         }
                     });
             }
@@ -281,6 +300,14 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     this.card3 = false;
                 }
             })
+    }
+
+    onChangeGps() {
+       let t =  this.latitude.nativeElement.value;
+       let g = this.longitude.nativeElement.value;
+        this.LawbreakerFG.patchValue({
+            GPS: `${t},${g}`
+        })
     }
 
     toggleCard() {
@@ -504,7 +531,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     [`arrest/allegation`, 'C'],
                     {
                         queryParams: {
-                            arrestCode: '',
+                            
+                            arrestCode: this.arrestCode,
                             indictmentId: '',
                             guiltbaseId: ''
                         }
