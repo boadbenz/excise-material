@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpService } from "app/core/http.service";
 import { appConfig } from "app/app.config";
-import { ArrestIndictment } from "../models/arrest-indictment";
+import { ArrestIndictment, ArrestIndictmentProduct } from "../models/arrest-indictment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable()
@@ -42,6 +42,12 @@ export class ArrestIndictmentService {
     async ArrestIndictmentinsAll(Indictment: any) {
         const params = Indictment;
         const url = `${appConfig.api7788}/ArrestIndictmentinsAll`;
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    }
+
+    async ArrestIndictmentProductinsAll(indictment: ArrestIndictmentProduct){
+        const params = indictment;
+        const url = `${appConfig.api7788}/ArrestIndictmentProductinsAll`;
         return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 

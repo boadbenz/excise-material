@@ -62,7 +62,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.24');
+        this.sidebarService.setVersion('0.0.0.26');
 
         this.navService.searchByKeyword
             .takeUntil(this.destroy$)
@@ -124,7 +124,10 @@ export class ListComponent implements OnInit, OnDestroy {
                 .map(staff => {
                     staff.FullName = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
                 });
+            
         })
+        console.log(list);
+        
         this.arrest = list;
         // set total record     
         this.paginage.TotalItems = this.arrest.length;
