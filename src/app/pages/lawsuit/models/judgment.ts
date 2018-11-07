@@ -1,5 +1,6 @@
 export class JudgmentModel {
   public arrestName: string;
+  public justicName: string;
   public numberBlackList: string;
   public numberRedList: string;
   public location: string;
@@ -9,6 +10,7 @@ export class JudgmentModel {
   public isPrison: boolean;
   public prisonDay: string;
   public unit: string;
+  public judgementNo: string;
   public payRadio1: string;
   public payRadio2: string;
   public payDate: string;

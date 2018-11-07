@@ -55,21 +55,59 @@ export class ListComponent implements OnInit, OnDestroy {
   onDateChanged(event) {
     let checkDate = new Date(event.jsdate);
 
-    let date: Date = new Date()
-    this.LawsuitDateFromOptions = {
-      dateFormat: 'dd/mmm/yyyy',
-      disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 }
-    }
+    let date: Date = new Date();
+    const sDateCompare = new Date(this.advForm.value.LawsuitDateFrom.jsdate);
+    const eDateCompare = new Date(this.advForm.value.LawsuitDateTo.jsdate);
+    console.log('sDateCompare', this.advForm.value.LawsuitDateFrom)
+    console.log('eDateCompare', this.advForm.value.LawsuitDateTo)
+    console.log('sDateCompare.valueOf() > eDateCompare.valueOf()==>', this.advForm.value.LawsuitDateFrom.valueOf() > this.advForm.value.LawsuitDateTo.valueOf())
+    setTimeout(() => {
+
+
+      if (this.advForm.value.LawsuitDateFrom.epoc > this.advForm.value.LawsuitDateTo.epoc) {
+        this.advForm.controls['LawsuitDateTo'].setValue({
+          date: this.advForm.value.LawsuitDateFrom.date,
+          epoc: this.advForm.value.LawsuitDateFrom.epoc,
+          formatted: this.advForm.value.LawsuitDateFrom.formatted,
+          jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
+        });
+        alert(Message.checkDate);
+        return;
+      }
+      else {
+        this.LawsuitDateFromOptions = {
+          dateFormat: 'dd/mmm/yyyy',
+          disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 }
+        }
+      }
+    }, 100);
   }
   onDateFromChanged(event) {
     let checkDate = new Date(event.jsdate);
-    if (!event) {
-      let date: Date = new Date()
-      this.LawsuitDateFromOptions = {
-        dateFormat: 'dd/mmm/yyyy',
-        disableSince: { year: checkDate.getFullYear(), month: checkDate.getMonth() + 1, day: checkDate.getDate() + 1 }
+    const sDateCompare = new Date(this.advForm.value.LawsuitDateFrom.jsdate);
+    const eDateCompare = new Date(this.advForm.value.LawsuitDateTo.jsdate);
+    console.log('sDateCompare.valueOf() > eDateCompare.valueOf()==>', this.advForm.value.LawsuitDateFrom.valueOf() > this.advForm.value.LawsuitDateTo.valueOf())
+    setTimeout(() => {
+
+
+      if (this.advForm.value.LawsuitDateFrom.epoc > this.advForm.value.LawsuitDateTo.epoc) {
+        this.advForm.controls['LawsuitDateTo'].setValue({
+          date: this.advForm.value.LawsuitDateFrom.date,
+          epoc: this.advForm.value.LawsuitDateFrom.epoc,
+          formatted: this.advForm.value.LawsuitDateFrom.formatted,
+          jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
+        });
+        alert(Message.checkDate);
+        return;
       }
-    }
+      else if (!event) {
+        let date: Date = new Date()
+        this.LawsuitDateFromOptions = {
+          dateFormat: 'dd/mmm/yyyy',
+          disableSince: { year: checkDate.getFullYear(), month: checkDate.getMonth() + 1, day: checkDate.getDate() + 1 }
+        }
+      }
+    }, 100);
 
   }
   async ngOnInit() {
@@ -120,7 +158,7 @@ export class ListComponent implements OnInit, OnDestroy {
         alert(Message.checkDate);
         return false;
       }
-      console.log('form.value.LawsuitDateFrom ===>',form.value.LawsuitDateFrom )
+      console.log('form.value.LawsuitDateFrom ===>', form.value.LawsuitDateFrom)
       form.value.LawsuitDateFrom = sDateCompare.toISOString();
       form.value.LawsuitDateTo = eDateCompare.toISOString();
     }

@@ -216,9 +216,14 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group row">
-              <label class="col-form-label text-right col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
-              <div class="col-md-8">
+              <label class="col-form-label text-right col-md-3">เลขที่คดีรับคำกล่าวโทษ : </label>
+              <div class="col-md-4">
                 <input class="form-control" type="text" formControlName="LawsuitNo" [readonly]="showEditField"
+                  [ngClass]="{'ng-touched':isRequired}" required>
+              </div>
+              <label class="col-form-label text-center col-md-2">/</label>
+              <div class="col-md-3">
+                <input class="form-control" type="text" formControlName="LawsuitNoSub" [readonly]="showEditField"
                   [ngClass]="{'ng-touched':isRequired}" required>
               </div>
             </div>
@@ -295,7 +300,7 @@
           <thead>
             <tr>
               <th class="footable-sortable text-center">ลำดับ</th>
-              <th class="footable-sortable">ประเภทผู้ต้องสงสัย</th>
+              <th class="footable-sortable">ประเภทผู้ต้องหา</th>
               <th class="footable-sortable">ประเภทบุคคล</th>
               <th class="footable-sortable">หมายเลขอ้างอิง</th>
               <th class="footable-sortable">ชื่อผู้ต้องหา</th>
@@ -322,13 +327,12 @@
                 </select>
               </td>
               <td>
-                <a href="javaScript:void(0);" class="text-danger" (click)="editTable(item, i)">
+                <!-- <a href="javaScript:void(0);" class="text-danger" (click)="editTable(item, i)">
+                  <i class="fa fa-edit fa-lg"></i>
+                </a> -->
+                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField " (click)="editTable(item, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a>
-                <!-- <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['IsProve'].value == 0"
-                    (click)="editTable(item, i)">
-                    <i class="fa fa-edit fa-lg"></i>
-                  </a> -->
                 <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="item.controls['LawsuitType'].value == 0">
                   <i class="mdi mdi-eye fa-lg"></i>
                 </a>
