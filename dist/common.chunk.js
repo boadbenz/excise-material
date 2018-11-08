@@ -5273,7 +5273,7 @@ module.exports = "<div class=\"card card-outline-bluish unset-radius\">\r\n  <di
 /***/ "./src/app/pages/lawsuit/manage/manage.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ng-template #printDocModal let-c=\"close\" let-d=\"dismiss\">\r\n  <app-print-lawsuit-modal (c)=\"modal.close()\" (d)=\"modal.dismiss()\" [IndictmentID]=\"IndictmentID\"></app-print-lawsuit-modal>\r\n</ng-template>\r\n<form [formGroup]=\"lawsuitArrestForm\">\r\n  <div class=\"wizard-content\">\r\n    <div class=\"wizard-circle wizard clearfix clearfix\">\r\n      <div class=\"steps tab-wizard\">\r\n        <ul role=\"tablist\">\r\n          <li role=\"tab\" class=\"current\" aria-disabled=\"false\" aria-selected=\"true\">\r\n            <a>\r\n              <span class=\"current-info audible\">current step: </span>\r\n              <span class=\"step\"></span> 1. ใบแจ้งความนำจับ</a>\r\n          </li>\r\n          <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 2. งานจับกุม </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 3. รับคำกล่าวโทษ </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"disabled last\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"disabled last\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"disabled last\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 6. นำส่งเงินรายได้ </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"disabled last\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"card card-outline-bluish unset-radius\">\r\n    <div class=\"card-header unset-radius\">\r\n      <app-card-actions-collapse></app-card-actions-collapse>\r\n      <h5 class=\"card-title m-b-0\">ข้อมูลการจับกุม</h5>\r\n    </div>\r\n    <div class=\"card-body\">\r\n      <div class=\"form-body\">\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">เลขที่ใบงาน : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" [attr.disabled]=\"disabled ? '' : null\" formControlName=\"ArrestCode\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">วันที่จับกุม : </label>\r\n              <div class=\"col-md-4\">\r\n                <input class=\"form-control\" type=\"text\" [attr.disabled]=\"disabled ? '' : null\" formControlName=\"OccurrenceDate\">\r\n              </div>\r\n              <label class=\"col-form-label text-center col-md-2\">เวลา</label>\r\n              <div class=\"col-md-3\">\r\n                <input class=\"form-control\" type=\"text\" [attr.disabled]=\"disabled ? '' : null\" formControlName=\"OccurrenceTime\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">เขียนที่ : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" [attr.disabled]=\"disabled ? '' : null\" formControlName=\"ArrestStation\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div formArrayName=\"LawsuitArrestStaff\">\r\n          <div class=\"row\" *ngFor=\"let item of LawsuitArrestStaff.controls; let i=index;\" [formGroupName]=\"i\">\r\n            <div class=\"col-md-6\">\r\n              <div class=\"form-group row\">\r\n                <label class=\"col-form-label text-right col-md-3\">ผู้กล่าวหา : </label>\r\n                <div class=\"col-md-9\">\r\n                  <input class=\"form-control\" type=\"text\" formControlName=\"FullName\" [attr.disabled]=\"disabled ? '' : null\">\r\n                </div>\r\n\r\n              </div>\r\n            </div>\r\n\r\n\r\n            <div class=\"col-md-6\">\r\n              <div class=\"form-group row\">\r\n                <label class=\"col-form-label text-right col-md-3\">ตำแหน่ง : </label>\r\n                <div class=\"col-md-9\">\r\n                  <input class=\"form-control\" type=\"text\" formControlName=\"PositionName\" [attr.disabled]=\"disabled ? '' : null\">\r\n                </div>\r\n              </div>\r\n            </div>\r\n\r\n\r\n            <div class=\"col-md-6\">\r\n              <div class=\"form-group row\">\r\n                <label class=\"col-form-label text-right col-md-3\">หน่วยงาน : </label>\r\n                <div class=\"col-md-9\">\r\n                  <input class=\"form-control\" type=\"text\" formControlName=\"DepartmentName\" [attr.disabled]=\"disabled ? '' : null\">\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">ฐานความผิดมาตรา : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"SubSectionType\" [attr.disabled]=\"disabled ? '' : null\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">ฐานความผิด : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"GuiltBaseName\" [attr.disabled]=\"disabled ? '' : null\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">บทกำหนดโทษ : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"SectionNo\" [attr.disabled]=\"disabled ? '' : null\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">อัตราโทษ : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"PenaltyDesc\" [attr.disabled]=\"disabled ? '' : null\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"table-responsive table-striped\" *ngIf=\"LawsuitArrestIndictmentProductTableListShow\">\r\n        <table class=\"table\" *ngIf=\"!errorShow\">\r\n          <thead>\r\n            <tr>\r\n              <th class=\"footable-sortable text-center\">ลำดับ</th>\r\n              <th class=\"footable-sortable\">ของกลาง</th>\r\n              <th class=\"footable-sortable\">จำนวน</th>\r\n              <th class=\"footable-sortable\">หน่วย</th>\r\n              <th class=\"footable-sortable\">ปริมาณสุทธิ</th>\r\n              <th class=\"footable-sortable\">หน่วย</th>\r\n            </tr>\r\n          </thead>\r\n          <tbody>\r\n            <tr class=\"footable\" *ngFor=\"let item of LawsuitArrestIndictmentProduct; let i=index;\">\r\n              <td class=\"text-center\">{{i+1}}</td>\r\n              <td>{{item.ProductDesc}}</td>\r\n              <td>{{item.IndictmentProductQty}}</td>\r\n              <td>{{item.IndictmentProductQtyUnit}}</td>\r\n              <td>{{item.IndictmentProductVolume}}</td>\r\n              <td>{{item.IndictmentProductVolumeUnit}}</td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n      </div>\r\n\r\n    </div>\r\n  </div>\r\n</form>\r\n<form [formGroup]=\"lawsuitForm\">\r\n  <div class=\"card card-outline-bluish unset-radius\">\r\n    <div class=\"card-header unset-radius\">\r\n      <app-card-actions-collapse></app-card-actions-collapse>\r\n      <h5 class=\"card-title m-b-0\">รับคำกล่าวโทษ</h5>\r\n    </div>\r\n    <div class=\"card-body\">\r\n      <div class=\"form-body\">\r\n        <div class=\"row\">\r\n          <div class=\"col-md-12\">\r\n\r\n            <div class=\"row form-group\">\r\n              <div class=\"col\">\r\n                <input [attr.disabled]=\"showEditField ? '' : null\" formControlName=\"IsLawsuitCheck\" type=\"checkbox\" id=\"IsLawsuit\"\r\n                  class=\"filled-in chk-col-indigo\" [readonly]=\"showEditField\">\r\n                <label for=\"IsLawsuit\">ไม่รับคดีเป็นเพราะ</label>\r\n              </div>\r\n              <div class=\"col-md-10\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"ReasonDontLawsuit\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-12\">\r\n            <div class=\"row form-group\">\r\n              <div class=\"col\">\r\n                <input [attr.disabled]=\"showEditField ? '' : null\" formControlName=\"IsOutsideCheck\" type=\"checkbox\" id=\"IsOutSide\"\r\n                  class=\"filled-in chk-col-indigo\" [readonly]=\"showEditField\">\r\n                <label for=\"IsOutSide\">คดีรับคำกล่าวโทษนอกสถานที่</label>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-4\">เลขที่คดีรับคำกล่าวโทษ : </label>\r\n              <div class=\"col-md-8\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitNo\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">วันที่รับคดี : </label>\r\n              <div class=\"col-md-4\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitDate\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n              <label class=\"col-form-label text-center col-md-2\">เวลา</label>\r\n              <div class=\"col-md-3\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitTime\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-4\">ผู้รับคดี : </label>\r\n              <div class=\"col-md-8\">\r\n                <input class=\"form-control\" formControlName=\"FullName\" type=\"text\" [readonly]=\"showEditField\" [ngClass]=\"{'ng-touched':isRequired}\"\r\n                  (input)=\"onChangeFullname($event.target.value)\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">ตำแหน่ง : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"PositionName\" disabled>\r\n              </div>\r\n            </div>\r\n          </div>\r\n\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-4\">หน่วยงาน : </label>\r\n              <div class=\"col-md-8\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"DepartmentName\" disabled>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-4\">เขียนที่ : </label>\r\n              <div class=\"col-md-8\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitStation\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-12\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-2\">คำให้การของผู้กล่าวโทษ : </label>\r\n              <div class=\"col-md-10\">\r\n                <textarea class=\"form-control\" rows=\"5\" [readonly]=\"showEditField\" formControlName=\"AccuserTestimony\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required></textarea>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n\r\n      </div>\r\n      <div class=\"table-responsive table-striped\" *ngIf=\"LawsuitTableListShow\">\r\n        <table class=\"table\" *ngIf=\"!errorShow\">\r\n          <thead>\r\n            <tr>\r\n              <th class=\"footable-sortable text-center\">ลำดับ</th>\r\n              <th class=\"footable-sortable\">ประเภทผู้ต้องสงสัย</th>\r\n              <th class=\"footable-sortable\">ประเภทบุคคล</th>\r\n              <th class=\"footable-sortable\">หมายเลขอ้างอิง</th>\r\n              <th class=\"footable-sortable\">ชื่อผู้ต้องหา</th>\r\n              <th class=\"footable-sortable\">ลักษณะคดี</th>\r\n              <th class=\"footable-sortable\">คดีสิ้นสุดชั้น</th>\r\n              <th class=\"footable-sortable\"></th>\r\n            </tr>\r\n          </thead>\r\n          <tbody formArrayName=\"LawsuitTableList\">\r\n            <tr class=\"footable\" *ngFor=\"let item of LawsuitTableList.controls; let i=index;\" [formGroupName]=\"i\">\r\n              <td class=\"text-center\">{{i+1}}</td>\r\n              <td>{{item.controls['EntityType'].value}}</td>\r\n              <td>{{item.controls['LawbreakerType'].value}}</td>\r\n              <td>{{item.controls['LawsuitNoRef'].value}}</td>\r\n              <td>{{item.controls['LawBrakerFullName'].value}}</td>\r\n              <td>\r\n                <select formControlName=\"LawsuitType\" class=\"form-control form-control-sm\" [attr.disabled]=\"showEditField ? '' : null\">\r\n                  <option [value]=\"type.id\" *ngFor=\"let type of lstype\">{{type.name}}</option>\r\n                </select>\r\n              </td>\r\n              <td>\r\n                <select formControlName=\"LawsuitEnd\" class=\"form-control form-control-sm\" [attr.disabled]=\"showEditField ? '' : null\">\r\n                  <option [value]=\"end.id\" *ngFor=\"let end of lsend\">{{end.name}}</option>\r\n                </select>\r\n              </td>\r\n              <td>\r\n                <a href=\"javaScript:void(0);\" class=\"text-danger\" (click)=\"editTable(item, i)\">\r\n                  <i class=\"fa fa-edit fa-lg\"></i>\r\n                </a>\r\n                <!-- <a href=\"javaScript:void(0);\" class=\"text-danger\" *ngIf=\"!showEditField && item.controls['IsProve'].value == 0\"\r\n                    (click)=\"editTable(item, i)\">\r\n                    <i class=\"fa fa-edit fa-lg\"></i>\r\n                  </a> -->\r\n                <a href=\"javaScript:void(0);\" class=\"text-secondary\" (click)=\"viewData(item)\" *ngIf=\"item.controls['LawsuitType'].value == 0\">\r\n                  <i class=\"mdi mdi-eye fa-lg\"></i>\r\n                </a>\r\n                <!-- <a href=\"javaScript:void(0);\" class=\"text-secondary\" (click)=\"viewData(item)\" *ngIf=\"!showEditField && item.value.LawsuitEnd == 1\" >\r\n                  <i class=\"mdi mdi-eye fa-lg\"></i>\r\n                </a> -->\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n      </div>\r\n    </div>\r\n\r\n  </div>\r\n\r\n  <div class=\"card card-outline-bluish unset-radius\">\r\n    <div class=\"card-header  unset-radius\">\r\n      <app-card-actions-collapse></app-card-actions-collapse>\r\n      <h4 class=\"card-title m-b-0\">เอกสารแนบภายใน</h4>\r\n    </div>\r\n    <div class=\"card-body\">\r\n      <div class=\"row form-group\">\r\n        <div class=\"col-lg-10 col-md-9 col-sm-8\"></div>\r\n        <div class=\"col-lg-2 col-md-3 col-sm-4\">\r\n          <button class=\"btn btn-block btn-themecolor\" [disabled]=\"showEditField\" (click)=\"addDocument()\">เพิ่มเอกสารแนบ</button>\r\n        </div>\r\n      </div>\r\n      <table class=\"table table-sm table-striped table-set-border\">\r\n        <thead>\r\n          <tr>\r\n            <th class=\"text-center\">ลำดับ</th>\r\n            <th>ชื่อเอกสารแนบ</th>\r\n            <th>ที่อยู่เอกสารแนบ</th>\r\n            <th></th>\r\n          </tr>\r\n        </thead>\r\n        <tbody formArrayName=\"LawsuitDocument\">\r\n          <tr *ngFor=\"let item of LawsuitDocument.controls; let j=index;\" [formGroupName]=\"j\">\r\n            <td class=\"text-center\">{{j+1}}</td>\r\n            <td>\r\n              <input type=\"text\" formControlName=\"DocumentName\" class=\"form-control form-control-sm\" [readonly]=\"showEditField\">\r\n            </td>\r\n            <td>\r\n              <div class=\"input-group\">\r\n                <input type=\"text\" class=\"form-control form-control-sm\" formControlName=\"FilePath\" style=\"border-right: 0;\"\r\n                  [readonly]=\"showEditField\" disabled>\r\n                <div class=\"input-group-append\">\r\n                  <input [id]=\"'lawsuitAttach'+j\" type=\"file\" (input)=\"changeNoticeDoc($event, j)\" hidden\r\n                    [attr.disabled]=\"showEditField ? '' : null\">\r\n                  <label [for]=\"'lawsuitAttach'+j\" class=\"input-group-text custom-file-upload text-secondary\">\r\n                    <i class=\"ti-more-alt\"></i>\r\n                  </label>\r\n                </div>\r\n              </div>\r\n            </td>\r\n            <td class=\"text-center\">\r\n              <a href=\"javaScript:void(0);\" class=\"text-danger\" *ngIf=\"!showEditField\" (click)=\"onDeleteDocument(j)\">\r\n                <i class=\"fa fa-trash-o fa-lg\"></i>\r\n              </a>\r\n            </td>\r\n          </tr>\r\n        </tbody>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</form>\r\n"
+module.exports = "<ng-template #printDocModal let-c=\"close\" let-d=\"dismiss\">\r\n  <app-print-lawsuit-modal (c)=\"modal.close()\" (d)=\"modal.dismiss()\" [IndictmentID]=\"IndictmentID\"></app-print-lawsuit-modal>\r\n</ng-template>\r\n<form [formGroup]=\"lawsuitArrestForm\">\r\n  <div class=\"wizard-content\">\r\n    <div class=\"wizard-circle wizard clearfix clearfix\">\r\n      <div class=\"steps tab-wizard\">\r\n        <ul role=\"tablist\">\r\n          <li role=\"tab\" class=\"current\" aria-disabled=\"false\" aria-selected=\"true\">\r\n            <a>\r\n              <span class=\"current-info audible\">current step: </span>\r\n              <span class=\"step\"></span> 1. ใบแจ้งความนำจับ</a>\r\n          </li>\r\n          <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 2. งานจับกุม </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 3. รับคำกล่าวโทษ </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"disabled last\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"disabled last\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"disabled last\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 6. นำส่งเงินรายได้ </a>\r\n          </li>\r\n          <li role=\"tab\" class=\"disabled last\" aria-disabled=\"true\">\r\n            <a>\r\n              <span class=\"step\"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"card card-outline-bluish unset-radius\">\r\n    <div class=\"card-header unset-radius\">\r\n      <app-card-actions-collapse></app-card-actions-collapse>\r\n      <h5 class=\"card-title m-b-0\">ข้อมูลการจับกุม</h5>\r\n    </div>\r\n    <div class=\"card-body\">\r\n      <div class=\"form-body\">\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">เลขที่ใบงาน : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" [attr.disabled]=\"disabled ? '' : null\" formControlName=\"ArrestCode\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">วันที่จับกุม : </label>\r\n              <div class=\"col-md-4\">\r\n                <input class=\"form-control\" type=\"text\" [attr.disabled]=\"disabled ? '' : null\" formControlName=\"OccurrenceDate\">\r\n              </div>\r\n              <label class=\"col-form-label text-center col-md-2\">เวลา</label>\r\n              <div class=\"col-md-3\">\r\n                <input class=\"form-control\" type=\"text\" [attr.disabled]=\"disabled ? '' : null\" formControlName=\"OccurrenceTime\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">เขียนที่ : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" [attr.disabled]=\"disabled ? '' : null\" formControlName=\"ArrestStation\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div formArrayName=\"LawsuitArrestStaff\">\r\n          <div class=\"row\" *ngFor=\"let item of LawsuitArrestStaff.controls; let i=index;\" [formGroupName]=\"i\">\r\n            <div class=\"col-md-6\">\r\n              <div class=\"form-group row\">\r\n                <label class=\"col-form-label text-right col-md-3\">ผู้กล่าวหา : </label>\r\n                <div class=\"col-md-9\">\r\n                  <input class=\"form-control\" type=\"text\" formControlName=\"FullName\" [attr.disabled]=\"disabled ? '' : null\">\r\n                </div>\r\n\r\n              </div>\r\n            </div>\r\n\r\n\r\n            <div class=\"col-md-6\">\r\n              <div class=\"form-group row\">\r\n                <label class=\"col-form-label text-right col-md-3\">ตำแหน่ง : </label>\r\n                <div class=\"col-md-9\">\r\n                  <input class=\"form-control\" type=\"text\" formControlName=\"PositionName\" [attr.disabled]=\"disabled ? '' : null\">\r\n                </div>\r\n              </div>\r\n            </div>\r\n\r\n\r\n            <div class=\"col-md-6\">\r\n              <div class=\"form-group row\">\r\n                <label class=\"col-form-label text-right col-md-3\">หน่วยงาน : </label>\r\n                <div class=\"col-md-9\">\r\n                  <input class=\"form-control\" type=\"text\" formControlName=\"DepartmentName\" [attr.disabled]=\"disabled ? '' : null\">\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">ฐานความผิดมาตรา : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"SubSectionType\" [attr.disabled]=\"disabled ? '' : null\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">ฐานความผิด : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"GuiltBaseName\" [attr.disabled]=\"disabled ? '' : null\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">บทกำหนดโทษ : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"SectionNo\" [attr.disabled]=\"disabled ? '' : null\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">อัตราโทษ : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"PenaltyDesc\" [attr.disabled]=\"disabled ? '' : null\">\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"table-responsive table-striped\" *ngIf=\"LawsuitArrestIndictmentProductTableListShow\">\r\n        <table class=\"table\" *ngIf=\"!errorShow\">\r\n          <thead>\r\n            <tr>\r\n              <th class=\"footable-sortable text-center\">ลำดับ</th>\r\n              <th class=\"footable-sortable\">ของกลาง</th>\r\n              <th class=\"footable-sortable\">จำนวน</th>\r\n              <th class=\"footable-sortable\">หน่วย</th>\r\n              <th class=\"footable-sortable\">ปริมาณสุทธิ</th>\r\n              <th class=\"footable-sortable\">หน่วย</th>\r\n            </tr>\r\n          </thead>\r\n          <tbody>\r\n            <tr class=\"footable\" *ngFor=\"let item of LawsuitArrestIndictmentProduct; let i=index;\">\r\n              <td class=\"text-center\">{{i+1}}</td>\r\n              <td>{{item.ProductDesc}}</td>\r\n              <td>{{item.IndictmentProductQty}}</td>\r\n              <td>{{item.IndictmentProductQtyUnit}}</td>\r\n              <td>{{item.IndictmentProductVolume}}</td>\r\n              <td>{{item.IndictmentProductVolumeUnit}}</td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n      </div>\r\n\r\n    </div>\r\n  </div>\r\n</form>\r\n<form [formGroup]=\"lawsuitForm\">\r\n  <div class=\"card card-outline-bluish unset-radius\">\r\n    <div class=\"card-header unset-radius\">\r\n      <app-card-actions-collapse></app-card-actions-collapse>\r\n      <h5 class=\"card-title m-b-0\">รับคำกล่าวโทษ</h5>\r\n    </div>\r\n    <div class=\"card-body\">\r\n      <div class=\"form-body\">\r\n        <div class=\"row\">\r\n          <div class=\"col-md-12\">\r\n\r\n            <div class=\"row form-group\">\r\n              <div class=\"col\">\r\n                <input [attr.disabled]=\"showEditField ? '' : null\" formControlName=\"IsLawsuitCheck\" type=\"checkbox\" id=\"IsLawsuit\"\r\n                  class=\"filled-in chk-col-indigo\" [readonly]=\"showEditField\">\r\n                <label for=\"IsLawsuit\">ไม่รับคดีเป็นเพราะ</label>\r\n              </div>\r\n              <div class=\"col-md-10\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"ReasonDontLawsuit\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-12\">\r\n            <div class=\"row form-group\">\r\n              <div class=\"col\">\r\n                <input [attr.disabled]=\"showEditField ? '' : null\" formControlName=\"IsOutsideCheck\" type=\"checkbox\" id=\"IsOutSide\"\r\n                  class=\"filled-in chk-col-indigo\" [readonly]=\"showEditField\">\r\n                <label for=\"IsOutSide\">คดีรับคำกล่าวโทษนอกสถานที่</label>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">เลขที่คดีรับคำกล่าวโทษ : </label>\r\n              <div class=\"col-md-4\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitNo\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n              <label class=\"col-form-label text-center col-md-2\">/</label>\r\n              <div class=\"col-md-3\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitNoSub\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">วันที่รับคดี : </label>\r\n              <div class=\"col-md-4\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitDate\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n              <label class=\"col-form-label text-center col-md-2\">เวลา</label>\r\n              <div class=\"col-md-3\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitTime\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-4\">ผู้รับคดี : </label>\r\n              <div class=\"col-md-8\">\r\n                <input class=\"form-control\" formControlName=\"FullName\" type=\"text\" [readonly]=\"showEditField\" [ngClass]=\"{'ng-touched':isRequired}\"\r\n                  (input)=\"onChangeFullname($event.target.value)\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-3\">ตำแหน่ง : </label>\r\n              <div class=\"col-md-9\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"PositionName\" disabled>\r\n              </div>\r\n            </div>\r\n          </div>\r\n\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-4\">หน่วยงาน : </label>\r\n              <div class=\"col-md-8\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"DepartmentName\" disabled>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-6\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-4\">เขียนที่ : </label>\r\n              <div class=\"col-md-8\">\r\n                <input class=\"form-control\" type=\"text\" formControlName=\"LawsuitStation\" [readonly]=\"showEditField\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"row\">\r\n          <div class=\"col-md-12\">\r\n            <div class=\"form-group row\">\r\n              <label class=\"col-form-label text-right col-md-2\">คำให้การของผู้กล่าวโทษ : </label>\r\n              <div class=\"col-md-10\">\r\n                <textarea class=\"form-control\" rows=\"5\" [readonly]=\"showEditField\" formControlName=\"AccuserTestimony\"\r\n                  [ngClass]=\"{'ng-touched':isRequired}\" required></textarea>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n\r\n      </div>\r\n      <div class=\"table-responsive table-striped\" *ngIf=\"LawsuitTableListShow\">\r\n        <table class=\"table\" *ngIf=\"!errorShow\">\r\n          <thead>\r\n            <tr>\r\n              <th class=\"footable-sortable text-center\">ลำดับ</th>\r\n              <th class=\"footable-sortable\">ประเภทผู้ต้องหา</th>\r\n              <th class=\"footable-sortable\">ประเภทบุคคล</th>\r\n              <th class=\"footable-sortable\">หมายเลขอ้างอิง</th>\r\n              <th class=\"footable-sortable\">ชื่อผู้ต้องหา</th>\r\n              <th class=\"footable-sortable\">ลักษณะคดี</th>\r\n              <th class=\"footable-sortable\">คดีสิ้นสุดชั้น</th>\r\n              <th class=\"footable-sortable\"></th>\r\n            </tr>\r\n          </thead>\r\n          <tbody formArrayName=\"LawsuitTableList\">\r\n            <tr class=\"footable\" *ngFor=\"let item of LawsuitTableList.controls; let i=index;\" [formGroupName]=\"i\">\r\n              <td class=\"text-center\">{{i+1}}</td>\r\n              <td>{{item.controls['EntityType'].value}}</td>\r\n              <td>{{item.controls['LawbreakerType'].value}}</td>\r\n              <td>{{item.controls['LawsuitNoRef'].value}}</td>\r\n              <td>{{item.controls['LawBrakerFullName'].value}}</td>\r\n              <td>\r\n                <select formControlName=\"LawsuitType\" class=\"form-control form-control-sm\" [attr.disabled]=\"showEditField ? '' : null\">\r\n                  <option [value]=\"type.id\" *ngFor=\"let type of lstype\">{{type.name}}</option>\r\n                </select>\r\n              </td>\r\n              <td>\r\n                <select formControlName=\"LawsuitEnd\" class=\"form-control form-control-sm\" [attr.disabled]=\"showEditField ? '' : null\">\r\n                  <option [value]=\"end.id\" *ngFor=\"let end of lsend\">{{end.name}}</option>\r\n                </select>\r\n              </td>\r\n              <td>\r\n                <!-- <a href=\"javaScript:void(0);\" class=\"text-danger\" (click)=\"editTable(item, i)\">\r\n                  <i class=\"fa fa-edit fa-lg\"></i>\r\n                </a> -->\r\n                <a href=\"javaScript:void(0);\" class=\"text-danger\" *ngIf=\"!showEditField \" (click)=\"editTable(item, i)\">\r\n                  <i class=\"fa fa-edit fa-lg\"></i>\r\n                </a>\r\n                <a href=\"javaScript:void(0);\" class=\"text-secondary\" (click)=\"viewData(item)\" *ngIf=\"item.controls['LawsuitType'].value == 0\">\r\n                  <i class=\"mdi mdi-eye fa-lg\"></i>\r\n                </a>\r\n                <!-- <a href=\"javaScript:void(0);\" class=\"text-secondary\" (click)=\"viewData(item)\" *ngIf=\"!showEditField && item.value.LawsuitEnd == 1\" >\r\n                  <i class=\"mdi mdi-eye fa-lg\"></i>\r\n                </a> -->\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n      </div>\r\n    </div>\r\n\r\n  </div>\r\n\r\n  <div class=\"card card-outline-bluish unset-radius\">\r\n    <div class=\"card-header  unset-radius\">\r\n      <app-card-actions-collapse></app-card-actions-collapse>\r\n      <h4 class=\"card-title m-b-0\">เอกสารแนบภายใน</h4>\r\n    </div>\r\n    <div class=\"card-body\">\r\n      <div class=\"row form-group\">\r\n        <div class=\"col-lg-10 col-md-9 col-sm-8\"></div>\r\n        <div class=\"col-lg-2 col-md-3 col-sm-4\">\r\n          <button class=\"btn btn-block btn-themecolor\" [disabled]=\"showEditField\" (click)=\"addDocument()\">เพิ่มเอกสารแนบ</button>\r\n        </div>\r\n      </div>\r\n      <table class=\"table table-sm table-striped table-set-border\">\r\n        <thead>\r\n          <tr>\r\n            <th class=\"text-center\">ลำดับ</th>\r\n            <th>ชื่อเอกสารแนบ</th>\r\n            <th>ที่อยู่เอกสารแนบ</th>\r\n            <th></th>\r\n          </tr>\r\n        </thead>\r\n        <tbody formArrayName=\"LawsuitDocument\">\r\n          <tr *ngFor=\"let item of LawsuitDocument.controls; let j=index;\" [formGroupName]=\"j\">\r\n            <td class=\"text-center\">{{j+1}}</td>\r\n            <td>\r\n              <input type=\"text\" formControlName=\"DocumentName\" class=\"form-control form-control-sm\" [readonly]=\"showEditField\">\r\n            </td>\r\n            <td>\r\n              <div class=\"input-group\">\r\n                <input type=\"text\" class=\"form-control form-control-sm\" formControlName=\"FilePath\" style=\"border-right: 0;\"\r\n                  [readonly]=\"showEditField\" disabled>\r\n                <div class=\"input-group-append\">\r\n                  <input [id]=\"'lawsuitAttach'+j\" type=\"file\" (input)=\"changeNoticeDoc($event, j)\" hidden\r\n                    [attr.disabled]=\"showEditField ? '' : null\">\r\n                  <label [for]=\"'lawsuitAttach'+j\" class=\"input-group-text custom-file-upload text-secondary\">\r\n                    <i class=\"ti-more-alt\"></i>\r\n                  </label>\r\n                </div>\r\n              </div>\r\n            </td>\r\n            <td class=\"text-center\">\r\n              <a href=\"javaScript:void(0);\" class=\"text-danger\" *ngIf=\"!showEditField\" (click)=\"onDeleteDocument(j)\">\r\n                <i class=\"fa fa-trash-o fa-lg\"></i>\r\n              </a>\r\n            </td>\r\n          </tr>\r\n        </tbody>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</form>\r\n"
 
 /***/ }),
 
@@ -5283,21 +5283,22 @@ module.exports = "<ng-template #printDocModal let-c=\"close\" let-d=\"dismiss\">
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ManageComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DialogJudgment; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lawsuit_service__ = __webpack_require__("./src/app/pages/lawsuit/lawsuit.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_header_navigation_navigation_service__ = __webpack_require__("./src/app/shared/header-navigation/navigation.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ng_bootstrap_ng_bootstrap__ = __webpack_require__("./node_modules/@ng-bootstrap/ng-bootstrap/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_sidebar_sidebar_component__ = __webpack_require__("./src/app/shared/sidebar/sidebar.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_lawsuit_staff__ = __webpack_require__("./src/app/pages/lawsuit/models/lawsuit_staff.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__models_lawsuit_document__ = __webpack_require__("./src/app/pages/lawsuit/models/lawsuit_document.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_lawsuit_arreststaff__ = __webpack_require__("./src/app/pages/lawsuit/models/lawsuit_arreststaff.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__config_message__ = __webpack_require__("./src/app/config/message.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_app_config_dataString__ = __webpack_require__("./src/app/config/dataString.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__models_judgment__ = __webpack_require__("./src/app/pages/lawsuit/models/judgment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_dateFormat__ = __webpack_require__("./src/app/config/dateFormat.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lawsuit_service__ = __webpack_require__("./src/app/pages/lawsuit/lawsuit.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_header_navigation_navigation_service__ = __webpack_require__("./src/app/shared/header-navigation/navigation.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__ = __webpack_require__("./node_modules/@ng-bootstrap/ng-bootstrap/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_preloader_preloader_component__ = __webpack_require__("./src/app/shared/preloader/preloader.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__ = __webpack_require__("./src/app/shared/sidebar/sidebar.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__models_lawsuit_staff__ = __webpack_require__("./src/app/pages/lawsuit/models/lawsuit_staff.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_lawsuit_document__ = __webpack_require__("./src/app/pages/lawsuit/models/lawsuit_document.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__models_lawsuit_arreststaff__ = __webpack_require__("./src/app/pages/lawsuit/models/lawsuit_arreststaff.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__config_message__ = __webpack_require__("./src/app/config/message.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_app_config_dataString__ = __webpack_require__("./src/app/config/dataString.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__models_judgment__ = __webpack_require__("./src/app/pages/lawsuit/models/judgment.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5342,6 +5343,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+
 
 
 
@@ -5509,7 +5511,7 @@ var ManageComponent = /** @class */ (function () {
                         _a.sent();
                         if (!this.lawsuitForm.valid) {
                             this.isRequired = true;
-                            alert(__WEBPACK_IMPORTED_MODULE_11__config_message__["a" /* Message */].checkData);
+                            alert(__WEBPACK_IMPORTED_MODULE_12__config_message__["a" /* Message */].checkData);
                             return [2 /*return*/, false];
                         }
                         this.onSave();
@@ -5746,7 +5748,7 @@ var ManageComponent = /** @class */ (function () {
     };
     ManageComponent.prototype.onSave = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var IsLawsuitComplete, _masStaffList, result;
+            var IsLawsuitComplete, lawsuitNo, _masStaffList, result;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -5755,8 +5757,9 @@ var ManageComponent = /** @class */ (function () {
                         IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
                         console.log('IsLawsuitComplete onsave', IsLawsuitComplete);
                         if (!(IsLawsuitComplete == 1)) return [3 /*break*/, 2];
-                        /// check LawsuitNo on exite
-                        return [4 /*yield*/, this.lawsuitService.LawsuitVerifyLawsuitNo(this.lawsuitForm.controls['LawsuitNo'].value, this.lawsuitForm.controls['officeCode'].value, this.lawsuitForm.controls['IsOutsideCheck'].value).then(function (res) { return __awaiter(_this, void 0, void 0, function () {
+                        lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
+                        // await this.lawsuitService.LawsuitVerifyLawsuitNo(this.lawsuitForm.controls['LawsuitNo'].value,
+                        return [4 /*yield*/, this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, this.lawsuitForm.controls['IsOutsideCheck'].value).then(function (res) { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     if (res.length != 0) {
                                         alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
@@ -5767,7 +5770,7 @@ var ManageComponent = /** @class */ (function () {
                                 });
                             }); })];
                     case 1:
-                        /// check LawsuitNo on exite
+                        // await this.lawsuitService.LawsuitVerifyLawsuitNo(this.lawsuitForm.controls['LawsuitNo'].value,
                         _a.sent();
                         /// check LawsuitDate
                         if (!this.lawsuitForm.get('LawsuitDate').valid) {
@@ -5822,34 +5825,34 @@ var ManageComponent = /** @class */ (function () {
     };
     ManageComponent.prototype.createForm = function () {
         this.lawsuitArrestForm = this.fb.group({
-            ArrestCode: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            OccurrenceDate: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-            OccurrenceTime: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            ArrestStation: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            SubSectionType: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            GuiltBaseName: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            SectionNo: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            PenaltyDesc: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
+            ArrestCode: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            OccurrenceDate: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+            OccurrenceTime: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            ArrestStation: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            SubSectionType: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            GuiltBaseName: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            SectionNo: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            PenaltyDesc: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
             LawsuitArrestStaff: this.fb.array([this.createArrestStaffForm()]),
         });
     };
     ManageComponent.prototype.createStaffForm = function () {
-        __WEBPACK_IMPORTED_MODULE_8__models_lawsuit_staff__["a" /* LawsuitStaffFormControl */].LawsuitID = new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](this.LawsuitID);
-        return this.fb.group(__WEBPACK_IMPORTED_MODULE_8__models_lawsuit_staff__["a" /* LawsuitStaffFormControl */]);
+        __WEBPACK_IMPORTED_MODULE_9__models_lawsuit_staff__["a" /* LawsuitStaffFormControl */].LawsuitID = new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](this.LawsuitID);
+        return this.fb.group(__WEBPACK_IMPORTED_MODULE_9__models_lawsuit_staff__["a" /* LawsuitStaffFormControl */]);
     };
     ManageComponent.prototype.createArrestStaffForm = function () {
-        __WEBPACK_IMPORTED_MODULE_10__models_lawsuit_arreststaff__["a" /* LawsuitArrestStaffFormControl */].LawsuitID = new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](this.LawsuitID);
-        return this.fb.group(__WEBPACK_IMPORTED_MODULE_10__models_lawsuit_arreststaff__["a" /* LawsuitArrestStaffFormControl */]);
+        __WEBPACK_IMPORTED_MODULE_11__models_lawsuit_arreststaff__["a" /* LawsuitArrestStaffFormControl */].LawsuitID = new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](this.LawsuitID);
+        return this.fb.group(__WEBPACK_IMPORTED_MODULE_11__models_lawsuit_arreststaff__["a" /* LawsuitArrestStaffFormControl */]);
     };
     ManageComponent.prototype.createTableListForm = function () {
         return this.fb.group({
-            EntityType: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawbreakerType: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawsuitNoRef: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawBrakerFullName: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawsuitType: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawsuitEnd: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            ProductDesc: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
+            EntityType: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawbreakerType: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawsuitNoRef: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawBrakerFullName: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawsuitType: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawsuitEnd: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            ProductDesc: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
         });
     };
     ManageComponent.prototype.setItemFormArray = function (array, formControl, formGroup) {
@@ -5863,21 +5866,22 @@ var ManageComponent = /** @class */ (function () {
     };
     ManageComponent.prototype.createLawsuitForm = function () {
         this.lawsuitForm = this.fb.group({
-            IsLawsuitCheck: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            ReasonDontLawsuit: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            IsOutsideCheck: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawsuitDate: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawsuitTime: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            FullName: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            PositionName: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            DepartmentName: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawsuitStation: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            AccuserTestimony: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-            LawsuitNo: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
+            IsLawsuitCheck: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            ReasonDontLawsuit: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            IsOutsideCheck: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawsuitDate: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawsuitTime: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            FullName: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            PositionName: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            DepartmentName: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawsuitStation: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            AccuserTestimony: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawsuitNo: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+            LawsuitNoSub: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
             LawsuitStaff: this.fb.array([this.createStaffForm()]),
             LawsuitTableList: this.fb.array([this.createTableListForm()]),
             LawsuitDocument: this.fb.array([]),
-            officeCode: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
+            officeCode: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
         });
     };
     ManageComponent.prototype.ArrestgetByCon = function (IndictmentID, LawsuitID) {
@@ -5902,18 +5906,18 @@ var ManageComponent = /** @class */ (function () {
                         _a.sent();
                         ///get  LawsuitArrest
                         return [4 /*yield*/, this.lawsuitService.LawsuitArrestGetByCon(IndictmentID).then(function (res) { return __awaiter(_this, void 0, void 0, function () {
-                                var arreststaff, IsLawsuitComplete, islaw, IsLawsuitCheck, isout, IsOutsideCheck, staff, e_1, IsProve_1, IsLawsuitComplete_1, arrList_1, isProve, lawsuitType;
+                                var arreststaff, IsLawsuitComplete, islaw, IsLawsuitCheck, isout, IsOutsideCheck, staff, lawsuitNoArr, e_1, IsProve_1, IsLawsuitComplete_1, arrList_1, isProve, lawsuitType;
                                 var _this = this;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
                                             this.lawsuitList = res || [];
                                             console.log(res);
-                                            if (!(res.length != 0)) return [3 /*break*/, 13];
+                                            if (!(res.length != 0)) return [3 /*break*/, 14];
                                             /// set form lawsuitArrest
                                             return [4 /*yield*/, this.lawsuitArrestForm.reset({
                                                     ArrestCode: res[0]['ArrestCode'],
-                                                    OccurrenceDate: res[0]['OccurrenceDate'],
+                                                    OccurrenceDate: Object(__WEBPACK_IMPORTED_MODULE_0__config_dateFormat__["j" /* toLocalShort */])(res[0]['OccurrenceDate']),
                                                     OccurrenceTime: res[0]['OccurrenceTime'],
                                                     ArrestStation: res[0]['ArrestStation'],
                                                     SubSectionType: res[0]['LawsuitArrestIndicment'][0]['LawsuitLawGuiltbase'][0]['LawsuitLawSubSectionRule'][0]['LawsuitLawSubSection'][0]['SubSectionType'],
@@ -5938,17 +5942,18 @@ var ManageComponent = /** @class */ (function () {
                                             /// Check LawsuitComplete status
                                             this.disabled = true;
                                             IsLawsuitComplete = res[0]['IsLawsuitComplete'];
-                                            if (!(IsLawsuitComplete == 1)) return [3 /*break*/, 10];
-                                            if (!(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length != 0)) return [3 /*break*/, 8];
+                                            if (!(IsLawsuitComplete == 1)) return [3 /*break*/, 11];
+                                            if (!(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length != 0)) return [3 /*break*/, 9];
                                             return [4 /*yield*/, this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']).then(function (res) {
                                                     //insert doc to dosMacList
                                                 })];
                                         case 3:
                                             _a.sent();
                                             islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
-                                            IsLawsuitCheck = false;
+                                            IsLawsuitCheck = true;
                                             if (islaw == 1) {
-                                                IsLawsuitCheck = true;
+                                                IsLawsuitCheck = false;
+                                                this.lawsuitForm.controls['ReasonDontLawsuit'].setValue('');
                                             }
                                             isout = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'];
                                             IsOutsideCheck = false;
@@ -5961,6 +5966,7 @@ var ManageComponent = /** @class */ (function () {
                                                 })];
                                         case 4:
                                             _a.sent();
+                                            lawsuitNoArr = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitNo'].split('/');
                                             _a.label = 5;
                                         case 5:
                                             _a.trys.push([5, 7, , 8]);
@@ -5968,14 +5974,15 @@ var ManageComponent = /** @class */ (function () {
                                                     IsLawsuitCheck: IsLawsuitCheck,
                                                     ReasonDontLawsuit: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['ReasonDontLawsuit'],
                                                     IsOutsideCheck: IsOutsideCheck,
-                                                    LawsuitNo: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitNo'],
-                                                    LawsuitDate: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitDate'],
+                                                    LawsuitNo: lawsuitNoArr[0],
+                                                    LawsuitNoSub: lawsuitNoArr[1],
+                                                    LawsuitDate: Object(__WEBPACK_IMPORTED_MODULE_0__config_dateFormat__["j" /* toLocalShort */])(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitDate']),
                                                     LawsuitTime: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitTime'],
                                                     LawsuitStation: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStation'],
                                                     AccuserTestimony: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['AccuserTestimony'],
                                                     FullName: staff[0].FullName,
                                                     PositionName: staff[0].PositionName,
-                                                    DepartmentName: staff[0].DepartmentName,
+                                                    DepartmentName: staff[0].OfficeShortName,
                                                     officeCode: staff[0].officeCode,
                                                 })];
                                         case 6:
@@ -5985,13 +5992,22 @@ var ManageComponent = /** @class */ (function () {
                                             e_1 = _a.sent();
                                             return [3 /*break*/, 8];
                                         case 8:
+                                            if (islaw == 1) {
+                                                this.lawsuitForm.controls['ReasonDontLawsuit'].setValue('');
+                                                this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
+                                            }
+                                            _a.label = 9;
+                                        case 9:
                                             IsProve_1 = res[0]['LawsuitArrestIndicment'][0].IsProve;
                                             IsLawsuitComplete_1 = res[0]['LawsuitArrestIndicment'][0].IsLawsuitComplete;
                                             arrList_1 = [];
+                                            // console.log('resposne ise=====>',res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
                                             return [4 /*yield*/, res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].map(function (item) {
                                                     _this.LawsuitTableListShow = true;
                                                     res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitArrestLawbreaker'].map(function (arrestLaw) {
-                                                        item.lawBrakerFullName = arrestLaw.LawbreakerTitleName + " " + arrestLaw.LawbreakerFirstName + " " + arrestLaw.LawbreakerLastName;
+                                                        var middleName = (arrestLaw.LawbreakerMiddleName) ? arrestLaw.LawbreakerMiddleName : '';
+                                                        console.log('middleName', middleName);
+                                                        item.lawBrakerFullName = arrestLaw.LawbreakerTitleName + " " + arrestLaw.LawbreakerFirstName + " " + middleName + " " + arrestLaw.LawbreakerLastName;
                                                     });
                                                     /// add LawsuitTableList
                                                     if (item.LawsuitArrestProductDetail != null && item.LawsuitArrestProductDetail.length) {
@@ -6013,32 +6029,37 @@ var ManageComponent = /** @class */ (function () {
                                                         'IsLawsuitComplete': IsLawsuitComplete_1,
                                                     };
                                                     /// add EntityType
-                                                    if (item.ArrestLawbreaker == 1) {
+                                                    console.log('item EntityType===>', item);
+                                                    if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].EntityType == 1) {
                                                         a.EntityType = 'บุคคลธรรมดา';
                                                     }
-                                                    else {
+                                                    else if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].EntityType == 2) {
                                                         a.EntityType = 'นิติบุคคล';
                                                     }
                                                     /// add LawbreakerType
-                                                    if (item.ArrestLawbreaker == 1) {
+                                                    if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 1) {
                                                         a.LawbreakerType = 'คนไทย';
                                                     }
-                                                    else {
-                                                        a.LawbreakerType = 'ต่างชำติ';
+                                                    else if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 0) {
+                                                        a.LawbreakerType = 'ต่างชาติ';
                                                     }
                                                     /// add LawsuitNoRef
-                                                    if (item.ArrestLawbreaker == 1 && item.ArrestLawbreaker == 1) {
-                                                        a.LawsuitNoRef = a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].IDCard;
+                                                    console.log('item.LawsuitArrestLawbreaker[0]===>', item.LawsuitArrestLawbreaker[0]);
+                                                    if (item.LawsuitArrestLawbreaker[0].EntityType == 1 && item.LawsuitArrestLawbreaker[0].LawbreakerType == 1) {
+                                                        a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].IDCard;
                                                     }
-                                                    else if (item.ArrestLawbreaker == 1 && item.ArrestLawbreaker == 0) {
-                                                        a.LawsuitNoRef = a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].PassportNo;
+                                                    else if (item.LawsuitArrestLawbreaker[0].EntityType == 1 && item.LawsuitArrestLawbreaker[0].LawbreakerType == 0) {
+                                                        a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].PassportNo;
                                                     }
                                                     else {
-                                                        a.LawsuitNoRef = a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].CompanyRegistrationNo;
+                                                        if (item.LawsuitArrestLawbreaker[0]) {
+                                                            a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].CompanyRegistrationNo;
+                                                        }
                                                     }
                                                     arrList_1.push(a);
                                                 })];
-                                        case 9:
+                                        case 10:
+                                            // console.log('resposne ise=====>',res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
                                             _a.sent();
                                             console.log('LawsuitTableList===>', arrList_1);
                                             this.setItemFormArray(arrList_1, 'LawsuitTableList', this.lawsuitForm);
@@ -6071,8 +6092,8 @@ var ManageComponent = /** @class */ (function () {
                                                 this.navService.setNextPageButton(true);
                                                 this.navService.setInnerTextNextPageButton('งานพิสูจน์');
                                             }
-                                            return [3 /*break*/, 13];
-                                        case 10: 
+                                            return [3 /*break*/, 14];
+                                        case 11: 
                                         /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
                                         return [4 /*yield*/, this.lawsuitService.MasStaffMaingetAll().then(function (masstaff) {
                                                 var _masstaff = masstaff;
@@ -6081,18 +6102,18 @@ var ManageComponent = /** @class */ (function () {
                                                 });
                                                 _this.masStaffList = _masstaff || [];
                                             })];
-                                        case 11:
+                                        case 12:
                                             /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
                                             _a.sent();
                                             return [4 /*yield*/, this.lawsuitService.MasOfficeMaingetAll().then(function (masoffice) {
                                                     _this.masOfficeList = masoffice || [];
                                                 })];
-                                        case 12:
+                                        case 13:
                                             _a.sent();
                                             this.navService.setSaveButton(true);
                                             this.navService.setCancelButton(true);
-                                            _a.label = 13;
-                                        case 13: return [2 /*return*/];
+                                            _a.label = 14;
+                                        case 14: return [2 /*return*/];
                                     }
                                 });
                             }); })];
@@ -6123,14 +6144,14 @@ var ManageComponent = /** @class */ (function () {
             PositionName: e.item.PositionName || e.item.ManagementPosName,
             DepartmentLevel: e.item.DepartmentLevel || e.item.DeptLevel,
             DepartmentCode: e.item.DepartmentCode || e.item.OfficeCode,
-            DepartmentName: "" + (e.item.DepartmentName || e.item.OfficeName),
+            DepartmentName: "" + (e.item.OfficeShortName || e.item.OfficeName),
             ContributorCode: e.item.ContributorCode || 2,
             ContributorID: e.item.ContributorID || 1
         });
     };
     ManageComponent.prototype.addDocument = function () {
         var lastIndex = this.LawsuitDocument.length - 1;
-        var document = new __WEBPACK_IMPORTED_MODULE_9__models_lawsuit_document__["a" /* LawsuitDocument */]();
+        var document = new __WEBPACK_IMPORTED_MODULE_10__models_lawsuit_document__["a" /* LawsuitDocument */]();
         document.IsNewItem = true;
         document.DocumentName = "";
         document.FilePath = "";
@@ -6158,7 +6179,7 @@ var ManageComponent = /** @class */ (function () {
             if (dataSource && dataSource !== undefined) {
                 _this.LawsuitDocument.at(index).patchValue({
                     ReferenceCode: _this.LawsuitID,
-                    FilePath: Object(__WEBPACK_IMPORTED_MODULE_12_app_config_dataString__["a" /* replaceFakePath */])(e.target.value),
+                    FilePath: Object(__WEBPACK_IMPORTED_MODULE_13_app_config_dataString__["a" /* replaceFakePath */])(e.target.value),
                     DataSource: dataSource,
                     IsActive: 1
                 });
@@ -6202,23 +6223,23 @@ var ManageComponent = /** @class */ (function () {
         });
     };
     __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["_13" /* ViewChild */])('printDocModal'),
-        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_2__angular_core__["u" /* ElementRef */])
+        Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["_13" /* ViewChild */])('printDocModal'),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_3__angular_core__["u" /* ElementRef */])
     ], ManageComponent.prototype, "printDocModel", void 0);
     ManageComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({
+        Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["n" /* Component */])({
             selector: "app-manage",
             template: __webpack_require__("./src/app/pages/lawsuit/manage/manage.component.html")
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
-            __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_forms__["c" /* FormBuilder */],
-            __WEBPACK_IMPORTED_MODULE_3__shared_header_navigation_navigation_service__["a" /* NavigationService */],
-            __WEBPACK_IMPORTED_MODULE_4__ng_bootstrap_ng_bootstrap__["d" /* NgbModal */],
-            __WEBPACK_IMPORTED_MODULE_7__shared_sidebar_sidebar_component__["b" /* SidebarService */],
-            __WEBPACK_IMPORTED_MODULE_6__shared_preloader_preloader_component__["b" /* PreloaderService */],
-            __WEBPACK_IMPORTED_MODULE_0__lawsuit_service__["a" /* LawsuitService */],
-            __WEBPACK_IMPORTED_MODULE_13__angular_material__["d" /* MatDialog */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */],
+            __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */],
+            __WEBPACK_IMPORTED_MODULE_6__angular_forms__["c" /* FormBuilder */],
+            __WEBPACK_IMPORTED_MODULE_4__shared_header_navigation_navigation_service__["a" /* NavigationService */],
+            __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__["d" /* NgbModal */],
+            __WEBPACK_IMPORTED_MODULE_8__shared_sidebar_sidebar_component__["b" /* SidebarService */],
+            __WEBPACK_IMPORTED_MODULE_7__shared_preloader_preloader_component__["b" /* PreloaderService */],
+            __WEBPACK_IMPORTED_MODULE_1__lawsuit_service__["a" /* LawsuitService */],
+            __WEBPACK_IMPORTED_MODULE_14__angular_material__["d" /* MatDialog */]])
     ], ManageComponent);
     return ManageComponent;
 }());
@@ -6231,7 +6252,7 @@ var DialogJudgment = /** @class */ (function () {
         this.dialog = dialog;
         this.activatedRoute = activatedRoute;
         this.dialogRef = dialogRef;
-        this.judgmentModel = new __WEBPACK_IMPORTED_MODULE_14__models_judgment__["a" /* JudgmentModel */]();
+        this.judgmentModel = new __WEBPACK_IMPORTED_MODULE_15__models_judgment__["a" /* JudgmentModel */]();
         this.isPayAll = null;
         this.arrestData = [];
         this.closePopup = function () {
@@ -6259,24 +6280,24 @@ var DialogJudgment = /** @class */ (function () {
                         _a.sent();
                         this.arrestData = result;
                         this.lawsuitArrestFormDialog = this.fb.group({
-                            arrestName: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-                            justicName: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-                            numberBlackList: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-                            numberRedList: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-                            judgementNo: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-                            dateJustic: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_5__angular_forms__["m" /* Validators */].required),
-                            fine: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            fineRate: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            isPrison: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            prisonDay: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            unit: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            payRadio1: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            payRadio2: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            payDate: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            quantityPay: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            startPayDate: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            roundPay: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
-                            payUnit: new __WEBPACK_IMPORTED_MODULE_5__angular_forms__["d" /* FormControl */](null),
+                            arrestName: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+                            justicName: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+                            numberBlackList: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+                            numberRedList: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+                            judgementNo: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+                            dateJustic: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_6__angular_forms__["m" /* Validators */].required),
+                            fine: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            fineRate: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            isPrison: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            prisonDay: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            unit: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            payRadio1: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            payRadio2: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            payDate: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            quantityPay: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            startPayDate: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            roundPay: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
+                            payUnit: new __WEBPACK_IMPORTED_MODULE_6__angular_forms__["d" /* FormControl */](null),
                         });
                         this.judgmentModel.arrestName = this.validateData(this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName +
                             this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerFirstName + this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerLastName);
@@ -6303,15 +6324,15 @@ var DialogJudgment = /** @class */ (function () {
     };
     var DialogJudgment_1;
     DialogJudgment = DialogJudgment_1 = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({
+        Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["n" /* Component */])({
             selector: 'dialog-judgment',
             template: __webpack_require__("./src/app/pages/lawsuit/manage/dialog-judgment.html"),
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_5__angular_forms__["c" /* FormBuilder */],
-            __WEBPACK_IMPORTED_MODULE_0__lawsuit_service__["a" /* LawsuitService */],
-            __WEBPACK_IMPORTED_MODULE_13__angular_material__["d" /* MatDialog */],
-            __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
-            __WEBPACK_IMPORTED_MODULE_13__angular_material__["e" /* MatDialogRef */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_6__angular_forms__["c" /* FormBuilder */],
+            __WEBPACK_IMPORTED_MODULE_1__lawsuit_service__["a" /* LawsuitService */],
+            __WEBPACK_IMPORTED_MODULE_14__angular_material__["d" /* MatDialog */],
+            __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */],
+            __WEBPACK_IMPORTED_MODULE_14__angular_material__["e" /* MatDialogRef */]])
     ], DialogJudgment);
     return DialogJudgment;
 }());
