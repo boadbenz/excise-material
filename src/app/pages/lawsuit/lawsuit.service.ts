@@ -126,6 +126,14 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
+  async LawsuitinsAll(lawsuitForm) {
+    console.log('lawsuitForm==>', lawsuitForm)
+    // const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
+
+    const url = `${appConfig.api8083}/LawsuitinsAll `;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(lawsuitForm), url);
+  }
+
   async MasStaffMaingetAll() {
     const params = {};
     const url = `${appConfig.api7789}/MasStaffMaingetAll`;
@@ -139,7 +147,7 @@ export class LawsuitService {
   }
 
   async LawsuitPaymentFinegetByJudgementID(JudgementID) {
-    const params = {JudgementID: JudgementID};
+    const params = { JudgementID: JudgementID };
     const url = `${appConfig.api7789}/LawsuitPaymentFinegetByJudgementID`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
@@ -176,7 +184,7 @@ export class LawsuitService {
   }
 
   async LawsuitupdByCon(LawsuitID, LawsuitNo) {
-    const params = {LawsuitID: LawsuitID, LawsuitNo: LawsuitNo};
+    const params = { LawsuitID: LawsuitID, LawsuitNo: LawsuitNo };
     const url = `${appConfig.api8083}/LawsuitupdByCon`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
