@@ -45,6 +45,11 @@ export class ListComponent extends ListConfig implements OnInit {
   }
   private setShowButton() {
     this.navService.setSearchBar(true);
+    this.navService.setPrintButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setSaveButton(false);
   }
   private newData(data): IRequestList[] {
     return data.map((m: IRequestList) => ({

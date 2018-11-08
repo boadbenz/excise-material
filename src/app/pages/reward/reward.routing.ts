@@ -14,23 +14,22 @@ const routes: Routes = [
       {
         path: 'list',
         loadChildren: './views/list/list.module#ListModule',
-        data: [
-          {
-            urls: [
-              { title: 'หน้าหลัก', url: '/' },
-              { title: 'ค้นหาคำร้องขอรับเงินสินบนรางวัล' }
-            ],
-            pageType: 'list',
-            nextPage: {
-              title: 'จัดการข้อมูลคำร้องขอรับเงินสินบนรางวัล',
-              url: '/reward/manage'
-            }
+        data: {
+          urls: [
+            { title: 'หน้าหลัก', url: '/' },
+            { title: 'ค้นหารายการคำร้องขอรับเงินสินบนรางวัล' }
+          ],
+          pageType: 'list',
+          codePage: 'ILG60-08-01-00-00',
+          nextPage: {
+            title: 'จัดการข้อมูลคำร้องขอรับเงินสินบนรางวัล',
+            url: '/reward/manage'
           }
-        ]
+        }
       },
       {
         path: 'manage/:IndictmentID',
-        loadChildren: './views/manage/manage.module#ManageModule'
+        loadChildren: './views/manage/manage.module#ManageModule',
       }
     ]
   }

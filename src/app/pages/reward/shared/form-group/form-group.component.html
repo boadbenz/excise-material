@@ -1,46 +1,17 @@
-
-<form *ngIf="columns$ | async" [formGroup]="formGroup" [class]="'form-row'" (submit)="submitHandle(formGroup)">
+<form *ngIf="(columns$ | async)" [formGroup]="formGroup" [class]="'form-row'" (change)="changeHandle(formGroup.value)"
+  (submit)="submitHandle(formGroup)">
 
   <ng-container *ngFor="let c of (columns$ | async)">
     <ng-container *ngIf="c?.inputType === 'hidden' || c?.inputType2 === 'hidden'; else inputTypeNoHiden">
       <input type="hidden" [id]="c?.field" [formControlName]="c?.field" [attr.disabled]="c?.isDisabled">
     </ng-container>
     <ng-template #inputTypeNoHiden>
-      <ng-container *ngIf="options?.type === 'FILTER';else TypeAny">
+      <ng-container *ngIf="options?.type === 'FILTER';else FormField">
         <ng-container *ngIf="c?.field &&  c?.isFilter && !c?.isHidden">
-
-
-          <div [class]="c?.class ? c?.class : 'col-md-6'">
-            <div class="form-group row">
-              <label [for]="c?.field" class="col-sm-4 col-form-label">{{c?.title}} <strong *ngIf="c?.isRequired" class="text-danger">*</strong>
-                :</label>
-              <ng-container *ngIf="c?.field2; else notMulti">
-                <div class="col-sm-8 ">
-                  <div class="form-group input-group form-line">
-                    <input type="{{c?.inputType || 'text'}}" [id]="c?.field" [formControlName]="c?.field" class="form-control"
-                      [attr.disabled]="c?.isDisabled">
-                    <label class="col-2 control-label text-center padding-adv-search pt-1">{{c?.title2}} : </label>
-                    <input type="{{c?.inputType2 || 'text'}}" [id]="c?.field2" [formControlName]="c?.field2" class="form-control"
-                      [attr.disabled]="c?.isDisabled2">
-                  </div>
-                </div>
-              </ng-container>
-              <ng-template #notMulti>
-                <div class="col-sm-8">
-                  <input type="{{c?.inputType ? c?.inputType : 'text'}}" [id]="c?.field" [formControlName]="c?.field"
-                    class="form-control" [attr.disabled]="c?.isDisabled">
-                </div>
-              </ng-template>
-
-
-            </div>
-          </div>
-
-
+          <ng-container [ngTemplateOutlet]="FormField"></ng-container>
         </ng-container>
-
       </ng-container>
-      <ng-template #TypeAny>
+      <ng-template #FormField>
         <div [class]="c?.class ? c?.class : 'col-md-6'">
           <div class="form-group row">
             <label [for]="c?.field" class="col-sm-4 col-form-label">{{c?.title}} <strong *ngIf="c?.isRequired" class="text-danger">*</strong>
@@ -48,18 +19,18 @@
             <ng-container *ngIf="c?.field2; else notMulti">
               <div class="col-sm-8 ">
                 <div class="form-group input-group form-line">
-                  <input type="{{c?.inputType || 'text'}}" [id]="c?.field" [formControlName]="c?.field" class="form-control"
-                    [attr.disabled]="c?.isDisabled">
-                  <label class="col-2 control-label text-center padding-adv-search  pt-1">{{c?.title2}} : </label>
-                  <input type="{{c?.inputType2 || 'text'}}" [id]="c?.field2" [formControlName]="c?.field2" class="form-control"
-                    [attr.disabled]="c?.isDisabled2">
+                  <input matInput type="{{c?.inputType || 'text'}}" [min]="c?.minDate || ''" [max]="c?.maxDate || ''" [id]="c?.field"
+                    [formControlName]="c?.field" class="form-control" [attr.disabled]="c?.isDisabled">
+                  <label class="col-2 control-label text-center padding-adv-search pt-1">{{c?.title2}} : </label>
+                  <input matInput type="{{c?.inputType2 || 'text'}}" [min]="c?.minDate || ''" [max]="c?.maxDate || ''" [id]="c?.field2"
+                    [formControlName]="c?.field2" class="form-control" [attr.disabled]="c?.isDisabled2">
                 </div>
               </div>
             </ng-container>
             <ng-template #notMulti>
               <div class="col-sm-8">
-                <input type="{{c?.inputType ? c?.inputType : 'text'}}" [id]="c?.field" [formControlName]="c?.field"
-                  class="form-control" [attr.disabled]="c?.isDisabled">
+                <input matInput type="{{c?.inputType ? c?.inputType : 'text'}}" [min]="c?.minDate || ''" [max]="c?.maxDate || ''"
+                  [id]="c?.field" [formControlName]="c?.field" class="form-control" [attr.disabled]="c?.isDisabled">
               </div>
             </ng-template>
           </div>

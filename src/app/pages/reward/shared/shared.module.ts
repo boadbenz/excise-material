@@ -7,22 +7,25 @@ import { PaginationTableModule } from 'app/pages/component/pagination-table/pagi
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { CardActionsModule } from 'app/pages/component/card-actions/card-actions.module';
-
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 const SHARED_MODULES = [
   CommonModule,
-  FormsModule,
   HttpClientModule,
-  ReactiveFormsModule,
-  MatButtonModule,
-  MatCheckboxModule,
-  MatInputModule,
-  PaginationTableModule,
   RouterModule,
-  CardActionsModule
+  CardActionsModule,
 ];
 @NgModule({
   imports: [
-    ...SHARED_MODULES
+    ...SHARED_MODULES,
+    MyDatePickerTHModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatDatepickerModule,
+    PaginationTableModule,
+    FormsModule,
   ],
   exports: [
     ...SHARED_MODULES,

@@ -66,4 +66,7 @@ export class FormGroupComponent extends FormGroupConfig implements OnInit {
   submitHandle(value) {
     this.outputSubmit.emit(value);
   }
+  changeHandle(value) {
+    this.outputChange.emit(value);
+  }
 }

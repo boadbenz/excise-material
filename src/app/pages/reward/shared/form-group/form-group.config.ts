@@ -26,4 +26,7 @@ export class FormGroupConfig extends RewardHelper {
 
   @Output()
   public outputSubmit = new EventEmitter();
+
+  @Output()
+  public outputChange = new EventEmitter();
 }
