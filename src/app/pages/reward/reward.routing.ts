@@ -21,15 +21,20 @@ const routes: Routes = [
           ],
           pageType: 'list',
           codePage: 'ILG60-08-01-00-00',
-          nextPage: {
-            title: 'จัดการข้อมูลคำร้องขอรับเงินสินบนรางวัล',
-            url: '/reward/manage'
-          }
         }
       },
       {
         path: 'manage/:IndictmentID',
         loadChildren: './views/manage/manage.module#ManageModule',
+        data: {
+          urls: [
+            { title: 'หน้าหลัก', url: '/' },
+            { title: 'ค้นหารายการคำร้องขอรับเงินสินบนรางวัล' , url: '/reward/list' },
+            { title: 'จัดการคำร้องขอรับเงินสินบนรางวัล' }
+          ],
+          pageType: 'manage',
+          codePage: 'ILG60-08-02-00-00',
+        }
       }
     ]
   }
