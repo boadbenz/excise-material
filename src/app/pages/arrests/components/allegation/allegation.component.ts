@@ -140,35 +140,20 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
         switch (results.params.mode) {
           case 'C':
-            // set false
-            this.navService.setEditButton(false);
-            this.navService.setDeleteButton(false);
-            this.navService.setEditField(false);
-            this.navService.setPrevPageButton(false);
-            this.navService.setNextPageButton(false);
-            // set true
-            this.navService.setSaveButton(true);
-            this.navService.setCancelButton(true);
-
+            this.enableBtnModeC();
             if (this.arrestCode != 'NEW') {
               this.getArrestProductByArrest(this.arrestCode);
             } else {
-              let _prod = this.filterProductIsModify(this.ArrestStore.ArrestProduct);
-              this.setItemFormArray(_prod, 'ArrestProduct');
+              if (this.ArrestStore) {
+                let _prod = this.filterProductIsModify(this.ArrestStore.ArrestProduct);
+                this.setItemFormArray(_prod, 'ArrestProduct');
+              }
+              // this.setArrestIndictFromStore();
             }
             break;
 
           case 'R':
-            // set false
-            this.navService.setSaveButton(false);
-            this.navService.setCancelButton(false);
-            // set true
-            this.navService.setEditButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setEditField(true);
-            this.navService.setPrevPageButton(true);
-            this.navService.setNextPageButton(true);
-
+            this.enableBtnModeR();
             this.loaderService.show();
             await this.getArrestIndictment(this.indictmentId);
             await this.getArrestIndictmentProduct(this.indictmentId, this.arrestCode);
@@ -216,6 +201,30 @@ export class AllegationComponent implements OnInit, OnDestroy {
     })
   }
 
+  private enableBtnModeC() {
+    // set false
+    this.navService.setEditButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setEditField(false);
+    this.navService.setPrevPageButton(false);
+    this.navService.setNextPageButton(false);
+    // set true
+    this.navService.setSaveButton(true);
+    this.navService.setCancelButton(true);
+  }
+
+  private enableBtnModeR() {
+    // set false
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    // set true
+    this.navService.setEditButton(true);
+    this.navService.setDeleteButton(true);
+    this.navService.setEditField(true);
+    this.navService.setPrevPageButton(true);
+    this.navService.setNextPageButton(true);
+  }
+
   searchUnit = (text$: Observable<string>) =>
     text$.debounceTime(200).distinctUntilChanged()
       .map(term => term == '' ? []
@@ -248,7 +257,6 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
           let indictDetail = indict.ArrestIndicmentDetail[0];
           indictDetail.ArrestLawbreaker.map(law => {
-            // law.IsModify = 'r';
             this.addArrestLawbreaker(setViewLawbreaker(law));
           })
         }
@@ -265,17 +273,14 @@ export class AllegationComponent implements OnInit, OnDestroy {
           .then(async (y: fromModels.ArrestProduct[]) => {
             let _product = new Array<fromModels.ArrestProduct>();
 
-            _product = await y.map((y1, index) => {
+            _product = y.map((y1, index) => {
               y1.IsChecked = false;
               y1.RowId = index + 1;
               y1.IsModify = 'r';
               return y1;
             });
 
-            await x.filter(x1 => {
-              _product.find(p => parseInt(p.ProductID) == x1.ProductID).IsChecked = true;
-              debugger
-            });
+            x.filter(x1 => _product.find(p => parseInt(p.ProductID) == x1.ProductID).IsChecked = true);
 
             if (this.ArrestStore) {
               let product = this.filterProductIsModify(this.ArrestStore.ArrestProduct)
@@ -287,6 +292,16 @@ export class AllegationComponent implements OnInit, OnDestroy {
           }).catch((error) => this.catchError(error));
       }).catch((error) => this.catchError(error));
 
+  }
+
+  private setArrestIndictFromStore() {
+    if (this.ArrestStore) {
+      if (this.ArrestStore.ArrestIndictment) {
+        this.setArrestIndictment(this.ArrestStore.ArrestIndictment);
+      }
+      let _prod = this.filterProductIsModify(this.ArrestStore.ArrestProduct);
+      this.setItemFormArray(_prod, 'ArrestProduct');
+    }
   }
 
   private getArrestProductByArrest(arrestCode: string) {
@@ -543,15 +558,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private onEdit() {
-    // set false
-    this.navService.setEditButton(false);
-    this.navService.setDeleteButton(false);
-    this.navService.setEditField(false);
-    this.navService.setPrevPageButton(false);
-    this.navService.setNextPageButton(false);
-    // set true
-    this.navService.setSaveButton(true);
-    this.navService.setCancelButton(true);
+   this.enableBtnModeC();
   }
 
   private async createWithArrestCode() {

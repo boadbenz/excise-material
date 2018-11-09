@@ -111,18 +111,9 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   }
 
   onClickNewLawbreaker() {
-    // this.ArrestStore.ArrestIndictment = [this.ArrestIndictment];
-    // this.store.dispatch(new fromStore.UpdateArrest(this.ArrestStore));
-    // console.log(this.ArrestStore.ArrestIndictment);
-
-    // this.obArrest = this.store.select(s => s.arrest);
-    // this.obArrest
-    //   .takeUntil(this.destroy$)
-    //   .subscribe((x: fromModel.Arrest) => {
-    //     console.log(x);
-    //   })
-
-
+    this.ArrestStore.ArrestIndictment = [this.ArrestIndictment];
+    this.store.dispatch(new fromStore.UpdateArrest(this.ArrestStore));
+    
     this.dismiss('Cross click')
     this.router.navigate(
       [`/arrest/lawbreaker`, 'C', 'NEW'],
