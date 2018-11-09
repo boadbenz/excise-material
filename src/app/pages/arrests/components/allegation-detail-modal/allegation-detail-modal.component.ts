@@ -24,8 +24,8 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
   // Redux based variables
-  obArrest: Observable<fromModel.Arrest>;
-  ArrestStore: fromModel.Arrest;
+  // obArrest: Observable<fromModel.Arrest>;
+  // ArrestStore: fromModel.Arrest;
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
   navigationSubscription;
@@ -42,12 +42,12 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     private activeRoute: ActivatedRoute,
     private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
   ) {
-    this.obArrest = store.select(s => s.arrest);
-    this.obArrest
-      .takeUntil(this.destroy$)
-      .subscribe((x: fromModel.Arrest) => {
-        this.ArrestStore = x;
-      })
+    // this.obArrest = store.select(s => s.arrest);
+    // this.obArrest
+    //   .takeUntil(this.destroy$)
+    //   .subscribe((x: fromModel.Arrest) => {
+    //     this.ArrestStore = x;
+    //   })
   }
 
   paginage = pagination;
@@ -111,8 +111,8 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   }
 
   onClickNewLawbreaker() {
-    this.ArrestStore.ArrestIndictment = [this.ArrestIndictment];
-    this.store.dispatch(new fromStore.UpdateArrest(this.ArrestStore));
+    // this.ArrestStore.ArrestIndictment = [this.ArrestIndictment];
+    // this.store.dispatch(new fromStore.UpdateArrest(this.ArrestStore));
     
     this.dismiss('Cross click')
     this.router.navigate(
