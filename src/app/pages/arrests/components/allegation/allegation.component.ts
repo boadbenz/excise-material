@@ -103,7 +103,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.27');
+    this.sidebarService.setVersion('0.0.0.28');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -138,7 +138,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         this.indictmentId = results.queryParams.indictmentId;
         this.guiltbaseId = results.queryParams.guiltbaseId;
 
-        switch (this.mode) {
+        switch (results.params.mode) {
           case 'C':
             // set false
             this.navService.setEditButton(false);
@@ -249,43 +249,69 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private async getArrestIndictmentProduct(indictmentId: string, arrestCode: string) {
-    await this.s_indictmentDetail.ArrestIndicmentDetailgetByIndictmentID(indictmentId)
-      .then(async (x: fromModels.ArrestProduct[]) => {
+    await this.s_indictment.ArrestIndictmentProductgetByIndictmentID(indictmentId)
+      .then(async (x: fromModels.ArrestIndictmentProduct[]) => {
+
         await this.s_productService.ArrestProductgetByArrestCode(arrestCode)
           .then(async (y: fromModels.ArrestProduct[]) => {
-            let newProduct = new Array<fromModels.ArrestProduct>();
+            let _product = new Array<fromModels.ArrestProduct>();
 
-            await x.map(x1 => {
-              y.filter(y1 => y1.ProductID != x1.ProductID)
-                .map((y1, index) => {
-                  y1.RowId = index + 1;
-                  y1.IsModify = 'r';
-                  y1.IsChecked = false;
-                });
-
-              if (y.length)
-                newProduct.push(...y)
+            await x.filter(x1 => {
+              _product = y.map((y1, index) => {
+                y1.IsChecked = x1.ProductID == parseInt(y1.ProductID) ? true : false;
+                y1.RowId = index + 1;
+                y1.IsModify = 'r';
+                return y1;
+              });
+              // newProduct.push(...aaa);
             })
-            // console.log(newProduct);
-            this.setItemFormArray(newProduct, 'ArrestProduct');
+
+            if (this.Arrest.ArrestProduct) {
+              let product = this.filterProductIsModify(this.Arrest.ArrestProduct)
+              _product = [..._product, ...product];
+            }
+
+            this.setItemFormArray(_product, 'ArrestProduct');
+
+            // let arr = newProduct;
+            // let sorted_arr = arr.slice().sort((a, b) => parseInt(a.ProductID) - parseInt(b.ProductID));
+            // let results = new Array<fromModels.ArrestProduct>();
+
+            // for (let i = 0; i < sorted_arr.length - 1; i++) {
+            //   if (sorted_arr[i + 1] == sorted_arr[i]) {
+            //     results.push(sorted_arr[i]);
+            //   }
+            // }
+
+            // results.map((y1, index) => {
+            //   y1.IsChecked = false;
+            //   y1.RowId = index + 1;
+            //   y1.IsModify = 'r';
+            // });
+            // this.setItemFormArray(results, 'ArrestProduct');
+
           }).catch((error) => this.catchError(error));
       }).catch((error) => this.catchError(error));
+
   }
 
   private getArrestProductByArrest(arrestCode: string) {
     this.s_productService.ArrestProductgetByArrestCode(arrestCode)
       .then((x: fromModels.ArrestProduct[]) => {
-        let _product;
+        let _product = new Array<fromModels.ArrestProduct>();
         if (this.checkResponse(x)) {
-          x.map((y, index) => {
+
+          _product = x.map((y, index) => {
             y.IsChecked = false;
             y.RowId = index + 1;
             y.IsModify = 'r';
-          })
+            return y;
+          });
+        }
+
+        if (this.Arrest.ArrestProduct) {
           let product = this.filterProductIsModify(this.Arrest.ArrestProduct)
-          _product = [...x, ...product];
-        } else {
-          _product = this.filterProductIsModify(this.Arrest.ArrestProduct)
+          _product = [..._product, ...product];
         }
 
         this.setItemFormArray(_product, 'ArrestProduct');
@@ -443,7 +469,9 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private setItemFormArray(array: any[], formControl: string) {
+
     if (array !== undefined && array.length) {
+
       const itemFGs = array.map(item => this.fb.group(item));
       const itemFormArray = this.fb.array(itemFGs);
       this.arrestIndictmentFG.setControl(formControl, itemFormArray);
@@ -451,7 +479,6 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   setArrestLawGuiltbase(e: fromModels.ArrestLawGuitbase) {
-    debugger
 
     if (!e) return;
 
@@ -483,7 +510,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.arrestIndictmentFG.value;
 
     let lawbreaker = this.filterLawbreakerIsModify(this.ArrestLawbreaker.value);
-    let product = this.filterProductIsModify(this.ArrestProduct.value);
+    let product = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
     if (!lawbreaker.length && !product.length) {
       alert(Message.checkData);
       return;
@@ -569,6 +596,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
   private onComplete() {
     if (this._isSuccess) {
       this.isCheckAll = false;
+      this.store.dispatch(new fromStore.RemoveArrest);
+      this.arrestIndictmentFG.reset();
       alert(Message.saveComplete)
       if (this.mode == 'C') {
         this.router.navigate(
@@ -609,7 +638,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
       let str = '' + (tr.RunningNo + 1)
       let pad = '00000';
       let ans = pad.substring(0, pad.length - str.length) + str
-      this.newArrestCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
+      this.arrestCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
 
       await this.s_transactionRunning.
         TransactionRunningupdByCon(tr.RunningID.toString())
@@ -628,14 +657,14 @@ export class AllegationComponent implements OnInit, OnDestroy {
           let ans = '00001'
           let year = ((new Date).getFullYear() + 543).toString()
           year = year.substring(2, 4);
-          this.newArrestCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+          this.arrestCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
           return true;
         }, () => { this.saveFail(); return; })
         .catch((error) => this.catchError(error));
     }
 
-    if (this.newArrestCode)
-      await this.insertArrest(this.newArrestCode);
+    if (this.arrestCode)
+      await this.insertArrest(this.arrestCode);
   }
 
   async insertArrest(arrestCode: string) {
@@ -806,11 +835,14 @@ export class AllegationComponent implements OnInit, OnDestroy {
         .then(async x => {
           if (!this.checkIsSuccess(x)) return;
 
-          let prod = await this.insertArrestProductDetail(indictmentDetailID, x.ProductID, w);
+          if (w.IsChecked) {
 
-          let indictProd = await this.insertArrestIndictmentProduct(indictmentId, x.ProductID, w);
+            let prod = await this.insertArrestProductDetail(indictmentDetailID, x.ProductID, w);
 
-          return Promise.all([prod, indictProd]);
+            let indictProd = await this.insertArrestIndictmentProduct(indictmentId, x.ProductID, w);
+
+            return Promise.all([prod, indictProd]);
+          }
 
         }, () => { this.saveFail(); return; })
         .catch((error) => this.catchError(error));
@@ -860,7 +892,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     p.IndictmentProductVolumeUnit = product.NetVolumeUnit || '-';
     p.IndictmentProductMistreatRate = '';
     p.IndictmentProductFine = '';
-    p.ProductDetailIsActive = 1;
+    p.IndictmentProductIsActive = 1;
 
     console.log('IndictmentProduct : ', JSON.stringify(p));
 
@@ -889,7 +921,6 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   checkIsSuccess(res: any) {
-    debugger
     switch (res.IsSuccess) {
       case 'True':
       case true:

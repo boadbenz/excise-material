@@ -96,7 +96,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.LawbreakerFG = this.createForm();
-        this.sidebarService.setVersion('0.0.0.27');
+        this.sidebarService.setVersion('0.0.0.28');
 
         await this.active_route();
         await this.navigate_service();

@@ -35,7 +35,7 @@ export const ROUTES: Routes = [
                 { title: 'จัดการข้อมูลงานจับกุม', url: '/arrest/manage/C/NEW' },
                 { title: 'จัดการข้อมูลผู้ต้องหา' }
             ],
-            codePage: 'ILG60-03-02-03-00',
+            codePage: 'ILG60-03-03-00-00',
             nextPage: { title: 'งานจับกุม', url: '/' }
         },
         component: fromComponents.LawbreakerComponent

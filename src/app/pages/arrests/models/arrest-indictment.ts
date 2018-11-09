@@ -67,5 +67,35 @@ export class ArrestIndictmentProduct {
     IndictmentProductVolumeUnit: string;
     IndictmentProductMistreatRate: string;
     IndictmentProductFine: string;
-    ProductDetailIsActive: number;
+    // ProductDetailIsActive: number;
+    IndictmentProductIsActive: number;
+    ProductType: number;
+    ArrestCode: string;
+    ProductGroupCode: string;
+    ProductIsDomestic: number;
+    ProductCode: string;
+    ProductBrandCode: string;
+    ProductBrandNameTH: string;
+    ProductBrandNameEN: string;
+    ProductSubBrandCode: string;
+    ProductSubBrandNameTH: string;
+    ProductSubBrandNameEN: string;
+    ProductModelCode: string;
+    ProductModelName: string;
+    ProductFixNo1: string;
+    ProductDegreeCode: string;
+    ProductDegree: number;
+    ProductSizeCode: string;
+    ProductSize: string;
+    ProductSizeUnitCode: string;
+    ProductSizeUnitName: string;
+    ProductFixNo2: number;
+    ProductSequenceNo: string;
+    ProductDesc: string;
+    ProductCarNo: string;
+    ProductQty: number;
+    ProductQtyUnit: string;
+    ProductNetVolume: number;
+    ProductNetVolumeUnit: string;
+    ProductIsActive: number
 }
