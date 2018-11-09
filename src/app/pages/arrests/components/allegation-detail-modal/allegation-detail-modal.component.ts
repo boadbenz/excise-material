@@ -1,12 +1,11 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
+import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { pagination } from 'app/config/pagination';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LawbreakerTypes, EntityTypes } from 'app/models/drop-downs.model';
 import { Message } from 'app/config/message';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { MainMasterService } from 'app/services/main-master.service';
 import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
 import { ArrestLawbreakerAllegation, ArrestLawbreaker } from '../../models/arrest-lawbreaker';
 import * as fromStore from '../../store';
@@ -16,9 +15,6 @@ import { Acceptability } from '../../models/acceptability';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { TransactionRunningService } from 'app/services/transaction-running.service';
-import { TransactionRunning } from 'app/models/transaction-running.model';
-import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 
 @Component({
   selector: 'app-allegation-detail-modal',
@@ -29,10 +25,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
   // Redux based variables
   obArrest: Observable<fromModel.Arrest>;
-  obArrestIndictment: Observable<fromModel.ArrestIndictment[]>
-  // obArrestProduct: Observable<fromModel.ArrestProduct[]>;
-  // obArrestLocal: Observable<fromModel.ArrestLocale[]>;
-  // obArrestStaff: Observable<fromModel.ArrestStaff[]>;
+  ArrestStore: fromModel.Arrest;
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
   navigationSubscription;
@@ -47,18 +40,14 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     private router: Router,
     private store: Store<fromStore.AppState>,
     private activeRoute: ActivatedRoute,
-    private s_mainMaster: MainMasterService,
     private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
-    private s_ProductService: fromService.ArrestProductService,
-    private s_Indictment: fromService.ArrestIndictmentService,
-    private s_IndictmentDetail: fromService.ArrestIndictmentDetailService,
-    private s_ProductDetail: fromService.ArrestProductDetailService,
-    private s_Lawbreaker: fromService.ArrestLawbreakerService,
-    private s_transactionRunning: TransactionRunningService,
-    private s_arrest: fromService.ArrestService
   ) {
     this.obArrest = store.select(s => s.arrest);
-    this.obArrestIndictment = store.select(s => s.arrestIndictment);
+    this.obArrest
+      .takeUntil(this.destroy$)
+      .subscribe((x: fromModel.Arrest) => {
+        this.ArrestStore = x;
+      })
   }
 
   paginage = pagination;
@@ -81,6 +70,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
   card1 = true;
 
+  @Input() ArrestIndictment: fromModel.ArrestIndictment;
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
   @Output() OutputLawbreaker = new EventEmitter<fromModel.ArrestLawbreaker>();
@@ -121,7 +111,18 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   }
 
   onClickNewLawbreaker() {
-    debugger
+    // this.ArrestStore.ArrestIndictment = [this.ArrestIndictment];
+    // this.store.dispatch(new fromStore.UpdateArrest(this.ArrestStore));
+    // console.log(this.ArrestStore.ArrestIndictment);
+
+    // this.obArrest = this.store.select(s => s.arrest);
+    // this.obArrest
+    //   .takeUntil(this.destroy$)
+    //   .subscribe((x: fromModel.Arrest) => {
+    //     console.log(x);
+    //   })
+
+
     this.dismiss('Cross click')
     this.router.navigate(
       [`/arrest/lawbreaker`, 'C', 'NEW'],
@@ -210,10 +211,10 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     // let law = this.Lawbreaker;
     let law = this.Lawbreaker.value
       .filter(x => x.IsChecked == Acceptability.ACCEPTABLE)
-      // .map(x => {
-      //   x.IsModify = 'c';
-      //   return x;
-      // })
+    // .map(x => {
+    //   x.IsModify = 'c';
+    //   return x;
+    // })
 
     if (!law) return;
 

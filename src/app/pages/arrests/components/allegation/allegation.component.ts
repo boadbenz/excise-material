@@ -29,7 +29,7 @@ import { setViewLawbreaker } from '..';
 export class AllegationComponent implements OnInit, OnDestroy {
 
   obArrest: Observable<fromModels.Arrest>;
-  Arrest: fromModels.Arrest;
+  ArrestStore: fromModels.Arrest;
   ACCEPTABILITY = Acceptability;
   typeheadQtyUnit = new Array<MasDutyProductUnitModel>();
 
@@ -59,7 +59,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.obArrest
       .takeUntil(this.destroy$)
       .subscribe((x: fromModels.Arrest) => {
-        this.Arrest = x;
+        this.ArrestStore = x;
       })
 
     this.navService.setPrintButton(false);
@@ -103,7 +103,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.29');
+    this.sidebarService.setVersion('0.0.0.30');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -153,7 +153,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
             if (this.arrestCode != 'NEW') {
               this.getArrestProductByArrest(this.arrestCode);
             } else {
-              let _prod = this.filterProductIsModify(this.Arrest.ArrestProduct);
+              let _prod = this.filterProductIsModify(this.ArrestStore.ArrestProduct);
               this.setItemFormArray(_prod, 'ArrestProduct');
             }
             break;
@@ -277,8 +277,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
               debugger
             });
 
-            if (this.Arrest) {
-              let product = this.filterProductIsModify(this.Arrest.ArrestProduct)
+            if (this.ArrestStore) {
+              let product = this.filterProductIsModify(this.ArrestStore.ArrestProduct)
               _product = [..._product, ...product];
             };
 
@@ -303,8 +303,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
           });
         }
 
-        if (this.Arrest.ArrestProduct) {
-          let product = this.filterProductIsModify(this.Arrest.ArrestProduct)
+        if (this.ArrestStore.ArrestProduct) {
+          let product = this.filterProductIsModify(this.ArrestStore.ArrestProduct)
           _product = [..._product, ...product];
         }
 
@@ -651,7 +651,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async insertArrest(arrestCode: string) {
     if (!arrestCode) { this.saveFail(); return; };
-    let a = this.Arrest;
+    let a = this.ArrestStore;
     a.ArrestCode = arrestCode;
     if (this.isObject(a.ArrestDate)) {
       let arrestDate = getDateMyDatepicker(a.ArrestDate);

@@ -247,7 +247,8 @@
 
                     <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion"
                         [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterRegion"
-                        (selectItem)="selectItemRegion($event)" />
+                        (selectItem)="selectItemRegion($event)" 
+                        [value]="LawbreakerFG.get('Region').value"/>
                 </div>
             </div>
             <div class="row">
