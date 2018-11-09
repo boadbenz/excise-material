@@ -12,7 +12,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทผู้ต้องสงสัย :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select #lawbreakerType formControlName="LawbreakerType" class="form-control form-control-sm"
+                    <select formControlName="LawbreakerType" class="form-control form-control-sm"
                         [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="showEditField ? '' : null" required
                         (change)="toggleCard()">
                         <option value="" selected disabled></option>
@@ -21,7 +21,7 @@
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">ประเภทบุคคล :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select #entityType formControlName="EntityType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                    <select formControlName="EntityType" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
                         [attr.disabled]="showEditField ? '' : null" required (change)="toggleCard()">
                         <option value="" selected disabled></option>
                         <option *ngFor="let item of entityTypes; let i=index;" [value]="item.value">{{item.text}}</option>
@@ -169,13 +169,13 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">จำนวนครั้งกระทำผิด :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" class="form-control form-control-sm" readonly>
-                    <a class="viewOffense text-secondary" href="javaScript:void(0);" (click)="!showEditField && openOffenseDetailModal(offens)">
+                    <!-- <a class="viewOffense text-secondary" href="javaScript:void(0);" (click)="!showEditField && openOffenseDetailModal(offens)">
                         <i class="fa fa-eye fa-lg"></i>
-                    </a>
+                    </a> -->
 
-                    <ng-template #offens let-c="close" let-d="dismiss">
+                    <!-- <ng-template #offens let-c="close" let-d="dismiss">
                         <app-modal-offense (c)="modal.close()" (d)="modal.dismiss()"></app-modal-offense>
-                    </ng-template>
+                    </ng-template> -->
                 </div>
             </div>
         </div>
@@ -192,10 +192,17 @@
         </div>
         <div *ngIf="card2" class="card-body">
             <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">GPS :</label>
+                <label for="" class="col-lg-2 col-sm-4 control-label">ละติจูด :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="GPS" class="form-control form-control-sm" [readonly]="showEditField">
+                    <input #latitude (change)="onChangeGps()" type="text" class="form-control form-control-sm" [readonly]="showEditField">
                 </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">ลองจิจูด :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input #longitude (change)="onChangeGps()" type="text" class="form-control form-control-sm" [readonly]="showEditField">
+                </div>
+
+                <input type="text" formControlName="GPS" style="display: none;">
             </div>
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
@@ -240,7 +247,8 @@
 
                     <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion"
                         [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterRegion"
-                        (selectItem)="selectItemRegion($event)" />
+                        (selectItem)="selectItemRegion($event)" 
+                        [value]="LawbreakerFG.get('Region').value"/>
                 </div>
             </div>
             <div class="row">

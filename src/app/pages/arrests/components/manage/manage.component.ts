@@ -175,9 +175,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
         this.navService.setPrevPageButton(false);
-        // set true
-        this.navService.setNextPageButton(true);
-        this.navService.setInnerTextNextPageButton("รับคำกล่าวโทษ");
+        this.navService.setNextPageButton(false);
 
         this.obArrest = store.select(s => s.arrest);
         this.obArrest
@@ -186,8 +184,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.24');
+        this.sidebarService.setVersion('0.0.0.30');
         this.active_route();
+        if (this.arrestFG) {
+            setTimeout(() => {
+                this.arrestFG.reset();
+            }, 300);
+        }
         this.arrestFG = this.createForm();
         this.navigate_Service();
 
@@ -308,7 +311,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                this.onCancel();
+                if (confirm(Message.confirmAction)) {
+                    this.onCancel();
+                }
             }
         })
 
@@ -342,8 +347,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
-                    await this.pageRefresh(this.arrestCode);
+                    if (this.arrestCode != this.stateArrest.ArrestCode) 
+                        this.stateArrest = null;
                 }
+                await this.pageRefresh(this.arrestCode);
                 break;
 
             case 'R':
@@ -368,31 +375,35 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (arrestCode != 'NEW') {
             await this.s_arrest.ArrestgetByCon(arrestCode)
                 .then((a) => {
-                    if (this.checkResponse(a)) arr = a;
+                    if (this.checkResponse(a))
+                        arr = a;
                 }).catch((error) => this.catchError(error));
         } else {
-            arr = [this.stateArrest];
+            arr = this.stateArrest ? [this.stateArrest] : [];
         }
 
-        if (!arr.length) return;
-
-        let _arr = arr[0];
-        this.pageRefreshArrest(_arr);
-
-        await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
-
-        await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
-
-        await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
-
+        if (arr.length) {
+            let _arr = arr[0];
+            this.pageRefreshArrest(_arr);
+    
+            await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
+    
+            await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
+    
+            await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
+        };
         this.loaderService.hide();
     }
 
     private pageRefreshArrest(_arr: fromModels.Arrest) {
         let arrestForm = this.arrestFG;
 
-        _arr.ArrestDate = !this.isObject(this.dateStartFrom) || setDateMyDatepicker(_arr.ArrestDate);
-        _arr.OccurrenceDate = !this.isObject(this.dateStartFrom) || setDateMyDatepicker(_arr.OccurrenceDate);
+        _arr.ArrestDate = this.isObject(_arr.ArrestDate)
+            ? _arr.ArrestDate
+            : setDateMyDatepicker(_arr.ArrestDate);
+        _arr.OccurrenceDate = this.isObject(_arr.OccurrenceDate)
+            ? _arr.OccurrenceDate
+            : setDateMyDatepicker(_arr.OccurrenceDate);
 
         _arr.ArrestNotice.map((x, index) => {
             x.RowId = index + 1;
@@ -406,8 +417,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         _arr.ArrestStaff.map((x, index) => {
             x.RowId = index + 1;
             x.IsModify = x.IsModify || 'r';
-            x.ContributorID = x.ContributorID || ''
-            x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`
+            x.ContributorID = x.ContributorID || x.ContributorCode;
+            x.FullName = `${x.TitleName} ${x.FirstName} ${x.LastName}`;
         });
         this.setItemFormArray(_arr.ArrestStaff, 'ArrestStaff');
 
@@ -424,7 +435,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (arrestCode != 'NEW') {
             await this.s_product.ArrestProductgetByArrestCode(arrestCode)
                 .then((pro) => {
-                    if (this.checkResponse(pro)) _prod = pro;
+                    if (this.checkResponse(pro)) {
+                        _prod = pro.map(x => {
+                            x.IsModify = 'r';
+                            return x;
+                        })
+                    };
                 }).catch((error) => this.catchError(error));
         } else {
             _prod = _arrProd;
@@ -432,10 +448,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (!_prod.length) return;
 
-        _prod.map((x, index) => {
-            x.IsModify = x.IsModify || 'r';
-            x.RowId = index + 1;
-        })
+        _prod.map((x, index) => x.RowId = index + 1);
+
         this.setItemFormArray(_prod, 'ArrestProduct');
     }
 
@@ -460,7 +474,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (arrestCode != 'NEW') {
             await this.s_document.MasDocumentMaingetAll(this.documentType, arrestCode)
                 .then((x) => {
-                    if (this.checkResponse(x)) _doc = x;
+                    if (this.checkResponse(x)) {
+                        _doc = x.map(y => {
+                            y.IsModify = 'r';
+                            return y;
+                        });
+                    };
                 }).catch((error) => this.catchError(error));
         } else {
             _doc = _arrDoc;
@@ -468,10 +487,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (!_doc.length) return;
 
-        _doc.map((y, index) => {
-            y.RowId = index + 1;
-            y.IsModify = y.IsModify || 'r';
-        })
+        _doc.map((y, index) => y.RowId = index + 1);
+
         this.setItemFormArray(_doc, 'ArrestDocument');
     }
 
@@ -550,11 +567,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     // 1
     setNoticeForm(n: fromModels.ArrestNotice[]) {
         let arrestNotice = this.ArrestNotice;
+        let arr = new FormArray([]);
         let i = 0;
         n.map(x => {
             const modify = arrestNotice.value.filter(x => x.IsModify != 'd');
             i = (modify.length) && modify[modify.length - 1].RowId;
-            arrestNotice.push(
+            arr.push(
                 this.fb.group({
                     ArrestCode: this.arrestCode,
                     NoticeCode: x.NoticeCode,
@@ -567,6 +585,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             );
         })
+        this.arrestFG.setControl('ArrestNotice', arr);
     }
     // 2
     private setArrestNoticeStaff(o: fromModels.ArrestNoticeStaff[]) {
@@ -726,9 +745,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         let arrest = this.arrestFG.value as fromModels.Arrest;
         this.store.dispatch(new fromStore.CreateArrest(arrest));
         this.router.navigate(
-            [`arrest/allegation`, this.mode],
+            [`arrest/allegation`, 'C'],
             {
                 queryParams: {
+                    arrestMode: this.mode,
                     arrestCode: this.arrestCode,
                     indictmentId: '',
                     guiltbaseId: ''
@@ -743,6 +763,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             [`arrest/allegation`, 'R'],
             {
                 queryParams: {
+                    arrestMode: this.mode,
                     arrestCode: this.arrestCode,
                     indictmentId: indictmentId,
                     guiltbaseId: guiltbaseId
@@ -887,12 +908,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         const product = this.ArrestProduct.at(i).value;
         this.ArrestProduct.at(i).reset(e.item);
         this.ArrestProduct.at(i).patchValue({
+            ProductType: e.item.ProductID ? '1' : '2',
             ProductID: product.ProductID || e.item.ProductID,
             IsModify: product.IsModify == 'r' ? 'u' : product.IsModify,
             RowId: product.RowId,
             ArrestCode: this.arrestCode,
-            GroupCode: e.item.GroupCode || 1,
-            IsDomestic: e.item.IsDomestic || 1
+            GroupCode: e.item.GroupCode || product.GroupCode,
+            IsDomestic: e.item.IsDomestic || product.IsDomestic,
+            // ProductFrom: product.IsModify == 'c' ? 'mas-product' : product.ProductFrom
         })
     }
 
@@ -918,6 +941,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,
             ContributorID: e.item.ContributorID
+        })
+    }
+
+    onChangeContributer(e: any, i: number) {
+        let contributerId = e.target.value;
+        let staff = this.ArrestStaff.at(i).value;
+        this.ArrestStaff.at(i).patchValue({
+            ContributorCode: contributerId,
+            IsModify: staff.IsModify == 'r' ? 'u' : staff.IsModify
         })
     }
 
@@ -966,11 +998,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     checkResponse(res: any) {
         switch (res.IsSuccess) {
-            case 'True':
-            case true:
-                return true;
-            default:
+            case 'False':
+            case false:
                 return false;
+            default:
+                return true;
         }
     }
 
@@ -1116,6 +1148,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .then(x => {
                 if (this.checkResponse(x)) {
                     alert(Message.delComplete);
+                    this.arrestFG.reset();
                     this.router.navigate([`arrest/list`]);
                 } else {
                     alert(Message.delFail);

@@ -53,7 +53,7 @@ export const ArrestStaffFormControl = {
     OfficeCode: new FormControl(null),
     OfficeName: new FormControl(null),
     OfficeShortName: new FormControl(null),
-    ContributorCode: new FormControl(null),
+    // ContributorCode: new FormControl(null),
     IsActive: new FormControl(null),
 
     ContributorID: new FormControl(null),

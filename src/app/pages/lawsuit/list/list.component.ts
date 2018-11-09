@@ -44,29 +44,78 @@ export class ListComponent implements OnInit, OnDestroy {
   public LawsuitDateFromOptions: IMyDpOptions = {
     // other options...
     dateFormat: 'dd/mmm/yyyy',
-    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() +1 },
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
   };
   public LawsuitDateToOptions: IMyDpOptions = {
     // other options...
     dateFormat: 'dd/mmm/yyyy',
-    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() +1 },
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
     // disableUntil: { year: this.today.getFullYear(), month: this.today.getMonth(), day: this.today.getDate() },
   };
   onDateChanged(event) {
     let checkDate = new Date(event.jsdate);
 
-    let date: Date = new Date()
-    this.LawsuitDateFromOptions = {
-      dateFormat: 'dd/mmm/yyyy',
-      disableSince: { year: checkDate.getFullYear(), month: checkDate.getMonth() + 1, day: checkDate.getDate() + 1 }
-    }
+    let date: Date = new Date();
+    const sDateCompare = new Date(this.advForm.value.LawsuitDateFrom.jsdate);
+    const eDateCompare = new Date(this.advForm.value.LawsuitDateTo.jsdate);
+    console.log('sDateCompare', this.advForm.value.LawsuitDateFrom)
+    console.log('eDateCompare', this.advForm.value.LawsuitDateTo)
+    console.log('sDateCompare.valueOf() > eDateCompare.valueOf()==>', this.advForm.value.LawsuitDateFrom.valueOf() > this.advForm.value.LawsuitDateTo.valueOf())
+    setTimeout(() => {
+
+
+      if (this.advForm.value.LawsuitDateFrom.epoc > this.advForm.value.LawsuitDateTo.epoc) {
+        this.advForm.controls['LawsuitDateTo'].setValue({
+          date: this.advForm.value.LawsuitDateFrom.date,
+          epoc: this.advForm.value.LawsuitDateFrom.epoc,
+          formatted: this.advForm.value.LawsuitDateFrom.formatted,
+          jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
+        });
+        alert(Message.checkDate);
+        return;
+      }
+      else {
+        this.LawsuitDateFromOptions = {
+          dateFormat: 'dd/mmm/yyyy',
+          disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 }
+        }
+      }
+    }, 100);
+  }
+  onDateFromChanged(event) {
+    let checkDate = new Date(event.jsdate);
+    const sDateCompare = new Date(this.advForm.value.LawsuitDateFrom.jsdate);
+    const eDateCompare = new Date(this.advForm.value.LawsuitDateTo.jsdate);
+    console.log('sDateCompare.valueOf() > eDateCompare.valueOf()==>', this.advForm.value.LawsuitDateFrom.valueOf() > this.advForm.value.LawsuitDateTo.valueOf())
+    setTimeout(() => {
+
+
+      if (this.advForm.value.LawsuitDateFrom.epoc > this.advForm.value.LawsuitDateTo.epoc) {
+        this.advForm.controls['LawsuitDateTo'].setValue({
+          date: this.advForm.value.LawsuitDateFrom.date,
+          epoc: this.advForm.value.LawsuitDateFrom.epoc,
+          formatted: this.advForm.value.LawsuitDateFrom.formatted,
+          jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
+        });
+        alert(Message.checkDate);
+        return;
+      }
+      else if (!event) {
+        let date: Date = new Date()
+        this.LawsuitDateFromOptions = {
+          dateFormat: 'dd/mmm/yyyy',
+          disableSince: { year: checkDate.getFullYear(), month: checkDate.getMonth() + 1, day: checkDate.getDate() + 1 }
+        }
+      }
+    }, 100);
+
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.6');
+    this.sidebarService.setVersion('0.0.0.7');
     this.paginage.TotalItems = 0;
 
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
+    // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
 
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       if (Textsearch) {
@@ -86,6 +135,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+
     this.subOnSearchByKeyword.unsubscribe();
     this.subSetNextPage.unsubscribe();
   }
@@ -102,19 +152,18 @@ export class ListComponent implements OnInit, OnDestroy {
       if (!lawsuitDateToValue) {
         lawsuitDateToValue = form.value.LawsuitDateFrom;
       }
-      const sDateCompare = new Date(form.value.LawsuitDateFrom);
-      const eDateCompare = new Date(form.value.LawsuitDateTo);
+      const sDateCompare = new Date(form.value.LawsuitDateFrom.jsdate);
+      const eDateCompare = new Date(form.value.LawsuitDateTo.jsdate);
       if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
         alert(Message.checkDate);
         return false;
       }
+      console.log('form.value.LawsuitDateFrom ===>', form.value.LawsuitDateFrom)
       form.value.LawsuitDateFrom = sDateCompare.toISOString();
       form.value.LawsuitDateTo = eDateCompare.toISOString();
     }
     this.preLoaderService.setShowPreloader(true);
     await this.lawsuitService.LawsuitArrestGetByConAdv(form.value).then(list => this.onSearchComplete(list));
-    this.advForm.reset();
-    this.navService.setAdvSearch();
     this.advSearch = this.navService.showAdvSearch;
     this.preLoaderService.setShowPreloader(false);
   }
@@ -132,6 +181,7 @@ export class ListComponent implements OnInit, OnDestroy {
     /* Alert When No Data To Show */
     if (!list.length) {
       alert(Message.noRecord);
+      this.resultsPerPage = [];
       return false;
     }
     /* Adjust Another Column */
