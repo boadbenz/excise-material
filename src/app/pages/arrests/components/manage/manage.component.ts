@@ -184,7 +184,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.27');
+        this.sidebarService.setVersion('0.0.0.30');
         this.active_route();
         if (this.arrestFG) {
             setTimeout(() => {
@@ -311,7 +311,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                this.onCancel();
+                if (confirm(Message.confirmAction)) {
+                    this.onCancel();
+                }
             }
         })
 
@@ -345,12 +347,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
-                    if (this.arrestCode == this.stateArrest.ArrestCode) {
-                        await this.pageRefresh(this.arrestCode);
-                    } else {
+                    if (this.arrestCode != this.stateArrest.ArrestCode) 
                         this.stateArrest = null;
-                    }
                 }
+                await this.pageRefresh(this.arrestCode);
                 break;
 
             case 'R':
@@ -379,20 +379,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                         arr = a;
                 }).catch((error) => this.catchError(error));
         } else {
-            arr = [this.stateArrest];
+            arr = this.stateArrest ? [this.stateArrest] : [];
         }
 
-        if (!arr.length) return;
-
-        let _arr = arr[0];
-        this.pageRefreshArrest(_arr);
-
-        await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
-
-        await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
-
-        await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
-
+        if (arr.length) {
+            let _arr = arr[0];
+            this.pageRefreshArrest(_arr);
+    
+            await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
+    
+            await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
+    
+            await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
+        };
         this.loaderService.hide();
     }
 
@@ -743,7 +742,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addAllegation() {
-        debugger
         let arrest = this.arrestFG.value as fromModels.Arrest;
         this.store.dispatch(new fromStore.CreateArrest(arrest));
         this.router.navigate(
