@@ -120,19 +120,19 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     this.d.emit(e);
   }
 
-  onClickNewLawbreaker(){
+  onClickNewLawbreaker() {
     debugger
     this.dismiss('Cross click')
     this.router.navigate(
       [`/arrest/lawbreaker`, 'C', 'NEW'],
       {
         queryParams: {
-            allegationMode: this.mode,
-            arrestCode: this.arrestCode,
-            indictmentId: this.indictmentId,
-            guiltbaseId: this.guiltbaseId
+          allegationMode: this.mode,
+          arrestCode: this.arrestCode,
+          indictmentId: this.indictmentId,
+          guiltbaseId: this.guiltbaseId
         }
-    })
+      })
   }
 
   view(id: number) {
@@ -141,12 +141,12 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
       [`/arrest/lawbreaker`, 'R', id],
       {
         queryParams: {
-            allegationMode: this.mode,
-            arrestCode: this.arrestCode,
-            indictmentId: this.indictmentId,
-            guiltbaseId: this.guiltbaseId
+          allegationMode: this.mode,
+          arrestCode: this.arrestCode,
+          indictmentId: this.indictmentId,
+          guiltbaseId: this.guiltbaseId
         }
-    })
+      })
   }
 
   onSearchAdv(f: any) {
@@ -167,30 +167,9 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     await list.filter(item => item.IsActive == 1)
       .map(async (item: fromModel.ArrestLawbreaker, i) => {
         item.RowId = i + 1;
-        item.IsChecked = Acceptability.INACCEPTABLE;
-        item.LawbreakerTypeName = this.lawbreakerType.find(key => parseInt(key.value) == item.LawbreakerType).text;
-        item.EntityType = item.EntityType;
-        item.EntityTypeName = this.entityType.find(key => parseInt(key.value) == item.EntityType).text;
-        item.LawbreakerRefID = item.LawbreakerID;
-        item.LawbreakerFullName = `${item.LawbreakerTitleName || ''}`;
-        item.LawbreakerFullName += ` ${item.LawbreakerFirstName || ''}`;
-        item.LawbreakerFullName += ` ${item.LawbreakerLastName || ''}`;
         item.ResultCount = this.s_masLawbreaker.ArrestLawsuitResultCountgetByLawbreakerID(item.LawbreakerID.toString())
-        switch (item.EntityType) {
-          case 0: // นิติบุคคล
-            item.ReferenceID = item.CompanyRegistrationNo;
-            break;
-          case 1: // บุคคลธรรมดา
-            switch (item.LawbreakerType) {
-              case 0: // ต่างชาติ
-                item.ReferenceID = item.PassportNo;
-                break;
-              case 1: // ชาวไทย
-                item.ReferenceID = item.IDCard;
-                break;
-            }
-        }
-        law.push(item);
+        item.IsChecked = Acceptability.INACCEPTABLE;
+        law.push(setViewLawbreaker(item));
       })
 
     this.lawbreaker = law;
@@ -229,7 +208,12 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
   close(e: any) {
     // let law = this.Lawbreaker;
-    let law = this.Lawbreaker.value.filter(x => x.IsChecked == Acceptability.ACCEPTABLE)
+    let law = this.Lawbreaker.value
+      .filter(x => x.IsChecked == Acceptability.ACCEPTABLE)
+      // .map(x => {
+      //   x.IsModify = 'c';
+      //   return x;
+      // })
 
     if (!law) return;
 
@@ -237,4 +221,30 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
     this.c.emit(e);
   }
+}
+
+
+export function setViewLawbreaker(item: fromModel.ArrestLawbreaker) {
+  item.LawbreakerTypeName = LawbreakerTypes.find(key => parseInt(key.value) == item.LawbreakerType).text;
+  item.EntityType = item.EntityType;
+  item.EntityTypeName = EntityTypes.find(key => parseInt(key.value) == item.EntityType).text;
+  item.LawbreakerRefID = item.LawbreakerID;
+  item.LawbreakerFullName = `${item.LawbreakerTitleName || ''}`;
+  item.LawbreakerFullName += ` ${item.LawbreakerFirstName || ''}`;
+  item.LawbreakerFullName += ` ${item.LawbreakerLastName || ''}`;
+  switch (item.EntityType) {
+    case 0: // นิติบุคคล
+      item.ReferenceID = item.CompanyRegistrationNo;
+      break;
+    case 1: // บุคคลธรรมดา
+      switch (item.LawbreakerType) {
+        case 0: // ต่างชาติ
+          item.ReferenceID = item.PassportNo;
+          break;
+        case 1: // ชาวไทย
+          item.ReferenceID = item.IDCard;
+          break;
+      }
+  }
+  return item;
 }

@@ -311,7 +311,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                this.onCancel();
+                if (confirm(Message.confirmAction)) {
+                    this.onCancel();
+                }
             }
         })
 
