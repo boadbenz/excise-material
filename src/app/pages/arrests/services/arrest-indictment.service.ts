@@ -51,6 +51,12 @@ export class ArrestIndictmentService {
         return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
+    async ArrestIndictmentProductgetByIndictmentID(IndictmentID: string) {
+        const params = { IndictmentID };
+        const url = `${appConfig.api7788}/ArrestIndictmentProductgetByIndictmentID`;
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    }
+
     async ArrestIndictmentupdByCon(Indictment: ArrestIndictment) {
         const params = Indictment;
         const url = `${appConfig.api7788}/ArrestIndictmentupdByCon`;
@@ -59,7 +65,7 @@ export class ArrestIndictmentService {
 
     async ArrestIndictmentupdDelete(IndictmentID: string) {
         const params = { IndictmentID };
-        const url = `${appConfig.api7788}/ArrestIndictmentupdByCon`;
+        const url = `${appConfig.api7788}/ArrestIndictmentupdDelete`;
         return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 }

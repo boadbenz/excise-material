@@ -1,7 +1,7 @@
 import { Acceptability } from "./acceptability";
 
 export class ArrestProduct {
-    public ProductID: '';
+    public ProductID = '';
     public ProductType = '';
     public ArrestCode = '';
     public GroupCode = '';
