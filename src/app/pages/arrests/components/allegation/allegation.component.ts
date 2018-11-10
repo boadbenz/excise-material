@@ -19,7 +19,7 @@ import { TransactionRunning } from 'app/models/transaction-running.model';
 import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 import { Acceptability } from '../../models';
 import { LoaderService } from 'app/core/loader/loader.service';
-import { setViewLawbreaker } from '..';
+import { setViewLawbreaker } from '../allegation-detail-modal/allegation-detail-modal.component';
 
 @Component({
   selector: 'app-allegation',

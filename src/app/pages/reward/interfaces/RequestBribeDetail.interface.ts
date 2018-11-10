@@ -22,6 +22,10 @@ export interface IRequestBribeDetail {
   IsActive: number;
 }
 
+// tslint:disable-next-line:no-empty-interface
+export interface IRequestBribeDetailinsAll extends IRequestBribeDetail {
+
+}
 export interface IRequestBribeDetail {
   RequestBribeDetailID: number;
   PaymentFineDetailID: number;
