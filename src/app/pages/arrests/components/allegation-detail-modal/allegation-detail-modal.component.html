@@ -3,7 +3,7 @@
     <div class="col-lg-5">
       <!-- <h4 class="modal-title text-white">รายละเอียดข้อกล่าวหา</h4> -->
       <h4 class="modal-title text-white">เพิ่มผู้ต้องหา
-        <a href="javaScript:void(0);" class="btn btn-ghost" (click)="onClickNewLawbreaker()">
+        <a class="btn btn-ghost" [routerLink]="['/arrest/lawbreaker', 'C', 'NEW']" target="_blank">
           <i class="ti-plus"></i>
           สร้างข้อมูล
         </a>
@@ -126,7 +126,8 @@
                 <td>{{item.get('LawbreakerFullName').value}}</td>
                 <td class="text-center">{{item.get('ResultCount').value | async}}</td>
                 <td class="text-center">
-                  <a href="javaScript:void(0);" class="text-center text-secondary" (click)="view(item.value.LawbreakerID)">
+                  <a href="javaScript:void(0);" class="text-center text-secondary" [routerLink]="['/arrest/lawbreaker', 'C', view(item.value.LawbreakerID)]"
+                    target="_blank">
                     <i class="fa fa-eye fa-lg"></i>
                   </a>
                 </td>
