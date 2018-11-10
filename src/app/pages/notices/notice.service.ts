@@ -6,6 +6,7 @@ import { Http, } from '@angular/http';
 import { NoticeDocument } from './notice-document';
 import { Suspect } from './suspect/suspect.interface';
 import { NoticeSuspect } from './notice-suspect';
+import { log } from 'util';
 
 @Injectable()
 export class NoticeService {
@@ -34,39 +35,47 @@ export class NoticeService {
     private async resposePromisGet(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         
-        if (res.IsSuccess == 'False' || !res.ResponseData.length) {
-            return [];
-        }
-        return res.ResponseData
+        // if (res.IsSuccess == 'False' || !res.ResponseData.length) {
+        //     return [];
+        // }
+        // return res.ResponseData
+        return res;
     }
 
     async getByKeywordOnInt(): Promise<Notice[]> {
         const params = { 'Textsearch': '' };
-        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
 
-        if (res.IsSuccess == 'False' || !res.Notice.length) {
-            return new Array<Notice>();
-        }
+        // if (res.IsSuccess == 'False' || !res.Notice.length) {
+        //     return new Array<Notice>();
+        // }
+        
+        // return res.Notice;
 
-        return res.Notice;
+        return res;
     }
 
     async getByKeyword(Textsearch: any): Promise<Notice[]> {
         debugger
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
-        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        // const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
 
-        if (res.IsSuccess == 'False' || !res.Notice.length) {
-            return new Array<Notice>();
-        }
+        // if (res.IsSuccess == 'False' || !res.Notice.length) {
+        //     return new Array<Notice>();
+        // }
 
-        return res.Notice;
+        // return res.Notice;
+
+        return res;
     }
 
     getByConAdv(form: any): Promise<Notice[]> {
-        const url = `${appConfig.api8082}/NoticegetByConAdv`;
+        alert(JSON.stringify(form));
+        // const url = `${appConfig.api8082}/NoticegetByConAdv`;
+        const url = `${appConfig.api8082}/NoticeListgetByConAdv`;
         return this.resposePromisGet(JSON.stringify(form), url)
     }
 

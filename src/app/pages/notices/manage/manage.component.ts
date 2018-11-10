@@ -882,7 +882,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         reader.readAsDataURL(file);
         reader.onload = () => {
-            let dataSource = reader.result.split(',')[1];
+            let dataSource = (<string>reader.result).split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
                     FilePath: replaceFakePath(e.target.value),
@@ -899,7 +899,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         reader.readAsDataURL(file);
         reader.onload = () => {
-            let dataSource = reader.result.split(',')[1];
+            let dataSource = (<string>reader.result).split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,

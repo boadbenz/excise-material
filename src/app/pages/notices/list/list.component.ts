@@ -99,9 +99,12 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (form.value.DateStartFrom && form.value.DateStartTo) {
 
-            const sdate = getDateMyDatepicker(form.value.dateStartFrom);
-            const edate = getDateMyDatepicker(form.value.dateStartTo);
+            // const sdate = getDateMyDatepicker(form.value.dateStartFrom);
+            // const edate = getDateMyDatepicker(form.value.dateStartTo);
 
+            const sdate = getDateMyDatepicker(this.dateStartFrom);
+            const edate = getDateMyDatepicker(this.dateStartTo);
+            
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate);
                 return false;
@@ -119,6 +122,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onSearchComplete(list: Notice[]) {
+
         if (!list.length) {
             alert(Message.noRecord)
             return false;

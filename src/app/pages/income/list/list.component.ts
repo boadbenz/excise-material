@@ -8,7 +8,7 @@ import { IncomeService } from '../income.service';
 
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Revenue } from '../Revenue';
+import { Revenue } from '../revenue';
 
 import { pagination } from '../../../config/pagination';
 

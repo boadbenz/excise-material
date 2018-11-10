@@ -65,6 +65,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
     typeheadRegion: RegionModel[] = []
 
     async ngOnInit() {
+
         this.preloader.setShowPreloader(true);
 
         this.SuspectFG = this.createForm();
