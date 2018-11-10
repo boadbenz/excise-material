@@ -11,6 +11,7 @@ import { RequestCommandService } from 'app/pages/reward/services/RequestCommand.
 import { RequestNoticeService } from 'app/pages/reward/services/RequestNotice.service';
 import { RequestBribeService } from 'app/pages/reward/services/RequestBribe.service';
 import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interface';
+import { IRequestCommand } from 'app/pages/reward/interfaces/RequestCommand';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -42,7 +43,6 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
           this.HaveNoticeCase(response);
         } else {
           // tslint:disable-next-line:max-line-length
-         
         }
         // this.columns$.next(this.columnsDefault);
       });
@@ -55,32 +55,33 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
         case 0:
           break;
         case 1:
-          this.requestBribeService
-            .RequestBribegetByRequestBribeRewardID({
-              RequestBribeRewardID: e.RequestBribeRewardID
+          this.requestCommandService
+            .RequestCommandgetByArrestCode({
+              ArrestCode: this.ArrestCode
             })
-            .subscribe((ResponseRequestBribegetByRequestBribeRewardID: IRequestBribe[]) => {
-
-             let newData: any[];
-                ResponseRequestBribegetByRequestBribeRewardID.forEach(
+            .subscribe(
+              (
+                ResponseRequestCommandgetByArrestCode: IRequestCommand[]
+              ) => {
+                console.log('ResponseRequestCommandgetByArrestCode', ResponseRequestCommandgetByArrestCode);
+                
+                let newData: any[];
+                ResponseRequestCommandgetByArrestCode.forEach(
                   element => {
-                    newData = element.RequestBribeStaff.map(m => ({
+                    newData = element.RequestCommandDetail.map(m => ({
                       ...element,
                       ...m,
-                      CommandName: `${m.TitleName ||
-                        ''}${m.FirstName ||
-                        ''} ${m.LastName ||
-                        ''}`,
-                      StaffName: `${m.TitleName ||
-                        ''}${m.FirstName ||
-                        ''} ${m.LastName ||
-                        ''}`,
+                      CommandName: `${m.TitleName || ''}${m.FirstName ||
+                        ''} ${m.LastName || ''}`,
+                      StaffName: `${m.StaffTitleName || ''}${m.StaffFirstName ||
+                        ''} ${m.StaffLastName || ''}`
                     }));
                   }
                 );
 
                 this.gridData$.next(newData);
-            });
+              }
+            );
 
           break;
       }

@@ -40,7 +40,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'bribe/:mode',
+        path: 'bribe/:mode/:RequestBribeRewardID/:ArrestCode',
         loadChildren: './views/bribe/bribe.module#BribeModule',
         data: {
           urls: [

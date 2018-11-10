@@ -10,6 +10,8 @@ export class CONFIG extends ManageConfig {
 
   @Input()
   public ArrestCode: string;
+  @Input()
+  public RequestBribeRewardID: number;
 
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
@@ -23,7 +25,7 @@ export class CONFIG extends ManageConfig {
     {
       title: 'เงินสินบนที่ขอรับแล้ว',
       field: 'SumBribeTotal'
-    },
+    }
   ];
   public FormInput$ = new BehaviorSubject<any>(this.FormInputDefault);
   public columnsTableDefault: ColumnsInterface[] = [
@@ -55,7 +57,7 @@ export class CONFIG extends ManageConfig {
     {
       title: 'งวดชำระ',
       field: 'PaymentPeriodNo'
-    },
+    }
   ];
   public columnsTable$ = new BehaviorSubject<any>(this.columnsTableDefault);
 }

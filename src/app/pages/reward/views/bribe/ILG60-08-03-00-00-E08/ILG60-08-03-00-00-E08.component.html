@@ -1,0 +1,87 @@
+<form [formGroup]="formGroup">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group row">
+        <label class="col-form-label col-md-4">เลขที่ใบแจ้งความนำจับ : </label>
+        <div class="col-md-8">
+          <input class="form-control" type="text" formControlName="NoticeCodeAndName">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group row">
+        <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
+        <div class="col-md-8">
+          <input class="form-control" type="text" formControlName="RequestBribeCode" disabled>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group row">
+        <label class="col-form-label col-md-4">เขียนที่ : </label>
+        <div class="col-md-8">
+          <input class="form-control" type="text" formControlName="Station" [disabled]="viewMode">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group row">
+        <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
+        <div class="col-md-3">
+          <input class="form-control" type="text" formControlName="RequestDate" [disabled]="viewMode">
+        </div>
+        <label class="col-form-label text-center col-md-2">เวลา</label>
+        <div class="col-md-3">
+          <input class="form-control" type="text" formControlName="RequestTime" [disabled]="viewMode">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-2">ผู้แจ้งความได้ทราบว่า : </label>
+        <div class="col-md-10">
+          <textarea class="form-control" rows="8" formControlName="Informeracknowledge" [disabled]="viewMode"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+<div class="table-responsive">
+  <table class="dataTable table table-sm table-striped table-hover">
+    <thead>
+      <tr>
+        <th class="footable-sortable text-center">ลำดับ</th>
+        <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+        <th class="footable-sortable">ลักษณะคดี</th>
+        <th class="footable-sortable">วันที่ชำระ</th>
+        <th class="footable-sortable">ใบเสร็จเล่มที่</th>
+        <th class="footable-sortable">ใบเสร็จเลขที่</th>
+        <th class="footable-sortable">เลขที่อ้างอิง</th>
+        <th class="footable-sortable">งวดชำระ</th>
+        <th class="footable-sortable">เงินสินบน</th>
+        <th class="footable-sortable">เงินสินบนสุทธิ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="footable">
+        <td class="text-center">1</td>
+        <td class="">นายธวัชชัย บิงขุนทด</td>
+        <td class="">เปรียบเทียบคดี</td>
+        <td>10-ม.ค.-2560</td>
+        <td class="text-center">33</td>
+        <td class="">001/2561</td>
+        <td class="">1/1</td>
+        <td>1,000,000.00</td>
+        <td>200,000.00</td>
+        <td>50,000.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -12,9 +12,7 @@ export class CONFIG extends ManageConfig {
   public ArrestCode: string;
 
   public TableDataOptions: ITableDataOptions = {
-    action: 'VIEW',
-    actionUrl: '/reward/manage',
-    actionFieldParams: ['IndictmentID']
+    isSumFooter: true
   };
 
   public gridData$ = new BehaviorSubject<any>(null);
@@ -52,15 +50,17 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'ตำแหน่ง',
-      field: 'PositionName'
+      field: 'StaffPositionName'
     },
     {
       title: 'หน่วยงาน',
-      field: 'OfficeName'
+      field: 'StaffOfficeName'
     },
     {
       title: 'จำนวนส่วน',
-      field: 'PartMoney'
+      field: 'PartMoney',
+      inputType: 'number',
+      showInput: true
     }
   ];
   public columnsTable$ = new BehaviorSubject<any>(this.columnsTableDefault);

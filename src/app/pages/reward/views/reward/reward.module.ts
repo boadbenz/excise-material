@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RewardComponent } from './reward.component';
 import { RewardRoutes } from './reward.routing';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     RewardRoutes
   ],
   declarations: [RewardComponent]
