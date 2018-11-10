@@ -8,11 +8,17 @@ export interface ITableDataOptions {
   action?: 'VIEW' | 'ADD' | 'EDIT' | 'DELETE';
   actionUrl?: string;
   actionFieldParams?: string[];
+  isSumFooter?: boolean;
 }
 export class TableDataConfig extends RewardHelper {
   public paginage = pagination;
   @Input()
-  public columns: Array<ColumnsInterface>;
+  set columns(val) {
+    this.columns$.next(val);
+  }
+  get columns() {
+    return this.columns$.asObservable();
+  }
   @Input()
   set data(val) {
     this.data$.next(val);
@@ -24,4 +30,5 @@ export class TableDataConfig extends RewardHelper {
   @Input() public showIndex = true;
 
   public data$ = new BehaviorSubject<any>(null);
+  public columns$  = new BehaviorSubject<any>(null);
 }

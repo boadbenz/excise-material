@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TableDataConfig } from './table-data.config';
 import { PagerService, IPagerService } from '../services/Pager.service';
+import { FormBuilder, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-table-data',
@@ -26,8 +27,8 @@ export class TableDataComponent extends TableDataConfig implements OnInit {
 
   // paged items
   public pagedItems: any[];
-
-  constructor(private pagerService: PagerService) {
+  public itemRows: FormArray;
+  constructor(private pagerService: PagerService, private fb: FormBuilder) {
     super();
   }
 
@@ -39,6 +40,7 @@ export class TableDataComponent extends TableDataConfig implements OnInit {
       }
     });
   }
+
   public setPage(current: number, pageSize) {
     // get pager object from service
     this.pager = this.pagerService.getPager(
@@ -68,7 +70,11 @@ export class TableDataComponent extends TableDataConfig implements OnInit {
   }
   public viewData(data) {}
 
-  public customRouteFor(path: string, item: any, route: string[]): (string | number)[] {
+  public customRouteFor(
+    path: string,
+    item: any,
+    route: string[]
+  ): (string | number)[] {
     return [path, ...route.map(m => item[m])];
   }
 }
