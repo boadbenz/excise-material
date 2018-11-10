@@ -256,7 +256,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
 
-        if(form.value.RevenueStatus == ""){
+        if (form.value.RevenueStatus == "") {
 
             form.value.RevenueStatus = null;
 
@@ -320,11 +320,11 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
 
-            if(StaffSendMoney.length > 0){
+            if (StaffSendMoney.length > 0) {
 
                 item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
 
-                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeName;
+                item.RevenueOneStaffDept = StaffSendMoney[0].OfficeName;
 
             }
 
@@ -342,7 +342,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
             }
 
-            else{
+            else {
 
                 item.RevenueStatus = "";
 

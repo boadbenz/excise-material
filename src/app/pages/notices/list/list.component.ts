@@ -96,8 +96,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onAdvSearch(form: any) {
-
-        if (form.value.DateStartFrom && form.value.DateStartTo) {
+        console.log(JSON.stringify(form.value))
+        if ((form.value.DateStartFrom && form.value.DateStartFrom != null) && (form.value.DateStartTo && (form.value.DateStartTo != null))) {
 
             // const sdate = getDateMyDatepicker(form.value.dateStartFrom);
             // const edate = getDateMyDatepicker(form.value.dateStartTo);
