@@ -155,10 +155,10 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         // set false
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
+        this.navService.setNextPageButton(false);
         // set true
         this.navService.setEditButton(true);
         this.navService.setEditField(true);
-        this.navService.setNextPageButton(true);
     }
 
     private async pageLoad() {
@@ -260,16 +260,14 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     this.typeheadRaces
                         .find(x => x.RaceCode == _Lfg.RaceCode).RaceNameTH;
 
-                this.LawbreakerFG.patchValue(_Lfg);
-
-                console.log(JSON.stringify(this.LawbreakerFG.value));
+                console.log(JSON.stringify(_Lfg));
 
                 switch (this.mode) {
                     case 'C':
-                        this.OnCreate();
+                        this.OnCreate(_Lfg);
                         break;
                     case 'R':
-                        this.OnRevice();
+                        this.OnRevice(_Lfg);
                         break;
                 }
             }
@@ -506,8 +504,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         }
     }
 
-    OnCreate() {
-        this.s_masLawbreaker.ArrestMasLawbreakerinsAll(this.LawbreakerFG.value)
+    OnCreate(lawbreaker: fromModels.ArrestLawbreaker) {
+        this.s_masLawbreaker.ArrestMasLawbreakerinsAll(lawbreaker)
             .takeUntil(this.destroy$)
             .subscribe(res => {
                 if (!this.checkResponse(res)) {
@@ -519,8 +517,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             });
     }
 
-    OnRevice() {
-        this.s_masLawbreaker.ArrestMasLawbreakerupdByCon(this.LawbreakerFG.value)
+    OnRevice(lawbreaker: fromModels.ArrestLawbreaker) {
+        this.s_masLawbreaker.ArrestMasLawbreakerupdByCon(lawbreaker)
             .takeUntil(this.destroy$)
             .subscribe(res => {
                 if (!this.checkResponse(res)) {

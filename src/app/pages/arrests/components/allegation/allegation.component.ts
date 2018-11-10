@@ -19,7 +19,7 @@ import { TransactionRunning } from 'app/models/transaction-running.model';
 import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 import { Acceptability } from '../../models';
 import { LoaderService } from 'app/core/loader/loader.service';
-import { setViewLawbreaker } from '..';
+import { setViewLawbreaker } from '../allegation-detail-modal/allegation-detail-modal.component';
 
 @Component({
   selector: 'app-allegation',
@@ -266,11 +266,12 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
 
   private async getArrestIndictmentProduct(indictmentId: string, arrestCode: string) {
-    await this.s_indictment.ArrestIndictmentProductgetByIndictmentID(indictmentId)
-      .then(async (x: fromModels.ArrestIndictmentProduct[]) => {
 
-        await this.s_productService.ArrestProductgetByArrestCode(arrestCode)
-          .then(async (y: fromModels.ArrestProduct[]) => {
+    await this.s_productService.ArrestProductgetByArrestCode(arrestCode)
+      .then(async (y: fromModels.ArrestProduct[]) => {
+
+        await this.s_indictment.ArrestIndictmentProductgetByIndictmentID(indictmentId)
+          .then(async (x: fromModels.ArrestIndictmentProduct[]) => {
             let _product = new Array<fromModels.ArrestProduct>();
 
             _product = y.map((y1, index) => {
@@ -280,16 +281,19 @@ export class AllegationComponent implements OnInit, OnDestroy {
               return y1;
             });
 
-            x.filter(x1 => _product.find(p => parseInt(p.ProductID) == x1.ProductID).IsChecked = true);
+            if (this.checkResponse(x)) {
+              x.filter(x1 => _product.find(p => parseInt(p.ProductID) == x1.ProductID).IsChecked = true);
+            }
 
             if (this.ArrestStore) {
-              let product = this.filterProductIsModify(this.ArrestStore.ArrestProduct)
+              let product = this.filterProductIsModify(this.ArrestStore.ArrestProduct);
               _product = [..._product, ...product];
             };
 
             this.setItemFormArray(_product, 'ArrestProduct');
 
           }).catch((error) => this.catchError(error));
+
       }).catch((error) => this.catchError(error));
 
   }
@@ -421,6 +425,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
     lawbreaker.RowId = 1;
     lawbreaker.IsModify = 'c';
+
     this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
     let sort = this.sortFormArray(this.ArrestLawbreaker.value);
     sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
@@ -558,7 +563,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   }
 
   private onEdit() {
-   this.enableBtnModeC();
+    this.enableBtnModeC();
   }
 
   private async createWithArrestCode() {
@@ -596,15 +601,21 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   private onComplete() {
     if (this._isSuccess) {
-      this.isCheckAll = false;
-      this.store.dispatch(new fromStore.RemoveArrest);
-      this.arrestIndictmentFG.reset();
+
+      setTimeout(() => {
+        this.isCheckAll = false;
+        this.store.dispatch(new fromStore.RemoveArrest);
+        this.arrestIndictmentFG.reset();
+        this.clearFormArray(this.ArrestProduct);
+        this.clearFormArray(this.ArrestLawbreaker);
+      }, 300);
+
       alert(Message.saveComplete)
       this.router.navigate(
         [`arrest/allegation`, 'R'],
         {
           queryParams: {
-            arrestMode: this.mode,
+            arrestMode: this.arrestMode,
             arrestCode: this.arrestCode,
             indictmentId: this.indictmentId,
             guiltbaseId: this.guiltbaseId
@@ -613,6 +624,12 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
     } else {
       alert(Message.saveFail)
+    }
+  }
+
+  clearFormArray = (formArray: FormArray) => {
+    while (formArray.length !== 0) {
+      formArray.removeAt(0)
     }
   }
 
