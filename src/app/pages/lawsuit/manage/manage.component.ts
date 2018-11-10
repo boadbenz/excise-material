@@ -85,7 +85,7 @@ export class ManageComponent implements OnInit {
   },
   {
     id: '2',
-    name: 'พนักงานฝ่ายปกครอบ/พนักงายอัยการ',
+    name: 'พนักงานฝ่ายปกครอง/พนักงายอัยการ',
   }];
 
   lawsuitTypeSelected: number;
