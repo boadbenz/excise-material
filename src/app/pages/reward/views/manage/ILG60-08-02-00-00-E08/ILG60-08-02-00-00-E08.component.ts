@@ -26,6 +26,8 @@ export class ILG6008020000E08Component extends CONFIG implements OnInit {
     this.requestArrestLawsuitService
       .RequestArrestLawsuitgetByIndictmentID(param)
       .subscribe(res => {
+        console.log('requestArrestLawsuitService', res);
+
         const response: IRequestArrestLawsuit = res[0];
         const staffName = `${response.TitleName}${response.FirstName} ${
           response.LastName

@@ -6,18 +6,18 @@
           <tr>
             <th *ngIf="showIndex">ลำดับ</th>
             <ng-container *ngFor="let column of columns;trackBy: column?.field">
-              <ng-container *ngIf="!column?.isHiddenTable">
+              <ng-container *ngIf="column?.inputType !== 'hidden'">
                 <th>{{column?.title}}</th>
               </ng-container>
             </ng-container>
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="pagedItems?.length > 0">
           <tr *ngFor="let item of pagedItems; let i = index;">
             <td *ngIf="showIndex">{{i + 1}}</td>
             <ng-container *ngFor="let column of columns; trackBy: column?.field">
-              <ng-container *ngIf="!column?.isHiddenTable">
+              <ng-container *ngIf="column?.inputType !== 'hidden'">
                 <td>{{ item[column?.field] || '-' }}</td>
               </ng-container>
 
@@ -25,7 +25,7 @@
 
             <td>
               <ng-container *ngIf="options?.action === 'VIEW'">
-                <a href="javaScript:void(0);" class="text-secondary" [routerLink]="[options?.actionUrl, item[options?.actionFieldParams]]">
+                <a href="javaScript:void(0);" class="text-secondary" [routerLink]="customRouteFor(options?.actionUrl,item, options?.actionFieldParams)">
                   <i class="mdi mdi-eye fa-lg"></i>
                 </a>
               </ng-container>

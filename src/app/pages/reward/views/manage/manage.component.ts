@@ -9,7 +9,7 @@ import { NavigationService } from 'app/shared/header-navigation/navigation.servi
   styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent extends ManageConfig implements OnInit {
-  public IndictmentID: number;
+
   constructor(
     private navService: NavigationService,
     private activatedRoute: ActivatedRoute
@@ -17,6 +17,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
     super();
     this.activatedRoute.params.subscribe(param => {
       this.IndictmentID = param['IndictmentID'];
+      this.ArrestCode = param['ArrestCode'];
     });
   }
 

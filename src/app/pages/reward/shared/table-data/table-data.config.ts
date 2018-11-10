@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export interface ITableDataOptions {
   action?: 'VIEW' | 'ADD' | 'EDIT' | 'DELETE';
   actionUrl?: string;
-  actionFieldParams?: string;
+  actionFieldParams?: string[];
 }
 export class TableDataConfig extends RewardHelper {
   public paginage = pagination;

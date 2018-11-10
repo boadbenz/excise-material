@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-12">
-
+      <app-form-group [columns]="FormInput$ | async"></app-form-group>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    <!-- <app-table-data [columns]="columns$ | async" [data]="gridData$ | async" [options]="TableDataOptions"></app-table-data> -->
+    <app-table-data [columns]="columnsTable$ | async" [data]="gridData$ | async" [options]="{}"></app-table-data>
   </div>
 </div>
