@@ -103,11 +103,11 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.30');
+    this.sidebarService.setVersion('0.0.0.31');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
-      ArrestCode: ['', Validators.required],
+      ArrestCode: [''],
       GuiltBaseID: ['', Validators.required],
       IsProve: ['1', Validators.required],
       IsActive: ['1', Validators.required],
@@ -269,6 +269,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
     await this.s_productService.ArrestProductgetByArrestCode(arrestCode)
       .then(async (y: fromModels.ArrestProduct[]) => {
+
+        if (!this.checkResponse(y)) return;
 
         await this.s_indictment.ArrestIndictmentProductgetByIndictmentID(indictmentId)
           .then(async (x: fromModels.ArrestIndictmentProduct[]) => {
@@ -525,9 +527,32 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
     let lawbreaker = this.filterLawbreakerIsModify(this.ArrestLawbreaker.value);
     let product = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
+
+    if (this.arrestIndictmentFG.invalid) {
+    debugger
+      alert(Message.checkData);
+      return;
+    }
+
     if (!lawbreaker.length && !product.length) {
       alert(Message.checkData);
       return;
+    }
+
+    let staff: fromModels.ArrestStaff[] = this.ArrestStore.ArrestStaff.filter(x => x.IsModify != 'd')
+    if (staff.length) {
+      if (staff.length < 3) {
+        alert('ต้องมีรายการผู้จับกุมอย่างน้อย 3 รายการ')
+        return
+      }
+      if (staff.filter(x => x.ContributorID == '').length > 0) {
+        alert('กรุณาเลือกฐานะของผู้จับกุม');
+        return;
+      }
+      if (staff.filter(x => x.ContributorID == '6').length > 1) {
+        alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการเท่านั้น');
+        return;
+      }
     }
 
     if (this.arrestCode != 'NEW' && this.mode == 'C') {
