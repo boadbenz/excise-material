@@ -96,9 +96,9 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onAdvSearch(form: any) {
-        console.log(JSON.stringify(form.value))
-        if ((form.value.DateStartFrom && form.value.DateStartFrom != null) && (form.value.DateStartTo && (form.value.DateStartTo != null))) {
-
+        // if ((form.value.DateStartFrom && form.value.DateStartFrom != null) && (form.value.DateStartTo && (form.value.DateStartTo != null))) {
+        if (form.value.DateStartFrom && form.value.DateStartTo) {
+            console.log(JSON.stringify(form.value))
             // const sdate = getDateMyDatepicker(form.value.dateStartFrom);
             // const edate = getDateMyDatepicker(form.value.dateStartTo);
 
@@ -110,8 +110,11 @@ export class ListComponent implements OnInit, OnDestroy {
                 return false;
             }
 
-            form.value.DateStartFrom = setZeroHours(sdate);
-            form.value.DateStartTo = setZeroHours(edate);
+            // form.value.DateStartFrom = setZeroHours(sdate);
+            // form.value.DateStartTo = setZeroHours(edate);
+
+            form.value.DateStartFrom = '24-OCT-2018';
+            form.value.DateStartTo = '29-OCT-2018';
         }
 
         this.preLoaderService.setShowPreloader(true);
