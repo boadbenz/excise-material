@@ -16,7 +16,7 @@ export function arrestReducer(
             return Object.assign({}, state, action.payload);
 
         case fromAction.REMOVE_ARREST:
-            state = new Arrest();
+            state = null;
             return state;
 
         default:
