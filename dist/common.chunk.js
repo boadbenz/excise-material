@@ -3933,105 +3933,6 @@ var ArrestsService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/pages/arrests/models/arrest-lawbreaker.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ArrestLawbreaker; });
-/* unused harmony export ArrestLawbreakerAllegation */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ArrestLawbreakerFormControl; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
-
-var ArrestLawbreaker = /** @class */ (function () {
-    function ArrestLawbreaker() {
-    }
-    return ArrestLawbreaker;
-}());
-
-var ArrestLawbreakerAllegation = /** @class */ (function () {
-    function ArrestLawbreakerAllegation() {
-    }
-    return ArrestLawbreakerAllegation;
-}());
-
-var ArrestLawbreakerFormControl = {
-    LawbreakerID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ArrestCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerRefID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    EntityType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyTitleCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyTitle: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyOtherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyRegistrationNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyLicenseNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    CompanyFullName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    FoundedDate: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LicenseDateForm: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LicenseDateTo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    TaxID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ExciseRegNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerTitleCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerTitleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerFirstName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerMiddleName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerLastName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerOtherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerDesc: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerFullName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IDCard: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    VISAType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportCountryCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportCountryName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportDateIn: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PassportDateOut: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    BirthDate: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    GenderType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    BloodType: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    NationalityCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    NationalityNameTH: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    RaceCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    RaceName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ReligionCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ReligionName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    MaritalStatus: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Career: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    GPS: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Location: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Address: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Village: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Building: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Floor: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Room: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Alley: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Road: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubDistrictCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    SubDistrict: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    DistrictCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProvinceCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Province: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ZipCode: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    TelephoneNo: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Email: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    FatherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    MotherName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    Remarks: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LinkPhoto: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    PhotoDesc: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsActive: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    EntityTypeName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    LawbreakerTypeName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProductID: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    ProductName: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsChecked: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null),
-    IsNewItem: new __WEBPACK_IMPORTED_MODULE_0__angular_forms__["d" /* FormControl */](null)
-};
-
-
-/***/ }),
-
 /***/ "./src/app/pages/component/card-actions/card-actions.component.html":
 /***/ (function(module, exports) {
 
@@ -9781,7 +9682,813 @@ var ProveService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/pages/reward/reward.service.ts":
+/***/ "./src/app/pages/reward/reward.helper.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RewardHelper; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
+
+var RewardHelper = /** @class */ (function () {
+    function RewardHelper() {
+    }
+    // ===== create form =====
+    RewardHelper.prototype.validateSetting = function (valid) {
+        var arr = [];
+        var validSet = null;
+        var d_val = valid.default;
+        var required = valid.isRequired ? arr.push(__WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].required) : null;
+        var email = valid.isEmail ? arr.push(__WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].email) : null;
+        var min = valid.minLenght
+            ? arr.push(__WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].minLength(valid.min_length))
+            : null;
+        var max = valid.maxLenght
+            ? arr.push(__WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].maxLength(valid.max_length))
+            : null;
+        var pattern = valid.pattern
+            ? arr.push(__WEBPACK_IMPORTED_MODULE_0__angular_forms__["m" /* Validators */].pattern(valid.pattern))
+            : null;
+        if (arr.length > 0) {
+            validSet = [d_val, arr];
+        }
+        else {
+            validSet = [d_val];
+        }
+        //  console.log('valid',  valid);
+        return validSet;
+    };
+    RewardHelper.prototype.createForm = function (columns) {
+        var _this = this;
+        var allColumns = this.mergeField(columns);
+        var obj = {};
+        allColumns.forEach(function (val) {
+            if (val.children) {
+                val.children.forEach(function (val2) {
+                    if (!val2.primaryKey && !val2.doNotEditor) {
+                        obj[val2.field] = _this.validateSetting(val);
+                        if (val2.field2) {
+                            obj[val2.field2] = _this.validateSetting(val);
+                        }
+                    }
+                });
+            }
+            else {
+                if (!val.primaryKey && !val.doNotEditor) {
+                    obj[val.field] = _this.validateSetting(val);
+                    if (val.field2) {
+                        obj[val.field2] = _this.validateSetting(val);
+                    }
+                }
+            }
+        });
+        return obj;
+    };
+    // ===== create form =====
+    RewardHelper.prototype.mergeField = function (columns) {
+        var fieldNew = columns;
+        // columns.forEach((x, index) => {
+        //   if (x.mergeField) {
+        //     x.mergeField.forEach(e => {
+        //       if (e.substring(0, 1) !== '&') {
+        //         fieldNew.push({
+        //           field: e,
+        //           inputType: 'hidden'
+        //         })
+        //       }
+        //     });
+        //   }
+        // });
+        return fieldNew;
+    };
+    // ===== merge Field =====
+    // ===== setDefault Columns ======
+    RewardHelper.prototype.setDefaultDataColumns = function (columns, defaultData) {
+        // console.log('columns', columns);
+        columns.forEach(function (x, index) {
+            if (columns[index].inputType === 'date') {
+                columns[index].default = new Date(defaultData[x.field] && typeof defaultData[x.field] === 'string'
+                    ? defaultData[x.field]
+                    : Date.now);
+                if (x.field2) {
+                    columns[index].default2 = new Date(defaultData[x.field2] && typeof defaultData[x.field2] === 'string'
+                        ? defaultData[x.field2]
+                        : Date.now);
+                }
+            }
+            else {
+                columns[index].default = defaultData[x.field]
+                    ? defaultData[x.field]
+                    : null;
+                if (x.field2) {
+                    columns[index].default2 = defaultData[x.field2]
+                        ? defaultData[x.field2]
+                        : null;
+                }
+            }
+        });
+        return columns;
+    };
+    return RewardHelper;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/services/HelperService.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HelperService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_environments_environment__ = __webpack_require__("./src/environments/environment.ts");
+
+var HelperService = /** @class */ (function () {
+    function HelperService() {
+        this.ApiPrefixUrl = __WEBPACK_IMPORTED_MODULE_0_environments_environment__["a" /* environment */].api + "/XCS60";
+    }
+    return HelperService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/services/RequestArrestLawsuit.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RequestArrestLawsuitService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__HelperService__ = __webpack_require__("./src/app/pages/reward/services/HelperService.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var RequestArrestLawsuitService = /** @class */ (function (_super) {
+    __extends(RequestArrestLawsuitService, _super);
+    function RequestArrestLawsuitService(http) {
+        var _this = _super.call(this) || this;
+        _this.http = http;
+        return _this;
+    }
+    RequestArrestLawsuitService.prototype.RequestArrestLawsuitgetByIndictmentID = function (param) {
+        return this.http.post(this.ApiPrefixUrl + "/RequestArrestLawsuitgetByIndictmentID", param);
+    };
+    RequestArrestLawsuitService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpClient */]])
+    ], RequestArrestLawsuitService);
+    return RequestArrestLawsuitService;
+}(__WEBPACK_IMPORTED_MODULE_1__HelperService__["a" /* HelperService */]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/services/RequestBribeReward.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RequestBribeRewardService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__HelperService__ = __webpack_require__("./src/app/pages/reward/services/HelperService.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var RequestBribeRewardService = /** @class */ (function (_super) {
+    __extends(RequestBribeRewardService, _super);
+    function RequestBribeRewardService(http) {
+        var _this = _super.call(this) || this;
+        _this.http = http;
+        return _this;
+    }
+    RequestBribeRewardService.prototype.RequestBribeRewardgetByIndictmentID = function (param) {
+        return this.http.post(this.ApiPrefixUrl + "/RequestBribeRewardgetByIndictmentID", param);
+    };
+    RequestBribeRewardService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpClient */]])
+    ], RequestBribeRewardService);
+    return RequestBribeRewardService;
+}(__WEBPACK_IMPORTED_MODULE_1__HelperService__["a" /* HelperService */]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/services/RequestList.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RequestListService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__HelperService__ = __webpack_require__("./src/app/pages/reward/services/HelperService.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var RequestListService = /** @class */ (function (_super) {
+    __extends(RequestListService, _super);
+    function RequestListService(http) {
+        var _this = _super.call(this) || this;
+        _this.http = http;
+        return _this;
+    }
+    RequestListService.prototype.RequestListgetByKeyword = function (TextSearch) {
+        return this.http.post(this.ApiPrefixUrl + "/RequestListgetByKeyword", TextSearch);
+    };
+    RequestListService.prototype.RequestListgetByConAdv = function (ConAdv) {
+        return this.http.post(this.ApiPrefixUrl + "/RequestListgetByConAdv", ConAdv);
+    };
+    RequestListService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpClient */]])
+    ], RequestListService);
+    return RequestListService;
+}(__WEBPACK_IMPORTED_MODULE_1__HelperService__["a" /* HelperService */]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/form-group/form-group.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<form *ngIf=\"(columns$ | async)\" [formGroup]=\"formGroup\" [class]=\"'form-row'\" (change)=\"changeHandle(formGroup.value)\"\r\n  (submit)=\"submitHandle(formGroup)\">\r\n\r\n  <ng-container *ngFor=\"let c of (columns$ | async)\">\r\n    <ng-container *ngIf=\"c?.inputType === 'hidden' || c?.inputType2 === 'hidden'; else inputTypeNoHiden\">\r\n      <input type=\"hidden\" [id]=\"c?.field\" [formControlName]=\"c?.field\" [attr.disabled]=\"c?.isDisabled ? 'disabled' : null\">\r\n    </ng-container>\r\n    <ng-template #inputTypeNoHiden>\r\n      <ng-container *ngIf=\"options?.type === 'FILTER';else FormField\">\r\n        <ng-container *ngIf=\"c?.field &&  c?.isFilter && !c?.isHidden\">\r\n          <ng-container [ngTemplateOutlet]=\"FormField\"></ng-container>\r\n        </ng-container>\r\n      </ng-container>\r\n      <ng-template #FormField>\r\n        <div [class]=\"c?.class ? c?.class : 'col-md-6'\">\r\n          <div class=\"form-group row\">\r\n            <label [for]=\"c?.field\" class=\"col-sm-4 col-form-label\">{{c?.title}} <strong *ngIf=\"c?.isRequired\" class=\"text-danger\">*</strong>\r\n              <span class=\"pull-right\">:</span> </label>\r\n            <ng-container *ngIf=\"c?.field2; else notMulti\">\r\n              <div class=\"col-sm-8 \">\r\n                <div class=\"form-group input-group form-line\">\r\n                  <input  type=\"{{c?.inputType || 'text'}}\" [min]=\"c?.minDate || ''\" [max]=\"c?.maxDate || ''\" [id]=\"c?.field\"\r\n                    [formControlName]=\"c?.field\" class=\"form-control\" [attr.disabled]=\"c?.isDisabled ? 'disabled' : null\">\r\n                  <label class=\"col-2 control-label text-center padding-adv-search pt-1\">{{c?.title2}} : </label>\r\n                  <input  type=\"{{c?.inputType2 || 'text'}}\" [min]=\"c?.minDate || ''\" [max]=\"c?.maxDate || ''\" [id]=\"c?.field2\"\r\n                    [formControlName]=\"c?.field2\" class=\"form-control\" [attr.disabled]=\"c?.isDisabled2 ? 'disabled' : null\">\r\n                </div>\r\n              </div>\r\n            </ng-container>\r\n            <ng-template #notMulti>\r\n              <div class=\"col-sm-8\">\r\n                <input  type=\"{{c?.inputType ? c?.inputType : 'text'}}\" [min]=\"c?.minDate || ''\" [max]=\"c?.maxDate || ''\"\r\n                  [id]=\"c?.field\" [formControlName]=\"c?.field\" class=\"form-control\" [attr.disabled]=\"c?.isDisabled ? 'disabled' : null\">\r\n              </div>\r\n            </ng-template>\r\n          </div>\r\n        </div>\r\n      </ng-template>\r\n    </ng-template>\r\n  </ng-container>\r\n  <hr>\r\n  <div style=\"width: 100%\">\r\n    <div class=\" text-right\">\r\n      <button *ngIf=\"needSearchBtn\" type=\"submit\" class=\"btn waves-effect waves-light btn-navy\">ค้นข้อมูล</button>\r\n    </div>\r\n\r\n  </div>\r\n\r\n</form>\r\n"
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/form-group/form-group.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".pages {\n  padding: 10px; }\n\n.pages a {\n  color: #67757c; }\n\n.padding-adv-search {\n  padding-right: 0;\n  padding-left: 0px; }\n\n.padding-input-adv-search {\n  padding-left: 5px; }\n\n.pages {\n  padding: 10px; }\n\n.border-navy {\n  border-color: #005C97; }\n\n.table-striped tbody tr:nth-of-type(2n+1) {\n  background: #e5eef4; }\n\n.card-navy {\n  background: #ccdeea; }\n\n.btn-navy {\n  background: #005e8d;\n  color: white; }\n\n.icn-collapse {\n  color: black;\n  font-size: 18px; }\n\n.top-navbar {\n  background: linear-gradient(45deg, #005e8d, #353993); }\n\n.btn-action {\n  color: red;\n  font-size: 20px;\n  cursor: pointer; }\n\n#btn-browse {\n  opacity: 0; }\n\n.modal-lg {\n  max-width: 1200px;\n  margin-left: 170px; }\n\n.modal-content {\n  max-height: 650px; }\n\n.card-popup {\n  max-height: 300px; }\n\n.card-overflow {\n  overflow: auto; }\n\n.form-popup {\n  margin-bottom: 0; }\n\n.col-form-label {\n  color: black;\n  font-weight: 400; }\n\n.close-popup {\n  cursor: pointer; }\n"
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/form-group/form-group.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FormGroupComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__form_group_config__ = __webpack_require__("./src/app/pages/reward/shared/form-group/form-group.config.ts");
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var FormGroupComponent = /** @class */ (function (_super) {
+    __extends(FormGroupComponent, _super);
+    function FormGroupComponent(fb) {
+        var _this = _super.call(this) || this;
+        _this.fb = fb;
+        return _this;
+    }
+    FormGroupComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        // set data default
+        this.columns$.subscribe(function (c) {
+            if (c) {
+                var column = c;
+                // console.log('columns', column);
+                _this.formGroup = _this.fb.group(_this.createForm(column));
+                column.forEach(function (key, index) {
+                    if (key.inputType === 'date' || key.inputType2 === 'date') {
+                        if (key.default) {
+                            _this.formGroup.controls[key.field].setValue(new Date(key.default), true);
+                        }
+                        if (key.default2) {
+                            _this.formGroup.controls[key.field2].setValue(new Date(key.default2), true);
+                        }
+                    }
+                    else if (key.inputType === 'number' ||
+                        key.inputType2 === 'number') {
+                        if (key.default) {
+                            _this.formGroup.controls[key.field].setValue(Number(key.default), true);
+                        }
+                        if (key.default2) {
+                            _this.formGroup.controls[key.field2].setValue(Number(key.default2), true);
+                        }
+                    }
+                    else {
+                        if (key.default) {
+                            _this.formGroup.controls[key.field].setValue(key.default, true);
+                        }
+                        if (key.default2) {
+                            _this.formGroup.controls[key.field2].setValue(key.default2, true);
+                        }
+                    }
+                });
+            }
+        });
+    };
+    FormGroupComponent.prototype.submitHandle = function (value) {
+        this.outputSubmit.emit(value);
+    };
+    FormGroupComponent.prototype.changeHandle = function (value) {
+        this.outputChange.emit(value);
+    };
+    FormGroupComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'app-form-group',
+            template: __webpack_require__("./src/app/pages/reward/shared/form-group/form-group.component.html"),
+            styles: [__webpack_require__("./src/app/pages/reward/shared/form-group/form-group.component.scss")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormBuilder */]])
+    ], FormGroupComponent);
+    return FormGroupComponent;
+}(__WEBPACK_IMPORTED_MODULE_2__form_group_config__["a" /* FormGroupConfig */]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/form-group/form-group.config.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FormGroupConfig; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__reward_helper__ = __webpack_require__("./src/app/pages/reward/reward.helper.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__ = __webpack_require__("./node_modules/rxjs/_esm5/BehaviorSubject.js");
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var FormGroupConfig = /** @class */ (function (_super) {
+    __extends(FormGroupConfig, _super);
+    function FormGroupConfig() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.columns$ = new __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](null);
+        _this.outputSubmit = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["x" /* EventEmitter */]();
+        _this.outputChange = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["x" /* EventEmitter */]();
+        return _this;
+    }
+    Object.defineProperty(FormGroupConfig.prototype, "columns", {
+        get: function () {
+            return this.columns$.asObservable();
+        },
+        set: function (val) {
+            this.columns$.next(val);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["F" /* Input */])(),
+        __metadata("design:type", Object)
+    ], FormGroupConfig.prototype, "options", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["F" /* Input */])(),
+        __metadata("design:type", Boolean)
+    ], FormGroupConfig.prototype, "needSearchBtn", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["F" /* Input */])(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], FormGroupConfig.prototype, "columns", null);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["S" /* Output */])(),
+        __metadata("design:type", Object)
+    ], FormGroupConfig.prototype, "outputSubmit", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["S" /* Output */])(),
+        __metadata("design:type", Object)
+    ], FormGroupConfig.prototype, "outputChange", void 0);
+    return FormGroupConfig;
+}(__WEBPACK_IMPORTED_MODULE_0__reward_helper__["a" /* RewardHelper */]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return REWARD_SHARED_COMPONENTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return REWARD_SHARED_SERVICES; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form_group_form_group_component__ = __webpack_require__("./src/app/pages/reward/shared/form-group/form-group.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__table_data_table_data_component__ = __webpack_require__("./src/app/pages/reward/shared/table-data/table-data.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_Pager_service__ = __webpack_require__("./src/app/pages/reward/shared/services/Pager.service.ts");
+
+
+
+var REWARD_SHARED_COMPONENTS = [
+    __WEBPACK_IMPORTED_MODULE_0__form_group_form_group_component__["a" /* FormGroupComponent */],
+    __WEBPACK_IMPORTED_MODULE_1__table_data_table_data_component__["a" /* TableDataComponent */]
+];
+var REWARD_SHARED_SERVICES = [__WEBPACK_IMPORTED_MODULE_2__services_Pager_service__["a" /* PagerService */]];
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/services/Pager.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PagerService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_app_config_pagination__ = __webpack_require__("./src/app/config/pagination.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+var PagerService = /** @class */ (function () {
+    function PagerService() {
+    }
+    PagerService.prototype.getPager = function (totalItems, currentPage, pageSize) {
+        if (currentPage === void 0) { currentPage = __WEBPACK_IMPORTED_MODULE_1_app_config_pagination__["a" /* pagination */].CurrentPage; }
+        if (pageSize === void 0) { pageSize = __WEBPACK_IMPORTED_MODULE_1_app_config_pagination__["a" /* pagination */].PageSize; }
+        // calculate total pages
+        var totalPages = Math.ceil(totalItems / pageSize);
+        // ensure current page isn't out of range
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+        else if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+        var startPage, endPage;
+        if (totalPages <= 10) {
+            // less than 10 total pages so show all
+            startPage = 1;
+            endPage = totalPages;
+        }
+        else {
+            // more than 10 total pages so calculate start and end pages
+            if (currentPage <= 6) {
+                startPage = 1;
+                endPage = 10;
+            }
+            else if (currentPage + 4 >= totalPages) {
+                startPage = totalPages - 9;
+                endPage = totalPages;
+            }
+            else {
+                startPage = currentPage - 5;
+                endPage = currentPage + 4;
+            }
+        }
+        // calculate start and end item indexes
+        var startIndex = (currentPage - 1) * pageSize;
+        var endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+        // create an array of pages to ng-repeat in the pager control
+        var pages = Array.from(Array(endPage + 1 - startPage).keys()).map(function (i) { return startPage + i; });
+        // return object with all pager properties required by the view
+        return {
+            totalItems: totalItems,
+            currentPage: currentPage,
+            pageSize: pageSize,
+            totalPages: totalPages,
+            startPage: startPage,
+            endPage: endPage,
+            startIndex: startIndex,
+            endIndex: endIndex,
+            pages: pages
+        };
+    };
+    PagerService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])()
+    ], PagerService);
+    return PagerService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/shared.module.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SharedModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("./node_modules/@angular/common/esm5/common.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3____ = __webpack_require__("./src/app/pages/reward/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_app_pages_component_pagination_table_pagination_table_module__ = __webpack_require__("./src/app/pages/component/pagination-table/pagination-table.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_app_pages_component_card_actions_card_actions_module__ = __webpack_require__("./src/app/pages/component/card-actions/card-actions.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_material_datepicker__ = __webpack_require__("./node_modules/@angular/material/esm5/datepicker.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_mydatepicker_th__ = __webpack_require__("./node_modules/mydatepicker-th/index.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+
+
+
+
+
+
+var SHARED_MODULES = [
+    __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
+    __WEBPACK_IMPORTED_MODULE_7__angular_common_http__["c" /* HttpClientModule */],
+    __WEBPACK_IMPORTED_MODULE_6__angular_router__["d" /* RouterModule */],
+    __WEBPACK_IMPORTED_MODULE_8_app_pages_component_card_actions_card_actions_module__["a" /* CardActionsModule */],
+];
+var SharedModule = /** @class */ (function () {
+    function SharedModule() {
+    }
+    SharedModule = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
+            imports: SHARED_MODULES.concat([
+                __WEBPACK_IMPORTED_MODULE_10_mydatepicker_th__["a" /* MyDatePickerTHModule */],
+                __WEBPACK_IMPORTED_MODULE_4__angular_forms__["l" /* ReactiveFormsModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_material__["b" /* MatButtonModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_material__["c" /* MatCheckboxModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_material__["f" /* MatInputModule */],
+                __WEBPACK_IMPORTED_MODULE_9__angular_material_datepicker__["a" /* MatDatepickerModule */],
+                __WEBPACK_IMPORTED_MODULE_5_app_pages_component_pagination_table_pagination_table_module__["a" /* PaginationTableModule */],
+                __WEBPACK_IMPORTED_MODULE_4__angular_forms__["g" /* FormsModule */],
+            ]),
+            exports: SHARED_MODULES.concat(__WEBPACK_IMPORTED_MODULE_3____["a" /* REWARD_SHARED_COMPONENTS */]),
+            declarations: __WEBPACK_IMPORTED_MODULE_3____["a" /* REWARD_SHARED_COMPONENTS */].slice(),
+            providers: __WEBPACK_IMPORTED_MODULE_3____["b" /* REWARD_SHARED_SERVICES */].slice()
+        })
+    ], SharedModule);
+    return SharedModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/table-data/table-data.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"card\">\r\n  <div class=\"card-body\">\r\n    <div class=\"table-responsive table-striped no-wrap\">\r\n      <table #rewardTable class=\"table table-striped table-hover\">\r\n        <thead>\r\n          <tr>\r\n            <th *ngIf=\"showIndex\">ลำดับ</th>\r\n            <ng-container *ngFor=\"let column of columns;trackBy: column?.field\">\r\n              <ng-container *ngIf=\"!column?.isHiddenTable\">\r\n                <th>{{column?.title}}</th>\r\n              </ng-container>\r\n            </ng-container>\r\n            <th></th>\r\n          </tr>\r\n        </thead>\r\n        <tbody>\r\n          <tr *ngFor=\"let item of pagedItems; let i = index;\">\r\n            <td *ngIf=\"showIndex\">{{i + 1}}</td>\r\n            <ng-container *ngFor=\"let column of columns; trackBy: column?.field\">\r\n              <ng-container *ngIf=\"!column?.isHiddenTable\">\r\n                <td>{{ item[column?.field] || '-' }}</td>\r\n              </ng-container>\r\n\r\n            </ng-container>\r\n\r\n            <td>\r\n              <ng-container *ngIf=\"options?.action === 'VIEW'\">\r\n                <a href=\"javaScript:void(0);\" class=\"text-secondary\" [routerLink]=\"[options?.actionUrl, item[options?.actionFieldParams]]\">\r\n                  <i class=\"mdi mdi-eye fa-lg\"></i>\r\n                </a>\r\n              </ng-container>\r\n\r\n            </td>\r\n          </tr>\r\n        </tbody>\r\n      </table>\r\n    </div>\r\n    <!-- <pre>\r\n      {{pager | json}}\r\n    </pre> -->\r\n  </div>\r\n  <div class=\"card-footer card-footer-unset\">\r\n    <app-pagination-table [TotalItems]=\"pager?.totalItems\" [CurrentPage]=\"paginage.CurrentPage\" [PageSize]=\"paginage.PageSize\"\r\n      [RowsPerPageOptions]=\"paginage.RowsPerPageOptions\" (onPageChange)=\"pageChanges($event)\">\r\n    </app-pagination-table>\r\n  </div>\r\n</div>\r\n"
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/table-data/table-data.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/table-data/table-data.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TableDataComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__table_data_config__ = __webpack_require__("./src/app/pages/reward/shared/table-data/table-data.config.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_Pager_service__ = __webpack_require__("./src/app/pages/reward/shared/services/Pager.service.ts");
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var TableDataComponent = /** @class */ (function (_super) {
+    __extends(TableDataComponent, _super);
+    function TableDataComponent(pagerService) {
+        var _this = _super.call(this) || this;
+        _this.pagerService = pagerService;
+        return _this;
+    }
+    TableDataComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.data$.subscribe(function (data) {
+            _this.allItems = data;
+            _this.setPage(1, _this.paginage.PageSize);
+        });
+    };
+    TableDataComponent.prototype.setPage = function (current, pageSize) {
+        // get pager object from service
+        this.pager = this.pagerService.getPager(this.allItems.length, current, pageSize);
+        // get current page of items
+        this.pagedItems = this.allItems.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    };
+    TableDataComponent.prototype.pageChanges = function ($event) {
+        // console.log('pageChange', $event);
+        // this.pager.totalItems = $event.TotalItems
+        // this.pager.pageSize = $event.PageSize
+        this.pager.currentPage = $event.currentPage;
+        this.pager.startIndex = $event.startIndex;
+        this.pager.endIndex = $event.endIndex;
+        this.pager.pageSize = $event.pageSize;
+        this.pager.pages = $event.pages;
+        this.setPage($event.currentPage, $event.pageSize);
+    };
+    TableDataComponent.prototype.viewData = function (data) { };
+    TableDataComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'app-table-data',
+            template: __webpack_require__("./src/app/pages/reward/shared/table-data/table-data.component.html"),
+            styles: [__webpack_require__("./src/app/pages/reward/shared/table-data/table-data.component.scss")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_Pager_service__["a" /* PagerService */]])
+    ], TableDataComponent);
+    return TableDataComponent;
+}(__WEBPACK_IMPORTED_MODULE_1__table_data_config__["a" /* TableDataConfig */]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward/shared/table-data/table-data.config.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TableDataConfig; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__reward_helper__ = __webpack_require__("./src/app/pages/reward/reward.helper.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_app_config_pagination__ = __webpack_require__("./src/app/config/pagination.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__ = __webpack_require__("./node_modules/rxjs/_esm5/BehaviorSubject.js");
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var TableDataConfig = /** @class */ (function (_super) {
+    __extends(TableDataConfig, _super);
+    function TableDataConfig() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.paginage = __WEBPACK_IMPORTED_MODULE_1_app_config_pagination__["a" /* pagination */];
+        _this.showIndex = true;
+        _this.data$ = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](null);
+        return _this;
+    }
+    Object.defineProperty(TableDataConfig.prototype, "data", {
+        get: function () {
+            return this.data$.asObservable();
+        },
+        set: function (val) {
+            this.data$.next(val);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["F" /* Input */])(),
+        __metadata("design:type", Array)
+    ], TableDataConfig.prototype, "columns", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["F" /* Input */])(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], TableDataConfig.prototype, "data", null);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["F" /* Input */])(),
+        __metadata("design:type", Object)
+    ], TableDataConfig.prototype, "options", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["F" /* Input */])(),
+        __metadata("design:type", Object)
+    ], TableDataConfig.prototype, "showIndex", void 0);
+    return TableDataConfig;
+}(__WEBPACK_IMPORTED_MODULE_0__reward_helper__["a" /* RewardHelper */]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/reward_old/reward.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
