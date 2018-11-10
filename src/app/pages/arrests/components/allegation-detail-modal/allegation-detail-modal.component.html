@@ -126,8 +126,8 @@
                 <td>{{item.get('LawbreakerFullName').value}}</td>
                 <td class="text-center">{{item.get('ResultCount').value | async}}</td>
                 <td class="text-center">
-                  <a href="javaScript:void(0);" class="text-center text-secondary" [routerLink]="['/arrest/lawbreaker', 'C', view(item.value.LawbreakerID)]"
-                    target="_blank">
+                  <a class="text-center text-secondary" 
+                    [routerLink]="['/arrest/lawbreaker', 'R', item.value.LawbreakerID]" target="_blank">
                     <i class="fa fa-eye fa-lg"></i>
                   </a>
                 </td>
