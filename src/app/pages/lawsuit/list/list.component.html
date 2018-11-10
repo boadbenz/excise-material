@@ -96,7 +96,7 @@
                 <td>{{
                   item.LawsuitArrestIndicment[0].LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
                   || '' }}</td>
-                <td>{{ item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitNo || '' }}</td>
+                <td>{{ checkNullLawsuitNo(item) || '' }}</td>
                 <td>{{ item.LawsuitDate || '' }}</td>
                 <td>
                   <div *ngIf="item.LawsuitArrestIndicment[0].Lawsuit[0]">

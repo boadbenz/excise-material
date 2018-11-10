@@ -17,7 +17,7 @@ export class PrintLawsuitModalComponent implements OnInit {
       // console.log(indictmentID); // Print the parameter to the console.
     });
   }
-
+  isCheck = ''
   printDoc = [
     // {
     //   DocName: 'บันทึกจับกุม (ส.ส. 2/39)',
@@ -40,8 +40,7 @@ export class PrintLawsuitModalComponent implements OnInit {
   ngOnInit() {
     console.log(this.IndictmentID);
     // console.log('malawwww', this.lawsuitService)
-    this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(
-      data => {
+    this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(data => {
         this.printDocData = data || [];
         console.log('data-->', data)
         return true;
@@ -68,7 +67,7 @@ export class PrintLawsuitModalComponent implements OnInit {
   }
 
   onPrint(f: any) {
-
+    console.log(f.value)
   }
 
   dismiss(e: any) {

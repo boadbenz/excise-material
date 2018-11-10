@@ -115,7 +115,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.paginage.TotalItems = 0;
 
     this.preLoaderService.setShowPreloader(true);
-    // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
 
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       if (Textsearch) {
@@ -220,6 +220,14 @@ export class ListComponent implements OnInit, OnDestroy {
   async pageChanges(event) {
     this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
     console.log('this.resultsPerPage', this.resultsPerPage);
+  }
+
+  checkNullLawsuitNo(data) {
+    if (data.LawsuitArrestIndicment[0].Lawsuit.length > 0) {
+      return data.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitNo;
+    } else {
+      return "";
+    }
   }
 
 }

@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { Arrest } from "../../arrests/models/arrest";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder } from "@angular/forms";
 import { PreloaderService } from "../../../shared/preloader/preloader.component";
 import { SidebarService } from "../../../shared/sidebar/sidebar.component";
@@ -26,6 +26,10 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { async } from "q";
 import { JudgmentModel } from "../models/judgment";
 import { IMyDpOptions } from "mydatepicker";
+
+import { PrintLawsuitModalComponent } from '../print-doc-modal/print-doc-modal.component';
+
+
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html"
@@ -115,6 +119,10 @@ export class ManageComponent implements OnInit {
     this.navService.setSearchBar(false);
     // this.navService.setInnerTextNextPageButton('งานจับกุม')
   }
+  public onPrint = (content) => {
+    this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
+  }
+
   get LawsuitArrestStaff(): FormArray {
     return this.lawsuitArrestForm.get('LawsuitArrestStaff') as FormArray;
   }
@@ -1116,6 +1124,8 @@ export class DialogJudgment {
     });
 
   }
+
+
   public closePopup = function () {
     this.dialogRef.close(DialogJudgment);
   }
@@ -1126,7 +1136,7 @@ export class DialogJudgment {
     return '';
   }
 
-
+}
 
 
 
