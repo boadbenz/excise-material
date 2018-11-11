@@ -58,7 +58,7 @@ export class NoticeService {
         const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
 
-        if (res.IsSuccess == 'False' || !res.Notice.length) {
+        if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
 
