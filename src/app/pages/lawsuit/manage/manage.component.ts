@@ -127,7 +127,7 @@ export class ManageComponent implements OnInit {
     return this.lawsuitForm.get('LawsuitStaff') as FormArray;
   }
   get LawsuitTableList(): FormArray {
-    // console.log('lawsuitForm',this.lawsuitForm.get('LawsuitTableList'))
+    console.log('lawsuitForm',this.lawsuitForm.get('LawsuitTableList'))
     return this.lawsuitForm.get('LawsuitTableList') as FormArray;
   }
   get LawsuitDocument(): FormArray {
@@ -1025,23 +1025,21 @@ export class ManageComponent implements OnInit {
   }
 
   editTable(item: any, index: number) {
-    ///####use this value to get api
-    ///item.controls['IndictmentDetailID'].value
-    // const dialogRef = this.dialog.open(DialogJudgment, {
-    //   width: '90%',
-    //   maxWidth: 'none',
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   //console.log(`Dialog result: ${result}`);
-    // });
-    this.router.navigate(["/lawsuit/detail", "R"], {
-      queryParams: {
-        ArrestCode: this.lawsuitList[0].ArrestCode,
-        IndictmentDetailID: item.controls['IndictmentDetailID'].value,
-        IndictmentID: this.IndictmentID,
-      }
+    const dialogRef = this.dialog.open(DialogJudgment, {
+      width: '90%',
+      maxWidth: 'none',
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log(`Dialog result: ${result}`);
+    });
+    // this.router.navigate(["/lawsuit/detail", "R"], {
+    //   queryParams: {
+    //     ArrestCode: this.lawsuitList[0].ArrestCode,
+    //     IndictmentDetailID: item.controls['IndictmentDetailID'].value,
+    //     IndictmentID: this.IndictmentID,
+    //   }
+    // });
   }
 
 }

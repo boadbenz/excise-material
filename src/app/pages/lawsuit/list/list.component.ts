@@ -115,7 +115,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.paginage.TotalItems = 0;
 
     this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
+    // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
 
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       if (Textsearch) {
@@ -175,6 +175,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
+    this.navService.setOnPrevPage(false);
   }
 
   private onSearchComplete(list: any) {
