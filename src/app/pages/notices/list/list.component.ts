@@ -57,28 +57,27 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-
         this.sidebarService.setVersion('0.0.2.12');
         this.paginage.TotalItems = 0;
 
-        this.preLoaderService.setShowPreloader(true);
+        // this.preLoaderService.setShowPreloader(true);
         await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
 
-        this.subOnsearchByKeyword = this.navservice.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {
-                await this.navservice.setOnSearch('');
-                this.onSearch(Textsearch);
-            }
-        })
+        // this.subOnsearchByKeyword = this.navservice.searchByKeyword.subscribe(async Textsearch => {
+        //     if (Textsearch) {
+        //         await this.navservice.setOnSearch('');
+        //         this.onSearch(Textsearch);
+        //     }
+        // })
 
-        this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
-            if (status) {
-                await this.navservice.setOnNextPage(false);
-                this._router.navigate(['/notice/manage', 'C', 'NEW']);
-            }
-        })
+        // this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
+        //     if (status) {
+        //         await this.navservice.setOnNextPage(false);
+        //         this._router.navigate(['/notice/manage', 'C', 'NEW']);
+        //     }
+        // })
 
-        this.preLoaderService.setShowPreloader(false);
+        // this.preLoaderService.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
@@ -110,8 +109,9 @@ export class ListComponent implements OnInit, OnDestroy {
                 return false;
             }
 
-            // form.value.DateStartFrom = setZeroHours(sdate);
+            form.value.DateStartFrom = setZeroHours(sdate);
             // form.value.DateStartTo = setZeroHours(edate);
+            console.log(setZeroHours(sdate));
 
             form.value.DateStartFrom = '24-OCT-2018';
             form.value.DateStartTo = '29-OCT-2018';
