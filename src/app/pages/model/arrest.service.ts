@@ -26,4 +26,17 @@ export class ArrestService {
       return [];
     }
   }
+
+  //2018-11-11: Wish | ILG60-06-02-E01 > 1.1.2.2
+  async getByCompareArrestCon(ArrestCode: string): Promise<any> {
+    const params = { ArrestCode };
+    const url = `${appConfig.api7788}/CompareArrestgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
+    } catch (error) {
+      return [];
+    }
+  }
 }

@@ -27,6 +27,12 @@ export class FineService {
         const url = `${appConfig.api8881}/ComparegetByKeyword`;
         return this.http.post<Compare[]>(url, params, this.httpOptions);
     }
+// 2018-11-11: Wish
+  getListByKeyword(Textsearch: string) {
+    const params = Textsearch;
+    const url = `${appConfig.api8881}/CompareListgetByKeyword`;
+    return this.http.post<Compare[]>(url, params, this.httpOptions);
+  }
 
     // getByCon(form: any) {
     //     const params = JSON.stringify(form);
@@ -58,6 +64,18 @@ export class FineService {
             await alert(error);
         }
     }
+// 2018-11-11: Wish
+  async getListByConAdv(form: any): Promise<any> {
+    const params = JSON.stringify(form);
+    const url = `${appConfig.api8881}/CompareListgetByConAdv`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
+    } catch (error) {
+      await alert(error);
+    }
+  }
 
 
     async getByArrestCon(ArrestCode: string): Promise<Arrest> {

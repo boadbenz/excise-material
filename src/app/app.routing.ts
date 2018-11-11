@@ -117,8 +117,12 @@ export const routes: Routes = [
         path: 'list',
         loadChildren: './pages/fine/list/list.module#ListModule'
       },
+      // {
+      //   path: 'manage/:mode/:code1/:code2/:code3',
+      //   loadChildren: './pages/fine/manage/manage.module#ManageModule'
+      // },  // 2018-11-11: ILG60-06-01-E08: discard arrestCode
       {
-        path: 'manage/:mode/:code1/:code2/:code3',
+        path: 'manage/:mode/:code1/:code2',
         loadChildren: './pages/fine/manage/manage.module#ManageModule'
       },
       {

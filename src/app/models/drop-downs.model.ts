@@ -203,3 +203,20 @@ export const CostofNews: DropDown[] = [
         text: 'ไม่สามารถตัดสินได้'
     }
 ]
+
+//2018-11-11: Wish
+export const RevernueStatuses: DropDown[] = [
+  {
+      value: '0',
+      text: 'ยังไมนําสงเงินรายได้'
+  }, {
+      value: '1',
+      text: 'นําสงเงินรายได'
+  }, {
+      value: '2',
+      text: 'รับรายการนําสงเงิน'
+  }, {
+      value: '3',
+      text: 'เกินกําหนดชําระ'
+  }
+]

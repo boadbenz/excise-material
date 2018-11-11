@@ -24,6 +24,7 @@ import { ArrestStaff } from '../../model/arrest-staff';
 import { isNgTemplate } from '@angular/compiler';
 import { async } from 'q';
 import { isArray } from 'jquery';
+import { DropDown, RevernueStatuses } from '../../../models';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -88,6 +89,7 @@ export class ManageComponent implements OnInit {
   oCompare: Compare;
   oCompareDetail: CompareDetail = {};
   oCompareStaff: CompareStaff;
+  revernueStatuses: DropDown[] = RevernueStatuses;
 
   // ----- Model ------ //
   @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -115,12 +117,14 @@ export class ManageComponent implements OnInit {
     this.active_Route();
     this.navigate_Service();
 
-    await this.getStation();
-    await this.getCompareStaff();
+    // await this.getStation(); 2018-11-11 : change to getDepartmentStation
+    await this.getDepartmentStation();
+    // await this.getCompareStaff(); // 2018-11-11: change to getCompareMainStaff
+    await this.getCompareMainStaff();
     this.CreateObject();
     this.getLawsuitByID(this.LawsuitID);
-    await this.getArrestByID(this.ArrestCode);
-
+    // await this.getArrestByID(this.ArrestCode);  //  2018-11-11: Change to getCompareArrestByLawsuitNo
+    await this.getCompareArrestByLawsuitNo(this.LawsuitID);
     let date = new Date();
     this.CompareYear = (date.getFullYear() + 543).toString();
     this.CompareDate = this.getCurrentDate();
@@ -161,14 +165,14 @@ export class ManageComponent implements OnInit {
 
 
     this.param = this.activeRoute.params.subscribe(p => {
-      this.navService.setPrintButton(true);
-      this.navService.setDeleteButton(true);
-      this.navService.setEditButton(true);
-      this.navService.setSearchBar(false);
-      this.navService.setCancelButton(false);
-      this.navService.setSaveButton(false);
-
-      this.navService.setNextPageButton(true);
+      // this.navService.setPrintButton(true);   // 2018-11-11: Comment out
+      // this.navService.setDeleteButton(true);
+      // this.navService.setEditButton(true);
+      // this.navService.setSearchBar(false);
+      // this.navService.setCancelButton(false);
+      // this.navService.setSaveButton(false);
+      //
+      // this.navService.setNextPageButton(true);
 
       console.log(this.param);
 
@@ -183,6 +187,25 @@ export class ManageComponent implements OnInit {
       if (p['code3']) {
         this.CompareID = p['code3'];
       }
+    // 2018-11-11: Wish | ILG60-06-02-E01
+      if (this.CompareID !== undefined && this.CompareID !== '0')
+      {
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+      }else
+      {
+        this.navService.setPrintButton(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setEditButton(false);
+        this.navService.setCancelButton(true);
+        this.navService.setSaveButton(true);
+      }
+
+      this.navService.setSearchBar(false);
+      this.navService.setNextPageButton(true);
     });
   }
 
@@ -377,6 +400,100 @@ export class ManageComponent implements OnInit {
 
       // res[0].ArrestLawbreaker.map(async item => {
         
+      //   this.AccusedTable = item.AccusedName;
+      //   if (isArray(this.AccusedTable)) {
+      //     this.AccusedTable = [this.AccusedTable];
+      //   }
+      // });
+
+      this.oArrest = res[0];
+
+      this.oArrest.ArrestLawbreaker.map(async item => {
+        if (item.EntityType == 0) {
+          item.LawbreakerFullName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
+          item.LawbreakerFullName += ` ${item.CompanyName == null ? '' : item.CompanyName}`;
+        }
+        else {
+          item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
+          item.LawbreakerFullName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
+          item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
+        }
+      });
+      console.log("ArrestLawbreaker");
+      console.log(this.oArrest);
+      await this.getGuiltBaseByID();
+
+      this.preloader.setShowPreloader(false);
+    }, (err: HttpErrorResponse) => {
+      alert(err.message);
+    });
+
+
+  }
+
+  // 2018-11-11: Wish | ILG60-06-02-E01 > 1.1.2.2
+  async getCompareArrestByLawsuitNo(LawsuitNo: string) {
+    // this.preloader.setShowPreloader(true);
+
+    await this.ArrestSV.getByCompareArrestCon(LawsuitNo).then(async res => {
+      console.log(res);
+
+      res[0].ArrestStaff.map(async item => {
+
+        if (item.ContributorCode === "6") {
+          item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
+          item.FullName += `${item.FirstName == null ? '' : item.FirstName}`;
+          item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
+        }
+
+      });
+
+      res[0].ArrestLawbreaker.forEach(item => {
+
+        if (item.EntityType === "0") {
+          item.AccusedName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
+          item.AccusedName += `${item.CompanyName == null ? '' : item.CompanyName}`;
+          // item.AccusedName += ` ${item.LastName == null ? '' : item.LastName}`;
+        } else {
+          let tpmname = {
+            AccusedName : item.AccusedName = item.LawbreakerTitleName + " "
+              + item.LawbreakerFirstName + " "
+              + item.LawbreakerMiddleName + " "
+              + item.LawbreakerLastName
+
+          }
+          if (this.AccusedTable === undefined) {
+            this.AccusedTable = new Array();
+          }
+          this.AccusedTable.push(tpmname);
+          // item.AccusedName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
+          // item.AccusedName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
+          // item.AccusedName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
+          // item.AccusedName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
+        }
+
+      });
+
+
+
+      this.ArrestLocation = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
+      this.ArrestLocation += ` ${res[0].ArrestLocale[0].District == null ? '' : res[0].ArrestLocale[0].District}`;
+      this.ArrestLocation += ` ${res[0].ArrestLocale[0].Province == null ? '' : res[0].ArrestLocale[0].Province}`;
+      this.AccuserSubdistrictCode = `${res[0].ArrestLocale[0].SubDistrictCode == null ? '' : res[0].ArrestLocale[0].SubDistrictCode}`;
+      this.AccuserSubdistrict = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
+
+      // res.ArrestStaff.filter(item => item.ContributorID === "11").map(async item => {
+      res[0].ArrestStaff.map(async item => {
+        if (item.ContributorCode === "6") {
+          this.ArrestStaffName = item.FullName;   // ผู้กล่าวหา
+          this.PositionName = item.PositionName;  // ตำแหน่งผู้กล่าวหา
+          this.DepartmentName = item.DepartmentName;  // แผนกผู้กล่าวหา
+        }
+
+      });
+
+      // res[0].ArrestLawbreaker.map(async item => {
+
       //   this.AccusedTable = item.AccusedName;
       //   if (isArray(this.AccusedTable)) {
       //     this.AccusedTable = [this.AccusedTable];
@@ -637,7 +754,15 @@ export class ManageComponent implements OnInit {
 
 
   async onInsCompare() {
-
+  //2018-11-11: Wish
+    let isSuccess: boolean = true;
+    //  ILG60-06-02-E02 | 1.2 >> 1.2.1
+    await this.fineService.insAll(this.oCompare).then(IsSuccess => {
+      if (!IsSuccess) {
+        isSuccess = IsSuccess;
+        return false;
+      }
+    }, (error) => { isSuccess = false; console.error(error); return false; });
   }
 
   async onUpdCompare() {
@@ -686,6 +811,20 @@ export class ManageComponent implements OnInit {
   getStation() {
     // this.preloader.setShowPreloader(true);
     this.MasterSV.getStation().then(async res => {
+      if (res) {
+        this.rawOptions = res;
+      }
+
+    }, (err: HttpErrorResponse) => {
+      alert(err.message);
+    });
+    // this.preloader.setShowPreloader(false);
+  }
+
+  //2018-11-11: Wish | ILG60-06-02-E01 > 1.1.2 > 1.1.2
+  getDepartmentStation() {
+    // this.preloader.setShowPreloader(true);
+    this.MasterSV.getDepartmentStation().then(async res => {
       if (res) {
         this.rawOptions = res;
       }
@@ -771,7 +910,18 @@ export class ManageComponent implements OnInit {
     });
     // this.preloader.setShowPreloader(false);
   }
-
+  //2018-11-1: Wish | ILG60-06-02-E01 > 1.1.2 > 1.2.2
+  async getCompareMainStaff() {
+    // this.preloader.setShowPreloader(true);
+    await this.MasterSV.getMainStaff().then(async res => {
+      if (res) {
+        this.rawStaffOptions = res;
+      }
+    }, (err: HttpErrorResponse) => {
+      alert(err.message);
+    });
+    // this.preloader.setShowPreloader(false);
+  }
 
   StaffonAutoChange(value: string) {
     // 

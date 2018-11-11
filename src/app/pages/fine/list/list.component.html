@@ -114,8 +114,8 @@
             <td style="text-align: center">{{i + 1}}</td>
             <td>{{item.ArrestCode}}</td>
             <td style="text-align: center">
-              <div *ngIf="item.IsOutside == 1">น {{item.Lawsuilt}}</div>
-              <div *ngIf="item.IsOutside != 1">{{item.Lawsuilt}}</div>
+              <div *ngIf="item.IsOutside == 1">น {{item.LawsuitNo}}</div>
+              <div *ngIf="item.IsOutside != 1">{{item.LawsuitNo}}</div>
             </td>
             <td>{{item.ProveReportNo}}</td>
             <td style="text-align: center">
@@ -123,14 +123,16 @@
               <div *ngIf="item.IsOutside != 1">{{item.CompareCode}}</div>
             </td>
             <td>
-                <div *ngFor="let staff of item.CompareStaff | ContributorPipe:18;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
+                <!--<div *ngFor="let staff of item.CompareStaff | ContributorPipe:18;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>-->
+              {{item.TitleName}}{{item.FirstName}} {{item.LastName}}
             </td>
             <td style="text-align: center">{{item.CompareDate | date:'dd-MM-yyyy'}}</td>
             <td>
-                <div *ngFor="let staff of item.CompareStaff | ContributorPipe:18;">{{staff.DepartmentName}}</div>
+                <!--<div *ngFor="let staff of item.CompareStaff | ContributorPipe:18;">{{staff.DepartmentName}}</div>-->
+              {{item.DepartmentName}}
             </td>
             <td class="text-center">
-              <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitID,item.ArrestCode,item.CompareID)">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitNo,item.ArrestCode,item.CompareID)">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
             </td>

@@ -39,5 +39,29 @@ export class MasterService {
       //await alert(error);
     }
   }
-  
+  // 2018-11-11: Wish | ILG60-06-02-E01 > 1.1.2 > 1.1.2
+
+  async getDepartmentStation(): Promise<any> {
+    const params = {};
+    const url = `${appConfig.api8881}/MasDepartmentMaingetAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      //await alert(error);
+    }
+  }
+  // 2018-11-11: Wish | | ILG60-06-02-E01 > 1.1.2 > 1.2.2
+  async getMainStaff(): Promise<any> {
+    const params = {};
+    const url = `${appConfig.api8881}/MasStaffMaingetAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      //await alert(error);
+    }
+  }
 }
