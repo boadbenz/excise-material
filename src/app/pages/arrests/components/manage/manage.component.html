@@ -50,7 +50,11 @@
 
                     <input type="text" class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}"
                         required [ngbTypeahead]="serachOffice" [resultTemplate]="rt" [readOnly]="showEditField"
-                        [inputFormatter]="formatterOffice" (selectItem)="selectItemOffice($event)" [value]="arrestFG.get('ArrestStation').value" />
+                        [inputFormatter]="formatterOffice" (selectItem)="selectItemOffice($event)" 
+                        [value]="arrestFG.get('ArrestStation').value" 
+                        (change)="onChangeArrestStation($event)"/>
+
+                    <input type="text" style="display: none;" formControlName="ArrestStation">
                 </div>
             </div>
             <div class="row">

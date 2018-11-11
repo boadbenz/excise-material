@@ -103,7 +103,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.31');
+    this.sidebarService.setVersion('0.0.0.32');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -267,36 +267,38 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   private async getArrestIndictmentProduct(indictmentId: string, arrestCode: string) {
 
+    let _product = new Array<fromModels.ArrestProduct>();
+
+    if (this.ArrestStore) {
+      _product = this.filterProductIsModify(this.ArrestStore.ArrestProduct);
+    };
+
     await this.s_productService.ArrestProductgetByArrestCode(arrestCode)
       .then(async (y: fromModels.ArrestProduct[]) => {
 
         if (!this.checkResponse(y)) return;
 
+        let p = y.map((y1, index) => {
+          y1.IsChecked = false;
+          y1.RowId = index + 1;
+          y1.IsModify = 'r';
+          return y1;
+        });
+
+        _product = [..._product, ...p];
+
         await this.s_indictment.ArrestIndictmentProductgetByIndictmentID(indictmentId)
           .then(async (x: fromModels.ArrestIndictmentProduct[]) => {
-            let _product = new Array<fromModels.ArrestProduct>();
 
-            _product = y.map((y1, index) => {
-              y1.IsChecked = false;
-              y1.RowId = index + 1;
-              y1.IsModify = 'r';
-              return y1;
-            });
+            if (!this.checkResponse(x)) return;
 
-            if (this.checkResponse(x)) {
-              x.filter(x1 => _product.find(p => parseInt(p.ProductID) == x1.ProductID).IsChecked = true);
-            }
-
-            if (this.ArrestStore) {
-              let product = this.filterProductIsModify(this.ArrestStore.ArrestProduct);
-              _product = [..._product, ...product];
-            };
-
-            this.setItemFormArray(_product, 'ArrestProduct');
+            x.filter(x1 => _product.find(p => parseInt(p.ProductID) == x1.ProductID).IsChecked = true);
 
           }).catch((error) => this.catchError(error));
 
       }).catch((error) => this.catchError(error));
+
+    this.setItemFormArray(_product, 'ArrestProduct');
 
   }
 
@@ -324,7 +326,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
           });
         }
 
-        if (this.ArrestStore.ArrestProduct) {
+        if (this.ArrestStore) {
           let product = this.filterProductIsModify(this.ArrestStore.ArrestProduct)
           _product = [..._product, ...product];
         }
@@ -341,7 +343,10 @@ export class AllegationComponent implements OnInit, OnDestroy {
     _indict.patchValue({
       IndictmentID: o[0].IndictmentID,
       GuiltBaseID: o[0].GuiltBaseID,
-      ArrestLawGuitbase: this.setArrestLawGuitbase(o[0].ArrestLawGuitbase)
+      ArrestLawGuitbase: this.setArrestLawGuitbase(o[0].ArrestLawGuitbase),
+      IsProve: o[0].IsProve,
+      IsActive: o[0].IsActive,
+      IsLawsuitComplete: o[0].IsLawsuitComplete,
     })
   }
   // --- 1
@@ -529,7 +534,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     let product = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
 
     if (this.arrestIndictmentFG.invalid) {
-    debugger
+      debugger
       alert(Message.checkData);
       return;
     }
