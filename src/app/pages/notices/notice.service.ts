@@ -44,12 +44,12 @@ export class NoticeService {
         const params = { 'Textsearch': '' };
         const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-
+        console.log(res)
         if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
 
-        return res.Notice;
+        return res[0];
     }
 
     async getByKeyword(Textsearch: any): Promise<Notice[]> {
@@ -57,12 +57,12 @@ export class NoticeService {
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-
+        console.log(res)
         if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
 
-        return res.Notice;
+        // return res.Notice;
     }
 
     getByConAdv(form: any): Promise<Notice[]> {
