@@ -33,7 +33,9 @@ export class ILG6008020000E11Component extends CONFIG implements OnInit {
         if (response.length > 0) {
           this.HaveNoticeCase(response);
         } else {
+
         }
+        this.RequestBribeRewardID  = response[0].RequestBribeRewardID;
         // this.columns$.next(this.columnsDefault);
       });
   }

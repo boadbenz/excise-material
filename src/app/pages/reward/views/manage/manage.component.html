@@ -4,7 +4,7 @@
     <h4 class="card-title m-b-0">รายละเอียดคดี</h4>
   </div>
   <div class="card-body">
-    <ILG60-08-02-00-00-E08 [IndictmentID]="IndictmentID"></ILG60-08-02-00-00-E08>
+    <ILG60-08-02-00-00-E08 [RequestArrestLawsuitgetByIndictmentID]="RequestArrestLawsuitgetByIndictmentID$ | async"></ILG60-08-02-00-00-E08>
   </div>
 </div>
 
@@ -14,7 +14,7 @@
     <h4 class="card-title m-b-0">คำสั่งกรมฯ กรณีที่มีผู้แจ้งความนำจับหลายคน</h4>
   </div>
   <div class="card-body">
-    <ILG60-08-02-00-00-E09 [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode"></ILG60-08-02-00-00-E09>
+    <ILG60-08-02-00-00-E09 [RequestNoticegetByArrestCode]="RequestNoticegetByArrestCode$ | async"></ILG60-08-02-00-00-E09>
   </div>
 </div>
 

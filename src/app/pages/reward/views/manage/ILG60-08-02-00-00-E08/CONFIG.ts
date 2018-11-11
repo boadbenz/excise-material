@@ -8,8 +8,14 @@ export class CONFIG extends ManageConfig {
   @Input()
   public IndictmentID: number;
 
-  public defaultData: IRequestArrestLawsuit;
-
+  @Input()
+  set RequestArrestLawsuitgetByIndictmentID(val) {
+    this.RequestArrestLawsuitgetByIndictmentID$.next(val);
+  }
+  get RequestArrestLawsuitgetByIndictmentID() {
+    return this.RequestArrestLawsuitgetByIndictmentID$.asObservable();
+  }
+  public RequestArrestLawsuitgetByIndictmentID$ = new BehaviorSubject<any>(null);
   public columnsDefault: ColumnsInterface[] = [
     {
       field: 'TitleName',

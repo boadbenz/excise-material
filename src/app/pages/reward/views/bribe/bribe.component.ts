@@ -13,6 +13,12 @@ import {
   ITransactionRunning,
   ITransactionRunninginsAll
 } from '../../interfaces/TransactionRunning';
+import { RequestBribeRewardService } from '../../services/RequestBribeReward.service';
+import { RequestBribeService } from '../../services/RequestBribe.service';
+import {
+  IRequestBribeinsAll,
+  IRequestBribe
+} from '../../interfaces/RequestBribe.interface';
 
 @Component({
   selector: 'app-bribe',
@@ -30,19 +36,29 @@ export class BribeComponent extends BribeConfig implements OnInit {
     private bribeService: BribeService,
     private navService: NavigationService,
     private rewardService: RewardService,
-    private transactionRunningService: TransactionRunningService
+    private transactionRunningService: TransactionRunningService,
+    private requestBribeService: RequestBribeService
   ) {
     super();
   }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(param => {
-      if (param['mode'] === 'C') {
-        this.MasStaffMaingetAll();
-        this.MasOfficeMaingetAll();
+      switch (param['mode']) {
+        case 'C':
+          this.MasStaffMaingetAll();
+          this.MasOfficeMaingetAll();
+          break;
+        case 'R':
+
+          break;
       }
       this.bribeService.mode$.next(param['mode']);
       this.bribeService.ArrestCode$.next(param['ArrestCode']);
+
+      this.bribeService.RequestCommand$.next([{
+        ddf: 'ssss'
+      }]);
     });
     this.bribeService.ArrestCode$.subscribe(ArrestCode => {
       this.RequestCommandgetByArrestCode({ ArrestCode: ArrestCode });
@@ -84,25 +100,29 @@ export class BribeComponent extends BribeConfig implements OnInit {
   private modeCase(mode) {
     switch (mode) {
       case 'C':
-        this.transactionRunningService
-          .TransactionRunninggetByCon({
-            RunningTable: 'ops_requestbribe',
-            RunningOfficeCode: this.OfficeCode
-          })
-          .subscribe((res: ITransactionRunning[]) => {
-            if (res.length > 0) {
-              res.forEach(e => {
-                this.TransactionRunningupdByCon(e.RunningID);
-              });
-            } else {
-              this.TransactionRunninginsAll({
-                RunningTable: 'ops_requestbribe',
-                RunningPrefix: 'BR'
-              });
-            }
-          });
+        this.TransactionRunninggetByCon();
+
         break;
     }
+  }
+  private TransactionRunninggetByCon() {
+    this.transactionRunningService
+      .TransactionRunninggetByCon({
+        RunningTable: 'ops_requestbribe',
+        RunningOfficeCode: this.OfficeCode
+      })
+      .subscribe((res: ITransactionRunning[]) => {
+        if (res.length > 0) {
+          res.forEach(e => {
+            this.TransactionRunningupdByCon(e.RunningID);
+          });
+        } else {
+          this.TransactionRunninginsAll({
+            RunningTable: 'ops_requestbribe',
+            RunningPrefix: 'BR'
+          });
+        }
+      });
   }
   private TransactionRunningupdByCon(RunningID: number) {
     this.transactionRunningService
@@ -126,5 +146,10 @@ export class BribeComponent extends BribeConfig implements OnInit {
           .toString()
           .substring(2, 4)}00001`;
       });
+  }
+  private RequestBribeinsAll(param: IRequestBribeinsAll) {
+    this.requestBribeService
+      .RequestBribeinsAll(param)
+      .subscribe((res: IRequestBribe[]) => {});
   }
 }

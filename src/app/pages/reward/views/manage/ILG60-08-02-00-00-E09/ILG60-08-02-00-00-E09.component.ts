@@ -11,7 +11,9 @@ import { RequestCommandService } from 'app/pages/reward/services/RequestCommand.
 import { RequestNoticeService } from 'app/pages/reward/services/RequestNotice.service';
 import { RequestBribeService } from 'app/pages/reward/services/RequestBribe.service';
 import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interface';
-import { IRequestCommand } from 'app/pages/reward/interfaces/RequestCommand';
+import { IRequestCommand, IRequestCommandinsAll } from 'app/pages/reward/interfaces/RequestCommand';
+import { IRequestCommandDetail } from 'app/pages/reward/interfaces/RequestCommandDetail';
+import { IRequestNotice } from 'app/pages/reward/interfaces/RequestNotice';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -20,6 +22,7 @@ import { IRequestCommand } from 'app/pages/reward/interfaces/RequestCommand';
   styleUrls: ['./ILG60-08-02-00-00-E09.component.scss']
 })
 export class ILG6008020000E09Component extends CONFIG implements OnInit {
+  public submitData: IRequestCommandDetail[];
   constructor(
     private requestBribeRewardService: RequestBribeRewardService,
     private requestBribeService: RequestBribeService,
@@ -28,25 +31,20 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
     private requestNoticeService: RequestNoticeService
   ) {
     super();
+    this.RequestNoticegetByArrestCode$.subscribe(
+      (response: IRequestNotice[]) => {
+        
+        // this.columns$.next(this.columnsDefault);
+      }
+    );
   }
 
   ngOnInit() {
-    this.fetchData({ IndictmentID: this.IndictmentID });
+    this.fetchData();
     this.FormInput$.next(this.FormInputDefault);
   }
-  private fetchData(param: IRequestBribeRewardgetByIndictmentID) {
-    this.requestBribeRewardService
-      .RequestBribeRewardgetByIndictmentID(param)
-      .subscribe((response: IRequestBribeReward[]) => {
-        console.log('response', response);
-        if (response.length > 0) {
-          this.HaveNoticeCase(response);
-        } else {
-          // tslint:disable-next-line:max-line-length
-        }
-        // this.columns$.next(this.columnsDefault);
-      });
-  }
+  private fetchData() {}
+  
   private HaveNoticeCase(Data: IRequestBribeReward[]) {
     console.log('Data', Data);
 
@@ -60,24 +58,23 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
               ArrestCode: this.ArrestCode
             })
             .subscribe(
-              (
-                ResponseRequestCommandgetByArrestCode: IRequestCommand[]
-              ) => {
-                console.log('ResponseRequestCommandgetByArrestCode', ResponseRequestCommandgetByArrestCode);
-                
-                let newData: any[];
-                ResponseRequestCommandgetByArrestCode.forEach(
-                  element => {
-                    newData = element.RequestCommandDetail.map(m => ({
-                      ...element,
-                      ...m,
-                      CommandName: `${m.TitleName || ''}${m.FirstName ||
-                        ''} ${m.LastName || ''}`,
-                      StaffName: `${m.StaffTitleName || ''}${m.StaffFirstName ||
-                        ''} ${m.StaffLastName || ''}`
-                    }));
-                  }
+              (ResponseRequestCommandgetByArrestCode: IRequestCommand[]) => {
+                console.log(
+                  'ResponseRequestCommandgetByArrestCode',
+                  ResponseRequestCommandgetByArrestCode
                 );
+
+                let newData: any[];
+                ResponseRequestCommandgetByArrestCode.forEach(element => {
+                  newData = element.RequestCommandDetail.map(m => ({
+                    ...element,
+                    ...m,
+                    CommandName: `${m.TitleName || ''}${m.FirstName ||
+                      ''} ${m.LastName || ''}`,
+                    StaffName: `${m.StaffTitleName || ''}${m.StaffFirstName ||
+                      ''} ${m.StaffLastName || ''}`
+                  }));
+                });
 
                 this.gridData$.next(newData);
               }

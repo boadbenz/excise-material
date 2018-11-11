@@ -17,15 +17,8 @@ export class ILG6008020000E08Component extends CONFIG implements OnInit {
     private requestArrestLawsuitService: RequestArrestLawsuitService
   ) {
     super();
-  }
-
-  ngOnInit() {
-    this.fetchData({ IndictmentID: Number(this.IndictmentID) });
-  }
-  fetchData(param: IRequestArrestLawsuitGetByIndictmentId) {
-    this.requestArrestLawsuitService
-      .RequestArrestLawsuitgetByIndictmentID(param)
-      .subscribe(res => {
+    this.RequestArrestLawsuitgetByIndictmentID$.subscribe(res => {
+      if (res != null) {
         console.log('requestArrestLawsuitService', res);
 
         const response: IRequestArrestLawsuit = res[0];
@@ -50,6 +43,12 @@ export class ILG6008020000E08Component extends CONFIG implements OnInit {
         });
 
         this.columns$.next(this.columnsDefault);
-      });
+      }
+    });
   }
+
+  ngOnInit() {
+    this.fetchData();
+  }
+  fetchData() {}
 }

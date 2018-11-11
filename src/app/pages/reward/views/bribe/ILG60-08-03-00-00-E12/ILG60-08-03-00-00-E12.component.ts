@@ -13,4 +13,7 @@ export class ILG6008030000E12Component extends CONFIG implements OnInit {
   }
 
   ngOnInit() {}
+  public formSubmit(formData) {
+
+  }
 }

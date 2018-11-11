@@ -14,6 +14,14 @@ export class CONFIG extends ManageConfig {
   public TableDataOptions: ITableDataOptions = {
     isSumFooter: true
   };
+  @Input()
+  set RequestNoticegetByArrestCode(val) {
+    this.RequestNoticegetByArrestCode$.next(val);
+  }
+  get RequestNoticegetByArrestCode() {
+    return this.RequestNoticegetByArrestCode$.asObservable();
+  }
+  public RequestNoticegetByArrestCode$ = new BehaviorSubject<any>(null);
 
   public gridData$ = new BehaviorSubject<any>(null);
 

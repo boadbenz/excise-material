@@ -1,17 +1,19 @@
 import { IRequestCommandDetail } from './RequestCommandDetail';
 
 export interface IRequestCommand {
-  CommandID: number;
-  CommandDate: Date;
-  CommandTime: string;
-  CommandNo: string;
-  IsActive: number;
-  TotalPart: number;
-  ArrestCode: string;
+  CommandID?: number;
+  CommandDate?: Date;
+  CommandTime?: string;
+  CommandNo?: string;
+  IsActive?: number;
+  TotalPart?: number;
+  ArrestCode?: string;
 
-  RequestCommandDetail: Array<IRequestCommandDetail>;
+  RequestCommandDetail?: Array<IRequestCommandDetail>;
 }
 
 export interface IRequestCommandgetByArrestCode {
   ArrestCode: string;
 }
+// tslint:disable-next-line:no-empty-interface
+export interface IRequestCommandinsAll extends IRequestCommand {}
