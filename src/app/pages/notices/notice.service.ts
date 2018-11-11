@@ -43,11 +43,11 @@ export class NoticeService {
     }
 
     async getByKeywordOnInt(): Promise<Notice[]> {
-        alert();
+        
         const params = { 'Textsearch': '' };
         const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        
+        // alert(JSON.stringify(res));
         // if (res.IsSuccess == 'False' || !res.Notice.length) {
         //     return new Array<Notice>();
         // }

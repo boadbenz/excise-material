@@ -114,31 +114,35 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     // this.ArrestStore.ArrestIndictment = [this.ArrestIndictment];
     // this.store.dispatch(new fromStore.UpdateArrest(this.ArrestStore));
     
-    this.dismiss('Cross click')
-    this.router.navigate(
-      [`/arrest/lawbreaker`, 'C', 'NEW'],
-      {
-        queryParams: {
-          allegationMode: this.mode,
-          arrestCode: this.arrestCode,
-          indictmentId: this.indictmentId,
-          guiltbaseId: this.guiltbaseId
-        }
-      })
+    // this.dismiss('Cross click')
+    // this.router.navigate(
+    //   [`/arrest/lawbreaker`, 'C', 'NEW'],
+    //   {
+    //     queryParams: {
+    //       allegationMode: this.mode,
+    //       arrestCode: this.arrestCode,
+    //       indictmentId: this.indictmentId,
+    //       guiltbaseId: this.guiltbaseId
+    //     }
+    //   })
+
+     window.open(`${location.origin}/#/arrest/lawbreaker/C/NEW`);
+     
   }
 
   view(id: number) {
-    this.dismiss('Cross click')
-    this.router.navigate(
-      [`/arrest/lawbreaker`, 'R', id],
-      {
-        queryParams: {
-          allegationMode: this.mode,
-          arrestCode: this.arrestCode,
-          indictmentId: this.indictmentId,
-          guiltbaseId: this.guiltbaseId
-        }
-      })
+    // this.dismiss('Cross click')
+    window.open(`${location.origin}/#/arrest/lawbreaker/R/${id}`);
+    // this.router.navigate(
+    //   [`/arrest/lawbreaker`, 'R', id],
+    //   {
+    //     queryParams: {
+    //       allegationMode: this.mode,
+    //       arrestCode: this.arrestCode,
+    //       indictmentId: this.indictmentId,
+    //       guiltbaseId: this.guiltbaseId
+    //     }
+    //   })
   }
 
   onSearchAdv(f: any) {
