@@ -74,7 +74,7 @@ export class NoticeService {
     }
 
     getByConAdv(form: any): Promise<Notice[]> {
-        alert(JSON.stringify(form));
+        // alert(JSON.stringify(form));
         // const url = `${appConfig.api8082}/NoticegetByConAdv`;
         const url = `${appConfig.api8082}/NoticeListgetByConAdv`;
         return this.resposePromisGet(JSON.stringify(form), url)
