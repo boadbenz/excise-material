@@ -30,8 +30,8 @@
         <tbody>
           <tr >
             <td class="text-center">
-              <input type="checkbox" [id]="0" name="ischeck" ngModel class="filled-in chk-col-indigo">
-              <label class="m-0"></label>
+              <input type="checkbox" [id]="'td'" name="ischeck" ngModel class="filled-in chk-col-indigo">
+              <label [for]="'td'" class="m-0"></label>
             </td>
             <td class="text-center">1</td>
             <td>บันทึกคำให้กำรของผู้กล่ำวโทษ ส.ส.1/55
@@ -42,8 +42,8 @@
           </tr>
           <tr>
             <td class="text-center">
-              <input type="checkbox" [id]="1" name="ischeck" ngModel class="filled-in chk-col-indigo">
-              <label class="m-0"></label>
+              <input type="checkbox" [id]="'td'+1" name="ischeck" ngModel class="filled-in chk-col-indigo">
+              <label [for]="'td'+1" class="m-0"></label>
             </td>
             <td class="text-center">2</td>
             <td>บันทึกคำให้กำรของผู้กล่ำวโทษ ส.ส.2/54

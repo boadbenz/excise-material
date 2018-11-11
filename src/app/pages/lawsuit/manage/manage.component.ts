@@ -27,9 +27,6 @@ import { async } from "q";
 import { JudgmentModel } from "../models/judgment";
 import { IMyDpOptions } from "mydatepicker";
 
-import { PrintLawsuitModalComponent } from '../print-doc-modal/print-doc-modal.component';
-
-
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html"
@@ -1047,7 +1044,6 @@ export class ManageComponent implements OnInit {
     });
   }
 
-
 }
 
 @Component({
@@ -1137,10 +1133,3 @@ export class DialogJudgment {
   }
 
 }
-
-
-
-
-}
-
-
