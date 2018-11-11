@@ -1,40 +1,55 @@
-<div class="card ">
-  <div class="card-header  unset-radius">
-    <app-card-actions-collapse></app-card-actions-collapse>
-    <h4 class="card-title m-b-0">รายละเอียดคดี</h4>
-  </div>
-  <div class="card-body">
-    <ILG60-08-02-00-00-E08 [RequestArrestLawsuitgetByIndictmentID]="RequestArrestLawsuitgetByIndictmentID$ | async"></ILG60-08-02-00-00-E08>
-  </div>
-</div>
+<mat-accordion [multi]="true">
+  <mat-expansion-panel [expanded]="ILG60_08_02_00_00E08$ | async" (opened)="ILG60_08_02_00_00E08$.next(true)" (closed)="ILG60_08_02_00_00E08$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">รายละเอียดคดี</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-02-00-00-E08 [RequestArrestLawsuitgetByIndictmentID]="RequestArrestLawsuitgetByIndictmentID$ | async"></ILG60-08-02-00-00-E08>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
 
-<div class="card ">
-  <div class="card-header  unset-radius">
-    <app-card-actions-collapse></app-card-actions-collapse>
-    <h4 class="card-title m-b-0">คำสั่งกรมฯ กรณีที่มีผู้แจ้งความนำจับหลายคน</h4>
-  </div>
-  <div class="card-body">
-    <ILG60-08-02-00-00-E09 [RequestNoticegetByArrestCode]="RequestNoticegetByArrestCode$ | async"></ILG60-08-02-00-00-E09>
-  </div>
-</div>
+  <mat-expansion-panel [expanded]="ILG60_08_02_00_00E09$ | async" (opened)="ILG60_08_02_00_00E09$.next(true)" (closed)="ILG60_08_02_00_00E09$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">คำสั่งกรมฯ กรณีที่มีผู้แจ้งความนำจับหลายคน</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-02-00-00-E09 [gridData]="ILG60_08_02_00_00E09_DATA$ | async"></ILG60-08-02-00-00-E09>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
 
-<div class="card ">
-  <div class="card-header unset-radius">
-    <app-card-actions-collapse></app-card-actions-collapse>
-    <h4 class="card-title m-b-0">คำร้องขอรับเงินสินบน</h4>
-  </div>
-  <div class="card-body">
-    <ILG60-08-02-00-00-E11 [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode"></ILG60-08-02-00-00-E11>
-  </div>
-</div>
+  <mat-expansion-panel [expanded]="ILG60_08_02_00_00E11$ | async" (opened)="ILG60_08_02_00_00E11$.next(true)" (closed)="ILG60_08_02_00_00E11$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">คำร้องขอรับเงินสินบน</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-02-00-00-E11 [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode" [mode]="mode$  | async"
+        [gridData]="ILG60_08_02_00_00E11_DATA$ | async"></ILG60-08-02-00-00-E11>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
 
-<div class="card ">
-  <div class="card-header  unset-radius">
-    <app-card-actions-collapse></app-card-actions-collapse>
-    <h4 class="card-title m-b-0">คำร้องขอรับเงินรางวัล</h4>
-  </div>
-
-  <div class="card-body">
-    <ILG60-08-02-00-00-E14 [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode"></ILG60-08-02-00-00-E14>
-  </div>
-</div>
+  <mat-expansion-panel [expanded]="ILG60_08_02_00_00E14$ | async" (opened)="ILG60_08_02_00_00E14$.next(true)" (closed)="ILG60_08_02_00_00E14$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">คำร้องขอรับเงินรางวัล</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-02-00-00-E14 [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode" [mode]="mode$  | async"
+        [gridData]="ILG60_08_02_00_00E14_DATA$ | async"></ILG60-08-02-00-00-E14>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>

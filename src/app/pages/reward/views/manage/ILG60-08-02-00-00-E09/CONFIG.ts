@@ -15,16 +15,13 @@ export class CONFIG extends ManageConfig {
     isSumFooter: true
   };
   @Input()
-  set RequestNoticegetByArrestCode(val) {
-    this.RequestNoticegetByArrestCode$.next(val);
+  set gridData(val) {
+    this.gridData$.next(val);
   }
-  get RequestNoticegetByArrestCode() {
-    return this.RequestNoticegetByArrestCode$.asObservable();
+  get gridData() {
+    return this.gridData$.asObservable();
   }
-  public RequestNoticegetByArrestCode$ = new BehaviorSubject<any>(null);
-
   public gridData$ = new BehaviorSubject<any>(null);
-
   public FormInput$ = new BehaviorSubject<any>(null);
 
   public FormInputDefault: ColumnsInterface[] = [
@@ -68,6 +65,7 @@ export class CONFIG extends ManageConfig {
       title: 'จำนวนส่วน',
       field: 'PartMoney',
       inputType: 'number',
+      width: '50',
       showInput: true
     }
   ];

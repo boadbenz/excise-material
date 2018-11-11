@@ -7,6 +7,7 @@ import {
 import { RequestBribeRewardService } from 'app/pages/reward/services/RequestBribeReward.service';
 import { RequestBribeService } from 'app/pages/reward/services/RequestBribe.service';
 import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interface';
+import { IRequestRewardgetByRequestBribeRewardID } from 'app/pages/reward/interfaces/RequestReward';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -23,9 +24,16 @@ export class ILG6008020000E11Component extends CONFIG implements OnInit {
   }
 
   ngOnInit() {
-    this.fetchData({ IndictmentID: this.IndictmentID });
+    this.fetchData();
   }
-  private fetchData(param: IRequestBribeRewardgetByIndictmentID) {
+  private fetchData() {
+    this.RequestBribeRewardgetByIndictmentID({
+      IndictmentID: this.IndictmentID
+    });
+  }
+  private RequestBribeRewardgetByIndictmentID(
+    param: IRequestBribeRewardgetByIndictmentID
+  ) {
     this.requestBribeRewardService
       .RequestBribeRewardgetByIndictmentID(param)
       .subscribe((response: IRequestBribeReward[]) => {
@@ -33,9 +41,7 @@ export class ILG6008020000E11Component extends CONFIG implements OnInit {
         if (response.length > 0) {
           this.HaveNoticeCase(response);
         } else {
-
         }
-        this.RequestBribeRewardID  = response[0].RequestBribeRewardID;
         // this.columns$.next(this.columnsDefault);
       });
   }
@@ -70,7 +76,8 @@ export class ILG6008020000E11Component extends CONFIG implements OnInit {
                         ''} ${m.LawbreakerMiddleName ||
                         ''} ${m.LawbreakerLastName ||
                         ''} ${m.LawbreakerOtherName || ''}`,
-                        FineTypeName: m.FineType === 1 ? 'ส่งฟ้องศาล' : 'เปรียบเทียบคดี'
+                      FineTypeName:
+                        m.FineType === 1 ? 'ส่งฟ้องศาล' : 'เปรียบเทียบคดี'
                     }));
                   }
                 );
@@ -83,4 +90,7 @@ export class ILG6008020000E11Component extends CONFIG implements OnInit {
       }
     });
   }
+  private RequestRewardgetByRequestBribeRewardID(
+    param: IRequestRewardgetByRequestBribeRewardID
+  ) {}
 }

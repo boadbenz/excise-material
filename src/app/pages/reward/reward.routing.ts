@@ -55,7 +55,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'reward/:mode/:caseSelect',
+        path: 'reward/:mode/:RequestBribeRewardID/:IndictmentID',
         loadChildren: './views/reward/reward.module#RewardModule',
         data: {
           urls: [

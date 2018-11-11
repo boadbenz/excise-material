@@ -11,6 +11,21 @@ export class CONFIG extends ManageConfig {
   @Input()
   public ArrestCode: string;
 
+  @Input()
+  public mode: string;
+
+  @Input()
+  public RequestBribeRewardID: number;
+
+  @Input()
+  set gridData(val) {
+    this.gridData$.next(val);
+  }
+  get gridData() {
+    return this.gridData$.asObservable();
+  }
+  public gridData$ = new BehaviorSubject<any>(null);
+
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
     actionUrl: '/reward/reward',

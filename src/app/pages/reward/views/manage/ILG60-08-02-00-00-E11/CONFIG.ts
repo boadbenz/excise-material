@@ -10,16 +10,26 @@ export class CONFIG extends ManageConfig {
 
   @Input()
   public ArrestCode: string;
+
   @Input()
   public RequestBribeRewardID: number;
 
+  @Input()
+  public mode: string;
+
+  @Input()
+  set gridData(val) {
+    this.gridData$.next(val);
+  }
+  get gridData() {
+    return this.gridData$.asObservable();
+  }
+  public gridData$ = new BehaviorSubject<any>(null);
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
     actionUrl: '/reward/bribe',
     actionFieldParams: ['RequestBribeRewardID']
   };
-
-  public gridData$ = new BehaviorSubject<any>(null);
 
   public FormInputDefault: ColumnsInterface[] = [
     {

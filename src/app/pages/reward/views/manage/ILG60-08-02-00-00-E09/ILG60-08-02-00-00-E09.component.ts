@@ -11,7 +11,10 @@ import { RequestCommandService } from 'app/pages/reward/services/RequestCommand.
 import { RequestNoticeService } from 'app/pages/reward/services/RequestNotice.service';
 import { RequestBribeService } from 'app/pages/reward/services/RequestBribe.service';
 import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interface';
-import { IRequestCommand, IRequestCommandinsAll } from 'app/pages/reward/interfaces/RequestCommand';
+import {
+  IRequestCommand,
+  IRequestCommandinsAll
+} from 'app/pages/reward/interfaces/RequestCommand';
 import { IRequestCommandDetail } from 'app/pages/reward/interfaces/RequestCommandDetail';
 import { IRequestNotice } from 'app/pages/reward/interfaces/RequestNotice';
 
@@ -33,7 +36,6 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
     super();
     this.RequestNoticegetByArrestCode$.subscribe(
       (response: IRequestNotice[]) => {
-        
         // this.columns$.next(this.columnsDefault);
       }
     );
@@ -44,7 +46,7 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
     this.FormInput$.next(this.FormInputDefault);
   }
   private fetchData() {}
-  
+
   private HaveNoticeCase(Data: IRequestBribeReward[]) {
     console.log('Data', Data);
 
