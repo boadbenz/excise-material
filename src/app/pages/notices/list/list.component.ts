@@ -119,7 +119,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onSearchComplete(list: Notice[]) {
-        if (!list.length) {
+        
+        if (list === undefined) {
             alert(Message.noRecord)
             return false;
         }
