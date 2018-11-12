@@ -91,7 +91,6 @@
               </div>
             </div>
 
-
             <div class="col-md-6">
               <div class="form-group row">
                 <label class="col-form-label text-right col-md-3">ตำแหน่ง : </label>
@@ -111,7 +110,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group row">
@@ -150,7 +149,7 @@
         </div>
       </div>
 
-      <div class="table-responsive table-striped" *ngIf="LawsuitArrestIndictmentProductTableListShow">
+      <div class="table-responsive table-striped" *ngIf="LawsuitArrestIndictmentProductTableListShow ">
         <table class="table" *ngIf="!errorShow">
           <thead>
             <tr>
@@ -175,9 +174,10 @@
         </table>
       </div>
 
-    </div>
+    </div> 
   </div>
 </form>
+
 <form [formGroup]="lawsuitForm" novalidate >
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
@@ -197,7 +197,7 @@
               </div>
               <div class="col-md-10">
                 <input class="form-control" name="ReasonDontLawsuit" type="text" formControlName="ReasonDontLawsuit" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" [required]="this.lawsuitForm.controls['IsLawsuitCheck'].value">
+                  [ngClass]="{'ng-touched':isRequired}" [required]="this.lawsuitForm.controls['IsLawsuitCheck'].value" [attr.disabled]="!this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null">
               </div>
             </div>
           </div>
@@ -219,12 +219,12 @@
               <label class="col-form-label text-right col-md-3">เลขที่คดีรับคำกล่าวโทษ : </label>
               <div class="col-md-4">
                 <input class="form-control" type="text" formControlName="LawsuitNo" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" required>
+                  [ngClass]="{'ng-touched':isRequired}"  [attr.disabled]="!this.lawsuitForm.controls['IsOutsideCheck'].value ? '' : null" required>
               </div>
               <label class="col-form-label text-center col-md-2">/</label>
               <div class="col-md-3">
                 <input class="form-control" type="text" formControlName="LawsuitNoSub" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" required>
+                  [ngClass]="{'ng-touched':isRequired}"  [attr.disabled]="!this.lawsuitForm.controls['IsOutsideCheck'].value ? '' : null" required>
               </div>
             </div>
           </div>
@@ -234,13 +234,11 @@
               <div class="col-md-4">
                 <my-date-picker-th ngModel name="LawsuitDate" formControlName="LawsuitDate" placeholder="" locale="th"
                   [disabled]="showEditField" [options]="LawsuitDateOptions" required></my-date-picker-th>
-                <!-- <input class="form-control" type="date" formControlName="LawsuitDate" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" required> -->
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
               <div class="col-md-3">
                 <input class="form-control" type="text" formControlName="LawsuitTime" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" required>
+                  [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="!this.lawsuitForm.controls['IsOutsideCheck'].value ? '' : null" required>
               </div>
             </div>
           </div>
@@ -251,7 +249,7 @@
               <label class="col-form-label text-right col-md-4">ผู้รับคดี : </label>
               <div class="col-md-8">
                 <input class="form-control" formControlName="FullName" type="text" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                  (input)="onChangeFullname($event.target.value)" (blur)="onBlurFullname()" name="FullName" required>
+                  (input)="onChangeFullname($event.target.value)" (blur)="onBlurFullname()" name="FullName" [attr.disabled]="!this.lawsuitForm.controls['IsOutsideCheck'].value ? '' : null" required>
                 <div class="list-group" *ngIf="suggestions.length">
                   <a class="list-group-item list-group-item-action" (click)="onChangeFullnameReslut(s)" style="cursor: pointer;"
                     *ngFor="let s of suggestions">{{s.FullName}}</a>
@@ -284,7 +282,7 @@
               <div class="col-md-8">
                 <input class="form-control" name="LawsuitStation" type="text" formControlName="LawsuitStation"
                   [readonly]="showEditField" (blur)="onBlurOfficename()" (input)="onChangeStation($event.target.value)"
-                  [ngClass]="{'ng-touched':isRequired}" required>
+                  [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="!this.lawsuitForm.controls['IsOutsideCheck'].value ? '' : null" required>
                 <div class="list-group" *ngIf="suggestionsStation.length">
                   <a class="list-group-item list-group-item-action" (click)="onChangeStationReslut(s)" style="cursor: pointer;"
                     *ngFor="let s of suggestionsStation">{{s.OfficeName}}</a>
@@ -299,7 +297,7 @@
               <label class="col-form-label text-right col-md-2">คำให้การของผู้กล่าวโทษ : </label>
               <div class="col-md-10">
                 <textarea class="form-control" rows="5" [readonly]="showEditField" formControlName="AccuserTestimony"
-                  [ngClass]="{'ng-touched':isRequired}" required></textarea>
+                  [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="!this.lawsuitForm.controls['IsOutsideCheck'].value ? '' : null" required></textarea>
               </div>
             </div>
           </div>
@@ -338,18 +336,12 @@
                 </select>
               </td>
               <td>
-                <!-- <a href="javaScript:void(0);" class="text-danger" (click)="editTable(item, i)">
-                  <i class="fa fa-edit fa-lg"></i>
-                </a> -->
-                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField " (click)="editTable(item, i)">
+                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 0" (click)="editTable(item.value, i)" >
                   <i class="fa fa-edit fa-lg"></i>
                 </a>
-                <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="item.controls['LawsuitType'].value == 0">
+                <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.value)" *ngIf="showEditField && item.controls['LawsuitType'].value > 0">
                   <i class="mdi mdi-eye fa-lg"></i>
                 </a>
-                <!-- <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="!showEditField && item.value.LawsuitEnd == 1" >
-                  <i class="mdi mdi-eye fa-lg"></i>
-                </a> -->
               </td>
             </tr>
           </tbody>
