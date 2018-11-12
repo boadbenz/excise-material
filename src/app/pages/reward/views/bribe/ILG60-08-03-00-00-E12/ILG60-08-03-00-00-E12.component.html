@@ -1,5 +1,5 @@
 <div class="row">
   <div class="col-md-12">
-    <app-form-group [columns]="columns"></app-form-group>
+    <app-form-group [columns]="columns" (outputSubmit)="formSubmit($event)"></app-form-group>
   </div>
 </div>

@@ -32,8 +32,6 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
       RequestTime: [''],
       Informeracknowledge: ['']
     });
-    console.log('RequestCommand', this.RequestCommand);
-    
   }
   public RequestArrestLawsuitgetByIndictmentID(
     param: IRequestArrestLawsuitGetByIndictmentId

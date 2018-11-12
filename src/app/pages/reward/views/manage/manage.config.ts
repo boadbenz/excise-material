@@ -2,11 +2,15 @@ import { RewardHelper } from '../../reward.helper';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export class ManageConfig extends RewardHelper {
+  public ILG60_08_02_00_00E08_EXPANDED$ = new BehaviorSubject<any>(true);
+  public ILG60_08_02_00_00E09_EXPANDED$ = new BehaviorSubject<any>(true);
+  public ILG60_08_02_00_00E11_EXPANDED$ = new BehaviorSubject<any>(true);
+  public ILG60_08_02_00_00E14_EXPANDED$ = new BehaviorSubject<any>(true);
 
-  public ILG60_08_02_00_00E08$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E09$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E11$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E14$ = new BehaviorSubject<any>(true);
+  public ILG60_08_02_00_00E08_DISABLED$ = new BehaviorSubject<any>(false);
+  public ILG60_08_02_00_00E09_DISABLED$ = new BehaviorSubject<any>(false);
+  public ILG60_08_02_00_00E11_DISABLED$ = new BehaviorSubject<any>(false);
+  public ILG60_08_02_00_00E14_DISABLED$ = new BehaviorSubject<any>(false);
 
   public ILG60_08_02_00_00E08_DATA$ = new BehaviorSubject<any>(null);
   public ILG60_08_02_00_00E09_DATA$ = new BehaviorSubject<any>(null);
@@ -15,6 +19,9 @@ export class ManageConfig extends RewardHelper {
 
   public IndictmentID: number;
   public ArrestCode: string;
+
+  public CommandID$ = new BehaviorSubject<any>(null);
+  public PageLoadHaveNotice$ = new BehaviorSubject<number>(null);
   public RequestBribeRewardID$ = new BehaviorSubject<any>(null);
 
   public RequestArrestLawsuitgetByIndictmentID$ = new BehaviorSubject<any>(
@@ -30,10 +37,10 @@ export class ManageConfig extends RewardHelper {
   public RequestBribeRewardinsAll$ = new BehaviorSubject<any>(null);
 
   public RequestCommandgetByArrestCode$ = new BehaviorSubject<any>(null);
-  
-  public RequestBribegetByRequestBribeRewardID$ = new BehaviorSubject<any>(null);
-  
 
+  public RequestBribegetByRequestBribeRewardID$ = new BehaviorSubject<any>(
+    null
+  );
 
   public mode$ = new BehaviorSubject<any>('C');
 }

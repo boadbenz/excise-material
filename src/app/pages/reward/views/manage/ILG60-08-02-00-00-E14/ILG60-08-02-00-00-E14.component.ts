@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
-import { IRequestBribeRewardgetByIndictmentID, IRequestBribeReward } from 'app/pages/reward/interfaces/RequestBribeReward.interface';
+import {
+  IRequestBribeRewardgetByIndictmentID,
+  IRequestBribeReward
+} from 'app/pages/reward/interfaces/RequestBribeReward.interface';
 import { RequestBribeRewardService } from 'app/pages/reward/services/RequestBribeReward.service';
 import { RequestRewardService } from 'app/pages/reward/services/RequestReward.service';
 import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interface';
@@ -66,7 +69,8 @@ export class ILG6008020000E14Component extends CONFIG implements OnInit {
                         ''} ${m.LawbreakerMiddleName ||
                         ''} ${m.LawbreakerLastName ||
                         ''} ${m.LawbreakerOtherName || ''}`,
-                        FineTypeName: m.FineType === 1 ? 'ส่งฟ้องศาล' : 'เปรียบเทียบคดี'
+                      FineTypeName:
+                        m.FineType === 1 ? 'ส่งฟ้องศาล' : 'เปรียบเทียบคดี'
                     }));
                   }
                 );

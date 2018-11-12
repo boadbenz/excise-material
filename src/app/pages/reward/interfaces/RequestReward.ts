@@ -27,5 +27,5 @@ export interface IRequestReward {
 }
 
 export interface IRequestRewardgetByRequestBribeRewardID {
-  RequestBribeRewardID: string;
+  RequestBribeRewardID: number;
 }

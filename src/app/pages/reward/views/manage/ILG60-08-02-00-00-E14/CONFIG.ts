@@ -31,7 +31,6 @@ export class CONFIG extends ManageConfig {
     actionUrl: '/reward/reward',
     actionFieldParams: ['IndictmentID']
   };
-  public gridData$ = new BehaviorSubject<any>(null);
 
   public FormInputDefault: ColumnsInterface[] = [
     {

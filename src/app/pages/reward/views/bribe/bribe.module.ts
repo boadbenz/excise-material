@@ -7,6 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [SharedModule, BribeRoutes, FormsModule, ReactiveFormsModule],
-  declarations: [...BRIBE_COMPONENTS]
+  declarations: [...BRIBE_COMPONENTS],
 })
 export class BribeModule {}

@@ -17,3 +17,10 @@ export interface IRequestCommandgetByArrestCode {
 }
 // tslint:disable-next-line:no-empty-interface
 export interface IRequestCommandinsAll extends IRequestCommand {}
+
+// tslint:disable-next-line:no-empty-interface
+export interface IRequestCommandupdByCon extends IRequestCommand {}
+
+export interface IRequestCommandupdDelete {
+  CommandID: number;
+}
