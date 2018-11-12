@@ -184,7 +184,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.31');
+        this.sidebarService.setVersion('0.0.0.32');
         this.active_route();
         if (this.arrestFG) {
             setTimeout(() => {
@@ -211,12 +211,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestTime: new FormControl(ArrestTime, Validators.required),
             OccurrenceDate: new FormControl(ArrestDate, Validators.required),
             OccurrenceTime: new FormControl(ArrestTime, Validators.required),
-            ArrestStationCode: new FormControl(null, Validators.required),
+            ArrestStationCode: new FormControl(null),
             ArrestStation: new FormControl(null, Validators.required),
             HaveCulprit: new FormControl(0),
-            Behaviour: new FormControl(null, Validators.required),
-            Testimony: new FormControl(null, Validators.required),
-            Prompt: new FormControl(null, Validators.required),
+            Behaviour: new FormControl(null),
+            Testimony: new FormControl(null),
+            Prompt: new FormControl(null),
             IsMatchNotice: new FormControl(null),
             ArrestDesc: new FormControl('N/A'),
             NoticeCode: new FormControl(null),
@@ -960,6 +960,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+    onChangeArrestStation(e: any){
+        this.arrestFG.patchValue({
+            ArrestStation: e.target.value
+        })
+    }
+
     selectItemQtyUnit(e: any, i: number) {
         this.ArrestProduct.at(i).patchValue({
             QtyUnit: e.item.DutyCode,
@@ -1097,14 +1103,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onComplete() {
-        // set true
-        await this.navService.setEditField(true);
-        await this.navService.setEditButton(true);
-        await this.navService.setPrintButton(true);
-        await this.navService.setDeleteButton(true);
-        // set false
-        await this.navService.setSaveButton(false);
-        await this.navService.setCancelButton(false);
+        this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
+        // // set true
+        // await this.navService.setEditField(true);
+        // await this.navService.setEditButton(true);
+        // await this.navService.setPrintButton(true);
+        // await this.navService.setDeleteButton(true);
+        // // set false
+        // await this.navService.setSaveButton(false);
+        // await this.navService.setCancelButton(false);
     }
 
     private async upateArrest() {
