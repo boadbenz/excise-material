@@ -106,7 +106,7 @@
               <div class="form-group row">
                 <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
                 <div class="col-md-9">
-                  <input class="form-control" type="text" formControlName="DepartmentName" [attr.disabled]="disabled ? '' : null">
+                  <input class="form-control" type="text" formControlName="OfficeShortName" [attr.disabled]="disabled ? '' : null">
                 </div>
               </div>
             </div>
@@ -329,7 +329,7 @@
               <td>{{item.controls['LawBrakerFullName'].value}}</td>
               <td>
                 <select formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
-                  <option [value]="type.id" *ngFor="let type of lstype">{{type.name}}</option>
+                  <option [value]="type.id"  *ngFor="let type of lstype">{{type.name}}</option>
                 </select>
               </td>
               <td>

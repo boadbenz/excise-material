@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { Arrest } from "../../arrests/models/arrest";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder } from "@angular/forms";
 import { PreloaderService } from "../../../shared/preloader/preloader.component";
 import { SidebarService } from "../../../shared/sidebar/sidebar.component";
@@ -26,6 +26,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { async } from "q";
 import { JudgmentModel } from "../models/judgment";
 import { IMyDpOptions } from "mydatepicker";
+
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html"
@@ -115,6 +116,10 @@ export class ManageComponent implements OnInit {
     this.navService.setSearchBar(false);
     // this.navService.setInnerTextNextPageButton('งานจับกุม')
   }
+  public onPrint = (content) => {
+    this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
+  }
+
   get LawsuitArrestStaff(): FormArray {
     return this.lawsuitArrestForm.get('LawsuitArrestStaff') as FormArray;
   }
@@ -122,7 +127,7 @@ export class ManageComponent implements OnInit {
     return this.lawsuitForm.get('LawsuitStaff') as FormArray;
   }
   get LawsuitTableList(): FormArray {
-    // console.log('lawsuitForm',this.lawsuitForm.get('LawsuitTableList'))
+    console.log('lawsuitForm',this.lawsuitForm.get('LawsuitTableList'))
     return this.lawsuitForm.get('LawsuitTableList') as FormArray;
   }
   get LawsuitDocument(): FormArray {
@@ -1020,25 +1025,22 @@ export class ManageComponent implements OnInit {
   }
 
   editTable(item: any, index: number) {
-    ///####use this value to get api
-    ///item.controls['IndictmentDetailID'].value
-    // const dialogRef = this.dialog.open(DialogJudgment, {
-    //   width: '90%',
-    //   maxWidth: 'none',
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   //console.log(`Dialog result: ${result}`);
-    // });
-    this.router.navigate(["/lawsuit/detail", "R"], {
-      queryParams: {
-        ArrestCode: this.lawsuitList[0].ArrestCode,
-        IndictmentDetailID: item.controls['IndictmentDetailID'].value,
-        IndictmentID: this.IndictmentID,
-      }
+    const dialogRef = this.dialog.open(DialogJudgment, {
+      width: '90%',
+      maxWidth: 'none',
     });
-  }
 
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log(`Dialog result: ${result}`);
+    });
+    // this.router.navigate(["/lawsuit/detail", "R"], {
+    //   queryParams: {
+    //     ArrestCode: this.lawsuitList[0].ArrestCode,
+    //     IndictmentDetailID: item.controls['IndictmentDetailID'].value,
+    //     IndictmentID: this.IndictmentID,
+    //   }
+    // });
+  }
 
 }
 
@@ -1116,6 +1118,8 @@ export class DialogJudgment {
     });
 
   }
+
+
   public closePopup = function () {
     this.dialogRef.close(DialogJudgment);
   }
@@ -1126,11 +1130,4 @@ export class DialogJudgment {
     return '';
   }
 
-
-
-
-
-
 }
-
-

@@ -175,6 +175,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
+    this.navService.setOnPrevPage(false);
   }
 
   private onSearchComplete(list: any) {
@@ -220,6 +221,14 @@ export class ListComponent implements OnInit, OnDestroy {
   async pageChanges(event) {
     this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
     console.log('this.resultsPerPage', this.resultsPerPage);
+  }
+
+  checkNullLawsuitNo(data) {
+    if (data.LawsuitArrestIndicment[0].Lawsuit.length > 0) {
+      return data.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitNo;
+    } else {
+      return "";
+    }
   }
 
 }
