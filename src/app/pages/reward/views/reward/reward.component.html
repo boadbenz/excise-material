@@ -63,7 +63,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">เขียนที่ : </label>
           <div class="col-md-8">
-            <input class="form-control" type="text" [disabled]="viewMode">
+            <input class="form-control" type="text">
           </div>
         </div>
       </div>
@@ -71,11 +71,11 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [disabled]="viewMode">
+            <input class="form-control" type="text">
           </div>
           <label class="col-form-label text-center col-md-2">เวลา</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [disabled]="viewMode">
+            <input class="form-control" type="text">
           </div>
         </div>
       </div>
@@ -133,7 +133,7 @@
   <div class="card-body">
     <div class="text-right">
       <!-- addSupport ส่ง id -->
-      <input type="button" id="btn-browse" [disabled]="viewMode">
+      <input type="button" id="btn-browse">
       <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy">เพิ่มจนท.สนับสนุน</label>
     </div>
     <div class="table-responsive">
@@ -244,7 +244,7 @@
               <input class="form-control" type="text" disabled>
             </td>
             <td>
-              <i class="ti-trash btn-action" [hidden]="modeCreate"></i>
+              <i class="ti-trash btn-action"></i>
             </td>
           </tr>
           <tr [hidden]="!modeCreate">
@@ -399,10 +399,10 @@
           <tr class="footable">
             <td class="text-center">1</td>
             <td>
-              <input class="form-control" type="text" nmae="fileName" [disabled]="viewMode">
+              <input class="form-control" type="text" nmae="fileName">
             </td>
             <td>
-              <input class="form-control" type="text" name="filePath" [disabled]="viewMode">
+              <input class="form-control" type="text" name="filePath">
             </td>
             <td>
               <i class="ti-trash btn-action"></i>

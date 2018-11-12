@@ -62,6 +62,32 @@ export class ManageComponent extends ManageConfig implements OnInit {
       this.IndictmentID = param['IndictmentID'];
       this.ArrestCode = param['ArrestCode'];
     });
+    this.navService.onCancel.subscribe(command => {
+      if (command === true) {
+        this.cancelButton();
+      }
+    });
+    this.navService.onSave.subscribe(command => {
+      if (command === true) {
+        this.saveButton();
+      }
+    });
+    this.navService.onEdit.subscribe(command => {
+      if (command === true) {
+        this.editButton();
+      }
+    });
+
+    this.navService.onDelete.subscribe(command => {
+      if (command === true) {
+        this.deleteButton();
+      }
+    });
+    this.navService.onPrint.subscribe(command => {
+      if (command === true) {
+        this.printButton();
+      }
+    });
   }
 
   ngOnInit() {
@@ -365,7 +391,8 @@ export class ManageComponent extends ManageConfig implements OnInit {
     // ILG60-08-02-00-00-E05
     // 1 START
     const dialogRef = this.dialog.open(PrintDialogComponent, {
-      width: '500px',
+      width: '1200px',
+      height: 'auto',
       data: {}
     });
 
