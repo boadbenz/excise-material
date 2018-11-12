@@ -61,8 +61,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.sidebarService.setVersion('0.0.2.12');
         this.paginage.TotalItems = 0;
 
-        this.preLoaderService.setShowPreloader(true);
-        await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
+        // this.preLoaderService.setShowPreloader(true);
+        // await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
 
         this.subOnsearchByKeyword = this.navservice.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
@@ -78,7 +78,7 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         })
 
-        this.preLoaderService.setShowPreloader(false);
+        // this.preLoaderService.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {

@@ -136,13 +136,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
-        await this.setCommunicateStore();
-        await this.setProductStore();
-        await this.setStaffStore();
-        await this.setRegionStore();
-        await this.setProductUnitStore();
-        await this.setOfficeStore();
-        await this.setCommunicateStore();
+        // await this.setCommunicateStore();
+        // await this.setProductStore();
+        // await this.setStaffStore();
+        // await this.setRegionStore();
+        // await this.setProductUnitStore();
+        // await this.setOfficeStore();
+        // await this.setCommunicateStore();
 
         if (this.mode == 'R') {
             this.getByCon(this.noticeCode);
