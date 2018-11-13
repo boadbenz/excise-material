@@ -13,7 +13,9 @@ export class CONFIG extends BribeConfig {
   }
   public inputData$ = new BehaviorSubject<any>(null);
   public RequestArrestLawsuit$ = new BehaviorSubject<any>(null);
-  public columns: ColumnsInterface[] = [
+
+
+  public columnsTable: ColumnsInterface[] = [
     {
       title: 'ชื่อผู้ต้องหา',
       field: 'LawbreakerName'

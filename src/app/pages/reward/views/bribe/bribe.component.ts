@@ -27,6 +27,7 @@ import { MasDocumentMainService } from '../../services/master/MasDocumentMain.se
 import { MasDocumentModel } from 'app/models/mas-document.model';
 import { MasStaffModel } from 'app/models';
 import { MasOfficeModel } from 'app/models/mas-office.model';
+import { RequestPaymentFineDetailService } from '../../services/RequestPaymentFineDetail.service';
 
 @Component({
   selector: 'app-bribe',
@@ -45,7 +46,8 @@ export class BribeComponent extends BribeConfig implements OnInit {
     private navService: NavigationService,
     private rewardService: RewardService,
     private transactionRunningService: TransactionRunningService,
-    private requestBribeService: RequestBribeService
+    private requestBribeService: RequestBribeService,
+    private requestPaymentFineDetailService: RequestPaymentFineDetailService
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -142,6 +144,94 @@ export class BribeComponent extends BribeConfig implements OnInit {
         break;
     }
     // 2 END
+  }
+
+  private async saveButton() {
+    // 1 START
+    // 1.1 'WAIT'
+    // 1.2 'WAIT'
+    // 1.3 'WAIT'
+    // 1.4 'WAIT'
+    // 1.5 'WAIT'
+
+    // 2
+    switch (this.bribeService.mode$.getValue()) {
+      case 'C':
+        // 2.1
+        // 2.1.1
+        await this.transactionRunningService
+          .TransactionRunninggetByCon({
+            RunningTable: 'ops_requestbribe',
+            RunningOfficeCode: this.OfficeCode
+          })
+          .subscribe(async (res: ITransactionRunning[]) => {
+            // 2.1.2
+            if (res.length > 0) {
+              // 2.1.2(1)
+              const TransactionRunning: ITransactionRunning = res[0];
+
+              // 2.1.2(1.1)
+              await this.transactionRunningService
+                .TransactionRunningupdByCon({
+                  RunningID: TransactionRunning.RunningID
+                })
+                .subscribe();
+
+              // 2.1.2(1.2)
+              const RunningPrefix: string = this.leftPad(
+                TransactionRunning.RunningPrefix,
+                2
+              ); // 2.1.2(1.2(1))
+              const RunningOfficeCode: string = this.leftPad(
+                TransactionRunning.RunningOfficeCode,
+                6
+              ); // 2.1.2(1.2(2))
+              const RunningYear: string = this.leftPad(
+                TransactionRunning.RunningYear,
+                2
+              ); // 2.1.2(1.2(3))
+              const RunningNo: string = this.leftPad(
+                (Number(TransactionRunning.RunningNo) + 1).toString(),
+                5
+              ); // 2.1.2(1.2(4))
+              const RequestBribeCode = `${RunningPrefix}${RunningOfficeCode}${RunningYear}${RunningNo}`;
+              this.bribeService.RequestBribeCode$.next(RequestBribeCode);
+            } else {
+              // 2.1.2(2)
+              // 2.1.2(2.1)
+              await this.transactionRunningService
+                .TransactionRunninginsAll({
+                  RunningOfficeCode: this.OfficeCode, // 2.1.2(2.1.1)
+                  RunningTable: 'ops_requestbribe', // 2.1.2(2.1.2)
+                  RunningPrefix: 'BR' // 2.1.2(2.1.3)
+                })
+                .subscribe();
+
+              // 2.1.2(2.2)
+              const RunningOfficeCode = this.leftPad(this.OfficeCode, 6);
+              const yy_thaibuddha = (new Date().getFullYear() + 543)
+                .toString()
+                .substr(2, 1);
+              const RequestBribeCode = `BR${RunningOfficeCode}${yy_thaibuddha}00001`;
+              this.bribeService.RequestBribeCode$.next(RequestBribeCode);
+            }
+          });
+
+        // 2.1.3
+        await this.requestBribeService
+          .RequestBribeinsAll({
+            RequestBribeRewardID: this.bribeService.RequestBribeRewardID$.getValue(), // 2.1.3(1)
+            RequestBribeCode: this.bribeService.RequestBribeCode$.getValue(), // 2.1.3(2)
+            CommandDetailID: this.bribeService.CommandDetailID$.getValue() // 2.1.3(4) 'WAIT'
+          })
+          .subscribe();
+
+        // 2.1.4 'WAIT
+        // this.requestPaymentFineDetailService.RequestPaymentFineDetailupdByCon({
+        //   PaymentFineDetailID:
+        // })
+        break;
+    }
   }
 
   private RequestBribegetByCon(param: IRequestBribegetByCon) {
