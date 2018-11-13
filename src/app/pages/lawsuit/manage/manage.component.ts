@@ -459,7 +459,9 @@ export class ManageComponent implements OnInit {
     this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
     /// save IsLawsuitComplete = 1
+    console.log(IsLawsuitComplete)
     if (IsLawsuitComplete == 1) {
+
       /// check LawsuitNo on exite
       const lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
       // await this.lawsuitService.LawsuitVerifyLawsuitNo(this.lawsuitForm.controls['LawsuitNo'].value,
@@ -536,27 +538,21 @@ export class ManageComponent implements OnInit {
         isOut = 0;
       }
       // isOut => (isOut) ? '1' : '0';
-
-      console.log('lawsuitNo==>', lawsuitNo);
-      console.log('isOut==>', isOut)
-      await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo,
-        this.lawsuitForm.controls['officeCode'].value,
-        isOut).then(async res => {
-          if (res.length != 0) {
-            alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
-            this.preLoaderService.setShowPreloader(false);
-            return;
-          }
-          // console.log('LawsuitDate', toLocalShort(this.lawsuitForm.controls['LawsuitDate'].value))
+      await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut).then(async res => {
+        if (res.length > 0) {
+          alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
+          this.preLoaderService.setShowPreloader(false);
+          return;
+        } else {
           const _lawDate = (this.lawsuitForm.controls['LawsuitDate'].value)
-          const json =
-          {
+          const json = {
+            // "ArrestCode": "TN9000126100012",
             "LawsuitID": this.LawsuitID,
             "IndictmentID": this.IndictmentID,
-            "IsLawsuit": this.lawsuitForm.controls['IsLawsuitCheck'].value,
-            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value,
+            "IsLawsuit": this.lawsuitForm.controls['IsLawsuitCheck'].value === false ? 0 : 1,
+            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",
             "LawsuitNo": this.lawsuitForm.controls['LawsuitNo'].value,
-            "LawsuitDate": (_lawDate.date) + '/' + _lawDate.month + '/' + _lawDate.year,
+            "LawsuitDate": _lawDate.jsdate,
             "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
             "LawsuitStationCode": '',
             "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
@@ -564,34 +560,37 @@ export class ManageComponent implements OnInit {
             "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
             "LawsuitResult": '',
             "DeliveryDocNo": '',
-            "DeliveryDate": (_lawDate.date) + '/' + _lawDate.month + '/' + _lawDate.year,
+            "DeliveryDate": _lawDate.jsdate,
             "IsActive": 1,
-            "LawsuitType": this.LawsuitTableList.controls['LawsuitType'],
-            "LawsuitEnd": this.LawsuitTableList.controls['LawsuitEnd'],
-            // "LawsuiteStaff": [{
-            //   "StaffID": '1',
-            //   "ProgramCode": "XCS-60",
-            //   "ProcessCode": "XCS-60-001",
-            //   "LawsuitID": '',
-            //   "StaffCode": "S000",
-            //   "TitleName": "นาย",
-            //   "FirstName": "ธวัชชัย", "LastName": "บิงขุนทด",
-            //   "PositionCode": "P001", "PositionName": "ผู้ช านาญการ",
-            //   "PosLevel": "01", "PosLevelName": "ระดับสูง",
-            //   "DepartmentCode": "V001",
-            //   "DepartmentName": "สตป",
-            //   "DepartmentLevel": "1",
-            //   "OfficeCode": "T001",
-            //   "OfficeName": "สตป",
-            //   "OfficeShortName": "สตป",
-            //   "ContributorCode": "001",
-            //   "IsActive": ''
-            // }]
+            // "LawsuitType": this.LawsuitTableList.controls[0].value['LawsuitType'],
+            "LawsuitType": 2,
+            // "LawsuitEnd": this.LawsuitTableList.controls[0].value['LawsuitEnd'].value,
+            "LawsuitEnd": 2,
+            "LawsuiteStaff": [{
+              "StaffID": '1',
+              "ProgramCode": "XCS-60",
+              "ProcessCode": "XCS-60-001",
+              "LawsuitID": '',
+              "StaffCode": "S000",
+              "TitleName": "นาย",
+              "FirstName": "ธวัชชัย", "LastName": "บิงขุนทด",
+              "PositionCode": "P001", "PositionName": "ผู้ช านาญการ",
+              "PosLevel": "01", "PosLevelName": "ระดับสูง",
+              "DepartmentCode": "V001",
+              "DepartmentName": "สตป",
+              "DepartmentLevel": "1",
+              "OfficeCode": "T001",
+              "OfficeName": "สตป",
+              "OfficeShortName": "สตป",
+              "ContributorCode": "001",
+              "IsActive": ''
+            }]
           }
           await this.lawsuitService.LawsuitinsAll(json).then(async response => {
             console.log('response', response);
           });
-        });
+        }
+      });
     }
     this.preLoaderService.setShowPreloader(false);
   }
@@ -991,13 +990,21 @@ export class ManageComponent implements OnInit {
   }
   isLawsuitCheckReq() {
     if (this.lawsuitForm.controls['IsLawsuitCheck'].value) {
+      this.lawsuitForm.controls['IsOutsideCheck'].setValue(false);
       this.lawsuitForm.controls['ReasonDontLawsuit'].setValidators([Validators.required]);
     } else {
       this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
     }
     // this.form.controls["firstName"].setValidators([Validators.minLength(1), Validators.maxLength(30)]);
   }
-
+  isOutsideCheckReq() {
+    if (this.lawsuitForm.controls['IsOutsideCheck'].value) {
+      this.lawsuitForm.controls['IsLawsuitCheck'].setValue(false);
+      // this.lawsuitForm.controls['ReasonDontLawsuit'].setValidators([Validators.required]);
+    } else {
+      // this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
+    }
+  }
   public validateData = function (data) {
     if (data) {
       return data;
@@ -1131,7 +1138,7 @@ export class ManageComponent implements OnInit {
     //           controls_status: controls_status
     //         }
     //       });
-    
+
 
     //       console.log(MasStaff_All)
     //       console.log(MasOffice_All)
@@ -1140,12 +1147,12 @@ export class ManageComponent implements OnInit {
     //     }
     //   })
     // }
-    
+
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
       maxWidth: 'none',
     });
-    
+
   }
 
 }
@@ -1178,8 +1185,8 @@ export class DialogJudgment {
   lawsuitArrestFormDialog: FormGroup;
   ngOnInit() {
     this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.indictmentID).then(async result => {
-      this.arrestData = await result;
-      console.log(this.data)
+      this.arrestData = result;
+      console.log(this.arrestData)
       this.lawsuitArrestFormDialog = this.fb.group({
         arrestName: new FormControl(null, Validators.required),
         justicName: new FormControl(null, Validators.required),

@@ -188,7 +188,6 @@
       <div class="form-body">
         <div class="row">
           <div class="col-md-12">
-
             <div class="row form-group">
               <div class="col">
                 <input [attr.disabled]="showEditField ? '' : null" formControlName="IsLawsuitCheck" type="checkbox" id="IsLawsuit"
@@ -197,7 +196,8 @@
               </div>
               <div class="col-md-10">
                 <input class="form-control" name="ReasonDontLawsuit" type="text" formControlName="ReasonDontLawsuit" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" [required]="this.lawsuitForm.controls['IsLawsuitCheck'].value" [attr.disabled]="!this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null">
+                  [ngClass]="{'ng-touched':isRequired}" [required]="this.lawsuitForm.controls['IsLawsuitCheck'].value"
+                   [attr.disabled]="!this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null">
               </div>
             </div>
           </div>
@@ -207,7 +207,7 @@
             <div class="row form-group">
               <div class="col">
                 <input [attr.disabled]="showEditField ? '' : null" formControlName="IsOutsideCheck" name="IsOutsideCheck" type="checkbox" id="IsOutSide"
-                  class="filled-in chk-col-indigo" [readonly]="showEditField">
+                  class="filled-in chk-col-indigo" [readonly]="showEditField" (change)="isOutsideCheckReq()">
                 <label for="IsOutSide">คดีรับคำกล่าวโทษนอกสถานที่</label>
               </div>
             </div>
