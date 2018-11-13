@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TableDataConfig } from './table-data.config';
 import { PagerService, IPagerService } from '../services/Pager.service';
-import { FormBuilder, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-table-data',
@@ -27,8 +26,7 @@ export class TableDataComponent extends TableDataConfig implements OnInit {
 
   // paged items
   public pagedItems: any[];
-  public itemRows: FormArray;
-  constructor(private pagerService: PagerService, private fb: FormBuilder) {
+  constructor(private pagerService: PagerService) {
     super();
   }
 

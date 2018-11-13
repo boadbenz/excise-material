@@ -8,7 +8,7 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-02-00-00-E08 [RequestArrestLawsuitgetByIndictmentID]="RequestArrestLawsuitgetByIndictmentID$ | async"></ILG60-08-02-00-00-E08>
+        <ILG60-08-02-00-00-E08 [inputData]="ILG60_08_02_00_00E08_DATA$ | async"></ILG60-08-02-00-00-E08>
       </div>
     </ng-template>
   </mat-expansion-panel>
@@ -22,7 +22,7 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-02-00-00-E09 [gridData]="ILG60_08_02_00_00E09_DATA$ | async"></ILG60-08-02-00-00-E09>
+        <ILG60-08-02-00-00-E09 [inputData]="ILG60_08_02_00_00E09_DATA$ | async"></ILG60-08-02-00-00-E09>
       </div>
     </ng-template>
   </mat-expansion-panel>
@@ -36,8 +36,7 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-02-00-00-E11 [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode" [mode]="mode$  | async"
-          [gridData]="ILG60_08_02_00_00E11_DATA$ | async"></ILG60-08-02-00-00-E11>
+        <ILG60-08-02-00-00-E11 [inputData]="ILG60_08_02_00_00E11_DATA$ | async" [mode]="mode$ | async" [RequestBribeRewardID]="RequestBribeRewardID$ | async" [ArrestCode]="ArrestCode$ | async"></ILG60-08-02-00-00-E11>
       </div>
     </ng-template>
   </mat-expansion-panel>
@@ -51,8 +50,7 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-02-00-00-E14 [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode" [mode]="mode$  | async"
-          [gridData]="ILG60_08_02_00_00E14_DATA$ | async"></ILG60-08-02-00-00-E14>
+        <ILG60-08-02-00-00-E14 [inputData]="ILG60_08_02_00_00E14_DATA$ | async" [mode]="mode$ | async" [RequestBribeRewardID]="RequestBribeRewardID$ | async" [IndictmentID]="IndictmentID$ | async"></ILG60-08-02-00-00-E14>
       </div>
     </ng-template>
   </mat-expansion-panel>

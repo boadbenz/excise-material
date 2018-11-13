@@ -17,12 +17,12 @@ export class ManageConfig extends RewardHelper {
   public ILG60_08_02_00_00E11_DATA$ = new BehaviorSubject<any>(null);
   public ILG60_08_02_00_00E14_DATA$ = new BehaviorSubject<any>(null);
 
-  public IndictmentID: number;
-  public ArrestCode: string;
+  public IndictmentID$ = new BehaviorSubject<number | null>(null);
+  public ArrestCode$ = new BehaviorSubject<string | null>(null);
 
-  public CommandID$ = new BehaviorSubject<any>(null);
-  public PageLoadHaveNotice$ = new BehaviorSubject<number>(null);
-  public RequestBribeRewardID$ = new BehaviorSubject<any>(null);
+  public CommandID$ = new BehaviorSubject<number | null>(null);
+  public PageLoadHaveNotice$ = new BehaviorSubject<number | null>(null);
+  public RequestBribeRewardID$ = new BehaviorSubject<number | null>(null);
 
   public RequestArrestLawsuitgetByIndictmentID$ = new BehaviorSubject<any>(
     null

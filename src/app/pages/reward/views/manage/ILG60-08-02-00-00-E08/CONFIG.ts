@@ -5,17 +5,16 @@ import { Input } from '@angular/core';
 import { IRequestArrestLawsuit } from 'app/pages/reward/interfaces/RequestArrestLawsuit.interface';
 
 export class CONFIG extends ManageConfig {
-  @Input()
-  public IndictmentID: number;
 
   @Input()
-  set RequestArrestLawsuitgetByIndictmentID(val) {
-    this.RequestArrestLawsuitgetByIndictmentID$.next(val);
+  set inputData(val) {
+    this.inputData$.next(val);
   }
-  get RequestArrestLawsuitgetByIndictmentID() {
-    return this.RequestArrestLawsuitgetByIndictmentID$.asObservable();
+  get inputData() {
+    return this.inputData$.asObservable();
   }
-  public RequestArrestLawsuitgetByIndictmentID$ = new BehaviorSubject<any>(null);
+  public inputData$ = new BehaviorSubject<any>(null);
+
   public columnsDefault: ColumnsInterface[] = [
     {
       field: 'TitleName',

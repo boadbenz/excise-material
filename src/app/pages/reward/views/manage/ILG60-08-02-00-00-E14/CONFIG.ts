@@ -6,30 +6,45 @@ import { Input } from '@angular/core';
 
 export class CONFIG extends ManageConfig {
   @Input()
-  public IndictmentID: number;
-
-  @Input()
-  public ArrestCode: string;
-
-  @Input()
-  public mode: string;
-
-  @Input()
-  public RequestBribeRewardID: number;
-
-  @Input()
-  set gridData(val) {
-    this.gridData$.next(val);
+  set IndictmentID(val) {
+    this.IndictmentID$.next(val);
   }
-  get gridData() {
-    return this.gridData$.asObservable();
+  get IndictmentID() {
+    return this.IndictmentID$.asObservable();
   }
-  public gridData$ = new BehaviorSubject<any>(null);
+  public IndictmentID$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set mode(val) {
+    this.mode$.next(val);
+  }
+  get mode() {
+    return this.mode$.asObservable();
+  }
+  public mode$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set RequestBribeRewardID(val) {
+    this.RequestBribeRewardID$.next(val);
+  }
+  get RequestBribeRewardID() {
+    return this.RequestBribeRewardID$.asObservable();
+  }
+  public RequestBribeRewardID$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set inputData(val) {
+    this.inputData$.next(val);
+  }
+  get inputData() {
+    return this.inputData$.asObservable();
+  }
+  public inputData$ = new BehaviorSubject<any>(null);
 
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
-    actionUrl: '/reward/reward',
-    actionFieldParams: ['IndictmentID']
+    actionUrl: '/reward/bribe/R',
+    actionFieldParams: ['RequestRewardID']
   };
 
   public FormInputDefault: ColumnsInterface[] = [

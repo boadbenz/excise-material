@@ -3,8 +3,34 @@ import { BribeComponent } from './bribe.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: BribeComponent
+    path: ':mode/:RequestRewardID',
+    component: BribeComponent,
+    data: {
+      urls: [
+        { title: 'หน้าหลัก', url: '/' },
+        { title: 'ค้นหาคำร้องขอรับเงินสินบนรางวัล', url: '/reward/list' },
+        {
+          title: 'จัดการข้อมูลคำร้องขอรับเงินสินบนรางวัล'
+        },
+        { title: 'จัดการข้อมูลคำร้องขอรับเงินสินบน' }
+      ],
+      pageType: 'view'
+    }
+  },
+  {
+    path: ':mode/:RequestBribeRewardID/:ArrestCode',
+    component: BribeComponent,
+    data: {
+      urls: [
+        { title: 'หน้าหลัก', url: '/' },
+        { title: 'ค้นหาคำร้องขอรับเงินสินบนรางวัล', url: '/reward/list' },
+        {
+          title: 'จัดการข้อมูลคำร้องขอรับเงินสินบนรางวัล'
+        },
+        { title: 'จัดการข้อมูลคำร้องขอรับเงินสินบน' }
+      ],
+      pageType: 'manage'
+    }
   }
 ];
 

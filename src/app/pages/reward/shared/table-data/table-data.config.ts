@@ -10,7 +10,12 @@ export interface ITableDataOptions {
   actionFieldParams?: string[];
   isSumFooter?: boolean;
 }
+export interface IShowInputModel {
+  field: string;
+  index: number;
+}
 export class TableDataConfig extends RewardHelper {
+  public ShowInputModel: IShowInputModel[];
   public paginage = pagination;
   @Input()
   set columns(val) {
@@ -26,9 +31,10 @@ export class TableDataConfig extends RewardHelper {
   get data() {
     return this.data$.asObservable();
   }
+  public data$ = new BehaviorSubject<any>(null);
+
   @Input() public options: ITableDataOptions;
   @Input() public showIndex = true;
 
-  public data$ = new BehaviorSubject<any>(null);
-  public columns$  = new BehaviorSubject<any>(null);
+  public columns$ = new BehaviorSubject<any>(null);
 }

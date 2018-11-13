@@ -59,8 +59,8 @@ export class ManageComponent extends ManageConfig implements OnInit {
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
-      this.IndictmentID = param['IndictmentID'];
-      this.ArrestCode = param['ArrestCode'];
+      this.IndictmentID$.next(param['IndictmentID']);
+      this.ArrestCode$.next(param['ArrestCode']);
     });
     this.navService.onCancel.subscribe(command => {
       if (command === true) {
@@ -91,19 +91,28 @@ export class ManageComponent extends ManageConfig implements OnInit {
   }
 
   ngOnInit() {
+    this.setShowButton();
     this.pageLoad();
+  }
+  private setShowButton() {
+    this.navService.setSearchBar(false);
+    this.navService.setPrintButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setSaveButton(false);
   }
   private pageLoad() {
     // ILG60-08-02-00-00-E01
 
     // 1 START
     this.RequestArrestLawsuitgetByIndictmentID({
-      IndictmentID: this.IndictmentID
+      IndictmentID: this.IndictmentID$.getValue()
     });
 
     // 3
     this.RequestBribeRewardgetByIndictmentID({
-      IndictmentID: this.IndictmentID
+      IndictmentID: this.IndictmentID$.getValue()
     });
 
     // 5 END
@@ -115,7 +124,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
       .RequestArrestLawsuitgetByIndictmentID(param)
       .subscribe((res: IRequestArrestLawsuit[]) => {
         // 2
-        this.RequestArrestLawsuitgetByIndictmentID$.next(res);
+        this.ILG60_08_02_00_00E08_DATA$.next(res);
       });
   }
 
@@ -425,7 +434,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
           // 4.2
           // 4.2.1
           this.RequestNoticegetByArrestCode({
-            ArrestCode: this.ArrestCode
+            ArrestCode: this.ArrestCode$.getValue()
           });
         }
         this.RequestBribeRewardgetByIndictmentID$.next(res);
@@ -462,7 +471,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
         // 4.1.1(2.5)
         this.RequestCommandgetByArrestCode(
           {
-            ArrestCode: this.ArrestCode
+            ArrestCode: this.ArrestCode$.getValue()
           },
           '4.1.1(2.5)'
         );
@@ -482,7 +491,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
             // 4.2.2(1.1.1)
             TotalPart: res.length || 0,
             // 4.2.2(1.1.2)
-            ArrestCode: this.ArrestCode,
+            ArrestCode: this.ArrestCode$.getValue(),
             // 4.2.2(1.1.3)
             RequestCommandDetail: res.map(m => ({
               ...m,
@@ -494,7 +503,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
           // 4.2.2(1.2)
           this.RequestBribeRewardinsAll({
             // 4.2.2(1.2.1)
-            IndictmentID: this.IndictmentID,
+            IndictmentID: this.IndictmentID$.getValue(),
             // 4.2.2(1.2.2)
             HaveNotice: 1
           });
@@ -502,13 +511,13 @@ export class ManageComponent extends ManageConfig implements OnInit {
           // 4.2.2(1.3)
           this.RequestCommandgetByArrestCode(
             {
-              ArrestCode: this.ArrestCode
+              ArrestCode: this.ArrestCode$.getValue()
             },
             '4.2.2(1.3)'
           );
         } else {
           this.RequestBribeRewardinsAll({
-            IndictmentID: this.IndictmentID,
+            IndictmentID: this.IndictmentID$.getValue(),
             HaveNotice: 0
           });
         }
@@ -528,7 +537,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
             // 4.1.1(1.2.1)
             if (res.length > 0) {
               // 4.1.1(1.2.1(1))
-              this.ILG60_08_02_00_00E09_DATA$.next(res);
+              this.ILG60_08_02_00_00E14_DATA$.next(res);
 
               // 4.1.1(1.2.1(2))
             } else {
@@ -670,7 +679,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
                 // 4.2.2(1.1.1)
                 TotalPart: res.length || 0,
                 // 4.2.2(1.1.2)
-                ArrestCode: this.ArrestCode,
+                ArrestCode: this.ArrestCode$.getValue(),
                 // 4.2.2(1.1.3)
                 RequestCommandDetail: this.RequestNoticegetByArrestCode$.getValue().map(
                   m => ({
@@ -684,7 +693,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
               // 4.2.2(1.2)
               this.RequestBribeRewardinsAll({
                 // 4.2.2(1.2.1)
-                IndictmentID: this.IndictmentID,
+                IndictmentID: this.IndictmentID$.getValue(),
                 // 4.2.2(1.2.2)
                 HaveNotice: 1
               });
@@ -692,7 +701,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
               // 4.2.2(1.3)
               this.RequestCommandgetByArrestCode(
                 {
-                  ArrestCode: this.ArrestCode
+                  ArrestCode: this.ArrestCode$.getValue()
                 },
                 '4.2.2(1.3)'
               );
@@ -753,7 +762,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
               // 4.2.2(2.1)
               this.RequestBribeRewardinsAll({
                 // 4.2.2(2.1.1)
-                IndictmentID: this.IndictmentID,
+                IndictmentID: this.IndictmentID$.getValue(),
                 // 4.2.2(2.1.2)
                 HaveNotice: 0
               });

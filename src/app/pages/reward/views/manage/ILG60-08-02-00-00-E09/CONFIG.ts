@@ -5,23 +5,18 @@ import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-int
 import { ITableDataOptions } from 'app/pages/reward/shared/table-data/table-data.config';
 
 export class CONFIG extends ManageConfig {
-  @Input()
-  public IndictmentID: number;
-
-  @Input()
-  public ArrestCode: string;
 
   public TableDataOptions: ITableDataOptions = {
     isSumFooter: true
   };
   @Input()
-  set gridData(val) {
-    this.gridData$.next(val);
+  set inputData(val) {
+    this.inputData$.next(val);
   }
-  get gridData() {
-    return this.gridData$.asObservable();
+  get inputData() {
+    return this.inputData$.asObservable();
   }
-  public gridData$ = new BehaviorSubject<any>(null);
+  public inputData$ = new BehaviorSubject<any>(null);
   public FormInput$ = new BehaviorSubject<any>(null);
 
   public FormInputDefault: ColumnsInterface[] = [

@@ -6,29 +6,44 @@ import { ITableDataOptions } from 'app/pages/reward/shared/table-data/table-data
 
 export class CONFIG extends ManageConfig {
   @Input()
-  public IndictmentID: number;
-
-  @Input()
-  public ArrestCode: string;
-
-  @Input()
-  public RequestBribeRewardID: number;
-
-  @Input()
-  public mode: string;
-
-  @Input()
-  set gridData(val) {
-    this.gridData$.next(val);
+  set ArrestCode(val) {
+    this.ArrestCode$.next(val);
   }
-  get gridData() {
-    return this.gridData$.asObservable();
+  get ArrestCode() {
+    return this.ArrestCode$.asObservable();
   }
-  public gridData$ = new BehaviorSubject<any>(null);
+  public ArrestCode$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set mode(val) {
+    this.mode$.next(val);
+  }
+  get mode() {
+    return this.mode$.asObservable();
+  }
+  public mode$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set RequestBribeRewardID(val) {
+    this.RequestBribeRewardID$.next(val);
+  }
+  get RequestBribeRewardID() {
+    return this.RequestBribeRewardID$.asObservable();
+  }
+  public RequestBribeRewardID$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set inputData(val) {
+    this.inputData$.next(val);
+  }
+  get inputData() {
+    return this.inputData$.asObservable();
+  }
+  public inputData$ = new BehaviorSubject<any>(null);
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
-    actionUrl: '/reward/bribe',
-    actionFieldParams: ['RequestBribeRewardID']
+    actionUrl: `/reward/bribe/R`,
+    actionFieldParams: ['RequestBribeID']
   };
 
   public FormInputDefault: ColumnsInterface[] = [

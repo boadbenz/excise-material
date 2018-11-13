@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
-import { RequestArrestLawsuitService } from 'app/pages/reward/services/RequestArrestLawsuit.service';
 import {
-  IRequestArrestLawsuitGetByIndictmentId,
   IRequestArrestLawsuit
 } from 'app/pages/reward/interfaces/RequestArrestLawsuit.interface';
 
@@ -14,12 +12,11 @@ import {
 })
 export class ILG6008020000E08Component extends CONFIG implements OnInit {
   constructor(
-    private requestArrestLawsuitService: RequestArrestLawsuitService
   ) {
     super();
-    this.RequestArrestLawsuitgetByIndictmentID$.subscribe(res => {
+    this.inputData$.subscribe(res => {
       if (res != null) {
-        console.log('requestArrestLawsuitService', res);
+        // console.log('requestArrestLawsuitService', res);
 
         const response: IRequestArrestLawsuit = res[0];
         const staffName = `${response.TitleName}${response.FirstName} ${

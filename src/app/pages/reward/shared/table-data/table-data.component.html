@@ -22,7 +22,7 @@
                     <td>
 
                       <ng-container *ngIf="column?.showInput; else showDefault;">
-                        <input class="form-control text-center" [type]="column?.inputType || 'text'" [value]="item[column?.field]">
+                        <input class="form-control text-center" [type]="column?.inputType || 'text'" [(ngModel)]="ShowInputModel[{field: column?.field , index: index}]"  [value]="item[column?.field]">
                       </ng-container>
                       <ng-template #showDefault>
                         {{ item[column?.field] || '-' }}
