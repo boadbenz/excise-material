@@ -16,6 +16,7 @@ import { CardActionsModule } from 'app/pages/component/card-actions/card-actions
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { PrintDialogComponent } from './print-dialog/print-dialog.component';
+import { REWARD_PIPES } from '../pipes';
 const SHARED_MODULES = [
   CommonModule,
   HttpClientModule,
@@ -36,8 +37,8 @@ const SHARED_MODULES = [
     PaginationTableModule,
     FormsModule
   ],
-  exports: [...SHARED_MODULES, ...REWARD_SHARED_COMPONENTS],
-  declarations: [...REWARD_SHARED_COMPONENTS],
+  exports: [...SHARED_MODULES, ...REWARD_SHARED_COMPONENTS, ...REWARD_PIPES],
+  declarations: [...REWARD_SHARED_COMPONENTS, ...REWARD_PIPES],
   providers: [...REWARD_SHARED_SERVICES],
   entryComponents: [PrintDialogComponent]
 })
