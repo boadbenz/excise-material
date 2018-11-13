@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MasterHelperService } from './MasterHelperService';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class MasOfficeService extends MasterHelperService {
@@ -8,7 +9,7 @@ export class MasOfficeService extends MasterHelperService {
     super();
   }
 
-  public MasOfficeMaingetAll() {
+  public MasOfficeMaingetAll(): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/MasOfficeMaingetAll`, {});
   }
 }

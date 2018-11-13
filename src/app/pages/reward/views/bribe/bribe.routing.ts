@@ -3,7 +3,7 @@ import { BribeComponent } from './bribe.component';
 
 const routes: Routes = [
   {
-    path: ':mode/:RequestRewardID',
+    path: ':mode/:RequestBribeID',
     component: BribeComponent,
     data: {
       urls: [

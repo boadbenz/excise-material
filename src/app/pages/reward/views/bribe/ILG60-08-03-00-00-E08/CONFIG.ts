@@ -1,19 +1,17 @@
 import { BribeConfig } from '../bribe.config';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
-import { IRequestCommand } from 'app/pages/reward/interfaces/RequestCommand';
 import { Input } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 export class CONFIG extends BribeConfig {
   @Input()
-  set RequestCommand(val){
-      this.RequestCommand$.next(val)
+  set inputData(val){
+      this.inputData$.next(val)
   }
-  get RequestCommand() {
-      return this.RequestCommand$.asObservable();
+  get inputData() {
+      return this.inputData$.asObservable();
   }
-  public RequestCommand$ = new BehaviorSubject<any>(null);
+  public inputData$ = new BehaviorSubject<any>(null);
   public RequestArrestLawsuit$ = new BehaviorSubject<any>(null);
   public columns: ColumnsInterface[] = [
     {

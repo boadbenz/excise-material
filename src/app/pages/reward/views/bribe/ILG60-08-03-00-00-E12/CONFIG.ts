@@ -21,11 +21,13 @@ export class CONFIG extends BribeConfig {
     },
     {
       title: 'ตำแหน่ง',
-      field: 'PositionName'
+      field: 'PositionName',
+      isDisabled: true // 1.1.5(2)
     },
     {
       title: 'หน่วยงาน',
-      field: 'OfficeName'
+      field: 'OfficeName',
+      isDisabled: true // 1.1.5(3)
     }
   ];
 }
