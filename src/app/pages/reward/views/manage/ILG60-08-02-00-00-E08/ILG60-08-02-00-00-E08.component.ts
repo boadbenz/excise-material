@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
-import { RequestArrestLawsuitService } from 'app/pages/reward/services/RequestArrestLawsuit.service';
 import {
-  IRequestArrestLawsuitGetByIndictmentId,
   IRequestArrestLawsuit
 } from 'app/pages/reward/interfaces/RequestArrestLawsuit.interface';
 
@@ -14,18 +12,12 @@ import {
 })
 export class ILG6008020000E08Component extends CONFIG implements OnInit {
   constructor(
-    private requestArrestLawsuitService: RequestArrestLawsuitService
   ) {
     super();
-  }
+    this.inputData$.subscribe(res => {
+      if (res != null) {
+        // console.log('requestArrestLawsuitService', res);
 
-  ngOnInit() {
-    this.fetchData({ IndictmentID: Number(this.IndictmentID) });
-  }
-  fetchData(param: IRequestArrestLawsuitGetByIndictmentId) {
-    this.requestArrestLawsuitService
-      .RequestArrestLawsuitgetByIndictmentID(param)
-      .subscribe(res => {
         const response: IRequestArrestLawsuit = res[0];
         const staffName = `${response.TitleName}${response.FirstName} ${
           response.LastName
@@ -48,6 +40,12 @@ export class ILG6008020000E08Component extends CONFIG implements OnInit {
         });
 
         this.columns$.next(this.columnsDefault);
-      });
+      }
+    });
   }
+
+  ngOnInit() {
+    this.fetchData();
+  }
+  fetchData() {}
 }

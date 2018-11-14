@@ -12,5 +12,8 @@ export class ILG6008020000E14Component extends CONFIG implements OnInit {
     super();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.fetchData();
+  }
+  private fetchData() {}
 }
