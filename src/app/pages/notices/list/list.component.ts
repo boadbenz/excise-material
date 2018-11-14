@@ -21,7 +21,7 @@ export class ListComponent implements OnInit, OnDestroy {
     setDefaultDate: string;
     paginage = pagination;
 
-    notice = new Array<Notice>();
+    notice = [];
     noticeList = new Array<Notice>();
 
     dateStartFrom: any;
@@ -118,33 +118,44 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preLoaderService.setShowPreloader(false);
     }
 
-    async onSearchComplete(list: Notice[]) {
-        if (!list.length) {
+    async onSearchComplete(list) {
+        if (list === undefined) {
             alert(Message.noRecord)
             return false;
         }
 
-        this.notice = [];
-        await list
-            .filter(item => item.IsActive == 1)
-            .map((item, i) => {
-                item.RowId = i + 1;
-                item.NoticeDate = toLocalShort(item.NoticeDate);
-                item.NoticeStaff
-                    .filter(_s => _s.IsActive == 1)
-                    .map(s => {
-                        s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
-                    });
-                item.NoticeSuspect
-                    .filter(_s => _s.IsActive == 1)
-                    .map(s => {
-                        s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
-                    })
-            })
+        // await list
+        //     .filter(item => item.IsActive == 1)
+        //     .map((item, i) => {
+        //         item.RowId = i + 1;
+        //         item.NoticeDate = toLocalShort(item.NoticeDate);
+        //         item.NoticeStaff
+        //             .filter(_s => _s.IsActive == 1)
+        //             .map(s => {
+        //                 s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+        //             });
+        //         item.NoticeSuspect
+        //             .filter(_s => _s.IsActive == 1)
+        //             .map(s => {
+        //                 s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+        //             })
+        //     })
 
-        this.notice = list
+        this.notice.push({
+            NoticeCode: list.NoticeCode,
+            NoticeDate: list.NoticeDate,
+            StaffTitleName: list.StaffTitleName,
+            StaffFirstName: list.StaffFirstName,
+            StaffLastName: list.StaffLastName,
+            StaffOfficeName: list.StaffOfficeName,
+            SuspectTitleName: list.SuspectTitleName,
+            SuspectFirstName: list.SuspectFirstName,
+            SuspectMiddleName: list.SuspectMiddleName,
+            SuspectLastName: list.SuspectLastName,
+        })
+        console.log(this.notice)
         // set total record
-        this.paginage.TotalItems = this.notice.length;
+        // this.paginage.TotalItems = this.notice.length;
     }
 
     onSDateChange(event: IMyDateModel) {

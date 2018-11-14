@@ -42,27 +42,27 @@ export class NoticeService {
 
     async getByKeywordOnInt(): Promise<Notice[]> {
         const params = { 'Textsearch': '' };
-        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-
-        if (res.IsSuccess == 'False' || !res.Notice.length) {
+        console.log(res)
+        if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
 
-        return res.Notice;
+        return res[0];
     }
 
     async getByKeyword(Textsearch: any): Promise<Notice[]> {
         debugger
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
-        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-
-        if (res.IsSuccess == 'False' || !res.Notice.length) {
+        console.log(res)
+        if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
 
-        return res.Notice;
+        // return res.Notice;
     }
 
     getByConAdv(form: any): Promise<Notice[]> {
