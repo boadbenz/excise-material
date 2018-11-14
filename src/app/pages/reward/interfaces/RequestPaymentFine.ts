@@ -4,9 +4,9 @@ export interface IRequestPaymentFine {
   ReferenceID: number;
   PaymentPeriodNo: number;
   PaymentFine: number;
-  PaymentDueDate: Date;
-  PaymentActualDate: Date;
-  ReceiveFinRate: Date;
+  PaymentDueDate: string;
+  PaymentActualDate: string;
+  ReceiveFinRate: string;
   LawbreakerTitleName: string;
   LawbreakerFirstName: string;
   LawbreakerMiddleName: string;

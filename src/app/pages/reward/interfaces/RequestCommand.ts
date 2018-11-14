@@ -2,7 +2,7 @@ import { IRequestCommandDetail } from './RequestCommandDetail';
 
 export interface IRequestCommand {
   CommandID?: number;
-  CommandDate?: Date;
+  CommandDate?: string;
   CommandTime?: string;
   CommandNo?: string;
   IsActive?: number;

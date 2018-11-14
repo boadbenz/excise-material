@@ -16,7 +16,7 @@ export interface IRequestBribe {
   LastName?: string;
   TotalPart?: number;
 
-  RequestDate?: Date;
+  RequestDate?: string;
   RequestTime?: string;
   StationCode?: string;
   Station?: string;
@@ -24,7 +24,7 @@ export interface IRequestBribe {
   BribeRemainder?: number;
   Informeracknowledge?: string;
   StationOfPOA?: string;
-  POADate?: Date;
+  POADate?: string;
   POATime?: string;
   POANo?: string;
   StationCodeOfPOA?: string;
@@ -62,7 +62,7 @@ export interface IRequestBribeupdByCon {
   RequestBribeRewardID: number;
   RequestBribeCode: string;
   CommandDetailID: number;
-  RequestDate: Date;
+  RequestDate: string;
   RequestTime: string;
   StationCode: string;
   Station: string;
@@ -70,7 +70,7 @@ export interface IRequestBribeupdByCon {
   BribeRemainder: number;
   Informeracknowledge: string;
   StationOfPOA: string;
-  POADate: Date;
+  POADate: string;
   POATime: string;
   POANo: string;
   StationCodeOfPOA: string;

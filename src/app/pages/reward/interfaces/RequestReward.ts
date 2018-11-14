@@ -6,7 +6,7 @@ export interface IRequestReward {
   RequestBribeRewardID: number;
   RequestRewardCode: string;
   FineType: number;
-  RequestDate: Date;
+  RequestDate: string;
   RequestTime: string;
   StationCode: string;
   Station: string;
@@ -28,4 +28,8 @@ export interface IRequestReward {
 
 export interface IRequestRewardgetByRequestBribeRewardID {
   RequestBribeRewardID: number;
+}
+
+export interface IRequestRewardgetByCon {
+  RequestRewardID: number;
 }
