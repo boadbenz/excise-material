@@ -22,11 +22,19 @@
                     <label for="" class="col-lg-2 col-sm-3 control-label">วันที่นำส่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group form-line">
-                            <input type="date" name="DateStartFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <div style="width:45%">
+                                <my-date-picker-th name="DateStartFrom" [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)" [(ngModel)]="DateStartFrom"></my-date-picker-th>
+                            </div>
+                            <!-- <input type="date" name="DateStartFrom" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"> -->
 
-                            <label for="">&nbsp; ถึง &nbsp;</label>
+                            <div style="margin:10px;">
+                                <label for="">&nbsp;ถึง&nbsp;</label>
+                            </div>
 
-                            <input type="date" name="DateStartTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป">
+                            <div style="width:45%">
+                                <my-date-picker-th name="DateStartTo" [options]="myDatePickerOptions" (dateChanged)="onEDateChange($event)" [(ngModel)]="DateStartTo"></my-date-picker-th>
+                            </div>
+                            <!-- <input type="date" name="DateStartTo" ngModel class="form-control form-control-sm" placeholder="วว/ดด/ปปปป"> -->
                         </div>
                     </div>
                 </div>
@@ -44,7 +52,15 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="DepartmentName" ngModel class="form-control" placeholder="">
+                                <input type="text" class="form-control" [(ngModel)]="OfficeName" name="OfficeName">
+                                <!-- <input type="text" class="form-control" [(ngModel)]="DepartmentName" name="DepartmentName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                                    matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
+                                    [disabled]="showEditField">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
+                                        {{ option.OfficeName }}
+                                    </mat-option>
+                                </mat-autocomplete> -->
                             </div>
                         </div>
                     </div>
@@ -54,7 +70,11 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="RevenueStatus" ngModel class="form-control" placeholder="">
+                                <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm" [disabled]="showEditField">
+                                    <option value="">ไม่เลือกสถานะนำส่งเงิน</option>
+                                    <option value="1">นำส่งเงินรายได้</option>
+                                    <option value="2">รับรายการนำส่งเงิน</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -79,13 +99,13 @@
             <table #revenueTable class="table">
                 <thead>
                     <tr>
-                        <th style="text-align: center">ลำดับ</th>
-                        <th>เลขที่นำส่งเงิน</th>
-                        <th>วันที่นำส่ง</th>
-                        <th>ผู้นำส่งเงิน</th>
-                        <th>หน่วยงาน</th>
-                        <th style="text-align: center">จำนวนคดี</th>
-                        <th>สถานะนำส่งเงิน</th>
+                        <th style="text-align: center;width:5%">ลำดับ</th>
+                        <th style="width:10%">เลขที่นำส่งเงิน</th>
+                        <th style="width:10%">วันที่นำส่ง</th>
+                        <th style="width:15%">ผู้นำส่งเงิน</th>
+                        <th style="width:30%">หน่วยงาน</th>
+                        <th style="text-align: center;width:10%">จำนวนคดี</th>
+                        <th style="width:20%" class="text-center">สถานะนำส่งเงิน</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -93,13 +113,13 @@
                     <tr *ngFor="let item of RevenueList; let i=index;">
                         <td style="text-align: center">{{i + 1}}</td>
                         <td>{{item.RevenueCode}}</td>
-                        <td>{{item.RevenueDate | date:'dd-MM-yyyy'}}</td>
-                        <td>{{item.InformTo}}</td>
-                        <td>{{item.RevenueStaff[0].DepartmentName}}</td>
-                        <td style="text-align: center">???</td>
-                        <td>{{item.RevenueDetail[0].RevenueStatus}}</td>
+                        <td>{{item.RevenueDate}}</td>
+                        <td>{{item.RevenueOneStaff}}</td>
+                        <td>{{item.RevenueOneStaffDept}}</td>
+                        <td style="text-align: center">{{item.ResultCount}}</td>
+                        <td class="text-center">{{item.RevenueStatus}}</td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueCode)">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueID)">
                                 <i class="mdi mdi-eye fa-lg"></i>
                             </a>
                         </td>
@@ -109,12 +129,8 @@
         </div>
 
         <div class="card-footer card-footer-unset">
-            <app-pagination-table 
-                [TotalItems]="paginage.TotalItems" 
-                [CurrentPage]="paginage.CurrentPage" 
-                [PageSize]="paginage.PageSize"
-                [RowsPerPageOptions]="paginage.RowsPerPageOptions" 
-                (onPageChange)="pageChanges($event)">
+            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
             </app-pagination-table>
         </div>
     </div>

@@ -8,6 +8,7 @@ import { FineService } from '../fine.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { ContributorPipe } from '../../../shared/pipe/ContributorPipe';
 
 const routes: Routes = [
     {
@@ -32,7 +33,7 @@ const routes: Routes = [
       CardActionsModule,
       PaginationTableModule
     ],
-    declarations: [ListComponent],
+    declarations: [ListComponent,ContributorPipe],
     providers: [FineService]
 })
 export class ListModule { }
