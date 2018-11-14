@@ -128,8 +128,6 @@ export class LawsuitService {
 
   async LawsuitinsAll(lawsuitForm) {
     console.log('lawsuitForm==>', lawsuitForm)
-    // const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-
     const url = `${appConfig.api8083}/LawsuitinsAll `;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(lawsuitForm), url);
   }

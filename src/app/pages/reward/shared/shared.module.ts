@@ -1,19 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatButtonModule, MatCheckboxModule, MatInputModule} from '@angular/material';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatInputModule,
+  MatExpansionModule,
+  MatDialogModule
+} from '@angular/material';
 import { REWARD_SHARED_COMPONENTS, REWARD_SHARED_SERVICES } from '.';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PaginationTableModule } from 'app/pages/component/pagination-table/pagination-table.module';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { CardActionsModule } from 'app/pages/component/card-actions/card-actions.module';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { PrintDialogComponent } from './print-dialog/print-dialog.component';
+import { REWARD_PIPES } from '../pipes';
 const SHARED_MODULES = [
   CommonModule,
   HttpClientModule,
   RouterModule,
   CardActionsModule,
+  MatExpansionModule,
+  MatDialogModule
 ];
 @NgModule({
   imports: [
@@ -25,17 +35,11 @@ const SHARED_MODULES = [
     MatInputModule,
     MatDatepickerModule,
     PaginationTableModule,
-    FormsModule,
+    FormsModule
   ],
-  exports: [
-    ...SHARED_MODULES,
-    ...REWARD_SHARED_COMPONENTS
-  ],
-  declarations: [
-    ...REWARD_SHARED_COMPONENTS
-  ],
-  providers: [
-    ...REWARD_SHARED_SERVICES
-  ]
+  exports: [...SHARED_MODULES, ...REWARD_SHARED_COMPONENTS, ...REWARD_PIPES],
+  declarations: [...REWARD_SHARED_COMPONENTS, ...REWARD_PIPES],
+  providers: [...REWARD_SHARED_SERVICES],
+  entryComponents: [PrintDialogComponent]
 })
-export class SharedModule { }
+export class SharedModule {}

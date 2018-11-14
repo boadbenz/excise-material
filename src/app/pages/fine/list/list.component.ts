@@ -8,6 +8,7 @@ import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { FormGroup, FormControl } from "@angular/forms";
+import { stringify } from 'querystring';
 
 @Component({
     selector: 'app-list',
@@ -46,8 +47,6 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        // {"ArrestCode":"","LawsuitCode":"","ProveReportNo":"","CompareCode":"","CompareDateFrom":null,"CompareDateTo":null,"ProgramCode":"XCS06","ProcessCode":"01","Staff":"","Department":""}
-
         const form = new FormGroup({
             ArrestCode: new FormControl(""),
             LawsuitCode: new FormControl(""),
@@ -61,16 +60,16 @@ export class ListComponent implements OnInit, OnDestroy {
             Department: new FormControl(""),
 
         });
-
-        this.onAdvSearch(form);
-        // this.onSearch({ Textsearch: "" });
-
-
+        // this.onAdvSearch(form);
+        this.onSearch({Textsearch:""});
         this.preLoaderService.setShowPreloader(true);
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
+                if(Textsearch.Textsearch && Textsearch.Textsearch == null){
+                    Textsearch = {Textsearch:""};
+                }
                 await this.onSearch(Textsearch);
             }
         });
@@ -83,58 +82,77 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onSearch(Textsearch: any) {
+        if(Textsearch.Textsearch == null){
+            Textsearch = {Textsearch:""};
+        }
         await this.fineService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            console.log("fail onSearch");
         });
     }
 
     async onAdvSearch(form: any) {
-
         const sDateCompare = new Date(form.value.CompareDateFrom);
         const eDateCompare = new Date(form.value.CompareDateTo);
-
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkRevenueDate);
         } else {
             form.value.CompareDateFrom = sDateCompare.getTime();
             form.value.CompareDateTo = eDateCompare.getTime();
 
-            if (isNaN(form.value.CompareDateFrom)) {
-                form.value.CompareDateFrom = "";
-                form.value.CompareDateTo = "";
-            }
+            isNaN(form.value.CompareDateFrom) ? form.value.CompareDateFrom = "" :  form.value.CompareDateFrom = new Date(form.value.CompareDateFrom).toLocaleString('en-GB', { timeZone: 'UTC' });
+            isNaN(form.value.CompareDateTo) ? form.value.CompareDateTo = "" :  form.value.CompareDateFrom = new Date(form.value.CompareDateTo).toLocaleString('en-GB', { timeZone: 'UTC' });
 
             form.value.ProgramCode = "";
             form.value.ProcessCode = "";
-
-
-            await this.fineService.getByConAdv(form.value).then(async list => {
+            
+            var sendingFormat = {
+                ArrestCode: form.value.ArrestCode,
+                LawsuitCode: form.value.LawsuitCode,
+                CompareCode: form.value.CompareCode,
+                ProveReportNo: form.value.ProveReportNo,
+                CompareDateFrom: form.value.CompareDateFrom,
+                CompareDateTo: form.value.CompareDateTo,
+                StaffName: form.value.Staff,
+                DepartmentName: form.value.Department,
+            }
+            this.fineService.getByConAdv(sendingFormat).subscribe(async list => {
                 this.onSearchComplete(list)
             }, (err: HttpErrorResponse) => {
-                alert(err.message);
+                console.log("fail onAdvSearch", err.message);
             });
         }
     }
 
     onSearchComplete(list: any) {
-        this.Compare = [];
-        console.log(list);
-        if (!list.length) {
+        var IsOutside = 0;
+        var CompareCode = "";
+        this.CompareList = [];
+        if (list.length < 1) {
             alert(Message.noRecord);
             return false;
         }
-
         if (Array.isArray(list)) {
-            this.Compare = list;
+            list.forEach(element => {
+                this.CompareList.push({
+                    CompareCode: CompareCode,
+                    ArrestCode: element.ArrestCode, 
+                    LawsuitNo: element.LawsuitNo,
+                    ProveReportNo: element.ProveReportNo,
+                    TitleName: element.TitleName,
+                    FirstName: element.FirstName,
+                    LastName: element.LastName,
+                    CompareDate: new Date(element.CompareDate),
+                    DepartmentName: element.DepartmentName,
+                    IsOutside: IsOutside
+                });                
+            });
         } else {
-            this.Compare.push(list);
+            this.CompareList.push(list);
         }
-
         // set total record
-        this.paginage.TotalItems = this.Compare.length;
-        this.CompareList = this.Compare.slice(0, this.paginage.RowsPerPageOptions[0]);
+        this.paginage.TotalItems = this.CompareList.length;
     }
 
     clickView(LawsuitID: string, ArrestCode: string, CompareID: string) {

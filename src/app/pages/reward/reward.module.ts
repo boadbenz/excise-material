@@ -5,6 +5,7 @@ import { SharedModule } from './shared/shared.module';
 import { REWARD_SERVICES } from './services';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CoreInterceptor } from './core.Interceptor';
+import { SumArrayPipe } from './pipes/sumArray.pipe';
 @NgModule({
   imports: [SharedModule, RewardRoutes],
   declarations: [...REWARD_COMPONENTS],

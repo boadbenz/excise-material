@@ -1,4 +1,5 @@
 export const appConfig = {
+<<<<<<< HEAD
     // apiUrl: 'http://150.95.81.223:8888/XCS60',
     // api8888: 'http://150.95.81.223:8888/XCS60',
     // api7788: 'http://150.95.81.223:7788/XCS60',
@@ -12,6 +13,8 @@ export const appConfig = {
     // api8087: 'http://150.95.81.223:8087/XCS60',
     // mockapi: 'http://demo1735762.mockable.io/XCS60',
     //
+=======
+>>>>>>> game
     apiUrl: 'http://103.233.193.62:8888/XCS60',
     api8888: 'http://103.233.193.62:8888/XCS60',
     api7788: 'http://103.233.193.62:7788/XCS60',
@@ -23,5 +26,9 @@ export const appConfig = {
     api8882: 'http://103.233.193.62:8882/XCS60',
     api8883: 'http://103.233.193.62:8883/XCS60',
     api8087: 'http://103.233.193.62:8087/XCS60',
+<<<<<<< HEAD
+    mockapi: 'http://demo1735762.mockable.io/XCS60'
+=======
     mockapi: 'http://demo1735762.mockable.io/XCS60',
+>>>>>>> game
 }

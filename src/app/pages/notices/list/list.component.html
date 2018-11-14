@@ -79,7 +79,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <!-- <tbody>
                     <tr *ngFor="let item of noticeList; let i=index;">
                         <td class="text-center">{{item.RowId}}</td>
                         <td>{{item.NoticeCode}}</td>
@@ -93,6 +93,21 @@
                         <td>
                             <div *ngFor="let suspect of item.NoticeSuspect;">{{suspect.SuspectFullName}}</div>
                         </td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.NoticeCode)">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody> -->
+                <tbody>
+                    <tr *ngFor="let item of notice; let i=index;">
+                        <td class="text-center">{{i+1}}</td>
+                        <td>{{item.NoticeCode}}</td>
+                        <td>{{item.NoticeDate}}</td>
+                        <td>{{item.StaffTitleName}}{{item.StaffFirstName}}{{item.StaffLastName}}</td>
+                        <td>{{item.StaffOfficeName}}</td>
+                        <td>{{item.SuspectTitleName}}{{item.SuspectFirstName}}{{item.SuspectLastName}}</td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.NoticeCode)">
                                 <i class="fa fa-eye fa-lg"></i>

@@ -11,7 +11,7 @@ export class ListConfig extends RewardHelper {
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
     actionUrl: '/reward/manage',
-    actionFieldParams: 'IndictmentID'
+    actionFieldParams: ['IndictmentID', 'ArrestCode']
   };
   public columns: ColumnsInterface[] = [
     {

@@ -81,7 +81,7 @@ export class ManageComponent implements OnInit {
   OperationPosName: string; // ตำแหน่งผู้เปรียบเทียบ (คำให้การของผู้ต้องหา)
   OperationDeptName: string; // แผนกผู้เปรียบเทียบ (คำให้การของผู้ต้องหา)
   CompareStaffID: string;   // รหัสผู้เปรียบเทียบ (คำให้การของผู้ต้องหา)
-  IsOutside: string;        // flg คดีเปรียบเทียบนอกสถานที่ทำการ
+  IsOutside: number;        // flg คดีเปรียบเทียบนอกสถานที่ทำการ
   AccusedTable: any; // ส่วนข้อมูลคาให้การของผู้ต้องหา ส่วนตาราง
   // --- Object ---
   oArrest: Arrest;
@@ -254,7 +254,7 @@ export class ManageComponent implements OnInit {
     this.oCompare = {
       CompareID: "",
       CompareCode: "",
-      CompareDate: "",
+      CompareDate: new Date(),
       CompareStationCode: "",
       CompareStation: "",
       CompareSubdistrictCode: "",
@@ -269,7 +269,7 @@ export class ManageComponent implements OnInit {
       AccuserDistrict: "",
       AccuserProvinceCode: "",
       AccuserProvince: "",
-      IsOutside: "",
+      IsOutside: 0,
       LawsuitID: ""
     }
   }
@@ -586,7 +586,7 @@ export class ManageComponent implements OnInit {
         this.CompareYear = CRN[1];
       }
 
-      var CDate = this.oCompare.CompareDate.split(" ");
+      var CDate = this.oCompare.CompareDate.toString().split(" ");
       this.CompareDate = CDate[0];
       this.CompareTime = CDate[1] + ".000";
 
@@ -649,7 +649,7 @@ export class ManageComponent implements OnInit {
     // this.preloader.setShowPreloader(true);
 
     this.oCompare.CompareCode = this.CompareNo + "/" + this.CompareYear;
-    this.oCompare.CompareDate = this.CompareDate + ' ' + this.CompareTime;
+    this.oCompare.CompareDate = new Date(this.CompareDate + ' ' + this.CompareTime);
 
     this.oCompare.AccuserSubdistrictCode = this.AccuserSubdistrictCode;
     this.oCompare.AccuserSubdistrict = this.AccuserSubdistrict;
@@ -657,7 +657,7 @@ export class ManageComponent implements OnInit {
     var aIndex;
     aIndex = this.getIndexOf(this.ListCompareStaff, "18", "ContributorCode");
     this.ListCompareStaff[aIndex] = this.oCompareStaff;
-    this.oCompare.IsOutside = '1';
+    this.oCompare.IsOutside = 1;
     // debugger
     // if (this.IsOutside == 'true') {
     //   this.oCompare.IsOutside = '1';

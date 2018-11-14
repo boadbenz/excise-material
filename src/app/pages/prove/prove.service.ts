@@ -20,7 +20,7 @@ export class ProveService {
 
   getByKeyword(Textsearch: string) {
     const params = Textsearch;
-    const url = `${appConfig.api8882}/ProvegetByKeyword`;
+    const url = `${appConfig.api8882}/ProveListgetByKeyword`;
     return this.http.post<Prove[]>(url, params, this.httpOptions);
   }
 

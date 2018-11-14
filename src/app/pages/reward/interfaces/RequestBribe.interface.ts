@@ -4,34 +4,34 @@ import { IRequestBribeStaff } from './RequestBribeStaff.interface';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IRequestBribe {
-  RequestBribeID: number;
-  RequestBribeRewardID: number;
-  RequestBribeCode: string;
-  CommandDetailID: number;
+  RequestBribeID?: number;
+  RequestBribeRewardID?: number;
+  RequestBribeCode?: string;
+  CommandDetailID?: number;
 
-  NoticeCode: string;
-  PartMoney: number;
-  TitleName: string;
-  FirstName: string;
-  LastName: string;
-  TotalPart: number;
+  NoticeCode?: string;
+  PartMoney?: number;
+  TitleName?: string;
+  FirstName?: string;
+  LastName?: string;
+  TotalPart?: number;
 
-  RequestDate: Date;
-  RequestTime: string;
-  StationCode: string;
-  Station: string;
-  BribeTotal: number;
-  BribeRemainder: number;
-  Informeracknowledge: string;
-  StationOfPOA: string;
-  POADate: Date;
-  POATime: string;
-  POANo: string;
-  StationCodeOfPOA: string;
-  IsActive: number;
+  RequestDate?: Date;
+  RequestTime?: string;
+  StationCode?: string;
+  Station?: string;
+  BribeTotal?: number;
+  BribeRemainder?: number;
+  Informeracknowledge?: string;
+  StationOfPOA?: string;
+  POADate?: Date;
+  POATime?: string;
+  POANo?: string;
+  StationCodeOfPOA?: string;
+  IsActive?: number;
 
-  RequestBribeDetail: Array<IRequestBribeDetail>;
-  RequestBribeStaff: Array<IRequestBribeStaff>;
+  RequestBribeDetail?: Array<IRequestBribeDetail>;
+  RequestBribeStaff?: Array<IRequestBribeStaff>;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -50,28 +50,7 @@ export interface IRequestBribegetByCon {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface IRequestBribeinsAll {
-  RequestBribeID: number;
-  RequestBribeRewardID: number;
-  RequestBribeCode: string;
-  CommandDetailID: number;
-  RequestDate: Date;
-  RequestTime: string;
-  StationCode: string;
-  Station: string;
-  BribeTotal: number;
-  BribeRemainder: number;
-  Informeracknowledge: string;
-  StationOfPOA: string;
-  POADate: Date;
-  POATime: string;
-  POANo: string;
-  StationCodeOfPOA: string;
-  IsActive: number;
-
-  RequestBribeDetail: Array<IRequestBribeDetail>;
-  RequestBribeStaff: Array<IRequestBribeStaff>;
-}
+export interface IRequestBribeinsAll extends IRequestBribe {}
 
 // tslint:disable-next-line:class-name
 export interface IRequestBribeinsAllResponse extends IResponseCommon {
