@@ -227,6 +227,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
+    
     this.sidebarService.setVersion('0.0.0.6');
     // this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
@@ -410,12 +411,11 @@ export class ManageComponent implements OnInit {
       }
     );
 
-    let IsLawsuitComplete = 0;
-    this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
+     let IsLawsuitComplete = await this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
 
-      IsLawsuitComplete = res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
+      return res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
     });
-
+    console.log(IsLawsuitComplete)
     if (!confirm("ยืนยันการทำรายการหรือไม่")) {
       return;
     }
@@ -454,7 +454,55 @@ export class ManageComponent implements OnInit {
     this.navService.setDeleteButton(true);
     this.navService.setEditButton(true);
   }
+  alertOnSave() {
+    /// check LawsuitDate
+    if (!this.lawsuitForm.get('LawsuitDate').valid) {
+      alert("กรุณากรอกวันที่รับคดีใหม่");
+      this.preLoaderService.setShowPreloader(false);
+      return;
+    }
+    /// check LawsuitTime
+    if (!this.lawsuitForm.get('LawsuitTime').valid) {
+      alert("กรุณากรอกเวลาที่รับคดีใหม่");
+      this.preLoaderService.setShowPreloader(false);
+      return;
+    }
 
+    /// check StaffID on exite in this.masStaffList)
+    // if( this.lawsuitForm.get('FullName').value in this.masStaffList)
+    let _masStaffList = this.masStaffList;
+    let result = _masStaffList.filter(item => (item.FullName == this.lawsuitForm.get('FullName').value));
+    if (!result) {
+      alert("กรุณากรอกผู้รับคดีใหม่");
+      this.preLoaderService.setShowPreloader(false);
+      return;
+    }
+
+    /// check PositionName
+    if (!this.lawsuitForm.get('PositionName').valid) {
+      alert("กรุณากรอกตำแหน่งใหม่");
+      this.preLoaderService.setShowPreloader(false);
+      return;
+    }
+    /// check DepartmentName
+    if (!this.lawsuitForm.get('DepartmentName').valid) {
+      alert("กรุณากรอกหน่วยงานใหม่");
+      this.preLoaderService.setShowPreloader(false);
+      return;
+    }
+    /// check LawsuitStation
+    if (!this.lawsuitForm.get('LawsuitStation').valid) {
+      alert("กรุณากรอกสถานที่เขียนใหม่");
+      this.preLoaderService.setShowPreloader(false);
+      return;
+    }
+    /// check AccuserTestimony
+    if (!this.lawsuitForm.get('AccuserTestimony').valid) {
+      alert("กรุณากรอกคำให้การใหม่");
+      this.preLoaderService.setShowPreloader(false);
+      return;
+    }
+  }
   private async onSave() {
     this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
@@ -475,53 +523,7 @@ export class ManageComponent implements OnInit {
           }
         });
 
-      /// check LawsuitDate
-      if (!this.lawsuitForm.get('LawsuitDate').valid) {
-        alert("กรุณากรอกวันที่รับคดีใหม่");
-        this.preLoaderService.setShowPreloader(false);
-        return;
-      }
-      /// check LawsuitTime
-      if (!this.lawsuitForm.get('LawsuitTime').valid) {
-        alert("กรุณากรอกเวลาที่รับคดีใหม่");
-        this.preLoaderService.setShowPreloader(false);
-        return;
-      }
-
-      /// check StaffID on exite in this.masStaffList)
-      // if( this.lawsuitForm.get('FullName').value in this.masStaffList)
-      let _masStaffList = this.masStaffList;
-      let result = _masStaffList.filter(item => (item.FullName == this.lawsuitForm.get('FullName').value));
-      if (!result) {
-        alert("กรุณากรอกผู้รับคดีใหม่");
-        this.preLoaderService.setShowPreloader(false);
-        return;
-      }
-
-      /// check PositionName
-      if (!this.lawsuitForm.get('PositionName').valid) {
-        alert("กรุณากรอกตำแหน่งใหม่");
-        this.preLoaderService.setShowPreloader(false);
-        return;
-      }
-      /// check DepartmentName
-      if (!this.lawsuitForm.get('DepartmentName').valid) {
-        alert("กรุณากรอกหน่วยงานใหม่");
-        this.preLoaderService.setShowPreloader(false);
-        return;
-      }
-      /// check LawsuitStation
-      if (!this.lawsuitForm.get('LawsuitStation').valid) {
-        alert("กรุณากรอกสถานที่เขียนใหม่");
-        this.preLoaderService.setShowPreloader(false);
-        return;
-      }
-      /// check AccuserTestimony
-      if (!this.lawsuitForm.get('AccuserTestimony').valid) {
-        alert("กรุณากรอกคำให้การใหม่");
-        this.preLoaderService.setShowPreloader(false);
-        return;
-      }
+      this.alertOnSave()
       ///edit LawsuitNo
       // await this.lawsuitService.LawsuitupdByCon(this.LawsuitID, this.lawsuitForm.controls['LawsuitNo'].value).then(async res=>{
       //   console.log(res);
@@ -537,6 +539,7 @@ export class ManageComponent implements OnInit {
       } else {
         isOut = 0;
       }
+      this.alertOnSave()
       // isOut => (isOut) ? '1' : '0';
       await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut).then(async res => {
         if (res.length > 0) {
@@ -566,7 +569,7 @@ export class ManageComponent implements OnInit {
             "LawsuitType": 2,
             // "LawsuitEnd": this.LawsuitTableList.controls[0].value['LawsuitEnd'].value,
             "LawsuitEnd": 2,
-            "LawsuiteStaff": [{
+            "LawsuitStaff": [{
               "StaffID": '1',
               "ProgramCode": "XCS-60",
               "ProcessCode": "XCS-60-001",
