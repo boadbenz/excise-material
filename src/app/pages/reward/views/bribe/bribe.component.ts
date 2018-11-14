@@ -51,10 +51,10 @@ export class BribeComponent extends BribeConfig implements OnInit {
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
-      this.bribeService.mode$.next(param['mode']);
-      this.bribeService.ArrestCode$.next(param['ArrestCode']);
-      this.bribeService.RequestBribeID$.next(param['RequestBribeID']);
-      this.bribeService.RequestBribeRewardID$.next(
+      this.mode$.next(param['mode']);
+      this.ArrestCode$.next(param['ArrestCode']);
+      this.RequestBribeID$.next(param['RequestBribeID']);
+      this.RequestBribeRewardID$.next(
         param['RequestBribeRewardID']
       );
     });
@@ -74,14 +74,14 @@ export class BribeComponent extends BribeConfig implements OnInit {
   }
   private pageLoad() {
     // 1 START
-    switch (this.bribeService.mode$.getValue()) {
+    switch (this.mode$.getValue()) {
       case 'C':
         // 1.1
         this.MasStaffMaingetAll(); // 1.1.1
         this.MasOfficeMaingetAll(); // 1.1.2
 
         this.RequestCommandgetByArrestCode({
-          ArrestCode: this.bribeService.ArrestCode$.getValue()
+          ArrestCode: this.ArrestCode$.getValue()
         }); // 1.1.3
 
         // 1.1.5
@@ -99,7 +99,7 @@ export class BribeComponent extends BribeConfig implements OnInit {
       case 'R':
         // 1.2
         this.RequestBribegetByCon({
-          RequestBribeID: this.bribeService.RequestBribeID$.getValue()
+          RequestBribeID: this.RequestBribeID$.getValue()
         });
 
         this.MasDocumentMaingetAll();
@@ -155,7 +155,7 @@ export class BribeComponent extends BribeConfig implements OnInit {
     // 1.5 'WAIT'
 
     // 2
-    switch (this.bribeService.mode$.getValue()) {
+    switch (this.mode$.getValue()) {
       case 'C':
         // 2.1
         // 2.1.1
@@ -195,7 +195,7 @@ export class BribeComponent extends BribeConfig implements OnInit {
                 5
               ); // 2.1.2(1.2(4))
               const RequestBribeCode = `${RunningPrefix}${RunningOfficeCode}${RunningYear}${RunningNo}`;
-              this.bribeService.RequestBribeCode$.next(RequestBribeCode);
+              this.RequestBribeCode$.next(RequestBribeCode);
             } else {
               // 2.1.2(2)
               // 2.1.2(2.1)
@@ -213,16 +213,16 @@ export class BribeComponent extends BribeConfig implements OnInit {
                 .toString()
                 .substr(2, 1);
               const RequestBribeCode = `BR${RunningOfficeCode}${yy_thaibuddha}00001`;
-              this.bribeService.RequestBribeCode$.next(RequestBribeCode);
+              this.RequestBribeCode$.next(RequestBribeCode);
             }
           });
 
         // 2.1.3
         await this.requestBribeService
           .RequestBribeinsAll({
-            RequestBribeRewardID: this.bribeService.RequestBribeRewardID$.getValue(), // 2.1.3(1)
-            RequestBribeCode: this.bribeService.RequestBribeCode$.getValue(), // 2.1.3(2)
-            CommandDetailID: this.bribeService.CommandDetailID$.getValue() // 2.1.3(4) 'WAIT'
+            RequestBribeRewardID: this.RequestBribeRewardID$.getValue(), // 2.1.3(1)
+            RequestBribeCode: this.RequestBribeCode$.getValue(), // 2.1.3(2)
+            CommandDetailID: this.CommandDetailID$.getValue() // 2.1.3(4) 'WAIT'
           })
           .subscribe();
 
@@ -240,7 +240,7 @@ export class BribeComponent extends BribeConfig implements OnInit {
       .RequestBribegetByCon(param)
       .subscribe((res: IRequestBribe[]) => {
         // 1.2.3
-        this.bribeService.RequestBribe$.next(res);
+        this.RequestBribe$.next(res);
       });
   }
   private MasDocumentMaingetAll() {
@@ -248,11 +248,11 @@ export class BribeComponent extends BribeConfig implements OnInit {
     this.masDocumentMainService
       .MasDocumentMaingetAll({
         DocumentType: 8,
-        ReferenceCode: this.bribeService.RequestBribeID$.getValue()
+        ReferenceCode: this.RequestBribeID$.getValue()
       })
       .subscribe((res: MasDocumentModel[]) => {
         // 1.2.3
-        this.bribeService.MasDocument$.next(res);
+        this.MasDocument$.next(res);
       });
   }
 
@@ -290,21 +290,21 @@ export class BribeComponent extends BribeConfig implements OnInit {
       .RequestCommandgetByArrestCode(param)
       .subscribe((res: IRequestCommand[]) => {
         // 1.1.4
-        this.bribeService.RequestCommand$.next(res);
+        this.RequestCommand$.next(res);
       });
   }
   private MasStaffMaingetAll() {
     this.masStaffService
       .MasStaffMaingetAll()
       .subscribe((res: MasStaffModel[]) => {
-        this.bribeService.MasStaffMain$.next(res);
+        this.MasStaffMain$.next(res);
       });
   }
   private MasOfficeMaingetAll() {
     this.masOfficeService
       .MasOfficeMaingetAll()
       .subscribe((res: MasOfficeModel[]) => {
-        this.bribeService.MasOfficeMain$.next(res);
+        this.MasOfficeMain$.next(res);
       });
   }
   private setShowButton() {

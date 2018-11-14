@@ -1,3 +1,54 @@
+<mat-accordion [multi]="true">
+  <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E08_DISABLED$ | async"
+    (opened)="ILG60_08_04_00_00_E08_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E08_EXPANDED$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">คำร้องขอรับเงินรางวัล</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-04-00-00-E08></ILG60-08-04-00-00-E08>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E12_DISABLED$ | async"
+    (opened)="ILG60_08_04_00_00_E12_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E12_EXPANDED$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">ตารางการแบ่งจ่ายเงินสินบนรางวัล</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-04-00-00-E12></ILG60-08-04-00-00-E12>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E19_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E19_DISABLED$ | async"
+    (opened)="ILG60_08_04_00_00_E19_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E19_EXPANDED$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-04-00-00-E19></ILG60-08-04-00-00-E19>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>
+
+
+
+
+
+
+
+
 <!-- ส่งฟ้องศาล ซ่อน -->
 <div class="card" [hidden]="!court">
   <div class="card-header  unset-radius">

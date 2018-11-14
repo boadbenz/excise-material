@@ -8,6 +8,7 @@ import { RequestBribeService } from './RequestBribe.service';
 import { REWARD_MASTER_SERVICES } from './master';
 import { RewardService } from '../reward.service';
 import { TransactionRunningService } from './TransactionRunning.service';
+import { RequestPaymentFineDetailService } from './RequestPaymentFineDetail.service';
 
 export const REWARD_SERVICES = [
   ...REWARD_MASTER_SERVICES,
@@ -19,5 +20,6 @@ export const REWARD_SERVICES = [
   RequestCommandService,
   RequestNoticeService,
   RequestBribeService,
+  RequestPaymentFineDetailService,
   TransactionRunningService
 ];

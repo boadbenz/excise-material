@@ -417,19 +417,174 @@ export class ManageComponent extends ManageConfig implements OnInit {
     this.requestBribeRewardService
       .RequestBribeRewardgetByIndictmentID(param)
       .subscribe((res: IRequestBribeReward[]) => {
-        console.log('IRequestBribeReward', res);
+        // console.log('IRequestBribeReward', res);
         // 4.1
         if (res.length > 0) {
           const RequestBribeReward: IRequestBribeReward = res[0];
 
           this.PageLoadHaveNotice$.next(RequestBribeReward.HaveNotice); // นำไปใช้ใน รหัสเหตุการณ์  ILG60-03-02-00-00-E04
 
-          // this.RequestBribeRewardID$.next(
-          //   RequestBribeReward.RequestBribeRewardID
-          // );
+          // ILG60-08-02-00-00
+          this.RequestBribeRewardID$.next(
+            RequestBribeReward.RequestBribeRewardID
+          );
 
           // 4.1.1
-          this.HaveNoticeSwitch(RequestBribeReward.HaveNotice);
+          switch (RequestBribeReward.HaveNotice) {
+            // 4.1.1(1)
+            case 0:
+              // 4.1.1(1.1)
+              this.requestRewardService
+                .RequestRewardgetByRequestBribeRewardID({
+                  RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+                })
+                .subscribe(
+                  (resReward: IRequestRewardgetByRequestBribeRewardID[]) => {
+                    // 4.1.1(1.2)
+                    // 4.1.1(1.2.1)
+                    if (resReward.length > 0) {
+                      // 4.1.1(1.2.1(1))
+                      this.ILG60_08_02_00_00E14_DATA$.next(resReward);
+
+                      // 4.1.1(1.2.1(2))
+                    } else {
+                      // 4.1.1(1.2.2)
+                      // 4.1.1(1.2.2(1)) => 4.1.1(1.3)
+                    }
+
+                    // 4.1.1(1.3)
+                    this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                    // 4.1.1(1.3.1)
+                    this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+                    // 4.1.1(1.3.2)
+                    this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
+                    this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                    // 4.1.1(1.4)
+                    // 4.1.1(1.4.1)
+                    this.ILG60_08_02_00_00E08_DISABLED$.next(false);
+                    this.ILG60_08_02_00_00E09_DISABLED$.next(true);
+                    this.ILG60_08_02_00_00E11_DISABLED$.next(true);
+                    // 4.1.1(1.4.1)
+                    this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+
+                    this.navService.setSearchBar(false);
+                    this.navService.setPrintButton(true);
+                    this.navService.setDeleteButton(true);
+                    this.navService.setCancelButton(false);
+                    this.navService.setEditButton(true);
+                    this.navService.setSaveButton(false);
+                  }
+                );
+              break;
+
+            // 4.1.1(2)
+            case 1:
+              // 4.1.1(2.1)
+              this.RequestBribegetByRequestBribeRewardID({
+                RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+              });
+
+              // 4.1.1(2.3)
+              this.requestRewardService
+                .RequestRewardgetByRequestBribeRewardID({
+                  RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+                })
+                .subscribe(
+                  (resReward: IRequestRewardgetByRequestBribeRewardID[]) => {
+                    // 4.1.1(2.4)
+                    // 4.1.1(2.4.1)
+                    if (resReward.length > 0) {
+                      // 4.1.1(2.4.1(1))
+                      this.ILG60_08_02_00_00E14_DATA$.next(resReward);
+                      // 4.1.1(2.4.1(2)) ==> 4.1.1(2.5)
+                    } else {
+                      // 4.1.1(2.4.2)
+                      // 4.1.1(2.4.2(1)) ==> 4.1.1(2.5)
+                    }
+                  }
+                );
+
+              // 4.1.1(2.5)
+
+              this.requestCommandService
+                .RequestCommandgetByArrestCode({
+                  ArrestCode: this.ArrestCode$.getValue()
+                })
+                .subscribe((resCommand: IRequestCommand[]) => {
+                  const RequestCommand: IRequestCommand = resCommand[0];
+                  // 4.1.1(2.6)
+
+                  // 4.1.1(2.6.1)
+                  if (
+                    RequestCommand &&
+                    RequestCommand['RequestCommandDetail'].length === 1
+                  ) {
+                    // 4.1.1(2.6.1(1))
+                    this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                    // 4.1.1(2.6.1(1.1))
+                    this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+                    this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
+                    this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                    // 4.1.1(2.6.1(2))
+                    // 4.1.1(2.6.1(2.1))
+                    this.ILG60_08_02_00_00E08_DISABLED$.next(false);
+                    this.ILG60_08_02_00_00E09_DISABLED$.next(true);
+                    // 4.1.1(2.6.1(2.2)) || 4.1.1(2.6.1(2.4))
+                    this.ILG60_08_02_00_00E11_DISABLED$.next(false);
+                    // 4.1.1(2.6.1(2.3)) || 4.1.1(2.6.1(2.5))
+                    this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+
+                    // 4.1.1(2.6.1(3))
+                    this.navService.setSearchBar(false);
+                    // 4.1.1(2.6.1(3.1))
+                    this.navService.setPrintButton(true);
+                    // 4.1.1(2.6.1(3.2))
+                    this.navService.setEditButton(true);
+                    // 4.1.1(2.6.1(3.3))
+                    this.navService.setDeleteButton(true);
+                    this.navService.setCancelButton(false);
+                    this.navService.setSaveButton(false);
+                  } else if (
+                    RequestCommand &&
+                    RequestCommand['RequestCommandDetail'].length > 1
+                  ) {
+                    // 4.1.1(2.6.2)
+                    // 4.1.1(2.6.2(1))
+                    this.ILG60_08_02_00_00E09_DATA$.next(resCommand);
+
+                    // 4.1.1(2.6.2(2))
+                    this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                    this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
+                    this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
+                    this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                    // 4.1.1(2.6.2(3))
+                    // 4.1.1(2.6.2(3.1))
+                    this.ILG60_08_02_00_00E08_DISABLED$.next(false);
+                    // 4.1.1(2.6.2(3.2))
+                    this.ILG60_08_02_00_00E09_DISABLED$.next(false);
+                    // 4.1.1(2.6.2(3.3)) || 4.1.1(2.6.2(3.5))
+                    this.ILG60_08_02_00_00E11_DISABLED$.next(false);
+                    // 4.1.1(2.6.2(3.4)) || 4.1.1(2.6.2(3.6))
+                    this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+
+                    // 4.1.1(2.6.2(4))
+                    // 4.1.1(2.6.2(4.1))
+                    this.navService.setPrintButton(true);
+                    // 4.1.1(2.6.2(4.2))
+                    this.navService.setEditButton(true);
+                    // 4.1.1(2.6.2(4.3))
+                    this.navService.setDeleteButton(true);
+                    this.navService.setCancelButton(false);
+                    this.navService.setSearchBar(false);
+                    this.navService.setSaveButton(false);
+                  }
+                });
+
+              break;
+          }
         } else {
           // 4.2
           // 4.2.1
@@ -440,45 +595,6 @@ export class ManageComponent extends ManageConfig implements OnInit {
         this.RequestBribeRewardgetByIndictmentID$.next(res);
       });
   }
-  private HaveNoticeSwitch(HaveNotice: number) {
-    switch (HaveNotice) {
-      // 4.1.1(1)
-      case 0:
-        // 4.1.1(1.1)
-        this.RequestRewardgetByRequestBribeRewardID(
-          {
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-          },
-          HaveNotice
-        );
-        break;
-
-      // 4.1.1(2)
-      case 1:
-        // 4.1.1(2.1)
-        this.RequestBribegetByRequestBribeRewardID({
-          RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-        });
-
-        // 4.1.1(2.3)
-        this.RequestRewardgetByRequestBribeRewardID(
-          {
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-          },
-          HaveNotice
-        );
-
-        // 4.1.1(2.5)
-        this.RequestCommandgetByArrestCode(
-          {
-            ArrestCode: this.ArrestCode$.getValue()
-          },
-          '4.1.1(2.5)'
-        );
-        break;
-    }
-  }
-
   private RequestNoticegetByArrestCode(param: IRequestNoticegetByArrestCode) {
     this.requestNoticeService
       .RequestNoticegetByArrestCode(param)
@@ -509,12 +625,100 @@ export class ManageComponent extends ManageConfig implements OnInit {
           });
 
           // 4.2.2(1.3)
-          this.RequestCommandgetByArrestCode(
-            {
+          this.requestCommandService
+            .RequestCommandgetByArrestCode({
               ArrestCode: this.ArrestCode$.getValue()
-            },
-            '4.2.2(1.3)'
-          );
+            })
+            .subscribe((resCommand: IRequestCommand[]) => {
+              const RequestCommand: IRequestCommand = resCommand[0];
+              // 4.2.2(1.4)
+              // 4.2.2(1.4.1)
+              if (
+                RequestCommand &&
+                RequestCommand['RequestCommandDetail'].length === 1
+              ) {
+                // 4.2.2(1.4.1(1))
+                this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                // 4.2.2(1.4.1(1.1))
+                this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+                this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
+                this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                // 4.2.2(1.4.1(2))
+                // 4.2.2(1.4.1(2.1)) 'WAIT'
+                // 4.2.2(1.4.1(2.2)) 'WAIT'
+                // 4.2.2(1.4.1(2.3)) 'WAIT'
+
+                // 4.2.2(1.4.1(3))
+                // 4.2.2(1.4.1(3.1))
+                this.navService.setSaveButton(true);
+                // 4.2.2(1.4.1(3.2))
+                this.navService.setCancelButton(true);
+                this.navService.setPrintButton(false);
+                this.navService.setEditButton(false);
+                this.navService.setDeleteButton(false);
+                this.navService.setSearchBar(false);
+              } else if (
+                RequestCommand &&
+                RequestCommand['RequestCommandDetail'].length > 1
+              ) {
+                // 4.2.2(1.4.2)
+                // 4.2.2(1.4.2(1))
+                this.ILG60_08_02_00_00E09_DATA$.next(resCommand);
+
+                // 4.2.2(1.4.2(2))
+                this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
+                this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
+                this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                // 4.2.2(1.4.2(3))
+                // 4.2.2(1.4.2(3.1)) 'WAIT'
+                // 4.2.2(1.4.2(3.2)) 'WAIT'
+                // 4.2.2(1.4.2(3.3)) 'WAIT'
+
+                // 4.2.2(1.4.2(4))
+                // 4.2.2(1.4.2(4.1))
+                this.navService.setSaveButton(true);
+                // 4.2.2(1.4.2(4.2))
+                this.navService.setCancelButton(true);
+                this.navService.setPrintButton(false);
+                this.navService.setEditButton(false);
+                this.navService.setDeleteButton(false);
+                this.navService.setSearchBar(false);
+              } else {
+                // 4.2.2(2)
+                // 4.2.2(2.1)
+                this.RequestBribeRewardinsAll({
+                  // 4.2.2(2.1.1)
+                  IndictmentID: this.IndictmentID$.getValue(),
+                  // 4.2.2(2.1.2)
+                  HaveNotice: 0
+                });
+
+                // 4.2.2(2.2)
+                this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                // 4.2.2(2.2.1)
+                this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+                // 4.2.2(2.2.2)
+                this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
+                this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                // 4.2.2(2.3)
+                // 4.2.2(2.3.1) 'WAIT'
+                // 4.2.2(2.3.2) 'WAIT'
+
+                // 4.2.2(2.4)
+                // 4.2.2(2.4.1)
+                this.navService.setSaveButton(true);
+                // 4.2.2(2.4.2)
+                this.navService.setCancelButton(true);
+                this.navService.setPrintButton(false);
+                this.navService.setEditButton(false);
+                this.navService.setDeleteButton(false);
+                this.navService.setSearchBar(false);
+              }
+            });
         } else {
           this.RequestBribeRewardinsAll({
             IndictmentID: this.IndictmentID$.getValue(),
@@ -607,68 +811,6 @@ export class ManageComponent extends ManageConfig implements OnInit {
         const RequestCommand: IRequestCommand = res[0];
         switch (event) {
           case '4.1.1(2.5)':
-            // 4.1.1(2.6)
-
-            // 4.1.1(2.6.1)
-            if (RequestCommand.RequestCommandDetail.length === 1) {
-              // 4.1.1(2.6.1(1))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              // 4.1.1(2.6.1(1.1))
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-              // 4.1.1(2.6.1(2))
-              // 4.1.1(2.6.1(2.1))
-              this.ILG60_08_02_00_00E08_DISABLED$.next(false);
-              this.ILG60_08_02_00_00E09_DISABLED$.next(true);
-              // 4.1.1(2.6.1(2.2)) || 4.1.1(2.6.1(2.4))
-              this.ILG60_08_02_00_00E11_DISABLED$.next(false);
-              // 4.1.1(2.6.1(2.3)) || 4.1.1(2.6.1(2.5))
-              this.ILG60_08_02_00_00E14_DISABLED$.next(false);
-
-              // 4.1.1(2.6.1(3))
-              this.navService.setSearchBar(false);
-              // 4.1.1(2.6.1(3.1))
-              this.navService.setPrintButton(true);
-              // 4.1.1(2.6.1(3.2))
-              this.navService.setEditButton(true);
-              // 4.1.1(2.6.1(3.3))
-              this.navService.setDeleteButton(true);
-              this.navService.setCancelButton(false);
-              this.navService.setSaveButton(false);
-            } else if (RequestCommand.RequestCommandDetail.length > 1) {
-              // 4.1.1(2.6.2)
-              // 4.1.1(2.6.2(1))
-              this.ILG60_08_02_00_00E09_DATA$.next(res);
-
-              // 4.1.1(2.6.2(2))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-              // 4.1.1(2.6.2(3))
-              // 4.1.1(2.6.2(3.1))
-              this.ILG60_08_02_00_00E08_DISABLED$.next(false);
-              // 4.1.1(2.6.2(3.2))
-              this.ILG60_08_02_00_00E09_DISABLED$.next(false);
-              // 4.1.1(2.6.2(3.3)) || 4.1.1(2.6.2(3.5))
-              this.ILG60_08_02_00_00E11_DISABLED$.next(false);
-              // 4.1.1(2.6.2(3.4)) || 4.1.1(2.6.2(3.6))
-              this.ILG60_08_02_00_00E14_DISABLED$.next(false);
-
-              // 4.1.1(2.6.2(4))
-              // 4.1.1(2.6.2(4.1))
-              this.navService.setPrintButton(true);
-              // 4.1.1(2.6.2(4.2))
-              this.navService.setEditButton(true);
-              // 4.1.1(2.6.2(4.3))
-              this.navService.setDeleteButton(true);
-              this.navService.setCancelButton(false);
-              this.navService.setSearchBar(false);
-              this.navService.setSaveButton(false);
-            }
             break;
 
           case '4.2.2':
@@ -708,87 +850,6 @@ export class ManageComponent extends ManageConfig implements OnInit {
             }
             break;
           case '4.2.2(1.3)':
-            // 4.2.2(1.4)
-            // 4.2.2(1.4.1)
-            if (RequestCommand.RequestCommandDetail.length === 1) {
-              // 4.2.2(1.4.1(1))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              // 4.2.2(1.4.1(1.1))
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-              // 4.2.2(1.4.1(2))
-              // 4.2.2(1.4.1(2.1)) 'WAIT'
-              // 4.2.2(1.4.1(2.2)) 'WAIT'
-              // 4.2.2(1.4.1(2.3)) 'WAIT'
-
-              // 4.2.2(1.4.1(3))
-              // 4.2.2(1.4.1(3.1))
-              this.navService.setSaveButton(true);
-              // 4.2.2(1.4.1(3.2))
-              this.navService.setCancelButton(true);
-              this.navService.setPrintButton(false);
-              this.navService.setEditButton(false);
-              this.navService.setDeleteButton(false);
-              this.navService.setSearchBar(false);
-            } else if (RequestCommand.RequestCommandDetail.length > 1) {
-              // 4.2.2(1.4.2)
-              // 4.2.2(1.4.2(1))
-              this.ILG60_08_02_00_00E09_DATA$.next(res);
-
-              // 4.2.2(1.4.2(2))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-              // 4.2.2(1.4.2(3))
-              // 4.2.2(1.4.2(3.1)) 'WAIT'
-              // 4.2.2(1.4.2(3.2)) 'WAIT'
-              // 4.2.2(1.4.2(3.3)) 'WAIT'
-
-              // 4.2.2(1.4.2(4))
-              // 4.2.2(1.4.2(4.1))
-              this.navService.setSaveButton(true);
-              // 4.2.2(1.4.2(4.2))
-              this.navService.setCancelButton(true);
-              this.navService.setPrintButton(false);
-              this.navService.setEditButton(false);
-              this.navService.setDeleteButton(false);
-              this.navService.setSearchBar(false);
-            } else {
-              // 4.2.2(2)
-              // 4.2.2(2.1)
-              this.RequestBribeRewardinsAll({
-                // 4.2.2(2.1.1)
-                IndictmentID: this.IndictmentID$.getValue(),
-                // 4.2.2(2.1.2)
-                HaveNotice: 0
-              });
-
-              // 4.2.2(2.2)
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              // 4.2.2(2.2.1)
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-              // 4.2.2(2.2.2)
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-              // 4.2.2(2.3)
-              // 4.2.2(2.3.1) 'WAIT'
-              // 4.2.2(2.3.2) 'WAIT'
-
-              // 4.2.2(2.4)
-              // 4.2.2(2.4.1)
-              this.navService.setSaveButton(true);
-              // 4.2.2(2.4.2)
-              this.navService.setCancelButton(true);
-              this.navService.setPrintButton(false);
-              this.navService.setEditButton(false);
-              this.navService.setDeleteButton(false);
-              this.navService.setSearchBar(false);
-            }
             break;
         }
       });
