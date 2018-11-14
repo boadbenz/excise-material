@@ -24,7 +24,7 @@ export class FineService {
 
     getByKeyword(Textsearch: string) {
         const params = Textsearch;
-        const url = `${appConfig.api8881}/ComparegetByKeyword`;
+        const url = `${appConfig.api8881}/CompareListgetByKeyword`;
         return this.http.post<Compare[]>(url, params, this.httpOptions);
     }
 
@@ -49,7 +49,7 @@ export class FineService {
 
     async getByConAdv(form: any): Promise<any> {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8881}/ComparegetByConAdv`;
+        const url = `${appConfig.api8881}/CompareListgetByConAdv`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -148,6 +148,18 @@ export class FineService {
     async CompareupdByCon(oCompare: Compare): Promise<any> {
         const params = JSON.stringify(oCompare);
         const url = `${appConfig.api8881}/CompareupdByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async CompareUpdDelete(oCompare: Compare): Promise<any> {
+        const params = JSON.stringify(oCompare);
+        const url = `${appConfig.api8881}/CompareUpdDelete`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

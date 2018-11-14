@@ -119,23 +119,22 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearchComplete(list: any) {
-        // this.Compare = [];
-        // console.log("getByConAdv");
-        // console.log(list);
-        // if (!list.length) {
-        //     alert(Message.noRecord);
-        //     return false;
-        // }
+        this.Compare = [];
+        console.log(list);
+        if (!list.length) {
+            alert(Message.noRecord);
+            return false;
+        }
 
-        // if (Array.isArray(list)) {
-        //     this.Compare = list;
-        // } else {
-        //     this.Compare.push(list);
-        // }
+        if (Array.isArray(list)) {
+            this.Compare = list;
+        } else {
+            this.Compare.push(list);
+        }
 
         // set total record
-        // this.paginage.TotalItems = this.Compare.length;
-        // this.CompareList = this.Compare.slice(0, this.paginage.RowsPerPageOptions[0]);
+        this.paginage.TotalItems = this.Compare.length;
+        this.CompareList = this.Compare.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
     clickView(LawsuitID: string, ArrestCode: string, CompareID: string) {
