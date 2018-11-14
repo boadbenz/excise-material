@@ -15,7 +15,7 @@ export interface IShowInputModel {
   index: number;
 }
 export class TableDataConfig extends RewardHelper {
-  public ShowInputModel: number[];
+  public ShowInputModel: number[] = [15, 14 , 1];
   public paginage = pagination;
   @Input()
   set columns(val) {
