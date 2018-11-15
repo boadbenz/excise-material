@@ -30,4 +30,6 @@ export class Compare {
     public FirstName?: string;
     public LastName?: string;
     public DepartmentName?: string;
+    public DepartmentNameTH?: string;
+    public DepartmentCode?: string;
 }

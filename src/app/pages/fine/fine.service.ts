@@ -22,6 +22,11 @@ export class FineService {
             })
     };
 
+    postMethod(url: string, data: any, port: string = '7789') {
+        const params = data;
+        const full_url = `${appConfig[`api${port}`]}/${url}`;
+        return this.http.post<any>(full_url, params, this.httpOptions).toPromise();
+    }
     getByKeyword(Textsearch: string) {
         const params = Textsearch;
         const url = `${appConfig.api8881}/CompareListgetByKeyword`;

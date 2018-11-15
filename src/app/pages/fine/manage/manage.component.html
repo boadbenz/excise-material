@@ -89,7 +89,7 @@
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
               <div class="col-md-3">
-                <input class="form-control" [(ngModel)]="LawsuiltTime" type="date" name="LawsuiltTime" disabled>
+                <input class="form-control" [(ngModel)]="LawsuiltTime" type="time" name="LawsuiltTime" disabled>
               </div>
             </div>
           </div>
@@ -197,36 +197,43 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable">
-            <td class="">{{item.LawBrakerName}}</td>
-                        <!--<td *ngIf="item.EntityType === '0'" class="">{{item.CompanyTitle}} + {{item.CompanyName }}</td>
-            <td *ngIf="item.EntityType === '1'" class="">{{item.LawbreakerTitleName}} + {{item.LawbreakerFirstName}} + {{item.LawbreakerMiddleName}} + {{item.LawbreakerLastName}} </td>-->
-            <td class="text-center">
+          <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable" [style]="item.sum ? 'font-weight: bold' : '' ">
+            <!-- <td class="">{{item.LawBrakerName}}</td> -->
+            <td *ngIf="(!item.sum) && item.ArrestLawbreaker[0].EntityType == '0' && (!item.isTmp)" class="">{{item.ArrestLawbreaker[0].CompanyTitle}} {{item.ArrestLawbreaker[0].CompanyName }}</td>
+            <td *ngIf="(!item.sum) && item.ArrestLawbreaker[0].EntityType == '1'  && (!item.isTmp)" class="">{{item.ArrestLawbreaker[0].LawbreakerTitleName}}{{item.ArrestLawbreaker[0].LawbreakerFirstName}} {{item.ArrestLawbreaker[0].LawbreakerMiddleName}} {{item.ArrestLawbreaker[0].LawbreakerLastName}} </td>
+            <td *ngIf="(!item.sum) && item.isTmp"></td>
+            <td *ngIf="(!item.sum)" class="text-center">
               <b>
                 <u>
-                  <a (click)="viewData()">{{item.MistreatNo}}</a>
+                  <a (click)="viewData()">!01</a>
                 </u>
               </b>
             </td>
-            <td>{{item.ProductDesc}}</td>
+            <td *ngIf="(!item.sum)">{{item.ArrestProductDetail[0].ProductBrandNameTH}}</td>
             <!-- <td class="text-center">{{item.FineRate}}</td> -->
-            <td>
-              <input class="form-control" type="text" [(ngModel)]="item.FineRate" [disabled]="showEditField" value="">
+            <td *ngIf="(!item.sum)">
+              !02
+              <!-- <input class="form-control" type="text" [(ngModel)]="item.FineRate" [disabled]="showEditField" value=""> -->
             </td>
             <!-- <td class="">{{item.VatValue}}</td> -->
-            <td>
+            <td *ngIf="(!item.sum)">
               <input class="form-control" type="text" [(ngModel)]="item.VatValue" [disabled]="showEditField" value="">
             </td>
-            <td class="">{{item.FineRate * item.VatValue}}</td>
-            <td>
+            <!-- <td class="">{{item.FineRate * item.VatValue}}</td> -->
+            <td class="" *ngIf="(!item.sum)">!03</td>
+            <!-- <td>
               <input class="form-control" type="text" [(ngModel)]="item.CompareFine" [disabled]="showEditField" value="">
-            </td>
+            </td> -->
+            <td *ngIf="(item.sum)" colspan="6"></td>
+            <td >!04</td>
             <!-- <td class="">{{item.BribeMoney}}</td> -->
-            <td>
+            <td >
               <input class="form-control" type="text" [(ngModel)]="item.BribeMoney" [disabled]="showEditField" value="">
             </td>
-            <td class="">{{item.CompareFine * item.RewardRate}}</td>
-            <td class="">{{item.CompareFine - (item.BribeMoney + item.RewardMoney | number) }}</td>
+            <!-- <td class="">{{item.CompareFine * item.RewardRate}}</td> -->
+            <td>05</td>
+            <!-- <td class="">{{item.CompareFine - (item.BribeMoney + item.RewardMoney | number) }}</td> -->
+            <td>06</td>
             <!--<td class="">รวม</td>-->
           </tr>
         </tbody>
@@ -248,7 +255,7 @@
           <div class="form-group row">
             <label class="col-form-label  col-md-3">วันที่จัดทำ : </label>
             <div class="col-md-4">
-              <input class="form-control" type="date" [(ngModel)]="CompareDate" name="CompareDate" [disabled]="showEditField">
+              <input class="form-control" type="date" [(ngModel)]="CompareDate" name="CompareDate" [disabled]="showEditField" local="th">
             </div>
             <label class="col-form-label text-center col-md-2">เวลา</label>
             <div class="col-md-3">
@@ -261,11 +268,12 @@
             <label class="col-form-label col-md-4">เขียนที่ : </label>
             <div class="col-md-7">
               <input type="text" class="form-control" [(ngModel)]="StationName" name="StationName" placeholder="พิมพ์ข้อความ" aria-label="Number"
-                matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
+                matInput [matAutocomplete]="auto7" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                 [disabled]="showEditField">
-              <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
-                  {{ option.OfficeName }}
+              <mat-autocomplete #auto7="matAutocomplete">
+                <mat-option *ngFor="let station of optionsStation" [value]="station.DepartmentCode + ' ' + station.DepartmentNameTH"
+                  (click)="StaffonAutoSelecteWord(sOption)">
+                  {{ station.DepartmentCode }} {{ station.DepartmentNameTH }} .
                 </mat-option>
               </mat-autocomplete>
             </div>
@@ -521,7 +529,11 @@
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-form-label col-md-5">วันที่กำหนดชำระค่าปรับ : </label>
+                <label class="col-form-label col-md-5">วันที่กำหนดชำระค่าปรับ : - </label>
+                <!-- <div class="col-md-7">
+                    <my-date-picker-th ngModel name="PaymentFineAppointDate" placeholder="" locale="th" [options]="PaymentFineAppointDateOptions"
+                      (dateChanged)=""></my-date-picker-th>
+                </div> -->
                 <div class="col-md-7">
                   <input class="form-control" type="date" [(ngModel)]="PaymentFineAppointDate" name="PaymentFineAppointDate" [disabled]="showEditField">
                 </div>

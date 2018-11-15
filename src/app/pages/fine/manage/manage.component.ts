@@ -24,6 +24,7 @@ import { ArrestStaff } from '../../model/arrest-staff';
 import { isNgTemplate } from '@angular/compiler';
 import { async } from 'q';
 import { isArray } from 'jquery';
+import { IMyDpOptions } from 'mydatepicker';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -48,6 +49,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   // --- Array ---
   rawOptions = [];
   options = [];
+  optionsStation = [];
   rawStaffOptions = [];
   Staffoptions = [];
   ReportOptions = [];
@@ -55,7 +57,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   ListCompareDetailReceipt = [];
   ListCompareStaff = [];
   ArrestIndictment = [];
-
   // ---- Varible ---
   CompareNo: string = '';   // เลขที่เปรียบเทียบ  (ไม่รวม /ปี พ.ศ.)
   CompareYear: string;      // ปี พ.ศ.
@@ -92,6 +93,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   OnSubscribe: any = {};
   // ----- Model ------ //
   @ViewChild('printDocModal') printDocModel: ElementRef;
+  private today = new Date();
 
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
@@ -108,16 +110,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.navService.setSearchBar(false);
     // set true
     this.navService.setNextPageButton(true);
+    this.navService.setInnerTextNextPageButton('ส่งเงินรายได้');
   }
 
   async ngOnInit() {
+    await this.MasStaffMaingetAll();
+    await this.MasDepartmentMaingetAll();
     // this.preloader.setShowPreloader(true);
-    console.log(1234);
+    // console.log(1234);
     this.active_Route();
     this.navigate_Service();
-
-    await this.getStation();
-    await this.getCompareStaff();
+    // await this.getStation();
+    // await this.getCompareStaff();
     this.CreateObject();
     this.getLawsuitByID(this.LawsuitID);
     await this.getArrestByID(this.ArrestCode);
@@ -132,10 +136,51 @@ export class ManageComponent implements OnInit, OnDestroy {
       await this.ShowData();
     }
 
-    this.getAresstData();
+    await this.getAresstData();
+    await this.CompareListgetByConAdv();
+    await this.CompareArrestgetByCon();
     this.preloader.setShowPreloader(false);
     this.navigate_Service();
   }
+  async CompareArrestgetByCon() {
+    try {
+      const resp: any = await this.fineService.postMethod('/CompareArrestgetByCon', { 'IndictmentID': this.IndictmentID }, '8881');
+      this.SectionName = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].SectionNo;
+      this.GuiltBaseName = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].GuiltBaseName;
+      this.SectionNo = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].SectionNo;
+      this.PenaltyDesc = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].CompareGroupSection[0].SectionDesc1;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async CompareListgetByConAdv() {
+    try {
+      // const resp: any = await this.fineService.postMethod('/CompareListgetByConAdv', {'ArrestCode': this.ArrestCode});
+      // this.LawsuiltCode = resp.IsOutside === 1 ? `น${resp.LawsuitNo}` : resp.LawsuitNo;
+      // this.ArrestStaffName = `${resp.TitleName}${resp.FirstName} ${resp.LastName}`;
+      // this.IndictmentID = resp[0].IndictmentID;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async MasStaffMaingetAll () {
+      try {
+          const resp: any = await this.fineService.postMethod('/MasStaffMaingetAll', {});
+          console.log(resp);
+          this.rawStaffOptions = resp;
+      } catch (err) {
+        console.log(err);
+      }
+  }
+  async MasDepartmentMaingetAll () {
+    try {
+        const resp: any = await this.fineService.postMethod('/MasDepartmentMaingetAll', {});
+        console.log(resp);
+        this.rawOptions = resp;
+    } catch (err) {
+      console.log(err);
+    }
+}
   // private navigate_service() {
   //   this.navService.showFieldEdit.subscribe(async p => {
   //     this.showEditField = p;
@@ -151,11 +196,13 @@ export class ManageComponent implements OnInit, OnDestroy {
       const resp: any = await this.fineService.compareArrestGetByCon(this.ArrestCode);
       console.log(resp);
       console.log(resp[0].CompareDate);
-      this.LawsuiltCode = resp[0].LawsuitNo;
+      this.IndictmentID = resp[0].IndictmentID;
+      this.LawsuiltCode = resp[0].IsOutside === 1 ? `น${resp[0].LawsuitNo}` : resp[0].LawsuitNo;
       this.ProveReportNo = resp[0].ProveReportNo;
       this.LawsuiltDate = resp[0].CompareDate.split(' ')[0];
       this.LawsuiltTime = resp[0].CompareDate.split(' ')[1];
     } catch (err) {
+      console.log(err);
     }
   }
   private active_Route() {
@@ -225,6 +272,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
+      }
+    });
+    this.OnSubscribe.cancel = this.navService.onCancel.subscribe(async status => {
+      if (status) {
+        await this.navService.setOnCancel(false);
+        this.showEditField = status;
+        this.navService.setPrintButton(true);
+          this.navService.setDeleteButton(true);
+          this.navService.setEditButton(true);
+          this.navService.setSearchBar(false);
+          this.navService.setCancelButton(false);
+          this.navService.setSaveButton(false);
       }
     });
     // this.sub = this.navService.showFieldEdit.subscribe(p => {
@@ -308,7 +367,11 @@ export class ManageComponent implements OnInit, OnDestroy {
       LawsuitID: ""
     }
   }
-
+  public PaymentFineAppointDateOptions: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd/mmm/yyyy',
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
+  };
   async getLawsuitByID(LawsuitID: string) {
     // this.preloader.setShowPreloader(true);
 
@@ -354,16 +417,51 @@ export class ManageComponent implements OnInit, OnDestroy {
       alert(err.message);
     }
   }
-
+  jsonCopy(src) {
+    return JSON.parse(JSON.stringify(src));
+  }
   async getArrestByID(ArrestCode: string) {
     // this.preloader.setShowPreloader(true);
 
     await this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
       try {
         console.log(res);
-        this.rawStaffOptions = res[0].ArrestStaff;
-        const local = res[0].ArrestLocale[0];
-        this.ArrestLocation = `${local.Building} ${local.District} ${local.DistrictCode}`;
+        const tmp: any = [];
+        this.ListCompareDetail = res[0].ArrestIndictment[0].ArrestIndictmentDetail;
+        const name: any = [];
+        for (let item of this.ListCompareDetail) {
+          if (item.ArrestLawbreaker[0].EntityType === 0) {
+            name.push({ 'AccusedName' : `${item.ArrestLawbreaker[0].CompanyTitle}${item.ArrestLawbreaker[0].CompanyName}`});
+          } else {
+            name.push({ 'AccusedName' : `${item.ArrestLawbreaker[0].LawbreakerTitleName}${item.ArrestLawbreaker[0].LawbreakerFirstName} ${item.ArrestLawbreaker[0].LawbreakerMiddleName} ${item.ArrestLawbreaker[0].LawbreakerLastName}`});
+          }
+          let count = 0;
+          const tmpItem: any = this.jsonCopy(item);
+          tmpItem.isTmp = false;
+          tmp.push(tmpItem);
+          for (let t of res[0].ArrestIndictment[0].ArrestIndictmentDetail[0].ArrestProductDetail) {
+            if (count > 0) {
+              const newItem:any = this.jsonCopy(item);
+              newItem.isTmp = true;
+              newItem.ArrestProductDetail[0] = this.jsonCopy(t);
+              tmp.push(newItem);
+            }
+            count++;
+          }
+          tmp.push({ sum: true});
+        }
+        console.log(tmp);
+        this.ListCompareDetail = tmp;
+        this.AccusedTable = name;
+        const staff: any = res[0].ArrestStaff[0];
+        // console.log(res[0].ArrestStaff[0]);
+        // this.ArrestStaffName = `${staff.TitleName}${staff.FirstName} ${staff.LastName}`;
+        // this.PositionName = staff.PositionName;
+        // this.DepartmentName = staff.OfficeName;
+        // this.ArrestLocation = res[0].ArrestStation;
+        // this.rawStaffOptions = res[0].ArrestStaff;
+        // const local = res[0].ArrestLocale[0];
+        // this.ArrestLocation = `${local.Building} ${local.District} ${local.DistrictCode}`;
         res[0].ArrestStaff.map(async item => {
 
           if (item.ContributorCode === "6") {
@@ -374,31 +472,31 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         });
 
-        res[0].ArrestLawbreaker.forEach(item => {
+        // res[0].ArrestLawbreaker.forEach(item => {
 
-          if (item.EntityType === "0") {
-            item.AccusedName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
-            item.AccusedName += `${item.CompanyName == null ? '' : item.CompanyName}`;
-            // item.AccusedName += ` ${item.LastName == null ? '' : item.LastName}`;
-          } else {
-            let tpmname = {
-              AccusedName : item.AccusedName = item.LawbreakerTitleName + " "
-                + item.LawbreakerFirstName + " "
-                + item.LawbreakerMiddleName + " "
-                + item.LawbreakerLastName
+        //   if (item.EntityType === "0") {
+        //     item.AccusedName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
+        //     item.AccusedName += `${item.CompanyName == null ? '' : item.CompanyName}`;
+        //     // item.AccusedName += ` ${item.LastName == null ? '' : item.LastName}`;
+        //   } else {
+        //     let tpmname = {
+        //       AccusedName : item.AccusedName = item.LawbreakerTitleName + " "
+        //         + item.LawbreakerFirstName + " "
+        //         + item.LawbreakerMiddleName + " "
+        //         + item.LawbreakerLastName
 
-            }
-            if (this.AccusedTable === undefined) {
-              this.AccusedTable = new Array();
-            }
-            this.AccusedTable.push(tpmname);
-            // item.AccusedName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
-            // item.AccusedName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
-            // item.AccusedName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
-            // item.AccusedName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
-          }
+        //     }
+        //     if (this.AccusedTable === undefined) {
+        //       this.AccusedTable = new Array();
+        //     }
+        //     this.AccusedTable.push(tpmname);
+        //     // item.AccusedName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
+        //     // item.AccusedName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
+        //     // item.AccusedName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
+        //     // item.AccusedName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
+        //   }
 
-        });
+        // });
 
 
 
@@ -428,16 +526,16 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.oArrest = res[0];
 
-        this.oArrest.ArrestLawbreaker.map(async item => {
-          if (item.EntityType == 0) {
-            item.LawbreakerFullName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
-            item.LawbreakerFullName += ` ${item.CompanyName == null ? '' : item.CompanyName}`;
-          } else {
-            item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
-            item.LawbreakerFullName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
-            item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
-          }
-        });
+        // this.oArrest.ArrestLawbreaker.map(async item => {
+        //   if (item.EntityType == 0) {
+        //     item.LawbreakerFullName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
+        //     item.LawbreakerFullName += ` ${item.CompanyName == null ? '' : item.CompanyName}`;
+        //   } else {
+        //     item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
+        //     item.LawbreakerFullName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
+        //     item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
+        //   }
+        // });
         console.log("ArrestLawbreaker");
         console.log(this.oArrest);
         await this.getGuiltBaseByID();
@@ -480,6 +578,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.ArrestIndictment = this.oArrest.ArrestIndictment.filter(item => item.IndictmentID == +this.IndictmentID)
 
       await this.LawsuitSV.getGuiltBaseByCon(this.oArrest.ArrestIndictment[0].GuiltBaseID.toString()).then(async res => {
+        console.log(res);
         this.SectionName = res.CompareMasLawSection.SectionName;
         this.GuiltBaseName = res.CompareMasLawGuiltBase.GuiltBaseName;
         this.SectionNo = res.CompareMasLawPenalty.SectionNo.toString();
@@ -683,6 +782,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
   async onInsCompare() {
+    try {
+      const data: any = {
+        'document_id': ''
+      }
+      const resp: any = await this.fineService.postMethod('', {});
+
+    } catch (err) {
+
+    }
 
   }
 
@@ -746,14 +854,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     //
     if (value == '') {
       this.options = [];
-
+      this.optionsStation = [];
       this.oCompare.CompareStationCode = "";
       this.oCompare.CompareStation = "";
     } else {
-      this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+      this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
+      this.optionsStation = this.options;
+      console.log(this.options);
+      console.log('this');
     }
   }
-
+  getWord(str: any) {
+    console.log(str);
+    return JSON.stringify(str);
+  }
   onAutoFocus(value: string) {
     if (value == '') {
       this.options = [];
@@ -761,9 +875,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   onAutoSelecteWord(event) {
-    this.oCompare.CompareStationCode = event.OfficeCode;
-    this.oCompare.CompareStation = event.OfficeName;
-    debugger
+    this.oCompare.CompareStationCode = event.DepartmentCode;
+    this.oCompare.CompareStation = event.DepartmentNameTH;
   }
   // ----- End เขียนที่ (คำให้การของผู้ต้องหา) ---
 
