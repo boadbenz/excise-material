@@ -372,6 +372,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     dateFormat: 'dd/mmm/yyyy',
     disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
   };
+  public PaymentVatDateOptionsOptions: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd/mmm/yyyy',
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
+  };
   async getLawsuitByID(LawsuitID: string) {
     // this.preloader.setShowPreloader(true);
 

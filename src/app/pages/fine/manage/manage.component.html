@@ -529,14 +529,14 @@
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-form-label col-md-5">วันที่กำหนดชำระค่าปรับ : - </label>
-                <!-- <div class="col-md-7">
-                    <my-date-picker-th ngModel name="PaymentFineAppointDate" placeholder="" locale="th" [options]="PaymentFineAppointDateOptions"
-                      (dateChanged)=""></my-date-picker-th>
-                </div> -->
+                <label class="col-form-label col-md-5">วันที่กำหนดชำระค่าปรับ : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="date" [(ngModel)]="PaymentFineAppointDate" name="PaymentFineAppointDate" [disabled]="showEditField">
+                    <my-date-picker-th ngModel name="PaymentFineAppointDate" placeholder="" locale="th" [options]="PaymentFineAppointDateOptions"
+                    ></my-date-picker-th>
                 </div>
+                <!-- <div class="col-md-7">
+                  <input class="form-control" type="date" [(ngModel)]="PaymentFineAppointDate" name="PaymentFineAppointDate" [disabled]="showEditField">
+                </div> -->
               </div>
             </div>
           </div>
@@ -545,7 +545,9 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-5">วันที่กำหนดชำระภาษี : </label>
                 <div class="col-md-7">
-                  <input class="form-control" type="date" [(ngModel)]="PaymentVatDate" name="PaymentVatDate" [disabled]="showEditField">
+                    <my-date-picker-th ngModel name="PaymentVatDate" placeholder="" locale="th" [options]="PaymentVatDateOptions"
+                    ></my-date-picker-th>
+                  <!-- <input class="form-control" type="date" [(ngModel)]="PaymentVatDate" name="PaymentVatDate" [disabled]="showEditField"> -->
                 </div>
               </div>
             </div>
