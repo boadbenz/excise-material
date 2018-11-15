@@ -205,28 +205,33 @@ export class ManageComponent implements OnInit {
       }
     });
 
-    // this.sub =  this.navService.onDelete.subscribe(async status => {
-    //     if (status) {
-    //         await this.navService.setOnDelete(false);
-    //         this.onDelete();
-    //     }
-    // });
+    this.sub =  this.navService.onDelete.subscribe(async status => {
+        if (status) {
+            await this.navService.setOnDelete(false);
+            await this.onDeletes();
+        }
+    });
+  }
 
-    this.sub = this.navService.onPrint.subscribe(async status => {
-      if (status) {
-        await this.navService.setOnPrint(false);
-        this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+  async onDeletes() {
+    let isSuccess: boolean = true;
+    await this.fineService.CompareUpdDelete(this.oCompare).then(IsSuccess => {
+      console.log(IsSuccess);
+      if (!IsSuccess) {
+        isSuccess = IsSuccess;
+        return false;
       }
-    })
+    }, (error) => { isSuccess = false; console.error(error); return false; });
 
-    // this.sub = this.navService.onCancel.subscribe(async status => {
-    //     if (status) {
-    //         if (confirm(Message.confirmAction)) {
-    //             await this.navService.setOnCancel(false);
-    //             this.router.navigate(['/prove/list']);
-    //         }
-    //     }
-    // })
+    if (!isSuccess) return false;
+
+    if (isSuccess) {
+      alert(Message.saveComplete);
+    } else {
+      alert(Message.saveFail);
+    }
+
+    this.preloader.setShowPreloader(false);
   }
 
   ngOnDestroy(): void {
@@ -665,6 +670,7 @@ export class ManageComponent implements OnInit {
     debugger
     // Update compare
     await this.fineService.CompareupdByCon(this.oCompare).then(IsSuccess => {
+      console.log(IsSuccess);
       if (!IsSuccess) {
         isSuccess = IsSuccess;
         return false;
