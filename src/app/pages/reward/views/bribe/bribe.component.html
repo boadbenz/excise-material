@@ -8,7 +8,8 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-03-00-00-E08 [RequestCommand]="RequestCommand$ | async"></ILG60-08-03-00-00-E08>
+          RequestCommand: {{RequestCommand$ | async | json}}
+        <ILG60-08-03-00-00-E08 [RequestCommand]="RequestCommand$ | async" [inputData]="ILG60_08_03_00_00_E08_DATA$ | async"></ILG60-08-03-00-00-E08>
       </div>
     </ng-template>
   </mat-expansion-panel>

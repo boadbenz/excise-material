@@ -29,6 +29,7 @@ export class BribeConfig extends RewardHelper {
   // Icon
   public ILG60_08_03_00_00_E08_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E08_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
+  public ILG60_08_03_00_00_E08_DATA$ = new BehaviorSubject<any>(null);
   // Drop Down List
   public ILG60_08_03_00_00_E09_DISABLED$ = new BehaviorSubject<boolean>(false); // เลขที่ใบแจ้งความนำจับ
   // Input Box

@@ -8,7 +8,8 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-04-00-00-E08></ILG60-08-04-00-00-E08>
+        <ILG60-08-04-00-00-E08 [requestCompare]="requestCompare$ | async" [requstLawsuitJudgement]="requstLawsuitJudgement$ | async"
+          [inputData]="ILG60_08_04_00_00_E08_DATA$ | async"></ILG60-08-04-00-00-E08>
       </div>
     </ng-template>
   </mat-expansion-panel>
@@ -22,7 +23,8 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-04-00-00-E12></ILG60-08-04-00-00-E12>
+        <ILG60-08-04-00-00-E12 [inputData]="ILG60_08_04_00_00_E12_DATA$ | async">
+        </ILG60-08-04-00-00-E12>
       </div>
     </ng-template>
   </mat-expansion-panel>

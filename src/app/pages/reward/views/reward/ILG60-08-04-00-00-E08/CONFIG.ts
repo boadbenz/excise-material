@@ -14,6 +14,25 @@ export class CONFIG extends RewardConfig {
     return this.inputData$.asObservable();
   }
   public inputData$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set requstLawsuitJudgement(val) {
+    this.requstLawsuitJudgement$.next(val);
+  }
+  get requstLawsuitJudgement() {
+    return this.requstLawsuitJudgement$.asObservable();
+  }
+  public requstLawsuitJudgement$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set requestCompare(val) {
+    this.requestCompare$.next(val);
+  }
+  get requestCompare() {
+    return this.requestCompare$.asObservable();
+  }
+  public requestCompare$ = new BehaviorSubject<any>(null);
+
   public columnsForm: ColumnsInterface[] = [
     {
       title: 'เลขที่อ้างอิง',
