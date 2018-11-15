@@ -20,7 +20,7 @@ const routes: Routes = [
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานเปรียบเทียบและชำระค่าปรับ' }],
             pageType: 'list',
             nextPage: { title: 'แจ้งความ', url: '/fine/manage' },
-            codePage: 'ILG60-06-01-00' 
+            codePage: 'ILG60-06-01-00'
         },
         component: ListComponent
     }
@@ -38,7 +38,7 @@ const routes: Routes = [
       MyDatePickerTHModule,
       MyDatePickerModule
     ],
-    declarations: [ListComponent,ContributorPipe],
+    declarations: [ListComponent, ContributorPipe],
     providers: [FineService]
 })
 export class ListModule { }

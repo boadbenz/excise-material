@@ -81,7 +81,7 @@ export class ListComponent implements OnInit, OnDestroy {
             } catch (err) {
                 console.log(err)
             }
-          
+
         }, 100);
     }
     onDateFromChanged(event) {
@@ -107,7 +107,7 @@ export class ListComponent implements OnInit, OnDestroy {
             } catch (err) {
                 console.log(err);
             }
-          
+
         }, 100);
       }
     async ngOnInit() {
@@ -170,7 +170,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
             form.value.ProgramCode = "";
             form.value.ProcessCode = "";
-            
+
             var sendingFormat = {
                 ArrestCode: form.value.ArrestCode,
                 LawsuitCode: form.value.LawsuitCode,
@@ -203,11 +203,11 @@ export class ListComponent implements OnInit, OnDestroy {
             try {
               item.CompareDate = toLocalShort(item.CompareDate);
             } catch (error) {
-      
+
             }
-      
-            //item.LawsuitID = list.LawsuitArrestIndicment[0];
-            //console.log("Check LIST:"+JSON.stringify(item));
+
+            // item.LawsuitID = list.LawsuitArrestIndicment[0];
+            // console.log("Check LIST:"+JSON.stringify(item));
             return item;
           });
           /* Set Total Record */
@@ -217,7 +217,7 @@ export class ListComponent implements OnInit, OnDestroy {
         //     list.forEach(element => {
         //         this.CompareList.push({
         //             CompareCode: element.CompareCode,
-        //             ArrestCode: element.ArrestCode, 
+        //             ArrestCode: element.ArrestCode,
         //             LawsuitNo: element.LawsuitNo,
         //             ProveReportNo: element.ProveReportNo,
         //             TitleName: element.TitleName,
@@ -226,7 +226,7 @@ export class ListComponent implements OnInit, OnDestroy {
         //             CompareDate: toLocalShort(element.CompareDate),
         //             DepartmentName: element.DepartmentName,
         //             IsOutside: IsOutside
-        //         });                
+        //         });
         //     });
         // } else {
         //     this.CompareList.push(list);
@@ -236,10 +236,11 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(LawsuitID: string, ArrestCode: string, CompareID: string) {
-        if (CompareID == null || CompareID == "")
-            CompareID = "0";
-
-        this._router.navigate([`/fine/manage/R/${LawsuitID}/${ArrestCode}/${CompareID}`]);
+        if (CompareID == null || CompareID === '') {
+          CompareID = '0';
+        }
+        LawsuitID = LawsuitID.toString().replace('/', '-');
+        this._router.navigate([`/fine/manage/R/${CompareID}/${LawsuitID}/${ArrestCode}`]);
     }
 
     async pageChanges(event) {

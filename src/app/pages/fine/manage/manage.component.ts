@@ -29,7 +29,7 @@ import { isArray } from 'jquery';
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.scss']
 })
-export class ManageComponent implements OnInit {
+export class ManageComponent implements OnInit, OnDestroy {
   private sub: any;
   mode: string;
   modal: any;
@@ -57,7 +57,7 @@ export class ManageComponent implements OnInit {
   ArrestIndictment = [];
 
   // ---- Varible ---
-  CompareNo: string = "";   // เลขที่เปรียบเทียบ  (ไม่รวม /ปี พ.ศ.)
+  CompareNo: string = '';   // เลขที่เปรียบเทียบ  (ไม่รวม /ปี พ.ศ.)
   CompareYear: string;      // ปี พ.ศ.
   LawsuiltCode: string;   // เลขที่คดีรับคำกล่าวโทษ
   LawsuiltDate: string;   // วันที่รับทำคดี
@@ -73,6 +73,7 @@ export class ManageComponent implements OnInit {
   ArrestLocation: string;   // สถานที่จับกุม
   AccuserSubdistrictCode: string;   // รหัสสถานที่จับกลุ่ม
   AccuserSubdistrict: string;   // สถานที่จับกลุ่ม
+  ProveReportNo: string;
 
   CompareDate: string;      // วันที่จัดทำ
   CompareTime: string;      // เวลาจัดทำ
@@ -88,7 +89,7 @@ export class ManageComponent implements OnInit {
   oCompare: Compare;
   oCompareDetail: CompareDetail = {};
   oCompareStaff: CompareStaff;
-
+  OnSubscribe: any = {};
   // ----- Model ------ //
   @ViewChild('printDocModal') printDocModel: ElementRef;
 
@@ -111,7 +112,7 @@ export class ManageComponent implements OnInit {
 
   async ngOnInit() {
     // this.preloader.setShowPreloader(true);
-
+    console.log(1234);
     this.active_Route();
     this.navigate_Service();
 
@@ -121,22 +122,42 @@ export class ManageComponent implements OnInit {
     this.getLawsuitByID(this.LawsuitID);
     await this.getArrestByID(this.ArrestCode);
 
-    let date = new Date();
+    const date = new Date();
     this.CompareYear = (date.getFullYear() + 543).toString();
     this.CompareDate = this.getCurrentDate();
     this.CompareTime = this.getCurrentTime();
 
-    if (this.CompareID !== "0") {
+    if (this.CompareID !== '0') {
       await this.getCompareByID();
       await this.ShowData();
     }
 
-
+    this.getAresstData();
     this.preloader.setShowPreloader(false);
-
+    this.navigate_Service();
   }
-
-
+  // private navigate_service() {
+  //   this.navService.showFieldEdit.subscribe(async p => {
+  //     this.showEditField = p;
+  //   });
+  //   this.OnSubscribe.edit = this.navService.onEdit.subscribe(async status => {
+  //     if (status) {
+  //       await this.navService.setOnEdit(false);
+  //     }
+  //   });
+  // }
+  async getAresstData() {
+    try {
+      const resp: any = await this.fineService.compareArrestGetByCon(this.ArrestCode);
+      console.log(resp);
+      console.log(resp[0].CompareDate);
+      this.LawsuiltCode = resp[0].LawsuitNo;
+      this.ProveReportNo = resp[0].ProveReportNo;
+      this.LawsuiltDate = resp[0].CompareDate.split(' ')[0];
+      this.LawsuiltTime = resp[0].CompareDate.split(' ')[1];
+    } catch (err) {
+    }
+  }
   private active_Route() {
     // this.sub = this.navService.showFieldEdit.subscribe(status => {
     //   if (!status) {
@@ -173,23 +194,42 @@ export class ManageComponent implements OnInit {
       console.log(this.param);
 
       if (p['code1']) {
-        this.LawsuitID = p['code1'];
+        this.LawsuitID = p['code2'];
+        this.LawsuiltCode = this.LawsuitID.replace('-', '/');
       }
 
       if (p['code2']) {
-        this.ArrestCode = p['code2'];
+        this.ArrestCode = p['code3'];
       }
 
       if (p['code3']) {
-        this.CompareID = p['code3'];
+        this.CompareID = p['code1'];
       }
     });
   }
 
   private navigate_Service() {
-    this.sub = this.navService.showFieldEdit.subscribe(p => {
-      this.showEditField = p;
+    this.navService.showFieldEdit.subscribe(status => {
+      this.showEditField = status;
+      if (!this.showEditField) {
+        this.navService.setSaveButton(true);
+        this.navService.setCancelButton(true);
+        this.navService.setPrintButton(false);
+        this.navService.setSearchBar(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setEditButton(false);
+      } else {
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setSearchBar(false);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+      }
     });
+    // this.sub = this.navService.showFieldEdit.subscribe(p => {
+    //   this.showEditField = p;
+    // });
 
     this.sub = this.navService.onSave.subscribe(async status => {
       if (status) {
@@ -272,9 +312,11 @@ export class ManageComponent implements OnInit {
   async getLawsuitByID(LawsuitID: string) {
     // this.preloader.setShowPreloader(true);
 
-    await this.LawsuitSV.LawsuitegetByCon2(LawsuitID).then(async res => {
+    try {
+      const res: any = await this.LawsuitSV.LawsuitegetByCon2(LawsuitID);
+      console.log(res);
       // --- รายละเอียดคดี ----
-      var tmplawsuit: any;
+      let tmplawsuit: any;
       tmplawsuit = res;
 
       // for (let index = 0; index < tmplawsuit.length; index++) {
@@ -284,7 +326,7 @@ export class ManageComponent implements OnInit {
       //     // this.LawsuitList =
       //   }
 
-      // }  
+      // }
 
       // if (res[0].ArrestIndicment[0].Lawsuit[0].IsOutside == "1") {
       //   this.LawsuiltCode = "น " + res[0].ArrestIndicment[0].Lawsuit[0].LawsuitNo;
@@ -308,99 +350,103 @@ export class ManageComponent implements OnInit {
       // this.LawsuiltTime = new Date(res[0].ArrestIndicment[0].Lawsuit[0].LawsuitTime).toISOString().substring(15, 20);
       // this.IndictmentID = res[0].ArrestIndicment[0].IndictmentID.toString();
       this.preloader.setShowPreloader(false);
-    }, (err: HttpErrorResponse) => {
+    } catch (err) {
       alert(err.message);
-    });
-
-
+    }
   }
 
   async getArrestByID(ArrestCode: string) {
     // this.preloader.setShowPreloader(true);
 
     await this.ArrestSV.getByArrestCon(ArrestCode).then(async res => {
-      console.log(res);
+      try {
+        console.log(res);
+        this.rawStaffOptions = res[0].ArrestStaff;
+        const local = res[0].ArrestLocale[0];
+        this.ArrestLocation = `${local.Building} ${local.District} ${local.DistrictCode}`;
+        res[0].ArrestStaff.map(async item => {
 
-      res[0].ArrestStaff.map(async item => {
-
-        if (item.ContributorCode === "6") {
-          item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
-          item.FullName += `${item.FirstName == null ? '' : item.FirstName}`;
-          item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
-        }
-        
-      });
-
-      res[0].ArrestLawbreaker.forEach(item => {
-
-        if (item.EntityType === "0") {
-          item.AccusedName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
-          item.AccusedName += `${item.CompanyName == null ? '' : item.CompanyName}`;
-          // item.AccusedName += ` ${item.LastName == null ? '' : item.LastName}`;
-        } else {
-          let tpmname = {
-            AccusedName : item.AccusedName = item.LawbreakerTitleName + " " 
-                                            + item.LawbreakerFirstName + " " 
-                                            + item.LawbreakerMiddleName + " " 
-                                            + item.LawbreakerLastName 
-                                            
+          if (item.ContributorCode === "6") {
+            item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
+            item.FullName += `${item.FirstName == null ? '' : item.FirstName}`;
+            item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
           }
-          if (this.AccusedTable === undefined) {
-            this.AccusedTable = new Array();
-          } 
-          this.AccusedTable.push(tpmname);
-          // item.AccusedName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
-          // item.AccusedName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
-          // item.AccusedName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
-          // item.AccusedName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
-        }
 
-      });
-      
-      
+        });
 
-      this.ArrestLocation = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
-      this.ArrestLocation += ` ${res[0].ArrestLocale[0].District == null ? '' : res[0].ArrestLocale[0].District}`;
-      this.ArrestLocation += ` ${res[0].ArrestLocale[0].Province == null ? '' : res[0].ArrestLocale[0].Province}`;
-      this.AccuserSubdistrictCode = `${res[0].ArrestLocale[0].SubDistrictCode == null ? '' : res[0].ArrestLocale[0].SubDistrictCode}`;
-      this.AccuserSubdistrict = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
+        res[0].ArrestLawbreaker.forEach(item => {
 
-      // res.ArrestStaff.filter(item => item.ContributorID === "11").map(async item => {
-      res[0].ArrestStaff.map(async item => {
-        if (item.ContributorCode === "6") {
-          this.ArrestStaffName = item.FullName;   // ผู้กล่าวหา
-          this.PositionName = item.PositionName;  // ตำแหน่งผู้กล่าวหา
-          this.DepartmentName = item.DepartmentName;  // แผนกผู้กล่าวหา
-        }
-        
-      });
+          if (item.EntityType === "0") {
+            item.AccusedName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
+            item.AccusedName += `${item.CompanyName == null ? '' : item.CompanyName}`;
+            // item.AccusedName += ` ${item.LastName == null ? '' : item.LastName}`;
+          } else {
+            let tpmname = {
+              AccusedName : item.AccusedName = item.LawbreakerTitleName + " "
+                + item.LawbreakerFirstName + " "
+                + item.LawbreakerMiddleName + " "
+                + item.LawbreakerLastName
 
-      // res[0].ArrestLawbreaker.map(async item => {
-        
-      //   this.AccusedTable = item.AccusedName;
-      //   if (isArray(this.AccusedTable)) {
-      //     this.AccusedTable = [this.AccusedTable];
-      //   }
-      // });
+            }
+            if (this.AccusedTable === undefined) {
+              this.AccusedTable = new Array();
+            }
+            this.AccusedTable.push(tpmname);
+            // item.AccusedName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
+            // item.AccusedName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
+            // item.AccusedName += ` ${item.LawbreakerMiddleName == null ? '' : item.LawbreakerMiddleName}`;
+            // item.AccusedName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
+          }
 
-      this.oArrest = res[0];
+        });
 
-      this.oArrest.ArrestLawbreaker.map(async item => {
-        if (item.EntityType == 0) {
-          item.LawbreakerFullName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
-          item.LawbreakerFullName += ` ${item.CompanyName == null ? '' : item.CompanyName}`;
-        }
-        else {
-          item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
-          item.LawbreakerFullName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
-          item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
-        }
-      });
-      console.log("ArrestLawbreaker");
-      console.log(this.oArrest);
-      await this.getGuiltBaseByID();
 
-      this.preloader.setShowPreloader(false);
+
+        this.ArrestLocation = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
+        this.ArrestLocation += ` ${res[0].ArrestLocale[0].District == null ? '' : res[0].ArrestLocale[0].District}`;
+        this.ArrestLocation += ` ${res[0].ArrestLocale[0].Province == null ? '' : res[0].ArrestLocale[0].Province}`;
+        this.AccuserSubdistrictCode = `${res[0].ArrestLocale[0].SubDistrictCode == null ? '' : res[0].ArrestLocale[0].SubDistrictCode}`;
+        this.AccuserSubdistrict = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
+
+        // res.ArrestStaff.filter(item => item.ContributorID === "11").map(async item => {
+        res[0].ArrestStaff.map(async item => {
+          if (item.ContributorCode === "6") {
+            this.ArrestStaffName = item.FullName;   // ผู้กล่าวหา
+            this.PositionName = item.PositionName;  // ตำแหน่งผู้กล่าวหา
+            this.DepartmentName = item.DepartmentName;  // แผนกผู้กล่าวหา
+          }
+
+        });
+
+        // res[0].ArrestLawbreaker.map(async item => {
+
+        //   this.AccusedTable = item.AccusedName;
+        //   if (isArray(this.AccusedTable)) {
+        //     this.AccusedTable = [this.AccusedTable];
+        //   }
+        // });
+
+        this.oArrest = res[0];
+
+        this.oArrest.ArrestLawbreaker.map(async item => {
+          if (item.EntityType == 0) {
+            item.LawbreakerFullName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
+            item.LawbreakerFullName += ` ${item.CompanyName == null ? '' : item.CompanyName}`;
+          } else {
+            item.LawbreakerFullName = `${item.LawbreakerTitleName == null ? '' : item.LawbreakerTitleName}`;
+            item.LawbreakerFullName += `${item.LawbreakerFirstName == null ? '' : item.LawbreakerFirstName}`;
+            item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
+          }
+        });
+        console.log("ArrestLawbreaker");
+        console.log(this.oArrest);
+        await this.getGuiltBaseByID();
+
+        this.preloader.setShowPreloader(false);
+      } catch (err) {
+        console.log(err);
+      }
+
     }, (err: HttpErrorResponse) => {
       alert(err.message);
     });
@@ -697,7 +743,7 @@ export class ManageComponent implements OnInit {
   }
 
   onAutoChange(value: string) {
-    // 
+    //
     if (value == '') {
       this.options = [];
 
@@ -724,7 +770,7 @@ export class ManageComponent implements OnInit {
 
   // --- เขียนที่ (รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ) ---
   ReportonAutoChange(value: string) {
-    // 
+    //
     if (value == '') {
       this.ReportOptions = [];
     } else {
@@ -753,7 +799,7 @@ export class ManageComponent implements OnInit {
 
   getCurrentTime() {
     let date = new Date();
-    // 
+    //
     return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
   }
   // ----- End DateTime -----
@@ -774,7 +820,7 @@ export class ManageComponent implements OnInit {
 
 
   StaffonAutoChange(value: string) {
-    // 
+    //
     if (value == '') {
       this.Staffoptions = [];
       this.ClearStaffData();

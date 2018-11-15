@@ -55,9 +55,19 @@ export class FineService {
         } catch (error) {
             alert(error);
         }
-        
-    }
 
+    }
+    async compareArrestGetByCon(ArrestCode: string) {
+      // http://103.233.193.62:8881/XCS60/CompareListgetByConAdv
+      const params = { 'ArrestCode' : ArrestCode };
+      const url = `${appConfig.api8881}/CompareListgetByConAdv`;
+
+      try {
+        return await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      } catch (error) {
+        await alert(error);
+      }
+    }
     // async getByConAdv(form: any): Promise<any> {
     //     const params = JSON.stringify(form);
     //     const url = `${appConfig.api8881}/CompareListgetByConAdv`;
