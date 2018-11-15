@@ -1623,14 +1623,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         reader.readAsDataURL(file);
         reader.onload = () => {
-            let dataSource = reader.result.split(',')[1];
-            if (dataSource && dataSource !== undefined) {
-                this.ListProveDoc[i].FilePath = `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`;
-                this.ListProveDoc[i].DataSource = "";
-                this.ListProveDoc[i].DocumentType = 1;
-                this.ListProveDoc[i].DocumentName = fileName;
-                this.ListProveDoc[i].IsActive = 1;
-            }
+            // let dataSource = reader.result.split(',')[1];
+            // if (dataSource && dataSource !== undefined) {
+            //     this.ListProveDoc[i].FilePath = `D:\\XCS\\03. Design\\03. Program Spec\\${this.programSpect}`;
+            //     this.ListProveDoc[i].DataSource = "";
+            //     this.ListProveDoc[i].DocumentType = 1;
+            //     this.ListProveDoc[i].DocumentName = fileName;
+            //     this.ListProveDoc[i].IsActive = 1;
+            // }
         };
     }
 
