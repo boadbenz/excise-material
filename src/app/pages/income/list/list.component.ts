@@ -162,7 +162,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
             if(StaffSendMoney.length > 0){
                 item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
-                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeName;
+                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeShortName;
             }
 
             if (item.RevenueStatus == "1") {

@@ -4,6 +4,7 @@ import { appConfig } from '../../app.config';
 import { Prove } from './prove';
 import { ProveDocument } from './proveDoc';
 import { ProveProduct } from './proveProduct';
+import { ProveScience, ProveDeliverProduct } from './proveScience';
 
 @Injectable()
 export class ProveService {
@@ -53,7 +54,7 @@ export class ProveService {
 
   async getProveProductUnit(Textsearch: string): Promise<any> {
     const params = {  };
-    const url = `${appConfig.api8882}/ProveMasProductUnitgetAll`;
+    const url = `${appConfig.api7789}/MasDutyUnitMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -70,7 +71,7 @@ export class ProveService {
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
+      return res as any;
     } catch (error) {
       return [];
     }
@@ -80,6 +81,32 @@ export class ProveService {
     debugger
     const params = JSON.stringify(oProduct);
     const url = `${appConfig.api8882}/ProveProductinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async ProveScienceinsAll(oProductScience: ProveScience): Promise<any> {
+    debugger
+    const params = JSON.stringify(oProductScience);
+    const url = `${appConfig.api8882}/ProveScienceinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async ProveDeliverProductinsAll(oProveDeliver: ProveDeliverProduct): Promise<any> {
+    debugger
+    const params = JSON.stringify(oProveDeliver);
+    const url = `${appConfig.api8882}/ProveDeliverProductinsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -200,5 +227,52 @@ export class ProveService {
       return [];
     }
   }
+
+  async ProveArrestgetByCon(IndictmentID: string): Promise<any> {
+    const params = { IndictmentID };
+    const url = `${appConfig.api8882}/ProveArrestgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async ProveProductgetByCon(ProductID: string): Promise<any> {
+    const params = { ProductID };
+    const url = `${appConfig.api8882}/ProveProductgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
   
+  async ArrestIndictmentProductgetByIndictmentID(IndictmentID: string): Promise<any> {
+    const params = { IndictmentID };
+    const url = `${appConfig.api7788}/ArrestIndictmentProductgetByIndictmentID`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async LawsuitArrestgetByCon(IndictmentID: string): Promise<any> {
+    const params = { IndictmentID };
+    const url = `${appConfig.api8083}/LawsuitArrestgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
 }

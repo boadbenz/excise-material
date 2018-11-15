@@ -66,7 +66,7 @@ export class ListComponent implements OnInit {
         this.DeliveryDateTo = null;
         this.ProveDateTo = null;
 
-        this.sidebarService.setVersion('Prove 0.0.0.6 (L)');
+        this.sidebarService.setVersion('Prove 0.0.0.7 (L)');
 
         //this.preLoaderService.setShowPreloader(true);
         //this.onSearch({ Textsearch: "" });
@@ -176,8 +176,14 @@ export class ListComponent implements OnInit {
         await list.map((item) => {
             var vProveStaff, vProveStaffScience;
 
-            item.DeliveryDate = toLocalShort(item.DeliveryDate);
-            item.ProveDate = toLocalShort(item.ProveDate);
+            if(item.DeliveryDate){
+                item.DeliveryDate = toLocalShort(item.DeliveryDate);
+            }
+           
+            if(item.ProveDate){
+                item.ProveDate = toLocalShort(item.ProveDate);
+            }
+            
 
             vProveStaff = item.ProveStaff.filter(item => item.ContributorID === 14);
             vProveStaffScience = item.ProveStaff.filter(item => item.ContributorID === 15);
@@ -192,7 +198,7 @@ export class ListComponent implements OnInit {
 
             if(vProveStaffScience.length > 0){
                 item.ProveOneStaffScience = vProveStaffScience[0].TitleName + vProveStaffScience[0].FirstName + " " + vProveStaffScience[0].LastName;
-                item.ProveOneDeptScience =  vProveStaffScience[0].DepartmentName;
+                item.ProveOneDeptScience =  vProveStaffScience[0].OfficeShortName;
             }
         })
 
@@ -213,6 +219,7 @@ export class ListComponent implements OnInit {
 
     clickView(LawsuitID: string, ArrestCode: string, IndictmentID: string, GuiltBaseID: string, ProveID: string) {
         //this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${IndictmentID}/${GuiltBaseID}/${ProveID}`]);
+        debugger
         if(ProveID == "" || ProveID == undefined)
         {
             ProveID = "0";

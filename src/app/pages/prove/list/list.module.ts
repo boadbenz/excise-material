@@ -17,7 +17,7 @@ const routes: Routes = [
             // title: 'ค้นหาข้อมูล',
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง' }],
             nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/prove/manage' },
-            codePage: 'ILG60-05-01-00-00'
+            codePage: 'ILG60-05-00-00-00'
         },
         component: ListComponent
     }
