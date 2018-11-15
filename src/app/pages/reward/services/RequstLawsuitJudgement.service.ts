@@ -9,11 +9,11 @@ export class RequstLawsuitJudgementService extends HelperService {
     constructor(private http: HttpClient) {
       super();
     }
-    public RequestLawsuitJudgementgetByIndictmentID(
+    public RequstLawsuitJudgementgetByIndictmentID(
       param: IRequestLawsuitJudgementgetByIndictmentID
     ): Observable<any> {
       return this.http.post(
-        `${this.ApiPrefixUrl}/RequestLawsuitJudgementgetByIndictmentID`,
+        `${this.ApiPrefixUrl}/RequstLawsuitJudgementgetByIndictmentID`,
         param
       );
     }

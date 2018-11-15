@@ -588,146 +588,144 @@ export class ManageComponent extends ManageConfig implements OnInit {
         } else {
           // 4.2
           // 4.2.1
-          this.RequestNoticegetByArrestCode({
-            ArrestCode: this.ArrestCode$.getValue()
-          });
+          this.requestNoticeService
+            .RequestNoticegetByArrestCode({
+              ArrestCode: this.ArrestCode$.getValue()
+            })
+            .subscribe((RequestNotice: IRequestNotice[]) => {
+              // 4.2.2
+              // 4.2.2(1)
+              if (RequestNotice.length > 0) {
+                // 4.2.2(1.1)
+                this.RequestCommandinsAll({
+                  // 4.2.2(1.1.1)
+                  TotalPart: RequestNotice.length || 0,
+                  // 4.2.2(1.1.2)
+                  ArrestCode: this.ArrestCode$.getValue(),
+                  // 4.2.2(1.1.3)
+                  RequestCommandDetail: RequestNotice.map(m => ({
+                    ...m,
+                    // 4.2.2(1.1.4)
+                    PartMoney: 1
+                  }))
+                });
+
+                // 4.2.2(1.2)
+                this.RequestBribeRewardinsAll({
+                  // 4.2.2(1.2.1)
+                  IndictmentID: this.IndictmentID$.getValue(),
+                  // 4.2.2(1.2.2)
+                  HaveNotice: 1
+                });
+
+                // 4.2.2(1.3)
+                this.requestCommandService
+                  .RequestCommandgetByArrestCode({
+                    ArrestCode: this.ArrestCode$.getValue()
+                  })
+                  .subscribe((resCommand: IRequestCommand[]) => {
+                    const RequestCommand: IRequestCommand = resCommand[0];
+                    // 4.2.2(1.4)
+                    // 4.2.2(1.4.1)
+                    if (
+                      RequestCommand &&
+                      RequestCommand['RequestCommandDetail'].length === 1
+                    ) {
+                      // 4.2.2(1.4.1(1))
+                      this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                      // 4.2.2(1.4.1(1.1))
+                      this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+                      this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
+                      this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                      // 4.2.2(1.4.1(2))
+                      // 4.2.2(1.4.1(2.1)) 'WAIT'
+                      // 4.2.2(1.4.1(2.2)) 'WAIT'
+                      // 4.2.2(1.4.1(2.3)) 'WAIT'
+
+                      // 4.2.2(1.4.1(3))
+                      // 4.2.2(1.4.1(3.1))
+                      this.navService.setSaveButton(true);
+                      // 4.2.2(1.4.1(3.2))
+                      this.navService.setCancelButton(true);
+                      this.navService.setPrintButton(false);
+                      this.navService.setEditButton(false);
+                      this.navService.setDeleteButton(false);
+                      this.navService.setSearchBar(false);
+                    } else if (
+                      RequestCommand &&
+                      RequestCommand['RequestCommandDetail'].length > 1
+                    ) {
+                      // 4.2.2(1.4.2)
+                      // 4.2.2(1.4.2(1))
+                      this.ILG60_08_02_00_00E09_DATA$.next(resCommand);
+
+                      // 4.2.2(1.4.2(2))
+                      this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                      this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
+                      this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
+                      this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                      // 4.2.2(1.4.2(3))
+                      // 4.2.2(1.4.2(3.1)) 'WAIT'
+                      // 4.2.2(1.4.2(3.2)) 'WAIT'
+                      // 4.2.2(1.4.2(3.3)) 'WAIT'
+
+                      // 4.2.2(1.4.2(4))
+                      // 4.2.2(1.4.2(4.1))
+                      this.navService.setSaveButton(true);
+                      // 4.2.2(1.4.2(4.2))
+                      this.navService.setCancelButton(true);
+                      this.navService.setPrintButton(false);
+                      this.navService.setEditButton(false);
+                      this.navService.setDeleteButton(false);
+                      this.navService.setSearchBar(false);
+                    } else {
+                      // 4.2.2(2)
+                      // 4.2.2(2.1)
+                      this.RequestBribeRewardinsAll({
+                        // 4.2.2(2.1.1)
+                        IndictmentID: this.IndictmentID$.getValue(),
+                        // 4.2.2(2.1.2)
+                        HaveNotice: 0
+                      });
+
+                      // 4.2.2(2.2)
+                      this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                      // 4.2.2(2.2.1)
+                      this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+                      // 4.2.2(2.2.2)
+                      this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
+                      this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                      // 4.2.2(2.3)
+                      // 4.2.2(2.3.1) 'WAIT'
+                      // 4.2.2(2.3.2) 'WAIT'
+
+                      // 4.2.2(2.4)
+                      // 4.2.2(2.4.1)
+                      this.navService.setSaveButton(true);
+                      // 4.2.2(2.4.2)
+                      this.navService.setCancelButton(true);
+                      this.navService.setPrintButton(false);
+                      this.navService.setEditButton(false);
+                      this.navService.setDeleteButton(false);
+                      this.navService.setSearchBar(false);
+                    }
+                  });
+              } else {
+                this.RequestBribeRewardinsAll({
+                  IndictmentID: this.IndictmentID$.getValue(),
+                  HaveNotice: 0
+                });
+              }
+              this.RequestNoticegetByArrestCode$.next(RequestNotice);
+            });
         }
         this.RequestBribeRewardgetByIndictmentID$.next(res);
       });
   }
-  private RequestNoticegetByArrestCode(param: IRequestNoticegetByArrestCode) {
-    this.requestNoticeService
-      .RequestNoticegetByArrestCode(param)
-      .subscribe((res: IRequestNotice[]) => {
-        // 4.2.2
-        // 4.2.2(1)
-        if (res.length > 0) {
-          // 4.2.2(1.1)
-          this.RequestCommandinsAll({
-            // 4.2.2(1.1.1)
-            TotalPart: res.length || 0,
-            // 4.2.2(1.1.2)
-            ArrestCode: this.ArrestCode$.getValue(),
-            // 4.2.2(1.1.3)
-            RequestCommandDetail: res.map(m => ({
-              ...m,
-              // 4.2.2(1.1.4)
-              PartMoney: 1
-            }))
-          });
-
-          // 4.2.2(1.2)
-          this.RequestBribeRewardinsAll({
-            // 4.2.2(1.2.1)
-            IndictmentID: this.IndictmentID$.getValue(),
-            // 4.2.2(1.2.2)
-            HaveNotice: 1
-          });
-
-          // 4.2.2(1.3)
-          this.requestCommandService
-            .RequestCommandgetByArrestCode({
-              ArrestCode: this.ArrestCode$.getValue()
-            })
-            .subscribe((resCommand: IRequestCommand[]) => {
-              const RequestCommand: IRequestCommand = resCommand[0];
-              // 4.2.2(1.4)
-              // 4.2.2(1.4.1)
-              if (
-                RequestCommand &&
-                RequestCommand['RequestCommandDetail'].length === 1
-              ) {
-                // 4.2.2(1.4.1(1))
-                this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-                // 4.2.2(1.4.1(1.1))
-                this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-                this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-                this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-                // 4.2.2(1.4.1(2))
-                // 4.2.2(1.4.1(2.1)) 'WAIT'
-                // 4.2.2(1.4.1(2.2)) 'WAIT'
-                // 4.2.2(1.4.1(2.3)) 'WAIT'
-
-                // 4.2.2(1.4.1(3))
-                // 4.2.2(1.4.1(3.1))
-                this.navService.setSaveButton(true);
-                // 4.2.2(1.4.1(3.2))
-                this.navService.setCancelButton(true);
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                this.navService.setSearchBar(false);
-              } else if (
-                RequestCommand &&
-                RequestCommand['RequestCommandDetail'].length > 1
-              ) {
-                // 4.2.2(1.4.2)
-                // 4.2.2(1.4.2(1))
-                this.ILG60_08_02_00_00E09_DATA$.next(resCommand);
-
-                // 4.2.2(1.4.2(2))
-                this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-                this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
-                this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-                this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-                // 4.2.2(1.4.2(3))
-                // 4.2.2(1.4.2(3.1)) 'WAIT'
-                // 4.2.2(1.4.2(3.2)) 'WAIT'
-                // 4.2.2(1.4.2(3.3)) 'WAIT'
-
-                // 4.2.2(1.4.2(4))
-                // 4.2.2(1.4.2(4.1))
-                this.navService.setSaveButton(true);
-                // 4.2.2(1.4.2(4.2))
-                this.navService.setCancelButton(true);
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                this.navService.setSearchBar(false);
-              } else {
-                // 4.2.2(2)
-                // 4.2.2(2.1)
-                this.RequestBribeRewardinsAll({
-                  // 4.2.2(2.1.1)
-                  IndictmentID: this.IndictmentID$.getValue(),
-                  // 4.2.2(2.1.2)
-                  HaveNotice: 0
-                });
-
-                // 4.2.2(2.2)
-                this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-                // 4.2.2(2.2.1)
-                this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-                // 4.2.2(2.2.2)
-                this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
-                this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-                // 4.2.2(2.3)
-                // 4.2.2(2.3.1) 'WAIT'
-                // 4.2.2(2.3.2) 'WAIT'
-
-                // 4.2.2(2.4)
-                // 4.2.2(2.4.1)
-                this.navService.setSaveButton(true);
-                // 4.2.2(2.4.2)
-                this.navService.setCancelButton(true);
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                this.navService.setSearchBar(false);
-              }
-            });
-        } else {
-          this.RequestBribeRewardinsAll({
-            IndictmentID: this.IndictmentID$.getValue(),
-            HaveNotice: 0
-          });
-        }
-        this.RequestNoticegetByArrestCode$.next(res);
-      });
-  }
+  private RequestNoticegetByArrestCode(param: IRequestNoticegetByArrestCode) {}
   private RequestRewardgetByRequestBribeRewardID(
     param: IRequestRewardgetByRequestBribeRewardID,
     HaveNotice: number

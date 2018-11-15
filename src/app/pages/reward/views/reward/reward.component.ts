@@ -15,6 +15,10 @@ import { NonRequestRewardStaffService } from '../../services/NonRequestRewardSta
 import { INonRequestRewardStaff } from '../../interfaces/NonRequestRewardStaff';
 import { RequestBribeRewardService } from '../../services/RequestBribeReward.service';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
+import { RequestRewardService } from '../../services/RequestReward.service';
+import { IRequestReward } from '../../interfaces/RequestReward';
+import { MasDocumentMainService } from '../../services/master/MasDocumentMain.service';
+import { MasDocumentModel } from 'app/models/mas-document.model';
 
 @Component({
   selector: 'app-reward',
@@ -34,12 +38,15 @@ export class RewardComponent extends RewardConfig implements OnInit {
     private requstLawsuitJudgementService: RequstLawsuitJudgementService,
     private nonRequestRewardStaffService: NonRequestRewardStaffService,
     private requestBribeReward: RequestBribeRewardService,
-    private navService: NavigationService
+    private navService: NavigationService,
+    private requestRewardService: RequestRewardService,
+    private masDocumentMainService: MasDocumentMainService
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
       this.mode$.next(param['mode']);
       this.IndictmentID$.next(param['IndictmentID']);
+      this.RequestRewardID$.next(param['RequestRewardID']);
       this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
     });
   }
@@ -73,16 +80,28 @@ export class RewardComponent extends RewardConfig implements OnInit {
           .RequestComparegetByIndictmentID({
             IndictmentID: this.IndictmentID$.getValue()
           })
-          .subscribe((Compare: IRequestCompare[]) => {
-            this.requestCompare$.next(Compare); // 1.1.6
+          .subscribe((RequestCompare: IRequestCompare[]) => {
+            if (RequestCompare.length > 0) {
+              this.ILG60_08_04_00_00_E08_DATA$.next({
+                methodName: 'RequestComparegetByIndictmentID',
+                data: RequestCompare
+              });
+            }
+            // 1.1.6
           }); // 1.1.4
 
         this.requstLawsuitJudgementService
-          .RequestLawsuitJudgementgetByIndictmentID({
+          .RequstLawsuitJudgementgetByIndictmentID({
             IndictmentID: Number(this.IndictmentID$.getValue())
           })
           .subscribe((LawsuitJudgement: IRequestLawsuitJudgement[]) => {
-            this.requstLawsuitJudgement$.next(LawsuitJudgement); // 1.1.6
+            // if (LawsuitJudgement.length > 0) {
+            //   this.requstLawsuitJudgement$.next(LawsuitJudgement); // 1.1.6
+            //   this.ILG60_08_04_00_00_E08_DATA$.next({
+            //     methodName: 'RequstLawsuitJudgementgetByIndictmentID',
+            //     data: LawsuitJudgement
+            //   });
+            // }
           }); // 1.1.5
 
         // 1.1.7
@@ -99,9 +118,12 @@ export class RewardComponent extends RewardConfig implements OnInit {
           .RequestBribeRewardgetByIndictmentID({
             IndictmentID: this.IndictmentID$.getValue()
           })
-          .subscribe((nonRequestRewardStaff: INonRequestRewardStaff[]) => {
-            this.ILG60_08_04_00_00_E08_DATA$.next(nonRequestRewardStaff); // 1.1.10
-            this.ILG60_08_04_00_00_E12_DATA$.next(nonRequestRewardStaff); // 1.1.10
+          .subscribe((RequestBribeReward: INonRequestRewardStaff[]) => {
+            // this.ILG60_08_04_00_00_E08_DATA$.next({
+            //   methodName: 'RequestBribeReward',
+            //   data: RequestBribeReward
+            // }); // 1.1.10
+            // this.ILG60_08_04_00_00_E12_DATA$.next(RequestBribeReward); // 1.1.10
           });
 
         // 1.1.11 'WAIT'
@@ -116,6 +138,32 @@ export class RewardComponent extends RewardConfig implements OnInit {
         this.navService.setSearchBar(false);
         break;
       case 'R':
+        // 1.2
+
+        // 1.2.1
+        this.requestRewardService
+          .RequestRewardgetByCon({
+            RequestRewardID: this.RequestRewardID$.getValue()
+          })
+          .subscribe((RequestReward: IRequestReward[]) => {
+            if (RequestReward.length > 0) {
+              this.ILG60_08_04_00_00_E08_DATA$.next({
+                methodName: 'RequestRewardgetByCon',
+                data: RequestReward
+              });
+            }
+          });
+
+        // 1.2.2
+        this.masDocumentMainService
+          .MasDocumentMaingetAll({
+            DocumentType: 9,
+            ReferenceCode: this.RequestRewardID$.getValue()
+          })
+          .subscribe((masDocumentMain: MasDocumentModel[]) => {
+            this.MasDocument$.next(masDocumentMain);
+          });
+
         break;
     }
     // 2 END

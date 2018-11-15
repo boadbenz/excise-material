@@ -1,3 +1,30 @@
-<p>
-  ILG60-08-04-00-00-E19 works!
-</p>
+<div class="text-right">
+  <input type="file" id="btn-browse" #file>
+  <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy">
+    เพิ่มเอกสารแนบ </label>
+</div>
+<div class="table-responsive">
+  <table class="dataTable table table-sm table-striped table-hover">
+    <thead>
+      <tr>
+        <th class="footable-sortable text-center">ลำดับ</th>
+        <th class="footable-sortable">ชื่อเอกสารแนบ</th>
+        <th class="footable-sortable">ที่อยู่เอกสารแนบ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="footable">
+        <td class="text-center">1</td>
+        <td>
+          <input class="form-control" type="text" nmae="fileName">
+        </td>
+        <td>
+          <input class="form-control" type="text" name="filePath">
+        </td>
+        <td>
+          <i class="ti-trash btn-action"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

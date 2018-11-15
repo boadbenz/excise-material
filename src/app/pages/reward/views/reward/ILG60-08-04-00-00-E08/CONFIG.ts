@@ -16,6 +16,15 @@ export class CONFIG extends RewardConfig {
   public inputData$ = new BehaviorSubject<any>(null);
 
   @Input()
+  set RequestReward(val) {
+    this.RequestReward$.next(val);
+  }
+  get RequestReward() {
+    return this.RequestReward$.asObservable();
+  }
+  public RequestReward$ = new BehaviorSubject<any>(null);
+
+  @Input()
   set requstLawsuitJudgement(val) {
     this.requstLawsuitJudgement$.next(val);
   }
@@ -37,27 +46,48 @@ export class CONFIG extends RewardConfig {
     {
       title: 'เลขที่อ้างอิง',
       field: 'ReferenceNo',
+      inputType: 'text',
+      default: '',
       isDisabled: true
     },
     {
       title: 'เลขที่คำร้องขอ',
       field: 'RequestRewardCode',
+      inputType: 'text',
+      default: '',
       isDisabled: true
     },
     {
       title: 'เขียนที่',
       field: 'Station',
+      inputType: 'text',
+      default: '',
       isDisabled: true
     },
     {
       title: 'วันที่จัดทำ',
       field: 'RequestDate',
+      inputType: 'text',
       isDisabled: true,
+      default: '',
       title2: 'เวลา',
       field2: 'RequestTime',
-      isDisabled2: true
+      inputType2: 'text',
+      isDisabled2: true,
+      default2: '',
     }
   ];
+  public aggregate = {
+    PaymentFine: {
+      sum: 0
+    },
+    BribeMoney: {
+      sum: 0
+    },
+    RewardMoney: {
+      sum: 0
+    }
+  };
   public columnsTable: ColumnsInterface[] = [
     {
       title: 'ชื่อผู้ต้องหา',
@@ -82,27 +112,18 @@ export class CONFIG extends RewardConfig {
     },
     {
       title: 'ค่าปรับตามงวด',
-      field: 'PaymentFine'
+      field: 'PaymentFine',
+      isSum: true
     },
     {
       title: 'เงินสินบน',
-      field: 'BribeMoney' // BribeMoney = (PaymentFine * 0.2)
+      field: 'BribeMoney', // BribeMoney = (PaymentFine * 0.2)
+      isSum: true
     },
     {
       title: 'เงินรางวัล',
-      field: 'RewardMoney' // RewardMoney = (PaymentFine * 0.2)
-    },
-    {
-      title: 'รวม [ค่าปรับตามงวด]',
-      field: 'SumPaymentFine' // SumPaymentFine = (PaymentFine +…+ PaymentFine
-    },
-    {
-      title: 'รวม [เงินสินบน]',
-      field: 'SumBribeMoney' // SumBribeMoney = (BribeMoney +…+ BribeMoney)
-    },
-    {
-      title: 'รวม [เงินรางวัล]',
-      field: 'SumRewardMoney' // SumRewardMoney = (RewardMoney +…+ RewardMoney)
+      field: 'RewardMoney', // RewardMoney = (PaymentFine * 0.2)
+      isSum: true
     }
   ];
   public columnsForm$ = new BehaviorSubject<any>(this.columnsForm);

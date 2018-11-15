@@ -22,6 +22,24 @@ export class CONFIG extends BribeConfig {
   }
   public RequestCommand$ = new BehaviorSubject<any>(null);
 
+  @Input()
+  set RequestBribe(val) {
+    this.RequestBribe$.next(val);
+  }
+  get RequestBribe() {
+    return this.RequestBribe$.asObservable();
+  }
+  public RequestBribe$ = new BehaviorSubject<any>(null);
+
+
+  @Input()
+  set mode(val) {
+    this.mode$.next(val);
+  }
+  get mode() {
+    return this.mode$.asObservable();
+  }
+  public mode$ = new BehaviorSubject<any>(null);
   public RequestArrestLawsuit$ = new BehaviorSubject<any>(null);
 
   public columnsForm: ColumnsInterface[] = [

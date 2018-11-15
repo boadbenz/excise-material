@@ -4,6 +4,7 @@ import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-int
 import { IRewardBinding } from '../reward.config';
 import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 import { IRequestCompare } from 'app/pages/reward/interfaces/RequestCompare';
+import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -13,10 +14,14 @@ import { IRequestCompare } from 'app/pages/reward/interfaces/RequestCompare';
 })
 // tslint:disable-next-line:class-name
 export class ILG6008040000E08Component extends CONFIG implements OnInit {
+  public checkAll = false;
+  public checkList: boolean[];
   constructor() {
     super();
     this.inputData$.subscribe((res: IRewardBinding) => {
-      if (res != null) {
+      if (typeof res !== 'undefined' && res && res !== null) {
+        console.log('res', res);
+
         let newMapName;
 
         switch (res.methodName) {
@@ -35,13 +40,48 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
                 }`;
                 break;
             }
-
+            console.log('dataRequestReward', dataRequestReward);
             break;
           case 'RequestComparegetByIndictmentID':
             const dataRequestCompare: IRequestCompare[] = res.data;
-            newMapName = `เลขคดีเปรียบเทียบที่ / ${
-              dataRequestCompare[0].CompareCode
-            }`;
+            if (dataRequestCompare.length > 0) {
+              newMapName = `เลขคดีเปรียบเทียบที่ / ${
+                dataRequestCompare[0].CompareCode
+              }`;
+              const ReferenceNo = this.columnsForm.findIndex(
+                f => f.field === 'ReferenceNo'
+              );
+              this.columnsForm[ReferenceNo].default = newMapName;
+
+              this.columnsForm$.next(this.columnsForm);
+              const mapData = dataRequestCompare[0].RequestPaymentFine.map(
+                m => ({
+                  ...m,
+                  // tslint:disable-next-line:max-line-length
+                  LawbreakerName: `${m.LawbreakerTitleName ||
+                    ' '}${m.LawbreakerFirstName ||
+                    ' '}${m.LawbreakerMiddleName ||
+                    ' '}${m.LawbreakerLastName || ' '}${m.LawbreakerOtherName ||
+                    ' '}`,
+                  PaymentDueDate: `${m.PaymentActualDate}`,
+                  BribeMoney: `${m.PaymentFine * 0.2 || 0}`,
+                  RewardMoney: `${m.PaymentFine * 0.2 || 0}`
+                })
+              );
+              this.checkList = mapData.map(m => true);
+              this.aggregate.BribeMoney.sum = Number(
+                mapData.map(m => m.BribeMoney).reduce((a, b) => (a += b))
+              );
+              this.aggregate.PaymentFine.sum = Number(
+                mapData.map(m => m.PaymentFine).reduce((a, b) => (a += b))
+              );
+              this.aggregate.RewardMoney.sum = Number(
+                mapData.map(m => m.RewardMoney).reduce((a, b) => (a += b))
+              );
+              this.checkAll = this.checkChecked(this.checkList);
+              this.inputDataTable$.next(mapData);
+            }
+
             break;
           case 'ReqeustLawsuitJudgementgetByIndictmentID':
             const dataReqeustLawsuitJudgement: any[] = res.data;
@@ -50,14 +90,18 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
             }`;
             break;
         }
-        const index = this.columnsForm.findIndex(
-          f => f.field === 'ReferenceNo'
-        );
-        this.columnsForm[index].default = newMapName;
-        this.columnsForm$.next(this.columnsForm);
       }
     });
   }
 
   ngOnInit() {}
+
+  public checkChecked(arrBool: boolean[]): boolean {
+    const d = arrBool.map(m => (m ? 1 : -1));
+    let num = 1;
+    d.forEach(e => {
+      num = num * e
+    });
+    return num === 1 ? true : false;
+  }
 }
