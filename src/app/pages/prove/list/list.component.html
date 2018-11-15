@@ -58,17 +58,17 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="DeliveryProgramCode" ngModel>
+                <!-- <input type="hidden" name="DeliveryProgramCode" ngModel>
                 <input type="hidden" name="DeliveryProcessCode" ngModel>
                 <input type="hidden" name="ProveProgramCode" ngModel>
-                <input type="hidden" name="ProveProcessCode" ngModel>
+                <input type="hidden" name="ProveProcessCode" ngModel> -->
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-3 control-label">ชื่อผู้ตรวจรับ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="DeliveryName" ngModel class="form-control" placeholder="">
+                                <input type="text" name="StaffNameDelivery" ngModel class="form-control" placeholder="">
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="ProveName" ngModel class="form-control" placeholder="">
+                                <input type="text" name="StaffNameProve" ngModel class="form-control" placeholder="">
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="DeliveryDepartmentName" ngModel class="form-control" placeholder="">
+                                <input type="text" name="OfficeNameProve" ngModel class="form-control" placeholder="">
                             </div>
                         </div>
                     </div>
@@ -150,18 +150,14 @@
                         <td>{{item.ArrestCode}}</td>
                         <td>{{item.LawsuitNo}}</td>
                         <td>{{item.ProveReportNo}}</td>
-                        <td>
-                            <div *ngFor="let staff of item.ProveOneStaff;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
-                        </td>
+                        <td>{{item.ProveOneStaff}}</td>
                         <!-- <td>{{item.DeliveryDate | date:'dd-MM-yyyy'}}</td> -->
                         <td>{{item.DeliveryDate}}</td>
-                        <td>
-                            <div *ngFor="let staff of item.ProveOneStaffScience ;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
-                        </td>
+                        <td>{{item.ProveOneStaffScience}}</td>
                         <td>{{item.ProveDate}}</td>
-                        <td>{{item.ProveStation}}</td>
+                        <td>{{item.ProveOneDeptScience}}</td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitID,item.ArrestCode,item.ArrestIndictmentID,item.GuiltBaseID,item.ProveID)">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitID,item.ArrestCode,item.IndictmentID,item.GuiltBaseID,item.ProveID)">
                                 <i class="mdi mdi-eye fa-lg"></i>
                             </a>
                         </td>
