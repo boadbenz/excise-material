@@ -223,12 +223,12 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">เลขที่คดีรับคำกล่าวโทษ : </label>
               <div class="col-md-4">
-                <input class="form-control" type="text" [(ngModel)]="lawsuitForm.LawsuitNoCut" name="LawsuitNoCut"
+                <input class="form-control" type="text" [(ngModel)]="lawsuitForm.LawsuitNoCut" name="LawsuitNoCut" [attr.disabled]="mode.edit ? '' : null" 
                   required>
               </div>
               <label class="col-form-label text-center col-md-2">/</label>
               <div class="col-md-3">
-                <input class="form-control" type="text" [(ngModel)]="lawsuitForm.LawsuitNoSub" name="LawsuitNoSub"
+                <input class="form-control" type="text" [(ngModel)]="lawsuitForm.LawsuitNoSub" name="LawsuitNoSub" [attr.disabled]="mode.edit ? '' : null" 
                   required>
               </div>
             </div>
@@ -237,12 +237,12 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
               <div class="col-md-4">
-                <my-date-picker-th ngModel name="LawsuitDate" [(ngModel)]="lawsuitForm.LawsuitDate" placeholder=""
+                <my-date-picker-th ngModel name="LawsuitDate" [(ngModel)]="lawsuitForm.LawsuitDate" placeholder="" [attr.disabled]="mode.edit ? '' : null" 
                   locale="th" [options]="LawsuitDateOptions" required></my-date-picker-th>
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
               <div class="col-md-3">
-                <input class="form-control" type="text" [(ngModel)]="lawsuitForm.LawsuitTime" name="LawsuitTime"
+                <input class="form-control" type="text" [(ngModel)]="lawsuitForm.LawsuitTime" name="LawsuitTime" [attr.disabled]="mode.edit ? '' : null" 
                   required>
               </div>
             </div>
@@ -253,7 +253,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-4">ผู้รับคดี : </label>
               <div class="col-md-8">
-                <input class="form-control" [(ngModel)]="staff.FullName" type="text" name="FullName" (input)="onChangeFullname($event.target.value)"
+                <input class="form-control" [(ngModel)]="staff.FullName" type="text" name="FullName" (input)="onChangeFullname($event.target.value)" [attr.disabled]="mode.edit ? '' : null" 
                   (blur)="onBlurFullname()" required>
                 <div class="list-group" *ngIf="search.listMasStaff.length > 0">
                   <a class="list-group-item list-group-item-action" style="cursor: pointer;" *ngFor="let name of search.listMasStaff"
@@ -283,7 +283,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-4">เขียนที่ : </label>
               <div class="col-md-8">
-                <input class="form-control" name="LawsuitStation" type="text" [(ngModel)]="lawsuitForm.LawsuitStation" (blur)="onBlurOfficename()"
+                <input class="form-control" name="LawsuitStation" type="text" [(ngModel)]="lawsuitForm.LawsuitStation" (blur)="onBlurOfficename()" [attr.disabled]="mode.edit ? '' : null" 
                   (input)="onChangeStation($event.target.value)" required>
                 <div class="list-group" *ngIf="search.listMasOffice.length">
                   <a class="list-group-item list-group-item-action" (click)="onChangeStationReslut(name)" style="cursor: pointer;"
@@ -296,7 +296,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-2">คำให้การของผู้กล่าวโทษ : </label>
               <div class="col-md-10">
-                <textarea class="form-control" rows="5" [(ngModel)]="lawsuitForm.AccuserTestimony" name="AccuserTestimony"
+                <textarea class="form-control" rows="5" [(ngModel)]="lawsuitForm.AccuserTestimony" name="AccuserTestimony" [attr.disabled]="mode.edit ? '' : null" 
                   [ngClass]="{'ng-touched':isRequired}" required></textarea>
               </div>
             </div>
