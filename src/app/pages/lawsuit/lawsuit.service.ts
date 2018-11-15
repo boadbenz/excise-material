@@ -211,6 +211,12 @@ export class LawsuitService {
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
+  async LawsuitArrestCheckNotComplete(ArrestCode) {
+    const params = { ArrestCode: ArrestCode };
+    const url = `${appConfig.api8083}/LawsuitArrestCheckNotComplete`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+
 
 
   // async getByKeyword(filterValue) {
