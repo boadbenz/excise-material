@@ -24,6 +24,7 @@ import { ArrestStaff } from '../../model/arrest-staff';
 import { isNgTemplate } from '@angular/compiler';
 import { async } from 'q';
 import { isArray } from 'jquery';
+import { FormGroup, FormControl, NgForm } from '@angular/forms';
 import { IMyDpOptions } from 'mydatepicker';
 @Component({
   selector: 'app-manage',
@@ -39,7 +40,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
   // --------
   showEditField: any;
-
+  @ViewChild('advForm') advForm: NgForm;
   // -- Parameter ---
   LawsuitID: string;
   ArrestCode: string;
@@ -57,6 +58,9 @@ export class ManageComponent implements OnInit, OnDestroy {
   ListCompareDetailReceipt = [];
   ListCompareStaff = [];
   ArrestIndictment = [];
+  editUser: any = {};
+  compareUserDetail: any = [];
+  AllAddFiles: any = [];
   // ---- Varible ---
   CompareNo: string = '';   // เลขที่เปรียบเทียบ  (ไม่รวม /ปี พ.ศ.)
   CompareYear: string;      // ปี พ.ศ.
@@ -89,12 +93,21 @@ export class ManageComponent implements OnInit, OnDestroy {
   oArrest: Arrest;
   oCompare: Compare;
   oCompareDetail: CompareDetail = {};
+  fileData: any = {};
   oCompareStaff: CompareStaff;
   OnSubscribe: any = {};
+  fileToUpload: File = null;
   // ----- Model ------ //
   @ViewChild('printDocModal') printDocModel: ElementRef;
   private today = new Date();
-
+  PaymentFineAppointDateOptions: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd/mmm/yyyy'
+  };
+  PaymentVatDateOptionsOptions: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd/mmm/yyyy'
+  };
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -111,6 +124,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // set true
     this.navService.setNextPageButton(true);
     this.navService.setInnerTextNextPageButton('ส่งเงินรายได้');
+    this.IsOutside = 0;
   }
 
   async ngOnInit() {
@@ -149,6 +163,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.GuiltBaseName = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].GuiltBaseName;
       this.SectionNo = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].SectionNo;
       this.PenaltyDesc = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].CompareGroupSection[0].SectionDesc1;
+      this.compareUserDetail =  resp[0].CompareArrestIndictment[0].CompareIndicmentDetail;
     } catch (err) {
       console.log(err);
     }
@@ -201,6 +216,8 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.ProveReportNo = resp[0].ProveReportNo;
       this.LawsuiltDate = resp[0].CompareDate.split(' ')[0];
       this.LawsuiltTime = resp[0].CompareDate.split(' ')[1];
+      this.IsOutside = resp[0].IsOutside;
+      this.CompareNo = resp[0].CompareCode.split('/')[0];
     } catch (err) {
       console.log(err);
     }
@@ -367,16 +384,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       LawsuitID: ""
     }
   }
-  public PaymentFineAppointDateOptions: IMyDpOptions = {
-    // other options...
-    dateFormat: 'dd/mmm/yyyy',
-    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
-  };
-  public PaymentVatDateOptionsOptions: IMyDpOptions = {
-    // other options...
-    dateFormat: 'dd/mmm/yyyy',
-    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
-  };
   async getLawsuitByID(LawsuitID: string) {
     // this.preloader.setShowPreloader(true);
 
@@ -434,7 +441,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         const tmp: any = [];
         this.ListCompareDetail = res[0].ArrestIndictment[0].ArrestIndictmentDetail;
         const name: any = [];
-        for (let item of this.ListCompareDetail) {
+        console.log(this.ListCompareDetail);
+        for (const item of this.ListCompareDetail) {
           if (item.ArrestLawbreaker[0].EntityType === 0) {
             name.push({ 'AccusedName' : `${item.ArrestLawbreaker[0].CompanyTitle}${item.ArrestLawbreaker[0].CompanyName}`});
           } else {
@@ -986,10 +994,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.oCompareStaff.IsNewItem = true;
     }
 
-    this.OperationPosName = event.PosLevelName;
+    this.OperationPosName = event.OperationPosName;
     this.OperationDeptName = event.OperationDeptName;
   }
-
+  onClickEditF3(item: any) {
+    this.editUser = item;
+  }
   ClearStaffData() {
     this.OperationPosName = "";
     this.OperationDeptName = "";
@@ -1018,6 +1028,41 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     if (this.CompareStaffID == '' || this.CompareStaffID == undefined) {
       this.oCompareStaff.IsNewItem = true;
+    }
+  }
+  onSaveF3() {
+    const data: any = {
+      'name' : this.editUser.AccusedName,
+    };
+    console.log('Data for save');
+    console.log(this.advForm.controls);
+  }
+  onDateFromChanged(event) {
+    // console.log(this.advForm.controls['PaymentFineAppointDate'].value.formatted);
+    // setTimeout(() => {
+    //   try {
+    //     this.advForm.controls['LawsuitDateFrom'].setValue({
+    //       date: this.advForm.value.LawsuitDateFrom.date,
+    //       epoc: this.advForm.value.LawsuitDateFrom.epoc,
+    //       formatted: this.advForm.value.LawsuitDateFrom.formatted,
+    //       jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
+    //     });
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    //
+    // }, 100);
+  }
+  handleFileInput(files: FileList) {
+    // this.fileToUpload = files.item(0);
+    this.AllAddFiles.push(files.item(0));
+  }
+  async uploadFile() {
+    try {
+      const formData: FormData = new FormData();
+      formData.append('fileAdd', this.AllAddFiles);
+    } catch (err) {
+      console.log(err);
     }
   }
   // ----- End ผู้เปรียบเทียบ ---
