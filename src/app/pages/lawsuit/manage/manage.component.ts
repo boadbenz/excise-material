@@ -851,7 +851,7 @@ export class ManageComponent implements OnInit {
             "LawsuitID": this.LawsuitID,
             "IndictmentID": this.IndictmentID,
             "IsLawsuit": this.lawsuitForm.controls['IsLawsuitCheck'].value === false ? 0 : 1,
-            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",,
+            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",
             "LawsuitNo": this.lawsuitForm.controls['LawsuitNo'].value,
             "LawsuitDate": _lawDate.jsdate,
             "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
