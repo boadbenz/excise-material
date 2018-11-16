@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <!-- <pre>
-      {{FormInput$ | async | json}}
+      {{isEdit$ | async}}
     </pre> -->
-    <app-form-group [columns]="FormInput$ | async" (outputChange)="changeForm($event)"></app-form-group>
+    <app-form-group [columns]="bindingForm" (outputChange)="changeForm($event)"></app-form-group>
   </div>
 </div>
 <div class="row">
@@ -37,7 +37,7 @@
                 <ng-container *ngFor="let item of (columnsTable$ | async)">
                   <ng-container *ngIf="item.showInput;else any">
                     <td class="footable-sortable" [width]="item.width || ''">
-                      <input class="form-control text-center" type="number" width="50" [(ngModel)]="inputItem[i]"  (change)="itemChange()">
+                      <input class="form-control text-center" type="number" width="50" [(ngModel)]="inputItem[i]"  (change)="itemChange()" [disabled]="!(isEdit$ | async)">
                     </td>
                   </ng-container>
                   <ng-template #any>

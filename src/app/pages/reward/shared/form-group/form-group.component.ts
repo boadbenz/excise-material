@@ -18,7 +18,7 @@ export class FormGroupComponent extends FormGroupConfig implements OnInit {
 
         this.formGroup = this.fb.group(this.createForm(column));
         column.forEach((key, index) => {
-          if (key.default &&  key.field) {
+          if (key.default && key.field) {
             this.formGroup.controls[key.field].setValue(
               key.default || null,
               true

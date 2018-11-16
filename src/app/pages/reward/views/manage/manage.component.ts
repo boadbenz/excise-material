@@ -225,8 +225,9 @@ export class ManageComponent extends ManageConfig implements OnInit {
   public editButton() {
     // ILG60-08-02-00-00
     // 1
+    this.ILG60_08_02_00_00E09_EDIT = true;
+    // 1.1
 
-    // 1.1 'WAIT'
     if (this.ILG60_08_02_00_00E09_EXPANDED$.getValue() === true) {
       // 1.2 'WAIT'
     }

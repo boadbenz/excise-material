@@ -14,6 +14,8 @@ export class ManageConfig extends RewardHelper {
   public ILG60_08_02_00_00E11_DISABLED$ = new BehaviorSubject<any>(false);
   public ILG60_08_02_00_00E14_DISABLED$ = new BehaviorSubject<any>(false);
 
+  public ILG60_08_02_00_00E09_EDIT = false;
+
   public ILG60_08_02_00_00E08_DATA$ = new BehaviorSubject<any>(null);
   public ILG60_08_02_00_00E09_DATA: IRequestCommand[] = [];
   public ILG60_08_02_00_00E11_DATA: IRequestBribe[] = [];

@@ -3,6 +3,7 @@ import { CONFIG } from './CONFIG';
 import { IRequestCommandDetail } from 'app/pages/reward/interfaces/RequestCommandDetail';
 import { IRequestCommand } from 'app/pages/reward/interfaces/RequestCommand';
 import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interface';
+import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -12,6 +13,7 @@ import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interfac
 })
 export class ILG6008020000E09Component extends CONFIG implements OnInit {
   public bindingData: IRequestCommandDetail[];
+  public bindingForm: ColumnsInterface[] = [];
   public submitData: IRequestCommand = {};
 
   @Output()
@@ -34,13 +36,22 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
         }));
         this.inputItem = inp[0].RequestCommandDetail.map(m => m.PartMoney);
 
-        this.FormInput$.next(
-          this.FormInputDefault.map(m => ({
-            ...m,
-            default: inp[0][m.field],
-            default2: inp[0][m.field2]
-          }))
-        );
+        this.bindingForm = this.FormInputDefault.map(m => ({
+          ...m,
+          default: inp[0][m.field],
+          default2: inp[0][m.field2],
+          isDisabled: !this.isEdit$.getValue(),
+          isDisabled2: !this.isEdit$.getValue()
+        }));
+      }
+    });
+    this.isEdit$.subscribe(edit => {
+      if (edit !== undefined && edit != null) {
+        this.bindingForm = this.bindingForm.map(m => ({
+          ...m,
+          isDisabled: !edit,
+          isDisabled2: !edit
+        }));
       }
     });
   }
@@ -76,7 +87,7 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
     this.submitData.RequestCommandDetail = this.bindingData.map((m, index) => ({
       ...m,
       PartMoney: this.inputItem[index]
-    }))
+    }));
     this.sendEmitData();
   }
   public sendEmitData() {

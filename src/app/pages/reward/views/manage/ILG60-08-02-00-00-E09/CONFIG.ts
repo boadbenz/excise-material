@@ -16,6 +16,16 @@ export class CONFIG extends ManageConfig {
     return this.inputData$.asObservable();
   }
   public inputData$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set isEdit(val) {
+    this.isEdit$.next(val);
+  }
+  get isEdit() {
+    return this.isEdit$.asObservable();
+  }
+  public isEdit$ = new BehaviorSubject<any>(null);
+
   public FormInput$ = new BehaviorSubject<any>(null);
 
   public FormInputDefault: ColumnsInterface[] = [
