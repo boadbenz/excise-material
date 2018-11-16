@@ -833,19 +833,10 @@ export class ManageComponent implements OnInit {
     } else {
       /// save IsLawsuitComplete = 0
       const lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
-      let isOut = 0;
-      if (this.lawsuitForm.controls['IsOutsideCheck'].value) {
-        isOut = 1;
-      } else {
-        isOut = 0;
-      }
-      // isOut => (isOut) ? '1' : '0';
-
+      let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
       console.log('lawsuitNo==>', lawsuitNo);
       console.log('isOut==>', isOut)
-      await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo,
-        this.lawsuitForm.controls['officeCode'].value,
-        isOut).then(async res => {
+      await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo,this.lawsuitForm.controls['officeCode'].value,isOut).then(async res => {
           if (res.length != 0) {
             alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
             this.preLoaderService.setShowPreloader(false);
