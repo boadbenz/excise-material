@@ -145,7 +145,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
             // 1.1.2(1)
             if (res.length > 0) {
               // 1.1.2(1.1)
-              this.ILG60_08_02_00_00E11_DATA$.next(res);
+              this.ILG60_08_02_00_00E11_DATA = res;
             } else {
               // 1.1.2(2)
               // 1.1.2(2.1) => 2
@@ -179,8 +179,14 @@ export class ManageComponent extends ManageConfig implements OnInit {
   public saveButton() {
     // ILG60-08-02-00-00-E03
     // 1 START
-    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
-    const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
+    this.ILG60_08_02_00_00E09_SAVE.CommandID = null;
+    this.ILG60_08_02_00_00E09_SAVE.ArrestCode = this.ArrestCode$.getValue();
+    this.ILG60_08_02_00_00E09_SAVE.IsActive = 1;
+    // console.log('ILG60_08_02_00_00E09_SAVE', this.ILG60_08_02_00_00E09_SAVE);
+
+    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA || [];
+    const requestReward: IRequestReward[] =
+      this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
     let ValidateVerify = false;
     if (requestBribe.length === 0 && requestReward.length > 0) {
       // 1.1
@@ -189,23 +195,30 @@ export class ManageComponent extends ManageConfig implements OnInit {
       // 1.2
       ValidateVerify = true;
     }
-    // 2 'WAIT'
-    // 2.1 'WAIT'
-    if (ValidateVerify === true) {
-      // 3
-      const responseSave = false;
-      // 3.1
-      if (responseSave) {
-        // 3.1.1
-        alert('บันทึกไม่สำเร็จ');
-      } else {
-        // 3.2
-        // 3.2.1
-        alert('บันทึกสำเร็จ');
 
-        // 3.2.2
-        this.pageLoad();
-      }
+    if (ValidateVerify === true) {
+      // 2
+      // 2.1
+      this.requestCommandService
+        .RequestCommandupdByCon(this.ILG60_08_02_00_00E09_SAVE)
+        .subscribe((saveRes: IResponseCommon) => {
+          // 3
+          const responseSave = saveRes.IsSuccess;
+          // 3.1
+          if (!responseSave) {
+            // 3.1.1
+            alert('บันทึกไม่สำเร็จ');
+          } else {
+            // 3.2
+            // 3.2.1
+            alert('บันทึกสำเร็จ');
+
+            // 3.2.2
+            this.pageLoad();
+          }
+        });
+    } else {
+      alert('1.	ทำการตรวจสอบข้อมูล Input ที่นำเข้า (Validate/Verify) : False');
     }
     // 4 END
   }
@@ -316,7 +329,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
       if (this.ILG60_08_02_00_00E11_EXPANDED$.getValue() === true) {
         // 1.1.1
         // 1.1.1(1)
-        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
+        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA;
         if (requestBribe.length === 0) {
           // 1.1.1(1.1)
           // 1.1.1(1.1.1) => // 1.1.1(1.2)
@@ -552,7 +565,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
                   ) {
                     // 4.1.1(2.6.2)
                     // 4.1.1(2.6.2(1))
-                    this.ILG60_08_02_00_00E09_DATA$.next(resCommand);
+                    this.ILG60_08_02_00_00E09_DATA = resCommand;
 
                     // 4.1.1(2.6.2(2))
                     this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
@@ -658,7 +671,7 @@ export class ManageComponent extends ManageConfig implements OnInit {
                     ) {
                       // 4.2.2(1.4.2)
                       // 4.2.2(1.4.2(1))
-                      this.ILG60_08_02_00_00E09_DATA$.next(resCommand);
+                      this.ILG60_08_02_00_00E09_DATA = resCommand;
 
                       // 4.2.2(1.4.2(2))
                       this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
@@ -871,5 +884,10 @@ export class ManageComponent extends ManageConfig implements OnInit {
           // 4.1.1(2.2.2(1))) => 4.1.1(2.5)
         }
       });
+  }
+
+  public ILG60_08_02_00_00E09_RETURN($event: IRequestCommand) {
+    // console.log('IRequestCommand', $event);
+    this.ILG60_08_02_00_00E09_SAVE = $event;
   }
 }

@@ -12,6 +12,7 @@ import { RequestPaymentFineDetailService } from './RequestPaymentFineDetail.serv
 import { RequestCompareService } from './RequestCompare.service';
 import { NonRequestRewardStaffService } from './NonRequestRewardStaff.service';
 import { RequstLawsuitJudgementService } from './RequstLawsuitJudgement.service';
+import { RequestPaymentFineService } from './RequestPaymentFine.service';
 
 export const REWARD_SERVICES = [
   ...REWARD_MASTER_SERVICES,
@@ -27,5 +28,6 @@ export const REWARD_SERVICES = [
   TransactionRunningService,
   RequestCompareService,
   NonRequestRewardStaffService,
-  RequstLawsuitJudgementService
+  RequstLawsuitJudgementService,
+  RequestPaymentFineService
 ];

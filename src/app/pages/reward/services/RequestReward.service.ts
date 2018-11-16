@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { HelperService } from './HelperService';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { IRequestRewardgetByRequestBribeRewardID, IRequestRewardgetByCon } from '../interfaces/RequestReward';
+import {
+  IRequestRewardgetByRequestBribeRewardID,
+  IRequestRewardgetByCon,
+  IRequestRewardinsAll
+} from '../interfaces/RequestReward';
 
 @Injectable()
 export class RequestRewardService extends HelperService {
@@ -19,12 +23,11 @@ export class RequestRewardService extends HelperService {
     );
   }
 
-  public RequestRewardgetByCon(
-    param: IRequestRewardgetByCon
-  ): Observable<any> {
-    return this.http.post(
-      `${this.ApiPrefixUrl}/RequestRewardgetByCon`,
-      param
-    );
+  public RequestRewardgetByCon(param: IRequestRewardgetByCon): Observable<any> {
+    return this.http.post(`${this.ApiPrefixUrl}/RequestRewardgetByCon`, param);
+  }
+
+  public RequestRewardinsAll(param: IRequestRewardinsAll): Observable<any> {
+    return this.http.post(`${this.ApiPrefixUrl}/RequestRewardinsAll`, param);
   }
 }

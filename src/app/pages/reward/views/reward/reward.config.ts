@@ -9,14 +9,21 @@ export interface IRewardBinding {
   data?: any;
 }
 export class RewardConfig extends RewardHelper {
+  public OfficeCode = '102546';
+  public RequestBribeCode: string;
+  public RequestRewardCode: string;
+
   public mode$ = new BehaviorSubject<string>('');
   public IndictmentID$ = new BehaviorSubject<number>(null);
   public RequestBribeRewardID$ = new BehaviorSubject<number>(null);
   public RequestRewardID$ = new BehaviorSubject<number>(null);
+
   // ส่วนคำร้องขอรับเงินรางวัล
   public ILG60_08_04_00_00_E08_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_04_00_00_E08_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel DISABLED
-  public ILG60_08_04_00_00_E08_DATA$ = new BehaviorSubject<IRewardBinding>(null);
+  public ILG60_08_04_00_00_E08_DATA$ = new BehaviorSubject<IRewardBinding>(
+    null
+  );
   // ส่วนตารางการแบ่งจ่ายเงินสินบนรางวัล
   public ILG60_08_04_00_00_E12_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_04_00_00_E12_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel DISABLED

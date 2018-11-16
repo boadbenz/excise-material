@@ -14,23 +14,23 @@ export class FormGroupComponent extends FormGroupConfig implements OnInit {
     this.columns$.subscribe(c => {
       if (c) {
         const column: ColumnsInterface[] = c;
-        console.log('columns', column);
+        // console.log('columns', column);
 
         this.formGroup = this.fb.group(this.createForm(column));
         column.forEach((key, index) => {
-          if (key.default) {
+          if (key.default &&  key.field) {
             this.formGroup.controls[key.field].setValue(
               key.default || null,
               true
             );
           }
-          if (key.default2) {
+          if (key.default2 && key.field2) {
             this.formGroup.controls[key.field2].setValue(
-              key.default2 || null,
+              key.default2 || '',
               true
             );
           }
-          console.log('key', key);
+          // console.log('key', key);
         });
       }
     });

@@ -16,9 +16,16 @@ import { INonRequestRewardStaff } from '../../interfaces/NonRequestRewardStaff';
 import { RequestBribeRewardService } from '../../services/RequestBribeReward.service';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { RequestRewardService } from '../../services/RequestReward.service';
-import { IRequestReward } from '../../interfaces/RequestReward';
+import {
+  IRequestReward,
+  IRequestRewardinsAllRespone
+} from '../../interfaces/RequestReward';
 import { MasDocumentMainService } from '../../services/master/MasDocumentMain.service';
 import { MasDocumentModel } from 'app/models/mas-document.model';
+import { TransactionRunningService } from '../../services/TransactionRunning.service';
+import { ITransactionRunning } from '../../interfaces/TransactionRunning';
+import { RequestPaymentFineService } from '../../services/RequestPaymentFine.service';
+import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 
 @Component({
   selector: 'app-reward',
@@ -40,7 +47,9 @@ export class RewardComponent extends RewardConfig implements OnInit {
     private requestBribeReward: RequestBribeRewardService,
     private navService: NavigationService,
     private requestRewardService: RequestRewardService,
-    private masDocumentMainService: MasDocumentMainService
+    private masDocumentMainService: MasDocumentMainService,
+    private transactionRunningService: TransactionRunningService,
+    private requestPaymentFineService: RequestPaymentFineService
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -167,5 +176,107 @@ export class RewardComponent extends RewardConfig implements OnInit {
         break;
     }
     // 2 END
+  }
+
+  public saveButton(inputField) {
+    // 1.3.2.	รหัสเหตุการณ์ : ILG60-08-04-00-00-E02 (ปุ่ม “บันทึก”)
+
+    // 1 START
+    // 1.1 'WAIT'
+    // 1.2 'WAIT'
+    // 1.3 'WAIT'
+    // 1.4 'WAIT'
+    // 1.5 'WAIT'
+
+    // 2
+    switch (this.mode$.getValue()) {
+      case 'C':
+        // 2.1
+
+        this.transactionRunningService
+          .TransactionRunninggetByCon({
+            RunningTable: 'ops_requestreward',
+            RunningOfficeCode: this.OfficeCode
+          })
+          .subscribe((TransactionRunning: ITransactionRunning[]) => {
+            // 2.1.2
+            if (TransactionRunning.length > 0) {
+              const tRunning: ITransactionRunning = TransactionRunning[0];
+              // 2.1.2(1)
+              // 2.1.2(1.1)
+              this.transactionRunningService.TransactionRunningupdByCon({
+                RunningID: tRunning.RunningID
+              });
+
+              // 2.1.2(1.2)
+              const RunningPrefix = `${this.leftPad(
+                tRunning.RunningPrefix,
+                2
+              )}`; // 2.1.2(1.2(1))
+              const RunningOfficeCode = `${this.leftPad(
+                tRunning.RunningOfficeCode,
+                6
+              )}`; // 2.1.2(1.2(2))
+              const RunningYear = `${this.leftPad(tRunning.RunningYear, 2)}`; // 2.1.2(1.2(3))
+              const RunningNo = `${this.leftPad(
+                (Number(tRunning.RunningNo) + 1).toString(),
+                5
+              )}`; // 2.1.2(1.2(4))
+              this.RequestBribeCode =
+                RunningPrefix + RunningOfficeCode + RunningYear + RunningNo;
+            } else {
+              // 2.1.2(2)
+
+              // 2.1.2(2.1)
+              this.transactionRunningService.TransactionRunninginsAll({
+                RunningOfficeCode: this.OfficeCode,
+                RunningTable: 'ops_requestreward',
+                RunningPrefix: 'RW'
+              });
+
+              // 2.1.2(2.2)
+              this.RequestRewardCode = `RW${this.leftPad(
+                this.OfficeCode,
+                0
+              )}${this.leftPad(this.yy_thaibuddha, 2)}00001`;
+            }
+
+            // 2.1.3
+            this.requestRewardService
+              .RequestRewardinsAll({
+                RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
+                RequestRewardCode: this.RequestRewardCode
+              })
+              .subscribe((res: IRequestRewardinsAllRespone) => {
+                if (res.RequestRewardID) {
+                  // 2.1.5
+                  // 2.1.5(1)
+                  this.masDocumentMainService
+                    .MasDocumentMaininsAll({
+                      DocumentType: 9,
+                      ReferenceCode: res.RequestRewardID
+                    })
+                    .subscribe(resMasDocumentMain => {
+                      if (resMasDocumentMain['DocumentID']) {
+                        // 2.1.5(2) 'WAIT'
+                      }
+                    });
+                }
+              });
+
+            // 2.1.4 'WAIT'
+            // this.requestPaymentFineService.RequestPaymentFineupdByCon({
+            //   PaymentFineID:
+            // })
+
+            // 2.1.6 => 3
+          });
+
+        break;
+        case 'R':
+        // 2.2 'WAIT'
+
+        break;
+    }
   }
 }

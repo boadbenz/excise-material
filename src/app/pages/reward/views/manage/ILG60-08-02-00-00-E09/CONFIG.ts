@@ -5,7 +5,6 @@ import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-int
 import { ITableDataOptions } from 'app/pages/reward/shared/table-data/table-data.config';
 
 export class CONFIG extends ManageConfig {
-
   public TableDataOptions: ITableDataOptions = {
     isSumFooter: true
   };
@@ -22,13 +21,16 @@ export class CONFIG extends ManageConfig {
   public FormInputDefault: ColumnsInterface[] = [
     {
       title: 'คำสั่งกรมเลขที่',
-      field: 'CommandNo'
+      field: 'CommandNo',
+      default: ''
     },
     {
       title: 'วันที่ออกคำสั่ง',
       field: 'CommandDate',
+      default: '',
       title2: 'เวลา',
-      field2: 'CommandTime'
+      field2: 'CommandTime',
+      default2: ''
     }
   ];
   public columnsTableDefault: ColumnsInterface[] = [
@@ -59,7 +61,6 @@ export class CONFIG extends ManageConfig {
     {
       title: 'จำนวนส่วน',
       field: 'PartMoney',
-      inputType: 'number',
       width: '50',
       showInput: true
     }
