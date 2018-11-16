@@ -7,6 +7,7 @@ export class NavigationService {
     // modeSource = new BehaviorSubject<string>('');
     showAdvSearch = new BehaviorSubject<Boolean>(false);
     showNewButton = new BehaviorSubject<Boolean>(false);
+    showPrevPageButton = new BehaviorSubject<Boolean>(false);
     showNextPageButton = new BehaviorSubject<Boolean>(false);
     showPrintButton = new BehaviorSubject<Boolean>(false);
     showEditButton = new BehaviorSubject<Boolean>(false);
@@ -24,10 +25,21 @@ export class NavigationService {
     onSearch = new BehaviorSubject<Boolean>(false);
     onPrint = new BehaviorSubject<Boolean>(false);
     onNextPage = new BehaviorSubject<Boolean>(false);
+    onPrevPage = new BehaviorSubject<Boolean>(false);
 
-    searchByKeyword = new BehaviorSubject<string>(null);
+    innerTextNextPageButton = new BehaviorSubject<string>(null);
+    innerTextPrevPageButton = new BehaviorSubject<string>(null);
+    searchByKeyword = new BehaviorSubject<any>(null);
 
     constructor() { }
+
+    setInnerTextNextPageButton(text: string) {
+        this.innerTextNextPageButton.next(text);
+    }
+
+    setInnerTextPrevPageButton(text: string) {
+        this.innerTextPrevPageButton.next(text);
+    }
 
     // -- Set Element --
     setAdvSearch() {
@@ -74,6 +86,10 @@ export class NavigationService {
         this.showNextPageButton.next(status);
     }
 
+    setPrevPageButton(status: boolean) {
+        this.showPrevPageButton.next(status);
+    }
+
     // -- End Set Element --
 
     // -- Set Event --
@@ -108,6 +124,11 @@ export class NavigationService {
     setOnNextPage(status: boolean) {
         this.onNextPage.next(status);
     }
+
+    setOnPrevPage(status: boolean) {
+        this.onPrevPage.next(status);
+    }
+
     // -- End Set Event
 
 }

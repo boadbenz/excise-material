@@ -20,6 +20,7 @@ const routes: Routes = [
               { title: 'ค้นหางานการสืบสวน', url: '/investigation/list' },
               { title: 'จัดการงานสืบสวน' }
           ],
+          codePage: 'XCS60-01-02-00',
           nextPage: { title: '', url: '' }
       },
       component: ManageComponent

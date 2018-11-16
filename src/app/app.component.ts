@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PreloaderService } from './shared/preloader/preloader.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +10,11 @@ export class AppComponent implements OnInit {
 
   title = 'app';
 
-  isPreloader: any;
-
-  constructor(private preloader: PreloaderService) {
-
+  constructor() {
   }
 
   ngOnInit() {
-    this.isPreloader = this.preloader.showPreloader;
   }
+  myControl = new FormControl();
+  options: string[] = ['One', 'Two', 'Three'];
 }

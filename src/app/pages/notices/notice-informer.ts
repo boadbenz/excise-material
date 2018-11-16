@@ -1,3 +1,4 @@
+import { FormControl, Validators } from '@angular/forms';
 
 export class NoticeInformer {
     public InformerID: string;
@@ -28,25 +29,23 @@ export class NoticeInformer {
     public ZipCode: string;
     public TelephoneNo: string;
     public InformerInfo: string;
-    public IsActive: string;
+    public IsActive: number;
 
     public Region: string;
 }
-<<<<<<< HEAD
-=======
 
 export const NoticeInformerFormControl = {
     InformerID: new FormControl('22'),
-    InformerType: new FormControl(0),
-    NoticeCode: new FormControl(null),
-    TitleCode: new FormControl('k2'),
-    TitleName: new FormControl('นาง'),
-    FirstName: new FormControl('สุภาภรณ'),
-    LastName: new FormControl('ตะวันแดง'),
-    IDCard: new FormControl('1524478458520'),
+    InformerType: new FormControl(null),
+    NoticeCode: new FormControl(null, Validators.required),
+    TitleCode: new FormControl(null),
+    TitleName: new FormControl(null),
+    FirstName: new FormControl(null, Validators.required),
+    LastName: new FormControl(null),
+    IDCard: new FormControl('N/A'),
     Age: new FormControl(null),
-    GenderType: new FormControl('F'),
-    Location: new FormControl('สระบุรี'),
+    GenderType: new FormControl('-'),
+    Location: new FormControl('N/A'),
     Address: new FormControl(null),
     Village: new FormControl(null),
     Building: new FormControl(null),
@@ -60,10 +59,10 @@ export const NoticeInformerFormControl = {
     District: new FormControl(null),
     ProvinceCode: new FormControl(null),
     Province: new FormControl(null),
-    ZipCode: new FormControl(null),
-    TelephoneNo: new FormControl('0899595119'),
-    InformerInfo: new FormControl('บุคคลจํานวน3คนทําการขายเหลาเถื่อนที่บานเชาหลัง'),
+    ZipCode: new FormControl('N/A'),
+    TelephoneNo: new FormControl('N/A'),
+    InformerInfo: new FormControl('N/A'),
+    IsActive: new FormControl(1),
     FullName: new FormControl(null),
     Region: new FormControl(null)
 }
->>>>>>> FL_J

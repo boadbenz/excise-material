@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-5">
             <h4 class="modal-title text-white">เพิ่มผู้ต้องหา
-                <a href="javaScript:void(0);" class="btn btn-ghost" (click)="dismiss('Cross click')" [routerLink]="['/arrest/lawbreaker/c/new']">
+                <a href="javaScript:void(0);" class="btn btn-ghost" (click)="dismiss('Cross click')" [routerLink]="['/arrest/lawbreaker/C/NEW']">
                     <i class="ti-plus"></i>
                     สร้างข้อมูล
                 </a>
@@ -27,6 +27,9 @@
         </a>
     </div>
 </div>
+
+
+<h5 class="text-right mt-3 pr-3">ILG60-03-02-03-00</h5>
 <div class="modal-body font-14">
     <div *ngIf="advSearch">
         <div class="card card-outline-bluish unset-radius">
@@ -39,7 +42,7 @@
                 <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
             </div>
             <div class="card-body">
-                <form class="form-horizontal">
+                <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onSearchAdv(advForm.value)">
                     <div class="row">
                         <label for="" class="col-lg-2 col-sm-4">ประเภทผู้ต้องหา :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
@@ -51,11 +54,7 @@
 
                         <label for="" class="col-lg-2 col-sm-4">ประเภทบุคคล :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-<<<<<<< HEAD:src/app/pages/arrests/lawbreaker-modal/lawbreaker-modal.component.html
                             <select name="LawbreakerType" ngModel class="form-control form-control-sm">
-=======
-                            <select name="lawbreakerType" ngModel class="form-control form-control-sm">
->>>>>>> FL_J:src/app/pages/component/modal-lawbreaker/modal-lawbreaker.component.html
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of lawbreakerType" [value]="item.value">{{item.text}}</option>
                             </select>
@@ -87,7 +86,9 @@
                     <div class="row">
                         <label for="" class="col-lg-2 col-sm-4">ชื่อผู้ต้องสงสัย :</label>
                         <div class="col-lg-4 col-sm-8 form-group">
-                            <input type="text" name="" class="form-control form-control-sm">
+                            <input #fname type="text" name="LawbreakerFirstName" class="form-control form-control-sm">
+                            <input type="hidden" name="LawbreakerTitleName" [value]="fname">
+                            <input type="hidden" name="LawbreakerLastName" [value]="fname">
                         </div>
                     </div>
 
@@ -113,58 +114,33 @@
                                 <label for="th" class="m-t-10 m-b-0"></label>
                             </th>
                             <th>ลำดับ</th>
-                            <th>ประเภทผู้ต้องสงสัย</th>
+                            <th>ประเภทผู้ต้องหา</th>
                             <th>ประเภทบุคคล</th>
                             <th>หมายเลขอ้างอิง</th>
-                            <th>ชื่อผู้ต้องสงสัย</th>
-                            <th>จำนวนครั้งการกระทำความผิด</th>
+                            <th>ชื่อ</th>
+                            <th>จำนวนครั้งการกระทำผิด</th>
                             <th></th>
                         </tr>
                     </thead>
-<<<<<<< HEAD:src/app/pages/arrests/lawbreaker-modal/lawbreaker-modal.component.html
-                    <tbody>
-                        <tr>
-                            <td class="text-center">
-                                <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                <label for="td_1" class="m-0"></label>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-=======
                     <tbody formArrayName="Lawbreaker">
                         <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
                             <td class="text-center">
-                                <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo" 
-                                [checked]="isCheckAll">
+                                <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo" [checked]="isCheckAll">
                                 <label [for]="'td'+i" class="m-0"></label>
                             </td>
                             <td>{{item.get('RowId').value}}</td>
                             <td>{{item.get('LawbreakerTypeName').value}}</td>
                             <td>{{item.get('EntityTypeName').value}}</td>
+                            <td>{{item.get('LawbreakerID').value}}</td>
                             <td>
                                 <span *ngIf="item.get('EntityType').value == 0">
-                                    {{item.get('CompanyRegistrationNo').value}}
-                                </span>
-                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 0">
-                                    {{item.get('PassportNo').value}}
-                                </span>
-                                <span *ngIf="item.get('EntityType').value == 1 && item.get('LawbreakerType').value == 1">
-                                    {{item.get('Idcard').value}}
-                                </span>
-                            </td>
-                            <td>
-                                <span *ngIf="item.get('EntityType').value == 0">
-                                    {{item.get('CompanyFullName').value}}
-                                </span>
-                                <span *ngIf="item.get('EntityType').value == 1">
                                     {{item.get('LawbreakerFullName').value}}
                                 </span>
+                                <span *ngIf="item.get('EntityType').value == 1">
+                                    {{item.get('CompanyFullName').value}}
+                                </span>
                             </td>
->>>>>>> FL_J:src/app/pages/component/modal-lawbreaker/modal-lawbreaker.component.html
-                            <td></td>
+                            <td>{{i+1}}</td>
                             <td class="text-center">
                                 <a href="javaScript:void(0);" class="text-center text-secondary" (click)="view(item.value.LawbreakerID)">
                                     <i class="fa fa-eye fa-lg"></i>

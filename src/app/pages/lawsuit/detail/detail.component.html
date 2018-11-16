@@ -1,8 +1,8 @@
 <app-step-wizard [sectionId]="3"></app-step-wizard>
 
-<ng-template #printDocModal let-c="close" let-d="dismiss">
+<!-- <ng-template #printDocModal let-c="close" let-d="dismiss">
   <app-print-doc-modal (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
-</ng-template>
+</ng-template> -->
 
 <div class="card card-outline-bluish unset-radius">
   <div class="card-header unset-radius">
@@ -176,7 +176,7 @@
             </td>
             <td *ngFor="let list of arrestList;">
               <p *ngFor="let item of list.ArrestProduct;">
-                {{ item.ProductDesc }}
+                {{ item.ProductName }}
               </p>
             </td>
             <td>

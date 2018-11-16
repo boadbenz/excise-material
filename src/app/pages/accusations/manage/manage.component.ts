@@ -113,6 +113,7 @@ export class ManageComponent implements OnInit {
   allegationNumber: any;
   fullName: any;
   navServiceSub: any;
+  errorShow:any;
 
 
   fileItem = [{

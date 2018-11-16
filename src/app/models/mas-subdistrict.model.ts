@@ -1,10 +1,10 @@
 export interface MasSubdistrictModel {
-    subdistrictCode: string;
-    subdistrictNameTH: string;
-    subdistrictNameEN: string;
-    districtCode: string;
-    offCode: string;
-    rdbCode: string;
+    SubdistrictCode: string;
+    SubdistrictNameTH: string;
+    SubdistrictNameEN: string;
+    DistrictCode: string;
+    OffCode: string;
+    RdbCode: string;
     isActive: number;
-    eventDatetime: null;
+    EventDatetime: Date;
 }
