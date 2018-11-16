@@ -78,7 +78,7 @@ export const routes: Routes = [
         loadChildren: './pages/prove/list/list.module#ListModule'
       },
       {
-        path: 'manage/:mode/:code1/:code2/:code3/:code4/:code5',
+        path: 'manage/:mode/:code1/:code2',
         loadChildren: './pages/prove/manage/manage.module#ManageModule'
       }
     ]
