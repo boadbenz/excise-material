@@ -466,15 +466,8 @@ import { IMyDpOptions } from "mydatepicker";
 
 
 
-
-
-
-
-
-
-
-
 export class ManageComponent implements OnInit {
+
   lawsuitDoc: LawsuitDocument[] = [];
   masOfficeList: MasOffice[] = [];
   masStaffList: MasStaff[] = [];
@@ -496,6 +489,8 @@ export class ManageComponent implements OnInit {
   LawsuitTableListShow = false;
   fileToUpload: File = null;
   fileToUploadList: File[] = [];
+  lawsuitFormNoData: boolean;
+
   private getDataFromListPage: any;
   private onPrintSubscribe: any;
   private onSaveSubscribe: any;
@@ -506,44 +501,21 @@ export class ManageComponent implements OnInit {
   private LawsuitID: number;
   private IndictmentID: string;
   @ViewChild('printDocModal') printDocModel: ElementRef;
+
   MasStaff = new Array<MasStaff>();
-  lstype = [{
-    id: '0',
-    name: 'ส่งฟ้องศาล',
-  },
-  {
-    id: '1',
-    name: 'เปรียบเทียบปรับ',
-  },
-  {
-    id: '2',
-    name: 'ไม่มีตัวตน',
-  }];
-  lsend = [{
-    id: '0',
-    name: 'กรมสรรพสามิต',
-  },
-  {
-    id: '1',
-    name: 'ศาล',
-  },
-  {
-    id: '2',
-    name: 'พนักงานฝ่ายปกครอง/พนักงายอัยการ',
-  }];
+  lstype = [{ id: '0', name: 'ส่งฟ้องศาล' }, { id: '1', name: 'เปรียบเทียบปรับ', }, { id: '2', name: 'ไม่มีตัวตน', }];
+  lsend = [{ id: '0', name: 'กรมสรรพสามิต', }, { id: '1', name: 'ศาล', }, { id: '2', name: 'พนักงานฝ่ายปกครอง/พนักงายอัยการ', }];
 
   lawsuitTypeSelected: number;
   suggestions: any[] = [];
   suggestionsStation: any[] = [];
   private today = new Date();
   public LawsuitDateOptions: IMyDpOptions = {
-    // other options...
     dateFormat: 'dd mmm yyyy',
     disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
   };
   constructor(
     private activeRoute: ActivatedRoute,
-
     private router: Router,
     private fb: FormBuilder,
     private navService: NavigationService,
@@ -552,7 +524,6 @@ export class ManageComponent implements OnInit {
     private preLoaderService: PreloaderService,
     private lawsuitService: LawsuitService,
     public dialog: MatDialog
-
   ) {
     this.setShowButton();
     this.navService.setNewButton(false);
@@ -836,60 +807,71 @@ export class ManageComponent implements OnInit {
       let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
       console.log('lawsuitNo==>', lawsuitNo);
       console.log('isOut==>', isOut)
-      await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo,this.lawsuitForm.controls['officeCode'].value,isOut).then(async res => {
-          if (res.length != 0) {
-            alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
-            this.preLoaderService.setShowPreloader(false);
-            return;
-          }
-          // console.log('LawsuitDate', toLocalShort(this.lawsuitForm.controls['LawsuitDate'].value))
-          const _lawDate = (this.lawsuitForm.controls['LawsuitDate'].value)
-          console.log(this.LawsuitTableList.value[0].LawsuitType)
+      return await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut).then(async res => {
+        if (res.length != 0) {
+          alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
+          this.preLoaderService.setShowPreloader(false);
+          return;
+        }
+        // console.log('LawsuitDate', toLocalShort(this.lawsuitForm.controls['LawsuitDate'].value))
+        const _lawDate = (this.lawsuitForm.controls['LawsuitDate'].value)
 
-          const json =
-          {
-            "LawsuitID": this.LawsuitID,
-            "IndictmentID": this.IndictmentID,
-            "IsLawsuit": this.lawsuitForm.controls['IsLawsuitCheck'].value === false ? 0 : 1,
-            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",,
-            "LawsuitNo": this.lawsuitForm.controls['LawsuitNo'].value,
-            "LawsuitDate": _lawDate.jsdate,
-            "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
-            "LawsuitStationCode": '',
-            "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
-            "IsOutside": isOut,
-            "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
-            "LawsuitResult": '',
-            "DeliveryDocNo": '',
-            "DeliveryDate": _lawDate.jsdate,
-            "IsActive": 1,
-            "LawsuitType": this.LawsuitTableList.value[0].LawsuitType,
-            "LawsuitEnd": this.LawsuitTableList.value[0].LawsuitEnd,
-            "LawsuitStaff": [{
-              "StaffID": '1',
-              "ProgramCode": "XCS-60",
-              "ProcessCode": "XCS-60-001",
-              "LawsuitID": '',
-              "StaffCode": "S000",
-              "TitleName": "นาย",
-              "FirstName": "ธวัชชัย", "LastName": "บิงขุนทด",
-              "PositionCode": "P001", "PositionName": "ผู้ช านาญการ",
-              "PosLevel": "01", "PosLevelName": "ระดับสูง",
-              "DepartmentCode": "V001",
-              "DepartmentName": "สตป",
-              "DepartmentLevel": "1",
-              "OfficeCode": "T001",
-              "OfficeName": "สตป",
-              "OfficeShortName": "สตป",
-              "ContributorCode": "001",
-              "IsActive": ''
-            }]
-          }
-          console.log(json)
+        const json = {
+          "LawsuitID": this.LawsuitID,
+          "IndictmentID": this.IndictmentID,
+          "IsLawsuit": this.lawsuitForm.controls['IsLawsuitCheck'].value === false ? 0 : 1,
+          "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",
+          "LawsuitNo": lawsuitNo,
+          "LawsuitDate": _lawDate.jsdate,
+          "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
+          "LawsuitStationCode": '',
+          "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
+          "IsOutside": isOut,
+          "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
+          "LawsuitResult": '',
+          "DeliveryDocNo": '',
+          "DeliveryDate": _lawDate.jsdate,
+          "IsActive": 1,
+          "LawsuitType": this.LawsuitTableList.value[0].LawsuitType,
+          "LawsuitEnd": this.LawsuitTableList.value[0].LawsuitEnd,
+          "LawsuitStaff": [{
+            "StaffID": '1',
+            "ProgramCode": "XCS-60",
+            "ProcessCode": "XCS-60-001",
+            "LawsuitID": '',
+            "StaffCode": "S000",
+            "TitleName": "นาย",
+            "FirstName": "ธวัชชัย", "LastName": "บิงขุนทด",
+            "PositionCode": "P001", "PositionName": "ผู้ช านาญการ",
+            "PosLevel": "01", "PosLevelName": "ระดับสูง",
+            "DepartmentCode": "V001",
+            "DepartmentName": "สตป",
+            "DepartmentLevel": "1",
+            "OfficeCode": "T001",
+            "OfficeName": "สตป",
+            "OfficeShortName": "สตป",
+            "ContributorCode": "001",
+            "IsActive": ''
+          }]
+        }
+        if (!this.lawsuitForm.controls['IsLawsuitCheck']) {
+          json.LawsuitType = 2
+          json.LawsuitEnd = 2
           await this.lawsuitService.LawsuitinsAll(json).then(async response => {
-            console.log('response', response);
+            if (response.IsSuccess == "True") {
+              alert("บันทึกสำเร็จ");
+              console.log('response', response);
+            }
           });
-        });
+        } else {
+          await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
+          await this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].IndictmentDetailID).then(response => {
+            console.log(response)
+          })
+
+        }
+
+      });
     }
     this.preLoaderService.setShowPreloader(false);
   }
@@ -905,7 +887,6 @@ export class ManageComponent implements OnInit {
       SectionNo: new FormControl(null, Validators.required),
       PenaltyDesc: new FormControl(null),
       LawsuitArrestStaff: this.fb.array([this.createArrestStaffForm()]),
-
     });
   }
   private createStaffForm(): FormGroup {
@@ -959,7 +940,6 @@ export class ManageComponent implements OnInit {
   }
   private async ArrestgetByCon(IndictmentID: string, LawsuitID: number) {
     this.preLoaderService.setShowPreloader(true);
-    /// get LawsuitArrestIndictmentProduct
     await this.lawsuitService.LawsuitArrestIndictmentProductgetByIndictmentID(IndictmentID).then(async res => {
       if (res.length != 0) {
         console.log('res product===>', res)
@@ -971,6 +951,7 @@ export class ManageComponent implements OnInit {
     ///get  LawsuitArrest
     await this.lawsuitService.LawsuitArrestGetByCon(IndictmentID).then(async res => {
       this.lawsuitList = res || [];
+      this.lawsuitFormNoData = true;
       console.log('denden', res);
 
       if (res.length != 0) {
@@ -1006,10 +987,7 @@ export class ManageComponent implements OnInit {
         if (IsLawsuitComplete == 1) {
           /// get MasDocumentMaingetAll
           if (res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length != 0) {
-            await this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']).then(res => {
-              //insert doc to dosMacList
-
-            });
+            await this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID'])
             /// get IsLawsuit check box (IsLawsuitCheck)
             let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
             let IsLawsuitCheck = true;
@@ -1241,6 +1219,9 @@ export class ManageComponent implements OnInit {
           this.showEditField = false;
         }
 
+      } else {
+        console.log(res.length)
+        this.lawsuitFormNoData = false
       }
     });
 
@@ -1292,8 +1273,8 @@ export class ManageComponent implements OnInit {
   }
   isLawsuitCheckReq() {
     if (this.lawsuitForm.controls['IsLawsuitCheck'].value === true) {
-      this.lawsuitForm.controls['IsOutsideCheck'].setValue(false);
       this.lawsuitForm.controls['ReasonDontLawsuit'].setValidators([Validators.required]);
+      this.lawsuitForm.controls['IsOutsideCheck'].setValue(false);
     } else {
       this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
     }
@@ -1301,6 +1282,7 @@ export class ManageComponent implements OnInit {
   }
   IsOutsideCheckReq() {
     if (this.lawsuitForm.controls['IsOutsideCheck'].value === true) {
+      this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
       this.lawsuitForm.controls['IsLawsuitCheck'].setValue(false);
     }
   }

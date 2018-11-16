@@ -217,6 +217,15 @@ export class LawsuitService {
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
+  async LawsuitArrestIndicmentDetailupdByCon(IndictmentDetailID, LawsuitType, LawsuitEnd) {
+    const params = { 
+      IndictmentDetailID: IndictmentDetailID,
+      LawsuitType: LawsuitType,
+      LawsuitEnd: LawsuitEnd
+    };
+    const url = `${appConfig.api8083}/LawsuitArrestIndicmentDetailupdByCon`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
 
 
   // async getByKeyword(filterValue) {
