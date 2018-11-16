@@ -57,9 +57,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-
         this.sidebarService.setVersion('0.0.2.12');
-        this.paginage.TotalItems = 0;
 
         this.preLoaderService.setShowPreloader(true);
         await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
@@ -119,7 +117,9 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onSearchComplete(list) {
-        if (list === undefined) {
+        console.log(list)
+        this.notice = [];
+        if (list === undefined || list.length === 0) {
             alert(Message.noRecord)
             return false;
         }
@@ -140,22 +140,23 @@ export class ListComponent implements OnInit, OnDestroy {
         //                 s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
         //             })
         //     })
-
-        this.notice.push({
-            NoticeCode: list.NoticeCode,
-            NoticeDate: list.NoticeDate,
-            StaffTitleName: list.StaffTitleName,
-            StaffFirstName: list.StaffFirstName,
-            StaffLastName: list.StaffLastName,
-            StaffOfficeName: list.StaffOfficeName,
-            SuspectTitleName: list.SuspectTitleName,
-            SuspectFirstName: list.SuspectFirstName,
-            SuspectMiddleName: list.SuspectMiddleName,
-            SuspectLastName: list.SuspectLastName,
-        })
+        list.forEach(value => {
+            this.notice.push({
+                NoticeCode: value.NoticeCode,
+                NoticeDate: value.NoticeDate,
+                StaffTitleName: value.StaffTitleName,
+                StaffFirstName: value.StaffFirstName,
+                StaffLastName: value.StaffLastName,
+                StaffOfficeName: value.StaffOfficeName,
+                SuspectTitleName: '	สำนักงานสรรพสามิตพื้นที่อุบลราชธานี สาขาตระการพืชผล',
+                SuspectFirstName: value.SuspectFirstName,
+                SuspectMiddleName: value.SuspectMiddleName,
+                SuspectLastName: value.SuspectLastName,
+            });
+        });
         console.log(this.notice)
         // set total record
-        // this.paginage.TotalItems = this.notice.length;
+        this.paginage.TotalItems = this.notice.length;
     }
 
     onSDateChange(event: IMyDateModel) {

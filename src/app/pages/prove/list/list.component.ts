@@ -164,6 +164,7 @@ export class ListComponent implements OnInit {
     }
 
     async onSearchComplete(list: any) {
+        console.log(list)
         this.Prove = [];
 
         if (!list.length) {

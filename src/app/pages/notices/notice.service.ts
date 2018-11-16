@@ -33,11 +33,16 @@ export class NoticeService {
 
     private async resposePromisGet(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        
-        if (res.IsSuccess == 'False' || !res.ResponseData.length) {
+        console.log(res)
+        if (res.IsSuccess === 'False') {
             return [];
         }
-        return res.ResponseData
+        return res
+        // const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        // if (res.IsSuccess == 'False' || !res.ResponseData.length) {
+        //     return [];
+        // }
+        // return res.ResponseData
     }
 
     async getByKeywordOnInt(): Promise<Notice[]> {
@@ -49,11 +54,12 @@ export class NoticeService {
             return new Array<Notice>();
         }
 
-        return res[0];
+        // return res[0];
+        return res;
     }
 
     async getByKeyword(Textsearch: any): Promise<Notice[]> {
-        debugger
+        // debugger
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -61,12 +67,13 @@ export class NoticeService {
         if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
+        return res;
 
         // return res.Notice;
     }
 
     getByConAdv(form: any): Promise<Notice[]> {
-        const url = `${appConfig.api8082}/NoticegetByConAdv`;
+        const url = `${appConfig.api8082}/NoticeListgetByConAdv`;
         return this.resposePromisGet(JSON.stringify(form), url)
     }
 
