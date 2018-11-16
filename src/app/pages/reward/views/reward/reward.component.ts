@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RewardConfig } from './reward.config';
+import { RewardConfig, IRewardBinding } from './reward.config';
 import { ActivatedRoute } from '@angular/router';
 import { MasTitleService } from '../../services/master/MasTitle.service';
 import { MasTitleModel, MasStaffModel } from 'app/models';
@@ -26,6 +26,7 @@ import { TransactionRunningService } from '../../services/TransactionRunning.ser
 import { ITransactionRunning } from '../../interfaces/TransactionRunning';
 import { RequestPaymentFineService } from '../../services/RequestPaymentFine.service';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
+import { IRequestBribeReward } from '../../interfaces/RequestBribeReward.interface';
 
 @Component({
   selector: 'app-reward',
@@ -36,6 +37,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
   public MasTitleMain: MasTitleModel[];
   public MasStaffMain: MasStaffModel[];
   public MasOfficeMain: MasOfficeModel[];
+  public ILG60_08_04_00_00_E12_DATA: IRewardBinding[] = [];
   constructor(
     private activatedRoute: ActivatedRoute,
     private masTitleService: MasTitleService,
@@ -104,13 +106,13 @@ export class RewardComponent extends RewardConfig implements OnInit {
             IndictmentID: Number(this.IndictmentID$.getValue())
           })
           .subscribe((LawsuitJudgement: IRequestLawsuitJudgement[]) => {
-            // if (LawsuitJudgement.length > 0) {
-            //   this.requstLawsuitJudgement$.next(LawsuitJudgement); // 1.1.6
-            //   this.ILG60_08_04_00_00_E08_DATA$.next({
-            //     methodName: 'RequstLawsuitJudgementgetByIndictmentID',
-            //     data: LawsuitJudgement
-            //   });
-            // }
+            if (LawsuitJudgement.length > 0) {
+              this.requstLawsuitJudgement$.next(LawsuitJudgement); // 1.1.6
+              this.ILG60_08_04_00_00_E08_DATA$.next({
+                methodName: 'RequstLawsuitJudgementgetByIndictmentID',
+                data: LawsuitJudgement
+              });
+            }
           }); // 1.1.5
 
         // 1.1.7
@@ -119,7 +121,11 @@ export class RewardComponent extends RewardConfig implements OnInit {
             IndictmentID: this.IndictmentID$.getValue()
           })
           .subscribe((nonRequestRewardStaff: INonRequestRewardStaff[]) => {
-            this.ILG60_08_04_00_00_E12_DATA$.next(nonRequestRewardStaff); // 1.1.8
+            this.ILG60_08_04_00_00_E12_DATA$.next({
+              methodName: 'nonRequestRewardStaff',
+              data: nonRequestRewardStaff
+            });
+            // this.ILG60_08_04_00_00_E12_DATA$.next(nonRequestRewardStaff); // 1.1.8
           });
 
         // 1.1.9
@@ -127,11 +133,17 @@ export class RewardComponent extends RewardConfig implements OnInit {
           .RequestBribeRewardgetByIndictmentID({
             IndictmentID: this.IndictmentID$.getValue()
           })
-          .subscribe((RequestBribeReward: INonRequestRewardStaff[]) => {
-            // this.ILG60_08_04_00_00_E08_DATA$.next({
-            //   methodName: 'RequestBribeReward',
-            //   data: RequestBribeReward
-            // }); // 1.1.10
+          .subscribe((RequestBribeReward: IRequestBribeReward[]) => {
+            this.ILG60_08_04_00_00_E08_DATA$.next({
+              methodName: 'RequestBribeReward',
+              data: RequestBribeReward
+            }); // 1.1.10
+
+            this.ILG60_08_04_00_00_E12_DATA$.next({
+              methodName: 'RequestBribeReward',
+              data: RequestBribeReward
+            });
+
             // this.ILG60_08_04_00_00_E12_DATA$.next(RequestBribeReward); // 1.1.10
           });
 
@@ -273,7 +285,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
           });
 
         break;
-        case 'R':
+      case 'R':
         // 2.2 'WAIT'
 
         break;

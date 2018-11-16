@@ -5,6 +5,7 @@ import { IRewardBinding } from '../reward.config';
 import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 import { IRequestCompare } from 'app/pages/reward/interfaces/RequestCompare';
 import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
+import { IRequestPaymentFine } from 'app/pages/reward/interfaces/RequestPaymentFine';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -16,6 +17,7 @@ import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-i
 export class ILG6008040000E08Component extends CONFIG implements OnInit {
   public checkAll = false;
   public checkList: boolean[];
+  public RequestPaymentFine: IRequestPaymentFine[] = [];
   constructor() {
     super();
     this.inputData$.subscribe((res: IRewardBinding) => {
@@ -40,7 +42,7 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
                 }`;
                 break;
             }
-            console.log('dataRequestReward', dataRequestReward);
+            // console.log('dataRequestReward', dataRequestReward);
             break;
           case 'RequestComparegetByIndictmentID':
             const dataRequestCompare: IRequestCompare[] = res.data;
@@ -48,12 +50,22 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
               newMapName = `เลขคดีเปรียบเทียบที่ / ${
                 dataRequestCompare[0].CompareCode
               }`;
-              const ReferenceNo = this.columnsForm.findIndex(
+
+              const RequestRewardCode = this.columnsFormDefault.findIndex(
+                f => f.field === 'RequestRewardCode'
+              );
+              const ReferenceNo = this.columnsFormDefault.findIndex(
                 f => f.field === 'ReferenceNo'
               );
-              this.columnsForm[ReferenceNo].default = newMapName;
 
-              this.columnsForm$.next(this.columnsForm);
+              const columnsForm: ColumnsInterface[] = this.columnsFormDefault;
+              columnsForm[ReferenceNo].default = newMapName;
+
+              columnsForm[RequestRewardCode].isDisabled = true;
+              columnsForm[RequestRewardCode].default = 'Auto Generate';
+              // console.log('ReferenceNoData', columnsForm);
+              this.columnsForm = columnsForm;
+              // this.columnsForm$.next(this.columnsForm);
               const mapData = dataRequestCompare[0].RequestPaymentFine.map(
                 m => ({
                   ...m,
@@ -100,8 +112,22 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
     const d = arrBool.map(m => (m ? 1 : -1));
     let num = 1;
     d.forEach(e => {
-      num = num * e
+      num = num * e;
     });
     return num === 1 ? true : false;
+  }
+
+  public ILG60_08_04_00_00_E09_OnSelect() {
+    // 1 START
+    this.columnsForm = this.columnsForm.map(m => ({
+      ...m,
+      default: '',
+      default2: ''
+    }));
+
+    // 2
+    this.inputDataTable$.next(null);
+
+    // 3
   }
 }

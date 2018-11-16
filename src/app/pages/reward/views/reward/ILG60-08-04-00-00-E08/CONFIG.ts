@@ -41,8 +41,8 @@ export class CONFIG extends RewardConfig {
     return this.requestCompare$.asObservable();
   }
   public requestCompare$ = new BehaviorSubject<any>(null);
-
-  public columnsForm: ColumnsInterface[] = [
+  public columnsForm: ColumnsInterface[] = [];
+  public columnsFormDefault: ColumnsInterface[] = [
     {
       title: 'เลขที่อ้างอิง',
       field: 'ReferenceNo',
@@ -62,18 +62,18 @@ export class CONFIG extends RewardConfig {
       field: 'Station',
       inputType: 'text',
       default: '',
-      isDisabled: true
+      isDisabled: false
     },
     {
       title: 'วันที่จัดทำ',
       field: 'RequestDate',
       inputType: 'text',
-      isDisabled: true,
+      isDisabled: false,
       default: '',
       title2: 'เวลา',
       field2: 'RequestTime',
       inputType2: 'text',
-      isDisabled2: true,
+      isDisabled2: false,
       default2: '',
     }
   ];

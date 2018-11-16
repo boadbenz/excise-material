@@ -1,4 +1,6 @@
-
+<!-- <pre>
+  {{columns$ | async | json}}
+</pre> -->
 <form *ngIf="(columns$ | async)" [formGroup]="formGroup" [class]="'form-row'" (change)="changeHandle(formGroup.value)"
   (submit)="submitHandle(formGroup)">
   <!-- {{formGroup.value | json}} -->

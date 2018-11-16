@@ -12,15 +12,16 @@ export class FormGroupComponent extends FormGroupConfig implements OnInit {
   constructor(private fb: FormBuilder) {
     super();
     this.columns$.subscribe(c => {
-      if (c) {
+      if (c != null) {
         const column: ColumnsInterface[] = c;
         // console.log('columns', column);
 
         this.formGroup = this.fb.group(this.createForm(column));
         column.forEach((key, index) => {
+          // console.log('key', key);
           if (key.default && key.field) {
             this.formGroup.controls[key.field].setValue(
-              key.default || null,
+              key.default || '',
               true
             );
           }

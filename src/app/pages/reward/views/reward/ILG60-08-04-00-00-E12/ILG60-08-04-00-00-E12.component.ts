@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { INonRequestRewardStaff } from 'app/pages/reward/interfaces/NonRequestRewardStaff';
+import { IRewardBinding } from '../reward.config';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -33,43 +34,56 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
     this.formGroup = this.fb.group({
       sharedBribeReward: this.fb.array([])
     });
-    this.inputData$.subscribe((data: INonRequestRewardStaff[]) => {
+    this.inputData$.subscribe((data: IRewardBinding) => {
       if (data) {
-        console.log('DATA', data);
-        const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
-        data.forEach(e => {
-          // instantiate a new day FormGroup;
-          const newDayGroup: FormGroup = this.fb.group({
-            check: [true],
-            TitleName: [e.TitleName],
-            FullName: [
-              `${e.TitleName}${e.FirstName}${e.LastName}`,
-              Validators.required
-            ],
-            PositionName: [`${e.PositionName}`],
-            PosLevelName: [`${e.PosLevelName}`],
-            ContributorName: [
-              `${this.ConvertContributorName(e.ContributorID)}`,
-              Validators.required
-            ],
-            ContributorID: [`${e.ContributorID}`],
-            FirstPart: [
-              e.ContributorID === '6' || e.ContributorID === '7' ? 1 : ''
-            ],
-            SecondPart: [''],
-            FirstMoney: [1],
-            SecondMoney: [0],
-            ToTalMoney: [
-              ((e.ContributorID === '6' || e.ContributorID === '7' ? 1 : null) *
-                1) /
-                this.aggregate.FirstMoney.sum +
-                0 / this.aggregate.FirstMoney.sum
-            ]
-          });
-          // Add it to our formArray
-          control.push(newDayGroup);
-        });
-        console.log('control.value', control.value);
+        switch (data.methodName) {
+          case 'nonRequestRewardStaff':
+            console.log('DATA', data.data);
+            const control = <FormArray>(
+              this.formGroup.controls['sharedBribeReward']
+            );
+            data.data.forEach(e => {
+              // instantiate a new day FormGroup;
+              const newDayGroup: FormGroup = this.fb.group({
+                check: [true],
+                TitleName: [e.TitleName],
+                FullName: [
+                  `${e.TitleName}${e.FirstName}${e.LastName}`,
+                  Validators.required
+                ],
+                PositionName: [`${e.PositionName}`],
+                PosLevelName: [`${e.PosLevelName}`],
+                ContributorName: [
+                  `${this.ConvertContributorName(e.ContributorID)}`,
+                  Validators.required
+                ],
+                ContributorID: [`${e.ContributorID}`],
+                FirstPart: [
+                  e.ContributorID === '6' || e.ContributorID === '7' ? 1 : ''
+                ],
+                SecondPart: [''],
+                FirstMoney: [1],
+                SecondMoney: [0],
+                ToTalMoney: [
+                  ((e.ContributorID === '6' || e.ContributorID === '7'
+                    ? 1
+                    : null) *
+                    1) /
+                    this.aggregate.FirstMoney.sum +
+                    0 / this.aggregate.FirstMoney.sum
+                ]
+              });
+              // Add it to our formArray
+              control.push(newDayGroup);
+              console.log('control.value', control.value);
+            });
+            break;
+
+          case 'RequestBribeReward':
+            console.log('RequestBribeReward', data);
+
+            break;
+        }
       }
     });
     this.formGroup.controls['sharedBribeReward'].valueChanges.subscribe(
