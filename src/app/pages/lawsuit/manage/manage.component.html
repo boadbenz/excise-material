@@ -178,7 +178,7 @@
     </div>
   </div>
 </form>
-<form [formGroup]="lawsuitForm" novalidate >
+<form [formGroup]="lawsuitForm" novalidate *ngIf="lawsuitFormNoData">
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
       <app-card-actions-collapse></app-card-actions-collapse>
@@ -219,12 +219,12 @@
               <label class="col-form-label text-right col-md-3">เลขที่คดีรับคำกล่าวโทษ : </label>
               <div class="col-md-4">
                 <input class="form-control" type="text" formControlName="LawsuitNo" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" required>
+                  [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null" required>
               </div>
               <label class="col-form-label text-center col-md-2">/</label>
               <div class="col-md-3">
                 <input class="form-control" type="text" formControlName="LawsuitNoSub" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" required>
+                  [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null" required>
               </div>
             </div>
           </div>
@@ -232,14 +232,14 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
               <div class="col-md-4">
-                <my-date-picker-th ngModel name="LawsuitDate" formControlName="LawsuitDate" placeholder="" locale="th"
+                <my-date-picker-th ngModel name="LawsuitDate" formControlName="LawsuitDate" placeholder="" locale="th"  [attr.disabled]="this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null"
                   [disabled]="showEditField" [options]="LawsuitDateOptions" required></my-date-picker-th>
                 <!-- <input class="form-control" type="date" formControlName="LawsuitDate" [readonly]="showEditField"
                   [ngClass]="{'ng-touched':isRequired}" required> -->
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
               <div class="col-md-3">
-                <input class="form-control" type="text" formControlName="LawsuitTime" [readonly]="showEditField"
+                <input class="form-control" type="text" formControlName="LawsuitTime" [readonly]="showEditField" [attr.disabled]="this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null"
                   [ngClass]="{'ng-touched':isRequired}" required>
               </div>
             </div>
@@ -341,12 +341,12 @@
                 <!-- <a href="javaScript:void(0);" class="text-danger" (click)="editTable(item, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a> -->
-                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField " (click)="editTable(item, i)">
+                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 0" (click)="editTable(item, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a>
-                <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="item.controls['LawsuitType'].value == 0">
+                <!-- <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="item.controls['LawsuitType'].value == 0">
                   <i class="mdi mdi-eye fa-lg"></i>
-                </a>
+                </a> -->
                 <!-- <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="!showEditField && item.value.LawsuitEnd == 1" >
                   <i class="mdi mdi-eye fa-lg"></i>
                 </a> -->
