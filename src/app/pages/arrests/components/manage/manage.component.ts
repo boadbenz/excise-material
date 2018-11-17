@@ -184,7 +184,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.32');
+        this.sidebarService.setVersion('0.0.0.34');
         this.active_route();
         if (this.arrestFG) {
             setTimeout(() => {
@@ -282,8 +282,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert('กรุณาเลือกฐานะของผู้จับกุม');
                     return;
                 }
-                if (staff.filter(x => x.ContributorID == '7').length <= 0) {
-                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้ร่วมจับกุม” อย่างน้อย 1 รายการ');
+                if (staff.filter(x => x.ContributorID == '6').length <= 0) {
+                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ');
                     return;
                 }
                 if (!this.ArrestIndictment.value.length) {
@@ -335,15 +335,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async pageLoad(arrestCode: string) {
         switch (this.mode) {
             case 'C':
-                // set false
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                this.navService.setEditField(false);
-                // set true 
-                this.navService.setSaveButton(true);
-                this.navService.setCancelButton(true);
-
+                this.enableBtnModeC()
                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
@@ -354,18 +346,32 @@ export class ManageComponent implements OnInit, OnDestroy {
                 break;
 
             case 'R':
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                // set true
-                this.navService.setPrintButton(true);
-                this.navService.setEditButton(true);
-                this.navService.setDeleteButton(true);
-                this.navService.setEditField(true);
-
+                this.enableBthModeR();
                 this.pageRefresh(arrestCode);
                 break;
         }
+    }
+
+    private enableBtnModeC() {
+        // set false
+        this.navService.setPrintButton(false);
+        this.navService.setEditButton(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setEditField(false);
+        // set true 
+        this.navService.setSaveButton(true);
+        this.navService.setCancelButton(true);
+    }
+
+    private enableBthModeR() {
+        // set false
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
+        // set true
+        this.navService.setPrintButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditField(true);
     }
 
     private async pageRefresh(arrestCode: string) {
@@ -1085,6 +1091,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         Promise.all(indict).then(() => {
             if (isCheck) {
                 alert(Message.cannotModify);
+                this.enableBthModeR();
             } else {
                 this.loadMasterData();
             }

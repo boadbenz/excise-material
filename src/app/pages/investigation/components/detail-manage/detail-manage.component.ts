@@ -21,6 +21,10 @@ import { MainMasterService } from 'app/services/main-master.service';
 import { replaceFakePath } from 'app/config/dataString';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../store';
+import { TransactionRunningService } from 'app/services/transaction-running.service';
+import { TransactionRunning } from 'app/models/transaction-running.model';
+import { MasDocumentMainService } from 'app/services/mas-document-main.service';
+import { InvestigateDetailStaff } from '../../models';
 
 
 @Component({
@@ -45,6 +49,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     card6 = true;
     card7 = true;
 
+    _isSuccess: boolean;
     private mode: string;
     invesDetailId: string;
     private investMode: string;
@@ -60,6 +65,11 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     readonly contributorInvestType = fromGobalModels.ContributorInvestType;
     readonly valueofNews = fromGobalModels.ValueofNews;
     readonly costofNews = fromGobalModels.CostofNews;
+
+    readonly runningTable = 'ops_investigate';
+    readonly runningOfficeCode = '900012';
+    readonly runningPrefix = 'AI';
+    readonly documentType = '3';
 
     typeheadOffice = new Array<fromGobalModels.MasOfficeModel>();
     typeheadStaff = new Array<fromGobalModels.MasStaffModel>();
@@ -99,6 +109,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private mainMasterService: MainMasterService,
         private loaderService: LoaderService,
+        private s_transactionRunning: TransactionRunningService,
+        private s_invest: fromServices.InvestgateService,
+        private s_investDetail: fromServices.InvestgateDetailService,
+        private s_document: MasDocumentMainService,
         private router: Router,
         private store: Store<fromStore.AppState>
     ) {
@@ -140,11 +154,23 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 this.showEditField = status.valueOf();
             });
 
+        this.navService.onEdit
+            .takeUntil(this.destroy$)
+            .subscribe(async status => {
+                if (status) {
+                    await this.navService.setOnEdit(false);
+                    this.onEdit();
+                }
+            })
+
         this.navService.onCancel
             .takeUntil(this.destroy$)
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnCancel(false);
+                    if (confirm(Message.confirmAction)) {
+                        this.onCancel();
+                    }
                 }
             })
 
@@ -153,52 +179,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnSave(false);
-
-                    if (!this.stateInvest) {
-                        alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
-                        return;
-                    }
-
-                    if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart || !this.stateInvest.DateEnd) {
-                        alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
-                        return;
-                    }
-
-                    if (this.investigateFG.invalid) {
-                        alert(Message.checkData);
-                        return;
-                    }
-
-                    let staff: fromModels.InvestigateDetailStaff[] = this.InvestigateDetailStaff.value.filter(x => x.IsModify != 'd');
-                    if (staff.length) {
-                        if (staff.filter(x => x.ContributorID == '2').length <= 0) {
-                            alert('ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ')
-                            return;
-                        }
-
-                        if (staff.filter(x => x.ContributorID == '2').length > 1) {
-                            alert('ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” ต้องมีได้แค่ 1 รายการเท่านั้น')
-                            return;
-                        }
-
-                        if (staff.filter(x => x.ContributorID == '3').length > 1) {
-                            alert('ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้สั่งการ” ต้องมีได้แค่ 1 รายการเท่านั้น')
-                            return;
-                        }
-                    } else {
-                        alert('ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ')
-                        return;
-                    }
-
-                    let local: fromModels.InvestigateDetailLocal[] = this.InvestigateDetailLocal.value.filter(x => x.IsModify != 'd');
-                    if (local.length) {
-                       if (local.filter(x => x.Region == '').length > 1) {
-                           alert('ส่วนสถานที่ทำการสืบสวน กรุณาระบุ “ตำบล/อำเภอ/จังหวัด”')
-                       }
-                    } else {
-                        alert('ส่วนสถานที่ทำการสืบสวน ต้องมีอย่างน้อย 1 รายการ');
-                    }
-
+                    this.onSave();
                 }
             });
 
@@ -207,6 +188,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnDelete(false);
+                    this.onDelete();
                 }
             });
 
@@ -224,7 +206,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnNextPage(false);
-                    this.router.navigate(['investigation/manage', this.investMode, this.investCode])
+                    this.navigateToManage();
                 }
             })
     }
@@ -291,6 +273,64 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.loaderService.hide();
     }
 
+    onPageLoad() {
+        this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then((x: fromModels.InvestigateDetail) => {
+            if (!this.checkResponse(x)) return;
+
+            let invest = this.investigateFG;
+            x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
+            x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
+
+            this.pageRefreshStaff(x.InvestigateDetailStaff);
+
+            this.pageRefreshSuspect(x.InvestigateDetailSuspect);
+
+            this.pageRefreshLocal(x.InvestigateDetailLocal);
+
+            this.pageRefreshProduct(x.InvestigateDetailProduct);
+
+            invest.patchValue(x);
+        })
+    }
+
+    pageRefreshStaff(staff: fromModels.InvestigateDetailStaff[]) {
+        staff.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(staff, 'InvestigateDetailStaff');
+    }
+
+    pageRefreshSuspect(suspect: fromModels.InvestigateDetailSuspect[]) {
+        suspect.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(suspect, 'InvestigateDetailSuspect');
+    }
+
+    pageRefreshLocal(local: fromModels.InvestigateDetailLocal[]) {
+        local.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(local, 'InvestigateDetailLocal');
+    }
+
+    pageRefreshProduct(product: fromModels.InvestigateDetailProduct[]) {
+        product.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(product, 'InvestigateDetailProduct');
+    }
+
+    private async pageRefreshDocument(investDetailId: string) {
+        let _doc = new Array<fromModels.InvestigateDocumentModel>();
+
+        await this.s_document.MasDocumentMaingetAll(this.documentType, investDetailId)
+            .then((x) => {
+                if (!this.checkResponse(x)) return;
+                _doc = x.map(y => {
+                    y.IsModify = 'r';
+                    return y;
+                });
+            }).catch((error) => this.catchError(error));
+
+        if (!_doc.length) return;
+
+        _doc.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(_doc, 'InvestigateDocument');
+    }
+
     onSDateChange(event: IMyDateModel) {
         this._dateStartFrom = event
         this._dateStartTo = this._dateStartTo || this.investigateFG.value.DateEnd
@@ -355,20 +395,31 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    catchError(error: any) {
-        console.log(error);
-        this.endLoader();
-    }
-
     endLoader = () => this.loaderService.hide();
 
     addStaff() {
         const lastIndex = this.InvestigateDetailStaff.length - 1;
         let item = new fromModels.InvestigateDetailStaff();
-        item.PositionName = '';
-        item.OfficeName = '';
-        item.OfficeShortName = '';
-        item.ContributorID = '';
+        item.StaffID = null;
+        item.ProgramCode = null;
+        item.ProcessCode = null;
+        item.InvestigateDetailID = null;
+        item.StaffCode = null;
+        item.TitleName = null;
+        item.FirstName = null;
+        item.LastName = null;
+        item.PositionCode = null;
+        item.PositionName = null;
+        item.PosLevel = null;
+        item.PosLevelName = null;
+        item.DepartmentCode = null;
+        item.DepartmentName = null;
+        item.DepartmentLevel = null;
+        item.OfficeCode = null;
+        item.OfficeName = null;
+        item.OfficeShortName = null;
+        item.ContributorID = null;
+        item.IsActive = null;
         item.IsModify = 'c'
         if (lastIndex < 0) {
             item.RowId = 1;
@@ -395,14 +446,26 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addLocal() {
         const lastIndex = this.InvestigateDetailLocal.length - 1;
         let item = new fromModels.InvestigateDetailLocal();
-        item.Address = '';
-        item.Village = '';
-        item.Building = '';
-        item.Room = '';
-        item.Floor = '';
-        item.Alley = '';
-        item.Road = '';
-        item.Region = '';
+        item.LocalID = null;
+        item.InvestigateDetailID = null;
+        item.GPS = null;
+        item.Location = null;
+        item.Address = null;
+        item.Village = null;
+        item.Building = null;
+        item.Room = null;
+        item.Alley = null;
+        item.Road = null;
+        item.Floor = null;
+        item.SubDistrictCode = null;
+        item.SubDistrict = null;
+        item.DistrictCode = null;
+        item.District = null;
+        item.ProvinceCode = null;
+        item.Province = null;
+        item.ZipCode = null;
+        item.IsActive = 1;
+        item.Region = null;
         item.IsModify = 'c';
         if (lastIndex < 0) {
             item.RowId = 1;
@@ -419,12 +482,38 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addProduct() {
         const lastIndex = this.InvestigateDetailProduct.length - 1;
         let item = new fromModels.InvestigateDetailProduct();
-        item.ProductID = 0;
+        item.ProductID = null;
+        item.InvestigateDetailID = null;
+        item.GroupName = null;
+        item.GroupCode = '1';
+        item.IsDomestic = null;
+        item.ProductCode = null;
+        item.BrandCode = null;
+        item.BrandNameTH = null;
+        item.BrandNameEN = null;
+        item.SubBrandCode = null;
+        item.SubBrandNameTH = null;
+        item.SubBrandNameEN = null;
+        item.ModelCode = null;
+        item.ModelName = null;
+        item.FixNo1 = null;
+        item.DegreeCode = null;
+        item.Degree = null;
+        item.SizeCode = null;
+        item.Size = null;
+        item.SizeUnitCode = null;
+        item.SizeUnitName = null;
+        item.FixNo2 = null;
+        item.SequenceNo = null;
+        item.ProductDesc = null;
+        item.CarNo = null;
+        item.Qty = null;
+        item.QtyUnit = null;
+        item.NetVolume = null;
+        item.NetVolumeUnit = null;
+        item.IsActive = null;
         item.IsModify = 'c';
         item.GroupCode = '1';
-        item.ProductDesc = '';
-        item.Qty = null;
-        item.QtyUnit = '';
         if (lastIndex < 0) {
             item.RowId = 1;
             this.InvestigateDetailProduct.push(this.fb.group(item));
@@ -440,7 +529,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addDocument() {
         const lastIndex = this.InvestigateDocument.length - 1;
         let item = new fromModels.InvestigateDocumentModel();
-        item.DocumentType = '3';
+        item.DocumentType = this.documentType;
         item.DataSource = null;
         item.FilePath = null;
         item.IsModify = 'c';
@@ -473,11 +562,11 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     deleteLocal(i: number) {
-        this.deleteFormArray(this.InvestigateDetailLocal, i , 'InvestigateDetailLocal');
+        this.deleteFormArray(this.InvestigateDetailLocal, i, 'InvestigateDetailLocal');
     }
 
     deleteProduct(i: number) {
-        this.deleteFormArray(this.InvestigateDetailProduct, i , 'InvestigateDetailProduct');
+        this.deleteFormArray(this.InvestigateDetailProduct, i, 'InvestigateDetailProduct');
     }
 
     deleteDocument(i: number) {
@@ -599,8 +688,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             IsModify: staff.IsModify == 'r' ? 'u' : staff.IsModify,
             RowId: staff.RowId,
             FullName: `${e.item.TitleName} ${e.item.FirstName} ${e.item.LastName}`,
-            ProgramCode: 'ILG60-01-03-00-00',
-            ProcessCode: '03',
+            ProgramCode: 2,
+            ProcessCode: '02',
             PositionCode: e.item.OperationPosCode,
             PositionName: e.item.OperationPosName,
             DepartmentCode: e.item.OfficeCode,
@@ -654,10 +743,379 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.modal = this.ngbModel.open(e, { size: 'lg', centered: true });
     }
 
-    private onSave() {
+    saveFail() {
+        this._isSuccess = false;
+        return false;
     }
 
-    private onRevice() {
+    checkResponse(res: any) {
+        switch (res.IsSuccess) {
+            case 'False':
+            case false:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    checkIsSuccess(res: any) {
+        switch (res.IsSuccess) {
+            case 'True':
+            case true:
+                this._isSuccess = true;
+                return true;
+            default:
+                this._isSuccess = false;
+                return false;
+        }
+    }
+
+    catchError(error: any) {
+        console.log(error);
+        this._isSuccess = false;
+        this.endLoader();
+    }
+
+    clearFormArray = (formArray: FormArray) => {
+        while (formArray.length !== 0) {
+            formArray.removeAt(0)
+        }
+    }
+
+    onComplete() {
+        if (this._isSuccess) {
+            setTimeout(() => {
+                this.store.dispatch(new fromStore.RemoveInvestigate);
+                this.investigateFG.reset();
+                this.clearFormArray(this.InvestigateDetailStaff);
+                this.clearFormArray(this.InvestigateDetailSuspect);
+                this.clearFormArray(this.InvestigateDetailLocal);
+                this.clearFormArray(this.InvestigateDetailProduct);
+                this.clearFormArray(this.InvestigateDocument);
+            }, 300);
+
+            alert(Message.saveComplete)
+            this.onRefreshPage();
+
+        } else {
+            alert(Message.saveFail)
+        }
+    }
+
+    private navigateToManage = () => this.router.navigate([`investigation/manage`, this.investMode, this.investCode])
+
+    private onRefreshPage = () => this.router.navigate(
+        [`investigation/detail-manage`, 'R'],
+        {
+            queryParams: {
+                investMode: this.investMode,
+                investCode: this.investCode,
+                invesDetailId: this.invesDetailId
+            }
+        });
+
+    private async onEdit() {
+        await this.loadMasterData();
+    }
+
+    private onCancel() {
+        switch (this.mode) {
+            case 'C':
+                this.navigateToManage();
+                break;
+            case 'R':
+                this.onRefreshPage();
+                break;
+        }
+    }
+
+    private async onDelete() {
+        if (confirm(Message.confirmAction)) {
+            this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId).then(x => {
+                if (!this.checkResponse(x)) {
+                    alert(Message.delComplete);
+                    this.navigateToManage();
+                } else {
+                    alert(Message.delFail);
+                }
+            })
+        }
+    }
+
+    private async onSave() {
+        if (!this.stateInvest) {
+            alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
+            return;
+        }
+
+        if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart || !this.stateInvest.DateEnd) {
+            alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
+            return;
+        }
+
+        if (this.investigateFG.invalid) {
+            alert(Message.checkData);
+            return;
+        }
+
+        let staff: fromModels.InvestigateDetailStaff[] = this.InvestigateDetailStaff.value.filter(x => x.IsModify != 'd');
+        if (staff.length) {
+            if (staff.filter(x => x.ContributorID == '2').length <= 0) {
+                alert('ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ')
+                return;
+            }
+
+            if (staff.filter(x => x.ContributorID == '2').length > 1) {
+                alert('ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” ต้องมีได้แค่ 1 รายการเท่านั้น')
+                return;
+            }
+
+            if (staff.filter(x => x.ContributorID == '3').length > 1) {
+                alert('ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้สั่งการ” ต้องมีได้แค่ 1 รายการเท่านั้น')
+                return;
+            }
+        } else {
+            alert('ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ')
+            return;
+        }
+
+        let local: fromModels.InvestigateDetailLocal[] = this.InvestigateDetailLocal.value.filter(x => x.IsModify != 'd');
+        if (local.length) {
+            if (local.filter(x => x.Region == '').length > 1) {
+                alert('ส่วนสถานที่ทำการสืบสวน กรุณาระบุ “ตำบล/อำเภอ/จังหวัด”')
+            }
+        } else {
+            alert('ส่วนสถานที่ทำการสืบสวน ต้องมีอย่างน้อย 1 รายการ');
+        }
+
+        switch (this.mode) {
+            case 'C':
+                if (this.investCode == 'NEW') {
+                    await this.createWithOutInvestCode();
+                } else {
+                    await this.createWithInvestCode();
+                }
+                break;
+            case 'R':
+                await this.onRevice();
+                break;
+        }
+    }
+
+    private async createWithInvestCode() {
+        this.loaderService.show();
+        await this.insertInvestigate(this.investCode);
+
+        this.onComplete();
+
+        this.loaderService.hide();
+    }
+
+    private async createWithOutInvestCode() {
+        this.loaderService.show();
+        await this.getTransactionRunning();
+
+        this.onComplete();
+
+        this.loaderService.hide();
+    }
+
+    private async onRevice() {
+        this.loaderService.show();
+        this.updateInvestigateDetail();
+        this.onComplete();
+
+        this.loaderService.hide();
+    }
+
+    private async getTransactionRunning() {
+
+        let resRunning: any[] = await this.s_transactionRunning
+            .TransactionRunninggetByCon(this.runningTable, this.runningOfficeCode)
+            .then((x: TransactionRunning[]) => {
+                if (!this.checkResponse(x)) return;
+                return x;
+            })
+
+        if (resRunning.length) {
+            let tr = resRunning.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
+            let str = '' + (tr.RunningNo + 1)
+            let pad = '00000';
+            let ans = pad.substring(0, pad.length - str.length) + str
+            this.investCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
+
+            await this.s_transactionRunning.
+                TransactionRunningupdByCon(tr.RunningID.toString())
+                .then(async y => {
+                    if (!this.checkIsSuccess(y)) return;
+                    return true;
+                }, () => { this.saveFail(); return; })
+                .catch((error) => this.catchError(error));
+
+        } else {
+            await this.s_transactionRunning
+                .TransactionRunninginsAll(this.runningOfficeCode, this.runningTable, this.runningPrefix)
+                .then(async y => {
+                    if (!this.checkIsSuccess(y)) return;
+
+                    let ans = '00001'
+                    let year = ((new Date).getFullYear() + 543).toString()
+                    year = year.substring(2, 4);
+                    this.investCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+                    return true;
+                }, () => { this.saveFail(); return; })
+                .catch((error) => this.catchError(error));
+        }
+
+        if (this.investCode)
+            await this.insertInvestigate(this.investCode);
+    }
+
+    private async insertInvestigate(investCode: string) {
+        let invest = this.stateInvest;
+        invest.InvestigateCode = investCode;
+        await this.s_invest.InvestigateinsAll(invest).then(async x => {
+            if (!this.checkIsSuccess(x)) return;
+
+            await this.insertInvestigateDetail(investCode);
+
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
+    }
+
+    private async insertInvestigateDetail(investCode: string) {
+        let form: fromModels.InvestigateDetail = this.investigateFG.value;
+        form.InvestigateCode = investCode;
+        form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
+        form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
+
+        console.log("InvestigateDetailinsAll : ", JSON.stringify(form));
+
+        await this.s_investDetail.InvestigateDetailinsAll(form).then(async x => {
+            if (!this.checkIsSuccess(x)) return;
+            this.investCode = x.InvestigateCode;
+            this.invesDetailId = x.InvestigateDetailID;
+            let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
+            let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
+            let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
+
+            return Promise.all([suspect, product, ducument]);
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
+
+    }
+
+    private updateInvestigateDetail() {
+        let form: fromModels.InvestigateDetail = this.investigateFG.value;
+        form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
+        form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
+
+        this.s_investDetail.InvestigateDetailupdByCon(form).then(async x => {
+            if (!this.checkIsSuccess(x)) return;
+            let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
+            let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
+            let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
+
+            return Promise.all([suspect, product, ducument]);
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
+
+    }
+
+    private async modifyInvestigateDetailSuspect(investDetailId: number) {
+        const suspect = await this.InvestigateDetailSuspect.value
+            .map(async (x: fromModels.InvestigateDetailSuspect) => {
+                x.InvestigateDetailID = investDetailId;
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailSuspectupdDelete(x.SuspectID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        await this.s_investDetail.InvestigateDetailStaffinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                        await this.s_investDetail.InvestigateDetailStaffupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            });
+        return Promise.all(suspect);
+    }
+
+    private async modifyInvestigateDetailProduct(investDetailId: number) {
+        const product = await this.InvestigateDetailProduct.value
+            .map(async (x: fromModels.InvestigateDetailProduct) => {
+                x.InvestigateDetailID = investDetailId;
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailProductupdDelete(x.ProductID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        await this.s_investDetail.InvestigateDetailProductinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                        await this.s_investDetail.InvestigateDetailProductupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            });
+        return Promise.all(product);
+    }
+
+    private async modifyMasDocument(investDetailId: number) {
+        const document = await this.InvestigateDocument.value
+            .map(async (x: fromModels.InvestigateDocumentModel) => {
+                x.ReferenceCode = investDetailId.toString();
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailProductupdDelete(x.ReferenceCode)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        await this.s_investDetail.InvestigateDetailProductinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                        await this.s_investDetail.InvestigateDetailProductupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            })
+        return Promise.all(document);
     }
 
 

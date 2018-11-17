@@ -68,7 +68,7 @@ export class InvestigateMasSuspectModel {
 
     SuspectTypeName: string;
     EntityTypeName: string;
-    LawbreakerRefID: string;
+    SuspectReferenceID: number;
     ReferenceID: string;
     FullName: string;
     IsModify: string;

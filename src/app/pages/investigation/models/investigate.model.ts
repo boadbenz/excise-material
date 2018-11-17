@@ -51,6 +51,9 @@ export class InvestigateDetailStaff {
     RowId: number;
     FullName: string;
     IsModify: string;
+
+    Commander: string;
+    Investigator: string;
 }
 
 export class InvestigateDetailSuspect {
@@ -139,7 +142,7 @@ export class InvestigateDetailProduct {
     Qty: number;
     QtyUnit: string;
     NetVolume: number;
-    NetVolumeUnit: number;
+    NetVolumeUnit: string;
     IsActive: number;
 
     RowId: number;
