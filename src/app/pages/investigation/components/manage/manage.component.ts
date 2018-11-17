@@ -95,7 +95,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             InvestigateNo: new FormControl(null),
             DateStart: new FormControl(null),
             DateEnd: new FormControl(null),
-            Subject: new FormControl(null)
+            Subject: new FormControl(null),
+            IsActive: new FormControl(1)
         });
     }
 
@@ -148,7 +149,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                this.router.navigate(['/investigation/list']);
+                // this.router.navigate(['/investigation/list']);
             }
         })
 

@@ -102,7 +102,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.32');
+    this.sidebarService.setVersion('0.0.0.33');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
