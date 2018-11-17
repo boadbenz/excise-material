@@ -274,16 +274,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
                 if (this.arrestFG.invalid) return;
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
-                if (staff.length < 3) {
-                    alert('ต้องมีรายการผู้จับกุมอย่างน้อย 3 รายการ')
+                if (staff.length <= 0) {
+                    alert('ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ')
                     return
                 }
                 if (staff.filter(x => x.ContributorID == '').length > 0) {
                     alert('กรุณาเลือกฐานะของผู้จับกุม');
                     return;
                 }
-                if (staff.filter(x => x.ContributorID == '6').length > 1) {
-                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการเท่านั้น');
+                if (staff.filter(x => x.ContributorID == '7').length <= 0) {
+                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้ร่วมจับกุม” อย่างน้อย 1 รายการ');
                     return;
                 }
                 if (!this.ArrestIndictment.value.length) {
@@ -347,7 +347,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
-                    if (this.arrestCode != this.stateArrest.ArrestCode) 
+                    if (this.arrestCode != this.stateArrest.ArrestCode)
                         this.stateArrest = null;
                 }
                 await this.pageRefresh(this.arrestCode);
@@ -385,11 +385,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (arr.length) {
             let _arr = arr[0];
             this.pageRefreshArrest(_arr);
-    
+
             await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
-    
+
             await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
-    
+
             await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
         };
         this.loaderService.hide();
@@ -713,9 +713,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestStaff.push(this.fb.group(item));
             return;
         }
+
         const lastDoc = this.ArrestStaff.at(lastIndex).value;
         if (lastDoc.ContributorID) {
             item.RowId = lastDoc.RowId + 1;
+            this.ArrestStaff.push(this.fb.group(item));
+        } else if (lastDoc.IsModify == 'd') {
+            item.RowId = 1;
             this.ArrestStaff.push(this.fb.group(item));
         }
     }
@@ -734,9 +738,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestProduct.push(this.fb.group(item));
             return;
         }
+
         const lastDoc = this.ArrestProduct.at(lastIndex).value;
         if (lastDoc.ProductDesc) {
             item.RowId = lastDoc.RowId + 1;
+            this.ArrestProduct.push(this.fb.group(item));
+        } else if (lastDoc.IsModify == 'd') {
+            item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
         }
     }
@@ -782,9 +790,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ArrestDocument.push(this.fb.group(item));
             return;
         }
+
         const lastItem = this.ArrestDocument.at(lastIndex).value;
         if (lastItem.DataSource && lastItem.FilePath) {
             item.RowId = lastItem.RowId + 1;
+            this.ArrestDocument.push(this.fb.group(item));
+        } else if (lastItem.IsModify == 'd') {
+            item.RowId = 1;
             this.ArrestDocument.push(this.fb.group(item));
         }
     }
@@ -960,7 +972,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    onChangeArrestStation(e: any){
+    onChangeArrestStation(e: any) {
         this.arrestFG.patchValue({
             ArrestStation: e.target.value
         })
