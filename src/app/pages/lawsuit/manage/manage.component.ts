@@ -805,58 +805,6 @@ export class ManageComponent implements OnInit {
       let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
       console.log('lawsuitNo==>', lawsuitNo);
       console.log('isOut==>', isOut)
-<<<<<<< HEAD
-      await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo,this.lawsuitForm.controls['officeCode'].value,isOut).then(async res => {
-          if (res.length != 0) {
-            alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
-            this.preLoaderService.setShowPreloader(false);
-            return;
-          }
-          // console.log('LawsuitDate', toLocalShort(this.lawsuitForm.controls['LawsuitDate'].value))
-          const _lawDate = (this.lawsuitForm.controls['LawsuitDate'].value)
-          console.log(this.LawsuitTableList.value[0].LawsuitType)
-
-          const json =
-          {
-            "LawsuitID": this.LawsuitID,
-            "IndictmentID": this.IndictmentID,
-            "IsLawsuit": this.lawsuitForm.controls['IsLawsuitCheck'].value === false ? 0 : 1,
-            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",
-            "LawsuitNo": this.lawsuitForm.controls['LawsuitNo'].value,
-            "LawsuitDate": _lawDate.jsdate,
-            "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
-            "LawsuitStationCode": '',
-            "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
-            "IsOutside": isOut,
-            "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
-            "LawsuitResult": '',
-            "DeliveryDocNo": '',
-            "DeliveryDate": _lawDate.jsdate,
-            "IsActive": 1,
-            "LawsuitType": this.LawsuitTableList.value[0].LawsuitType,
-            "LawsuitEnd": this.LawsuitTableList.value[0].LawsuitEnd,
-            "LawsuitStaff": [{
-              "StaffID": '1',
-              "ProgramCode": "XCS-60",
-              "ProcessCode": "XCS-60-001",
-              "LawsuitID": '',
-              "StaffCode": "S000",
-              "TitleName": "นาย",
-              "FirstName": "ธวัชชัย", "LastName": "บิงขุนทด",
-              "PositionCode": "P001", "PositionName": "ผู้ช านาญการ",
-              "PosLevel": "01", "PosLevelName": "ระดับสูง",
-              "DepartmentCode": "V001",
-              "DepartmentName": "สตป",
-              "DepartmentLevel": "1",
-              "OfficeCode": "T001",
-              "OfficeName": "สตป",
-              "OfficeShortName": "สตป",
-              "ContributorCode": "001",
-              "IsActive": ''
-            }]
-          }
-          console.log(json)
-=======
       return await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut).then(async res => {
         if (res.length != 0) {
           alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
@@ -907,7 +855,6 @@ export class ManageComponent implements OnInit {
         if (!this.lawsuitForm.controls['IsLawsuitCheck']) {
           json.LawsuitType = 2
           json.LawsuitEnd = 2
->>>>>>> Em_Dev
           await this.lawsuitService.LawsuitinsAll(json).then(async response => {
             if (response.IsSuccess == "True") {
               alert("บันทึกสำเร็จ");
