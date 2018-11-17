@@ -1,0 +1,414 @@
+<form class="form-horizontal" [formGroup]="investigateFG">
+
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card1 = !card1">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card1, 'fa-chevron-up': !card1}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">รายงานการสืบสวน</h4>
+        </div>
+        <div class="card-body" *ngIf="card1">
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ครั้งที่สืบสวน : </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" formControlName="InvestigateSeq" class="form-control form-control-sm"
+                            readonly>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เริ่มสืบสวน :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" formControlName="InvestigateDateStart"
+                            [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
+
+                        <label for="DateEnd">&nbsp;ถึง&nbsp;</label>
+
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" id="DateEnd"
+                            formControlName="InvestigateDateEnd" [options]="myDatePickerOptions" (dateChanged)="onEDateChange($event)"></my-date-picker-th>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">มาตราความเชื่อมั่น :
+                </label>
+                <div class="col-lg-10 col-sm-8">
+                    <div class="form-group ">
+                        <select formControlName="ValueOfNews" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                            required>
+                            <option value="" selected disabled></option>
+                            <option *ngFor="let item of valueofNews; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">ค่าของเนื้อข่าว :
+                </label>
+                <div class="col-lg-10 col-sm-8">
+                    <div class="form-group ">
+                        <select formControlName="ConfidenceOfNews" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                            required>
+                            <option value="" selected disabled></option>
+                            <option *ngFor="let item of costofNews; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card2 = !card2">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">ผู้ร่วมทำการสืบสวน</h4>
+        </div>
+        <div class="card-body" *ngIf="card2">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addStaff()">เพิ่มผู้ร่วมจับกุม</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped table-set-border">
+                    <thead>
+                        <tr>
+                            <th class="text-center">ลำดับ</th>
+                            <th>ชื่อผู้สืบสวน</th>
+                            <th>ตำแหน่ง</th>
+                            <th>หน่วยงาน</th>
+                            <th>ฐานะ</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="InvestigateDetailStaff">
+                        <tr *ngFor="let item of InvestigateDetailStaff.controls; let i = index;" [formGroupName]="i">
+                            <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
+                                {{item.get('RowId').value}}
+                            </td>
+                            <td *ngIf="item.get('IsModify').value != 'd'">
+                                <ng-template #rt let-r="result" let-t="term">
+                                    {{ r.TitleName == null ? '' : r.TitleName }}
+                                    {{r.FirstName == null ? '' : r.FirstName}}
+                                    {{r.LastName == null ? '' : r.LastName}}
+                                </ng-template>
+
+                                <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff"
+                                    [resultTemplate]="rt" แ [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
+                                    value="{{item.value.FullName}}" />
+                            </td>
+                            <td *ngIf="item.get('IsModify').value != 'd'">
+                                <input type="text" formControlName="PositionName" class="form-control form-control-sm"
+                                    readonly>
+                            </td>
+                            <td *ngIf="item.get('IsModify').value != 'd'">
+                                <input type="text" formControlName="OfficeName" style="display: none;" readonly>
+                                <input type="text" formControlName="OfficeShortName" class="form-control form-control-sm"
+                                    readonly>
+                            </td>
+                            <td *ngIf="item.get('IsModify').value != 'd'">
+                                <select formControlName="ContributorID" class="form-control form-control-sm"
+                                    [attr.disabled]="showEditField ? '' : null">
+                                    <option value="" disabled selected></option>
+                                    <option *ngFor="let c of contributorInvestType;" [value]="c.value">{{c.text}}</option>
+                                </select>
+                            </td>
+                            <td *ngIf="item.get('IsModify').value != 'd'">
+                                <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField" (click)="deleteStaff(i)">
+                                    <i class="fa fa-trash-o fa-lg"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card3 = !card3">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card3, 'fa-chevron-up': !card3}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">ผู้ต้องสงสัย</h4>
+        </div>
+        <div class="card-body" *ngIf="card3">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" (click)="openModal(suspect)" [disabled]="showEditField">เพิ่มผู้ต้องสงสัย</button>
+                </div>
+
+                <ng-template #suspect let-c="close" let-d="dismiss">
+                    <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" (OutputSuspect)="addSuspect($event)"></app-suspect-modal>
+                </ng-template>
+            </div>
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th>ประเภทผู้ต้องสงสัย</th>
+                        <th>ประเภทบุคคล</th>
+                        <th>หมายเลขอ้างอิง</th>
+                        <th>ชื่อ</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="InvestigateDetailSuspect">
+                    <tr *ngFor="let item of InvestigateDetailSuspect.controls; let i = index;" [formGroupName]="i">
+                        <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('SuspectTypeName').value}}</td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('EntityTypeName').value}}</td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('ReferenceID').value}}</td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('FullName').value}}</td>
+                        <td *ngIf="item.get('IsModify').value != 'd'" colspan="2" class="text-center">
+                            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteSuspect(i)">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card4 = !card4">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card4, 'fa-chevron-up': !card4}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">สถานที่ทำการสืบสวน</h4>
+        </div>
+        <div class="card-body" *ngIf="card4">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" (click)="addLocal()" [disabled]="showEditField">เพิ่มสถานที่</button>
+                </div>
+            </div>
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th style="width: 100px">เลขที่</th>
+                        <th style="width: 60px">หมู่ที่</th>
+                        <th>อาคาร</th>
+                        <th style="width: 100px">ห้อง</th>
+                        <th style="width: 60px">ชั้น</th>
+                        <th>ตรอก/ซอย</th>
+                        <th>ถนน</th>
+                        <th style="width: 300px">ตำบล/อำเภอ/จังหวัด</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="InvestigateDetailLocal">
+                    <tr *ngFor="let item of InvestigateDetailLocal.controls; let i = index;" [formGroupName]="i">
+                        <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="text" formControlName="Address" class="form-control form-control-sm"
+                                [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="text" formControlName="Village" class="form-control form-control-sm"
+                                [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="text" formControlName="Building" class="form-control form-control-sm"
+                                [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <ng-template #rt let-r="result" let-t="term">
+                                {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
+                            </ng-template>
+
+                            <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion"
+                                [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterRegion"
+                                (selectItem)="selectItemLocaleRegion($event)" value="{{item.value.Region}}" />
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
+                            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteLocal(i)">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card5 = !card5">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card5, 'fa-chevron-up': !card5}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">สินค้าต้องสงสัย</h4>
+        </div>
+        <div class="card-body" *ngIf="card5">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" (click)="addProduct()" [disabled]="showEditField">เพิ่มสินค้า</button>
+                </div>
+            </div>
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th>สินค้า</th>
+                        <th>จำนวน</th>
+                        <th>หน่วย</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody formArrayName="InvestigateDetailProduct">
+                    <tr *ngFor="let item of InvestigateDetailProduct.controls; let i = index;" [formGroupName]="i">
+                        <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
+                        <td *ngIf="item.get('IsModify').value != 'd'" style="width: 700px;">
+                            <ng-template #rt let-r="result" let-t="term">
+                                {{ r.ProductDesc }}
+                            </ng-template>
+                            <input type="text" class="form-control form-control-sm" [readonly]="showEditField"
+                                [ngbTypeahead]="searchProduct" [resultTemplate]="rt" [inputFormatter]="formatterProduct"
+                                (selectItem)="selectItemProductItem($event, i)" [value]="item.value.ProductDesc"
+                                (change)="onChangeProductDesc($event, i)" />
+                            <input style="display: none" type="text" formControlName="ProductDesc">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <ng-template #qtyUnit let-r="result" let-t="term">
+                                {{ r.DutyCode }}
+                            </ng-template>
+                            <input type="text" class="form-control form-control-sm" [readonly]="showEditField"
+                                [ngbTypeahead]="searchUnit" [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit"
+                                (selectItem)="selectItemQtyUnit($event, i)" [value]="item.value.QtyUnit" />
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
+                            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card6 = !card6">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card6, 'fa-chevron-up': !card6}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">รายละเอียดที่เกิดเหตุในการสืบสวน</h4>
+        </div>
+        <div class="card-body" *ngIf="card6">
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียด :
+                </label>
+                <div class="col-lg-10 col-sm-8">
+                    <div class="form-group ">
+                        <textarea formControlName="InvestigateDetail" cols="30" rows="5" class="form-control form-control-sm"
+                            [disabled]="showEditField"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card7 = !card7">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card7, 'fa-chevron-up': !card7}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+        </div>
+        <div class="card-body" *ngIf="card7">
+
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" (click)="addDocument()" [disabled]="showEditField">เพิ่มเอกสาร</button>
+                </div>
+            </div>
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th>ชื่อเอกสารแนบ</th>
+                        <th>ที่อยู่เอกสารแนบ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="InvestigateDocument">
+                    <tr *ngFor="let item of InvestigateDocument.controls; let i=index;" [formGroupName]="i">
+                        <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <input type="text" formControlName="DataSource" class="form-control form-control-sm"
+                                [readonly]="showEditField">
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" formControlName="FilePath"
+                                    style="border-right: 0;" [readonly]="showEditField">
+                                <div class="input-group-append">
+                                    <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)"
+                                        hidden [attr.disabled]="showEditField ? '' : null">
+                                    <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
+                                        <i class="ti-more-alt"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+                        <td *ngIf="item.get('IsModify').value != 'd'">
+                            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteDocument(i)">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</form>
