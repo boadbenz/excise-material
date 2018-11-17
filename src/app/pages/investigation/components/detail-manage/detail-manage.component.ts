@@ -260,7 +260,15 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     onPageLoad() {
+        this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then((x: fromModels.InvestigateDetail) => {
+            if (!this.checkResponse(x)) return;
 
+            let invest = this.investigateFG;
+            x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
+            x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
+
+            invest.patchValue(x);
+        })
     }
 
     onSDateChange(event: IMyDateModel) {
