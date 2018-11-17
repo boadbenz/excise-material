@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -13,7 +14,11 @@ export class ILG6008030000E12Component extends CONFIG implements OnInit {
   }
 
   ngOnInit() {}
-  public formSubmit(formData) {
-
+  public formChange(formData: FormGroup) {
+    console.log('formData', formData);
+    this.emitChange.emit({
+      FormName: 'ILG60-08-03-00-00-E12',
+      FormData: formData
+    });
   }
 }

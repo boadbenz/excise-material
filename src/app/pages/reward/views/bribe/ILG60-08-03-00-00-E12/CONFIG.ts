@@ -1,7 +1,11 @@
 import { BribeConfig } from '../bribe.config';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
+import { Output, EventEmitter } from '@angular/core';
+import { IFormChange } from 'app/pages/reward/interfaces/FormChange';
 
 export class CONFIG extends BribeConfig {
+  @Output()
+  public emitChange: EventEmitter<IFormChange> = new EventEmitter();
   public columns: ColumnsInterface[] = [
     {
       title: 'เขียนที่',

@@ -4,9 +4,10 @@ import { BribeRoutes } from './bribe.routing';
 import { SharedModule } from '../../shared/shared.module';
 import { BRIBE_COMPONENTS } from '.';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
-  imports: [SharedModule, BribeRoutes, FormsModule, ReactiveFormsModule],
+  imports: [SharedModule, BribeRoutes, FormsModule, ReactiveFormsModule, MatCheckboxModule],
   declarations: [...BRIBE_COMPONENTS],
 })
 export class BribeModule {}

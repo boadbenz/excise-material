@@ -17,6 +17,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { PrintDialogComponent } from './print-dialog/print-dialog.component';
 import { REWARD_PIPES } from '../pipes';
+import { MyDatePickerModule } from 'mydatepicker';
 const SHARED_MODULES = [
   CommonModule,
   HttpClientModule,
@@ -25,12 +26,13 @@ const SHARED_MODULES = [
   MatExpansionModule,
   MatDialogModule,
   ReactiveFormsModule,
-  FormsModule
+  FormsModule,
+  MyDatePickerTHModule,
+  MyDatePickerModule,
 ];
 @NgModule({
   imports: [
     ...SHARED_MODULES,
-    MyDatePickerTHModule,
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,

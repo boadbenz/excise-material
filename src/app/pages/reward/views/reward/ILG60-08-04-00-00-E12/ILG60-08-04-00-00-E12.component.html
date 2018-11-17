@@ -1,9 +1,11 @@
 <div class="row">
   <div class="col-md-12">
 
-    <div class="table-responsive">
+    <div class="table-responsive" *ngIf="(aggregate08 | async)">
       <!-- {{ formGroup.value | json}} -->
-      {{aggregate | json}}
+      {{aggregate08 | async | json}}
+
+      {{SumBribeMoney}}
       <form [formGroup]="formGroup" *ngIf="formGroup">
         <div class="text-right">
           <button (click)="addRow()" [attr.disabled]="(ILG60_08_04_00_00_E13_BUTTON$ | async)?.DISABLED ? 'disabled' : null"
@@ -41,13 +43,49 @@
             </tr>
           </thead>
           <tbody>
+              <tr class="footable">
+              <td>
+                <mat-checkbox class="filled-in chk-col-indigo" [checked]="true" [disabled]="true"></mat-checkbox>
+              </td>
+              <td class="text-center">1</td>
+              <td>
+                <input class="form-control" type="text"  disabled>
+              </td>
+              <td>
+                <input class="form-control" type="text"   value="สายลับ (ขอปิดนาม)" disabled>
+              </td>
+              <td>
+                <input class="form-control" type="text"   disabled>
+              </td>
+              <td>
+                <input class="form-control" type="text"  disabled>
+              </td>
+              <td>
+                <input class="form-control" type="text" value="ผู้แจ้งความนำจับ" disabled>
+              </td>
+              <td>
+                <input class="form-control" type="number"  disabled>
+              </td>
+              <td>
+                <input class="form-control" type="number"  disabled>
+              </td>
+              <td>
+                <input class="form-control" type="number" disabled>
+              </td>
+              <td>
+                <input class="form-control" type="number" disabled>
+              </td>
+              <td>
+                <input class="form-control" type="number" [value]="SumBribeMoney"  disabled >
+              </td>
+              <td></td>
+            </tr>
             <tr class="footable" *ngFor="let item of formGroup['controls'].sharedBribeReward.controls | sort: i; let i=index;"
               [formGroupName]="i">
               <td>
                 <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
-                <label for="1"></label>
               </td>
-              <td class="text-center">{{i+1}}</td>
+              <td class="text-center">{{i+2}}</td>
               <td>
                 <input class="form-control" type="text"  formControlName="TitleName">
               </td>
@@ -116,7 +154,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" disabled>
+            <input class="form-control" type="number" [value]="sumTotal()?.SumMoney" disabled>
           </div>
         </div>
       </div>
@@ -126,7 +164,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" disabled>
+            <input class="form-control" type="text"  [value]="sumTotal()?.SumFirstMoney" disabled>
           </div>
         </div>
       </div>
@@ -134,11 +172,11 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" disabled>
+            <input class="form-control" type="text"  [value]="sumTotal()?.SumFirstMoneyPerPart" disabled>
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" disabled>
+            <input class="form-control" type="text" [value]="sumTotal()?.FirstRemainder" disabled>
           </div>
         </div>
       </div>
@@ -148,7 +186,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" disabled>
+            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoney" disabled>
           </div>
         </div>
       </div>
@@ -156,11 +194,11 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" disabled>
+            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoneyPerPart" disabled>
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" disabled>
+            <input class="form-control" type="text" [value]="sumTotal()?.SecondRemainder" disabled>
           </div>
         </div>
       </div>

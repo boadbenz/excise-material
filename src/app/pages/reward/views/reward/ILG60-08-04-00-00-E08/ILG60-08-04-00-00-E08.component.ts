@@ -18,6 +18,7 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
   public checkAll = false;
   public checkList: boolean[];
   public RequestPaymentFine: IRequestPaymentFine[] = [];
+  public listData: any[] = [];
   constructor() {
     super();
     this.inputData$.subscribe((res: IRewardBinding) => {
@@ -80,6 +81,7 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
                   RewardMoney: `${m.PaymentFine * 0.2 || 0}`
                 })
               );
+              this.listData = mapData;
               this.checkList = mapData.map(m => true);
               this.aggregate.BribeMoney.sum = Number(
                 mapData.map(m => m.BribeMoney).reduce((a, b) => (a += b))
@@ -91,6 +93,7 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
                 mapData.map(m => m.RewardMoney).reduce((a, b) => (a += b))
               );
               this.checkAll = this.checkChecked(this.checkList);
+              this.checkboxHandle();
               this.inputDataTable$.next(mapData);
             }
 
@@ -117,6 +120,30 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
     return num === 1 ? true : false;
   }
 
+  public checkboxHandle() {
+    // this.aggregate.BribeMoney.sum =
+    this.aggregate.BribeMoney.sum = Number(
+      this.listData
+        .map((m, index) => (this.checkList[index] ? m.BribeMoney : null))
+        .reduce((a, b) => (a += b))
+    );
+    this.aggregate.PaymentFine.sum = Number(
+      this.listData
+        .map((m, index) => (this.checkList[index] ? m.PaymentFine : null))
+        .reduce((a, b) => (a += b))
+    );
+    this.aggregate.RewardMoney.sum = Number(
+      this.listData
+        .map((m, index) => (this.checkList[index] ? m.RewardMoney : null))
+        .reduce((a, b) => (a += b))
+    );
+    
+    this.aggregateHandle.emit({
+      BribeMoney : this.aggregate.BribeMoney.sum,
+      PaymentFine : this.aggregate.PaymentFine.sum,
+      RewardMoney : this.aggregate.RewardMoney.sum,
+    });
+  }
   public ILG60_08_04_00_00_E09_OnSelect() {
     // 1 START
     this.columnsForm = this.columnsForm.map(m => ({

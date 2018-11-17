@@ -9,7 +9,7 @@
       <div class="card-body">
         <!-- <app-table-data [columns]="columnsTable$ | async" [data]="inputDataTable$ | async" [options]="TableDataOptions"></app-table-data> -->
         <div class="table-responsive table-striped no-wrap">
-          <!-- {{checkList | json}} -->
+          {{checkList | json}}
           <table class="dataTable table table-sm table-striped table-hover">
             <thead>
               <tr>
@@ -24,8 +24,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let dataItem of (inputDataTable$ | async); let i=index">
-                  <th><mat-checkbox  class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]"></mat-checkbox></th>
+              <tr *ngFor="let dataItem of listData; let i=index">
+                  <th><mat-checkbox  class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]" (change)="checkboxHandle()"></mat-checkbox></th>
                   <th>{{i+1}}</th>
                 <ng-container *ngFor="let item of (columnsTable$ | async)">
                   <td class="footable-sortable">
@@ -45,7 +45,7 @@
                 <ng-container *ngFor="let item of (columnsTable$ | async)">
                   <ng-container *ngIf="item?.isSum;">
                     <th class="footable-sortable">
-                      {{(aggregate[item.field]?.sum) || ''}}
+                      {{(aggregate[item.field]?.sum) || 0}}
                     </th>
                   </ng-container>
 

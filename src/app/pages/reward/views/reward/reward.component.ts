@@ -38,6 +38,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
   public MasStaffMain: MasStaffModel[];
   public MasOfficeMain: MasOfficeModel[];
   public ILG60_08_04_00_00_E12_DATA: IRewardBinding[] = [];
+  public aggregate = {};
   constructor(
     private activatedRoute: ActivatedRoute,
     private masTitleService: MasTitleService,
@@ -140,7 +141,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
             }); // 1.1.10
 
             this.ILG60_08_04_00_00_E12_DATA$.next({
-              methodName: 'RequestBribeReward',
+              methodName: 'RequestBribeRewardgetByIndictmentID',
               data: RequestBribeReward
             });
 
@@ -169,6 +170,11 @@ export class RewardComponent extends RewardConfig implements OnInit {
           .subscribe((RequestReward: IRequestReward[]) => {
             if (RequestReward.length > 0) {
               this.ILG60_08_04_00_00_E08_DATA$.next({
+                methodName: 'RequestRewardgetByCon',
+                data: RequestReward
+              });
+
+              this.ILG60_08_04_00_00_E12_DATA$.next({
                 methodName: 'RequestRewardgetByCon',
                 data: RequestReward
               });
@@ -290,5 +296,8 @@ export class RewardComponent extends RewardConfig implements OnInit {
 
         break;
     }
+  }
+  public emitAggregate(aggregate) {
+    this.aggregate = aggregate;
   }
 }

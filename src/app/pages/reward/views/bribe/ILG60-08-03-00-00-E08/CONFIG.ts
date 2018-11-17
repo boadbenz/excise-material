@@ -1,9 +1,11 @@
 import { BribeConfig } from '../bribe.config';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
-import { Input } from '@angular/core';
+import { Input, Output, EventEmitter } from '@angular/core';
+import { IFormChange } from 'app/pages/reward/interfaces/FormChange';
 
 export class CONFIG extends BribeConfig {
+  @Output() public formData: EventEmitter<IFormChange> = new EventEmitter();
   @Input()
   set inputData(val) {
     this.inputData$.next(val);
@@ -31,7 +33,6 @@ export class CONFIG extends BribeConfig {
   }
   public RequestBribe$ = new BehaviorSubject<any>(null);
 
-
   @Input()
   set mode(val) {
     this.mode$.next(val);
@@ -44,7 +45,16 @@ export class CONFIG extends BribeConfig {
 
   public columnsForm: ColumnsInterface[] = [
     {
+      field: 'DetailIDs'
+    },
+    {
+      field: 'CommandDetailID',
+      isRequired: true
+    },
+    {
       title: 'เลขที่ใบแจ้งความนำจับ',
+      field: 'NoticeCodeAndName',
+      isRequired: true
     },
     {
       title: 'เลขที่คำร้องขอ',
@@ -53,17 +63,20 @@ export class CONFIG extends BribeConfig {
     {
       title: 'เขียนที่',
       field: 'Station',
+      isRequired: true
     },
     {
       title: 'วันที่จัดทำ',
       field: 'RequestDate',
+      isRequired: true,
       title2: 'เวลา',
       field2: 'RequestTime'
     },
     {
       title: 'ผู้แจ้งความได้ทราบว่า',
+      isRequired: true,
       field: 'Informeracknowledge'
-    },
+    }
   ];
 
   public columnsTable: ColumnsInterface[] = [

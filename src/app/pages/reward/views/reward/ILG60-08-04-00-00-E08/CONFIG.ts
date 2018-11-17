@@ -1,7 +1,7 @@
 import { RewardConfig } from '../reward.config';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Input } from '@angular/core';
+import { Input, Output, EventEmitter } from '@angular/core';
 import { ITableDataOptions } from 'app/pages/reward/shared/table-data/table-data.config';
 
 export class CONFIG extends RewardConfig {
@@ -74,9 +74,11 @@ export class CONFIG extends RewardConfig {
       field2: 'RequestTime',
       inputType2: 'text',
       isDisabled2: false,
-      default2: '',
+      default2: ''
     }
   ];
+  @Output()
+  public aggregateHandle = new EventEmitter();
   public aggregate = {
     PaymentFine: {
       sum: 0
