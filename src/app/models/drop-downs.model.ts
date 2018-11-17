@@ -76,6 +76,12 @@ export const ContributorType: DropDown[] = [
     { value: '7', text: 'ผู้ร่วมจับกุม' }
 ]
 
+export const ContributorInvestType: DropDown[] = [
+    { value: '1', text: 'ผู้ร่วมทำการสืบสวน' },
+    { value: '2', text: 'ผู้ดูแลการสืบสวน' },
+    { value: '3', text: 'ผู้สังการ' }
+]
+
 export const MaritalStatuType: DropDown[] = [
     {
         value: '1',
@@ -92,98 +98,18 @@ export const MaritalStatuType: DropDown[] = [
     },
 ]
 
-export const TitleNames: DropDown[] = [
-    {
-        value: '1',
-        text: 'นาย'
-    }, {
-        value: '2',
-        text: 'นาง'
-    }, {
-        value: '3',
-        text: 'นางสาว'
-    }
-]
-
-export const Nationalitys: DropDown[] = [
-    {
-        value: '1',
-        text: 'ไทย'
-    }, {
-        value: '2',
-        text: 'เวียดนาม'
-    }, {
-        value: '3',
-        text: 'ลาว'
-    }, {
-        value: '4',
-        text: 'กัมพูชา'
-    }, {
-        value: '5',
-        text: 'มาเลเชีย'
-    }, {
-        value: '6',
-        text: 'ฟิลิปปินส์'
-    }, {
-        value: '7',
-        text: 'บรูไน'
-    }, {
-        value: '8',
-        text: 'จีน'
-    }
-]
-
-export const Races: DropDown[] = [
-    {
-        value: '1',
-        text: 'ไทย'
-    }, {
-        value: '2',
-        text: 'เวียดนาม'
-    }, {
-        value: '3',
-        text: 'ลาว'
-    }, {
-        value: '4',
-        text: 'กัมพูชา'
-    }, {
-        value: '5',
-        text: 'มาเลเชีย'
-    }, {
-        value: '6',
-        text: 'ฟิลิปปินส์'
-    }, {
-        value: '7',
-        text: 'บรูไน'
-    }, {
-        value: '8',
-        text: 'จีน'
-    }
-]
-
-export const Religions: DropDown[] = [
-    { value: '1', text: 'ศาสนาฮินดู' }
-    , { value: '2', text: 'ศาสนาเชน' }
-    , { value: '3', text: 'ศาสนาพุทธ' }
-    , { value: '4', text: 'ศาสนาซิกข์' }
-    , { value: '5', text: 'ศาสนายูดาห์' }
-    , { value: '6', text: 'ศาสนาคริสต์' }
-    , { value: '7', text: 'ศาสนาอิสลาม' }
-    , { value: '8', text: 'ศาสนาบาไฮ' }
-]
-
 export const ValueofNews: DropDown[] = [
     {
-        value: '1',
+        value: 'A',
         text: 'ที่ผ่านมาเชื่อมั่นได้อย่างสมบูรณ์'
     }, {
-        value: '2',
+        value: 'B',
         text: 'ที่อ่านมาเชื่อถือได้เป็นส่วนใหญ่'
     }, {
-        value: '3',
+        value: 'C',
         text: 'ที่ผ่านมาเชื่อถือไม่ได้เป็นส่วนใหญ่'
     }, {
-        value: '4',
+        value: 'X',
         text: 'ไม่สามารถตัดสินได้'
     }
 ]

@@ -19,22 +19,9 @@ export const routes: Routes = [
     }, {
         path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/arrests/arrest.module#ArrestModule'
-        // [
-        //     { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
-        //     { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' },
-        //     { path: 'lawbreaker/:mode/:code', loadChildren: './pages/arrests/lawbreaker/lawbreaker.module#LawbreakerModule' },
-        //     { path: 'allegation/:mode/:code', loadChildren: './pages/arrests/allegation/allegation.module#AllegationModule' }
-        // ]
     }, {
         path: 'investigation', component: LayoutComponent, canActivate: [AuthGuard],
-        children: [
-            { path: 'list', loadChildren: './pages/investigation/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/investigation/manage/manage.module#ManageModule' },
-            {
-                path: 'detail-manage/:mode/:code',
-                loadChildren: './pages/investigation/detail-manage/detail-manage.module#DetailManageModule'
-            }
-        ]
+        loadChildren: './pages/investigation/investigation.module#InvestigationModule'
     }, {
         path: 'prove', component: LayoutComponent,
         children: [

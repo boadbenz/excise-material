@@ -23,10 +23,6 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 })
 export class AllegationDetailModalComponent implements OnInit, OnDestroy {
 
-  // Redux based variables
-  // obArrest: Observable<fromModel.Arrest>;
-  // ArrestStore: fromModel.Arrest;
-
   private destroy$: Subject<boolean> = new Subject<boolean>();
   navigationSubscription;
   ACCEPTABILITY = Acceptability;
@@ -42,12 +38,6 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     private activeRoute: ActivatedRoute,
     private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
   ) {
-    // this.obArrest = store.select(s => s.arrest);
-    // this.obArrest
-    //   .takeUntil(this.destroy$)
-    //   .subscribe((x: fromModel.Arrest) => {
-    //     this.ArrestStore = x;
-    //   })
   }
 
   paginage = pagination;
@@ -55,46 +45,20 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   entityType = EntityTypes;
   lawbreaker = new Array<ArrestLawbreakerAllegation>();
   advSearch: boolean;
-  showLawbreakerDetail: boolean;
-  lawbreakerIndex: number;
-  typeheadProductUnit = new Array<MasDutyProductUnitModel>();
-
-  // param: Params
-  mode: string;
-  arrestCode: string;
-  indictmentDetailId: string;
-  indictmentId: string;
-  guiltbaseId: string;
-
-  _isSuccess: boolean;
-
+  
   card1 = true;
 
-  @Input() ArrestIndictment: fromModel.ArrestIndictment;
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
   @Output() OutputLawbreaker = new EventEmitter<fromModel.ArrestLawbreaker>();
 
   allegationFG: FormGroup;
 
-  productArray: FormArray;
-
   get Lawbreaker(): FormArray {
     return this.allegationFG.get('Lawbreaker') as FormArray
   }
 
   async ngOnInit() {
-
-    combineLatest(this.activeRoute.params, this.activeRoute.queryParams)
-      .map(results => ({ params: results[0], queryParams: results[1] }))
-      .takeUntil(this.destroy$)
-      .subscribe(async results => {
-        this.mode = results.params.mode;
-        this.arrestCode = results.queryParams.arrestCode;
-        this.indictmentId = results.queryParams.indictmentId;
-        this.guiltbaseId = results.queryParams.guiltbaseId;
-      });
-
     this.allegationFG = this.fb.group({
       Lawbreaker: this.fb.array([])
     });
@@ -111,38 +75,11 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   }
 
   onClickNewLawbreaker() {
-    // this.ArrestStore.ArrestIndictment = [this.ArrestIndictment];
-    // this.store.dispatch(new fromStore.UpdateArrest(this.ArrestStore));
-    
-    // this.dismiss('Cross click')
-    // this.router.navigate(
-    //   [`/arrest/lawbreaker`, 'C', 'NEW'],
-    //   {
-    //     queryParams: {
-    //       allegationMode: this.mode,
-    //       arrestCode: this.arrestCode,
-    //       indictmentId: this.indictmentId,
-    //       guiltbaseId: this.guiltbaseId
-    //     }
-    //   })
-
      window.open(`${location.origin}/#/arrest/lawbreaker/C/NEW`);
-     
   }
 
   view(id: number) {
-    // this.dismiss('Cross click')
     window.open(`${location.origin}/#/arrest/lawbreaker/R/${id}`);
-    // this.router.navigate(
-    //   [`/arrest/lawbreaker`, 'R', id],
-    //   {
-    //     queryParams: {
-    //       allegationMode: this.mode,
-    //       arrestCode: this.arrestCode,
-    //       indictmentId: this.indictmentId,
-    //       guiltbaseId: this.guiltbaseId
-    //     }
-    //   })
   }
 
   onSearchAdv(f: any) {
@@ -174,7 +111,6 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   }
 
   setIsChecked(i: number) {
-    this.lawbreakerIndex = i;
     let law = this.Lawbreaker;
     law.value.map((item, index) => {
       item.IsChecked = (i == index) ? Acceptability.ACCEPTABLE : Acceptability.INACCEPTABLE;
@@ -192,14 +128,12 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   async pageChanges(event: any) {
     const list = await this.lawbreaker.slice(event.startIndex - 1, event.endIndex);
     this.setItemFormArray(list, 'Lawbreaker');
-    this.showLawbreakerDetail = false;
   }
 
   closeLawbreakerDetail() {
     let law = this.Lawbreaker;
     law.value.map(item => item.IsChecked = Acceptability.INACCEPTABLE);
     law.patchValue(law.value);
-    this.showLawbreakerDetail = false;
   }
 
   close(e: any) {
