@@ -22,7 +22,7 @@ export interface IRequestRewardStaff {
   FirstMoney: number;
   SecondMoney: number;
   ToTalMoney: number;
-  DateReceiveMoney: Date;
+  DateReceiveMoney: string;
   FirstPart: number;
   SecondPart: number;
   ContributorName: string;
@@ -52,7 +52,7 @@ export interface IRequestRewardStaffinsAll {
   FirstMoney: number;
   SecondMoney: number;
   ToTalMoney: number;
-  DateReceiveMoney: Date;
+  DateReceiveMoney: string;
   FirstPart: number;
   SecondPart: number;
   ContributorName: string;
@@ -82,7 +82,7 @@ export interface IRequestRewardStaffupdByCon {
   FirstMoney: number;
   SecondMoney: number;
   ToTalMoney: number;
-  DateReceiveMoney: Date;
+  DateReceiveMoney: string;
   FirstPart: number;
   SecondPart: number;
   ContributorName: string;

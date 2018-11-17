@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-12">
+    <app-form-group [columns]="columnsForm" ></app-form-group>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- <app-table-data [columns]="columnsTable$ | async" [data]="inputDataTable$ | async" [options]="TableDataOptions"></app-table-data> -->
+        <div class="table-responsive table-striped no-wrap">
+          <!-- {{checkList | json}} -->
+          <table class="dataTable table table-sm table-striped table-hover">
+            <thead>
+              <tr>
+                  <th><mat-checkbox  class="filled-in chk-col-indigo" [(ngModel)]="checkAll"></mat-checkbox></th>
+                <th>ลำดับ</th>
+                <ng-container *ngFor="let item of (columnsTable$ | async)">
+                  <th class="footable-sortable">
+                    {{item.title}}
+                  </th>
+                </ng-container>
+                <th class="footable-sortable" colspan="1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dataItem of (inputDataTable$ | async); let i=index">
+                  <th><mat-checkbox  class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]"></mat-checkbox></th>
+                  <th>{{i+1}}</th>
+                <ng-container *ngFor="let item of (columnsTable$ | async)">
+                  <td class="footable-sortable">
+                    {{dataItem[item.field]}}
+                  </td>
+                </ng-container>
+                <td></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th colspan=5 class="text-right">
+                  รวม
+                </th>
+                <ng-container *ngFor="let item of (columnsTable$ | async)">
+                  <ng-container *ngIf="item?.isSum;">
+                    <th class="footable-sortable">
+                      {{(aggregate[item.field]?.sum) || ''}}
+                    </th>
+                  </ng-container>
+
+                </ng-container>
+                <th></th>
+
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,8 +8,8 @@ export interface IRequestRewardDetail {
     LawbreakerLastName: string;
     LawbreakerOtherName: string;
     FineType: number;
-    PaymentDueDate: Date;
-    PaymentActualDate: Date;
+    PaymentDueDate: string;
+    PaymentActualDate: string;
     ReceiptBookNo: string;
     ReceiptNo: string;
     JudgementNo: string;

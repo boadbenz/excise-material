@@ -23,19 +23,19 @@ const SHARED_MODULES = [
   RouterModule,
   CardActionsModule,
   MatExpansionModule,
-  MatDialogModule
+  MatDialogModule,
+  ReactiveFormsModule,
+  FormsModule
 ];
 @NgModule({
   imports: [
     ...SHARED_MODULES,
     MyDatePickerTHModule,
-    ReactiveFormsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,
     MatDatepickerModule,
-    PaginationTableModule,
-    FormsModule
+    PaginationTableModule
   ],
   exports: [...SHARED_MODULES, ...REWARD_SHARED_COMPONENTS, ...REWARD_PIPES],
   declarations: [...REWARD_SHARED_COMPONENTS, ...REWARD_PIPES],

@@ -3,9 +3,13 @@ import { ColumnsInterface } from './shared/interfaces/columns-interface';
 
 export class RewardHelper {
   public formGroup: FormGroup;
-
+  public yy_thaibuddha = (new Date().getFullYear() + 543).toString().substr(2, 1);
   constructor() {}
 
+  public leftPad(str: string, len: number, ch = '0'): string {
+    len = len - str.length + 1;
+    return len > 0 ? new Array(len).join(ch) + str : str;
+  }
   // ===== create form =====
   validateSetting(valid) {
     const arr = [];
