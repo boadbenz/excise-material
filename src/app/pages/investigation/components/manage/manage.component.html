@@ -91,23 +91,36 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr *ngFor="let item of investigateDetail; let i=index">
+                        <tr *ngFor="let item of investigateDetail; let i=index;">
                             <td class="text-center">{{i+1}}</td>
                             <td class="text-center">{{item.InvestigateDetailID}}</td>
                             <td>
-                                {{item.InvestigateDateStart | date:'dd-MM-yyyy'}}
+                                {{item.InvestigateDateStart}}
                             </td>
                             <td>
-                                {{item.InvestigateDateEnd | date:'dd-MM-yyyy'}}
+                                {{item.InvestigateDateEnd}}
                             </td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                <ng-template ngFor let-item [ngForOf]="investigateDetail">
+                                    <ng-template ngFor let-staff [ngForOf]="item.InvestigateDetailStaff">
+                                        {{staff.Investigator}}
+                                    </ng-template>
+                                </ng-template>
+                            </td>
+                            <td>
+                                <ng-template ngFor let-item [ngForOf]="investigateDetail">
+                                    <ng-template ngFor let-staff [ngForOf]="item.InvestigateDetailStaff">
+                                        {{staff.Commander}}
+                                    </ng-template>
+                                </ng-template>
+                            </td>
                             <td class="text-center">
-                                <a href="javaScript:void(0);" class="text-secondary" (click)="onViewInvesDetail(item.InvestigateCode)" *ngIf="!showEditField">
+                                <a href="javaScript:void(0);" class="text-secondary" (click)="onViewInvesDetail(item.InvestigateDetailID)"
+                                    *ngIf="!showEditField">
                                     <i class="fa fa-eye fa-lg"></i>
                                 </a>
                             </td>
-                        </tr> -->
+                        </tr>
                     </tbody>
                 </table>
             </form>

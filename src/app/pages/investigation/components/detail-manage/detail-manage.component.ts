@@ -23,6 +23,8 @@ import { Store } from '@ngrx/store';
 import * as fromStore from '../../store';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
+import { MasDocumentMainService } from 'app/services/mas-document-main.service';
+import { InvestigateDetailStaff } from '../../models';
 
 
 @Component({
@@ -47,7 +49,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     card6 = true;
     card7 = true;
 
-    private _isSuccess: boolean;
+    _isSuccess: boolean;
     private mode: string;
     invesDetailId: string;
     private investMode: string;
@@ -64,9 +66,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     readonly valueofNews = fromGobalModels.ValueofNews;
     readonly costofNews = fromGobalModels.CostofNews;
 
-    readonly runningTable = 'ops_investigate_detail';
+    readonly runningTable = 'ops_investigate';
     readonly runningOfficeCode = '900012';
     readonly runningPrefix = 'AI';
+    readonly documentType = '3';
 
     typeheadOffice = new Array<fromGobalModels.MasOfficeModel>();
     typeheadStaff = new Array<fromGobalModels.MasStaffModel>();
@@ -109,6 +112,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         private s_transactionRunning: TransactionRunningService,
         private s_invest: fromServices.InvestgateService,
         private s_investDetail: fromServices.InvestgateDetailService,
+        private s_document: MasDocumentMainService,
         private router: Router,
         private store: Store<fromStore.AppState>
     ) {
@@ -148,15 +152,25 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .takeUntil(this.destroy$)
             .subscribe(status => {
                 this.showEditField = status.valueOf();
-                this.onEdit();
             });
+
+        this.navService.onEdit
+            .takeUntil(this.destroy$)
+            .subscribe(async status => {
+                if (status) {
+                    await this.navService.setOnEdit(false);
+                    this.onEdit();
+                }
+            })
 
         this.navService.onCancel
             .takeUntil(this.destroy$)
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnCancel(false);
-                    this.onCancel();
+                    if (confirm(Message.confirmAction)) {
+                        this.onCancel();
+                    }
                 }
             })
 
@@ -267,8 +281,54 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
             x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
 
+            this.pageRefreshStaff(x.InvestigateDetailStaff);
+
+            this.pageRefreshSuspect(x.InvestigateDetailSuspect);
+
+            this.pageRefreshLocal(x.InvestigateDetailLocal);
+
+            this.pageRefreshProduct(x.InvestigateDetailProduct);
+
             invest.patchValue(x);
         })
+    }
+
+    pageRefreshStaff(staff: fromModels.InvestigateDetailStaff[]) {
+        staff.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(staff, 'InvestigateDetailStaff');
+    }
+
+    pageRefreshSuspect(suspect: fromModels.InvestigateDetailSuspect[]) {
+        suspect.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(suspect, 'InvestigateDetailSuspect');
+    }
+
+    pageRefreshLocal(local: fromModels.InvestigateDetailLocal[]) {
+        local.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(local, 'InvestigateDetailLocal');
+    }
+
+    pageRefreshProduct(product: fromModels.InvestigateDetailProduct[]) {
+        product.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(product, 'InvestigateDetailProduct');
+    }
+
+    private async pageRefreshDocument(investDetailId: string) {
+        let _doc = new Array<fromModels.InvestigateDocumentModel>();
+
+        await this.s_document.MasDocumentMaingetAll(this.documentType, investDetailId)
+            .then((x) => {
+                if (!this.checkResponse(x)) return;
+                _doc = x.map(y => {
+                    y.IsModify = 'r';
+                    return y;
+                });
+            }).catch((error) => this.catchError(error));
+
+        if (!_doc.length) return;
+
+        _doc.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(_doc, 'InvestigateDocument');
     }
 
     onSDateChange(event: IMyDateModel) {
@@ -340,10 +400,26 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addStaff() {
         const lastIndex = this.InvestigateDetailStaff.length - 1;
         let item = new fromModels.InvestigateDetailStaff();
-        item.PositionName = '';
-        item.OfficeName = '';
-        item.OfficeShortName = '';
-        item.ContributorID = '';
+        item.StaffID = null;
+        item.ProgramCode = null;
+        item.ProcessCode = null;
+        item.InvestigateDetailID = null;
+        item.StaffCode = null;
+        item.TitleName = null;
+        item.FirstName = null;
+        item.LastName = null;
+        item.PositionCode = null;
+        item.PositionName = null;
+        item.PosLevel = null;
+        item.PosLevelName = null;
+        item.DepartmentCode = null;
+        item.DepartmentName = null;
+        item.DepartmentLevel = null;
+        item.OfficeCode = null;
+        item.OfficeName = null;
+        item.OfficeShortName = null;
+        item.ContributorID = null;
+        item.IsActive = null;
         item.IsModify = 'c'
         if (lastIndex < 0) {
             item.RowId = 1;
@@ -370,14 +446,26 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addLocal() {
         const lastIndex = this.InvestigateDetailLocal.length - 1;
         let item = new fromModels.InvestigateDetailLocal();
-        item.Address = '';
-        item.Village = '';
-        item.Building = '';
-        item.Room = '';
-        item.Floor = '';
-        item.Alley = '';
-        item.Road = '';
-        item.Region = '';
+        item.LocalID = null;
+        item.InvestigateDetailID = null;
+        item.GPS = null;
+        item.Location = null;
+        item.Address = null;
+        item.Village = null;
+        item.Building = null;
+        item.Room = null;
+        item.Alley = null;
+        item.Road = null;
+        item.Floor = null;
+        item.SubDistrictCode = null;
+        item.SubDistrict = null;
+        item.DistrictCode = null;
+        item.District = null;
+        item.ProvinceCode = null;
+        item.Province = null;
+        item.ZipCode = null;
+        item.IsActive = 1;
+        item.Region = null;
         item.IsModify = 'c';
         if (lastIndex < 0) {
             item.RowId = 1;
@@ -394,12 +482,38 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addProduct() {
         const lastIndex = this.InvestigateDetailProduct.length - 1;
         let item = new fromModels.InvestigateDetailProduct();
-        item.ProductID = 0;
+        item.ProductID = null;
+        item.InvestigateDetailID = null;
+        item.GroupName = null;
+        item.GroupCode = '1';
+        item.IsDomestic = null;
+        item.ProductCode = null;
+        item.BrandCode = null;
+        item.BrandNameTH = null;
+        item.BrandNameEN = null;
+        item.SubBrandCode = null;
+        item.SubBrandNameTH = null;
+        item.SubBrandNameEN = null;
+        item.ModelCode = null;
+        item.ModelName = null;
+        item.FixNo1 = null;
+        item.DegreeCode = null;
+        item.Degree = null;
+        item.SizeCode = null;
+        item.Size = null;
+        item.SizeUnitCode = null;
+        item.SizeUnitName = null;
+        item.FixNo2 = null;
+        item.SequenceNo = null;
+        item.ProductDesc = null;
+        item.CarNo = null;
+        item.Qty = null;
+        item.QtyUnit = null;
+        item.NetVolume = null;
+        item.NetVolumeUnit = null;
+        item.IsActive = null;
         item.IsModify = 'c';
         item.GroupCode = '1';
-        item.ProductDesc = '';
-        item.Qty = null;
-        item.QtyUnit = '';
         if (lastIndex < 0) {
             item.RowId = 1;
             this.InvestigateDetailProduct.push(this.fb.group(item));
@@ -415,7 +529,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addDocument() {
         const lastIndex = this.InvestigateDocument.length - 1;
         let item = new fromModels.InvestigateDocumentModel();
-        item.DocumentType = '3';
+        item.DocumentType = this.documentType;
         item.DataSource = null;
         item.FilePath = null;
         item.IsModify = 'c';
@@ -574,8 +688,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             IsModify: staff.IsModify == 'r' ? 'u' : staff.IsModify,
             RowId: staff.RowId,
             FullName: `${e.item.TitleName} ${e.item.FirstName} ${e.item.LastName}`,
-            ProgramCode: 'ILG60-01-03-00-00',
-            ProcessCode: '03',
+            ProgramCode: 2,
+            ProcessCode: '02',
             PositionCode: e.item.OperationPosCode,
             PositionName: e.item.OperationPosName,
             DepartmentCode: e.item.OfficeCode,
@@ -658,6 +772,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     catchError(error: any) {
         console.log(error);
+        this._isSuccess = false;
         this.endLoader();
     }
 
@@ -669,7 +784,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     onComplete() {
         if (this._isSuccess) {
-
             setTimeout(() => {
                 this.store.dispatch(new fromStore.RemoveInvestigate);
                 this.investigateFG.reset();
@@ -776,7 +890,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
         switch (this.mode) {
             case 'C':
-                if (this.investCode != 'NEW') {
+                if (this.investCode == 'NEW') {
                     await this.createWithOutInvestCode();
                 } else {
                     await this.createWithInvestCode();
@@ -818,7 +932,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
         let resRunning: any[] = await this.s_transactionRunning
             .TransactionRunninggetByCon(this.runningTable, this.runningOfficeCode)
-            .then(async (x: TransactionRunning[]) => x)
+            .then((x: TransactionRunning[]) => {
+                if (!this.checkResponse(x)) return;
+                return x;
+            })
 
         if (resRunning.length) {
             let tr = resRunning.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
@@ -855,12 +972,15 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async insertInvestigate(investCode: string) {
-        await this.s_invest.InvestigateinsAll(this.stateInvest).then(x => {
+        let invest = this.stateInvest;
+        invest.InvestigateCode = investCode;
+        await this.s_invest.InvestigateinsAll(invest).then(async x => {
             if (!this.checkIsSuccess(x)) return;
 
-            this.insertInvestigateDetail(investCode);
+            await this.insertInvestigateDetail(investCode);
 
-        }, (error) => this.catchError(error));
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
     }
 
     private async insertInvestigateDetail(investCode: string) {
@@ -869,15 +989,19 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
         form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
 
+        console.log("InvestigateDetailinsAll : ", JSON.stringify(form));
+
         await this.s_investDetail.InvestigateDetailinsAll(form).then(async x => {
             if (!this.checkIsSuccess(x)) return;
-
+            this.investCode = x.InvestigateCode;
+            this.invesDetailId = x.InvestigateDetailID;
             let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
             let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
             let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
 
             return Promise.all([suspect, product, ducument]);
-        })
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
 
     }
 
@@ -888,13 +1012,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
         this.s_investDetail.InvestigateDetailupdByCon(form).then(async x => {
             if (!this.checkIsSuccess(x)) return;
-
             let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
             let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
             let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
 
             return Promise.all([suspect, product, ducument]);
-        })
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
 
     }
 
@@ -904,6 +1028,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 x.InvestigateDetailID = investDetailId;
                 switch (x.IsModify) {
                     case 'd':
+                        if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailSuspectupdDelete(x.SuspectID.toString())
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -935,6 +1060,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 x.InvestigateDetailID = investDetailId;
                 switch (x.IsModify) {
                     case 'd':
+                        if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailProductupdDelete(x.ProductID.toString())
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -966,6 +1092,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 x.ReferenceCode = investDetailId.toString();
                 switch (x.IsModify) {
                     case 'd':
+                        if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailProductupdDelete(x.ReferenceCode)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
