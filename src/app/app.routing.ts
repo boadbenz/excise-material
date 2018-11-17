@@ -52,10 +52,10 @@ export const routes: Routes = [
     }, {
         path: 'reward', component: LayoutComponent,
         children: [
-            { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
-            { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
-            { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
+            // { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
+            // { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
+            // { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
+            // { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
         ]
     }, {
         path: 'reduction', component: LayoutComponent,
