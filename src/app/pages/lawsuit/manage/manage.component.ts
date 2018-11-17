@@ -739,41 +739,39 @@ export class ManageComponent implements OnInit {
 
     if (!confirm("ยืนยันการทำรายการหรือไม่")) {
       return;
-    }
-    if (IsLawsuitComplete == 1) {
-      // this.ngOnInit();
-      this.navService.setCancelButton(false);
-      this.navService.setSaveButton(false);
-      this.navService.setEditField(true);
-      this.navService.showFieldEdit.subscribe(async p => {
-        this.showEditField = true;
-        this.ngOnInit();
-      });
     } else {
-      return;
-      // wait for logical IsLawsuitComplete == 0
-      this.lawsuitService.GetArrestIndicmentDetailgetByCon(indictmentID).then(result => {
-        console.log('result====>', result);
-        if (result.LawsuitJudgement) {
-
-        } else {
-          // this.ngOnInit();
-          this.navService.setEditField(true);
-          this.navService.showFieldEdit.subscribe(async p => {
-            this.showEditField = true;
-
+      if (IsLawsuitComplete == 1) {
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+        this.navService.setEditField(true);
+        this.navService.showFieldEdit.subscribe(async p => {
+          this.showEditField = true;
+          this.ngOnInit();
+        });
+      } else {
+        this.lawsuitService.GetArrestIndicmentDetailgetByCon(indictmentID).then(result => {
+          console.log('result====>', result);
+          if (result.LawsuitJudgement) {
+            // case 2.1.1
+          } else {
             // this.ngOnInit();
-          });
-        }
-      });
-      this.navService.setEditField(true);
-      this.navService.setCancelButton(false);
-      this.navService.setSaveButton(false);
+            this.navService.setEditField(true);
+            this.navService.showFieldEdit.subscribe(async p => {
+              this.showEditField = true;
 
+              // this.ngOnInit();
+            });
+          }
+        });
+
+        this.navService.setEditField(true);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+      }
+      this.navService.setPrintButton(true);
+      this.navService.setDeleteButton(true);
+      this.navService.setEditButton(true);
     }
-    this.navService.setPrintButton(true);
-    this.navService.setDeleteButton(true);
-    this.navService.setEditButton(true);
   }
 
   private async onSave() {
@@ -865,8 +863,19 @@ export class ManageComponent implements OnInit {
           });
         } else {
           await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
-          await this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].IndictmentDetailID).then(response => {
-            console.log(response)
+          await this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].IndictmentDetailID).then(async response => {
+            if (response.LawsuitJudgement.length != 0) {
+
+            } else {
+              await this.lawsuitService.LawsuitinsAll(json).then(async response => {
+                if (response.IsSuccess == "True") {
+                  alert("บันทึกสำเร็จ");
+                  console.log('response', response);
+                } else {
+
+                }
+              });
+            }
           })
 
         }
