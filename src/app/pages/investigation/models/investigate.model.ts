@@ -51,6 +51,9 @@ export class InvestigateDetailStaff {
     RowId: number;
     FullName: string;
     IsModify: string;
+
+    Commander: string;
+    Investigator: string;
 }
 
 export class InvestigateDetailSuspect {

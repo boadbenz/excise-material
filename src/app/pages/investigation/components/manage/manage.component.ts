@@ -12,7 +12,7 @@ import { NavigationService } from 'app/shared/header-navigation/navigation.servi
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { Message } from 'app/config/message';
 import { PreloaderService } from 'app/shared/preloader/preloader.component';
-import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker } from 'app/config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker, toLocalShort } from 'app/config/dateFormat';
 import { IMyDateModel } from 'mydatepicker-th';
 import { Subject } from 'rxjs/Subject';
 import * as fromStore from '../../store';
@@ -50,12 +50,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     investigateForm: FormGroup;
 
     myDatePickerOptions = MyDatePickerOptions;
+    investigateDetail = new Array<fromModels.InvestigateDetail>();
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
-    get InvestigateTeam(): FormArray {
-        return this.investigateForm.get('InvestigateTeam') as FormArray;
-    }
+    // get InvestigateDetail(): FormArray {
+    //     return this.investigateForm.get('InvestigateDetail') as FormArray;
+    // }
 
     constructor(
         private router: Router,
@@ -65,6 +66,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ngbModel: NgbModal,
         private sidebarService: SidebarService,
         private preloader: PreloaderService,
+        private s_invest: fromService.InvestgateService,
         private store: Store<fromStore.AppState>
     ) {
         // set false
@@ -112,6 +114,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.enableBtnModeR();
                     break;
             }
+
+            this.pageLoad();
         });
     }
 
@@ -176,11 +180,43 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private pageLoad() {
-
+        if (this.stateInvest) {
+            this.pageRefreshInvestigate(this.stateInvest);
+        } else {
+            if (this.investCode == 'NEW') return;
+            this.s_invest.InvestigategetByCon(this.investCode)
+                .then((x: fromModels.InvestigateModel) => {
+                    if (!this.checkResponse(x)) return;
+                    this.pageRefreshInvestigate(x)
+                });
+        }
     }
 
-    private pageRefresh() {
+    private pageRefreshInvestigate(x: fromModels.InvestigateModel) {
+        x.DateStart = setDateMyDatepicker(x.DateStart);
+        x.DateEnd = setDateMyDatepicker(x.DateEnd);
 
+        let investDetail = x.InvestigateDetail;
+        investDetail.map(id => {
+            id.InvestigateDateStart = toLocalShort(id.InvestigateDateStart);
+            id.InvestigateDateEnd = toLocalShort(id.InvestigateDateEnd);
+            let staff = id.InvestigateDetailStaff
+                .filter(staff => staff.ContributorID == '2' || staff.ContributorID == '3')
+                .map(staff => {
+                    switch (staff.ContributorID) {
+                        case '2':
+                            staff.Investigator = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
+                            break;
+                        case '3':
+                            staff.Commander = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
+                            break;
+                    }
+                    return staff;
+                });
+            id.InvestigateDetailStaff = staff;
+        })
+        this.investigateDetail = investDetail;
+        this.investigateForm.patchValue(x);
     }
 
     private onCreate() {
@@ -189,6 +225,16 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private onReviced() {
 
+    }
+
+    checkResponse(res: any) {
+        switch (res.IsSuccess) {
+            case 'False':
+            case false:
+                return false;
+            default:
+                return true;
+        }
     }
 
     onSDateChange(event: IMyDateModel) {
@@ -270,5 +316,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     isObject = (obj) => obj === Object(obj);
+
+    private setItemFormArray(array: any[], formControl: string) {
+        if (array !== undefined && array.length) {
+            const itemFGs = array.map(item => this.fb.group(item));
+            const itemFormArray = this.fb.array(itemFGs);
+            this.investigateForm.setControl(formControl, itemFormArray);
+        }
+    }
 
 }
