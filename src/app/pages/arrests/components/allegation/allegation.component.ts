@@ -102,7 +102,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.33');
+    this.sidebarService.setVersion('0.0.0.34');
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -551,15 +551,15 @@ export class AllegationComponent implements OnInit, OnDestroy {
         if (staff.length <= 0) {
           alert('ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ')
           return
-        }
-        if (staff.filter(x => x.ContributorID == '').length > 0) {
+      }
+      if (staff.filter(x => x.ContributorID == '').length > 0) {
           alert('กรุณาเลือกฐานะของผู้จับกุม');
           return;
-        }
-        if (staff.filter(x => x.ContributorID == '7').length <= 0) {
-          alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้ร่วมจับกุม” อย่างน้อย 1 รายการ');
+      }
+      if (staff.filter(x => x.ContributorID == '6').length <= 0) {
+          alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ');
           return;
-        }
+      }
       }
     }
 

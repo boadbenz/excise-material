@@ -184,7 +184,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.33');
+        this.sidebarService.setVersion('0.0.0.34');
         this.active_route();
         if (this.arrestFG) {
             setTimeout(() => {
@@ -282,8 +282,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert('กรุณาเลือกฐานะของผู้จับกุม');
                     return;
                 }
-                if (staff.filter(x => x.ContributorID == '7').length <= 0) {
-                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้ร่วมจับกุม” อย่างน้อย 1 รายการ');
+                if (staff.filter(x => x.ContributorID == '6').length <= 0) {
+                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ');
                     return;
                 }
                 if (!this.ArrestIndictment.value.length) {
