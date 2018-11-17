@@ -142,7 +142,7 @@ export class InvestigateDetailProduct {
     Qty: number;
     QtyUnit: string;
     NetVolume: number;
-    NetVolumeUnit: number;
+    NetVolumeUnit: string;
     IsActive: number;
 
     RowId: number;

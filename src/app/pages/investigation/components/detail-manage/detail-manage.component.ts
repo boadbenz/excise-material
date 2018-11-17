@@ -24,8 +24,7 @@ import * as fromStore from '../../store';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
-
-import * as Iinvestigate from '../../models/investigate.model'
+import { InvestigateDetailStaff } from '../../models';
 
 
 @Component({
@@ -400,20 +399,38 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     addStaff() {
         const lastIndex = this.InvestigateDetailStaff.length - 1;
-        let item = new fromModels.InvestigateDetailSuspect();
-        console.log(item);
-        
-        // item.IsModify = 'c'
-        // if (lastIndex < 0) {
-        //     item.RowId = 1;
-        //     this.InvestigateDetailStaff.push(this.fb.group(item));
-        //     return;
-        // }
-        // const lastDoc = this.InvestigateDetailStaff.at(lastIndex).value;
-        // if (lastDoc.ContributorID) {
-        //     item.RowId = lastDoc.RowId + 1;
-        //     this.InvestigateDetailStaff.push(this.fb.group(item));
-        // }
+        let item = new fromModels.InvestigateDetailStaff();
+        item.StaffID = null;
+        item.ProgramCode = null;
+        item.ProcessCode = null;
+        item.InvestigateDetailID = null;
+        item.StaffCode = null;
+        item.TitleName = null;
+        item.FirstName = null;
+        item.LastName = null;
+        item.PositionCode = null;
+        item.PositionName = null;
+        item.PosLevel = null;
+        item.PosLevelName = null;
+        item.DepartmentCode = null;
+        item.DepartmentName = null;
+        item.DepartmentLevel = null;
+        item.OfficeCode = null;
+        item.OfficeName = null;
+        item.OfficeShortName = null;
+        item.ContributorID = null;
+        item.IsActive = null;
+        item.IsModify = 'c'
+        if (lastIndex < 0) {
+            item.RowId = 1;
+            this.InvestigateDetailStaff.push(this.fb.group(item));
+            return;
+        }
+        const lastDoc = this.InvestigateDetailStaff.at(lastIndex).value;
+        if (lastDoc.ContributorID) {
+            item.RowId = lastDoc.RowId + 1;
+            this.InvestigateDetailStaff.push(this.fb.group(item));
+        }
     }
 
     addSuspect(suspect: fromModels.InvestigateDetailSuspect) {
@@ -429,14 +446,26 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addLocal() {
         const lastIndex = this.InvestigateDetailLocal.length - 1;
         let item = new fromModels.InvestigateDetailLocal();
-        item.Address = '';
-        item.Village = '';
-        item.Building = '';
-        item.Room = '';
-        item.Floor = '';
-        item.Alley = '';
-        item.Road = '';
-        item.Region = '';
+        item.LocalID = null;
+        item.InvestigateDetailID = null;
+        item.GPS = null;
+        item.Location = null;
+        item.Address = null;
+        item.Village = null;
+        item.Building = null;
+        item.Room = null;
+        item.Alley = null;
+        item.Road = null;
+        item.Floor = null;
+        item.SubDistrictCode = null;
+        item.SubDistrict = null;
+        item.DistrictCode = null;
+        item.District = null;
+        item.ProvinceCode = null;
+        item.Province = null;
+        item.ZipCode = null;
+        item.IsActive = 1;
+        item.Region = null;
         item.IsModify = 'c';
         if (lastIndex < 0) {
             item.RowId = 1;
@@ -453,12 +482,38 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addProduct() {
         const lastIndex = this.InvestigateDetailProduct.length - 1;
         let item = new fromModels.InvestigateDetailProduct();
-        item.ProductID = 0;
+        item.ProductID = null;
+        item.InvestigateDetailID = null;
+        item.GroupName = null;
+        item.GroupCode = '1';
+        item.IsDomestic = null;
+        item.ProductCode = null;
+        item.BrandCode = null;
+        item.BrandNameTH = null;
+        item.BrandNameEN = null;
+        item.SubBrandCode = null;
+        item.SubBrandNameTH = null;
+        item.SubBrandNameEN = null;
+        item.ModelCode = null;
+        item.ModelName = null;
+        item.FixNo1 = null;
+        item.DegreeCode = null;
+        item.Degree = null;
+        item.SizeCode = null;
+        item.Size = null;
+        item.SizeUnitCode = null;
+        item.SizeUnitName = null;
+        item.FixNo2 = null;
+        item.SequenceNo = null;
+        item.ProductDesc = null;
+        item.CarNo = null;
+        item.Qty = null;
+        item.QtyUnit = null;
+        item.NetVolume = null;
+        item.NetVolumeUnit = null;
+        item.IsActive = null;
         item.IsModify = 'c';
         item.GroupCode = '1';
-        item.ProductDesc = '';
-        item.Qty = null;
-        item.QtyUnit = '';
         if (lastIndex < 0) {
             item.RowId = 1;
             this.InvestigateDetailProduct.push(this.fb.group(item));
@@ -668,13 +723,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     selectItemQtyUnit(e: any, i: number) {
         this.InvestigateDetailProduct.at(i).patchValue({
-            QtyUnit: e.item.DutyUnitCode,
+            QtyUnit: e.item.DutyCode,
         })
     }
 
     selectItemNetVolumeUnit(e: any, i: number) {
         this.InvestigateDetailProduct.at(i).patchValue({
-            NetVolumeUnit: e.item.DutyUnitCode,
+            NetVolumeUnit: e.item.DutyCode,
         })
     }
 
@@ -760,7 +815,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         });
 
     private async onEdit() {
-        // await this.loadMasterData();
+        await this.loadMasterData();
     }
 
     private onCancel() {

@@ -81,6 +81,8 @@ export class SuspectModalComponent implements OnInit {
     let law = [];
     await list.filter(item => item.IsActive == 1)
       .map(async (item: fromModels.InvestigateMasSuspectModel, i) => {
+        item.SuspectReferenceID = item.SuspectID;
+        item.IsActive = 1;
         item.RowId = i + 1;
         item.IsChecked = Acceptability.INACCEPTABLE;
         law.push(setViewSuspect(item));
