@@ -3,176 +3,68 @@ import { LayoutComponent } from './shared/layout/layout.component';
 import { AuthGuard } from './pages/login/auth.guard';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  },
-  {
-    path: 'login',
-    loadChildren: './pages/login/login.module#LoginModule'
-  },
-  {
-    path: 'home',
-    loadChildren: './pages/starter/starter.module#StarterModule',
-    component: LayoutComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'notice',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'list',
-        loadChildren: './pages/notices/list/list.module#ListModule'
-      },
-      {
-        path: 'manage/:mode/:code',
-        loadChildren: './pages/notices/manage/manage.module#ManageModule'
-      },
-      {
-        path: 'suspect/:mode/:code',
-        loadChildren: './pages/notices/suspect/suspect.module#SuspectModule'
-      }
-    ]
-  },
-  {
-    path: 'arrest',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: './pages/arrests/arrest.module#ArrestModule'
-    // [
-    //     { path: 'list', loadChildren: './pages/arrests/list/list.module#ListModule' },
-    //     { path: 'manage/:mode/:code', loadChildren: './pages/arrests/manage/manage.module#ManageModule' },
-    //     { path: 'lawbreaker/:mode/:code', loadChildren: './pages/arrests/lawbreaker/lawbreaker.module#LawbreakerModule' },
-    //     { path: 'allegation/:mode/:code', loadChildren: './pages/arrests/allegation/allegation.module#AllegationModule' }
-    // ]
-  },
-  {
-    path: 'investigation',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'list',
-        loadChildren: './pages/investigation/list/list.module#ListModule'
-      },
-      {
-        path: 'manage/:mode/:code',
-        loadChildren: './pages/investigation/manage/manage.module#ManageModule'
-      },
-      {
-        path: 'detail-manage/:mode/:code',
-        loadChildren:
-          './pages/investigation/detail-manage/detail-manage.module#DetailManageModule'
-      }
-    ]
-  },
-  {
-    path: 'prove',
-    component: LayoutComponent,
-    children: [
-      {
-        path: 'list',
-        loadChildren: './pages/prove/list/list.module#ListModule'
-      },
-      {
-        path: 'manage/:mode/:code1/:code2',
-        loadChildren: './pages/prove/manage/manage.module#ManageModule'
-      }
-    ]
-  },
-  {
-      path: 'income', component: LayoutComponent,
-      children: [
-          { path: 'list', loadChildren: './pages/income/list/list.module#ListModule' },
-          { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
-      ]
-  },
-  {
-    path: 'lawsuit',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'list',
-        loadChildren: './pages/lawsuit/list/list.module#ListModule'
-      },
-      {
-        path: 'manage/:mode',
-        loadChildren: './pages/lawsuit/manage/manage.module#ManageModule'
-      },
-      {
-        path: 'detail/:mode',
-        loadChildren: './pages/lawsuit/detail/detail.module#DetailModule'
-      }
-    ]
-  },
-  {
-    path: 'fine',
-    component: LayoutComponent,
-    children: [
-      {
-        path: 'list',
-        loadChildren: './pages/fine/list/list.module#ListModule'
-      },
-      {
-        path: 'manage/:mode/:code1/:code2/:code3',
-        loadChildren: './pages/fine/manage/manage.module#ManageModule'
-      },
-      {
-        path: 'detail',
-        loadChildren: './pages/fine/detail/detail.module#DetailModule'
-      }
-    ]
-  },
-  {
-    path: 'reward',
-    component: LayoutComponent,
-    loadChildren: './pages/reward/reward.module#RewardModule'
-  },
-  {
-    path: 'reward_old',
-    component: LayoutComponent,
-    children: [
-      {
-        path: 'list',
-        loadChildren: './pages/reward_old/list/list.module#ListModule'
-      },
-      {
-        path: 'manage/:mode/:code',
-        loadChildren: './pages/reward_old/manage/manage.module#ManageModule'
-      },
-      {
-        path: 'bribe/:mode',
-        loadChildren: './pages/reward_old/bribe/bribe.module#BribeModule'
-      },
-      {
-        path: 'reward/:mode/:caseSelect',
-        loadChildren: './pages/reward_old/reward/reward.module#RewardModule'
-      }
-    ]
-  },
-  {
-    path: 'reduction',
-    component: LayoutComponent,
-    children: [
-      {
-        path: 'list',
-        loadChildren: './pages/reduction/list/list.module#ListModule'
-      },
-      {
-        path: 'manage/:mode',
-        loadChildren: './pages/reduction/manage/manage.module#ManageModule'
-      },
-      {
-        path: 'manage/:mode/:code',
-        loadChildren:
-          './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule'
-      }
-    ]
-  },
+    {
+        path: '', redirectTo: 'home', pathMatch: 'full'
+    }, {
+        path: 'login', loadChildren: './pages/login/login.module#LoginModule'
+    }, {
+        path: 'home', loadChildren: './pages/starter/starter.module#StarterModule', component: LayoutComponent, canActivate: [AuthGuard]
+    }, {
+        path: 'notice', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/notices/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/notices/manage/manage.module#ManageModule' },
+            { path: 'suspect/:mode/:code', loadChildren: './pages/notices/suspect/suspect.module#SuspectModule' }
+        ]
+    }, {
+        path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
+        loadChildren: './pages/arrests/arrest.module#ArrestModule'
+    }, {
+        path: 'investigation', component: LayoutComponent, canActivate: [AuthGuard],
+        loadChildren: './pages/investigation/investigation.module#InvestigationModule'
+    }, {
+        path: 'prove', component: LayoutComponent,
+        children: [
+            { path: 'list', loadChildren: './pages/prove/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code1/:code2/:code3/:code4/:code5', loadChildren: './pages/prove/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'income', component: LayoutComponent,
+        children: [
+            { path: 'list', loadChildren: './pages/income/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
+        ]
+    }, {
+        path: 'lawsuit', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/lawsuit/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/lawsuit/manage/manage.module#ManageModule' },
+            { path: 'detail/:mode', loadChildren: './pages/lawsuit/detail/detail.module#DetailModule' }
+        ]
+    }, {
+        path: 'fine', component: LayoutComponent,
+        children: [
+            { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
+            { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
+        ]
+    }, {
+        path: 'reward', component: LayoutComponent,
+        children: [
+            { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
+            { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
+            { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
+        ]
+    }, {
+        path: 'reduction', component: LayoutComponent,
+        children: [
+            { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
+            { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule' }
+        ]
+    },
 
   {
     path: 'accordion',

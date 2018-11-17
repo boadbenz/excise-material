@@ -25,6 +25,7 @@ import { MainMasterService } from './services/main-master.service';
 import { HttpClientModule } from '@angular/common/http';
 
 import * as fromArrestReducers from './pages/arrests/store/reducers/';
+import * as fromInvestReducers from './pages/investigation/store/reducers';
 import { TransactionRunningService } from './services/transaction-running.service';
 import { MasDocumentMainService } from './services/mas-document-main.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,8 +55,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         StoreModule.forRoot(
             {
                 arrest: fromArrestReducers.arrestReducer,
-                arrestProduct: fromArrestReducers.productReducer,
-                arrestIndictment: fromArrestReducers.indictmentReducer
+                invest: fromInvestReducers.investReducer
             })
     ],
     providers: [

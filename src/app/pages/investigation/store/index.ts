@@ -4,5 +4,5 @@ export * from './actions'
 export * from './reducers'
 
 export interface AppState {
-    readonly arrest: fromModels.Arrest;
+    readonly invest: fromModels.InvestigateModel;
 }
