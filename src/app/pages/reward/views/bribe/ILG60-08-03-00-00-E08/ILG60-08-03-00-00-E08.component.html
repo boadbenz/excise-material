@@ -4,10 +4,13 @@
       <div class="form-group row">
         <label class="col-form-label col-md-4">เลขที่ใบแจ้งความนำจับ : </label>
         <div class="col-md-8">
-          <select name="" id="" formControlName="NoticeCodeAndName">
-            <!-- <option [value]="item.CommandID" *ngFor="let item of RequestCommand">
-              {{item.ArrestCode + ' ' }}
-            </option> -->
+          <select name="" id="" formControlName="NoticeCodeAndName" class="form-control">
+            <option value="" selected>
+              - เลือกเลขที่ใบแจ้งความนำจับ -
+            </option>
+            <option [value]="item.value" *ngFor="let item of RequestCommand_NoticeCode_list">
+              {{item.text}}
+            </option>
           </select>
         </div>
       </div>
@@ -69,23 +72,33 @@
         <th class="footable-sortable">ใบเสร็จเลขที่</th>
         <th class="footable-sortable">เลขที่อ้างอิง</th>
         <th class="footable-sortable">งวดชำระ</th>
+        <th class="footable-sortable">ค่าปรับตามงวด</th>
         <th class="footable-sortable">เงินสินบน</th>
-        <th class="footable-sortable">เงินสินบนสุทธิ</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="footable">
-        <td class="text-center">1</td>
-        <td class="">นายธวัชชัย บิงขุนทด</td>
-        <td class="">เปรียบเทียบคดี</td>
-        <td>10-ม.ค.-2560</td>
-        <td class="text-center">33</td>
-        <td class="">001/2561</td>
-        <td class="">1/1</td>
-        <td>1,000,000.00</td>
-        <td>200,000.00</td>
-        <td>50,000.00</td>
+      <tr class="footable" *ngFor="let item of tableDetail;let i=index">
+        <td class="text-center">{{i+1}}</td>
+        <td class="">{{item.LawbreakerName}}</td>
+        <td class="">{{item.FineTypeName}}</td>
+        <td>{{item.PaymentDate}}</td>
+        <td class="text-center">{{item.ReceiptBookNo}}</td>
+        <td class="">{{item.Receipt}}</td>
+        <td class="">{{item.PaymentPeriodNo}}</td>
+        <td>{{item.PaymentFine}}</td>
+        <td>{{item.BribeMoney}}</td>
+        <td>{{item.NetBribeMoney }}</td>
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <th class="text-right" colspan="7">
+          รวม :
+        </th>
+        <td>{{total()?.PaymentFine}}</td>
+        <td>{{total()?.BribeMoney}}</td>
+        <td>{{total()?.NetBribeMoney }}</td>
+      </tr>
+    </tfoot>
   </table>
 </div>
