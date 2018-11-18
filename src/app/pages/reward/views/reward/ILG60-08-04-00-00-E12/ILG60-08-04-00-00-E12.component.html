@@ -80,6 +80,43 @@
               </td>
               <td></td>
             </tr>
+            <tr class="footable" *ngFor="let item of datatable | sort: i; let i=index;">
+              <td>
+                <mat-checkbox class="filled-in chk-col-indigo" ></mat-checkbox>
+              </td>
+              <td class="text-center">{{i+2}}</td>
+              <td>
+                <input class="form-control" type="text" [value]="item.TitleName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.FullName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.PositionName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.PosLevelName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.ContributorName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.FirstPart" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.SecondPart" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.FirstMoney" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.SecondMoney" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.SecondMoney" [attr.disabled]="'disabled'">
+              </td>
+              <td></td>
+            </tr>
             <tr class="footable" *ngFor="let item of formGroup['controls'].sharedBribeReward.controls | sort: i; let i=index;"
               [formGroupName]="i">
               <td>
@@ -99,7 +136,12 @@
                 <input class="form-control" type="text" formControlName="PosLevelName">
               </td>
               <td>
-                <input class="form-control" type="text" formControlName="ContributorName">
+                <input type="hidden" formControlName="ContributorName">
+                <select class="form-control" formControlName="ContributorID">
+                  <ng-container *ngFor="let item of ContributorList">
+                    <option *ngIf="item.value < 4" [value]="item.value">{{item.text}}</option>
+                  </ng-container>
+                </select>
               </td>
               <td>
                 <input class="form-control" type="number" formControlName="FirstPart">
@@ -129,19 +171,19 @@
               <td></td>
               <td class="text-right">รวมทั้งสิ้น:</td>
               <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstPart.sum">
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstPart.sum | currency:' '">
               </td>
               <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondPart.sum">
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondPart.sum | currency:' '">
               </td>
               <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstMoney.sum">
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstMoney.sum | currency:' '">
               </td>
               <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondMoney.sum">
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondMoney.sum | currency:' '">
               </td>
               <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.ToTalMoney.sum">
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.ToTalMoney.sum | currency:' '">
               </td>
               <td></td>
             </tr>
@@ -154,7 +196,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
           <div class="col-md-7">
-            <input class="form-control" type="number" [value]="sumTotal()?.SumMoney" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumMoney | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -164,7 +206,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumFirstMoney" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumFirstMoney | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -172,11 +214,12 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumFirstMoneyPerPart" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumFirstMoneyPerPart | currency:' '"
+              [attr.disabled]="'disabled'">
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="sumTotal()?.FirstRemainder" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="sumTotal()?.FirstRemainder | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -186,7 +229,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoney" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoney | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -194,11 +237,13 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoneyPerPart" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoneyPerPart | currency:' '"
+              [attr.disabled]="'disabled'">
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="sumTotal()?.SecondRemainder" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="sumTotal()?.SecondRemainder | currency:' '"
+              [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>

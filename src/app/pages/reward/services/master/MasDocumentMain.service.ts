@@ -28,4 +28,10 @@ export class MasDocumentMainService extends MasterHelperService {
       ReferenceCode: ReferenceCode
     });
   }
+
+  public MasDocumentMainupdDelete({ DocumentID }): Observable<any> {
+    return this.http.post(`${this.ApiPrefixUrl}/MasDocumentMainupdDelete`, {
+      DocumentID: DocumentID
+    });
+  }
 }

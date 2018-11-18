@@ -144,7 +144,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
           })
           .subscribe((RequestBribeReward: IRequestBribeReward[]) => {
             this.ILG60_08_04_00_00_E08_DATA$.next({
-              methodName: 'RequestBribeReward',
+              methodName: 'RequestBribeRewardgetByIndictmentID',
               data: RequestBribeReward
             }); // 1.1.10
 

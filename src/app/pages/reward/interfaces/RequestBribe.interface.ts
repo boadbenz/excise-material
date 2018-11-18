@@ -58,25 +58,25 @@ export interface IRequestBribeinsAllResponse extends IResponseCommon {
 }
 
 export interface IRequestBribeupdByCon {
-  RequestBribeID: number;
-  RequestBribeRewardID: number;
-  RequestBribeCode: string;
-  CommandDetailID: number;
-  RequestDate: string;
-  RequestTime: string;
-  StationCode: string;
-  Station: string;
-  BribeTotal: number;
-  BribeRemainder: number;
-  Informeracknowledge: string;
-  StationOfPOA: string;
-  POADate: string;
-  POATime: string;
-  POANo: string;
-  StationCodeOfPOA: string;
-  IsActive: number;
+  RequestBribeID?: number;
+  RequestBribeRewardID?: number;
+  RequestBribeCode?: string;
+  CommandDetailID?: number;
+  RequestDate?: string;
+  RequestTime?: string;
+  StationCode?: string;
+  Station?: string;
+  BribeTotal?: number;
+  BribeRemainder?: number;
+  Informeracknowledge?: string;
+  StationOfPOA?: string;
+  POADate?: string;
+  POATime?: string;
+  POANo?: string;
+  StationCodeOfPOA?: string;
+  IsActive?: number;
 
-  RequestBribeStaff: Array<IRequestBribeStaff>;
+  RequestBribeStaff?: Array<IRequestBribeStaff>;
 }
 
 // tslint:disable-next-line:no-empty-interface

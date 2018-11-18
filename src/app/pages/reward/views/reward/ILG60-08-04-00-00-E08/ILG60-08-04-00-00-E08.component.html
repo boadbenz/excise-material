@@ -58,7 +58,7 @@
       <div class="card-body">
         <!-- <app-table-data [columns]="columnsTable$ | async" [data]="inputDataTable$ | async" [options]="TableDataOptions"></app-table-data> -->
         <div class="table-responsive table-striped no-wrap">
-          {{checkList | json}}
+          <!-- {{checkList | json}} -->
           <table class="dataTable table table-sm table-striped table-hover">
             <thead>
               <tr>
@@ -66,26 +66,80 @@
                   <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkAll"></mat-checkbox>
                 </th>
                 <th>ลำดับ</th>
-                <ng-container *ngFor="let item of (columnsTable$ | async)">
-                  <th class="footable-sortable">
-                    {{item.title}}
-                  </th>
-                </ng-container>
+                <th class="footable-sortable ng-star-inserted">
+                  ชื่อผู้ต้องหา
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  วันที่ชำระ
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  ใบเสร็จเล่มที่
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  เลขที่อ้างอิง
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  งวดชำระ
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  ค่าปรับตามงวด
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  เงินสินบน
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  เงินรางวัล
+                </th>
+
                 <th class="footable-sortable" colspan="1"></th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let dataItem of listData; let i=index">
-                <th>
+                <td>
                   <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]" (change)="checkboxHandle()"></mat-checkbox>
-                </th>
-                <th>{{i+1}}</th>
-                <ng-container *ngFor="let item of (columnsTable$ | async)">
-                  <td class="footable-sortable">
-                    {{dataItem[item.field]}}
-                  </td>
-                </ng-container>
-                <td></td>
+                </td>
+                <td>{{i+1}}</td>
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['LawbreakerName']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['PaymentDueDate']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['ReceiptBookNo']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['ReceiptNo']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['PaymentPeriodNo']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['PaymentFine'] | currency : ' '}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['BribeMoney'] | currency : ' '}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['RewardMoney'] | currency : ' '}}
+                </td>
+
+                <td class="footable-sortable" colspan="1"></td>
               </tr>
             </tbody>
             <tfoot>
@@ -98,7 +152,7 @@
                 <ng-container *ngFor="let item of (columnsTable$ | async)">
                   <ng-container *ngIf="item?.isSum;">
                     <th class="footable-sortable">
-                      {{(aggregate[item.field]?.sum) || 0}}
+                      {{((aggregate[item.field]?.sum) || 0) | currency: ' '}}
                     </th>
                   </ng-container>
 

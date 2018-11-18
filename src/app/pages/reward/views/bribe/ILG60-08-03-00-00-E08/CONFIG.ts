@@ -4,6 +4,18 @@ import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-int
 import { Input, Output, EventEmitter } from '@angular/core';
 import { IFormChange } from 'app/pages/reward/interfaces/FormChange';
 
+// tslint:disable-next-line:class-name
+export interface IILG60_08_03_00_00_E08_DATA {
+  insDetailIDs?: number[];
+  delDetailIDs?: number[];
+  CommandDetailID?: number;
+  NoticeCodeAndName?: string;
+  RequestBribeCode?: string;
+  Station?: string;
+  RequestDate?: string;
+  RequestTime?: string;
+  Informeracknowledge?: string;
+}
 export class CONFIG extends BribeConfig {
   @Output() public formData: EventEmitter<IFormChange> = new EventEmitter();
   @Input()
@@ -92,7 +104,9 @@ export class CONFIG extends BribeConfig {
     {
       title: 'วันที่ชำระ',
       field: 'PaymentDate',
-      default: `${this.setZero((new Date).getHours())}.${this.setZero((new Date).getMinutes())} น.`
+      default: `${this.setZero(new Date().getHours())}.${this.setZero(
+        new Date().getMinutes()
+      )} น.`
     },
     {
       title: 'ใบเสร็จเล่มที่',
