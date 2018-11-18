@@ -551,7 +551,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.8');
+    this.sidebarService.setVersion('0.0.0.6');
     // this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -685,17 +685,17 @@ export class ManageComponent implements OnInit {
   }
 
   private async onNextPage() {
-    let indictmentID: string;
+    let IndictmentID: string;
     let lawsuitID: string;
     this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
       params => {
         lawsuitID = params.LawsuitID;
-        indictmentID = params.IndictmentID;
+        lawsuitID = params.IndictmentID;
       }
     );
 
     let IsProve = 0;
-    this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
+    this.lawsuitService.LawsuitArrestGetByCon(lawsuitID).then(res => {
 
       IsProve = res[0].LawsuitArrestIndicment[0].IsProve;
       console.log('result====>', res);
@@ -722,63 +722,50 @@ export class ManageComponent implements OnInit {
   }
 
   private async onCancel() {
-    this.preLoaderService.setShowPreloader(true);
-    let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
-    let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
-    let indictmentID: string;
-    if (IsLawsuitComplete == 0) {
-
-    }else {
-    // let IsLawsuitComplete = 1;
-      this.activeRoute.queryParams.subscribe(
-        params => { this.LawsuitID = params.LawsuitID;  indictmentID = params.IndictmentID; }
-      );
-      let ArrestIndicmentDetail = await this.lawsuitService.GetArrestIndicmentDetailgetByCon(IndictmentDetailID)
-      console.log(ArrestIndicmentDetail)
-    }
-    
-
-    // let IsLawsuitComplete = 0;
-    // this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
-
-    //   IsLawsuitComplete = res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
-    // });
-
-    // if (!confirm("ยืนยันการทำรายการหรือไม่")) {
-    //   return;
-    // } else {
-    //   if (IsLawsuitComplete == 1) {
-    //     this.navService.setCancelButton(false);
-    //     this.navService.setSaveButton(false);
-    //     this.navService.setEditField(true);
-    //     this.navService.showFieldEdit.subscribe(async p => {
-    //       this.showEditField = true;
-    //       this.ngOnInit();
-    //     });
-    //   } else {
-    //     this.lawsuitService.GetArrestIndicmentDetailgetByCon(indictmentID).then(result => {
-    //       console.log('result====>', result);
-    //       if (result.LawsuitJudgement) {
-    //         // case 2.1.1
-    //       } else {
-    //         // this.ngOnInit();
-    //         this.navService.setEditField(true);
-    //         this.navService.showFieldEdit.subscribe(async p => {
-    //           this.showEditField = true;
-
-    //           // this.ngOnInit();
-    //         });
-    //       }
-    //     });
-
-    //     this.navService.setEditField(true);
-    //     this.navService.setCancelButton(false);
-    //     this.navService.setSaveButton(false);
+    let indictmentID = this.IndictmentID;
+    // this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
+    //   params => {
+    //     this.LawsuitID = params.LawsuitID;
+    //     indictmentID = params.IndictmentID;
     //   }
-    //   this.navService.setPrintButton(true);
-    //   this.navService.setDeleteButton(true);
-    //   this.navService.setEditButton(true);
-    // }
+    // );
+    let IsLawsuitComplete = await this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
+      return res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
+    });
+    if (!confirm("ยืนยันการทำรายการหรือไม่")) {
+      return;
+    } else {
+      if (IsLawsuitComplete == 1) {
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+        this.navService.setEditField(true);
+        this.navService.showFieldEdit.subscribe(async p => {
+          this.showEditField = true;
+          this.ngOnInit();
+        });
+      } else {
+        let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
+        this.lawsuitService.GetArrestIndicmentDetailgetByCon(IndictmentDetailID).then(result => {
+          console.log('result====>', result);
+          if (result.LawsuitJudgement) {
+            // case 2.1.1
+          } else {
+            // this.ngOnInit();
+            this.navService.setEditField(true);
+            this.navService.showFieldEdit.subscribe(async p => {
+              this.showEditField = true;
+              this.ngOnInit();
+            });
+          }
+        });
+        this.navService.setEditField(true);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+      }
+      this.navService.setPrintButton(true);
+      this.navService.setDeleteButton(true);
+      this.navService.setEditButton(true);
+    }
   }
 
   private async onSave() {
@@ -1135,8 +1122,9 @@ export class ManageComponent implements OnInit {
           let isProve = res[0]['LawsuitArrestIndicment'][0]['IsProve'];
           let lawsuitType = res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'];
           console.log('+++IsLawsuitComplete', IsLawsuitComplete);
+          console.log(arrList)
+
           if (IsLawsuitComplete == 0) {
-            console.log(arrList)
 
             if (arrList.length != 0) {
               this.navService.setSaveButton(false);
@@ -1256,7 +1244,7 @@ export class ManageComponent implements OnInit {
             this.masOfficeList = masoffice || [];
           });
           console.log('IsLawsuitComplete ==== 0')
-          if (arrList.length != 0) {
+          if (LawsuitID > 0) {
             this.navService.setSaveButton(false);
             this.navService.setCancelButton(false);
             this.navService.setPrintButton(true);
@@ -1280,8 +1268,8 @@ export class ManageComponent implements OnInit {
   }
   async setlawsuitForm(res) {
     /// get IsLawsuit check box (IsLawsuitCheck)
-    console.log('IsLawsuitCheck',res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'])
-    console.log('IsOutsideCheck',res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'])
+    console.log('IsLawsuitCheck', res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'])
+    console.log('IsOutsideCheck', res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'])
 
     let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
     let IsLawsuitCheck = true;

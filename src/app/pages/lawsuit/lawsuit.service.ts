@@ -150,6 +150,11 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
+  async LawsuitJudgementupdDelete(JudgementID) {
+    const params = { JudgementID: JudgementID };
+    const url = `${appConfig.api7789}/LawsuitJudgementupdDelete`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }
 
   // async MasStaffMaingetAll() {
   //   const params = {};
