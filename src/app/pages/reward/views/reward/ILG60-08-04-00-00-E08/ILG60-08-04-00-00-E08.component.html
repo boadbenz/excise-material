@@ -1,13 +1,16 @@
 <div class="row">
   <div class="col-md-12">
     <!-- <app-form-group [columns]="columnsForm" ></app-form-group> -->
+    <!-- {{formGroup.value | json}} -->
     <form [formGroup]="formGroup" *ngIf="formGroup">
       <div class="row">
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label col-md-4">เลขที่อ้างอิง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" formControlName="ReferenceNo" disabled>
+              <select formControlName="ReferenceNo" class="form-control">
+                <option [value]="item" *ngFor="let item of ReferenceNoList">{{item}}</option>
+              </select>
             </div>
           </div>
         </div>
@@ -15,7 +18,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" formControlName="RequestRewardCode" disabled>
+              <input class="form-control" type="text" formControlName="RequestRewardCode" [attr.disabled]="true">
             </div>
           </div>
         </div>

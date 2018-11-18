@@ -78,7 +78,7 @@ export class CONFIG extends RewardConfig {
     {
       title: 'วันที่จัดทำ',
       field: 'RequestDate',
-      inputType: 'text',
+      inputType: 'date',
       default: this.setDateNow,
       isDisabled: false,
       title2: 'เวลา',

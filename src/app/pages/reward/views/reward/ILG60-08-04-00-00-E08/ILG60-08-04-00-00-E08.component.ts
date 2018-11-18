@@ -6,7 +6,7 @@ import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 import { IRequestCompare } from 'app/pages/reward/interfaces/RequestCompare';
 import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
 import { IRequestPaymentFine } from 'app/pages/reward/interfaces/RequestPaymentFine';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MyDatePickerOptions } from 'app/config/dateFormat';
 import { Observable } from 'rxjs/observable';
 import {
@@ -32,6 +32,7 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
   public RequestPaymentFine: IRequestPaymentFine[] = [];
   public listData: any[] = [];
   public MasOfficeMainList: string[] = [];
+  public ReferenceNoList: any[] = [];
   searchStation = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -47,10 +48,17 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private masOfficeService: MasOfficeService) {
+    private masOfficeService: MasOfficeService
+  ) {
     super();
 
-    this.formGroup = this.fb.group(this.createForm(this.columnsFormDefault));
+    this.formGroup = this.fb.group({
+      ReferenceNo: ['', Validators.required],
+      RequestRewardCode: ['Auto Generate'],
+      Station: ['', Validators.required],
+      RequestDate: [this.setDateNow],
+      RequestTime: [this.setTimeNow]
+    });
     this.inputData$.subscribe((res: IRewardBinding) => {
       if (typeof res !== 'undefined' && res && res !== null) {
         console.log('res', res);
@@ -73,6 +81,7 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
                 }`;
                 break;
             }
+            this.ReferenceNoList.push(newMapName);
             // console.log('dataRequestReward', dataRequestReward);
             break;
           case 'RequestComparegetByIndictmentID':
@@ -97,7 +106,8 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
               // // console.log('ReferenceNoData', columnsForm);
               // this.columnsForm = columnsForm;
               // columnsForm.forEach(f => {
-              this.formGroup.controls['ReferenceNo'].setValue(newMapName);
+              // this.formGroup.controls['ReferenceNo'].setValue(newMapName);
+              this.ReferenceNoList.push(newMapName);
               this.formGroup.controls['RequestRewardCode'].setValue(
                 'Auto Generate'
               );
@@ -148,10 +158,10 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
 
   ngOnInit() {
     this.masOfficeService
-    .MasOfficeMaingetAll()
-    .subscribe((Office: MasOfficeModel[]) => {
-      this.MasOfficeMainList = Office.map(m => m.OfficeName);
-    });
+      .MasOfficeMaingetAll()
+      .subscribe((Office: MasOfficeModel[]) => {
+        this.MasOfficeMainList = Office.map(m => m.OfficeName);
+      });
   }
 
   public checkChecked(arrBool: boolean[]): boolean {
