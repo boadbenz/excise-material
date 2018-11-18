@@ -209,7 +209,7 @@
                         <th style="width: 60px">หมู่ที่</th>
                         <th>อาคาร</th>
                         <th style="width: 100px">ห้อง</th>
-                        <th style="width: 60px">ชั้น</th>
+                        <!-- <th style="width: 60px">ชั้น</th> -->
                         <th>ตรอก/ซอย</th>
                         <th>ถนน</th>
                         <th style="width: 300px">ตำบล/อำเภอ/จังหวัด</th>
@@ -234,9 +234,9 @@
                         <td *ngIf="item.get('IsModify').value != 'd'">
                             <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField">
                         </td>
-                        <td *ngIf="item.get('IsModify').value != 'd'">
+                        <!-- <td *ngIf="item.get('IsModify').value != 'd'">
                             <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField">
-                        </td>
+                        </td> -->
                         <td *ngIf="item.get('IsModify').value != 'd'">
                             <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField">
                         </td>
@@ -250,7 +250,7 @@
 
                             <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion"
                                 [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterRegion"
-                                (selectItem)="selectItemLocaleRegion($event)" value="{{item.value.Region}}" />
+                                (selectItem)="selectItemLocaleRegion($event, i)" value="{{item.value.Region}}" />
                         </td>
                         <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
                             <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteLocal(i)">

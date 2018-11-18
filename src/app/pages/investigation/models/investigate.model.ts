@@ -89,7 +89,7 @@ export class InvestigateDetailSuspect {
 
 export class InvestigateDetailLocal {
     LocalID: number;
-    InvestigateDetailID: string;
+    InvestigateDetailID: number;
     GPS: string;
     Location: string;
     Address: string;
