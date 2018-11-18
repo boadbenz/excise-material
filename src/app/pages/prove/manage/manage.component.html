@@ -337,8 +337,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">คำสั่ง :</label>
                 <div class="col-lg-10 col-md-12 form-group ">
-                    <input type="text" [(ngModel)]="Command" name="Command" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField"
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" [(ngModel)]="Command" name="Command" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField">
                 </div>
             </div>
 
@@ -584,7 +583,7 @@
                                     <div class="form-group ">
                                             <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" 
                                             name="oProveProduct.ProductDesc"
-                                            [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}"
+                                            [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isPopupRequired}"
                                             required>
                                         <!-- <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" name="oProveProduct.ProductDesc" placeholder="พิมพ์ข้อความ" aria-label="Number"
                                             matInput [matAutocomplete]="auto7" (input)="onAutoProductChange($event.target.value)" (focus)="onAutoProductFocus($event.target.value)"
@@ -604,12 +603,14 @@
                                     <div class="form-group ">
                                         <input type="text" [(ngModel)]="oProveProduct.Qty" name="oProveProduct.Qty" 
                                             class="form-control form-control-sm" [disabled]="showEditField"
-                                            (input)="CalVatProve()">
+                                            (input)="CalVatProve()" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                    <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" 
+                                        class="form-control form-control-sm" [disabled]="showEditField"
+                                        [ngClass]="{'ng-touched':isPopupRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -622,13 +623,15 @@
                                     <div class="form-group ">
                                         <input type="number" [(ngModel)]="oProveProduct.NetVolume" name="oProveProduct.NetVolume" 
                                             class="form-control form-control-sm"
-                                            [disabled]="showEditField" (input)="CalVatProve()">
+                                            [disabled]="showEditField" (input)="CalVatProve()"
+                                            [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <select [(ngModel)]="oProveProduct.NetVolumeUnit" name="oProveProduct.NetVolumeUnit" class="form-control form-control-sm"
-                                        [disabled]="showEditField">
+                                    <select [(ngModel)]="oProveProduct.NetVolumeUnit" name="oProveProduct.NetVolumeUnit" 
+                                        class="form-control form-control-sm" [disabled]="showEditField"
+                                        [ngClass]="{'ng-touched':isPopupRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -644,7 +647,7 @@
                                     <label for="md_checkbox_7">ตามมูลค่าร้อยละ </label>&nbsp;&nbsp;
                                     <input type="number" [(ngModel)]="oProveProduct.ReferenceVatRate" name="oProveProduct.ReferenceVatRate" class="form-control form-control-sm"
                                         [disabled]="showEditField || !oProveProduct.IsReferenceVatRate" 
-                                        (input)="CalVatProve()">
+                                        (input)="CalVatProve()" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                 </div>
                             </div>
 
@@ -657,7 +660,8 @@
                                         (change)="ClickReferenceVatQty()">
                                     <label for="md_checkbox_8">ตามปริมาณต่อ </label>&nbsp;&nbsp;
                                     <input type="number" [(ngModel)]="oProveProduct.ReferenceVatQty" name="oProveProduct.ReferenceVatQty" class="form-control form-control-sm"
-                                        [disabled]="showEditField || !oProveProduct.IsReferenceVatQty">
+                                        [disabled]="showEditField || !oProveProduct.IsReferenceVatQty"
+                                        [ngClass]="{'ng-touched':isPopupRequired}" required>
                                 </div>
                             </div>
 
@@ -665,8 +669,10 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label"></label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
                                     <label for="">หน่วย </label>&nbsp;&nbsp;
-                                    <select [(ngModel)]="oProveProduct.ReferenceVatUnit" name="oProveProduct.ReferenceVatUnit" class="form-control form-control-sm"
-                                        [disabled]="showEditField || !oProveProduct.IsReferenceVatQty">
+                                    <select [(ngModel)]="oProveProduct.ReferenceVatUnit" name="oProveProduct.ReferenceVatUnit" 
+                                        class="form-control form-control-sm"
+                                        [disabled]="showEditField || !oProveProduct.IsReferenceVatQty"
+                                        [ngClass]="{'ng-touched':isPopupRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyUnitCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -680,7 +686,7 @@
                                     <input type="number" [(ngModel)]="oProveProduct.ReferenceVatValue" 
                                         name="oProveProduct.ReferenceVatValue" class="form-control form-control-sm"
                                         [disabled]="showEditField || !oProveProduct.IsReferenceVatQty"
-                                        (input)="CalVatProve()">
+                                        (input)="CalVatProve()" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                 </div>
                             </div>
 
@@ -692,7 +698,8 @@
                                         <input type="number" [(ngModel)]="oProveProduct.ReferenceRetailPrice" 
                                             name="oProveProduct.ReferenceRetailPrice" class="form-control form-control-sm"
                                             [disabled]="showEditField || !oProveProduct.IsReferenceVatRate" 
-                                            (input)="onKeyReferenceRetailPrice($event.target.value)">
+                                            (input)="onKeyReferenceRetailPrice($event.target.value)"
+                                            [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
 
@@ -701,7 +708,7 @@
                                     <select [(ngModel)]="oProveProduct.ReferenceRetailUnit" 
                                         name="oProveProduct.ReferenceRetailUnit" class="form-control form-control-sm"
                                         [disabled]="showEditField || !oProveProduct.IsReferenceVatRate"
-                                        (change)="changeReferenceRetailUnit()">
+                                        (change)="changeReferenceRetailUnit()" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyUnitCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -715,7 +722,7 @@
                                         <input type="number" [(ngModel)]="oProveProduct.RetailPrice" 
                                             name="oProveProduct.RetailPrice" class="form-control form-control-sm"
                                             [disabled]="showEditField || !oProveProduct.IsReferenceVatRate"
-                                            (input)="CalVatProve()">
+                                            (input)="CalVatProve()" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
 
@@ -723,7 +730,8 @@
                                 <div class="form-group col-lg-4 col-md-7">
                                     <select [(ngModel)]="oProveProduct.RetailUnit" name="oProveProduct.RetailUnit" 
                                         class="form-control form-control-sm" 
-                                        [disabled]="showEditField || !oProveProduct.IsReferenceVatRate">
+                                        [disabled]="showEditField || !oProveProduct.IsReferenceVatRate"
+                                        [ngClass]="{'ng-touched':isPopupRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyUnitCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -735,7 +743,8 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <input type="number" [(ngModel)]="oProveProduct.VatProve" name="oProveProduct.VatProve" class="form-control form-control-sm"
-                                            [disabled]="showEditField">
+                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required
+                                            (change)="VatProveFormat()">
                                     </div>
                                 </div>
                             </div>
@@ -757,13 +766,14 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <input type="number" [(ngModel)]="oProveProduct.QtyBalance" name="oProveProduct.QtyBalance" class="form-control form-control-sm"
-                                            [disabled]="showEditField">
+                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <select [(ngModel)]="oProveProduct.QtyBalanceUnit" name="oProveProduct.QtyBalanceUnit" class="form-control form-control-sm"
-                                        [disabled]="showEditField">
+                                    <select [(ngModel)]="oProveProduct.QtyBalanceUnit" name="oProveProduct.QtyBalanceUnit" 
+                                        class="form-control form-control-sm" [disabled]="showEditField"
+                                        [ngClass]="{'ng-touched':isPopupRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -775,13 +785,14 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <input type="number" [(ngModel)]="oProveProduct.NetVolumeBalance" name="oProveProduct.NetVolumeBalance" class="form-control form-control-sm"
-                                            [disabled]="showEditField">
+                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <select [(ngModel)]="oProveProduct.NetVolumeBalanceUnit" name="oProveProduct.NetVolumeBalanceUnit" class="form-control form-control-sm"
-                                        [disabled]="showEditField">
+                                    <select [(ngModel)]="oProveProduct.NetVolumeBalanceUnit" name="oProveProduct.NetVolumeBalanceUnit" 
+                                        class="form-control form-control-sm" [disabled]="showEditField"
+                                        [ngClass]="{'ng-touched':isPopupRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -813,7 +824,7 @@
                                 <div class="col-lg-9 col-md-6">
                                     <div class="form-group ">
                                         <input type="text" [(ngModel)]="oProveProduct.ProveScienceResult" name="oProveProduct.ProveScienceResult" class="form-control form-control-sm"
-                                            [disabled]="showEditField || !oProveProduct.IsProdScience">
+                                            [disabled]="showEditField">
                                     </div>
                                 </div>
                             </div>

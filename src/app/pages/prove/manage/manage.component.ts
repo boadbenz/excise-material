@@ -45,6 +45,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     LawsuitID: string;
     ProveID: string;
     isRequired: boolean | false;
+    isPopupRequired: boolean | false;
 
     // --- Array ---
     rawOptions = [];
@@ -205,6 +206,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.IsReceive = false;
         this.IsDelivery = false;
         this.IsOutside = false;
+        this.IsProdScience = false;
         this.showScienceField = true;
         this.ShowDeliveryField = true;
         this.ShowReceiveField = true;
@@ -216,15 +218,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ProveDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
         //this.ProveTime = await this.getCurrentTime();
         this.DeliveryDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
-        this.DeliverDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
         //this.DeliveryTime = await this.getCurrentTime();
-        this.ProveScienceDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
         //this.ProveScienceTime = await this.getCurrentTime();
 
         // if (this.ProveID != '0') {
         //     await this.getProveByID();
         // }
 
+        debugger
         await this.ProveArrestgetByCon();
     }
 
@@ -265,6 +266,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private navigate_Service() {
         this.sub = this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
+            this.ShowDeliveryField = p;
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
@@ -295,11 +297,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                     // คลิกเลือก “ส่งพิสูจน์ทางวิทยาศาสตร์”
                     if (this.IsProveScience) {
                         if (this.DeliveryDocNo == ""        // เลขที่หนังสือนำส่ง
+                            || this.ProveDate == null
                             || this.ProveScienceDate == null     // วันที่นำส่ง || this.ProveScienceTime == "" || this.ProveScienceTime == undefined
-                            || this.RequestNo == "" || this.RequestNo == undefined  // เลขที่คำขอ
-                            || this.ReportNo == "" || this.ReportNo == undefined    // เลขที่รายงานผล
                             || this.ScienceStaffName == ""       // ผู้พิสูจน์
-                            || this.Command == ""                // คำสั่ง
+                        // || this.Command == ""                // คำสั่ง
                         ) {
                             this.isRequired = true;
                             alert(Message.checkData);
@@ -309,9 +310,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }
                     // ไม่เลือก “ส่งพิสูจน์ทางวิทยาศาสตร์”
                     else {
-                        if (this.ProveScienceDate == null    // วันที่นำส่ง  || this.ProveScienceTime == "" || this.ProveScienceTime == undefined
+                        if (this.ProveDate == null    // วันที่นำส่ง  || this.ProveScienceTime == "" || this.ProveScienceTime == undefined
                             || this.ScienceStaffName == ""      // รหัผู้พิสูจน์
-                            || this.Command == ""               // คำสั่ง
+                            //|| this.Command == ""               // คำสั่ง
                         ) {
                             this.isRequired = true;
                             alert(Message.checkData);
@@ -459,8 +460,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         var isSuccess = true;
         await this.proveService.insAll(this.oProve).then(async res => {
             if (res.IsSuccess) {
+                this.ProveID = res.ProveID;
                 var ProveScienceID = "";
-                
+
                 // คลิกเลือก “ส่งพิสูจน์ทางวิทยาศาสตร์”
                 if (this.IsProveScience) {
                     this.oProveScience.ProveID = res.ProveID;
@@ -473,16 +475,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                         ProveScienceID = sRes.ProveScienceID;
                     }, (error) => { console.error(error); return false; });
                 }
-                
+
                 if (this.lsProveProduct.length > 0) {
                     this.lsProveProduct.map(async item => {
                         item.ProveID = res.ProveID;
 
-                        if(item.IsProdScience == true){
+                        if (item.IsProdScience == true) {
                             item.ProveScienceID = ProveScienceID;
                         }
 
                         await this.proveService.ProveProductinsAll(item).then(async pRes => {
+                            debugger
                             if (!pRes.IsSuccess) {
                                 isSuccess = pRes.IsSuccess;
                                 return false;
@@ -491,7 +494,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     });
                 }
 
-                debugger
+                
                 if (this.IsReceive) {
                     this.oProveDeliverProduct.ProveID = res.ProveID;
 
@@ -521,8 +524,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(Message.saveComplete);
                     //this.oRevenue = {};
                     this.onComplete();
-                    //this.router.navigate(['/income/manage']);
-                    this.router.navigate([`/income/manage/R/${this.ProveID}/${this.IndictmentID}`]);
+                    this.preloader.setShowPreloader(false);
+                    this.router.navigate([`/prove/manage/R/${this.ProveID}/${this.IndictmentID}`]);
                 }
             }
             else {
@@ -747,6 +750,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSaveButton(false);
 
         this.showEditField = true;
+        this.showScienceField = false;
+        this.ShowDeliveryField = false;
+        this.ShowReceiveField = false;
     }
     // openSuspect(e) {
     //     this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
@@ -922,7 +928,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ProveStation = `${this.oProve.ProveStation == 'null' ? '' : this.oProve.ProveStation}`;
                 this.Command = `${this.oProve.Command == 'null' ? '' : this.oProve.Command}`;
                 this.DeliveryStation = res.DeliveryStation;
-                
+
 
                 var PDate = this.oProve.ProveDate.toString().split(" ");
                 this.ProveDate = setDateMyDatepicker(new Date(PDate[0]));
@@ -971,13 +977,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                     item.Remarks = `${item.Remarks == null || item.Remarks == "null" ? '' : item.Remarks}`;
                     item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
                     item.ProveResult = `${item.ProveResult == null ? '' : item.ProveResult}`;
+                    item.VatProve = (+item.VatProve).toFixed(4);
                 });
 
                 // for (var i = 0; i < this.lsProveProduct.length; i += 1) {
                 //     this.lsProveProduct[i].ProductSeq = i;
                 // }
 
-                if(this.oProve.ProveScience.length > 0){
+                if (this.oProve.ProveScience.length > 0) {
                     this.oProve.ProveScience.map(item => {
                         item.DeliveryDocNo = `${item.DeliveryDocNo == null ? '' : item.DeliveryDocNo}`;
                         item.ProveScienceDate = `${item.ProveScienceDate == null ? '' : item.ProveScienceDate}`;
@@ -991,7 +998,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.ReportNo = this.oProve.ProveScience[0].ReportNo;
                     this.oProveScience = this.oProve.ProveScience[0];
                 }
-                
+
 
 
                 // -------------- Document -------------------------
@@ -1017,7 +1024,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }, (err: HttpErrorResponse) => {
             alert(err.message);
         });
-         
+
     }
 
     async ProveArrestgetByCon() {
@@ -1126,8 +1133,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.lsProveProduct = [];
 
                 this.lsProveProduct = this.ArrestProduct;
-                this.oProveProduct = {};
+                this.lsProveProduct.map(async item => {
+                    item.IsProdScience = false;
+                });
 
+                this.oProveProduct = {};
                 this.preloader.setShowPreloader(false);
             }
         }
@@ -1459,18 +1469,34 @@ export class ManageComponent implements OnInit, OnDestroy {
     OpenPopupProduct(i: number) {
         this.oProveProduct = {};
 
-        this.oProveProduct = this.lsProveProduct[i];
+        this.oProveProduct = Object.create(this.lsProveProduct[i]);
         this.ProductID = this.lsProveProduct[i].ProductID;
         this.iPopup = i;
         this.modePopup = "U";
+        this.isPopupRequired = false;
     }
 
     ClosePopupProduct() {
-        this.oProveProduct.ProductID = this.ProductID;
+        // if (this.oProveProduct.IsReferenceVatRate == true) {
+        //     if (this.oProveProduct.ReferenceVatRate == "" || this.oProveProduct.ReferenceVatRate == undefined
+        //         || this.oProveProduct.ReferenceRetailPrice == "" || this.oProveProduct.ReferenceRetailPrice == undefined
+        //         || this.oProveProduct.ReferenceRetailUnit == "" || this.oProveProduct.ReferenceRetailUnit == undefined
+        //         || this.oProveProduct.RetailPrice == "" || this.oProveProduct.RetailPrice == undefined
+        //         || this.oProveProduct.RetailUnit == "" || this.oProveProduct.RetailUnit == undefined
+        //         || this.oProveProduct.VatProve == "" || this.oProveProduct.VatProve == undefined
+        //     ) {
+        //         this.isPopupRequired = true;
+        //         alert(Message.checkData);
 
+        //         this.modal = this.modal.open(;
+        //         //return false;
+        //     }
+        // } 
+
+        this.oProveProduct.ProductID = this.ProductID;
         this.lsProveProduct[this.iPopup] = this.oProveProduct;
-        debugger
-        if(this.oProveProduct.IsProdScience == true){
+
+        if (this.oProveProduct.IsProdScience == true) {
             this.IsProveScience = true;
             this.showScienceField = false;
         }
@@ -1656,6 +1682,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     changeProveScience() {
         if (this.IsProveScience) {
             this.showScienceField = true;
+            this.ProveScienceDate = "";
 
             for (var i = 0; i < this.lsProveProduct.length; i += 1) {
                 this.lsProveProduct[i].IsProdScience = false;
@@ -1663,15 +1690,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
         else {
             this.showScienceField = false;
+            this.ProveScienceDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
         }
     }
 
     changeReceive() {
         if (this.IsReceive) {
             this.ShowReceiveField = true;
+            this.DeliverDate = "";
         }
         else {
             this.ShowReceiveField = false;
+            this.DeliverDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
         }
     }
 
@@ -1687,7 +1717,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     CalVatProve() {
         var paraVatProve = (((+this.oProveProduct.RetailPrice * +this.oProveProduct.ReferenceVatRate) / 100) * +this.oProveProduct.Qty).toString();
         var paraVatQty = +this.oProveProduct.ReferenceVatValue * +this.oProveProduct.NetVolume;
-        this.oProveProduct.VatProve = (+paraVatProve + +paraVatQty).toString();
+        this.oProveProduct.VatProve = (+paraVatProve + +paraVatQty).toFixed(4);
     }
 
     // Text Change ราคาขายปลีกแนะนำ
@@ -1723,5 +1753,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             this.CalVatProve();
         }
+    }
+
+    VatProveFormat() {
+        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve).toFixed(4);
     }
 }
