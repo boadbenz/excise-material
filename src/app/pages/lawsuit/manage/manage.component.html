@@ -219,12 +219,12 @@
               <label class="col-form-label text-right col-md-3">เลขที่คดีรับคำกล่าวโทษ : </label>
               <div class="col-md-4">
                 <input class="form-control" type="text" formControlName="LawsuitNo" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null" required>
+                  [ngClass]="{'ng-touched':isRequired}" required>
               </div>
               <label class="col-form-label text-center col-md-2">/</label>
               <div class="col-md-3">
                 <input class="form-control" type="text" formControlName="LawsuitNoSub" [readonly]="showEditField"
-                  [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null" required>
+                  [ngClass]="{'ng-touched':isRequired}" required>
               </div>
             </div>
           </div>
@@ -232,14 +232,14 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
               <div class="col-md-4">
-                <my-date-picker-th ngModel name="LawsuitDate" formControlName="LawsuitDate" placeholder="" locale="th"  [attr.disabled]="this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null"
+                <my-date-picker-th name="LawsuitDate" formControlName="LawsuitDate" placeholder="" locale="th" 
                   [disabled]="showEditField" [options]="LawsuitDateOptions" required></my-date-picker-th>
                 <!-- <input class="form-control" type="date" formControlName="LawsuitDate" [readonly]="showEditField"
                   [ngClass]="{'ng-touched':isRequired}" required> -->
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
               <div class="col-md-3">
-                <input class="form-control" type="text" formControlName="LawsuitTime" [readonly]="showEditField" [attr.disabled]="this.lawsuitForm.controls['IsLawsuitCheck'].value ? '' : null"
+                <input class="form-control" type="text" formControlName="LawsuitTime" [readonly]="showEditField"
                   [ngClass]="{'ng-touched':isRequired}" required>
               </div>
             </div>
@@ -250,10 +250,10 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-4">ผู้รับคดี : </label>
               <div class="col-md-8">
-                <input class="form-control" formControlName="FullName" type="text" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                <input class="form-control" [ngClass]="{'ng-touched':isRequired}" formControlName="FullName" type="text" [readonly]="showEditField" 
                   (input)="onChangeFullname($event.target.value)" (blur)="onBlurFullname()" name="FullName" required>
                 <div class="list-group" *ngIf="suggestions.length">
-                  <a class="list-group-item list-group-item-action" (click)="onChangeFullnameReslut(s)" style="cursor: pointer;"
+                  <a class="list-group-item list-group-item-action" style="cursor: pointer;" (click)="onChangeFullnameReslut(s)" 
                     *ngFor="let s of suggestions">{{s.FullName}}</a>
                 </div>
               </div>
@@ -328,12 +328,12 @@
               <td>{{item.controls['LawsuitNoRef'].value}}</td>
               <td>{{item.controls['LawBrakerFullName'].value}}</td>
               <td>
-                <select formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
-                  <option [value]="type.id" *ngFor="let type of lstype">{{type.name}}</option>
+                <select formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField || item.controls['LawsuitType'].value == 2 ? '' : null">
+                  <option [value]="type.id" *ngFor="let type of lstype; let i=index">{{type.name}}</option>
                 </select>
               </td>
               <td>
-                <select formControlName="LawsuitEnd" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null">
+                <select formControlName="LawsuitEnd" class="form-control form-control-sm" [attr.disabled]="showEditField || item.controls['LawsuitType'].value == 2 ? '' : null">
                   <option [value]="end.id" *ngFor="let end of lsend">{{end.name}}</option>
                 </select>
               </td>
@@ -341,7 +341,7 @@
                 <!-- <a href="javaScript:void(0);" class="text-danger" (click)="editTable(item, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a> -->
-                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 0" (click)="editTable(item, i)">
+                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 0" (click)="editTable(item.value, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a>
                 <!-- <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="item.controls['LawsuitType'].value == 0">

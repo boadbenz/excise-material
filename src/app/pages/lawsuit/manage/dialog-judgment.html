@@ -16,8 +16,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ชื่อผู้ต้องหา : </label>
               <div class="col-md-9">
-                <input class="form-control" formControlName="arrestName" type="text" [attr.disabled]="disabled ? '' : null"
-                  [(ngModel)]="judgmentModel.arrestName" name="arrestName">
+                <input class="form-control" formControlName="arrestName" type="text" disabled>
               </div>
             </div>
           </div>
@@ -26,8 +25,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ชื่อศาล: </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="justicName"
-                  [(ngModel)]="this.judgmentModel.justicName">
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="justicName">
               </div>
             </div>
           </div>
