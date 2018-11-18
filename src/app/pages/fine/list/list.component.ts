@@ -11,6 +11,7 @@ import { FormGroup, FormControl, NgForm } from "@angular/forms";
 import { stringify } from 'querystring';
 import { IMyDpOptions } from 'mydatepicker';
 import { toLocalShort } from 'app/config/dateFormat';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-list',
@@ -34,7 +35,8 @@ export class ListComponent implements OnInit, OnDestroy {
         private _router: Router,
         private navService: NavigationService,
         private fineService: FineService,
-        private preLoaderService: PreloaderService
+        private preLoaderService: PreloaderService,
+        private sidebarService: SidebarService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -111,6 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
+        this.sidebarService.setVersion('0.0.0.3');
         const form = new FormGroup({
             ArrestCode: new FormControl(""),
             LawsuitCode: new FormControl(""),

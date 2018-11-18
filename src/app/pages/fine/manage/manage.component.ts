@@ -26,6 +26,7 @@ import { async } from 'q';
 import { isArray } from 'jquery';
 import { FormGroup, FormControl, NgForm } from '@angular/forms';
 import { IMyDpOptions, IMyDate } from 'mydatepicker';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -136,8 +137,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     private LawsuitSV: LawsuitService,
     private MasterSV: MasterService,
     private router: Router,
-    private preloader: PreloaderService
+    private preloader: PreloaderService,
+    private sidebarService: SidebarService
   ) {
+    this.sidebarService.setVersion('0.0.0.3');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -185,118 +188,58 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   setDataObjectToSave() {
     const compare: any = {
-      'CompareCode': '1/2560',
-      'CompareDate': '2017-12-01 12:35:29.1234567 +07:00',
-      'CompareStationCode': '102',
-      'CompareStation': 'ระยอง',
-      'CompareSubdistrictCode': '580504',
-      'CompareSubdistrict': 'แม่โถ',
-      'CompareDistrictCode': '120',
-      'CompareDistrict': 'บางเขน',
-      'CompareProvinceCode': '02',
-      'CompareProvince': 'กรุงเทพ',
-      'AccuserSubdistrictCode': '580504',
-      'AccuserSubdistrict': 'แม่โถ',
-      'AccuserDistrictCode': '124',
-      'AccuserDistrict': 'คลองเตย',
-      'AccuserProvinceCode': '02',
-      'AccuserProvince': 'กรุงเทพ',
+      'CompareCode': '-',
+      'CompareDate': '-',
       'IsOutside': 0,
-      'LawsuitID': 1,
-      'IsActive': 1,
+      'LawsuitID': 0,
+      'IsActive': 0,
       'CompareDetail': [
         {
-          'CompareDetailID': 1,
-          'CompareID': 1,
-          'IndictmentDetailID': 1,
-          'CompareAction': 'แจ้งให้ญาติทราบ',
-          'LawbrakerTestimony': 'ยอมรับ',
-          'Fact': 'ยอมรับ',
+          'CompareDetailID': 0,
+          'CompareID': 0,
+          'IndictmentDetailID': 0,
+          'CompareAction': '-',
+          'LawbrakerTestimony': '-',
+          'Fact': '-',
           'IsRequest': 1,
-          'RequestForAction': 'แบบฟอร์ม',
-          'CompareReason': 'เปรียบเทียบ',
+          'RequestForAction': '-',
+          'CompareReason': '-',
           'IsProvisionalAcquittal': 1,
-          'Bail': 'ข้อมูลทดสอบ',
-          'Guaruntee': 'หลักประกัน',
-          'CompareFine': 1500,
-          'PaymentFineDate': '2017-12-01 12:35:29.1234567 +07:00',
-          'PaymentFineAppointDate': '2017-12-01 12:35:29.1234567 +07:00',
-          'PaymentVatDate': '2017-12-01 12:35:29.1234567 +07:00',
-          'TreasuryMoney': 1000,
-          'BribeMoney': 200,
-          'RewardMoney': 300,
-          'IsActive': 1,
-          'ApproveStationCode': '02',
-          'ApproveStation': 'ตลิ่งชัน',
-          'ApproveReportDate': '2017-12-01 12:35:29.1234567 +07:00',
-          'CommandNo': '1002',
-          'CommandDate': '2017-12-01 12:35:29.1234567 +07:00',
-          'CompareAuthority': 1,
-          'ApproveReportType': 1,
-          'MistreatNo': 1,
-          'FineType': 1,
-          'AdjustReason': 'เหตุผลในการับลด',
+          'Bail': '-',
+          'Guaruntee': '-',
+          'CompareFine': 0,
+          'PaymentFineDate': '-',
+          'PaymentFineAppointDate': '-',
+          'PaymentVatDate': '-',
+          'TreasuryMoney': 0,
+          'BribeMoney': 0,
+          'RewardMoney': 0,
+          'IsActive': 0,
+          'ApproveStationCode': '-',
+          'ApproveStation': '-',
+          'ApproveReportDate': '-',
+          'CommandNo': '-',
+          'CommandDate': '-',
+          'CompareAuthority': 0,
+          'ApproveReportType': 0,
+          'MistreatNo': 0,
+          'FineType': 0,
+          'AdjustReason': '-',
           'CompareDetailFine': [
             {
-              'CompareFineID': 1,
-              'CompareDetailID': 2,
-              'ProductID': 3,
-              'ProductFine': 200,
-              'VatValue': 7.5,
-              'FineRate': 5100,
-              'IsActive': 1,
-              'FineType': 1
+              'CompareFineID': 0,
+              'CompareDetailID': 0,
+              'ProductID': 0,
+              'ProductFine': 0,
+              'VatValue': 0,
+              'FineRate': 0,
+              'IsActive': 0,
+              'FineType': 0
             }
           ]
         }
       ],
-      'CompareStaff': [
-        {
-          'StaffID': 1,
-          'ProgramCode': 'ILG60-01-01',
-          'ProcessCode': '01',
-          'CompareID': 1,
-          'StaffCode': '134318',
-          'TitleName': 'นางสาว',
-          'FirstName': 'นริสรา',
-          'LastName': 'ภูผาม่าน',
-          'PositionCode': '1000',
-          'PositionName': 'BusinessAnalyst',
-          'PosLevel': '7',
-          'PosLevelName': 'ระดับ',
-          'DepartmentCode': '90501',
-          'DepartmentName': 'สท.ระยอง',
-          'DepartmentLevel': '1',
-          'OfficeCode': '10603',
-          'OfficeName': 'สท.ระยอง',
-          'OfficeShortName': 'สท.ระยอง',
-          'ContributorID': 19,
-          'IsActive': 1
-        }
-        ,
-        {
-          'StaffID': 2,
-          'ProgramCode': 'ILG60-01-01',
-          'ProcessCode': '01',
-          'CompareID': 251,
-          'StaffCode': '134318',
-          'TitleName': 'นางสาว',
-          'FirstName': 'นริสรา',
-          'LastName': 'ภูผาม่าน',
-          'PositionCode': '1000',
-          'PositionName': 'BusinessAnalyst',
-          'PosLevel': '7',
-          'PosLevelName': 'ระดับ',
-          'DepartmentCode': '90501',
-          'DepartmentName': 'สท.ระยอง',
-          'DepartmentLevel': '1',
-          'OfficeCode': '10603',
-          'OfficeName': 'สท.ระยอง',
-          'OfficeShortName': 'สท.ระยอง',
-          'ContributorID': 19,
-          'IsActive': 1
-        }
-      ]
+      'CompareStaff': []
     };
     this.dataToSave.compare = compare;
   }
@@ -315,6 +258,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.SectionNo = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].SectionNo;
       this.PenaltyDesc = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].Fine;
       // this.compareUserDetail =  resp[0].CompareArrestIndictment[0].CompareIndicmentDetail;
+      // this.dataToSave.compare.CompareStaff = resp[0].CompareArrestIndictment[0].CompareLawsuit[0].CompareLawsuitStaff;
       const ListCompareDetailTmp: any = resp[0].CompareArrestIndictment[0].CompareIndicmentDetail;
       const ListCompareDetailTmpData: any =  [];
       console.log(ListCompareDetailTmp);
@@ -410,9 +354,13 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   async CompareListgetByConAdv() {
     try {
-      // const resp: any = await this.fineService.postMethod('/CompareListgetByConAdv', {'ArrestCode': this.ArrestCode});
-      // this.LawsuiltCode = resp.IsOutside === 1 ? `น${resp.LawsuitNo}` : resp.LawsuitNo;
-      // this.ArrestStaffName = `${resp.TitleName}${resp.FirstName} ${resp.LastName}`;
+      const res: any = await this.fineService.postMethod('/CompareListgetByConAdv', {'ArrestCode': this.ArrestCode});
+      const resp: any = res[0];
+      if (resp) {
+        this.LawsuiltCode = resp.IsOutside === 1 ? `น${resp.LawsuitNo}` : resp.LawsuitNo;
+        this.dataToSave.compare.CompareCode = resp.CompareCode;
+        this.ArrestStaffName = `${resp.TitleName}${resp.FirstName} ${resp.LastName}`;
+      }
       // this.IndictmentID = resp[0].IndictmentID;
     } catch (err) {
       console.log(err);
@@ -553,8 +501,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setOnSave(false);
         if (this.CompareID == '0') {
           console.log(this.dataToSave);
-          await this.onInsCompare();
-          // this.router.navigate(['/fine/list']);
+          if (await this.onInsCompare()) {
+            this.router.navigate(['/fine/list']);
+          }
         } else {
           await this.onUpdCompare();
           await this.onComplete();
@@ -702,7 +651,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       // this.IndictmentID = res[0].ArrestIndicment[0].IndictmentID.toString();
       this.preloader.setShowPreloader(false);
     } catch (err) {
-      alert(err.message);
+      console.log(err.message);
     }
   }
   jsonCopy(src) {
@@ -837,7 +786,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
 
     }, (err: HttpErrorResponse) => {
-      alert(err.message);
+      console.log(err.message);
     });
 
 
@@ -963,7 +912,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
         */
       }, (err: HttpErrorResponse) => {
-        alert(err.message);
+        console.log(err.message);
       });
     }
 
@@ -985,7 +934,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(false);
       }
     }, (err: HttpErrorResponse) => {
-      alert(err.message);
+      console.log(err.message);
     });
   }
 
@@ -1057,23 +1006,32 @@ export class ManageComponent implements OnInit, OnDestroy {
     return `${datepicker.year}-${datepicker.month}-${datepicker.day}`;
   }
   async onInsCompare() {
+    let PaymentFineAppointDate: any = '';
+    let PaymentVatDate: any = '';
     try {
-      const data: any = {
-        'document_id': ''
-      };
+      if (this.advForm.controls.PaymentFineAppointDate.value) {
+        PaymentFineAppointDate = `${this.convertDatepickerToNormal(this.advForm.controls.PaymentFineAppointDate.value.date)} 00:00:00 +07:00`;
+      }
+      if (this.advForm.controls.PaymentVatDate.value) {
+        PaymentVatDate = `${this.convertDatepickerToNormal(this.advForm.controls.PaymentVatDate.value.date)} 00:00:00 +07:00`;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+ 
+    try {
       const compareDetail: any = {
         'LawbrakerTestimony': this.editUser.LawbrakerTestimony,
-        'Fact': 'ยอมรับ',
+        'Fact': this.compareUserDetailPopup.detailFact,
         'IsRequest': this.editUser.request,
-        'RequestForAction': 'แบบฟอร์ม',
-        'CompareReason': 'เปรียบเทียบ',
+        'RequestForAction': '-',
+        'CompareReason': '-',
         'IsProvisionalAcquittal': 1,
         'Bail': this.editUser.Bail,
         'Guaruntee': this.editUser.Guaruntee,
-        'CompareFine': 1500,
-        // 'PaymentFineDate': `${this.convertDatepickerToNormal(this.advForm.controls.PaymentFineAppointDate.value.date)} 00:00:00 +07:00`,
-        'PaymentFineAppointDate': `${this.convertDatepickerToNormal(this.advForm.controls.PaymentFineAppointDate.value.date)} 00:00:00 +07:00`,
-        'PaymentVatDate': `${this.convertDatepickerToNormal(this.advForm.controls.PaymentVatDate.value.date)} 00:00:00 +07:00`,
+        'CompareFine': 0,
+        'PaymentFineAppointDate': PaymentFineAppointDate,
+        'PaymentVatDate': PaymentVatDate,
         'TreasuryMoney': this.compareDataAllSum.sum3,
         'BribeMoney': this.compareDataAllSum.sum1,
         'RewardMoney': this.compareDataAllSum.sum2,
@@ -1082,15 +1040,17 @@ export class ManageComponent implements OnInit, OnDestroy {
       };
       this.dataToSave.compare.IsOutside = this.IsOutside;
       console.log(this.selDate);
-      this.dataToSave.compare.compareDetail = compareDetail;
+      this.dataToSave.compare.CompareDetail = compareDetail;
       this.dataToSave.compare.CompareDate = `${this.selDate.year}-${this.selDate.month}-${this.selDate.day} ${this.CompareTime.toString()} +07.00`;
       this.dataToSave.compare.LawSuitID = this.LawsuitID;
       console.log(this.dataToSave);
       const resp: any = await this.fineService.postMethod('/CompareinsAll', this.dataToSave.compare, '8881');
-      console.log(resp);
+      alert('บันทึกข้อมูลเสร็จสิ้น');
+      return true
 
     } catch (err) {
-      console.log(err);
+      alert(err.message);
+      return false
     }
 
   }
@@ -1146,7 +1106,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
 
     }, (err: HttpErrorResponse) => {
-      alert(err.message);
+      console.log(err.message);
     });
     // this.preloader.setShowPreloader(false);
   }
@@ -1263,6 +1223,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   StaffonAutoSelecteWord(event) {
+  
     this.oCompareStaff = {
       StaffID: this.CompareStaffID,
       ProgramCode: 'XCS-60',
@@ -1285,7 +1246,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       ContributorID: '18',
       IsActive: '1'
     };
-
+    console.log(event);
     if (this.CompareStaffID == '' || this.CompareStaffID == undefined) {
       this.oCompareStaff.IsNewItem = true;
     }
