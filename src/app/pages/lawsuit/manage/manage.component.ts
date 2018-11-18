@@ -551,7 +551,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.9');
+    this.sidebarService.setVersion('0.0.0.10');
     // this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -811,7 +811,7 @@ export class ManageComponent implements OnInit {
     else {
       let lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
       let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
-
+      let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
       return await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut).then(async res => {
         if (res.length != 0) {
           alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
@@ -839,13 +839,14 @@ export class ManageComponent implements OnInit {
             "OfficeCode": this.LawsuitStaffOnsave.OfficeCode,
             "OfficeName": this.LawsuitStaffOnsave.OfficeName,
             "OfficeShortName": this.LawsuitStaffOnsave.OfficeShortName,
-            "ContributorCode": "",
+            "ContributorID": 12,
             "IsActive": this.LawsuitStaffOnsave.IsActive
           })
+
           const json = {
             "LawsuitID": this.LawsuitID,
             "IndictmentID": this.IndictmentID,
-            "IsLawsuit": this.lawsuitForm.controls['IsLawsuitCheck'].value === false ? 0 : 1,
+            "IsLawsuit": isLaw,
             "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : null,
             "LawsuitNo": lawsuitNo,
             "LawsuitDate": _lawDate.jsdate,
@@ -873,24 +874,25 @@ export class ManageComponent implements OnInit {
               }
             });
           } else {
-            await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
+            // await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
             await this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].IndictmentDetailID).then(async response => {
               if (response.LawsuitJudgement.length != 0) {
                 console.log(response)
               } else {
                 await this.lawsuitService.LawsuitinsAll(json).then(async result => {
-                  console.log(result)
                   if (result.IsSuccess == "True") {
                     alert("บันทึกสำเร็จ");
+                    await this.lawsuitService.LawsuitArrestIndicmentupdByCon(this.IndictmentID)
+                    await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
                     let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
                     console.log(checkComplete)
                     if (checkComplete.length != 0) {
                       // ให้เด้งป๊อบอัพ
                     } else {
-                      await this.lawsuitService.LawsuitArrestupdByCon(checkComplete[0].ArrestCode)
+                      await this.lawsuitService.LawsuitArrestupdByCon(this.lawsuitArrestForm.value.ArrestCode)
                       this.showEditField = false;
                       console.log("case no Complete")
-                      // location.reload();
+                      location.reload();
                     }
                     this.preLoaderService.setShowPreloader(false);
                     // location.reload();
@@ -1193,7 +1195,7 @@ export class ManageComponent implements OnInit {
               console.log(arrestLaw)
               const middleName = (arrestLaw.LawbreakerMiddleName) ? arrestLaw.LawbreakerMiddleName : '';
               console.log('middleName', middleName)
-              item.lawBrakerFullName = `${arrestLaw.LawbreakerTitleName} ${arrestLaw.LawbreakerFirstName} ${middleName} ${arrestLaw.LawbreakerLastName}`
+              item.lawBrakerFullName = `${arrestLaw.LawbreakerTitleName ? arrestLaw.LawbreakerTitleName : ""} ${arrestLaw.LawbreakerFirstName} ${middleName} ${arrestLaw.LawbreakerLastName}`
               console.log(item.lawBrakerFullName)
             });
 
@@ -1284,16 +1286,15 @@ export class ManageComponent implements OnInit {
   }
   async setlawsuitForm(res) {
     /// get IsLawsuit check box (IsLawsuitCheck)
-    console.log('IsLawsuitCheck',res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'])
-    console.log('IsOutsideCheck',res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'])
+    console.log(res)
 
     let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
     let IsLawsuitCheck = true;
     if (islaw == 1) {
-      IsLawsuitCheck = true;
+      IsLawsuitCheck = false;
       this.lawsuitForm.controls['ReasonDontLawsuit'].setValue('');
     } else {
-      IsLawsuitCheck = false;
+      IsLawsuitCheck = true;
     }
 
     let isout = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'];
