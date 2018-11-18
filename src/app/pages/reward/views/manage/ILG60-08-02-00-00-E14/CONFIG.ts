@@ -57,7 +57,7 @@ export class CONFIG extends ManageConfig {
   public columnsTableDefault: ColumnsInterface[] = [
     {
       title: 'เลขที่คำร้องขอ',
-      field: 'RequestBribeCode'
+      field: 'RequestRewardCode'
     },
     {
       title: 'วันที่จัดทำคำร้องขอ',
@@ -69,7 +69,7 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'ลักษณะคดี',
-      field: 'FineType'
+      field: 'FineTypeName'
     },
     {
       title: 'วันที่ชำระเงิน',

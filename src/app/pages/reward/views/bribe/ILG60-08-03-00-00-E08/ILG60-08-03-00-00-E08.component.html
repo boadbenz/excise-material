@@ -1,13 +1,18 @@
-<form [formGroup]="formGroup">
+{{formGroup.value | json}}
+<form [formGroup]="formGroup" (change)="changeForm(formGroup)">
   <div class="row">
     <div class="col-md-6">
       <div class="form-group row">
+        <input type="hidden" formControlName="NoticeCodeAndName">
         <label class="col-form-label col-md-4">เลขที่ใบแจ้งความนำจับ : </label>
         <div class="col-md-8">
-          <select name="" id="" formControlName="NoticeCodeAndName">
-            <!-- <option [value]="item.CommandID" *ngFor="let item of RequestCommand">
-              {{item.ArrestCode + ' ' }}
-            </option> -->
+          <select formControlName="NoticeCodeAndName" class="form-control" (change)="selectChange(formGroup.controls['NoticeCodeAndName'].value)">
+            <option value="" selected>
+              - เลือกเลขที่ใบแจ้งความนำจับ -
+            </option>
+            <option [value]="item.value" *ngFor="let item of RequestCommand_NoticeCode_list">
+              {{item.text}}
+            </option>
           </select>
         </div>
       </div>
@@ -28,7 +33,7 @@
       <div class="form-group row">
         <label class="col-form-label col-md-4">เขียนที่ : </label>
         <div class="col-md-8">
-          <input class="form-control" type="text" formControlName="Station">
+          <input class="form-control" type="text" formControlName="Station" [ngbTypeahead]="searchStation">
         </div>
       </div>
     </div>
@@ -36,7 +41,8 @@
       <div class="form-group row">
         <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
         <div class="col-md-3">
-          <input class="form-control" type="text" formControlName="RequestDate">
+          <my-date-picker formControlName="RequestDate" placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions" ></my-date-picker>
+          <!-- <input class="form-control" type="text" formControlName="RequestDate"> -->
         </div>
         <label class="col-form-label text-center col-md-2">เวลา</label>
         <div class="col-md-3">
@@ -61,31 +67,45 @@
   <table class="dataTable table table-sm table-striped table-hover">
     <thead>
       <tr>
+        <th></th>
         <th class="footable-sortable text-center">ลำดับ</th>
         <th class="footable-sortable">ชื่อผู้ต้องหา</th>
         <th class="footable-sortable">ลักษณะคดี</th>
         <th class="footable-sortable">วันที่ชำระ</th>
         <th class="footable-sortable">ใบเสร็จเล่มที่</th>
-        <th class="footable-sortable">ใบเสร็จเลขที่</th>
         <th class="footable-sortable">เลขที่อ้างอิง</th>
         <th class="footable-sortable">งวดชำระ</th>
+        <th class="footable-sortable">ค่าปรับตามงวด</th>
         <th class="footable-sortable">เงินสินบน</th>
         <th class="footable-sortable">เงินสินบนสุทธิ</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="footable">
-        <td class="text-center">1</td>
-        <td class="">นายธวัชชัย บิงขุนทด</td>
-        <td class="">เปรียบเทียบคดี</td>
-        <td>10-ม.ค.-2560</td>
-        <td class="text-center">33</td>
-        <td class="">001/2561</td>
-        <td class="">1/1</td>
-        <td>1,000,000.00</td>
-        <td>200,000.00</td>
-        <td>50,000.00</td>
+      <tr class="footable" *ngFor="let item of tableDetail;let i=index">
+        <td>
+          <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]"></mat-checkbox>
+        </td>
+        <td class="text-center">{{i+1}}</td>
+        <td class="">{{item.LawbreakerName}}</td>
+        <td class="">{{item.FineTypeName}}</td>
+        <td>{{item.PaymentDate}}</td>
+        <td class="text-center">{{item.ReceiptBookNo}}</td>
+        <td class="">{{item.Receipt}}</td>
+        <td class="">{{item.PaymentPeriodNo}}</td>
+        <td>{{item.PaymentFine}}</td>
+        <td>{{item.BribeMoney}}</td>
+        <td>{{item.NetBribeMoney }}</td>
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <th class="text-right" colspan="8">
+          รวม :
+        </th>
+        <td>{{total()?.PaymentFine}}</td>
+        <td>{{total()?.BribeMoney}}</td>
+        <td>{{total()?.NetBribeMoney }}</td>
+      </tr>
+    </tfoot>
   </table>
 </div>

@@ -26,12 +26,12 @@ export interface IRequestBribeDetail {
 export interface IRequestBribeDetailinsAll extends IRequestBribeDetail {
 
 }
-export interface IRequestBribeDetail {
-  RequestBribeDetailID: number;
-  PaymentFineDetailID: number;
-  RequestBribeID: number;
-  IsActive: number;
-}
+// export interface IRequestBribeDetail {
+//   RequestBribeDetailID: number;
+//   PaymentFineDetailID: number;
+//   RequestBribeID: number;
+//   IsActive: number;
+// }
 
 export interface IRequestBribeDetailResponse extends IResponseCommon {
   RequestBribeDetailID?: number;

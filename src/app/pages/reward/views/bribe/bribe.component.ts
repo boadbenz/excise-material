@@ -28,6 +28,8 @@ import { MasDocumentModel } from 'app/models/mas-document.model';
 import { MasStaffModel } from 'app/models';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { RequestPaymentFineDetailService } from '../../services/RequestPaymentFineDetail.service';
+import { FormGroup } from '@angular/forms';
+import { IFormChange } from '../../interfaces/FormChange';
 
 @Component({
   selector: 'app-bribe',
@@ -54,17 +56,23 @@ export class BribeComponent extends BribeConfig implements OnInit {
       this.mode$.next(param['mode']);
       this.ArrestCode$.next(param['ArrestCode']);
       this.RequestBribeID$.next(param['RequestBribeID']);
-      this.RequestBribeRewardID$.next(
-        param['RequestBribeRewardID']
-      );
+      this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
+    });
+    this.navService.onSave.subscribe(save => {
+      if (save === true) {
+        this.saveButton();
+      }
+    });
+    this.navService.onCancel.subscribe(cancel => {
+      if (cancel === true) {
+        this.cancelButton();
+      }
     });
   }
 
   ngOnInit() {
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
-
-    this.setShowButton();
     this.navService.onPrevPage.subscribe(res => {
       this.rewardService.bribeState$.next({
         mode: 'B',
@@ -148,89 +156,106 @@ export class BribeComponent extends BribeConfig implements OnInit {
 
   private async saveButton() {
     // 1 START
-    // 1.1 'WAIT'
-    // 1.2 'WAIT'
-    // 1.3 'WAIT'
-    // 1.4 'WAIT'
-    // 1.5 'WAIT'
+    // 1.1
+    // 1.2
+    // 1.3
+    // 1.4
+    // 1.5
+    if (this.ILG60_08_03_00_00_E08_FORM_VALID) {
+      // 2
+      switch (this.mode$.getValue()) {
+        case 'C':
+          // 2.1
+          // 2.1.1
+          await this.transactionRunningService
+            .TransactionRunninggetByCon({
+              RunningTable: 'ops_requestbribe',
+              RunningOfficeCode: this.OfficeCode
+            })
+            .subscribe(async (res: ITransactionRunning[]) => {
+              // 2.1.2
+              if (res.length > 0) {
+                // 2.1.2(1)
+                const TransactionRunning: ITransactionRunning = res[0];
 
-    // 2
-    switch (this.mode$.getValue()) {
-      case 'C':
-        // 2.1
-        // 2.1.1
-        await this.transactionRunningService
-          .TransactionRunninggetByCon({
-            RunningTable: 'ops_requestbribe',
-            RunningOfficeCode: this.OfficeCode
-          })
-          .subscribe(async (res: ITransactionRunning[]) => {
-            // 2.1.2
-            if (res.length > 0) {
-              // 2.1.2(1)
-              const TransactionRunning: ITransactionRunning = res[0];
+                // 2.1.2(1.1)
+                await this.transactionRunningService
+                  .TransactionRunningupdByCon({
+                    RunningID: TransactionRunning.RunningID
+                  })
+                  .subscribe();
 
-              // 2.1.2(1.1)
-              await this.transactionRunningService
-                .TransactionRunningupdByCon({
-                  RunningID: TransactionRunning.RunningID
-                })
-                .subscribe();
+                // 2.1.2(1.2)
+                const RunningPrefix: string = this.leftPad(
+                  TransactionRunning.RunningPrefix,
+                  2
+                ); // 2.1.2(1.2(1))
+                const RunningOfficeCode: string = this.leftPad(
+                  TransactionRunning.RunningOfficeCode,
+                  6
+                ); // 2.1.2(1.2(2))
+                const RunningYear: string = this.leftPad(
+                  TransactionRunning.RunningYear,
+                  2
+                ); // 2.1.2(1.2(3))
+                const RunningNo: string = this.leftPad(
+                  (Number(TransactionRunning.RunningNo) + 1).toString(),
+                  5
+                ); // 2.1.2(1.2(4))
+                const RequestBribeCode = `${RunningPrefix}${RunningOfficeCode}${RunningYear}${RunningNo}`;
+                this.RequestBribeCode$.next(RequestBribeCode);
+              } else {
+                // 2.1.2(2)
+                // 2.1.2(2.1)
+                await this.transactionRunningService
+                  .TransactionRunninginsAll({
+                    RunningOfficeCode: this.OfficeCode, // 2.1.2(2.1.1)
+                    RunningTable: 'ops_requestbribe', // 2.1.2(2.1.2)
+                    RunningPrefix: 'BR' // 2.1.2(2.1.3)
+                  })
+                  .subscribe();
 
-              // 2.1.2(1.2)
-              const RunningPrefix: string = this.leftPad(
-                TransactionRunning.RunningPrefix,
-                2
-              ); // 2.1.2(1.2(1))
-              const RunningOfficeCode: string = this.leftPad(
-                TransactionRunning.RunningOfficeCode,
-                6
-              ); // 2.1.2(1.2(2))
-              const RunningYear: string = this.leftPad(
-                TransactionRunning.RunningYear,
-                2
-              ); // 2.1.2(1.2(3))
-              const RunningNo: string = this.leftPad(
-                (Number(TransactionRunning.RunningNo) + 1).toString(),
-                5
-              ); // 2.1.2(1.2(4))
-              const RequestBribeCode = `${RunningPrefix}${RunningOfficeCode}${RunningYear}${RunningNo}`;
-              this.RequestBribeCode$.next(RequestBribeCode);
-            } else {
-              // 2.1.2(2)
-              // 2.1.2(2.1)
-              await this.transactionRunningService
-                .TransactionRunninginsAll({
-                  RunningOfficeCode: this.OfficeCode, // 2.1.2(2.1.1)
-                  RunningTable: 'ops_requestbribe', // 2.1.2(2.1.2)
-                  RunningPrefix: 'BR' // 2.1.2(2.1.3)
-                })
-                .subscribe();
+                // 2.1.2(2.2)
+                const RunningOfficeCode = this.leftPad(this.OfficeCode, 6);
+                const yy_thaibuddha = (new Date().getFullYear() + 543)
+                  .toString()
+                  .substr(2, 1);
+                const RequestBribeCode = `BR${RunningOfficeCode}${yy_thaibuddha}00001`;
+                this.RequestBribeCode$.next(RequestBribeCode);
+              }
+            });
 
-              // 2.1.2(2.2)
-              const RunningOfficeCode = this.leftPad(this.OfficeCode, 6);
-              const yy_thaibuddha = (new Date().getFullYear() + 543)
-                .toString()
-                .substr(2, 1);
-              const RequestBribeCode = `BR${RunningOfficeCode}${yy_thaibuddha}00001`;
-              this.RequestBribeCode$.next(RequestBribeCode);
-            }
-          });
+          // 2.1.3
+          await this.requestBribeService
+            .RequestBribeinsAll({
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue(), // 2.1.3(1)
+              RequestBribeCode: this.RequestBribeCode$.getValue(), // 2.1.3(2)
+              CommandDetailID: this.ILG60_08_03_00_00_E08_FORM_DATA
+                .CommandDetailID // 2.1.3(4) 'WAIT'
+            })
+            .subscribe();
 
-        // 2.1.3
-        await this.requestBribeService
-          .RequestBribeinsAll({
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue(), // 2.1.3(1)
-            RequestBribeCode: this.RequestBribeCode$.getValue(), // 2.1.3(2)
-            CommandDetailID: this.CommandDetailID$.getValue() // 2.1.3(4) 'WAIT'
-          })
-          .subscribe();
+          // 2.1.4 'WAIT
+          // this.requestPaymentFineDetailService.RequestPaymentFineDetailupdByCon({
+          //   PaymentFineDetailID:
+          // })
+          break;
+      }
+    } else {
+      alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+    }
+  }
 
-        // 2.1.4 'WAIT
-        // this.requestPaymentFineDetailService.RequestPaymentFineDetailupdByCon({
-        //   PaymentFineDetailID:
-        // })
-        break;
+  private cancelButton() {
+    if (confirm('ยืนยันการทำรายการหรือไม่')) {
+      switch (this.mode$.getValue()) {
+        case 'C':
+          break;
+        case 'R':
+          this.pageLoad();
+          break;
+      }
+    } else {
     }
   }
 
@@ -315,5 +340,20 @@ export class BribeComponent extends BribeConfig implements OnInit {
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
     this.navService.setPrevPageButton(true);
+  }
+
+  public changeForm(form: IFormChange) {
+    const { FormName, FormData } = form;
+
+    switch (FormName) {
+      case 'ILG60-08-03-00-00-E08':
+        this.ILG60_08_03_00_00_E08_FORM_VALID = FormData.valid;
+        this.ILG60_08_03_00_00_E08_FORM_DATA = FormData.value;
+        break;
+      case 'ILG60-08-03-00-00-E12':
+        this.ILG60_08_03_00_00_E12_FORM_VALID = FormData.valid;
+        this.ILG60_08_03_00_00_E12_FORM_DATA = FormData.valid;
+        break;
+    }
   }
 }

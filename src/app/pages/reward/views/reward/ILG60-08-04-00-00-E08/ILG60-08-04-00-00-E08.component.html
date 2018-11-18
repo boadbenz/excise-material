@@ -1,6 +1,55 @@
 <div class="row">
   <div class="col-md-12">
-    <app-form-group [columns]="columnsForm" ></app-form-group>
+    <!-- <app-form-group [columns]="columnsForm" ></app-form-group> -->
+    <!-- {{formGroup.value | json}} -->
+    <form [formGroup]="formGroup" *ngIf="formGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เลขที่อ้างอิง : </label>
+            <div class="col-md-8">
+              <select formControlName="ReferenceNo" class="form-control">
+                <option [value]="item" *ngFor="let item of ReferenceNoList">{{item}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" formControlName="RequestRewardCode" [attr.disabled]="true">
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เขียนที่ : </label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" formControlName="Station" [ngbTypeahead]="searchStation">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
+            <div class="col-md-3">
+              <my-date-picker formControlName="RequestDate" placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions"></my-date-picker>
+              <!-- <input class="form-control" type="text" formControlName="RequestDate"> -->
+            </div>
+            <label class="col-form-label text-center col-md-2">เวลา</label>
+            <div class="col-md-3">
+              <input class="form-control" type="text" formControlName="RequestTime">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
   </div>
 </div>
 <div class="row">
@@ -9,11 +58,13 @@
       <div class="card-body">
         <!-- <app-table-data [columns]="columnsTable$ | async" [data]="inputDataTable$ | async" [options]="TableDataOptions"></app-table-data> -->
         <div class="table-responsive table-striped no-wrap">
-          <!-- {{checkList | json}} -->
+          {{checkList | json}}
           <table class="dataTable table table-sm table-striped table-hover">
             <thead>
               <tr>
-                  <th><mat-checkbox  class="filled-in chk-col-indigo" [(ngModel)]="checkAll"></mat-checkbox></th>
+                <th>
+                  <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkAll"></mat-checkbox>
+                </th>
                 <th>ลำดับ</th>
                 <ng-container *ngFor="let item of (columnsTable$ | async)">
                   <th class="footable-sortable">
@@ -24,9 +75,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let dataItem of (inputDataTable$ | async); let i=index">
-                  <th><mat-checkbox  class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]"></mat-checkbox></th>
-                  <th>{{i+1}}</th>
+              <tr *ngFor="let dataItem of listData; let i=index">
+                <th>
+                  <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]" (change)="checkboxHandle()"></mat-checkbox>
+                </th>
+                <th>{{i+1}}</th>
                 <ng-container *ngFor="let item of (columnsTable$ | async)">
                   <td class="footable-sortable">
                     {{dataItem[item.field]}}
@@ -45,7 +98,7 @@
                 <ng-container *ngFor="let item of (columnsTable$ | async)">
                   <ng-container *ngIf="item?.isSum;">
                     <th class="footable-sortable">
-                      {{(aggregate[item.field]?.sum) || ''}}
+                      {{(aggregate[item.field]?.sum) || 0}}
                     </th>
                   </ng-container>
 

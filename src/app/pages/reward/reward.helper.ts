@@ -1,11 +1,19 @@
 import { FormGroup, Validators } from '@angular/forms';
 import { ColumnsInterface } from './shared/interfaces/columns-interface';
+import { IMyOptions } from 'mydatepicker-th';
+import { setZero, setDateMyDatepicker } from 'app/config/dateFormat';
 
 export class RewardHelper {
   public formGroup: FormGroup;
-  public yy_thaibuddha = (new Date().getFullYear() + 543).toString().substr(2, 1);
+  public yy_thaibuddha = (new Date().getFullYear() + 543)
+    .toString()
+    .substr(2, 1);
+  public setDateNow =  setDateMyDatepicker(new Date());
+  public setTimeNow = `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`;
   constructor() {}
-
+  public setZero(num: number) {
+    return num < 10 ? '0' + num : num;
+  }
   public leftPad(str: string, len: number, ch = '0'): string {
     len = len - str.length + 1;
     return len > 0 ? new Array(len).join(ch) + str : str;

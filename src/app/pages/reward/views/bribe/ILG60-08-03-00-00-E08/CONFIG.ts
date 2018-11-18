@@ -1,9 +1,11 @@
 import { BribeConfig } from '../bribe.config';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
-import { Input } from '@angular/core';
+import { Input, Output, EventEmitter } from '@angular/core';
+import { IFormChange } from 'app/pages/reward/interfaces/FormChange';
 
 export class CONFIG extends BribeConfig {
+  @Output() public formData: EventEmitter<IFormChange> = new EventEmitter();
   @Input()
   set inputData(val) {
     this.inputData$.next(val);
@@ -31,7 +33,6 @@ export class CONFIG extends BribeConfig {
   }
   public RequestBribe$ = new BehaviorSubject<any>(null);
 
-
   @Input()
   set mode(val) {
     this.mode$.next(val);
@@ -42,29 +43,42 @@ export class CONFIG extends BribeConfig {
   public mode$ = new BehaviorSubject<any>(null);
   public RequestArrestLawsuit$ = new BehaviorSubject<any>(null);
 
-  public columnsForm: ColumnsInterface[] = [
-    {
-      title: 'เลขที่ใบแจ้งความนำจับ',
-    },
-    {
-      title: 'เลขที่คำร้องขอ',
-      field: 'RequestBribeCode'
-    },
-    {
-      title: 'เขียนที่',
-      field: 'Station',
-    },
-    {
-      title: 'วันที่จัดทำ',
-      field: 'RequestDate',
-      title2: 'เวลา',
-      field2: 'RequestTime'
-    },
-    {
-      title: 'ผู้แจ้งความได้ทราบว่า',
-      field: 'Informeracknowledge'
-    },
-  ];
+  // public columnsForm: ColumnsInterface[] = [
+  //   {
+  //     field: 'DetailIDs'
+  //   },
+  //   {
+  //     field: 'CommandDetailID',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'เลขที่ใบแจ้งความนำจับ',
+  //     field: 'NoticeCodeAndName',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'เลขที่คำร้องขอ',
+  //     field: 'RequestBribeCode'
+  //   },
+  //   {
+  //     title: 'เขียนที่',
+  //     field: 'Station',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'วันที่จัดทำ',
+  //     field: 'RequestDate',
+  //     default: `${this.setZero((new Date).getHours())}.${this.setZero((new Date).getMinutes())} น.`,
+  //     isRequired: true,
+  //     title2: 'เวลา',
+  //     field2: 'RequestTime'
+  //   },
+  //   {
+  //     title: 'ผู้แจ้งความได้ทราบว่า',
+  //     isRequired: true,
+  //     field: 'Informeracknowledge'
+  //   }
+  // ];
 
   public columnsTable: ColumnsInterface[] = [
     {
@@ -77,7 +91,8 @@ export class CONFIG extends BribeConfig {
     },
     {
       title: 'วันที่ชำระ',
-      field: 'PaymentDate'
+      field: 'PaymentDate',
+      default: `${this.setZero((new Date).getHours())}.${this.setZero((new Date).getMinutes())} น.`
     },
     {
       title: 'ใบเสร็จเล่มที่',

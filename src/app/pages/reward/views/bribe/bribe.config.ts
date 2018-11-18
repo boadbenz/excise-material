@@ -30,6 +30,8 @@ export class BribeConfig extends RewardHelper {
   public ILG60_08_03_00_00_E08_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E08_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E08_DATA$ = new BehaviorSubject<any>(null);
+  public ILG60_08_03_00_00_E08_FORM_VALID: boolean;
+  public ILG60_08_03_00_00_E08_FORM_DATA: any;
   // Drop Down List
   public ILG60_08_03_00_00_E09_DISABLED$ = new BehaviorSubject<boolean>(false); // เลขที่ใบแจ้งความนำจับ
   // Input Box
@@ -43,6 +45,8 @@ export class BribeConfig extends RewardHelper {
   // Icon
   public ILG60_08_03_00_00_E12_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E12_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
+  public ILG60_08_03_00_00_E12_FORM_VALID: boolean;
+  public ILG60_08_03_00_00_E12_FORM_DATA: any;
   // Input Box
   public ILG60_08_03_00_00_E13_DISABLED$ = new BehaviorSubject<boolean>(false); // เขียนที่
   public ILG60_08_03_00_00_E14_DISABLED$ = new BehaviorSubject<boolean>(false); // ผู้รับมอบอำนาจ
@@ -51,6 +55,7 @@ export class BribeConfig extends RewardHelper {
   // Icon
   public ILG60_08_03_00_00_E16_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E16_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
+  public ILG60_08_03_00_00_E16_FORM_VALID: boolean;
   // Button
   public ILG60_08_03_00_00_E17_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม เพิ่มเอกสารแนบ
   // Icon
