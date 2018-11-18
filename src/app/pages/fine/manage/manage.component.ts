@@ -25,7 +25,7 @@ import { isNgTemplate } from '@angular/compiler';
 import { async } from 'q';
 import { isArray } from 'jquery';
 import { FormGroup, FormControl, NgForm } from '@angular/forms';
-import { IMyDpOptions } from 'mydatepicker';
+import { IMyDpOptions, IMyDate } from 'mydatepicker';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -36,11 +36,14 @@ export class ManageComponent implements OnInit, OnDestroy {
   mode: string;
   modal: any;
   param: any;
-  programSpect = 'ILG60-06-02-00'
+  programSpect = 'ILG60-06-02-00';
 
   // --------
   showEditField: any;
   @ViewChild('advForm') advForm: NgForm;
+  @ViewChild('Form2') form2: NgForm; // คำให้การผู้ต้องหา
+  @ViewChild('Form3') form3: NgForm; // บันทึกการเปรียบเทียบและชำระคเีค่าปรับ
+  @ViewChild('Form4') form4: NgForm; // รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ
   // -- Parameter ---
   LawsuitID: string;
   ArrestCode: string;
@@ -100,11 +103,28 @@ export class ManageComponent implements OnInit, OnDestroy {
   // ----- Model ------ //
   @ViewChild('printDocModal') printDocModel: ElementRef;
   private today = new Date();
+  compareData: any = {}; // ฟิลด์ค่าปรับ
+  compareDataAllSum: any = {}; // ฟิลด์ค่าปรับ
+  compareCount: any = 1; // จำนวนเท่า
+  selDate: IMyDate = {year: 0, month: 0, day: 0};
+  receiptCompareDate: IMyDate = {year: 0, month: 0, day: 0};
+  userCompareReceiptDetail: any = {};
+  compareUserDetailPopup: any = {};
+  filePath: any = [];
+  dataToSave: any = {};
   PaymentFineAppointDateOptions: IMyDpOptions = {
     // other options...
     dateFormat: 'dd/mmm/yyyy'
   };
   PaymentVatDateOptionsOptions: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd/mmm/yyyy'
+  };
+  CompareDateOptions: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd/mmm/yyyy'
+  };
+  receiptCompareDateOptions: IMyDpOptions = {
     // other options...
     dateFormat: 'dd/mmm/yyyy'
   };
@@ -128,18 +148,19 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    await this.MasStaffMaingetAll();
-    await this.MasDepartmentMaingetAll();
+    await this.setDataObjectToSave();
+    this.MasStaffMaingetAll();
+    this.MasDepartmentMaingetAll();
     // this.preloader.setShowPreloader(true);
     // console.log(1234);
     this.active_Route();
-    this.navigate_Service();
+    await this.navigate_Service();
     // await this.getStation();
     // await this.getCompareStaff();
     this.CreateObject();
+    await this.getAresstData();
     this.getLawsuitByID(this.LawsuitID);
     await this.getArrestByID(this.ArrestCode);
-
     const date = new Date();
     this.CompareYear = (date.getFullYear() + 543).toString();
     this.CompareDate = this.getCurrentDate();
@@ -149,24 +170,243 @@ export class ManageComponent implements OnInit, OnDestroy {
       await this.getCompareByID();
       await this.ShowData();
     }
-
-    await this.getAresstData();
-    await this.CompareListgetByConAdv();
-    await this.CompareArrestgetByCon();
     this.preloader.setShowPreloader(false);
     this.navigate_Service();
   }
+  async CompareCountMistreatgetByCon(LawBreakerID: number, SectionNo: number) {
+    try {
+      const data: any = {
+        LawBreakerID: LawBreakerID,
+        SectionNo: SectionNo
+      };
+      return await this.fineService.postMethod('/CompareCountMistreatgetByCon', data, '8881');
+    } catch (err) {
+    }
+  }
+  setDataObjectToSave() {
+    const compare: any = {
+      'CompareCode': '1/2560',
+      'CompareDate': '2017-12-01 12:35:29.1234567 +07:00',
+      'CompareStationCode': '102',
+      'CompareStation': 'ระยอง',
+      'CompareSubdistrictCode': '580504',
+      'CompareSubdistrict': 'แม่โถ',
+      'CompareDistrictCode': '120',
+      'CompareDistrict': 'บางเขน',
+      'CompareProvinceCode': '02',
+      'CompareProvince': 'กรุงเทพ',
+      'AccuserSubdistrictCode': '580504',
+      'AccuserSubdistrict': 'แม่โถ',
+      'AccuserDistrictCode': '124',
+      'AccuserDistrict': 'คลองเตย',
+      'AccuserProvinceCode': '02',
+      'AccuserProvince': 'กรุงเทพ',
+      'IsOutside': 0,
+      'LawsuitID': 1,
+      'IsActive': 1,
+      'CompareDetail': [
+        {
+          'CompareDetailID': 1,
+          'CompareID': 1,
+          'IndictmentDetailID': 1,
+          'CompareAction': 'แจ้งให้ญาติทราบ',
+          'LawbrakerTestimony': 'ยอมรับ',
+          'Fact': 'ยอมรับ',
+          'IsRequest': 1,
+          'RequestForAction': 'แบบฟอร์ม',
+          'CompareReason': 'เปรียบเทียบ',
+          'IsProvisionalAcquittal': 1,
+          'Bail': 'ข้อมูลทดสอบ',
+          'Guaruntee': 'หลักประกัน',
+          'CompareFine': 1500,
+          'PaymentFineDate': '2017-12-01 12:35:29.1234567 +07:00',
+          'PaymentFineAppointDate': '2017-12-01 12:35:29.1234567 +07:00',
+          'PaymentVatDate': '2017-12-01 12:35:29.1234567 +07:00',
+          'TreasuryMoney': 1000,
+          'BribeMoney': 200,
+          'RewardMoney': 300,
+          'IsActive': 1,
+          'ApproveStationCode': '02',
+          'ApproveStation': 'ตลิ่งชัน',
+          'ApproveReportDate': '2017-12-01 12:35:29.1234567 +07:00',
+          'CommandNo': '1002',
+          'CommandDate': '2017-12-01 12:35:29.1234567 +07:00',
+          'CompareAuthority': 1,
+          'ApproveReportType': 1,
+          'MistreatNo': 1,
+          'FineType': 1,
+          'AdjustReason': 'เหตุผลในการับลด',
+          'CompareDetailFine': [
+            {
+              'CompareFineID': 1,
+              'CompareDetailID': 2,
+              'ProductID': 3,
+              'ProductFine': 200,
+              'VatValue': 7.5,
+              'FineRate': 5100,
+              'IsActive': 1,
+              'FineType': 1
+            }
+          ]
+        }
+      ],
+      'CompareStaff': [
+        {
+          'StaffID': 1,
+          'ProgramCode': 'ILG60-01-01',
+          'ProcessCode': '01',
+          'CompareID': 1,
+          'StaffCode': '134318',
+          'TitleName': 'นางสาว',
+          'FirstName': 'นริสรา',
+          'LastName': 'ภูผาม่าน',
+          'PositionCode': '1000',
+          'PositionName': 'BusinessAnalyst',
+          'PosLevel': '7',
+          'PosLevelName': 'ระดับ',
+          'DepartmentCode': '90501',
+          'DepartmentName': 'สท.ระยอง',
+          'DepartmentLevel': '1',
+          'OfficeCode': '10603',
+          'OfficeName': 'สท.ระยอง',
+          'OfficeShortName': 'สท.ระยอง',
+          'ContributorID': 19,
+          'IsActive': 1
+        }
+        ,
+        {
+          'StaffID': 2,
+          'ProgramCode': 'ILG60-01-01',
+          'ProcessCode': '01',
+          'CompareID': 251,
+          'StaffCode': '134318',
+          'TitleName': 'นางสาว',
+          'FirstName': 'นริสรา',
+          'LastName': 'ภูผาม่าน',
+          'PositionCode': '1000',
+          'PositionName': 'BusinessAnalyst',
+          'PosLevel': '7',
+          'PosLevelName': 'ระดับ',
+          'DepartmentCode': '90501',
+          'DepartmentName': 'สท.ระยอง',
+          'DepartmentLevel': '1',
+          'OfficeCode': '10603',
+          'OfficeName': 'สท.ระยอง',
+          'OfficeShortName': 'สท.ระยอง',
+          'ContributorID': 19,
+          'IsActive': 1
+        }
+      ]
+    };
+    this.dataToSave.compare = compare;
+  }
   async CompareArrestgetByCon() {
+    const d: Date = new Date();
+    this.selDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    this.ListCompareDetailReceipt = [];
+    this.AccusedTable = [];
+    this.compareUserDetail = [];
     try {
       const resp: any = await this.fineService.postMethod('/CompareArrestgetByCon', { 'IndictmentID': this.IndictmentID }, '8881');
+      console.log(resp);
+      const sectionNo: number = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].SectionNo;
       this.SectionName = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].SectionNo;
       this.GuiltBaseName = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].GuiltBaseName;
       this.SectionNo = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].SectionNo;
-      this.PenaltyDesc = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].CompareGroupSection[0].SectionDesc1;
-      this.compareUserDetail =  resp[0].CompareArrestIndictment[0].CompareIndicmentDetail;
+      this.PenaltyDesc = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].Fine;
+      // this.compareUserDetail =  resp[0].CompareArrestIndictment[0].CompareIndicmentDetail;
+      const ListCompareDetailTmp: any = resp[0].CompareArrestIndictment[0].CompareIndicmentDetail;
+      const ListCompareDetailTmpData: any =  [];
+      console.log(ListCompareDetailTmp);
+      let count_user = 0;
+      let count_field = 0;
+      this.compareDataAllSum.sum = 0;
+      this.compareDataAllSum.sum1 = 0;
+      this.compareDataAllSum.sum2 = 0;
+      this.compareDataAllSum.sum3 = 0;
+      for (const compare of ListCompareDetailTmp) {
+        const compareTmp: any = {};
+        this.compareData[`user${count_user}`] = {};
+        const arrest: any = this.jsonCopy(compare.CompareArrestLawbreaker[0]);
+        if (arrest.EntityType === 1) {
+          compareTmp.name = `${arrest.LawbreakerTitleName}${arrest.LawbreakerFirstName} ${arrest.LawbreakerMiddleName} ${arrest.LawbreakerLastName}`;
+        } else {
+          compareTmp.name = `${arrest.CompanyTitle}${arrest.CompanyName}`;
+        }
+        // ข้อมูล
+        const ListCompareDetailReceiptTmp: any = {};
+        ListCompareDetailReceiptTmp.LawBrakerName = compareTmp.name;
+        this.ListCompareDetail.push(ListCompareDetailReceiptTmp);
+        this.ListCompareDetailReceipt.push(ListCompareDetailReceiptTmp);
+        ListCompareDetailReceiptTmp.test = 'test';
+        this.compareUserDetail.push(ListCompareDetailReceiptTmp);
+        console.log(this.compareUserDetail);
+        // ข้อมูลคำให้การ
+        const AccusedTableTmp: any = {};
+        AccusedTableTmp.LawBrakerName = compareTmp.name;
+        this.AccusedTable.push(AccusedTableTmp);
+        console.log(compareTmp);
+        // const this_product: any = product.CompareArrestProduct[0];
+        // const product_search: any = this.serchCompareProductByID(this_product.ProductID, resp[0].CompareArrestIndictment[0].CompareProve[0].CompareProveProduct);
+        compareTmp.Mistreat = (await this.CompareCountMistreatgetByCon(arrest.LawbreakerID, sectionNo)).Mistreat;
+        let count = 0;
+        const sumData = {
+          fineSum: true,
+          sumPayment: 0,
+          sum1: 0,
+          sum2: 0,
+          sum3: 0
+        };
+        if (resp[0].CompareArrestIndictment[0].CompareProve) {
+          for (const product of this.jsonCopy(resp[0].CompareArrestIndictment[0].CompareProve[0].CompareProveProduct)) {
+            const compareWithProduct: any = this.jsonCopy(compareTmp);
+            compareWithProduct.isFirstRow = true;
+            if (count > 0) {
+              compareWithProduct.isFirstRow = false;
+            }
+            this.compareData[`user${count_user}`][`field${count_field}`] = 0;
+            count_field++;
+            count++;
+            compareWithProduct.product = {};
+            compareWithProduct.fineSum = false;
+            compareWithProduct.userNo = count_user;
+            compareWithProduct.countCompare = this.compareCount;
+            compareWithProduct.sumPayment = 0;
+            compareWithProduct.fine = product.Fine;
+            compareWithProduct.product.name = product.BrandNameTH;
+            compareWithProduct.product.VatProve = product.VatProve;
+            compareWithProduct.allComparePerArrest = this.compareCount * product.VatProve;
+            compareWithProduct.sum1 = compareWithProduct.allComparePerArrest * 0.2;
+            compareWithProduct.sum2 = compareWithProduct.allComparePerArrest * 0.2;
+            compareWithProduct.sum3 = compareWithProduct.allComparePerArrest * 0.6;
+            ListCompareDetailTmpData.push(compareWithProduct);
+            sumData.sum1 = (+compareWithProduct.sum1) + (+sumData.sum1);
+            sumData.sum2 = (+compareWithProduct.sum2) + (+sumData.sum2);
+            sumData.sum3 = (+compareWithProduct.sum3) + (+sumData.sum3);
+          }
+        }
+        this.compareDataAllSum.sum1 = (+sumData.sum1) + (+this.compareDataAllSum.sum1);
+        this.compareDataAllSum.sum2 = (+sumData.sum2) + (+this.compareDataAllSum.sum2);
+        this.compareDataAllSum.sum3 = (+sumData.sum3) + (+this.compareDataAllSum.sum3);
+        ListCompareDetailTmpData.push(sumData);
+        count_user++;
+        count_field++;
+      }
+      this.ListCompareDetail = ListCompareDetailTmpData;
+      console.log(ListCompareDetailTmpData);
     } catch (err) {
       console.log(err);
     }
+  }
+  serchCompareProductByID(id: any, products: any) {
+    for (const product of products) {
+      console.log('product');
+      console.log(product);
+      if (product.ProductID === id) {
+        return product;
+      }
+    }
+    return null;
   }
   async CompareListgetByConAdv() {
     try {
@@ -208,6 +448,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   // }
   async getAresstData() {
     try {
+      console.log(this.dataToSave);
       const resp: any = await this.fineService.compareArrestGetByCon(this.ArrestCode);
       console.log(resp);
       console.log(resp[0].CompareDate);
@@ -218,6 +459,11 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.LawsuiltTime = resp[0].CompareDate.split(' ')[1];
       this.IsOutside = resp[0].IsOutside;
       this.CompareNo = resp[0].CompareCode.split('/')[0];
+      this.dataToSave.compare.CompareCode = resp[0].CompareCode;
+      this.dataToSave.compare.IsOutside = resp[0].CompareCode;
+      // this.dataToSave.compare.compareDate = resp[0].CompareDate;
+      // this.CompareArrestgetByCon();
+      // get
     } catch (err) {
       console.log(err);
     }
@@ -258,8 +504,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(this.param);
 
       if (p['code1']) {
-        this.LawsuitID = p['code2'];
-        this.LawsuiltCode = this.LawsuitID.replace('-', '/');
+        this.LawsuiltCode = p['code2'].replace('-', '/');
       }
 
       if (p['code2']) {
@@ -303,23 +548,43 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.navService.setSaveButton(false);
       }
     });
-    // this.sub = this.navService.showFieldEdit.subscribe(p => {
-    //   this.showEditField = p;
-    // });
-
-    this.sub = this.navService.onSave.subscribe(async status => {
+    this.OnSubscribe.save = this.navService.onSave.subscribe(async status => {
       if (status) {
         await this.navService.setOnSave(false);
-
         if (this.CompareID == '0') {
+          console.log(this.dataToSave);
           await this.onInsCompare();
-          this.router.navigate(['/fine/list']);
+          // this.router.navigate(['/fine/list']);
         } else {
           await this.onUpdCompare();
           await this.onComplete();
         }
+        await this.navService.setOnCancel(false);
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setSearchBar(false);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
       }
     });
+    // this.sub = this.navService.showFieldEdit.subscribe(p => {
+    //   this.showEditField = p;
+    // });
+
+    // this.sub = this.navService.onSave.subscribe(async status => {
+    //   if (status) {
+    //     await this.navService.setOnSave(false);
+    //
+    //     if (this.CompareID == '0') {
+    //       await this.onInsCompare();
+    //       this.router.navigate(['/fine/list']);
+    //     } else {
+    //       await this.onUpdCompare();
+    //       await this.onComplete();
+    //     }
+    //   }
+    // });
 
     // this.sub =  this.navService.onDelete.subscribe(async status => {
     //     if (status) {
@@ -344,7 +609,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     //     }
     // })
   }
+  async CompareinsAll() {
+    try {
+      const resp: any = await this.fineService.postMethod('/CompareinsAll', {});
+    } catch (err) {
 
+    }
+  }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
     this.param.unsubscribe();
@@ -363,25 +634,25 @@ export class ManageComponent implements OnInit, OnDestroy {
 
   CreateObject() {
     this.oCompare = {
-      CompareID: "",
-      CompareCode: "",
+      CompareID: '',
+      CompareCode: '',
       CompareDate: new Date(),
-      CompareStationCode: "",
-      CompareStation: "",
-      CompareSubdistrictCode: "",
-      CompareSubdistrict: "",
-      CompareDistrictCode: "",
-      CompareDistrict: "",
-      CompareProvinceCode: "",
-      CompareProvince: "",
-      AccuserSubdistrictCode: "",
-      AccuserSubdistrict: "",
-      AccuserDistrictCode: "",
-      AccuserDistrict: "",
-      AccuserProvinceCode: "",
-      AccuserProvince: "",
+      CompareStationCode: '',
+      CompareStation: '',
+      CompareSubdistrictCode: '',
+      CompareSubdistrict: '',
+      CompareDistrictCode: '',
+      CompareDistrict: '',
+      CompareProvinceCode: '',
+      CompareProvince: '',
+      AccuserSubdistrictCode: '',
+      AccuserSubdistrict: '',
+      AccuserDistrictCode: '',
+      AccuserDistrict: '',
+      AccuserProvinceCode: '',
+      AccuserProvince: '',
       IsOutside: 0,
-      LawsuitID: ""
+      LawsuitID: ''
     }
   }
   async getLawsuitByID(LawsuitID: string) {
@@ -403,15 +674,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
       // }
 
-      // if (res[0].ArrestIndicment[0].Lawsuit[0].IsOutside == "1") {
-      //   this.LawsuiltCode = "น " + res[0].ArrestIndicment[0].Lawsuit[0].LawsuitNo;
+      // if (res[0].ArrestIndicment[0].Lawsuit[0].IsOutside == '1') {
+      //   this.LawsuiltCode = 'น ' + res[0].ArrestIndicment[0].Lawsuit[0].LawsuitNo;
       // }
       // else {
       //   this.LawsuiltCode = res[0].ArrestIndicment[0].Lawsuit[0].LawsuitNo;
       // }
 
-      if (res.IsOutside == "1") {
-        this.LawsuiltCode = "น " + res.LawsuitNo;
+      if (res.IsOutside == '1') {
+        this.LawsuiltCode = 'น ' + res.LawsuitNo;
       }
       else {
         this.LawsuiltCode = res.LawsuitNo;
@@ -439,33 +710,35 @@ export class ManageComponent implements OnInit, OnDestroy {
       try {
         console.log(res);
         const tmp: any = [];
-        this.ListCompareDetail = res[0].ArrestIndictment[0].ArrestIndictmentDetail;
-        const name: any = [];
-        console.log(this.ListCompareDetail);
-        for (const item of this.ListCompareDetail) {
-          if (item.ArrestLawbreaker[0].EntityType === 0) {
-            name.push({ 'AccusedName' : `${item.ArrestLawbreaker[0].CompanyTitle}${item.ArrestLawbreaker[0].CompanyName}`});
-          } else {
-            name.push({ 'AccusedName' : `${item.ArrestLawbreaker[0].LawbreakerTitleName}${item.ArrestLawbreaker[0].LawbreakerFirstName} ${item.ArrestLawbreaker[0].LawbreakerMiddleName} ${item.ArrestLawbreaker[0].LawbreakerLastName}`});
-          }
-          let count = 0;
-          const tmpItem: any = this.jsonCopy(item);
-          tmpItem.isTmp = false;
-          tmp.push(tmpItem);
-          for (let t of res[0].ArrestIndictment[0].ArrestIndictmentDetail[0].ArrestProductDetail) {
-            if (count > 0) {
-              const newItem:any = this.jsonCopy(item);
-              newItem.isTmp = true;
-              newItem.ArrestProductDetail[0] = this.jsonCopy(t);
-              tmp.push(newItem);
-            }
-            count++;
-          }
-          tmp.push({ sum: true});
-        }
-        console.log(tmp);
-        this.ListCompareDetail = tmp;
-        this.AccusedTable = name;
+        this.IndictmentID = res[0].ArrestIndictment[0].IndictmentID;
+        await this.CompareArrestgetByCon();
+        // this.ListCompareDetail = res[0].ArrestIndictment[0].ArrestIndictmentDetail;
+        // const name: any = [];
+        // console.log(this.ListCompareDetail);
+        // for (const item of this.ListCompareDetail) {
+        //   if (item.ArrestLawbreaker[0].EntityType === 0) {
+        //     name.push({ 'AccusedName' : `${item.ArrestLawbreaker[0].CompanyTitle}${item.ArrestLawbreaker[0].CompanyName}`});
+        //   } else {
+        //     name.push({ 'AccusedName' : `${item.ArrestLawbreaker[0].LawbreakerTitleName}${item.ArrestLawbreaker[0].LawbreakerFirstName} ${item.ArrestLawbreaker[0].LawbreakerMiddleName} ${item.ArrestLawbreaker[0].LawbreakerLastName}`});
+        //   }
+        //   let count = 0;
+        //   const tmpItem: any = this.jsonCopy(item);
+        //   tmpItem.isTmp = false;
+        //   tmp.push(tmpItem);
+        //   for (const t of res[0].ArrestIndictment[0].ArrestIndictmentDetail[0].ArrestProductDetail) {
+        //     if (count > 0) {
+        //       const newItem: any = this.jsonCopy(item);
+        //       newItem.isTmp = true;
+        //       newItem.ArrestProductDetail[0] = this.jsonCopy(t);
+        //       tmp.push(newItem);
+        //     }
+        //     count++;
+        //   }
+        //   tmp.push({ sum: true});
+        // }
+        // console.log(tmp);
+        // this.ListCompareDetail = tmp;
+        // this.AccusedTable = name;
         const staff: any = res[0].ArrestStaff[0];
         // console.log(res[0].ArrestStaff[0]);
         // this.ArrestStaffName = `${staff.TitleName}${staff.FirstName} ${staff.LastName}`;
@@ -477,7 +750,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.ArrestLocation = `${local.Building} ${local.District} ${local.DistrictCode}`;
         res[0].ArrestStaff.map(async item => {
 
-          if (item.ContributorCode === "6") {
+          if (item.ContributorCode === '6') {
             item.FullName = `${item.TitleName == null ? '' : item.TitleName}`;
             item.FullName += `${item.FirstName == null ? '' : item.FirstName}`;
             item.FullName += ` ${item.LastName == null ? '' : item.LastName}`;
@@ -487,15 +760,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         // res[0].ArrestLawbreaker.forEach(item => {
 
-        //   if (item.EntityType === "0") {
+        //   if (item.EntityType === '0') {
         //     item.AccusedName = `${item.CompanyTitle == null ? '' : item.CompanyTitle}`;
         //     item.AccusedName += `${item.CompanyName == null ? '' : item.CompanyName}`;
         //     // item.AccusedName += ` ${item.LastName == null ? '' : item.LastName}`;
         //   } else {
         //     let tpmname = {
-        //       AccusedName : item.AccusedName = item.LawbreakerTitleName + " "
-        //         + item.LawbreakerFirstName + " "
-        //         + item.LawbreakerMiddleName + " "
+        //       AccusedName : item.AccusedName = item.LawbreakerTitleName + ' '
+        //         + item.LawbreakerFirstName + ' '
+        //         + item.LawbreakerMiddleName + ' '
         //         + item.LawbreakerLastName
 
         //     }
@@ -519,9 +792,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.AccuserSubdistrictCode = `${res[0].ArrestLocale[0].SubDistrictCode == null ? '' : res[0].ArrestLocale[0].SubDistrictCode}`;
         this.AccuserSubdistrict = `${res[0].ArrestLocale[0].SubDistrict == null ? '' : res[0].ArrestLocale[0].SubDistrict}`;
 
-        // res.ArrestStaff.filter(item => item.ContributorID === "11").map(async item => {
+        // res.ArrestStaff.filter(item => item.ContributorID === '11').map(async item => {
         res[0].ArrestStaff.map(async item => {
-          if (item.ContributorCode === "6") {
+          if (item.ContributorCode === '6') {
             this.ArrestStaffName = item.FullName;   // ผู้กล่าวหา
             this.PositionName = item.PositionName;  // ตำแหน่งผู้กล่าวหา
             this.DepartmentName = item.DepartmentName;  // แผนกผู้กล่าวหา
@@ -549,7 +822,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         //     item.LawbreakerFullName += ` ${item.LawbreakerLastName == null ? '' : item.LawbreakerLastName}`;
         //   }
         // });
-        console.log("ArrestLawbreaker");
+        console.log('ArrestLawbreaker');
         console.log(this.oArrest);
         await this.getGuiltBaseByID();
 
@@ -569,10 +842,10 @@ export class ManageComponent implements OnInit, OnDestroy {
   //  await this.LawsuitSV.CompareMasLawgetByCon(value.GuiltBaseID).then(res => {
   //     if (res) {
   //       for (let key in res) {
-  //         if (key == "CompareMasLawSection") {
+  //         if (key == 'CompareMasLawSection') {
   //           this.masLawGroupSectionList.push(res[key]);
   //         }
-  //         if (key == "CompareMasLawGuiltBase") {
+  //         if (key == 'CompareMasLawGuiltBase') {
   //           this.masLawGuitBaseList.push(res[key]);
   //         }
   //       }
@@ -584,8 +857,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   async getGuiltBaseByID() {
     // this.preloader.setShowPreloader(true);
 
-    var aIndex;
-    var arrestIndex;
+    // const aIndex;
+    // const arrestIndex;
 
     if (this.oArrest.ArrestIndictment.length > 0) {
       this.ArrestIndictment = this.oArrest.ArrestIndictment.filter(item => item.IndictmentID == +this.IndictmentID)
@@ -600,7 +873,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         /*
         if (this.ArrestIndictment[0].OpsArrestIndicmentDetailCollection.length > 0) {
           let ArrestLawbreaker = [];
-          let ArrestName = "";
+          let ArrestName = '';
 
 
           ArrestLawbreaker = this.oArrest.ArrestLawbreaker;
@@ -621,57 +894,57 @@ export class ManageComponent implements OnInit, OnDestroy {
           if (this.CompareID == '-') {
             for (var i = 0; i < ArrestIndictment[0].OpsArrestIndicmentDetailCollection.length; i += 1) {
               let ArrestList = [];
-              let Product = "";
+              let Product = '';
 
               ArrestList = ArrestLawbreaker.filter(item => item.LawbreakerID === ArrestIndictment[0].OpsArrestIndicmentDetailCollection[i].LawbreakerID);
 
               if (ArrestList.length > 0) {
                 for (var j = 0; j < this.oArrest.ArrestProduct.length; j++) {
-                  if (Product == "") {
+                  if (Product == '') {
                     Product += this.oArrest.ArrestProduct[j].ProductDesc;
                   }
                   else {
-                    Product += "<br>" + this.oArrest.ArrestProduct[j].ProductDesc;
+                    Product += '<br>' + this.oArrest.ArrestProduct[j].ProductDesc;
                   }
                 }
 
                 // ----- คำให้การผู้ต้องหา && รายงานการอนุมัติ ---//
                 this.oCompareDetail = {
-                  CompareDetailID: "",
+                  CompareDetailID: '',
                   CompareID: this.CompareID,
                   IndictmentDetailID: ArrestIndictment[0].OpsArrestIndicmentDetailCollection[i].IndictmentDetailID.toString(),
-                  CompareAction: "",
-                  LawbrakerTestimony: "",
-                  Fact: "",
-                  IsRequest: "0",
-                  RequestForAction: "",
-                  CompareReason: "",
-                  IsProvisionalAcquittal: "",
+                  CompareAction: '',
+                  LawbrakerTestimony: '',
+                  Fact: '',
+                  IsRequest: '0',
+                  RequestForAction: '',
+                  CompareReason: '',
+                  IsProvisionalAcquittal: '',
                   Bail: null,
                   Guaruntee: null,
-                  CompareFine: "",
-                  PaymentFineDate: "",
-                  PaymentFineAppointDate: "",
-                  PaymentVatDate: "",
-                  TreasuryMoney: "",
-                  BribeMoney: "",
-                  RewardMoney: "",
-                  ApproveStationCode: "",
-                  ApproveStation: "",
-                  ApproveReportDate: "",
-                  CommandNo: "",
-                  CommandDate: "",
-                  CompareAuthority: "",
-                  ApproveReportType: "",
-                  MistreatNo: "", //+ MistreatNo
-                  FineType: "",
-                  AdjustReason: "",
+                  CompareFine: '',
+                  PaymentFineDate: '',
+                  PaymentFineAppointDate: '',
+                  PaymentVatDate: '',
+                  TreasuryMoney: '',
+                  BribeMoney: '',
+                  RewardMoney: '',
+                  ApproveStationCode: '',
+                  ApproveStation: '',
+                  ApproveReportDate: '',
+                  CommandNo: '',
+                  CommandDate: '',
+                  CompareAuthority: '',
+                  ApproveReportType: '',
+                  MistreatNo: '', //+ MistreatNo
+                  FineType: '',
+                  AdjustReason: '',
                   Lawbreaker: ArrestList[0].ArrestName,
                   LawbreakerID: ArrestList[0].LawbreakerID,
                   ProductDesc: Product,
-                  FineRate: "",
-                  VatValue: "",
-                  RewardRate: "", //RewardRate
+                  FineRate: '',
+                  VatValue: '',
+                  RewardRate: '', //RewardRate
                   CompareDetailFine: [],
                   CompareDetailReceipt: [],
                 }
@@ -696,12 +969,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     // this.preloader.setShowPreloader(true);
 
     await this.fineService.getByCon(this.CompareID).then(async res => {
-      console.log("getCompareByID");
+      console.log('getCompareByID');
       console.log(res);
       if (res != null) {
         this.oCompare = res[0];
-        var CompareStaff = res[0].CompareStaff[0];
-        this.CompareStaffName = CompareStaff.TitleName + " " +CompareStaff.FirstName + " " + CompareStaff.LastName;
+        const CompareStaff = res[0].CompareStaff[0];
+        this.CompareStaffName = CompareStaff.TitleName + ' ' + CompareStaff.FirstName + ' ' + CompareStaff.LastName;
         this.OperationPosName = CompareStaff.PositionName;
         this.OperationDeptName = CompareStaff.DepartmentName;
         this.preloader.setShowPreloader(false);
@@ -709,46 +982,28 @@ export class ManageComponent implements OnInit, OnDestroy {
     }, (err: HttpErrorResponse) => {
       alert(err.message);
     });
-
-    //this.ListProveDoc = [];
-
-    // await this.proveService.DocumentgetByCon(this.oProve.ProveReportNo).then(async doc => {
-    //   if (doc) {
-    //     this.ListProveDoc.push(doc);
-
-    //     for (var i = 0; i < this.ListProveDoc.length; i += 1) {
-    //       this.ListProveDoc[i].DocumentSeq = i;
-    //       this.ListProveDoc[i].IsNewItem = false;
-    //       this.ListProveDoc[i].IsDelItem = false;
-    //     }
-    //   }
-    // }, (err: HttpErrorResponse) => {
-    //   alert(err.message);
-    // });
-
-    // this.preloader.setShowPreloader(false);
   }
 
   ShowData() {
-    debugger
-    if (this.CompareID !== "0") {
-      var CRN = this.oCompare.CompareCode.split('/');
+    // debugger
+    if (this.CompareID !== '0') {
+      const CRN = this.oCompare.CompareCode.split('/');
 
       if (CRN.length > 1) {
         this.CompareNo = CRN[0];
         this.CompareYear = CRN[1];
       }
 
-      var CDate = this.oCompare.CompareDate.toString().split(" ");
+      const CDate = this.oCompare.CompareDate.toString().split(' ');
       this.CompareDate = CDate[0];
-      this.CompareTime = CDate[1] + ".000";
+      this.CompareTime = CDate[1] + '.000';
 
       this.IsOutside = this.oCompare.IsOutside;
       this.StationName = this.oCompare.CompareStation;
       this.ListCompareDetail = this.oCompare.CompareDetail;
       this.ListCompareStaff = this.oCompare.CompareStaff;
 
-      this.ListCompareStaff.filter(f => f.ContributorCode == "18").map(async item => {
+      this.ListCompareStaff.filter(f => f.ContributorCode == '18').map(async item => {
         // this.CompareStaffName = `${item.TitleName == null ? '' : item.TitleName}`;
         // this.CompareStaffName += `${item.FirstName == null ? '' : item.FirstName}`;
         // this.CompareStaffName += ` ${item.LastName == null ? '' : item.LastName}`;
@@ -761,12 +1016,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       });
 
       // for (var i = 0; this.ListCompareDetail.length; i++) {
-      //   this.ListCompareDetail[i].LawBrakerName = "";
+      //   this.ListCompareDetail[i].LawBrakerName = '';
       //   this.ListCompareDetailReceipt.push(this.oCompare.CompareDetail[i].CompareDetailReceipt);
       //   this.ListCompareDetail[i].IsNewItem = false;
       //   this.ListCompareDetailReceipt[i].IsNewItem = false;
 
-      //   if (this.ListCompareDetail[i].IndictmentDetailID != null && this.ListCompareDetail[i].IndictmentDetailID || "") {
+      //   if (this.ListCompareDetail[i].IndictmentDetailID != null && this.ListCompareDetail[i].IndictmentDetailID || '') {
       //     let LawbreakerID = this.oArrest.ArrestIndictment
       //       .filter(item => item.IndictmentID === +this.IndictmentID)[0].OpsArrestIndicmentDetailCollection
       //       .filter(item => item.IndictmentDetailID === this.ListCompareDetail[i].IndictmentDetailID);
@@ -793,16 +1048,44 @@ export class ManageComponent implements OnInit, OnDestroy {
     return false;
   }
 
-
+  convertDatepickerToNormal(datepicker: any) {
+    return `${datepicker.year}-${datepicker.month}-${datepicker.day}`;
+  }
   async onInsCompare() {
     try {
       const data: any = {
         'document_id': ''
-      }
-      const resp: any = await this.fineService.postMethod('', {});
+      };
+      const compareDetail: any = {
+        'LawbrakerTestimony': this.editUser.LawbrakerTestimony,
+        'Fact': 'ยอมรับ',
+        'IsRequest': this.editUser.request,
+        'RequestForAction': 'แบบฟอร์ม',
+        'CompareReason': 'เปรียบเทียบ',
+        'IsProvisionalAcquittal': 1,
+        'Bail': this.editUser.Bail,
+        'Guaruntee': this.editUser.Guaruntee,
+        'CompareFine': 1500,
+        // 'PaymentFineDate': `${this.convertDatepickerToNormal(this.advForm.controls.PaymentFineAppointDate.value.date)} 00:00:00 +07:00`,
+        'PaymentFineAppointDate': `${this.convertDatepickerToNormal(this.advForm.controls.PaymentFineAppointDate.value.date)} 00:00:00 +07:00`,
+        'PaymentVatDate': `${this.convertDatepickerToNormal(this.advForm.controls.PaymentVatDate.value.date)} 00:00:00 +07:00`,
+        'TreasuryMoney': this.compareDataAllSum.sum3,
+        'BribeMoney': this.compareDataAllSum.sum1,
+        'RewardMoney': this.compareDataAllSum.sum2,
+        'ApproveStationCode': this.dataToSave.compare.CompareStationCode,
+        'ApproveStation': this.dataToSave.compare.CompareStation
+      };
+      this.dataToSave.compare.IsOutside = this.IsOutside;
+      console.log(this.selDate);
+      this.dataToSave.compare.compareDetail = compareDetail;
+      this.dataToSave.compare.CompareDate = `${this.selDate.year}-${this.selDate.month}-${this.selDate.day} ${this.CompareTime.toString()} +07.00`;
+      this.dataToSave.compare.LawSuitID = this.LawsuitID;
+      console.log(this.dataToSave);
+      const resp: any = await this.fineService.postMethod('/CompareinsAll', this.dataToSave.compare, '8881');
+      console.log(resp);
 
     } catch (err) {
-
+      console.log(err);
     }
 
   }
@@ -810,41 +1093,41 @@ export class ManageComponent implements OnInit, OnDestroy {
   async onUpdCompare() {
     // this.preloader.setShowPreloader(true);
 
-    this.oCompare.CompareCode = this.CompareNo + "/" + this.CompareYear;
-    this.oCompare.CompareDate = new Date(this.CompareDate + ' ' + this.CompareTime);
-
-    this.oCompare.AccuserSubdistrictCode = this.AccuserSubdistrictCode;
-    this.oCompare.AccuserSubdistrict = this.AccuserSubdistrict;
-
-    var aIndex;
-    aIndex = this.getIndexOf(this.ListCompareStaff, "18", "ContributorCode");
-    this.ListCompareStaff[aIndex] = this.oCompareStaff;
-    this.oCompare.IsOutside = 1;
+    // this.oCompare.CompareCode = this.CompareNo + '/' + this.CompareYear;
+    // this.oCompare.CompareDate = new Date(this.CompareDate + ' ' + this.CompareTime);
+    //
+    // this.oCompare.AccuserSubdistrictCode = this.AccuserSubdistrictCode;
+    // this.oCompare.AccuserSubdistrict = this.AccuserSubdistrict;
+    //
+    // var aIndex;
+    // aIndex = this.getIndexOf(this.ListCompareStaff, '18', 'ContributorCode');
+    // this.ListCompareStaff[aIndex] = this.oCompareStaff;
+    // this.oCompare.IsOutside = 1;
+    // // debugger
+    // // if (this.IsOutside == 'true') {
+    // //   this.oCompare.IsOutside = '1';
+    // // }
+    // // else {
+    // //   this.oCompare.IsOutside = '0';
+    // // }
+    //
+    // let isSuccess: boolean = true;
     // debugger
-    // if (this.IsOutside == 'true') {
-    //   this.oCompare.IsOutside = '1';
+    // // Update compare
+    // await this.fineService.CompareupdByCon(this.oCompare).then(IsSuccess => {
+    //   if (!IsSuccess) {
+    //     isSuccess = IsSuccess;
+    //     return false;
+    //   }
+    // }, (error) => { isSuccess = false; console.error(error); return false; });
+    //
+    // if (!isSuccess) return false;
+    //
+    // if (isSuccess) {
+    //   alert(Message.saveComplete);
+    // } else {
+    //   alert(Message.saveFail);
     // }
-    // else {
-    //   this.oCompare.IsOutside = '0';
-    // }
-
-    let isSuccess: boolean = true;
-    debugger
-    // Update compare
-    await this.fineService.CompareupdByCon(this.oCompare).then(IsSuccess => {
-      if (!IsSuccess) {
-        isSuccess = IsSuccess;
-        return false;
-      }
-    }, (error) => { isSuccess = false; console.error(error); return false; });
-
-    if (!isSuccess) return false;
-
-    if (isSuccess) {
-      alert(Message.saveComplete);
-    } else {
-      alert(Message.saveFail);
-    }
 
     this.preloader.setShowPreloader(false);
   }
@@ -868,8 +1151,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     if (value == '') {
       this.options = [];
       this.optionsStation = [];
-      this.oCompare.CompareStationCode = "";
-      this.oCompare.CompareStation = "";
+      this.oCompare.CompareStationCode = '';
+      this.oCompare.CompareStation = '';
     } else {
       this.options = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
       this.optionsStation = this.options;
@@ -890,6 +1173,9 @@ export class ManageComponent implements OnInit, OnDestroy {
   onAutoSelecteWord(event) {
     this.oCompare.CompareStationCode = event.DepartmentCode;
     this.oCompare.CompareStation = event.DepartmentNameTH;
+    this.dataToSave.compare.CompareStationCode = event.DepartmentCode;
+    this.dataToSave.compare.CompareStation = event.DepartmentNameTH;
+    console.log(event);
   }
   // ----- End เขียนที่ (คำให้การของผู้ต้องหา) ---
 
@@ -897,11 +1183,13 @@ export class ManageComponent implements OnInit, OnDestroy {
   // --- เขียนที่ (รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ) ---
   ReportonAutoChange(value: string) {
     //
+    console.log(value);
     if (value == '') {
       this.ReportOptions = [];
     } else {
-      this.ReportOptions = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+      this.ReportOptions = this.rawOptions.filter(f => f.DepartmentNameTH.toLowerCase().indexOf(value.toLowerCase()) > -1);
     }
+    console.log(this.ReportOptions);
   }
 
   ReportonAutoFocus(value: string) {
@@ -913,6 +1201,9 @@ export class ManageComponent implements OnInit, OnDestroy {
   ReportonAutoSelecteWord(event) {
     // this.oProve.ProveStationCode = event.OfficeCode;
     // this.oProve.ProveStation = event.OfficeName;
+    console.log('this');
+    this.dataToSave.compare.CompareDetail.ApproveStation = event.event.DepartmentNameTH;
+    this.dataToSave.compare.CompareDetail.ApproveStationCode = event.event.DepartmentCode;
   }
   // ----- End เขียนที่ (รายงานขออนุมัติการเปรียบเทียบคดีและแบบอนุมัติ) ---
 
@@ -926,7 +1217,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   getCurrentTime() {
     let date = new Date();
     //
-    return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds();
   }
   // ----- End DateTime -----
 
@@ -969,8 +1260,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   StaffonAutoSelecteWord(event) {
     this.oCompareStaff = {
       StaffID: this.CompareStaffID,
-      ProgramCode: "XCS-60",
-      ProcessCode: "XCS-60-06",
+      ProgramCode: 'XCS-60',
+      ProcessCode: 'XCS-60-06',
       // LawsuitID: this.LawsuitID,
       StaffCode: event.StaffCode,
       TitleName: event.TitleName,
@@ -986,9 +1277,9 @@ export class ManageComponent implements OnInit, OnDestroy {
       OfficeCode: event.OfficeCode,
       OfficeName: event.OfficeName,
       OfficeShortName: event.OfficeShortName,
-      ContributorID: "18",
-      IsActive: "1"
-    }
+      ContributorID: '18',
+      IsActive: '1'
+    };
 
     if (this.CompareStaffID == '' || this.CompareStaffID == undefined) {
       this.oCompareStaff.IsNewItem = true;
@@ -1001,41 +1292,54 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.editUser = item;
   }
   ClearStaffData() {
-    this.OperationPosName = "";
-    this.OperationDeptName = "";
+    this.OperationPosName = '';
+    this.OperationDeptName = '';
 
     this.oCompareStaff = {
-      ProgramCode: "XCS-60",
-      ProcessCode: "XCS-60-05",
+      ProgramCode: 'XCS-60',
+      ProcessCode: 'XCS-60-05',
       StaffID: this.CompareStaffID,
       // LawsuitID: this.LawsuitID,
-      StaffCode: "",
-      TitleName: "",
-      FirstName: "",
-      LastName: "",
-      PositionCode: "",
-      PositionName: "",
-      PosLevel: "",
-      PosLevelName: "",
-      DepartmentCode: "",
-      DepartmentName: "",
-      DepartmentLevel: "",
-      OfficeCode: "",
-      OfficeName: "",
-      OfficeShortName: "",
-      ContributorID: "18"
+      StaffCode: '',
+      TitleName: '',
+      FirstName: '',
+      LastName: '',
+      PositionCode: '',
+      PositionName: '',
+      PosLevel: '',
+      PosLevelName: '',
+      DepartmentCode: '',
+      DepartmentName: '',
+      DepartmentLevel: '',
+      OfficeCode: '',
+      OfficeName: '',
+      OfficeShortName: '',
+      ContributorID: '18'
     }
 
     if (this.CompareStaffID == '' || this.CompareStaffID == undefined) {
       this.oCompareStaff.IsNewItem = true;
     }
   }
-  onSaveF3() {
+  onSaveF3(item) {
     const data: any = {
       'name' : this.editUser.AccusedName,
     };
     console.log('Data for save');
     console.log(this.advForm.controls);
+    this.editUser.PaymentVatDate = this.advForm.controls.PaymentVatDate.value ? this.advForm.controls.PaymentVatDate.value.formatted : null;
+    this.editUser.PaymentFineAppointDate = this.advForm.controls.PaymentFineAppointDate.value ? this.advForm.controls.PaymentFineAppointDate.value.formatted : null;
+    if (this.advForm.controls.PaymentFineAppointDate.value && this.CompareID == '0') {
+      const dateObj = new Date();
+      const month = dateObj.getUTCMonth() + 1;
+      // months from 1-12
+      const day = dateObj.getUTCDate();
+      const year = dateObj.getUTCFullYear();
+      this.editUser.IsProvisionalAcquittal = this.compareDate(this.advForm.controls.PaymentFineAppointDate.value.date , {day: day, month: month, year: year});
+    } else if (this.advForm.controls.PaymentFineAppointDate.value) {
+      this.editUser.IsProvisionalAcquittal = this.compareDate(this.advForm.controls.PaymentFineAppointDate.value.date , item.PaymentVatDate);
+    }
+    console.log(this.editUser);
   }
   onDateFromChanged(event) {
     // console.log(this.advForm.controls['PaymentFineAppointDate'].value.formatted);
@@ -1053,9 +1357,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     //
     // }, 100);
   }
-  handleFileInput(files: FileList) {
+  handleFileInput(files: any) {
     // this.fileToUpload = files.item(0);
-    this.AllAddFiles.push(files.item(0));
+    console.log(files);
+    this.AllAddFiles.push(files.target.files.item(0));
+    this.filePath.push({path: files.target.value, name: files.target.files.item(0).name });
   }
   async uploadFile() {
     try {
@@ -1066,6 +1372,73 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
   // ----- End ผู้เปรียบเทียบ ---
+  calculateComparePayment() {
+    let i = 0;
+    let j = 0;
+    let allSum = 0;
+    console.log( this.compareData);
+    for (const compare of Object.keys(this.compareData)) {
+      let sum = 0;
+      console.log(compare);
+      console.log(Object.keys(this.compareData[compare]));
+      for (const user of Object.keys(this.compareData[compare])) {
+        console.log(this.compareData[compare][user]);
+        sum = (+sum) + (+this.compareData[compare][user]);
+        console.log(sum);
+        this.ListCompareDetail[j].sumPayment = sum;
+        j++;
+      }
+      allSum = (+allSum) + (+sum);
+      this.ListCompareDetail[j].sumPayment = sum;
+      j++;
+      i++;
+    }
+    this.compareDataAllSum.sum = allSum;
+  }
+  getRound(num: any) {
+    return parseFloat((Math.round(num * 100) / 100).toString()).toFixed(2);
+  }
+  compareDate(date1: any, date2: any) {
+    const dateFirst = new Date(date1.year, date1.month, date1.day);
+    const dateSecond = new Date(date2.year, date2.month, date2.day);
+    console.log(dateFirst);
+    console.log(dateSecond);
+    return dateFirst <= dateSecond;
+  }
+  onClickEditF4(item: any) {
+    this.userCompareReceiptDetail = item;
+    console.log(item);
+  }
+  onClickEditF5(item: any, index: any) {
+    console.log(index);
+    console.log(item);
+    if (index || index === 0) {
+      this.compareUserDetailPopup = item;
+      this.compareUserDetailPopup.index = index;
+    }
+    console.log(this.compareUserDetailPopup);
+  }
+  onSaveF5() {
+    console.log(this.compareUserDetailPopup);
+    if (this.compareUserDetailPopup.index || this.compareUserDetailPopup.index === 0 ) {
+      console.log(this.form4);
+      this.compareUserDetail[this.compareUserDetailPopup.index].ApproveReportDate = this.form4.controls.ApproveReportDate.value.formatted;
+    }
+    console.log(this.compareUserDetailPopup);
+  }
+  onSaveF4() {
+    // i = i - 1;
+    // console.log(this.ListCompareDetailReceipt);
+    this.userCompareReceiptDetail.PaymentDate = this.form3.controls.PaymentDate.value.formatted;
+    // this.ListCompareDetailReceipt[i].ReceiptChanel = this.userCompareReceiptDetail.ReceiptChanel;
+    // this.ListCompareDetailReceipt[i].ReceiptNo = this.userCompareReceiptDetail.ReceiptNo;
+    // this.ListCompareDetailReceipt[i].Refference = this.userCompareReceiptDetail.ReferenceNo;
+    // this.ListCompareDetailReceipt[i].RevernueStatus = this.userCompareReceiptDetail.RevernueStatus;
+    // this.ListCompareDetailReceipt[i].PaymentDate = this.form3.controls.PaymentDate.value.formatted;
+  }
+  confirmDelF4() {
+
+  }
 }
 
 
