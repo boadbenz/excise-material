@@ -102,8 +102,8 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  async LawsuitArrestgetByCon(ArrestCode: number) {
-    const params = { IndictmentID: ArrestCode };
+  async LawsuitArrestgetByCon(IndictmentID) {
+    const params = { IndictmentID: IndictmentID };
     const url = `${appConfig.api8083}/LawsuitArrestgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
@@ -157,7 +157,6 @@ export class LawsuitService {
   }
 
   async LawsuitArrestIndicmentupdByCon(IndictmentID) {
-    console.log(IndictmentID)
     const params = { IndictmentID: IndictmentID };
     const url = `${appConfig.api8083}/LawsuitArrestIndictmentupdByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
