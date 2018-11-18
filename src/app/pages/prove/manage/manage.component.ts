@@ -1469,7 +1469,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     OpenPopupProduct(i: number) {
         this.oProveProduct = {};
 
-        this.oProveProduct = Object.create(this.lsProveProduct[i]);
+        //this.oProveProduct = Object.create(this.lsProveProduct[i]);
+        this.oProveProduct = this.lsProveProduct[i];
+        debugger
         this.ProductID = this.lsProveProduct[i].ProductID;
         this.iPopup = i;
         this.modePopup = "U";
