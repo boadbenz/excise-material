@@ -140,7 +140,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.3');
+    this.sidebarService.setVersion('0.0.0.4');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
