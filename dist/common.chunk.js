@@ -2025,7 +2025,7 @@ var queue = /*@__PURE__*/ new __WEBPACK_IMPORTED_MODULE_1__QueueScheduler__["a" 
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return appConfig; });
 var appConfig = {
     apiUrl: 'http://150.95.81.223:8888/XCS60',
-    api8888: 'http://150.95.81.223888/XCS60',
+    api8888: 'http://150.95.81.223:888/XCS60',
     api7788: 'http://150.95.81.223:7788/XCS60',
     api7789: 'http://150.95.81.223:7789/XCS60',
     api8881: 'http://150.95.81.223:8881/XCS60',
