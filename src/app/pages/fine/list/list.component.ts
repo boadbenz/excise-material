@@ -7,8 +7,10 @@ import { Compare } from '../compare';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormGroup, FormControl, NgForm } from "@angular/forms";
 import { stringify } from 'querystring';
+import { IMyDpOptions } from 'mydatepicker';
+import { toLocalShort } from 'app/config/dateFormat';
 
 @Component({
     selector: 'app-list',
@@ -26,7 +28,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
     CompareDateFrom = "";
     CompareDateTo = "";
-
+    private today = new Date();
+    @ViewChild('advForm') advForm: NgForm;
     constructor(
         private _router: Router,
         private navService: NavigationService,
@@ -45,7 +48,68 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setNewButton(false);
         this.advSearch = this.navService.showAdvSearch;
     }
+    public LawsuitDateFromOptions: IMyDpOptions = {
+        // other options...
+        dateFormat: 'dd/mmm/yyyy',
+        disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
+    };
+    public LawsuitDateToOptions: IMyDpOptions = {
+        // other options...
+        dateFormat: 'dd/mmm/yyyy',
+        disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
+    };
+    onDateChanged(event) {
+        setTimeout(() => {
+            try {
+                if (this.advForm.value.LawsuitDateFrom.epoc > this.advForm.value.LawsuitDateTo.epoc) {
+                    this.advForm.controls['LawsuitDateTo'].setValue({
+                      date: this.advForm.value.LawsuitDateFrom.date,
+                      epoc: this.advForm.value.LawsuitDateFrom.epoc,
+                      formatted: this.advForm.value.LawsuitDateFrom.formatted,
+                      jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
+                    });
+                    console.log(this.advForm.controls['LawsuitDateTo'])
+                    alert(Message.checkDate);
+                    return;
+                  }
+                  else {
+                    this.LawsuitDateFromOptions = {
+                      dateFormat: 'dd/mmm/yyyy',
+                      disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 }
+                    }
+                  }
+            } catch (err) {
+                console.log(err)
+            }
 
+        }, 100);
+    }
+    onDateFromChanged(event) {
+        setTimeout(() => {
+            try {
+                if ( this.advForm.value.LawsuitDateFrom.epoc > this.advForm.value.LawsuitDateTo.epoc ) {
+                    this.advForm.controls['LawsuitDateTo'].setValue({
+                      date: this.advForm.value.LawsuitDateFrom.date,
+                      epoc: this.advForm.value.LawsuitDateFrom.epoc,
+                      formatted: this.advForm.value.LawsuitDateFrom.formatted,
+                      jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
+                    });
+                    alert(Message.checkDate);
+                    return;
+                  }
+                  else if (!event) {
+                    let checkDate = new Date(event.jsdate);
+                    this.LawsuitDateFromOptions = {
+                      dateFormat: 'dd/mmm/yyyy',
+                      disableSince: { year: checkDate.getFullYear(), month: checkDate.getMonth() + 1, day: checkDate.getDate() + 1 }
+                    }
+                  }
+            } catch (err) {
+                console.log(err);
+            }
+
+        }, 100);
+      }
     async ngOnInit() {
         const form = new FormGroup({
             ArrestCode: new FormControl(""),
@@ -106,7 +170,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
             form.value.ProgramCode = "";
             form.value.ProcessCode = "";
-            
+
             var sendingFormat = {
                 ArrestCode: form.value.ArrestCode,
                 LawsuitCode: form.value.LawsuitCode,
@@ -133,33 +197,50 @@ export class ListComponent implements OnInit, OnDestroy {
             alert(Message.noRecord);
             return false;
         }
-        if (Array.isArray(list)) {
-            list.forEach(element => {
-                this.CompareList.push({
-                    CompareCode: CompareCode,
-                    ArrestCode: element.ArrestCode, 
-                    LawsuitNo: element.LawsuitNo,
-                    ProveReportNo: element.ProveReportNo,
-                    TitleName: element.TitleName,
-                    FirstName: element.FirstName,
-                    LastName: element.LastName,
-                    CompareDate: new Date(element.CompareDate),
-                    DepartmentName: element.DepartmentName,
-                    IsOutside: IsOutside
-                });                
-            });
-        } else {
-            this.CompareList.push(list);
-        }
+
+        this.CompareList = list.map((item, i) => {
+            item.RowsId = i + 1;
+            try {
+              item.CompareDate = toLocalShort(item.CompareDate);
+            } catch (error) {
+
+            }
+
+            // item.LawsuitID = list.LawsuitArrestIndicment[0];
+            // console.log("Check LIST:"+JSON.stringify(item));
+            return item;
+          });
+          /* Set Total Record */
+        //   this.paginage.TotalItems = this.results.length;
+
+        // if (Array.isArray(list)) {
+        //     list.forEach(element => {
+        //         this.CompareList.push({
+        //             CompareCode: element.CompareCode,
+        //             ArrestCode: element.ArrestCode,
+        //             LawsuitNo: element.LawsuitNo,
+        //             ProveReportNo: element.ProveReportNo,
+        //             TitleName: element.TitleName,
+        //             FirstName: element.FirstName,
+        //             LastName: element.LastName,
+        //             CompareDate: toLocalShort(element.CompareDate),
+        //             DepartmentName: element.DepartmentName,
+        //             IsOutside: IsOutside
+        //         });
+        //     });
+        // } else {
+        //     this.CompareList.push(list);
+        // }
         // set total record
         this.paginage.TotalItems = this.CompareList.length;
     }
 
     clickView(LawsuitID: string, ArrestCode: string, CompareID: string) {
-        if (CompareID == null || CompareID == "")
-            CompareID = "0";
-
-        this._router.navigate([`/fine/manage/R/${LawsuitID}/${ArrestCode}/${CompareID}`]);
+        if (CompareID == null || CompareID === '') {
+          CompareID = '0';
+        }
+        LawsuitID = LawsuitID.toString().replace('/', '-');
+        this._router.navigate([`/fine/manage/R/${CompareID}/${LawsuitID}/${ArrestCode}`]);
     }
 
     async pageChanges(event) {
