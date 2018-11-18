@@ -3,6 +3,7 @@ import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-int
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Input, Output, EventEmitter } from '@angular/core';
 import { ITableDataOptions } from 'app/pages/reward/shared/table-data/table-data.config';
+import { MasOfficeModel } from 'app/models/mas-office.model';
 
 export class CONFIG extends RewardConfig {
   public TableDataOptions: ITableDataOptions = {};
@@ -41,6 +42,16 @@ export class CONFIG extends RewardConfig {
     return this.requestCompare$.asObservable();
   }
   public requestCompare$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set MasOfficeMain(val) {
+    this.MasOfficeMain$.next(val);
+  }
+  get MasOfficeMain() {
+    return this.MasOfficeMain$.asObservable();
+  }
+  public MasOfficeMain$ = new BehaviorSubject<any>(null);
+
   public columnsForm: ColumnsInterface[] = [];
   public columnsFormDefault: ColumnsInterface[] = [
     {
@@ -68,17 +79,18 @@ export class CONFIG extends RewardConfig {
       title: 'วันที่จัดทำ',
       field: 'RequestDate',
       inputType: 'text',
+      default: this.setDateNow,
       isDisabled: false,
-      default: '',
       title2: 'เวลา',
       field2: 'RequestTime',
       inputType2: 'text',
       isDisabled2: false,
-      default2: ''
+      default2: this.setTimeNow,
     }
   ];
   @Output()
   public aggregateHandle = new EventEmitter();
+
   public aggregate = {
     PaymentFine: {
       sum: 0

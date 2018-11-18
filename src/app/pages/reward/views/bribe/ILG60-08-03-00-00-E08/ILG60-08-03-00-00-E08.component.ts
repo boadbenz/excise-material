@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RequestArrestLawsuitService } from 'app/pages/reward/services/RequestArrestLawsuit.service';
 import {
   IRequestArrestLawsuitGetByIndictmentId,
@@ -15,6 +15,15 @@ import { RequestPaymentFineService } from 'app/pages/reward/services/RequestPaym
 import { IRequestPaymentFine } from 'app/pages/reward/interfaces/RequestPaymentFine';
 import { RequestPaymentFineDetailService } from 'app/pages/reward/services/RequestPaymentFineDetail.service';
 import { IRequestPaymentFineDetail } from 'app/pages/reward/interfaces/RequestPaymentFineDetail';
+import { MasOfficeService } from 'app/pages/reward/services/master/MasOffice.service';
+import { MasOfficeModel } from 'app/models/mas-office.model';
+import { Observable } from 'rxjs/observable';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  filter
+} from 'rxjs/operators';
 import { MyDatePickerOptions } from 'app/config/dateFormat';
 interface IDetailCustom {
   PaymentFineDetailID?: number;
@@ -41,11 +50,25 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
   public totalPart = 0;
   public partMoney = 0;
   public checkList: boolean[] = [];
+  public MasOfficeMainList: string[] = [];
+  searchStation = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 2
+          ? []
+          : this.MasOfficeMainList.filter(
+              v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
+            ).slice(0, 10)
+      )
+    );
   constructor(
     private fb: FormBuilder,
     private requestArrestLawsuitService: RequestArrestLawsuitService,
     private bribeService: BribeService,
-    private requestPaymentFineDetailService: RequestPaymentFineDetailService
+    private requestPaymentFineDetailService: RequestPaymentFineDetailService,
+    private masOfficeService: MasOfficeService
   ) {
     super();
     this.RequestCommand$.subscribe((resCom: IRequestCommand[]) => {
@@ -76,7 +99,16 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
         this.tableDetail = this.mapDetailData(RequestBribe.RequestBribeDetail);
       }
     });
-    this.formGroup = this.fb.group(this.createForm(this.columnsForm));
+    this.formGroup = this.fb.group({
+      DetailIDs: [null],
+      CommandDetailID: [null],
+      NoticeCodeAndName: ['', Validators.required],
+      RequestBribeCode: [''],
+      Station: ['', Validators.required],
+      RequestDate: [this.setDateNow, Validators.required],
+      RequestTime: [this.setTimeNow],
+      Informeracknowledge: ['', Validators.required]
+    });
     this.formGroup.controls['NoticeCodeAndName'].valueChanges.subscribe(
       form => {
         const index = this.RequestCommand_NoticeCode_list.findIndex(
@@ -90,7 +122,13 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
     );
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.masOfficeService
+    .MasOfficeMaingetAll()
+    .subscribe((Office: MasOfficeModel[]) => {
+      this.MasOfficeMainList = Office.map(m => m.OfficeName);
+    });
+  }
   public RequestArrestLawsuitgetByIndictmentID(
     param: IRequestArrestLawsuitGetByIndictmentId
   ) {

@@ -3,8 +3,16 @@ import { ListConfig } from './list.config';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { RequestListService } from '../../services/RequestList.service';
 import { PreloaderService } from 'app/shared/preloader/preloader.component';
-import { IRequestList, IRequestListgetByConAdv } from '../../interfaces/RequestList.interface';
+import {
+  IRequestList,
+  IRequestListgetByConAdv
+} from '../../interfaces/RequestList.interface';
 import { FormGroup } from '@angular/forms';
+import {
+  convertDateForSave,
+  toLocalNumeric,
+  getDateMyDatepicker
+} from 'app/config/dateFormat';
 
 @Component({
   selector: 'app-list',
@@ -59,7 +67,21 @@ export class ListComponent extends ListConfig implements OnInit {
   }
   public submitAdvSearch($event: FormGroup) {
     this.preloaderService.setShowPreloader(true);
+    console.log(' $event.value', $event.value);
+
     const formData: IRequestListgetByConAdv = $event.value;
+    formData.LawsuitDateFrom = convertDateForSave(
+      getDateMyDatepicker(formData.LawsuitDateFrom)
+    );
+    formData.LawsuitDateTo = convertDateForSave(
+      getDateMyDatepicker(formData.LawsuitDateTo)
+    );
+    formData.OccurrenceDateFrom = convertDateForSave(
+      getDateMyDatepicker(formData.OccurrenceDateFrom)
+    );
+    formData.OccurrenceDateTo = convertDateForSave(
+      getDateMyDatepicker(formData.OccurrenceDateTo)
+    );
     this.requestListService.RequestListgetByConAdv(formData).subscribe(res => {
       this.gridData = this.gridData = this.newData(res);
       this.preloaderService.setShowPreloader(false);

@@ -1,3 +1,4 @@
+{{formGroup.value | json}}
 <form [formGroup]="formGroup" (change)="changeForm(formGroup)">
   <div class="row">
     <div class="col-md-6">
@@ -32,7 +33,7 @@
       <div class="form-group row">
         <label class="col-form-label col-md-4">เขียนที่ : </label>
         <div class="col-md-8">
-          <input class="form-control" type="text" formControlName="Station">
+          <input class="form-control" type="text" formControlName="Station" [ngbTypeahead]="searchStation">
         </div>
       </div>
     </div>
@@ -40,7 +41,7 @@
       <div class="form-group row">
         <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
         <div class="col-md-3">
-          <my-date-picker formControlName="RequestDate" placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions"></my-date-picker>
+          <my-date-picker formControlName="RequestDate" placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions" ></my-date-picker>
           <!-- <input class="form-control" type="text" formControlName="RequestDate"> -->
         </div>
         <label class="col-form-label text-center col-md-2">เวลา</label>

@@ -6,6 +6,17 @@ import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 import { IRequestCompare } from 'app/pages/reward/interfaces/RequestCompare';
 import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
 import { IRequestPaymentFine } from 'app/pages/reward/interfaces/RequestPaymentFine';
+import { FormBuilder } from '@angular/forms';
+import { MyDatePickerOptions } from 'app/config/dateFormat';
+import { Observable } from 'rxjs/observable';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  filter
+} from 'rxjs/operators';
+import { MasOfficeModel } from 'app/models/mas-office.model';
+import { MasOfficeService } from 'app/pages/reward/services/master/MasOffice.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -15,12 +26,31 @@ import { IRequestPaymentFine } from 'app/pages/reward/interfaces/RequestPaymentF
 })
 // tslint:disable-next-line:class-name
 export class ILG6008040000E08Component extends CONFIG implements OnInit {
+  public myDatePickerOptions = MyDatePickerOptions;
   public checkAll = false;
   public checkList: boolean[];
   public RequestPaymentFine: IRequestPaymentFine[] = [];
   public listData: any[] = [];
-  constructor() {
+  public MasOfficeMainList: string[] = [];
+  searchStation = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 2
+          ? []
+          : this.MasOfficeMainList.filter(
+              v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
+            ).slice(0, 10)
+      )
+    );
+
+  constructor(
+    private fb: FormBuilder,
+    private masOfficeService: MasOfficeService) {
     super();
+
+    this.formGroup = this.fb.group(this.createForm(this.columnsFormDefault));
     this.inputData$.subscribe((res: IRewardBinding) => {
       if (typeof res !== 'undefined' && res && res !== null) {
         console.log('res', res);
@@ -52,20 +82,27 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
                 dataRequestCompare[0].CompareCode
               }`;
 
-              const RequestRewardCode = this.columnsFormDefault.findIndex(
-                f => f.field === 'RequestRewardCode'
-              );
-              const ReferenceNo = this.columnsFormDefault.findIndex(
-                f => f.field === 'ReferenceNo'
-              );
+              // const RequestRewardCode = this.columnsFormDefault.findIndex(
+              //   f => f.field === 'RequestRewardCode'
+              // );
+              // const ReferenceNo = this.columnsFormDefault.findIndex(
+              //   f => f.field === 'ReferenceNo'
+              // );
 
-              const columnsForm: ColumnsInterface[] = this.columnsFormDefault;
-              columnsForm[ReferenceNo].default = newMapName;
+              // const columnsForm: ColumnsInterface[] = this.columnsFormDefault;
+              // columnsForm[ReferenceNo].default = newMapName;
 
-              columnsForm[RequestRewardCode].isDisabled = true;
-              columnsForm[RequestRewardCode].default = 'Auto Generate';
-              // console.log('ReferenceNoData', columnsForm);
-              this.columnsForm = columnsForm;
+              // columnsForm[RequestRewardCode].isDisabled = true;
+              // columnsForm[RequestRewardCode].default = 'Auto Generate';
+              // // console.log('ReferenceNoData', columnsForm);
+              // this.columnsForm = columnsForm;
+              // columnsForm.forEach(f => {
+              this.formGroup.controls['ReferenceNo'].setValue(newMapName);
+              this.formGroup.controls['RequestRewardCode'].setValue(
+                'Auto Generate'
+              );
+              // })
+
               // this.columnsForm$.next(this.columnsForm);
               const mapData = dataRequestCompare[0].RequestPaymentFine.map(
                 m => ({
@@ -109,7 +146,13 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.masOfficeService
+    .MasOfficeMaingetAll()
+    .subscribe((Office: MasOfficeModel[]) => {
+      this.MasOfficeMainList = Office.map(m => m.OfficeName);
+    });
+  }
 
   public checkChecked(arrBool: boolean[]): boolean {
     const d = arrBool.map(m => (m ? 1 : -1));
@@ -137,11 +180,11 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
         .map((m, index) => (this.checkList[index] ? m.RewardMoney : null))
         .reduce((a, b) => (a += b))
     );
-    
+
     this.aggregateHandle.emit({
-      BribeMoney : this.aggregate.BribeMoney.sum,
-      PaymentFine : this.aggregate.PaymentFine.sum,
-      RewardMoney : this.aggregate.RewardMoney.sum,
+      BribeMoney: this.aggregate.BribeMoney.sum,
+      PaymentFine: this.aggregate.PaymentFine.sum,
+      RewardMoney: this.aggregate.RewardMoney.sum
     });
   }
   public ILG60_08_04_00_00_E09_OnSelect() {

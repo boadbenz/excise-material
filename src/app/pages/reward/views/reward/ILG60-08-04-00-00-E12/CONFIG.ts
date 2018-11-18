@@ -37,6 +37,7 @@ export class CONFIG extends RewardConfig {
     FirstPart: 0,
     FirstMoney: 0,
     SecondPart: 0,
+    SecondMoney: 0,
     ToTalMoney: 0
   };
 }

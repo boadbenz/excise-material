@@ -82,11 +82,11 @@ export class RewardComponent extends RewardConfig implements OnInit {
             this.MasStaffMain = staff;
           }); // 1.1.2
 
-        this.masOfficeService
-          .MasOfficeMaingetAll()
-          .subscribe((Office: MasOfficeModel[]) => {
-            this.MasOfficeMain = Office;
-          }); // 1.1.3
+        // this.masOfficeService
+        //   .MasOfficeMaingetAll()
+        //   .subscribe((Office: MasOfficeModel[]) => {
+        //     this.MasOfficeMain = Office;
+        //   }); // 1.1.3
 
         this.requestCompareService
           .RequestComparegetByIndictmentID({

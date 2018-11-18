@@ -14,24 +14,26 @@ export class CONFIG extends BribeConfig {
     {
       title: 'วันที่จัดทำ',
       field: 'POADate',
-      inputType: 'date',
-      title2: 'เวลา',
-      field2: 'POATime',
-      inputType2: 'time'
+      default: this.setDateNow
+    },
+    {
+      title: 'เวลา',
+      field: 'POATime',
+      default: this.setTimeNow
     },
     {
       title: 'ผู้รับมอบอำนาจ',
-      field: 'Name'
+      field: 'StaffMainName'
     },
     {
       title: 'ตำแหน่ง',
       field: 'PositionName',
-      isDisabled: true // 1.1.5(2)
+      // isDisabled: true // 1.1.5(2)
     },
     {
       title: 'หน่วยงาน',
       field: 'OfficeName',
-      isDisabled: true // 1.1.5(3)
+      // isDisabled: true // 1.1.5(3)
     }
   ];
 }

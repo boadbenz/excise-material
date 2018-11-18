@@ -43,41 +43,42 @@ export class CONFIG extends BribeConfig {
   public mode$ = new BehaviorSubject<any>(null);
   public RequestArrestLawsuit$ = new BehaviorSubject<any>(null);
 
-  public columnsForm: ColumnsInterface[] = [
-    {
-      field: 'DetailIDs'
-    },
-    {
-      field: 'CommandDetailID',
-      isRequired: true
-    },
-    {
-      title: 'เลขที่ใบแจ้งความนำจับ',
-      field: 'NoticeCodeAndName',
-      isRequired: true
-    },
-    {
-      title: 'เลขที่คำร้องขอ',
-      field: 'RequestBribeCode'
-    },
-    {
-      title: 'เขียนที่',
-      field: 'Station',
-      isRequired: true
-    },
-    {
-      title: 'วันที่จัดทำ',
-      field: 'RequestDate',
-      isRequired: true,
-      title2: 'เวลา',
-      field2: 'RequestTime'
-    },
-    {
-      title: 'ผู้แจ้งความได้ทราบว่า',
-      isRequired: true,
-      field: 'Informeracknowledge'
-    }
-  ];
+  // public columnsForm: ColumnsInterface[] = [
+  //   {
+  //     field: 'DetailIDs'
+  //   },
+  //   {
+  //     field: 'CommandDetailID',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'เลขที่ใบแจ้งความนำจับ',
+  //     field: 'NoticeCodeAndName',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'เลขที่คำร้องขอ',
+  //     field: 'RequestBribeCode'
+  //   },
+  //   {
+  //     title: 'เขียนที่',
+  //     field: 'Station',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'วันที่จัดทำ',
+  //     field: 'RequestDate',
+  //     default: `${this.setZero((new Date).getHours())}.${this.setZero((new Date).getMinutes())} น.`,
+  //     isRequired: true,
+  //     title2: 'เวลา',
+  //     field2: 'RequestTime'
+  //   },
+  //   {
+  //     title: 'ผู้แจ้งความได้ทราบว่า',
+  //     isRequired: true,
+  //     field: 'Informeracknowledge'
+  //   }
+  // ];
 
   public columnsTable: ColumnsInterface[] = [
     {
@@ -90,7 +91,8 @@ export class CONFIG extends BribeConfig {
     },
     {
       title: 'วันที่ชำระ',
-      field: 'PaymentDate'
+      field: 'PaymentDate',
+      default: `${this.setZero((new Date).getHours())}.${this.setZero((new Date).getMinutes())} น.`
     },
     {
       title: 'ใบเสร็จเล่มที่',
