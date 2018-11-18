@@ -65,7 +65,7 @@ export class FineService {
     async compareArrestGetByCon(ArrestCode: string) {
       // http://103.233.193.62:8881/XCS60/CompareListgetByConAdv
       const params = { 'ArrestCode' : ArrestCode };
-      const url = `${appConfig.api8881}/CompareListgetByConAdv`;
+      const url = `${appConfig.api8887}/CompareListgetByConAdv`;
 
       try {
         return await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -128,7 +128,7 @@ export class FineService {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             return res.ResponseData as Lawsuit;
         } catch (error) {
-            await alert(error);
+            console.log(error);
         }
     }
 

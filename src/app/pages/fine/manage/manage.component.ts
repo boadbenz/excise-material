@@ -151,6 +151,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.preloader.setShowPreloader(true);
     await this.setDataObjectToSave();
     this.MasStaffMaingetAll();
     this.MasDepartmentMaingetAll();
@@ -158,23 +159,24 @@ export class ManageComponent implements OnInit, OnDestroy {
     // console.log(1234);
     this.active_Route();
     await this.navigate_Service();
-    // await this.getStation();
-    // await this.getCompareStaff();
+    await this.getStation();
+    await this.getCompareStaff();
     this.CreateObject();
     await this.getAresstData();
-    this.getLawsuitByID(this.LawsuitID);
+    // this.getLawsuitByID(this.LawsuitID);
     await this.getArrestByID(this.ArrestCode);
     const date = new Date();
-    this.CompareYear = (date.getFullYear() + 543).toString();
-    this.CompareDate = this.getCurrentDate();
-    this.CompareTime = this.getCurrentTime();
+    // this.CompareYear = (date.getFullYear() + 543).toString();
+    // this.CompareDate = this.getCurrentDate();
+    // this.CompareTime = this.getCurrentTime();
 
-    if (this.CompareID !== '0') {
-      await this.getCompareByID();
-      await this.ShowData();
-    }
+    // if (this.CompareID !== '0') {
+    //   await this.getCompareByID();
+    //   await this.ShowData();
+    // }
     this.preloader.setShowPreloader(false);
-    this.navigate_Service();
+
+    // this.navigate_Service();
   }
   async CompareCountMistreatgetByCon(LawBreakerID: number, SectionNo: number) {
     try {
@@ -301,7 +303,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           sum2: 0,
           sum3: 0
         };
-        if (resp[0].CompareArrestIndictment[0].CompareProve) {
+        if (resp[0].CompareArrestIndictment[0].CompareProve[0]) {
           for (const product of this.jsonCopy(resp[0].CompareArrestIndictment[0].CompareProve[0].CompareProveProduct)) {
             const compareWithProduct: any = this.jsonCopy(compareTmp);
             compareWithProduct.isFirstRow = true;
@@ -773,7 +775,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // });
         console.log('ArrestLawbreaker');
         console.log(this.oArrest);
-        await this.getGuiltBaseByID();
+        // await this.getGuiltBaseByID();
 
         this.preloader.setShowPreloader(false);
       } catch (err) {
@@ -1046,7 +1048,8 @@ export class ManageComponent implements OnInit, OnDestroy {
       return true
 
     } catch (err) {
-      alert(err.message);
+      alert('บันทึกข้อมูลไม่สำเร็จ');
+      console.log(err.message);
       return false
     }
 
@@ -1192,7 +1195,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.rawStaffOptions = res;
       }
     }, (err: HttpErrorResponse) => {
-      alert(err.message);
+      console.log(err.message);
     });
     // this.preloader.setShowPreloader(false);
   }

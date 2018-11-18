@@ -138,6 +138,9 @@ export class ListComponent implements OnInit, OnDestroy {
                     Textsearch = {Textsearch:""};
                 }
                 await this.onSearch(Textsearch);
+            } else {
+                Textsearch = {Textsearch:""};
+                await this.onSearch(Textsearch);
             }
         });
 
