@@ -1552,7 +1552,7 @@ export class DialogJudgment {
   public validStatus = false;
   public isPayAll = null;
   public arrestData = [];
-  public MasCourtList  []
+  public MasCourtList = []
   lawsuitArrestFormDialog: FormGroup;
 
   async ngOnInit() {
