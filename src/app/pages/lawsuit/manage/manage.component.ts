@@ -551,7 +551,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.6');
+    this.sidebarService.setVersion('0.0.0.9');
     // this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -1175,11 +1175,14 @@ export class ManageComponent implements OnInit {
           let arrList = [];
           console.log('LawsuitArrestIndicment', res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
           await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].map(item => {
+
             this.LawsuitTableListShow = true;
-            res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitArrestLawbreaker'].map(arrestLaw => {
+            item['LawsuitArrestLawbreaker'].map(arrestLaw => {
+              console.log(arrestLaw)
               const middleName = (arrestLaw.LawbreakerMiddleName) ? arrestLaw.LawbreakerMiddleName : '';
               console.log('middleName', middleName)
               item.lawBrakerFullName = `${arrestLaw.LawbreakerTitleName} ${arrestLaw.LawbreakerFirstName} ${middleName} ${arrestLaw.LawbreakerLastName}`
+              console.log(item.lawBrakerFullName)
             });
 
             /// add LawsuitTableList
