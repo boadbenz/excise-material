@@ -26,6 +26,7 @@ import { async } from 'q';
 import { isArray } from 'jquery';
 import { FormGroup, FormControl, NgForm } from '@angular/forms';
 import { IMyDpOptions, IMyDate } from 'mydatepicker';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -136,8 +137,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     private LawsuitSV: LawsuitService,
     private MasterSV: MasterService,
     private router: Router,
-    private preloader: PreloaderService
+    private preloader: PreloaderService,
+    private sidebarService: SidebarService
   ) {
+    this.sidebarService.setVersion('0.0.0.3');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -255,7 +258,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.SectionNo = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].CompareSubSectionRules[0].SectionNo;
       this.PenaltyDesc = resp[0].CompareArrestIndictment[0].CompareGuiltBase[0].Fine;
       // this.compareUserDetail =  resp[0].CompareArrestIndictment[0].CompareIndicmentDetail;
-      this.dataToSave.compare.CompareStaff = resp[0].CompareArrestIndictment[0].CompareLawsuit[0].CompareLawsuitStaff;
+      // this.dataToSave.compare.CompareStaff = resp[0].CompareArrestIndictment[0].CompareLawsuit[0].CompareLawsuitStaff;
       const ListCompareDetailTmp: any = resp[0].CompareArrestIndictment[0].CompareIndicmentDetail;
       const ListCompareDetailTmpData: any =  [];
       console.log(ListCompareDetailTmp);
@@ -998,15 +1001,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     return `${datepicker.year}-${datepicker.month}-${datepicker.day}`;
   }
   async onInsCompare() {
+    let PaymentFineAppointDate: any = '';
+    let PaymentVatDate: any = '';
     try {
-      let PaymentFineAppointDate: any = '';
-      let PaymentVatDate: any = '';
       if (this.advForm.controls.PaymentFineAppointDate.value) {
         PaymentFineAppointDate = `${this.convertDatepickerToNormal(this.advForm.controls.PaymentFineAppointDate.value.date)} 00:00:00 +07:00`;
       }
       if (this.advForm.controls.PaymentVatDate.value) {
         PaymentVatDate = `${this.convertDatepickerToNormal(this.advForm.controls.PaymentVatDate.value.date)} 00:00:00 +07:00`;
       }
+    } catch (err) {
+      console.log(err);
+    }
+ 
+    try {
       const compareDetail: any = {
         'LawbrakerTestimony': this.editUser.LawbrakerTestimony,
         'Fact': this.compareUserDetailPopup.detailFact,
@@ -1210,6 +1218,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   StaffonAutoSelecteWord(event) {
+  
     this.oCompareStaff = {
       StaffID: this.CompareStaffID,
       ProgramCode: 'XCS-60',
@@ -1232,7 +1241,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       ContributorID: '18',
       IsActive: '1'
     };
-
+    console.log(event);
     if (this.CompareStaffID == '' || this.CompareStaffID == undefined) {
       this.oCompareStaff.IsNewItem = true;
     }
