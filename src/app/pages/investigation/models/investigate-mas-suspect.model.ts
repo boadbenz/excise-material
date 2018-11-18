@@ -15,6 +15,7 @@ export class InvestigateMasSuspectModel {
     LicenseDateTo: any;
     TaxID: string;
     ExciseRegNo: string;
+    SuspectReferenceID: number;
     SuspectType: number;
     SuspectTitleCode: string;
     SuspectTitleName: string;
@@ -68,7 +69,6 @@ export class InvestigateMasSuspectModel {
 
     SuspectTypeName: string;
     EntityTypeName: string;
-    SuspectReferenceID: number;
     ReferenceID: string;
     FullName: string;
     IsModify: string;

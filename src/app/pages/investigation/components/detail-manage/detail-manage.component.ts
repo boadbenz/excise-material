@@ -24,8 +24,7 @@ import * as fromStore from '../../store';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
-import { InvestigateDetailStaff } from '../../models';
-
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-investigate-detail-manage',
@@ -114,6 +113,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         private s_investDetail: fromServices.InvestgateDetailService,
         private s_document: MasDocumentMainService,
         private router: Router,
+        private sidebarService: SidebarService,
         private store: Store<fromStore.AppState>
     ) {
         this.obInvest = store.select(s => s.invest);
@@ -125,6 +125,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.sidebarService.setVersion('0.0.0.2');
+
         this.createForm();
 
         combineLatest(this.activeRoute.params, this.activeRoute.queryParams)
@@ -144,6 +146,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         break;
                     case 'R':
                         this.enableBtnModeR();
+                        this.onPageLoad();
                         break;
                 }
             });
@@ -274,42 +277,62 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     onPageLoad() {
-        this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then((x: fromModels.InvestigateDetail) => {
+        this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
 
             let invest = this.investigateFG;
             x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
             x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
 
-            this.pageRefreshStaff(x.InvestigateDetailStaff);
+            await this.pageRefreshStaff(x.InvestigateDetailStaff);
 
-            this.pageRefreshSuspect(x.InvestigateDetailSuspect);
+            await this.pageRefreshSuspect(x.InvestigateDetailSuspect);
 
-            this.pageRefreshLocal(x.InvestigateDetailLocal);
+            await this.pageRefreshLocal(x.InvestigateDetailLocal);
 
-            this.pageRefreshProduct(x.InvestigateDetailProduct);
+            await this.pageRefreshProduct(x.InvestigateDetailProduct);
+
+            await this.pageRefreshDocument(this.invesDetailId);
 
             invest.patchValue(x);
         })
     }
 
-    pageRefreshStaff(staff: fromModels.InvestigateDetailStaff[]) {
-        staff.map((y, index) => y.RowId = index + 1);
+    private async pageRefreshStaff(staff: fromModels.InvestigateDetailStaff[]) {
+        await staff.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+            y.FullName = `${y.TitleName} ${y.FirstName} ${y.LastName}`;
+        });
         this.setItemFormArray(staff, 'InvestigateDetailStaff');
     }
 
-    pageRefreshSuspect(suspect: fromModels.InvestigateDetailSuspect[]) {
-        suspect.map((y, index) => y.RowId = index + 1);
+    private async pageRefreshSuspect(suspect: fromModels.InvestigateDetailSuspect[]) {
+        await suspect.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+            y.FullName = `${y.SuspectTitleName} ${y.SuspectFirstName} ${y.SuspectLastName}`;
+        });
         this.setItemFormArray(suspect, 'InvestigateDetailSuspect');
     }
 
-    pageRefreshLocal(local: fromModels.InvestigateDetailLocal[]) {
-        local.map((y, index) => y.RowId = index + 1);
+    private async pageRefreshLocal(local: fromModels.InvestigateDetailLocal[]) {
+        await local.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+            y.Floor = y.Floor || null;
+            if (y.SubDistrictCode && y.DistrictCode && y.ProvinceCode) {
+                y.Region = `${y.SubDistrict} ${y.District} ${y.Province}`
+            }
+        });
         this.setItemFormArray(local, 'InvestigateDetailLocal');
     }
 
-    pageRefreshProduct(product: fromModels.InvestigateDetailProduct[]) {
-        product.map((y, index) => y.RowId = index + 1);
+    private async pageRefreshProduct(product: fromModels.InvestigateDetailProduct[]) {
+        await product.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+        });
         this.setItemFormArray(product, 'InvestigateDetailProduct');
     }
 
@@ -484,8 +507,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         let item = new fromModels.InvestigateDetailProduct();
         item.ProductID = null;
         item.InvestigateDetailID = null;
-        item.GroupName = null;
         item.GroupCode = '1';
+        item.GroupName = null;
         item.IsDomestic = null;
         item.ProductCode = null;
         item.BrandCode = null;
@@ -547,7 +570,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     changeArrestDoc(e: any, index: number) {
         this.InvestigateDocument.at(index).patchValue({
-            ReferenceCode: this.investCode,
             FilePath: replaceFakePath(e.target.value),
             IsActive: 1
         })
@@ -650,14 +672,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     formatterUnit = (DutyCode: string) => DutyCode;
 
-    selectItemLocaleRegion(e) {
-        this.InvestigateDetailLocal.at(0).patchValue({
+    selectItemLocaleRegion(e, i) {
+        this.InvestigateDetailLocal.at(i).patchValue({
             SubDistrictCode: e.item.SubdistrictCode,
             SubDistrict: e.item.SubdistrictNameTH,
             DistrictCode: e.item.DistrictCode,
             District: e.item.DistrictNameTH,
             ProvinceCode: e.item.ProvinceCode,
-            Province: e.item.ProvinceNameTH,
+            Province: e.item.ProvinceNameTH
         })
     }
 
@@ -670,6 +692,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             IsModify: product.IsModify == 'r' ? 'u' : product.IsModify,
             RowId: product.RowId,
             GroupCode: e.item.GroupCode || product.GroupCode,
+            GroupName: e.item.GroupName || e.item.GroupCode,
             IsDomestic: e.item.IsDomestic || product.IsDomestic,
             // ProductFrom: product.IsModify == 'c' ? 'mas-product' : product.ProductFrom
         })
@@ -831,27 +854,29 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     private async onDelete() {
         if (confirm(Message.confirmAction)) {
-            this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId).then(x => {
-                if (!this.checkResponse(x)) {
-                    alert(Message.delComplete);
-                    this.navigateToManage();
-                } else {
-                    alert(Message.delFail);
-                }
-            })
+            this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId)
+                .takeUntil(this.destroy$)
+                .subscribe(x => {
+                    if (!this.checkResponse(x)) {
+                        alert(Message.delComplete);
+                        this.navigateToManage();
+                    } else {
+                        alert(Message.delFail);
+                    }
+                })
         }
     }
 
     private async onSave() {
-        if (!this.stateInvest) {
-            alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
-            return;
-        }
+        // if (!this.stateInvest) {
+        //     alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
+        //     return;
+        // }
 
-        if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart || !this.stateInvest.DateEnd) {
-            alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
-            return;
-        }
+        // if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart || !this.stateInvest.DateEnd) {
+        //     alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
+        //     return;
+        // }
 
         if (this.investigateFG.invalid) {
             alert(Message.checkData);
@@ -995,11 +1020,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             if (!this.checkIsSuccess(x)) return;
             this.investCode = x.InvestigateCode;
             this.invesDetailId = x.InvestigateDetailID;
+            let staff = await this.modifyInvestigateDetailStaff(x.InvestigateDetailID);
             let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
+            let local = await this.modifyInvestigateDetailLocal(x.InvestigateDetailID);
             let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
             let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
 
-            return Promise.all([suspect, product, ducument]);
+            return Promise.all([staff, suspect, local, product, ducument]);
         }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
 
@@ -1012,14 +1039,48 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
         this.s_investDetail.InvestigateDetailupdByCon(form).then(async x => {
             if (!this.checkIsSuccess(x)) return;
+            let staff = await this.modifyInvestigateDetailStaff(x.InvestigateDetailID);
             let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
+            let local = await this.modifyInvestigateDetailLocal(x.InvestigateDetailID);
             let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
             let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
 
-            return Promise.all([suspect, product, ducument]);
+            return Promise.all([staff, suspect, local, product, ducument]);
         }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
+    }
 
+    private async modifyInvestigateDetailStaff(investDetailId: number) {
+        const staff = await this.InvestigateDetailStaff.value
+            .map(async (x: fromModels.InvestigateDetailStaff) => {
+                x.InvestigateDetailID = investDetailId;
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailStaffupdDelete(x.StaffID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        await this.s_investDetail.InvestigateDetailStaffinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                    case 'r':
+                        await this.s_investDetail.InvestigateDetailStaffupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            })
+        return Promise.all(staff);
     }
 
     private async modifyInvestigateDetailSuspect(investDetailId: number) {
@@ -1036,14 +1097,15 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        await this.s_investDetail.InvestigateDetailStaffinsAll(x)
+                        await this.s_investDetail.InvestigateDetailSuspectinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
                         break;
                     case 'u':
-                        await this.s_investDetail.InvestigateDetailStaffupdByCon(x)
+                    case 'r':
+                        await this.s_investDetail.InvestigateDetailSuspectupdByCon(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
@@ -1052,6 +1114,39 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 }
             });
         return Promise.all(suspect);
+    }
+
+    private async modifyInvestigateDetailLocal(investDetailId: number) {
+        const product = await this.InvestigateDetailLocal.value
+            .map(async (x: fromModels.InvestigateDetailLocal) => {
+                x.InvestigateDetailID = investDetailId;
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailLocalupdDelete(x.LocalID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        await this.s_investDetail.InvestigateDetailLocalinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                    case 'r':
+                        await this.s_investDetail.InvestigateDetailLocalupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            });
+        return Promise.all(product);
     }
 
     private async modifyInvestigateDetailProduct(investDetailId: number) {
@@ -1075,6 +1170,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'u':
+                    case 'r':
                         await this.s_investDetail.InvestigateDetailProductupdByCon(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -1092,22 +1188,22 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 x.ReferenceCode = investDetailId.toString();
                 switch (x.IsModify) {
                     case 'd':
-                        if (this.mode == 'C') return;
-                        await this.s_investDetail.InvestigateDetailProductupdDelete(x.ReferenceCode)
+                        this.s_document.MasDocumentMainupdDelete(x.DocumentID.toString())
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        await this.s_investDetail.InvestigateDetailProductinsAll(x)
+                        this.s_document.MasDocumentMaininsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
                         break;
                     case 'u':
-                        await this.s_investDetail.InvestigateDetailProductupdByCon(x)
+                    case 'r':
+                        this.s_document.MasDocumentMainupdByCon(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
