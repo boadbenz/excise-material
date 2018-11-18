@@ -29,7 +29,7 @@ export class FineService {
     }
     getByKeyword(Textsearch: string) {
         const params = Textsearch;
-        const url = `${appConfig.api8881}/CompareListgetByKeyword`;
+        const url = `${appConfig.api8887}/CompareListgetByKeyword`;
         return this.http.post<Compare[]>(url, params, this.httpOptions);
     }
 
