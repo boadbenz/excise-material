@@ -1033,9 +1033,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         'ApproveStationCode': this.dataToSave.compare.CompareStationCode,
         'ApproveStation': this.dataToSave.compare.CompareStation
       };
+      const val3: any = Object.assign(this.dataToSave.compare.CompareDetail, compareDetail);
+      console.log(val3);
       this.dataToSave.compare.IsOutside = this.IsOutside;
       console.log(this.selDate);
-      this.dataToSave.compare.CompareDetail = compareDetail;
+      this.dataToSave.compare.CompareDetail = val3;
       this.dataToSave.compare.CompareDate = `${this.selDate.year}-${this.selDate.month}-${this.selDate.day} ${this.CompareTime.toString()} +07.00`;
       this.dataToSave.compare.LawSuitID = this.LawsuitID;
       console.log(this.dataToSave);
