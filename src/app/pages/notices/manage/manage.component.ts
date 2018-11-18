@@ -144,6 +144,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         // await this.setOfficeStore();
         // await this.setCommunicateStore();
 
+        this.setProductUnitStore();
+        this.setCommunicateStore();
         if (this.mode == 'R') {
             this.getByCon(this.noticeCode);
         }
@@ -315,6 +317,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
+            
             this.noticeCode = res.NoticeCode;
             this.arrestCode = res.ArrestCode;
             await this.noticeForm.reset({
@@ -571,8 +574,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     addDocument() {
         const lastIndex = this.NoticeDocument.length - 1;
         let document = new NoticeDocument();
+        document.DocumentID = ""+(lastIndex + 1);
+        document.DocumentName = "";
+        document.FilePath = "";
         document.IsNewItem = true;
         if (lastIndex < 0) {
+            console.log(document);
             this.NoticeDocument.push(this.fb.group(document));
         } else {
             const lastDoc = this.NoticeDocument.at(lastIndex).value;
