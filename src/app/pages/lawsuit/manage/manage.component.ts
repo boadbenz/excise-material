@@ -891,6 +891,7 @@ export class ManageComponent implements OnInit {
             })
 
           }
+          this.preLoaderService.setShowPreloader(false);
         }
 
 
