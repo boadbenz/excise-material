@@ -232,12 +232,12 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
         this.navService.setPrevPageButton(false);
-        this.navService.setNextPageButton(false);
         // set true
         this.navService.setPrintButton(true);
         this.navService.setEditButton(true);
         this.navService.setDeleteButton(true);
         this.navService.setEditField(true);
+        this.navService.setNextPageButton(true);
     }
 
     private async loadMasterData() {
