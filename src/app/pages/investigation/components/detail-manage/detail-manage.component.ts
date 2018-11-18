@@ -232,12 +232,12 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
         this.navService.setPrevPageButton(false);
-        this.navService.setNextPageButton(false);
         // set true
         this.navService.setPrintButton(true);
         this.navService.setEditButton(true);
         this.navService.setDeleteButton(true);
         this.navService.setEditField(true);
+        this.navService.setNextPageButton(true);
     }
 
     private async loadMasterData() {
@@ -276,8 +276,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.loaderService.hide();
     }
 
-    onPageLoad() {
-        this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
+    async onPageLoad() {
+        this.loaderService.show();
+        await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
 
             let invest = this.investigateFG;
@@ -296,6 +297,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
             invest.patchValue(x);
         })
+        this.loaderService.hide();
     }
 
     private async pageRefreshStaff(staff: fromModels.InvestigateDetailStaff[]) {
