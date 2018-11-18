@@ -226,8 +226,18 @@ export class LawsuitService {
     const url = `${appConfig.api8083}/LawsuitArrestIndicmentDetailupdByCon`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
-
-
+  async LawsuitArrestupdByCon(ArrestCode) {
+    const params = { 
+      ArrestCode: ArrestCode,
+    };
+    const url = `${appConfig.api8083}/LawsuitArrestupdByCon`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+  async MasCourtMaingetAll() {
+    const params = {};
+    const url = `${appConfig.api7789}/MasCourtMaingetAll`;
+    return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
   // async getByKeyword(filterValue) {
   //   const params = JSON.stringify(filterValue);
   //   const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
