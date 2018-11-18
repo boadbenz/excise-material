@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.8');
+    this.sidebarService.setVersion('0.0.0.9');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
     // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
@@ -191,10 +191,18 @@ export class ListComponent implements OnInit, OnDestroy {
     } else {
       item.LawsuitID = '';
     }
+    if(item.LawsuitID != "") {
+      this.router.navigate(['/lawsuit/manage', 'R'], {
+        queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+      });
+    } else {
+      this.router.navigate(['/lawsuit/manage', 'C'], {
+        queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+      });
+    }
+      
+    
 
-    this.router.navigate(['/lawsuit/manage', 'R'], {
-      queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
-    });
   }
 
   private closeAdvSearch() {
