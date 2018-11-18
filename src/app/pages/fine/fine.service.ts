@@ -129,7 +129,7 @@ export class FineService {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             return res.ResponseData as Lawsuit;
         } catch (error) {
-            await alert(error);
+            console.log(error);
         }
     }
 

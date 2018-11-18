@@ -113,7 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.3');
+        this.sidebarService.setVersion('0.0.0.4');
         const form = new FormGroup({
             ArrestCode: new FormControl(""),
             LawsuitCode: new FormControl(""),
@@ -132,13 +132,16 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preLoaderService.setShowPreloader(true);
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            // if (Textsearch) {
-            //     await this.navService.setOnSearch('');
-            //     if(Textsearch.Textsearch && Textsearch.Textsearch == null){
-            //         Textsearch = {Textsearch:""};
-            //     }
-            //     await this.onSearch(Textsearch);
-            // }
+            if (Textsearch) {
+                await this.navService.setOnSearch('');
+                if(Textsearch.Textsearch && Textsearch.Textsearch == null){
+                    Textsearch = {Textsearch:""};
+                }
+                await this.onSearch(Textsearch);
+            } else {
+                Textsearch = {Textsearch:""};
+                await this.onSearch(Textsearch);
+            }
         });
 
         this.preLoaderService.setShowPreloader(false);
