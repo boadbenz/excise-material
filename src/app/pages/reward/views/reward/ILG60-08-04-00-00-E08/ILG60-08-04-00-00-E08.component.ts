@@ -6,7 +6,7 @@ import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 import { IRequestCompare } from 'app/pages/reward/interfaces/RequestCompare';
 import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
 import { IRequestPaymentFine } from 'app/pages/reward/interfaces/RequestPaymentFine';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MyDatePickerOptions } from 'app/config/dateFormat';
 import { Observable } from 'rxjs/observable';
 import {
@@ -209,5 +209,11 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
     this.inputDataTable$.next(null);
 
     // 3
+  }
+  public formChange(formGroup: FormGroup) {
+    this.emitChange.emit({
+      FormName: 'ILG60-08-04-00-00-E08',
+      FormData: formGroup
+    });
   }
 }

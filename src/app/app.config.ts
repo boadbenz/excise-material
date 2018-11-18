@@ -9,6 +9,6 @@ export const appConfig = {
     api8084: 'http://150.95.81.233:8084/XCS60',
     api8882: 'http://150.95.81.233:8882/XCS60',
     api8883: 'http://150.95.81.233:8883/XCS60',
-    api8087: 'http://150.95.81.233:8087/XCS60',
+    api8087: 'http://103.233.193.62:8087/XCS60',
     mockapi: 'http://demo1735762.mockable.io/XCS60'
 }

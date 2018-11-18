@@ -27,6 +27,8 @@ import { ITransactionRunning } from '../../interfaces/TransactionRunning';
 import { RequestPaymentFineService } from '../../services/RequestPaymentFine.service';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { IRequestBribeReward } from '../../interfaces/RequestBribeReward.interface';
+import { IFormChange } from '../../interfaces/FormChange';
+import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 
 @Component({
   selector: 'app-reward',
@@ -60,6 +62,12 @@ export class RewardComponent extends RewardConfig implements OnInit {
       this.IndictmentID$.next(param['IndictmentID']);
       this.RequestRewardID$.next(param['RequestRewardID']);
       this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
+    });
+
+    this.navService.onSave.subscribe(save => {
+      if (save === true) {
+        this.saveButton();
+      }
     });
   }
 
@@ -196,7 +204,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
     // 2 END
   }
 
-  public saveButton(inputField) {
+  public saveButton() {
     // 1.3.2.	รหัสเหตุการณ์ : ILG60-08-04-00-00-E02 (ปุ่ม “บันทึก”)
 
     // 1 START
@@ -205,95 +213,116 @@ export class RewardComponent extends RewardConfig implements OnInit {
     // 1.3 'WAIT'
     // 1.4 'WAIT'
     // 1.5 'WAIT'
+    if (this.ILG60_08_04_00_00_E08_FORM_VALID) {
+      // 2
+      switch (this.mode$.getValue()) {
+        case 'C':
+          // 2.1
 
-    // 2
-    switch (this.mode$.getValue()) {
-      case 'C':
-        // 2.1
+          this.transactionRunningService
+            .TransactionRunninggetByCon({
+              RunningTable: 'ops_requestreward',
+              RunningOfficeCode: this.OfficeCode
+            })
+            .subscribe((TransactionRunning: ITransactionRunning[]) => {
+              // 2.1.2
+              if (TransactionRunning.length > 0) {
+                const tRunning: ITransactionRunning = TransactionRunning[0];
+                // 2.1.2(1)
+                // 2.1.2(1.1)
+                this.transactionRunningService.TransactionRunningupdByCon({
+                  RunningID: tRunning.RunningID
+                });
 
-        this.transactionRunningService
-          .TransactionRunninggetByCon({
-            RunningTable: 'ops_requestreward',
-            RunningOfficeCode: this.OfficeCode
-          })
-          .subscribe((TransactionRunning: ITransactionRunning[]) => {
-            // 2.1.2
-            if (TransactionRunning.length > 0) {
-              const tRunning: ITransactionRunning = TransactionRunning[0];
-              // 2.1.2(1)
-              // 2.1.2(1.1)
-              this.transactionRunningService.TransactionRunningupdByCon({
-                RunningID: tRunning.RunningID
-              });
+                // 2.1.2(1.2)
+                const RunningPrefix = `${this.leftPad(
+                  tRunning.RunningPrefix,
+                  2
+                )}`; // 2.1.2(1.2(1))
+                const RunningOfficeCode = `${this.leftPad(
+                  tRunning.RunningOfficeCode,
+                  6
+                )}`; // 2.1.2(1.2(2))
+                const RunningYear = `${this.leftPad(tRunning.RunningYear, 2)}`; // 2.1.2(1.2(3))
+                const RunningNo = `${this.leftPad(
+                  (Number(tRunning.RunningNo) + 1).toString(),
+                  5
+                )}`; // 2.1.2(1.2(4))
+                this.RequestBribeCode =
+                  RunningPrefix + RunningOfficeCode + RunningYear + RunningNo;
+              } else {
+                // 2.1.2(2)
 
-              // 2.1.2(1.2)
-              const RunningPrefix = `${this.leftPad(
-                tRunning.RunningPrefix,
-                2
-              )}`; // 2.1.2(1.2(1))
-              const RunningOfficeCode = `${this.leftPad(
-                tRunning.RunningOfficeCode,
-                6
-              )}`; // 2.1.2(1.2(2))
-              const RunningYear = `${this.leftPad(tRunning.RunningYear, 2)}`; // 2.1.2(1.2(3))
-              const RunningNo = `${this.leftPad(
-                (Number(tRunning.RunningNo) + 1).toString(),
-                5
-              )}`; // 2.1.2(1.2(4))
-              this.RequestBribeCode =
-                RunningPrefix + RunningOfficeCode + RunningYear + RunningNo;
-            } else {
-              // 2.1.2(2)
+                // 2.1.2(2.1)
+                this.transactionRunningService.TransactionRunninginsAll({
+                  RunningOfficeCode: this.OfficeCode,
+                  RunningTable: 'ops_requestreward',
+                  RunningPrefix: 'RW'
+                });
 
-              // 2.1.2(2.1)
-              this.transactionRunningService.TransactionRunninginsAll({
-                RunningOfficeCode: this.OfficeCode,
-                RunningTable: 'ops_requestreward',
-                RunningPrefix: 'RW'
-              });
+                // 2.1.2(2.2)
+                this.RequestRewardCode = `RW${this.leftPad(
+                  this.OfficeCode,
+                  0
+                )}${this.leftPad(this.yy_thaibuddha, 2)}00001`;
+              }
 
-              // 2.1.2(2.2)
-              this.RequestRewardCode = `RW${this.leftPad(
-                this.OfficeCode,
-                0
-              )}${this.leftPad(this.yy_thaibuddha, 2)}00001`;
-            }
+              // 2.1.3
+              this.requestRewardService
+                .RequestRewardinsAll({
+                  RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
+                  RequestRewardCode: this.RequestRewardCode,
+                  ReferenceNo: this.ILG60_08_04_00_00_E08_FORM_DATA.ReferenceNo,
+                  Station: this.ILG60_08_04_00_00_E08_FORM_DATA.Station,
+                  RequestDate: convertDateForSave(
+                    getDateMyDatepicker(
+                      this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate
+                    )
+                  ),
+                  RequestTime: this.ILG60_08_04_00_00_E08_FORM_DATA.RequestTime
+                })
+                .subscribe((res: IRequestRewardinsAllRespone) => {
+                  if (res.RequestRewardID) {
+                    // 2.1.5
+                    // 2.1.5(1)
+                    this.masDocumentMainService
+                      .MasDocumentMaininsAll({
+                        DocumentType: 9,
+                        ReferenceCode: res.RequestRewardID
+                      })
+                      .subscribe(resMasDocumentMain => {
+                        if (resMasDocumentMain['DocumentID']) {
+                          // 2.1.5(2) 'WAIT'
+                        }
+                      });
+                  }
+                });
 
-            // 2.1.3
-            this.requestRewardService
-              .RequestRewardinsAll({
-                RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
-                RequestRewardCode: this.RequestRewardCode
-              })
-              .subscribe((res: IRequestRewardinsAllRespone) => {
-                if (res.RequestRewardID) {
-                  // 2.1.5
-                  // 2.1.5(1)
-                  this.masDocumentMainService
-                    .MasDocumentMaininsAll({
-                      DocumentType: 9,
-                      ReferenceCode: res.RequestRewardID
-                    })
-                    .subscribe(resMasDocumentMain => {
-                      if (resMasDocumentMain['DocumentID']) {
-                        // 2.1.5(2) 'WAIT'
-                      }
-                    });
-                }
-              });
+              // 2.1.4 'WAIT'
+              // this.requestPaymentFineService.RequestPaymentFineupdByCon({
+              //   PaymentFineID:
+              // })
 
-            // 2.1.4 'WAIT'
-            // this.requestPaymentFineService.RequestPaymentFineupdByCon({
-            //   PaymentFineID:
-            // })
+              // 2.1.6 => 3
+            });
 
-            // 2.1.6 => 3
-          });
+          break;
+        case 'R':
+          // 2.2 'WAIT'
 
-        break;
-      case 'R':
-        // 2.2 'WAIT'
+          break;
+      }
+    } else {
+      alert('กรุณากรอกให้ครบถ้วน');
+    }
+  }
+  public changeForm(form: IFormChange) {
+    const { FormName, FormData } = form;
 
+    switch (FormName) {
+      case 'ILG60-08-04-00-00-E08':
+        this.ILG60_08_04_00_00_E08_FORM_VALID = FormData.valid;
+        this.ILG60_08_04_00_00_E08_FORM_DATA = FormData.value;
         break;
     }
   }
