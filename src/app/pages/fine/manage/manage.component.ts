@@ -1376,7 +1376,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.compareDataAllSum.sum1 = allSum*0.2;
     this.compareDataAllSum.sum2 = allSum*0.2;
     this.compareDataAllSum.sum3 = allSum*0.6;
-    this.userCompareReceiptDetail.TotalFine = this.getRound(allSum);
+    // this.userCompareReceiptDetail.TotalFine = this.getRound(allSum);
+    // console.log(this.userCompareReceiptDetail);
   }
   getRound(num: any) {
     return parseFloat((Math.round(num * 100) / 100).toString()).toFixed(2);
@@ -1390,6 +1391,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   onClickEditF4(item: any) {
     this.userCompareReceiptDetail = item;
+    this.userCompareReceiptDetail.TotalFine = this.getRound(this.compareDataAllSum.sum);
     console.log(item);
   }
   onClickEditF5(item: any, index: any) {

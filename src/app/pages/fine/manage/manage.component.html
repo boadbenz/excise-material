@@ -213,9 +213,9 @@
                    [disabled]="showEditField" value="" (keyup)="calculateComparePayment()">
           </td>
           <td *ngIf="item.fineSum">{{ getRound(item.sumPayment) }}</td>
-          <td>{{ getRound(item.fineSum ? item.sum1 : compareData['user' + item.userNo]['field' + i]*0.2) }}</td>
-          <td class="">{{ getRound(item.fineSum ? item.sum2 : compareData['user' + item.userNo]['field' + i]*0.2) }}</td>
-          <td>{{ getRound(item.fineSum ? item.sum3 : compareData['user' + item.userNo]['field' + i]*0.6) }}</td>
+          <td>{{ getRound(item.fineSum ? item.sum1 : (compareData['user' + item.userNo] ? compareData['user' + item.userNo]['field' + i]*0.2 : 0)) }}</td>
+          <td class="">{{ getRound(item.fineSum ? item.sum2 : (compareData['user' + item.userNo] ? compareData['user' + item.userNo]['field' + i]*0.2 : 0)) }}</td>
+          <td>{{ getRound(item.fineSum ? item.sum3 : (compareData['user' + item.userNo] ? compareData['user' + item.userNo]['field' + i]*0.6 : 0)) }}</td>
         </tr>
         <tr class="footable">
           <td colspan="5"></td>
