@@ -6,7 +6,7 @@ import { MasDocumentModel } from 'app/models/mas-document.model';
 import { IRequestReward } from '../../interfaces/RequestReward';
 export interface IRewardBinding {
   methodName?: string;
-  data?: any;
+  data?: any[];
 }
 export class RewardConfig extends RewardHelper {
   public OfficeCode = '102546';

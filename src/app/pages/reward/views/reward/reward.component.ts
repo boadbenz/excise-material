@@ -36,16 +36,10 @@ import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
   styleUrls: ['./reward.component.scss']
 })
 export class RewardComponent extends RewardConfig implements OnInit {
-  public MasTitleMain: MasTitleModel[];
-  public MasStaffMain: MasStaffModel[];
-  public MasOfficeMain: MasOfficeModel[];
   public ILG60_08_04_00_00_E12_DATA: IRewardBinding[] = [];
   public aggregate = {};
   constructor(
     private activatedRoute: ActivatedRoute,
-    private masTitleService: MasTitleService,
-    private masStaffService: MasStaffService,
-    private masOfficeService: MasOfficeService,
     private requestCompareService: RequestCompareService,
     private requstLawsuitJudgementService: RequstLawsuitJudgementService,
     private nonRequestRewardStaffService: NonRequestRewardStaffService,
@@ -54,7 +48,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
     private requestRewardService: RequestRewardService,
     private masDocumentMainService: MasDocumentMainService,
     private transactionRunningService: TransactionRunningService,
-    private requestPaymentFineService: RequestPaymentFineService
+    private requestPaymentFineService: RequestPaymentFineService,
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -79,16 +73,16 @@ export class RewardComponent extends RewardConfig implements OnInit {
     switch (this.mode$.getValue()) {
       case 'C':
         // 1.1
-        this.masTitleService
-          .MasTitleMaingetAll()
-          .subscribe((title: MasTitleModel[]) => {
-            this.MasTitleMain = title;
-          }); // 1.1.1
-        this.masStaffService
-          .MasStaffMaingetAll()
-          .subscribe((staff: MasStaffModel[]) => {
-            this.MasStaffMain = staff;
-          }); // 1.1.2
+        // this.masTitleService
+        //   .MasTitleMaingetAll()
+        //   .subscribe((title: MasTitleModel[]) => {
+        //     this.MasTitleMain = title;
+        //   }); // 1.1.1
+        // this.masStaffService
+        //   .MasStaffMaingetAll()
+        //   .subscribe((staff: MasStaffModel[]) => {
+        //     this.MasStaffMain = staff;
+        //   }); // 1.1.2
 
         // this.masOfficeService
         //   .MasOfficeMaingetAll()

@@ -45,7 +45,6 @@ import { async } from 'q';
   styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
-
   constructor(
     private navService: NavigationService,
     private activatedRoute: ActivatedRoute,
@@ -64,6 +63,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       this.ArrestCode$.next(param['ArrestCode']);
     });
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
+      console.log('command', command);
+
       if (command === true) {
         this.navService.onCancel.next(false);
         this.cancelButton();
@@ -151,7 +152,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
             // 1.1.2(1)
             if (res.length > 0) {
               // 1.1.2(1.1)
-              this.ILG60_08_02_00_00E11_DATA = res;
+              this.ILG60_08_02_00_00E11_DATA$.next(res);
             } else {
               // 1.1.2(2)
               // 1.1.2(2.1) => 2
@@ -190,9 +191,9 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.ILG60_08_02_00_00E09_SAVE.IsActive = 1;
     // console.log('ILG60_08_02_00_00E09_SAVE', this.ILG60_08_02_00_00E09_SAVE);
 
-    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA || [];
+    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
     const requestReward: IRequestReward[] =
-      this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
+      this.ILG60_08_02_00_00E14_DATA$.getValue();
     let ValidateVerify = false;
     if (requestBribe.length === 0 && requestReward.length > 0) {
       // 1.1
@@ -336,7 +337,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       if (this.ILG60_08_02_00_00E11_EXPANDED$.getValue() === true) {
         // 1.1.1
         // 1.1.1(1)
-        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA;
+        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
         if (requestBribe.length === 0) {
           // 1.1.1(1.1)
           // 1.1.1(1.1.1) => // 1.1.1(1.2)
@@ -572,7 +573,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
                   ) {
                     // 4.1.1(2.6.2)
                     // 4.1.1(2.6.2(1))
-                    this.ILG60_08_02_00_00E09_DATA = resCommand;
+                    this.ILG60_08_02_00_00E09_DATA$.next(resCommand);
 
                     // 4.1.1(2.6.2(2))
                     this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
@@ -678,7 +679,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
                     ) {
                       // 4.2.2(1.4.2)
                       // 4.2.2(1.4.2(1))
-                      this.ILG60_08_02_00_00E09_DATA = resCommand;
+                      this.ILG60_08_02_00_00E09_DATA$.next(resCommand);
 
                       // 4.2.2(1.4.2(2))
                       this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
