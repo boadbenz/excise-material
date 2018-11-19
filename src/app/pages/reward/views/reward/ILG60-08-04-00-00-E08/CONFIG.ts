@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Input, Output, EventEmitter } from '@angular/core';
 import { ITableDataOptions } from 'app/pages/reward/shared/table-data/table-data.config';
 import { MasOfficeModel } from 'app/models/mas-office.model';
+import { IFormChange } from 'app/pages/reward/interfaces/FormChange';
 
 export class CONFIG extends RewardConfig {
   public TableDataOptions: ITableDataOptions = {};
@@ -85,11 +86,14 @@ export class CONFIG extends RewardConfig {
       field2: 'RequestTime',
       inputType2: 'text',
       isDisabled2: false,
-      default2: this.setTimeNow,
+      default2: this.setTimeNow
     }
   ];
   @Output()
   public aggregateHandle = new EventEmitter();
+
+  @Output()
+  public emitChange: EventEmitter<IFormChange> = new EventEmitter();
 
   public aggregate = {
     PaymentFine: {

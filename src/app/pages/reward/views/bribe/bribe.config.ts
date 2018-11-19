@@ -6,6 +6,7 @@ import { IRequestBribe } from '../../interfaces/RequestBribe.interface';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { IRequestCommand } from '../../interfaces/RequestCommand';
 import { MasStaffModel } from 'app/models';
+import { IILG60_08_03_00_00_E08_DATA } from './ILG60-08-03-00-00-E08/CONFIG';
 export class BribeConfig extends RewardHelper {
   public formGroup: FormGroup;
   public OfficeCode = '102546';
@@ -31,7 +32,7 @@ export class BribeConfig extends RewardHelper {
   public ILG60_08_03_00_00_E08_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E08_DATA$ = new BehaviorSubject<any>(null);
   public ILG60_08_03_00_00_E08_FORM_VALID: boolean;
-  public ILG60_08_03_00_00_E08_FORM_DATA: any;
+  public ILG60_08_03_00_00_E08_FORM_DATA: IILG60_08_03_00_00_E08_DATA;
   // Drop Down List
   public ILG60_08_03_00_00_E09_DISABLED$ = new BehaviorSubject<boolean>(false); // เลขที่ใบแจ้งความนำจับ
   // Input Box

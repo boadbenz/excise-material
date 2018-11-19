@@ -50,7 +50,8 @@ export class CONFIG extends ManageConfig {
   public FormInputDefault: ColumnsInterface[] = [
     {
       title: 'เงินสินบนที่ขอรับแล้ว',
-      field: 'SumRewardTotal'
+      field: 'SumRewardTotal',
+      isDisabled: true
     }
   ];
   public FormInput$ = new BehaviorSubject<any>(this.FormInputDefault);

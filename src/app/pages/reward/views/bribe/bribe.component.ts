@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MasStaffService } from '../../services/master/MasStaff.service';
 import { BribeConfig } from './bribe.config';
 import { MasOfficeService } from '../../services/master/MasOffice.service';
@@ -30,6 +30,7 @@ import { MasOfficeModel } from 'app/models/mas-office.model';
 import { RequestPaymentFineDetailService } from '../../services/RequestPaymentFineDetail.service';
 import { FormGroup } from '@angular/forms';
 import { IFormChange } from '../../interfaces/FormChange';
+import { RequestBribeDetailService } from '../../services/RequestBribeDetail.service';
 
 @Component({
   selector: 'app-bribe',
@@ -37,7 +38,7 @@ import { IFormChange } from '../../interfaces/FormChange';
   styleUrls: ['./bribe.component.scss'],
   providers: [BribeService]
 })
-export class BribeComponent extends BribeConfig implements OnInit {
+export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private masStaffService: MasStaffService,
@@ -49,7 +50,9 @@ export class BribeComponent extends BribeConfig implements OnInit {
     private rewardService: RewardService,
     private transactionRunningService: TransactionRunningService,
     private requestBribeService: RequestBribeService,
-    private requestPaymentFineDetailService: RequestPaymentFineDetailService
+    private requestPaymentFineDetailService: RequestPaymentFineDetailService,
+    private requestBribeDetailService: RequestBribeDetailService,
+    private router: Router
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -58,13 +61,15 @@ export class BribeComponent extends BribeConfig implements OnInit {
       this.RequestBribeID$.next(param['RequestBribeID']);
       this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
     });
-    this.navService.onSave.subscribe(save => {
+    this.navService.onSave.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
+        this.navService.setOnSave(false);
         this.saveButton();
       }
     });
-    this.navService.onCancel.subscribe(cancel => {
+    this.navService.onCancel.takeUntil(this.destroy$).subscribe(cancel => {
       if (cancel === true) {
+        this.navService.setOnCancel(false);
         this.cancelButton();
       }
     });
@@ -73,7 +78,7 @@ export class BribeComponent extends BribeConfig implements OnInit {
   ngOnInit() {
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
-    this.navService.onPrevPage.subscribe(res => {
+    this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(res => {
       this.rewardService.bribeState$.next({
         mode: 'B',
         RequestBribeRewardID: this.RequestBribeRewardID
@@ -226,23 +231,75 @@ export class BribeComponent extends BribeConfig implements OnInit {
             });
 
           // 2.1.3
+
           await this.requestBribeService
             .RequestBribeinsAll({
               RequestBribeRewardID: this.RequestBribeRewardID$.getValue(), // 2.1.3(1)
               RequestBribeCode: this.RequestBribeCode$.getValue(), // 2.1.3(2)
               CommandDetailID: this.ILG60_08_03_00_00_E08_FORM_DATA
-                .CommandDetailID // 2.1.3(4) 'WAIT'
+                .CommandDetailID, // 2.1.3(4)
+              Station: this.ILG60_08_03_00_00_E08_FORM_DATA.Station,
+              RequestDate: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestDate,
+              RequestTime: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestTime
             })
             .subscribe();
 
-          // 2.1.4 'WAIT
-          // this.requestPaymentFineDetailService.RequestPaymentFineDetailupdByCon({
-          //   PaymentFineDetailID:
+          // 2.1.4
+          this.ILG60_08_03_00_00_E08_FORM_DATA.insDetailIDs.forEach(
+            async PaymentFineDetailID => {
+              await this.requestPaymentFineDetailService
+                .RequestPaymentFineDetailupdByCon({
+                  PaymentFineDetailID: PaymentFineDetailID
+                })
+                .subscribe();
+            }
+          );
+
+          break;
+        case 'R':
+          // 2.2
+          // 2.2.1(1)
+          this.requestBribeService
+            .RequestBribeupdByCon({
+              RequestBribeID: this.RequestBribeID$.getValue(),
+              Station: this.ILG60_08_03_00_00_E08_FORM_DATA.Station,
+              RequestDate: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestDate,
+              RequestTime: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestTime
+            })
+            .subscribe();
+
+          // 2.2.2(1)
+          this.ILG60_08_03_00_00_E08_FORM_DATA.delDetailIDs.forEach(
+            async PaymentFineDetailID => {
+              this.requestBribeDetailService
+                .RequestBribeDetailupdDelete({
+                  RequestBribeDetailID: PaymentFineDetailID
+                })
+                .subscribe();
+            }
+          );
+
+          // 2.2.3(1)
+          // this.masDocumentMainService.MasDocumentMaininsAll({
+          //   DocumentType: 8,
+          //   ReferenceCode: this.RequestBribeID$.getValue()
+          // }).subscribe((Mas) => {
+
+          //   // 2.2.3(2)
+          //   this.masDocumentMainService.MasDocumentMainupdDelete({
+          //     DocumentID: Mas.DocumentID
+          //   }).subscribe()
           // })
+
           break;
       }
+      alert('บันทึกสำเร็จ');
+      this.router.navigate([
+        '/reward/bribe/R',
+        this.RequestBribeID$.getValue()
+      ]);
     } else {
-      alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+      alert('บันทึกไม่สำเร็จ');
     }
   }
 
@@ -355,5 +412,9 @@ export class BribeComponent extends BribeConfig implements OnInit {
         this.ILG60_08_03_00_00_E12_FORM_DATA = FormData.valid;
         break;
     }
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

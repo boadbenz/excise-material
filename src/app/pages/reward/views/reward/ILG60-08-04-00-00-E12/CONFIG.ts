@@ -2,8 +2,36 @@ import { RewardConfig } from '../reward.config';
 import { Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IButtonAttr } from 'app/pages/reward/interfaces/ButtonAttr';
+import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
 
+export const ContributorList: DropdownInterface[] = [
+  {
+    text: 'ผู้แจ้งความนำจับ',
+    value: 0
+  },
+  {
+    text: 'ผู้สั่งการ',
+    value: 1
+  },
+  {
+    text: 'เจ้าพนักงานผู้จับกุม',
+    value: 2
+  },
+  {
+    text: 'เจ้าหน้าที่สนับสนุน',
+    value: 3
+  },
+  {
+    text: 'เจ้าพนักงานผู้จับกุม',
+    value: 6
+  },
+  {
+    text: 'ผู้ร่วมจับกุม',
+    value: 7
+  }
+];
 export class CONFIG extends RewardConfig {
+  public ContributorList = ContributorList;
   @Input()
   set inputData(val) {
     this.inputData$.next(val);
@@ -11,7 +39,7 @@ export class CONFIG extends RewardConfig {
   get inputData() {
     return this.inputData$.asObservable();
   }
-  public inputData$ = new BehaviorSubject<any>(null);
+  public inputData$ = new BehaviorSubject<any>([]);
 
   @Input()
   set aggregate08(val) {

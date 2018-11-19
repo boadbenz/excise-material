@@ -2,8 +2,10 @@ import { FormGroup, Validators } from '@angular/forms';
 import { ColumnsInterface } from './shared/interfaces/columns-interface';
 import { IMyOptions } from 'mydatepicker-th';
 import { setZero, setDateMyDatepicker } from 'app/config/dateFormat';
+import { Subject } from 'rxjs/Subject';
 
 export class RewardHelper {
+  private destroy$: Subject<boolean> = new Subject<boolean>();
   public formGroup: FormGroup;
   public yy_thaibuddha = (new Date().getFullYear() + 543)
     .toString()
