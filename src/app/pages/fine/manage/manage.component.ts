@@ -129,6 +129,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     // other options...
     dateFormat: 'dd/mmm/yyyy'
   };
+  // เก็บค่าก่อนเซฟข้อมูล
+  ComparePaymentData: any = [];
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -1015,7 +1017,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.log(err);
     }
- 
+
     try {
       const compareDetail: any = {
         'LawbrakerTestimony': this.editUser.LawbrakerTestimony,
@@ -1223,7 +1225,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   StaffonAutoSelecteWord(event) {
-  
+
     this.oCompareStaff = {
       StaffID: this.CompareStaffID,
       ProgramCode: 'XCS-60',
@@ -1246,13 +1248,14 @@ export class ManageComponent implements OnInit, OnDestroy {
       ContributorID: '18',
       IsActive: '1'
     };
-    console.log(event);
     if (this.CompareStaffID == '' || this.CompareStaffID == undefined) {
       this.oCompareStaff.IsNewItem = true;
     }
 
     this.OperationPosName = event.OperationPosName;
     this.OperationDeptName = event.OperationDeptName;
+    console.log(this.oCompareStaff);
+    this.dataToSave.compare.CompareStaff = [this.oCompareStaff];
   }
   onClickEditF3(item: any) {
     this.editUser = item;
