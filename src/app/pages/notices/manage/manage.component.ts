@@ -410,15 +410,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!isSuccess) { IsSuccess = false; return false; };
         }, () => { IsSuccess = false; return; });
 
-        if (IsSuccess) {
-            await this.NoticeDocument.value.map(async doc => {
-                // insert Document
-                await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
-                    if (!docIsSuccess) { IsSuccess = false; return false; };
+        // if (IsSuccess) {
+        //     await this.NoticeDocument.value.map(async doc => {
+        //         // insert Document
+        //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
+        //             if (!docIsSuccess) { IsSuccess = false; return false; };
 
-                }, () => { IsSuccess = false; return false; });
-            });
-        }
+        //         }, () => { IsSuccess = false; return false; });
+        //     });
+        // }
 
         if (IsSuccess) {
             alert(Message.saveComplete)
@@ -441,31 +441,30 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         let IsSuccess: boolean = true;
         await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
-            debugger
             if (!isSuccess) { IsSuccess = false; return; };
         }, () => { IsSuccess = false; return; });
 
-        if (IsSuccess) {
-            const document = this.NoticeDocument.value;
-            await document.map(async (item: NoticeDocument) => {
-                if (item.IsNewItem) {
-                    await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
-                        if (!docIsSuccess) { IsSuccess = false; return; };
-                    }, () => { IsSuccess = false; return; });
+        // if (IsSuccess) {
+        //     const document = this.NoticeDocument.value;
+        //     await document.map(async (item: NoticeDocument) => {
+        //         if (item.IsNewItem) {
+        //             await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
+        //                 if (!docIsSuccess) { IsSuccess = false; return; };
+        //             }, () => { IsSuccess = false; return; });
 
-                } else {
-                    this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
-                        if (!docIsSuccess) { IsSuccess = false; return };
-                    }, () => { IsSuccess = false; return; })
-                }
-            })
-        }
+        //         } else {
+        //             this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
+        //                 if (!docIsSuccess) { IsSuccess = false; return };
+        //             }, () => { IsSuccess = false; return; })
+        //         }
+        //     })
+        // }
 
         if (IsSuccess) {
-            alert(Message.saveComplete)
-            this.onComplete()
+            alert(Message.saveComplete);
+            this.onComplete();
         } else {
-            alert(Message.saveFail)
+            alert(Message.saveFail);
         }
 
         this.preloader.setShowPreloader(false);
@@ -476,13 +475,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             // Set Preloader
             this.preloader.setShowPreloader(true);
             this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
+                this.preloader.setShowPreloader(false);
                 if (IsSuccess) {
                     alert(Message.delComplete)
                     this.router.navigate(['/notice/list']);
                 } else (
                     alert(Message.delFail)
                 )
-            })
+            });
         } else {
             this.router.navigate(['/notice/list']);
         }
