@@ -33,6 +33,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private obInvest: Observable<fromModels.InvestigateModel>;
     stateInvest: fromModels.InvestigateModel;
+    toLocalShort = toLocalShort;
 
     private mode: string;
     investCode: string;
@@ -82,11 +83,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.sidebarService.setVersion('0.0.0.3');
-
         this.active_Route();
         this.navigate_Service();
         this.createForm();
-
     }
 
     private createForm() {
@@ -211,9 +210,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 .takeUntil(this.destroy$)
                 .subscribe((x: fromModels.InvestigateModel) => {
                     if (!this.checkResponse(x)) return;
-
                     this.pageRefreshInvestigate(x[0]);
-
                 });
         }
     }
@@ -225,8 +222,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         let investDetail = x.InvestigateDetail;
         if (!investDetail) return;
         await investDetail.map(id => {
-            id.InvestigateDateStart = toLocalShort(id.InvestigateDateStart);
-            id.InvestigateDateEnd = toLocalShort(id.InvestigateDateEnd);
             let staff: fromModels.InvestigateDetailStaff[] = id.InvestigateDetailStaff
                 .filter(staff => staff.ContributorID == '2' || staff.ContributorID == '3')
                 .map(staff => {

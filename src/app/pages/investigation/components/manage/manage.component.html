@@ -13,7 +13,6 @@
             <h4 class="card-title m-b-0">คดีสืบสวน</h4>
         </div>
         <div class="card-body" *ngIf="card1">
-
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่สืบสวน :
                 </label>
@@ -23,7 +22,6 @@
                             readonly>
                     </div>
                 </div>
-
                 <label for="" class="col-lg-2 col-sm-4 control-label">คดีสืบสวนที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" formControlName="InvestigateNo" class="form-control form-control-sm" [readOnly]="showEditField"
@@ -96,10 +94,10 @@
                         <td class="text-center">{{i+1}}</td>
                         <td class="text-center">{{item.get('InvestigateSeq').value}}</td>
                         <td>
-                            {{item.get('InvestigateDateStart').value}}
+                            {{toLocalShort(item.get('InvestigateDateStart').value)}}
                         </td>
                         <td>
-                            {{item.get('InvestigateDateEnd').value}}
+                            {{toLocalShort(item.get('InvestigateDateEnd').value)}}
                         </td>
                         <td>
                             <div *ngFor="let staff of getInvestigateDetailStaff(item)">
