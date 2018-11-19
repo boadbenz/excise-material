@@ -58,20 +58,29 @@ export const MyDatePickerOptions: IMyOptions = {
     height: '30px'
 };
 
-export function setDateMyDatepicker(date: Date) {
+export function setDateMyDatepicker(date: any) {
     if (!date)
         return { myDate: null };
 
-    date = new Date(date);
-    return { date: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } }
+    if (date.jsdate) {
+        return date;
+    } else {
+        const d = new Date(date)
+        return { date: { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() } };
+    }
 }
 
 export function getDateMyDatepicker(date: any) {
     if (!date)
         return null;
-
-    date = date.date
-    return new Date(`${date.year}-${date.month}-${date.day}`);
+        
+    if (date.date) {
+        const d = date.date;
+        return new Date(`${d.year}-${d.month}-${d.day}`);
+    } else {
+        return date;
+    }
+    
 }
 
 export function convertDateForSave(date: Date) {
