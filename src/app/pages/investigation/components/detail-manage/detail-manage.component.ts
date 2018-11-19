@@ -1131,7 +1131,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
-                            .catch((error) => this.catchError(error));
+                            .catch((error) => this.catchError(error));  
                         break;
                     case 'c':
                         console.log(`InvestigateDetailLocalinsAll : ${index + 1}`, JSON.stringify(x))
