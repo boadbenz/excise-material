@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ManageConfig } from './manage.config';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
@@ -44,7 +44,8 @@ import { async } from 'q';
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.scss']
 })
-export class ManageComponent extends ManageConfig implements OnInit {
+export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
+
   constructor(
     private navService: NavigationService,
     private activatedRoute: ActivatedRoute,
@@ -62,29 +63,34 @@ export class ManageComponent extends ManageConfig implements OnInit {
       this.IndictmentID$.next(param['IndictmentID']);
       this.ArrestCode$.next(param['ArrestCode']);
     });
-    this.navService.onCancel.subscribe(command => {
+    this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
+        this.navService.onCancel.next(false);
         this.cancelButton();
       }
     });
-    this.navService.onSave.subscribe(command => {
+    this.navService.onSave.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
+        this.navService.onSave.next(false);
         this.saveButton();
       }
     });
-    this.navService.onEdit.subscribe(command => {
+    this.navService.onEdit.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
+        this.navService.onEdit.next(false);
         this.editButton();
       }
     });
 
-    this.navService.onDelete.subscribe(command => {
+    this.navService.onDelete.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
+        this.navService.onDelete.next(false);
         this.deleteButton();
       }
     });
-    this.navService.onPrint.subscribe(command => {
+    this.navService.onPrint.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
+        this.navService.onPrint.next(false);
         this.printButton();
       }
     });
@@ -886,7 +892,10 @@ export class ManageComponent extends ManageConfig implements OnInit {
         }
       });
   }
-
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
   public ILG60_08_02_00_00E09_RETURN($event: IRequestCommand) {
     // console.log('IRequestCommand', $event);
     this.ILG60_08_02_00_00E09_SAVE = $event;
