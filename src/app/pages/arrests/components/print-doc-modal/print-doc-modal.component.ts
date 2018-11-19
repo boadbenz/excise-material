@@ -79,12 +79,33 @@ export class PrintDocModalComponent implements OnInit {
     if (_print.length) {
       _print.map(x => {
         this.s_arrest.ArrestReportgetByCon(this.ArrestCode).subscribe(response => {
-          
-          // const file = new Blob([response.text()], { type: 'application/pdf' });
           console.log(response);
           
-          // const fileURL = URL.createObjectURL(file);
-          // window.open(response.text()); 
+          // window.open('data:application/pdf,' + response.text());
+          // create a download anchor tag
+          var downloadLink = document.createElement('a');
+          downloadLink.target = '_blank';
+          downloadLink.download = `${this.ArrestCode}.pdf`;
+
+          // convert downloaded data to a Blob
+          var blob = new Blob([response.text()], { type: 'application/pdf' });
+
+          // create an object URL from the Blob
+          var URL = window.URL;
+          var downloadUrl = URL.createObjectURL(blob);
+
+          // set object URL as the anchor's href
+          downloadLink.href = downloadUrl;
+
+          // append the anchor to document body
+          document.body.appendChild(downloadLink);
+
+          // fire a click event on the anchor
+          downloadLink.click();
+
+          // cleanup: remove element and revoke object URL
+          document.body.removeChild(downloadLink);
+          URL.revokeObjectURL(downloadUrl);
         });
       })
     }
