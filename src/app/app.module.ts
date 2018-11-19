@@ -29,7 +29,6 @@ import * as fromInvestReducers from './pages/investigation/store/reducers';
 import { TransactionRunningService } from './services/transaction-running.service';
 import { MasDocumentMainService } from './services/mas-document-main.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 @NgModule({
     declarations: [
         AppComponent,

@@ -377,9 +377,9 @@
                 </div>
 
                 <ng-template #suspect let-c="close" let-d="dismiss">
-                    <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" 
+                    <app-notice-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" 
                     (exportSuspectData)="addSuspect($event)">
-                </app-suspect-modal>
+                </app-notice-suspect-modal>
                     <!-- <app-modal-lawbreaker (c)="modal.close()" (d)="modal.dismiss()" (lawbreakerEmit)="addSuspect($event)"></app-modal-lawbreaker> -->
                 </ng-template>
             </div>
