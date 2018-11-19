@@ -1,3 +1,5 @@
+import { Acceptability } from "app/pages/arrests/models";
+
 export class InvestigateModel {
     InvestigateCode: string;
     InvestigateNo: string;
@@ -80,10 +82,11 @@ export class InvestigateDetailSuspect {
 
     SuspectTypeName: string;
     EntityTypeName: string;
-    LawbreakerRefID: string;
     ReferenceID: string;
+    ResultCount: string;
     FullName: string;
     IsModify: string;
+    IsChecked: Acceptability;
     RowId: number;
 }
 

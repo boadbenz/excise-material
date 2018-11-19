@@ -72,6 +72,7 @@ export class InvestigateMasSuspectModel {
     ReferenceID: string;
     FullName: string;
     IsModify: string;
+    ResultCount: string;
     IsChecked: Acceptability;
     Region: string;
     RowId: number;

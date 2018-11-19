@@ -109,7 +109,7 @@
                   <th>ประเภทบุคคล</th>
                   <th>หมายเลขอ้างอิง</th>
                   <th>ชื่อ</th>
-                  <th></th>
+                  <th>จำนวนครั้งการกระทำผิด</th>
                 </tr>
               </thead>
               <tbody formArrayName="Suspect">
@@ -124,6 +124,7 @@
                   <td>{{item.get('EntityTypeName').value}}</td>
                   <td>{{item.get('ReferenceID').value}}</td>
                   <td>{{item.get('FullName').value}}</td>
+                  <td class="text-center">{{item.get('ResultCount').value}}</td>
                   <td class="text-center">
                     <a class="text-center text-secondary" 
                       [routerLink]="['/investigation/suspect', 'R', item.value.SuspectID]" target="_blank">

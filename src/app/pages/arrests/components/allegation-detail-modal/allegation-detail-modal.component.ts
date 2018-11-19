@@ -45,7 +45,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   entityType = EntityTypes;
   lawbreaker = new Array<ArrestLawbreakerAllegation>();
   advSearch: boolean;
-  
+
   card1 = true;
 
   @Output() d = new EventEmitter();
@@ -75,7 +75,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   }
 
   onClickNewLawbreaker() {
-     window.open(`${location.origin}/#/arrest/lawbreaker/C/NEW`);
+    window.open(`${location.origin}/#/arrest/lawbreaker/C/NEW`);
   }
 
   view(id: number) {
@@ -163,9 +163,6 @@ export function setViewLawbreaker(item: fromModel.ArrestLawbreaker) {
   item.LawbreakerFullName += ` ${item.LawbreakerFirstName || ''}`;
   item.LawbreakerFullName += ` ${item.LawbreakerLastName || ''}`;
   switch (item.EntityType) {
-    case 0: // นิติบุคคล
-      item.ReferenceID = item.CompanyRegistrationNo;
-      break;
     case 1: // บุคคลธรรมดา
       switch (item.LawbreakerType) {
         case 0: // ต่างชาติ
@@ -175,6 +172,9 @@ export function setViewLawbreaker(item: fromModel.ArrestLawbreaker) {
           item.ReferenceID = item.IDCard;
           break;
       }
+    case 2: // นิติบุคคล
+      item.ReferenceID = item.CompanyRegistrationNo;
+      break;
   }
   return item;
 }
