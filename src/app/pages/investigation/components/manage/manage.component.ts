@@ -82,7 +82,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.3');
+        this.sidebarService.setVersion('0.0.0.4');
         this.active_Route();
         this.navigate_Service();
         this.createForm();
@@ -379,7 +379,16 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onDelete() {
-
+        this.s_invest.InvestigateupdDelete(this.investCode)
+            .takeUntil(this.destroy$)
+            .subscribe(x => {
+                if (this.checkIsSuccess(x)) {
+                    alert(Message.delComplete);
+                    this.router.navigate(['/investigation/list']);
+                } else {
+                    alert(Message.delFail);
+                }
+            })
     }
 
     private updateInvestigate(form: any) {

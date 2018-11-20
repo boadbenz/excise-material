@@ -126,7 +126,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.3');
+        this.sidebarService.setVersion('0.0.0.4');
 
         this.createForm();
 
@@ -822,10 +822,19 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onComplete() {
         if (this._isSuccess) {
-            await this.store.dispatch(new fromStore.RemoveInvestigate);
-            await this.clearForm();
-            alert(Message.saveComplete)
-            this.onRefreshPage();
+            alert(Message.saveComplete);
+            switch (this.mode) {
+                case 'C':
+                    await this.store.dispatch(new fromStore.RemoveInvestigate);
+                    await this.clearForm();
+
+                    this.onRefreshPage();
+                    break;
+                case 'R':
+                    location.reload();
+                    break;
+            }
+
 
         } else {
             alert(Message.saveFail)
@@ -835,7 +844,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private navigateToManage = () => this.router.navigate([`/investigation/manage`, this.investMode, this.investCode]);
 
     private onRefreshPage = () => this.router.navigate(
-        [`investigation/detail-manage`, 'R'],
+        [`/investigation/detail-manage`, 'R'],
         {
             queryParams: {
                 investMode: this.investMode,
