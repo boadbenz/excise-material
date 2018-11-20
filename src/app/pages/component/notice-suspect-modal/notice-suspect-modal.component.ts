@@ -8,6 +8,7 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { NoticeMasSuspect } from './notice-mas-suspect';
 import { LawbreakerTypes, EntityTypes } from 'app/models';
 import { NoticeSuspect } from '../../notices/notice-suspect';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class NoticeSuspectService {
@@ -86,6 +87,7 @@ export class NoticeSuspectModalComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+        private _router: Router,
       private suspectService: NoticeSuspectService,
       private fb: FormBuilder,
       private preloader: PreloaderService
@@ -134,6 +136,7 @@ export class NoticeSuspectModalComponent implements OnInit, OnDestroy {
       const list = await res.map((item, i) => {
           item.RowId = i + 1;
           item.IsChecked = false;
+          item.SuspectID = item.SuspectID;
           item.EntityTypeName = this.entityType.find(el => parseInt(el.value) == item.EntityType).text;
           item.SuspectTypeName = this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
           item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
@@ -162,6 +165,11 @@ export class NoticeSuspectModalComponent implements OnInit, OnDestroy {
 
   close(e: any) {
       this.c.emit(e);
+  }
+
+  view(id:any):void{
+    this.close('View click');
+      this._router.navigate([`/notice/suspect/R/${id}`]);
   }
 
   async exportData() {

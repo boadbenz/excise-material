@@ -129,3 +129,22 @@ export const CostofNews: DropDown[] = [
         text: 'ไม่สามารถตัดสินได้'
     }
 ]
+
+export const MaritalStatus: DropDown[] = [
+    {
+        value: '1',
+        text: 'โสด'
+    }, {
+        value: '2',
+        text: 'สมรส'
+    }, {
+        value: '3',
+        text: 'หย่าร้าง'
+    }, {
+        value: '4',
+        text: 'หม้าย'
+    }, {
+        value: '5',
+        text: 'แยกกันอยู่'
+    }
+]
