@@ -49,12 +49,13 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
         ]
-    }, 
+    },
   {
     path: 'reward',
     component: LayoutComponent,
     loadChildren: './pages/reward/reward.module#RewardModule'
-  },{
+  },
+  {
         path: 'reduction', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },

@@ -8,7 +8,7 @@ import { IncomeService } from '../income.service';
 
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Revenue } from '../Revenue';
+import { Revenue } from '../revenue';
 
 import { pagination } from '../../../config/pagination';
 
@@ -119,36 +119,34 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
 
-        this.RevenueStatus = "";
+        this.RevenueStatus = '';
 
 
 
-        //this.preloader.setShowPreloader(true);
+        // this.preloader.setShowPreloader(true);
+        // this.getDepartmentRevenue();
 
-
-
-        //this.getDepartmentRevenue();
-
-        //this.onSearch({ Textsearch: "" });
+        // this.onSearch({ Textsearch: "" });
 
 
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {               
+            if (Textsearch) {
                 await this.navService.setOnSearch('');
 
 
 
                 let ts;
 
-                ts = { Textsearch: "" }
+                ts = { Textsearch: '' }
 
                 ts = Textsearch;
 
 
 
-                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
+                if (ts.Textsearch == null) { this.onSearch({ Textsearch: '' }); }
 
+                // tslint:disable-next-line:one-line
                 else { this.onSearch(Textsearch); }
 
 
@@ -222,7 +220,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
 
-            if (sDate != undefined) {
+            if (sDate !== undefined) {
 
                 sDateRevenue = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
 
@@ -240,7 +238,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
 
-            if (sDate != undefined) {
+            if (sDate !== undefined) {
 
                 eDateRevenue = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
 
@@ -252,7 +250,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
 
-        if(form.value.RevenueStatus == ""){
+        if (form.value.RevenueStatus === '') {
 
             form.value.RevenueStatus = null;
 
@@ -298,43 +296,40 @@ export class ListComponent implements OnInit, OnDestroy {
 
         await list.map((item) => {
 
-            var StaffSendMoney;
+            let StaffSendMoney;
 
             item.RevenueDate = toLocalShort(item.RevenueDate);
 
+            // tslint:disable-next-line:no-shadowed-variable
             StaffSendMoney = item.RevenueStaff.filter(item => item.ContributorID === 20);
 
 
 
-            item.RevenueOneStaff = "";
+            item.RevenueOneStaff = '';
 
-            item.RevenueOneStaffDept = "";
+            item.RevenueOneStaffDept = '';
 
 
 
-            if(StaffSendMoney.length > 0){
+            if (StaffSendMoney.length > 0) {
 
-                item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
+                item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + ' ' + StaffSendMoney[0].LastName;
                 item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeShortName;
             }
 
 
 
-            if (item.RevenueStatus == "1") {
+            if (item.RevenueStatus === '1') {
 
-                item.RevenueStatus = "นำส่งเงินรายได้"
+                item.RevenueStatus = 'นำส่งเงินรายได้'
 
-            }
+            } else if (item.RevenueStatus === '2') {
 
-            else if (item.RevenueStatus == "2") {
+                item.RevenueStatus = 'รับรายการนำส่งเงิน'
 
-                item.RevenueStatus = "รับรายการนำส่งเงิน"
+            } else {
 
-            }
-
-            else{
-
-                item.RevenueStatus = "";
+                item.RevenueStatus = '';
 
             }
 
@@ -386,7 +381,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     getCurrentDate() {
 
-        let date = new Date();
+        const date = new Date();
 
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
 

@@ -4,15 +4,16 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ManageComponent } from './manage.component';
+import { ReductionApiService } from '../reduction.api.service';
 
 const routes: Routes = [
   {
     path: '',
     data: {
       urls: [
-        { title: "หน้าหลัก", url: '' },
-        { title: "ค้นหารายการปรับเพิ่ม-ปรับลด", url: '/reduction/list' },
-        { title: "จัดการข้อมูลรายการปรับเพิ่ม-ปรับลด" }
+        { title: 'หน้าหลัก', url: '' },
+        { title: 'ค้นหารายการปรับเพิ่ม-ปรับลด', url: '/reduction/list' },
+        { title: 'จัดการข้อมูลรายการปรับเพิ่ม-ปรับลด' }
       ],
       pageType: 'manage',
       codePage: 'ILG60-09-02-00-00',
@@ -30,6 +31,7 @@ const routes: Routes = [
     CardActionsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ManageComponent]
+  declarations: [ManageComponent],
+  providers: [ReductionApiService]
 })
 export class ManageModule { }
