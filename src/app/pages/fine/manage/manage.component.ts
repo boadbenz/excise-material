@@ -142,7 +142,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.4');
+    this.sidebarService.setVersion('0.0.0.5');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -168,14 +168,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     // this.getLawsuitByID(this.LawsuitID);
     await this.getArrestByID(this.ArrestCode);
     const date = new Date();
-    // this.CompareYear = (date.getFullYear() + 543).toString();
-    // this.CompareDate = this.getCurrentDate();
-    // this.CompareTime = this.getCurrentTime();
+    this.CompareYear = (date.getFullYear() + 543).toString();
+    this.CompareDate = this.getCurrentDate();
+    this.CompareTime = this.getCurrentTime();
 
-    // if (this.CompareID !== '0') {
-    //   await this.getCompareByID();
-    //   await this.ShowData();
-    // }
+    if (this.CompareID !== '0') {
+      await this.getCompareByID();
+      await this.ShowData();
+    }
     this.preloader.setShowPreloader(false);
 
     // this.navigate_Service();
@@ -312,9 +312,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (count > 0) {
               compareWithProduct.isFirstRow = false;
             }
-            this.compareData[`user${count_user}`][`field${count_field}`] = 0;
-            count_field++;
-            count++;
             compareWithProduct.product = {};
             compareWithProduct.fineSum = false;
             compareWithProduct.userNo = count_user;
@@ -324,6 +321,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             compareWithProduct.product.name = product.BrandNameTH;
             compareWithProduct.product.VatProve = product.VatProve;
             compareWithProduct.allComparePerArrest = this.compareCount * product.VatProve;
+            this.compareData[`user${count_user}`][`field${count_field}`] = this.getRound(this.compareCount * product.VatProve);
             compareWithProduct.sum1 = compareWithProduct.allComparePerArrest * 0.2;
             compareWithProduct.sum2 = compareWithProduct.allComparePerArrest * 0.2;
             compareWithProduct.sum3 = compareWithProduct.allComparePerArrest * 0.6;
@@ -331,6 +329,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             sumData.sum1 = (+compareWithProduct.sum1) + (+sumData.sum1);
             sumData.sum2 = (+compareWithProduct.sum2) + (+sumData.sum2);
             sumData.sum3 = (+compareWithProduct.sum3) + (+sumData.sum3);
+            count_field++;
+            count++;
           }
         }
         this.compareDataAllSum.sum1 = (+sumData.sum1) + (+this.compareDataAllSum.sum1);
@@ -341,6 +341,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         count_field++;
       }
       this.ListCompareDetail = ListCompareDetailTmpData;
+      this.calculateComparePayment();
       console.log(ListCompareDetailTmpData);
     } catch (err) {
       console.log(err);
@@ -407,8 +408,8 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.IndictmentID = resp[0].IndictmentID;
       this.LawsuiltCode = resp[0].IsOutside === 1 ? `น${resp[0].LawsuitNo}` : resp[0].LawsuitNo;
       this.ProveReportNo = resp[0].ProveReportNo;
-      this.LawsuiltDate = resp[0].CompareDate.split(' ')[0];
-      this.LawsuiltTime = resp[0].CompareDate.split(' ')[1];
+      this.LawsuiltDate = resp[0].CompareDate ?  resp[0].CompareDate.split(' ')[0] : '-';
+      this.LawsuiltTime = resp[0].CompareDate?  resp[0].CompareDate.split(' ')[1] : '-';
       this.IsOutside = resp[0].IsOutside;
       this.CompareNo = resp[0].CompareCode.split('/')[0];
       this.dataToSave.compare.CompareCode = resp[0].CompareCode;
@@ -465,6 +466,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
       if (p['code3']) {
         this.CompareID = p['code1'];
+        if (this.CompareID === '0') {
+          
+        }
       }
     });
   }
@@ -1303,16 +1307,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(this.advForm.controls);
     this.editUser.PaymentVatDate = this.advForm.controls.PaymentVatDate.value ? this.advForm.controls.PaymentVatDate.value.formatted : null;
     this.editUser.PaymentFineAppointDate = this.advForm.controls.PaymentFineAppointDate.value ? this.advForm.controls.PaymentFineAppointDate.value.formatted : null;
-    if (this.advForm.controls.PaymentFineAppointDate.value && this.CompareID == '0') {
-      const dateObj = new Date();
-      const month = dateObj.getUTCMonth() + 1;
-      // months from 1-12
-      const day = dateObj.getUTCDate();
-      const year = dateObj.getUTCFullYear();
-      this.editUser.IsProvisionalAcquittal = this.compareDate(this.advForm.controls.PaymentFineAppointDate.value.date , {day: day, month: month, year: year});
-    } else if (this.advForm.controls.PaymentFineAppointDate.value) {
-      this.editUser.IsProvisionalAcquittal = this.compareDate(this.advForm.controls.PaymentFineAppointDate.value.date , item.PaymentVatDate);
-    }
+    // if (this.advForm.controls.PaymentFineAppointDate.value && this.CompareID == '0') {
+    //   const dateObj = new Date();
+    //   const month = dateObj.getUTCMonth() + 1;
+    //   // months from 1-12
+    //   const day = dateObj.getUTCDate();
+    //   const year = dateObj.getUTCFullYear();
+    //   this.editUser.IsProvisionalAcquittal = (this.editUser.Bail!='' && this.editUser.Bail!=null) || (this.editUser.Guaruntee!='' && this.editUser.Guaruntee!=null);
+    // } else if (this.advForm.controls.PaymentFineAppointDate.value) {
+    //   this.editUser.IsProvisionalAcquittal = (this.editUser.Bail!='' && this.editUser.Bail!=null) || (this.editUser.Guaruntee!='' && this.editUser.Guaruntee!=null);
+    // }
+    this.editUser.IsProvisionalAcquittal = (this.editUser.Bail!='' && this.editUser.Bail!=null) || (this.editUser.Guaruntee!='' && this.editUser.Guaruntee!=null);
     console.log(this.editUser);
   }
   onDateFromChanged(event) {
@@ -1355,19 +1360,29 @@ export class ManageComponent implements OnInit, OnDestroy {
       let sum = 0;
       console.log(compare);
       console.log(Object.keys(this.compareData[compare]));
+      // const subSum = {sum1: 0, sum2: 0, sum3: 0};
       for (const user of Object.keys(this.compareData[compare])) {
         console.log(this.compareData[compare][user]);
         sum = (+sum) + (+this.compareData[compare][user]);
         console.log(sum);
+        console.log(user);
         this.ListCompareDetail[j].sumPayment = sum;
         j++;
       }
       allSum = (+allSum) + (+sum);
       this.ListCompareDetail[j].sumPayment = sum;
+      this.ListCompareDetail[j].sum1 = sum*0.2;
+      this.ListCompareDetail[j].sum2 = sum*0.2;
+      this.ListCompareDetail[j].sum3 = sum*0.6;
       j++;
       i++;
     }
     this.compareDataAllSum.sum = allSum;
+    this.compareDataAllSum.sum1 = allSum*0.2;
+    this.compareDataAllSum.sum2 = allSum*0.2;
+    this.compareDataAllSum.sum3 = allSum*0.6;
+    // this.userCompareReceiptDetail.TotalFine = this.getRound(allSum);
+    // console.log(this.userCompareReceiptDetail);
   }
   getRound(num: any) {
     return parseFloat((Math.round(num * 100) / 100).toString()).toFixed(2);
@@ -1381,6 +1396,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   onClickEditF4(item: any) {
     this.userCompareReceiptDetail = item;
+    this.userCompareReceiptDetail.TotalFine = this.getRound(this.compareDataAllSum.sum);
     console.log(item);
   }
   onClickEditF5(item: any, index: any) {
