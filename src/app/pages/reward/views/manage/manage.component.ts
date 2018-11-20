@@ -38,6 +38,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { async } from 'q';
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
 
 @Component({
   selector: 'app-manage',
@@ -55,7 +56,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     private requestCommandService: RequestCommandService,
     private requestBribeService: RequestBribeService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private preloaderService: PreloaderService
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -109,18 +111,19 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
   }
-  private pageLoad() {
+  private async pageLoad() {
     // ILG60-08-02-00-00-E01
-
+    this.preloaderService.setShowPreloader(true);
     // 1 START
-    this.RequestArrestLawsuitgetByIndictmentID({
+    await this.RequestArrestLawsuitgetByIndictmentID({
       IndictmentID: this.IndictmentID$.getValue()
     });
 
     // 3
-    this.RequestBribeRewardgetByIndictmentID({
+    await this.RequestBribeRewardgetByIndictmentID({
       IndictmentID: this.IndictmentID$.getValue()
     });
+    this.preloaderService.setShowPreloader(false);
 
     // 5 END
   }

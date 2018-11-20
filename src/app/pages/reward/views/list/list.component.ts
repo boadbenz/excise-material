@@ -13,6 +13,7 @@ import {
   toLocalNumeric,
   getDateMyDatepicker
 } from 'app/config/dateFormat';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-list',
@@ -23,7 +24,8 @@ export class ListComponent extends ListConfig implements OnInit {
   constructor(
     private navService: NavigationService,
     private requestListService: RequestListService,
-    private preloaderService: PreloaderService
+    private preloaderService: PreloaderService,
+    private sidebarService: SidebarService
   ) {
     super();
     this.advSearch = this.navService.showAdvSearch;
@@ -35,6 +37,7 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.1.1');
     this.setShowButton();
     this.fetchData('');
   }
