@@ -767,7 +767,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             await this.clearFormArray(this.InvestigateDetailProduct),
             await this.clearFormArray(this.InvestigateDocument)
         ];
-
         Promise.all(reset);
     }
 
@@ -775,7 +774,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         await this.clearForm();
-
     }
 
     openModal(e) {
@@ -1035,7 +1033,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             let local = await this.modifyInvestigateDetailLocal(x.InvestigateDetailID);
             let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
             let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
-
             return Promise.all([staff, suspect, local, product, ducument]);
         }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
@@ -1057,7 +1054,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             let local = await this.modifyInvestigateDetailLocal(parseInt(this.invesDetailId));
             let product = await this.modifyInvestigateDetailProduct(parseInt(this.invesDetailId));
             let ducument = await this.modifyMasDocument(parseInt(this.invesDetailId));
-
             return Promise.all([staff, suspect, local, product, ducument]);
         }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
@@ -1079,7 +1075,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        console.log(`modifyInvestigateDetailStaff : ${index + 1}`, JSON.stringify(x));
+                        console.log(`InvestigateDetailStaffinsAll : ${index + 1}`, JSON.stringify(x));
                         await this.s_investDetail.InvestigateDetailStaffinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -1126,7 +1122,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     private async modifyInvestigateDetailLocal(investDetailId: number) {
         const product = await this.InvestigateDetailLocal.value
-            .map(async (x: fromModels.InvestigateDetailLocal) => {
+            .map(async (x: fromModels.InvestigateDetailLocal, index) => {
                 x.InvestigateDetailID = investDetailId;
                 switch (x.IsModify) {
                     case 'd':
@@ -1135,9 +1131,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
-                            .catch((error) => this.catchError(error));
+                            .catch((error) => this.catchError(error));  
                         break;
                     case 'c':
+                        console.log(`InvestigateDetailLocalinsAll : ${index + 1}`, JSON.stringify(x))
                         await this.s_investDetail.InvestigateDetailLocalinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
