@@ -101,13 +101,13 @@ export class NoticeService {
 
     async noticeSuspectgetByCon(SuspectID: string): Promise<Suspect> {
         const params = { SuspectID };
-        const url = `${appConfig.api8082}/NoticeSuspectgetByCon`;
+        const url = `${appConfig.api8082}/NoticeMasSuspectgetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
 
-        if (res.IsSuccess == 'False' || !res.ResponseData) {
+        if (res.IsSuccess == 'False') {
             return new Suspect();
         }
-        return res.ResponseData;
+        return res[0];
     }
 
     insAll(Notice: Notice): Promise<any> {
@@ -171,13 +171,13 @@ export class NoticeService {
     }
 
     async noticeMasSuspectinsAll(from: any): Promise<boolean> {
-        const params = JSON.stringify(from);
+        const params = from;
         const url = `${appConfig.api8082}/NoticeMasSuspectinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async noticeMasSuspectupdByCon(from: any): Promise<boolean> {
-        const params = JSON.stringify(from);
+        const params = from;
         const url = `${appConfig.api8082}/NoticeMasSuspectupdByCon`
         return this.responsePromisModify(JSON.stringify(params), url);
     }
