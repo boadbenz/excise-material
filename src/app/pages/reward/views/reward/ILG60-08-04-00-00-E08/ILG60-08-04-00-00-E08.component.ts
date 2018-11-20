@@ -8,7 +8,7 @@ import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-i
 import { IRequestPaymentFine } from 'app/pages/reward/interfaces/RequestPaymentFine';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MyDatePickerOptions } from 'app/config/dateFormat';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import {
   debounceTime,
   distinctUntilChanged,

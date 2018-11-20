@@ -17,7 +17,7 @@ import { RequestPaymentFineDetailService } from 'app/pages/reward/services/Reque
 import { IRequestPaymentFineDetail } from 'app/pages/reward/interfaces/RequestPaymentFineDetail';
 import { MasOfficeService } from 'app/pages/reward/services/master/MasOffice.service';
 import { MasOfficeModel } from 'app/models/mas-office.model';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import {
   debounceTime,
   distinctUntilChanged,
