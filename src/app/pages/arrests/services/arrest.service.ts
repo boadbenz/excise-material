@@ -19,6 +19,12 @@ export class ArrestService {
             })
     };
 
+    ArrestReportgetByCon(ArrestCode: string) {
+        const params = { ArrestCode };
+        const url = `${appConfig.apiReport}/ArrestgetByCon.aspx`;
+        return this.http.post(url, params).map(x => x);
+    }
+
     ArrestgetByKeyword(Textsearch: any) {
         const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api7788}/ArrestgetByKeyword`;

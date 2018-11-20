@@ -37,7 +37,8 @@ import {
 } from '../../../models';
 import { IMyDateModel } from 'mydatepicker-th';
 import { replaceFakePath } from 'app/config/dataString';
-import { NoticeMasSuspect } from '../../component/suspect-modal/notice-mas-suspect';
+// import { NoticeMasSuspect } from '../../component/suspect-modal/notice-mas-suspect';
+import { NoticeMasSuspect } from '../../component/notice-suspect-modal/notice-mas-suspect';
 import { MainMasterService } from '../../../services/main-master.service';
 import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
 
@@ -53,6 +54,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
 
+    months:any[];
     programSpect: string = 'ILG60-02-02-00';
     mode: string;
     showEditField: Boolean;
@@ -136,13 +138,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.createForm();
 
+        await this.setCommunicateStore();
+        await this.setProductStore();
+        await this.setStaffStore();
+        await this.setRegionStore();
+        await this.setProductUnitStore();
+        await this.setOfficeStore();
         // await this.setCommunicateStore();
-        // await this.setProductStore();
-        // await this.setStaffStore();
-        // await this.setRegionStore();
-        // await this.setProductUnitStore();
-        // await this.setOfficeStore();
-        // await this.setCommunicateStore();
+
+        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 
         if (this.mode == 'R') {
             this.getByCon(this.noticeCode);
@@ -219,8 +223,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                this.noticeForm.value.NoticeDate = convertDateForSave(sDateCompare);
-                this.noticeForm.value.NoticeDueDate = convertDateForSave(eDateCompare);
+                const noticeDate = this.noticeForm.value.NoticeDate;
+                const noticeDueDate = this.noticeForm.value.NoticeDueDate;
+
+                this.noticeForm.value.NoticeDate = noticeDate.date.day+"-"+this.months[noticeDate.date.month-1]+"-"+noticeDate.date.year;//convertDateForSave(sDateCompare);
+                this.noticeForm.value.NoticeDueDate = noticeDueDate.date.day+"-"+this.months[noticeDueDate.date.month-1]+"-"+noticeDueDate.date.year;//convertDateForSave(eDateCompare);
                 this.noticeForm.value.NoticeInformer.map(item => {
                     item.InformerType = item.InformerType == true ? 1 : 0;
                 });
@@ -315,6 +322,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
+            
             this.noticeCode = res.NoticeCode;
             this.arrestCode = res.ArrestCode;
             await this.noticeForm.reset({
@@ -562,6 +570,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     RowId: item.RowId,
                     IsChecked: true,
                     IsNewItem: true,
+                    MistreatNo: item.MistreatNo
                 }
                 this.NoticeSuspect.push(this.fb.group(noticeSuspect))
             });
@@ -571,6 +580,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     addDocument() {
         const lastIndex = this.NoticeDocument.length - 1;
         let document = new NoticeDocument();
+        document.DocumentID = ""+(lastIndex + 1);
+        document.DocumentName = "";
+        document.FilePath = "";
         document.IsNewItem = true;
         if (lastIndex < 0) {
             this.NoticeDocument.push(this.fb.group(document));
@@ -589,9 +601,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async setStaffStore() {
-        // await this.mainMasterService.masStaffMaingetAll().then(res =>
-        //     this.typeheadStaff = res
-        // )
+        await this.mainMasterService.masStaffMaingetAll().then(res =>
+            this.typeheadStaff = res
+        )
     }
 
     private async setProductStore() {
@@ -742,8 +754,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeCode: this.noticeCode,
             GroupCode: ele.item.GroupCode || '1',
             IsDomestic: ele.item.IsDomestic || '1',
-            NetWeight: ele.item.NetWeight || 0,
-            NetWeightUnit: ele.item.NetWeightUnit || 0,
+            NetVolume: ele.item.NetVolume || 0,
+            NetVolumeUnit: ele.item.NetVolumeUnit || 0,
         })
     }
 

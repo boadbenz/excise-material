@@ -44,16 +44,44 @@
             </div>
           </div>
         </div>
-
         <div class="row">
-          <label for="" class="col-md-2 control-label padding-adv-search">วันที่เปรียบเทียบคดี :</label>
+          <!-- <label for="" class="col-md-2 control-label padding-adv-search">วันที่เปรียบเทียบคดี :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group input-group form-line">
               <input type="date"  [(ngModel)]="CompareDateFrom" name="CompareDateFrom"  (blur)="varidateCDF(advForm,$event)"  ngModel class="form-control " placeholder="วว/ดด/ปปปป">
               <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
               <input type="date" [(ngModel)]="CompareDateTo" name="CompareDateTo"  (blur)="varidateCDE(advForm,$event)" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
             </div>
+          </div> -->
+          <label for="" class="col-md-2 control-label padding-adv-search">วันที่เปรียบเทียบคดี :</label>
+          <div class="col-md-4">
+            <div class="form-group row">
+              <div class="col-md-5">
+                <my-date-picker-th ngModel name="LawsuitDateFrom" placeholder="" locale="th" [options]="LawsuitDateFromOptions"
+                  (dateChanged)="onDateFromChanged($event)"></my-date-picker-th>
+              </div>
+              <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
+              <div class="col-md-5">
+                <my-date-picker-th ngModel name="LawsuitDateTo" placeholder="" locale="th" [options]="LawsuitDateToOptions"
+                  (dateChanged)="onDateChanged($event)"></my-date-picker-th>
+              </div>
+            </div>
           </div>
+<!--
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
+              <div class="col-md-4">
+                <my-date-picker-th ngModel name="CompareDateFrom" placeholder="" locale="th" [options]="CompareDateFromOptions"
+                  (dateChanged)="onDateFromChanged($event)"></my-date-picker-th>
+              </div>
+              <label class="col-form-label text-right col-md-1 px-0">ถึง : </label>
+              <div class="col-md-4">
+                <my-date-picker-th ngModel name="CompareDateTo" placeholder="" locale="th" [options]="CompareDateToOptions"
+                  (dateChanged)="onDateChanged($event)"></my-date-picker-th>
+              </div>
+            </div>
+          </div> -->
 
           <input type="hidden" name="ProgramCode" ngModel>
           <input type="hidden" name="ProcessCode" ngModel>
@@ -80,7 +108,7 @@
         </div>
 
         <div class="row form-group">
-          
+
             <div class="col-10"></div>
             <div class="col-2">
                 <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
@@ -114,23 +142,19 @@
             <td style="text-align: center">{{i + 1}}</td>
             <td>{{item.ArrestCode}}</td>
             <td style="text-align: center">
-              <div *ngIf="item.IsOutside == 1">น {{item.Lawsuilt}}</div>
-              <div *ngIf="item.IsOutside != 1">{{item.Lawsuilt}}</div>
+              <div *ngIf="item.IsOutside == 1">น {{item.LawsuitNo}}</div>
+              <div *ngIf="item.IsOutside != 1">{{item.LawsuitNo}}</div>
             </td>
             <td>{{item.ProveReportNo}}</td>
             <td style="text-align: center">
-              <div *ngIf="item.IsOutside == 1">น {{item.CompareCode}}</div>
-              <div *ngIf="item.IsOutside != 1">{{item.CompareCode}}</div>
+              <div *ngIf="item.IsOutside == 1; else notOutside">น {{item.CompareCode}}</div>
+              <ng-template #notOutside>{{item.CompareCode}}</ng-template>
             </td>
-            <td>
-                <div *ngFor="let staff of item.CompareStaff | ContributorPipe:18;">{{staff.TitleName}}{{staff.FirstName}} {{staff.LastName}}</div>
-            </td>
-            <td style="text-align: center">{{item.CompareDate | date:'dd-MM-yyyy'}}</td>
-            <td>
-                <div *ngFor="let staff of item.CompareStaff | ContributorPipe:18;">{{staff.DepartmentName}}</div>
-            </td>
+            <td>{{item.TitleName}}{{item.FirstName}}{{item.LastName}}</td>
+            <td style="text-align: center">{{item.CompareDate}}</td>
+            <td>{{item.DepartmentName}}</td>
             <td class="text-center">
-              <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitID,item.ArrestCode,item.CompareID)">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.LawsuitNo, item.ArrestCode, item.CompareID)">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
             </td>

@@ -65,6 +65,7 @@ export class InvestigateMasLawbreakerModel {
     PhotoDesc: string;
     IsActive: number;
 
+    ResultCount: number;
     Region: string;
 }
 
@@ -131,5 +132,6 @@ export const InvestigateMasLawbreakerFC = {
     Remarks: new FormControl(''),
     LinkPhoto: new FormControl(''),
     PhotoDesc: new FormControl(''),
-    IsActive: new FormControl('')
+    IsActive: new FormControl(''),
+    ResultCount: new FormControl('')
 }

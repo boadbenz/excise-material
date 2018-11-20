@@ -1,0 +1,252 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="table-responsive" *ngIf="(aggregate08 | async)">
+      <!-- {{ formGroup.value | json}} -->
+      {{aggregate08 | async | json}}
+
+      {{SumBribeMoney}}
+      <form [formGroup]="formGroup" *ngIf="formGroup">
+        <div class="text-right">
+          <button (click)="addRow()" [attr.disabled]="(ILG60_08_04_00_00_E13_BUTTON$ | async)?.DISABLED ? 'disabled' : null"
+            class="btn waves-effect waves-light btn-navy">เพิ่มจนท.สนับสนุน</button>
+        </div>
+        <table class="dataTable table table-sm table-striped table-hover" formArrayName="sharedBribeReward">
+          <thead>
+            <tr>
+              <th class="footable-sortable" colspan="1"></th>
+              <th class="footable-sortable" colspan="1">ลำดับ</th>
+              <th class="footable-sortable" colspan="1">ยศ</th>
+              <th class="footable-sortable" colspan="1">ชื่อ-สกุล</th>
+              <th class="footable-sortable" colspan="1">ตำแหน่ง</th>
+              <th class="footable-sortable" colspan="1">ระดับ</th>
+              <th class="footable-sortable" colspan="1">ได้ในฐานะ</th>
+              <th class="footable-sortable text-center" colspan="2">จำนวนสัดส่วน</th>
+              <th class="footable-sortable text-center" colspan="2">จำนวนเงิน</th>
+              <th class="footable-sortable" colspan="1">รวมทั้งสิ้น</th>
+              <th class="footable-sortable" colspan="1"></th>
+            </tr>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>ส่วนแรก</th>
+              <th>ส่วนหลัง</th>
+              <th>ส่วนแรก</th>
+              <th>ส่วนหลัง</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="footable">
+              <td>
+                <mat-checkbox class="filled-in chk-col-indigo" [checked]="true" [attr.disabled]="'disabled'"></mat-checkbox>
+              </td>
+              <td class="text-center">1</td>
+              <td>
+                <input class="form-control" type="text" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" value="สายลับ (ขอปิดนาม)" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" value="ผู้แจ้งความนำจับ" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="number" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="number" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="number" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="number" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="number" [value]="SumBribeMoney" [attr.disabled]="'disabled'">
+              </td>
+              <td></td>
+            </tr>
+            <tr class="footable" *ngFor="let item of datatable | sort: i; let i=index;">
+              <td>
+                <mat-checkbox class="filled-in chk-col-indigo" ></mat-checkbox>
+              </td>
+              <td class="text-center">{{i+2}}</td>
+              <td>
+                <input class="form-control" type="text" [value]="item.TitleName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.FullName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.PositionName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.PosLevelName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.ContributorName" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.FirstPart" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.SecondPart" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.FirstMoney" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.SecondMoney" [attr.disabled]="'disabled'">
+              </td>
+              <td>
+                <input class="form-control" type="text" [value]="item.SecondMoney" [attr.disabled]="'disabled'">
+              </td>
+              <td></td>
+            </tr>
+            <tr class="footable" *ngFor="let item of formGroup['controls'].sharedBribeReward.controls | sort: i; let i=index;"
+              [formGroupName]="i">
+              <td>
+                <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
+              </td>
+              <td class="text-center">{{i+2}}</td>
+              <td>
+                <input class="form-control" type="text" formControlName="TitleName">
+              </td>
+              <td>
+                <input class="form-control" type="text" formControlName="FullName">
+              </td>
+              <td>
+                <input class="form-control" type="text" formControlName="PositionName">
+              </td>
+              <td>
+                <input class="form-control" type="text" formControlName="PosLevelName">
+              </td>
+              <td>
+                <input type="hidden" formControlName="ContributorName">
+                <select class="form-control" formControlName="ContributorID">
+                  <ng-container *ngFor="let item of ContributorList">
+                    <option *ngIf="item.value < 4" [value]="item.value">{{item.text}}</option>
+                  </ng-container>
+                </select>
+              </td>
+              <td>
+                <input class="form-control" type="number" formControlName="FirstPart">
+              </td>
+              <td>
+                <input class="form-control" type="number" formControlName="SecondPart">
+              </td>
+              <td>
+                <input class="form-control" type="number" formControlName="FirstMoney">
+              </td>
+              <td>
+                <input class="form-control" type="number" formControlName="SecondMoney">
+              </td>
+              <td>
+                <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+              </td>
+              <td><i class="ti-trash btn-action" (click)="deleteHandle(i)"></i></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="footable">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="text-right">รวมทั้งสิ้น:</td>
+              <td>
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstPart.sum | currency:' '">
+              </td>
+              <td>
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondPart.sum | currency:' '">
+              </td>
+              <td>
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstMoney.sum | currency:' '">
+              </td>
+              <td>
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondMoney.sum | currency:' '">
+              </td>
+              <td>
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.ToTalMoney.sum | currency:' '">
+              </td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group row">
+          <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
+          <div class="col-md-7">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumMoney | currency:' '" [attr.disabled]="'disabled'">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group row">
+          <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
+          <div class="col-md-7">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumFirstMoney | currency:' '" [attr.disabled]="'disabled'">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group row">
+          <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
+          <div class="col-md-3">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumFirstMoneyPerPart | currency:' '"
+              [attr.disabled]="'disabled'">
+          </div>
+          <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
+          <div class="col-md-3">
+            <input class="form-control" type="text" [value]="sumTotal()?.FirstRemainder | currency:' '" [attr.disabled]="'disabled'">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group row">
+          <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
+          <div class="col-md-7">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoney | currency:' '" [attr.disabled]="'disabled'">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group row">
+          <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
+          <div class="col-md-3">
+            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoneyPerPart | currency:' '"
+              [attr.disabled]="'disabled'">
+          </div>
+          <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
+          <div class="col-md-3">
+            <input class="form-control" type="text" [value]="sumTotal()?.SecondRemainder | currency:' '"
+              [attr.disabled]="'disabled'">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

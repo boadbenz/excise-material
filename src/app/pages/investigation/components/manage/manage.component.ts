@@ -11,7 +11,6 @@ import * as fromService from '../../services';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { Message } from 'app/config/message';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker, toLocalShort } from 'app/config/dateFormat';
 import { IMyDateModel } from 'mydatepicker-th';
 import { Subject } from 'rxjs/Subject';
@@ -34,6 +33,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private obInvest: Observable<fromModels.InvestigateModel>;
     stateInvest: fromModels.InvestigateModel;
+    toLocalShort = toLocalShort;
 
     private mode: string;
     investCode: string;
@@ -50,13 +50,16 @@ export class ManageComponent implements OnInit, OnDestroy {
     investigateForm: FormGroup;
 
     myDatePickerOptions = MyDatePickerOptions;
-    investigateDetail = new Array<fromModels.InvestigateDetail>();
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
-    // get InvestigateDetail(): FormArray {
-    //     return this.investigateForm.get('InvestigateDetail') as FormArray;
-    // }
+    get InvestigateDetail(): FormArray {
+        return this.investigateForm.get('InvestigateDetail') as FormArray;
+    }
+
+    getInvestigateDetailStaff(form: any) {
+        return form.controls.InvestigateDetailStaff.value;
+    }
 
     constructor(
         private router: Router,
@@ -65,14 +68,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private ngbModel: NgbModal,
         private sidebarService: SidebarService,
-        private preloader: PreloaderService,
         private s_invest: fromService.InvestgateService,
         private store: Store<fromStore.AppState>
     ) {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
-        this.navService.setNextPageButton(false);
 
         this.obInvest = store.select(s => s.invest);
         this.obInvest
@@ -81,24 +82,21 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.preloader.setShowPreloader(true);
-        this.sidebarService.setVersion('0.0.0.2');
-
+        this.sidebarService.setVersion('0.0.0.3');
         this.active_Route();
         this.navigate_Service();
         this.createForm();
-
-        this.preloader.setShowPreloader(false);
     }
 
     private createForm() {
         this.investigateForm = this.fb.group({
-            InvestigateCode: new FormControl(this.investCode, Validators.required),
-            InvestigateNo: new FormControl(null),
-            DateStart: new FormControl(null),
-            DateEnd: new FormControl(null),
+            InvestigateCode: new FormControl(this.investCode),
+            InvestigateNo: new FormControl(null, Validators.required),
+            DateStart: new FormControl(null, Validators.required),
+            DateEnd: new FormControl(null, Validators.required),
             Subject: new FormControl(null),
-            IsActive: new FormControl(1)
+            IsActive: new FormControl(1),
+            InvestigateDetail: this.fb.array([])
         });
     }
 
@@ -114,7 +112,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.enableBtnModeR();
                     break;
             }
-
             this.pageLoad();
         });
     }
@@ -136,13 +133,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         // set false
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
+        this.navService.setPrevPageButton(false);
+        this.navService.setNextPageButton(false);
         // set true
         this.navService.setPrintButton(true);
         this.navService.setEditButton(true);
         this.navService.setDeleteButton(true);
         this.navService.setEditField(true);
-        this.navService.setPrevPageButton(true);
-        this.navService.setNextPageButton(true);
     }
 
     private navigate_Service() {
@@ -160,6 +157,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnSave(false);
+                this.onSave();
 
             }
         });
@@ -179,51 +177,70 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+    private onSave() {
+        let f = this.investigateForm.value;
+
+        if (this.investigateForm.invalid) {
+            alert(Message.checkData);
+            return;
+        }
+
+        if (!this.InvestigateDetail.length) {
+            alert('ส่วนรายงานการสืบสวน ต้องมีอย่างน้อย 1 รายการ');
+            return;
+        }
+
+        f.DateStart = getDateMyDatepicker(f.DateStart);
+        f.DateEnd = getDateMyDatepicker(f.DateEnd);
+
+        switch (this.mode) {
+            case 'R':
+                this.updateInvestigate(f);
+                break;
+        }
+
+    }
+
     private pageLoad() {
         if (this.stateInvest) {
             this.pageRefreshInvestigate(this.stateInvest);
         } else {
             if (this.investCode == 'NEW') return;
             this.s_invest.InvestigategetByCon(this.investCode)
-                .then((x: fromModels.InvestigateModel) => {
+                .takeUntil(this.destroy$)
+                .subscribe((x: fromModels.InvestigateModel) => {
                     if (!this.checkResponse(x)) return;
-                    this.pageRefreshInvestigate(x)
+                    this.pageRefreshInvestigate(x[0]);
                 });
         }
     }
 
-    private pageRefreshInvestigate(x: fromModels.InvestigateModel) {
+    private async pageRefreshInvestigate(x: fromModels.InvestigateModel) {
         x.DateStart = setDateMyDatepicker(x.DateStart);
         x.DateEnd = setDateMyDatepicker(x.DateEnd);
 
         let investDetail = x.InvestigateDetail;
-        investDetail.map(id => {
-            id.InvestigateDateStart = toLocalShort(id.InvestigateDateStart);
-            id.InvestigateDateEnd = toLocalShort(id.InvestigateDateEnd);
-            let staff = id.InvestigateDetailStaff
+        if (!investDetail) return;
+        await investDetail.map(id => {
+            let staff: fromModels.InvestigateDetailStaff[] = id.InvestigateDetailStaff
                 .filter(staff => staff.ContributorID == '2' || staff.ContributorID == '3')
                 .map(staff => {
-                    switch (staff.ContributorID) {
-                        case '2':
+                    switch (parseInt(staff.ContributorID)) {
+                        case 2:
                             staff.Investigator = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
                             break;
-                        case '3':
+                        case 3:
                             staff.Commander = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
                             break;
                     }
                     return staff;
                 });
+
             id.InvestigateDetailStaff = staff;
         })
-        this.investigateDetail = investDetail;
+        investDetail.sort((a, b) => { if (a.InvestigateSeq  < b.InvestigateSeq) return -1; })
+        this.setItemFormArray(investDetail, 'InvestigateDetail')
         this.investigateForm.patchValue(x);
-    }
-
-    private onCreate() {
-
-    }
-
-    private onReviced() {
 
     }
 
@@ -234,6 +251,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                 return false;
             default:
                 return true;
+        }
+    }
+
+    checkIsSuccess(res: any) {
+        switch (res.IsSuccess) {
+            case 'True':
+            case true:
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -251,40 +278,25 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private checkDate() {
         if (this._dateStartFrom && this._dateStartTo) {
-
-            let sdate = this.isObject(this._dateStartFrom)
-                ? getDateMyDatepicker(this._dateStartFrom)
-                : new Date(this._dateStartFrom);
-            let edate = this.isObject(this._dateStartTo)
-                ? getDateMyDatepicker(this._dateStartTo)
-                : new Date(this._dateStartTo);
+            let sdate = getDateMyDatepicker(this._dateStartFrom);
+            let edate = getDateMyDatepicker(this._dateStartTo)
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.investigateForm.patchValue({
-                        DateEnd: this.isObject(this._dateStartFrom)
-                            ? { date: this._dateStartFrom.date }
-                            : setDateMyDatepicker(this._dateStartFrom)
+                        DateEnd: setDateMyDatepicker(this._dateStartFrom)
                     })
                 }, 0);
             }
         }
     }
 
-    private onComplete() {
-
-        alert(Message.saveComplete);
-    }
-
-    private async onDelete() {
-
-    }
-
     onCreateInvestDetail() {
         let invest = this.investigateForm.value as fromModels.InvestigateModel;
-        invest.DateStart = this.isObject(invest.DateStart) ? getDateMyDatepicker(invest.DateStart) : invest.DateStart;
-        invest.DateEnd = this.isObject(invest.DateEnd) ? getDateMyDatepicker(invest.DateEnd) : invest.DateEnd;
+
+        invest.DateStart = getDateMyDatepicker(invest.DateStart);
+        invest.DateEnd = getDateMyDatepicker(invest.DateEnd);
         this.store.dispatch(new fromStore.CreateInvestigate(invest));
 
         this.router.navigate(
@@ -313,9 +325,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
+        this.investigateForm.reset();
+        this.clearFormArray(this.InvestigateDetail);
     }
 
-    isObject = (obj) => obj === Object(obj);
+    catchError(error: any) {
+        console.log(error);
+        alert(Message.saveFail);
+    }
+
+    clearFormArray = (formArray: FormArray) => {
+        while (formArray.length !== 0) {
+            formArray.removeAt(0)
+        }
+    }
 
     private setItemFormArray(array: any[], formControl: string) {
         if (array !== undefined && array.length) {
@@ -323,6 +346,35 @@ export class ManageComponent implements OnInit, OnDestroy {
             const itemFormArray = this.fb.array(itemFGs);
             this.investigateForm.setControl(formControl, itemFormArray);
         }
+    }
+
+    private async onDelete() {
+
+    }
+
+    private updateInvestigate(form: any) {
+        const invest = {
+            InvestigateCode: form.InvestigateCode,
+            InvestigateNo: form.InvestigateNo,
+            DateStart: form.DateStart,
+            DateEnd: form.DateEnd,
+            Subject: form.Subject,
+            IsActive: form.IsActive
+        }
+
+        console.log("InvestigateupdAll : ", JSON.stringify(invest));
+
+        this.s_invest.InvestigateupdAll(invest)
+            .takeUntil(this.destroy$)
+            .subscribe(x => {
+                if (!this.checkIsSuccess(x)) {
+                    alert(Message.saveFail);
+                    return;
+                }
+                alert(Message.saveComplete);
+
+                this.router.navigate(['/investigation/manage', this.mode, this.investCode])
+            }, (error) => this.catchError(error));
     }
 
 }

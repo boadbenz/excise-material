@@ -16,12 +16,14 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
+    months:any[];
+
     advSearch: any;
     isRequired = false;
     setDefaultDate: string;
     paginage = pagination;
 
-    notice = new Array<Notice>();
+    notice = [];
     noticeList = new Array<Notice>();
 
     dateStartFrom: any;
@@ -69,14 +71,16 @@ export class ListComponent implements OnInit, OnDestroy {
                 await this.navservice.setOnSearch('');
                 this.onSearch(Textsearch);
             }
-        })
+        });
 
         this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navservice.setOnNextPage(false);
                 this._router.navigate(['/notice/manage', 'C', 'NEW']);
             }
-        })
+        });
+
+        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 
         // this.preLoaderService.setShowPreloader(false);
     }
@@ -96,19 +100,24 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onAdvSearch(form: any) {
+        if (this.dateStartFrom && this.dateStartTo) {
 
-        if (form.value.DateStartFrom && form.value.DateStartTo) {
-
-            const sdate = getDateMyDatepicker(form.value.dateStartFrom);
-            const edate = getDateMyDatepicker(form.value.dateStartTo);
+            let sdate = getDateMyDatepicker(this.dateStartFrom);
+            let edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate);
                 return false;
             }
 
-            form.value.DateStartFrom = setZeroHours(sdate);
-            form.value.DateStartTo = setZeroHours(edate);
+            form.value.DateStartFrom = this.dateStartFrom.date.day+"-"+this.months[this.dateStartFrom.date.month-1]+"-"+this.dateStartFrom.date.year;//setZeroHours(sdate);
+            form.value.DateStartTo = this.dateStartTo.date.day+"-"+this.months[this.dateStartTo.date.month-1]+"-"+this.dateStartTo.date.year;//setZeroHours(edate);
+
+            form.value.DateStartFrom = form.value.DateStartFrom?form.value.DateStartFrom:"";
+            form.value.DateStartTo = form.value.DateStartTo?form.value.DateStartTo:"";
+        }else{
+            form.value.DateStartFrom = "";
+            form.value.DateStartTo = "";
         }
 
         this.preLoaderService.setShowPreloader(true);
@@ -118,31 +127,24 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preLoaderService.setShowPreloader(false);
     }
 
-    async onSearchComplete(list: Notice[]) {
-        if (!list.length) {
+    async onSearchComplete(list) {
+        if (list === undefined) {
             alert(Message.noRecord)
             return false;
         }
 
-        this.notice = [];
-        await list
-            .filter(item => item.IsActive == 1)
-            .map((item, i) => {
-                item.RowId = i + 1;
-                item.NoticeDate = toLocalShort(item.NoticeDate);
-                item.NoticeStaff
-                    .filter(_s => _s.IsActive == 1)
-                    .map(s => {
-                        s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
-                    });
-                item.NoticeSuspect
-                    .filter(_s => _s.IsActive == 1)
-                    .map(s => {
-                        s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
-                    })
-            })
+        // await list.filter(item => item.IsActive == 1).map((item, i) => {
+        //     item.RowId = i + 1;
+        //     item.NoticeDate = toLocalShort(item.NoticeDate);
+        //     item.NoticeStaff.filter(_s => _s.IsActive == 1).map(s => {
+        //         s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+        //     });
+        //     item.NoticeSuspect.filter(_s => _s.IsActive == 1).map(s => {
+        //         s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+        //     });
+        // });
 
-        this.notice = list
+        this.notice = list;
         // set total record
         this.paginage.TotalItems = this.notice.length;
     }

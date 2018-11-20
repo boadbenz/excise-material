@@ -26,7 +26,7 @@ export const routes: Routes = [
         path: 'prove', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/prove/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code1/:code2/:code3/:code4/:code5', loadChildren: './pages/prove/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code1/:code2', loadChildren: './pages/prove/manage/manage.module#ManageModule' }
         ]
     },
     {
@@ -52,10 +52,10 @@ export const routes: Routes = [
     }, {
         path: 'reward', component: LayoutComponent,
         children: [
-            { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
-            { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
-            { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
+            // { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
+            // { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
+            // { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
+            // { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
         ]
     }, {
         path: 'reduction', component: LayoutComponent,
@@ -66,53 +66,93 @@ export const routes: Routes = [
         ]
     },
 
-    {
-        path: 'accordion', component: LayoutComponent,
-        loadChildren: './pages/component/accordion/accordion.module#AccordionModule'
-    }, {
-        path: 'alert', component: LayoutComponent,
-        loadChildren: './pages/component/alert/alert.module#NgAlertModule'
-    }, {
-        path: 'carousel', component: LayoutComponent,
-        loadChildren: './pages/component/carousel/carousel.module#ButtonsModule'
-    }, {
-        path: 'datepicker', component: LayoutComponent,
-        loadChildren: './pages/component/datepicker/datepicker.module#DatepickerModule'
-    }, {
-        path: 'dropdown', component: LayoutComponent,
-        loadChildren: './pages/component/dropdown-collapse/dropdown-collapse.module#DropdownModule'
-    }, {
-        path: 'modal', component: LayoutComponent,
-        loadChildren: './pages/component/modal/modal.module#ModalModule'
-    }, {
-        path: 'pagination', component: LayoutComponent,
-        loadChildren: './pages/component/pagination/pagination.module#paginationModule'
-    }, {
-        path: 'Popovertooltip', component: LayoutComponent,
-        loadChildren: './pages/component/popover-tooltip/popover-tooltip.module#PopoverTooltipModule'
-    }, {
-        path: 'progressbar', component: LayoutComponent,
-        loadChildren: './pages/component/progressbar/progressbar.module#progressbarModule'
-    }, {
-        path: 'rating', component: LayoutComponent,
-        loadChildren: './pages/component/rating/rating.module#RatingModule'
-    }, {
-        path: 'tabs', component: LayoutComponent,
-        loadChildren: './pages/component/tabs/tabs.module#TabsModule'
-    }, {
-        path: 'timepicker', component: LayoutComponent,
-        loadChildren: './pages/component/timepicker/timepicker.module#TimepickerModule'
-    }, {
-        path: 'typehead', component: LayoutComponent,
-        loadChildren: './pages/component/typehead/typehead.module#TypeheadModule'
-    }, {
-        path: 'fontawesome', component: LayoutComponent,
-        loadChildren: './pages/icons/fontawesome/fontawesome.module#FontawesomeModule'
-    }, {
-        path: 'simpleline', component: LayoutComponent,
-        loadChildren: './pages/icons/simpleline/simpleline.module#SimplelineIconModule'
-    }, {
-        path: 'material', component: LayoutComponent,
-        loadChildren: './pages/icons/material/material.module#MaterialComponentModule'
-    }
+  {
+    path: 'accordion',
+    component: LayoutComponent,
+    loadChildren: './pages/component/accordion/accordion.module#AccordionModule'
+  },
+  {
+    path: 'alert',
+    component: LayoutComponent,
+    loadChildren: './pages/component/alert/alert.module#NgAlertModule'
+  },
+  {
+    path: 'carousel',
+    component: LayoutComponent,
+    loadChildren: './pages/component/carousel/carousel.module#ButtonsModule'
+  },
+  {
+    path: 'datepicker',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/component/datepicker/datepicker.module#DatepickerModule'
+  },
+  {
+    path: 'dropdown',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/component/dropdown-collapse/dropdown-collapse.module#DropdownModule'
+  },
+  {
+    path: 'modal',
+    component: LayoutComponent,
+    loadChildren: './pages/component/modal/modal.module#ModalModule'
+  },
+  {
+    path: 'pagination',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/component/pagination/pagination.module#paginationModule'
+  },
+  {
+    path: 'Popovertooltip',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/component/popover-tooltip/popover-tooltip.module#PopoverTooltipModule'
+  },
+  {
+    path: 'progressbar',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/component/progressbar/progressbar.module#progressbarModule'
+  },
+  {
+    path: 'rating',
+    component: LayoutComponent,
+    loadChildren: './pages/component/rating/rating.module#RatingModule'
+  },
+  {
+    path: 'tabs',
+    component: LayoutComponent,
+    loadChildren: './pages/component/tabs/tabs.module#TabsModule'
+  },
+  {
+    path: 'timepicker',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/component/timepicker/timepicker.module#TimepickerModule'
+  },
+  {
+    path: 'typehead',
+    component: LayoutComponent,
+    loadChildren: './pages/component/typehead/typehead.module#TypeheadModule'
+  },
+  {
+    path: 'fontawesome',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/icons/fontawesome/fontawesome.module#FontawesomeModule'
+  },
+  {
+    path: 'simpleline',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/icons/simpleline/simpleline.module#SimplelineIconModule'
+  },
+  {
+    path: 'material',
+    component: LayoutComponent,
+    loadChildren:
+      './pages/icons/material/material.module#MaterialComponentModule'
+  }
 ];

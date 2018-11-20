@@ -28,7 +28,7 @@ import * as fromArrestReducers from './pages/arrests/store/reducers/';
 import * as fromInvestReducers from './pages/investigation/store/reducers';
 import { TransactionRunningService } from './services/transaction-running.service';
 import { MasDocumentMainService } from './services/mas-document-main.service';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
     declarations: [
         AppComponent,
@@ -42,6 +42,7 @@ import { MasDocumentMainService } from './services/mas-document-main.service';
         CommonModule,
         ReactiveFormsModule,
         BrowserModule,
+        BrowserAnimationsModule,
         NgbModule.forRoot(),
         FormsModule,
         HttpModule,

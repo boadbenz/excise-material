@@ -64,8 +64,8 @@ export const NoticeProductFormControl = {
     CarNo: new FormControl(null),
     Qty: new FormControl(null, Validators.required),
     QtyUnit: new FormControl(null, Validators.required),
-    NetWeight: new FormControl(null),
-    NetWeightUnit: new FormControl(null),
+    NetVolume: new FormControl(null),
+    NetVolumeUnit: new FormControl(null),
     Remarks: new FormControl(null),
     IsActive: new FormControl(null),
 
