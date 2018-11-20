@@ -29,6 +29,7 @@ import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { IRequestBribeReward } from '../../interfaces/RequestBribeReward.interface';
 import { IFormChange } from '../../interfaces/FormChange';
 import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-reward',
@@ -48,7 +49,8 @@ export class RewardComponent extends RewardConfig implements OnInit {
     private requestRewardService: RequestRewardService,
     private masDocumentMainService: MasDocumentMainService,
     private transactionRunningService: TransactionRunningService,
-    private requestPaymentFineService: RequestPaymentFineService,
+    private sidebarService: SidebarService,
+    private requestPaymentFineService: RequestPaymentFineService
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -66,6 +68,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.1.1');
     this.pageLoad();
   }
   private pageLoad() {
@@ -273,7 +276,34 @@ export class RewardComponent extends RewardConfig implements OnInit {
                       this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate
                     )
                   ),
-                  RequestTime: this.ILG60_08_04_00_00_E08_FORM_DATA.RequestTime
+                  RequestTime: this.ILG60_08_04_00_00_E08_FORM_DATA.RequestTime,
+                  BribeTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.BribeTotal,
+                  FineType: this.ILG60_08_04_00_00_E08_FORM_DATA.FineType,
+                  FirstMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .FirstMoneyPerPart,
+                  FirstMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .FirstMoneyTotal,
+                  FirstPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .FirstPartTotal,
+                  FirstRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .FirstRemainder,
+                  IsActive: this.ILG60_08_04_00_00_E08_FORM_DATA.IsActive,
+                  RequestRewardDetail: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .RequestRewardDetail,
+                  RequestRewardID: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .RequestRewardID,
+                  RequestRewardStaff: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .RequestRewardStaff,
+                  RewardTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.RewardTotal,
+                  SecondMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .SecondMoneyPerPart,
+                  SecondMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .SecondMoneyTotal,
+                  SecondPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .SecondPartTotal,
+                  SecondRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
+                    .SecondRemainder,
+                  StationCode: this.ILG60_08_04_00_00_E08_FORM_DATA.StationCode
                 })
                 .subscribe((res: IRequestRewardinsAllRespone) => {
                   if (res.RequestRewardID) {

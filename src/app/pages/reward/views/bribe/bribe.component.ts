@@ -34,6 +34,7 @@ import { IFormChange } from '../../interfaces/FormChange';
 import { RequestBribeDetailService } from '../../services/RequestBribeDetail.service';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-bribe',
@@ -56,6 +57,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     private requestPaymentFineDetailService: RequestPaymentFineDetailService,
     private requestBribeDetailService: RequestBribeDetailService,
     private router: Router,
+    private sidebarService: SidebarService,
     public dialog: MatDialog
   ) {
     super();
@@ -104,6 +106,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.1.1');
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
     this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(res => {
@@ -244,7 +247,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
                   .TransactionRunninginsAll({
                     RunningOfficeCode: this.OfficeCode, // 2.1.2(2.1.1)
                     RunningTable: 'ops_requestbribe', // 2.1.2(2.1.2)
-                    RunningPrefix: 'BR' // 2.1.2(2.1.3)
+                    RunningPrefix: 'BR', // 2.1.2(2.1.3)
                   })
                   .subscribe();
 
@@ -268,7 +271,26 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
                 .CommandDetailID, // 2.1.3(4)
               Station: this.ILG60_08_03_00_00_E08_FORM_DATA.Station,
               RequestDate: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestDate,
-              RequestTime: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestTime
+              RequestTime: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestTime,
+              BribeRemainder: 0,
+              BribeTotal: 0,
+              FirstName: '',
+              Informeracknowledge: '',
+              IsActive: 1,
+              LastName: '',
+              NoticeCode: '',
+              POADate: '',
+              POANo: '',
+              POATime: '',
+              PartMoney: 0,
+              RequestBribeDetail: [],
+              RequestBribeID: null,
+              RequestBribeStaff: null,
+              StationCode: '',
+              StationCodeOfPOA: '',
+              StationOfPOA: '',
+              TitleName: '',
+              TotalPart: 0
             })
             .subscribe();
 

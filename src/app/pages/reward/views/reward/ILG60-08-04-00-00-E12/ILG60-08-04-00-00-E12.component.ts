@@ -1,29 +1,14 @@
-import {
-  Component,
-  OnInit,
-  AfterContentInit,
-  AfterViewInit
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { INonRequestRewardStaff } from 'app/pages/reward/interfaces/NonRequestRewardStaff';
 import { IRewardBinding } from '../reward.config';
 import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
 import { Observable } from 'rxjs/Observable';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  filter,
-  tap
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { MasTitleService } from 'app/pages/reward/services/master/MasTitle.service';
 import { MasTitleModel, MasStaffModel } from 'app/models';
-import { MasOfficeModel } from 'app/models/mas-office.model';
-import { MasOfficeService } from 'app/pages/reward/services/master/MasOffice.service';
 import { MasStaffService } from 'app/pages/reward/services/master/MasStaff.service';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
-import { combineLatest } from 'rxjs/operator/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Component({
   // tslint:disable-next-line:component-selector
@@ -75,7 +60,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       map(term =>
-        term.length < 2
+        term.length < 1
           ? []
           : this.TitleList.filter(
               v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
@@ -87,7 +72,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       map(term =>
-        term.length < 0
+        term.length < 1
           ? []
           : this.Staff_StaffCode_List.filter(
               v => v.text.toLowerCase().indexOf(term.toLowerCase()) > -1
@@ -99,9 +84,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
   constructor(
     private fb: FormBuilder,
     private masTitleService: MasTitleService,
-    private masStaffService: MasStaffService,
-    private masOfficeService: MasOfficeService,
-    private preloaderService: PreloaderService
+    private masStaffService: MasStaffService
   ) {
     super();
     this.formGroup = this.fb.group({
@@ -117,23 +100,33 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
             // this.nonRequestRewardStaffData = data.data;
             this.nonRequestRewardStaff = data.data;
 
-            this.aggregate.FirstPart.sum = data.data.map(m => m.ContributorID === '6' || m.ContributorID === '7' ? 1 : null).reduce(
-              (a, b) => (a += b));
+            this.aggregate.FirstPart.sum = data.data
+              .map(m =>
+                m.ContributorID === '6' || m.ContributorID === '7' ? 1 : null
+              )
+              .reduce((a, b) => (a += b));
 
-            this.aggregate.FirstMoney.sum = data.data.map(m => (Number(this.aggregate.FirstMoney.sum || 0) /
-            Number(this.aggregate.FirstPart.sum || 0)) *
-          Number(
-            m.ContributorID === '6' || m.ContributorID === '7'
-              ? 1
-              : null || 0
-          )).reduce(
-            (a, b) => (a += b));
+            this.aggregate.FirstMoney.sum = data.data
+              .map(
+                m =>
+                  (Number(this.aggregate.FirstMoney.sum || 0) /
+                    Number(this.aggregate.FirstPart.sum || 0)) *
+                  Number(
+                    m.ContributorID === '6' || m.ContributorID === '7'
+                      ? 1
+                      : null || 0
+                  )
+              )
+              .reduce((a, b) => (a += b));
             this.aggregate.SecondPart.sum = 0;
-            this.aggregate.SecondMoney.sum = data.data.map(m => (Number(this.aggregate.SecondMoney.sum || 0) /
-            Number(this.aggregate.SecondPart.sum || 0)) *
-          Number(null || 0)).reduce(
-            (a, b) => (a += b));
-
+            this.aggregate.SecondMoney.sum = data.data
+              .map(
+                () =>
+                  (Number(this.aggregate.SecondMoney.sum || 0) /
+                    Number(this.aggregate.SecondPart.sum || 0)) *
+                  Number(null || 0)
+              )
+              .reduce((a, b) => (a += b));
 
             // Object.keys(this.aggregate).forEach(element => {
             //   const keyObj = {};
@@ -156,16 +149,16 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
               FirstMoney:
                 (Number(this.aggregate.FirstMoney.sum || 0) /
                   Number(this.aggregate.FirstPart.sum || 0)) *
-                Number(
-                  m.ContributorID === '6' || m.ContributorID === '7'
-                    ? 1
-                    : null || 0
-                ),
+                  Number(
+                    m.ContributorID === '6' || m.ContributorID === '7'
+                      ? 1
+                      : null || 0
+                  ) || 0,
 
               SecondMoney:
                 (Number(this.aggregate.SecondMoney.sum || 0) /
                   Number(this.aggregate.SecondPart.sum || 0)) *
-                Number(null || 0),
+                  Number(null || 0) || 0,
               ToTalMoney:
                 Number(
                   (Number(this.aggregate.FirstMoney.sum || 0) /
@@ -176,11 +169,11 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
                         : null || 0
                     ) || 0
                 ) +
-                Number(
-                  (Number(this.aggregate.SecondMoney.sum || 0) /
-                    Number(this.aggregate.SecondPart.sum || 0)) *
-                    Number(null || 0) || 0
-                )
+                  Number(
+                    (Number(this.aggregate.SecondMoney.sum || 0) /
+                      Number(this.aggregate.SecondPart.sum || 0)) *
+                      Number(null || 0) || 0
+                  ) || 0
             }));
             // data.data.forEach(e => {
             //   // instantiate a new day FormGroup;
@@ -378,11 +371,11 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
     console.log(this.formGroup.value);
   }
 
-  public ILG60_08_04_00_00_E15($event) {
+  public ILG60_08_04_00_00_E15() {
     // ยศ	Column	Key Press	ILG60-08-04-00-00-E15
   }
 
-  public ILG60_08_04_00_00_E16($event) {
+  public ILG60_08_04_00_00_E16() {
     // ชื่อ-สกุล	Column	Key Press	ILG60-08-04-00-00-E16
     // ชื่อ-สกุล	Column	Text Change	ILG60-08-04-00-00-E17
   }

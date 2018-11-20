@@ -37,8 +37,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
-import { async } from 'q';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-manage',
@@ -55,9 +54,9 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     private requestNoticeService: RequestNoticeService,
     private requestCommandService: RequestCommandService,
     private requestBribeService: RequestBribeService,
+    private sidebarService: SidebarService,
     private router: Router,
-    public dialog: MatDialog,
-    private preloaderService: PreloaderService
+    public dialog: MatDialog
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -100,6 +99,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.1.1');
     this.setShowButton();
     this.pageLoad();
   }
@@ -111,19 +111,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
   }
-  private async pageLoad() {
+  private pageLoad() {
     // ILG60-08-02-00-00-E01
-    this.preloaderService.setShowPreloader(true);
     // 1 START
-    await this.RequestArrestLawsuitgetByIndictmentID({
+    this.RequestArrestLawsuitgetByIndictmentID({
       IndictmentID: this.IndictmentID$.getValue()
     });
 
     // 3
-    await this.RequestBribeRewardgetByIndictmentID({
+    this.RequestBribeRewardgetByIndictmentID({
       IndictmentID: this.IndictmentID$.getValue()
     });
-    this.preloaderService.setShowPreloader(false);
 
     // 5 END
   }
@@ -138,53 +136,6 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       });
   }
 
-  private pageRefresh(param) {
-    // ILG60-08-02-00-00-E02
-
-    // 1 START
-    switch (param) {
-      // 1.1
-      case 'B':
-        // 1.1.1
-        this.requestBribeService
-          .RequestBribegetByRequestBribeRewardID({
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-          })
-          .subscribe((res: IRequestBribe[]) => {
-            // 1.1.2
-            // 1.1.2(1)
-            if (res.length > 0) {
-              // 1.1.2(1.1)
-              this.ILG60_08_02_00_00E11_DATA$.next(res);
-            } else {
-              // 1.1.2(2)
-              // 1.1.2(2.1) => 2
-            }
-          });
-
-        break;
-      // 1.2
-      case 'R':
-        // 1.2.1
-        this.requestRewardService
-          .RequestRewardgetByRequestBribeRewardID({
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-          })
-          .subscribe((res: IRequestReward[]) => {
-            // 1.2.2
-            // 1.2.2(1)
-            if (res.length > 0) {
-              // 1.2.2(1.1)
-              this.ILG60_08_02_00_00E14_DATA$.next(res);
-            } else {
-              // 1.2.2(2)
-              // 1.2.2(2.1) => 2
-            }
-          });
-        break;
-    }
-    // 2 END
-  }
 
   public saveButton() {
     // ILG60-08-02-00-00-E03
@@ -195,8 +146,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     // console.log('ILG60_08_02_00_00E09_SAVE', this.ILG60_08_02_00_00E09_SAVE);
 
     const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
-    const requestReward: IRequestReward[] =
-      this.ILG60_08_02_00_00E14_DATA$.getValue();
+    const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
     let ValidateVerify = false;
     if (requestBribe.length === 0 && requestReward.length > 0) {
       // 1.1
@@ -210,7 +160,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       // 2
       // 2.1
       this.requestCommandService
-        .RequestCommandupdByCon(this.ILG60_08_02_00_00E09_SAVE)
+        .RequestCommandupdByCon({
+          ArrestCode: this.ILG60_08_02_00_00E09_SAVE.ArrestCode,
+          CommandDate: this.ILG60_08_02_00_00E09_SAVE.CommandDate,
+          CommandID: this.ILG60_08_02_00_00E09_SAVE.CommandID,
+          CommandNo: this.ILG60_08_02_00_00E09_SAVE.CommandNo,
+          CommandTime: this.ILG60_08_02_00_00E09_SAVE.CommandTime,
+          IsActive: this.ILG60_08_02_00_00E09_SAVE.IsActive,
+          RequestCommandDetail: this.ILG60_08_02_00_00E09_SAVE
+            .RequestCommandDetail,
+          TotalPart: this.ILG60_08_02_00_00E09_SAVE.TotalPart
+        })
         .subscribe((saveRes: IResponseCommon) => {
           // 3
           const responseSave = saveRes.IsSuccess;
@@ -429,7 +389,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       data: {}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
     });
     // 2 END
@@ -462,44 +422,42 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
                 .RequestRewardgetByRequestBribeRewardID({
                   RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
                 })
-                .subscribe(
-                  (resReward: IRequestRewardgetByRequestBribeRewardID[]) => {
-                    // 4.1.1(1.2)
-                    // 4.1.1(1.2.1)
-                    if (resReward.length > 0) {
-                      // 4.1.1(1.2.1(1))
-                      this.ILG60_08_02_00_00E14_DATA$.next(resReward);
+                .subscribe((resReward: IRequestReward[]) => {
+                  // 4.1.1(1.2)
+                  // 4.1.1(1.2.1)
+                  if (resReward.length > 0) {
+                    // 4.1.1(1.2.1(1))
+                    this.ILG60_08_02_00_00E14_DATA$.next(resReward);
 
-                      // 4.1.1(1.2.1(2))
-                    } else {
-                      // 4.1.1(1.2.2)
-                      // 4.1.1(1.2.2(1)) => 4.1.1(1.3)
-                    }
-
-                    // 4.1.1(1.3)
-                    this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-                    // 4.1.1(1.3.1)
-                    this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-                    // 4.1.1(1.3.2)
-                    this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
-                    this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-                    // 4.1.1(1.4)
-                    // 4.1.1(1.4.1)
-                    this.ILG60_08_02_00_00E08_DISABLED$.next(false);
-                    this.ILG60_08_02_00_00E09_DISABLED$.next(true);
-                    this.ILG60_08_02_00_00E11_DISABLED$.next(true);
-                    // 4.1.1(1.4.1)
-                    this.ILG60_08_02_00_00E14_DISABLED$.next(false);
-
-                    this.navService.setSearchBar(false);
-                    this.navService.setPrintButton(true);
-                    this.navService.setDeleteButton(true);
-                    this.navService.setCancelButton(false);
-                    this.navService.setEditButton(true);
-                    this.navService.setSaveButton(false);
+                    // 4.1.1(1.2.1(2))
+                  } else {
+                    // 4.1.1(1.2.2)
+                    // 4.1.1(1.2.2(1)) => 4.1.1(1.3)
                   }
-                );
+
+                  // 4.1.1(1.3)
+                  this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+                  // 4.1.1(1.3.1)
+                  this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+                  // 4.1.1(1.3.2)
+                  this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
+                  this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+
+                  // 4.1.1(1.4)
+                  // 4.1.1(1.4.1)
+                  this.ILG60_08_02_00_00E08_DISABLED$.next(false);
+                  this.ILG60_08_02_00_00E09_DISABLED$.next(true);
+                  this.ILG60_08_02_00_00E11_DISABLED$.next(true);
+                  // 4.1.1(1.4.1)
+                  this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+
+                  this.navService.setSearchBar(false);
+                  this.navService.setPrintButton(true);
+                  this.navService.setDeleteButton(true);
+                  this.navService.setCancelButton(false);
+                  this.navService.setEditButton(true);
+                  this.navService.setSaveButton(false);
+                });
               break;
 
             // 4.1.1(2)
@@ -514,20 +472,18 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
                 .RequestRewardgetByRequestBribeRewardID({
                   RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
                 })
-                .subscribe(
-                  (resReward: IRequestRewardgetByRequestBribeRewardID[]) => {
-                    // 4.1.1(2.4)
-                    // 4.1.1(2.4.1)
-                    if (resReward.length > 0) {
-                      // 4.1.1(2.4.1(1))
-                      this.ILG60_08_02_00_00E14_DATA$.next(resReward);
-                      // 4.1.1(2.4.1(2)) ==> 4.1.1(2.5)
-                    } else {
-                      // 4.1.1(2.4.2)
-                      // 4.1.1(2.4.2(1)) ==> 4.1.1(2.5)
-                    }
+                .subscribe((resReward: IRequestReward[]) => {
+                  // 4.1.1(2.4)
+                  // 4.1.1(2.4.1)
+                  if (resReward.length > 0) {
+                    // 4.1.1(2.4.1(1))
+                    this.ILG60_08_02_00_00E14_DATA$.next(resReward);
+                    // 4.1.1(2.4.1(2)) ==> 4.1.1(2.5)
+                  } else {
+                    // 4.1.1(2.4.2)
+                    // 4.1.1(2.4.2(1)) ==> 4.1.1(2.5)
                   }
-                );
+                });
 
               // 4.1.1(2.5)
 
@@ -631,7 +587,12 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
                     ...m,
                     // 4.2.2(1.1.4)
                     PartMoney: 1
-                  }))
+                  })),
+                  CommandDate: this.ILG60_08_02_00_00E09_SAVE.CommandDate,
+                  CommandID: this.ILG60_08_02_00_00E09_SAVE.CommandID,
+                  CommandNo: this.ILG60_08_02_00_00E09_SAVE.CommandNo,
+                  CommandTime: this.ILG60_08_02_00_00E09_SAVE.CommandTime,
+                  IsActive: this.ILG60_08_02_00_00E09_SAVE.IsActive
                 });
 
                 // 4.2.2(1.2)
@@ -749,67 +710,6 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         this.RequestBribeRewardgetByIndictmentID$.next(res);
       });
   }
-  private RequestNoticegetByArrestCode(param: IRequestNoticegetByArrestCode) {}
-  private RequestRewardgetByRequestBribeRewardID(
-    param: IRequestRewardgetByRequestBribeRewardID,
-    HaveNotice: number
-  ) {
-    this.requestRewardService
-      .RequestRewardgetByRequestBribeRewardID(param)
-      .subscribe((res: IRequestRewardgetByRequestBribeRewardID[]) => {
-        switch (HaveNotice) {
-          case 0:
-            // 4.1.1(1.2)
-            // 4.1.1(1.2.1)
-            if (res.length > 0) {
-              // 4.1.1(1.2.1(1))
-              this.ILG60_08_02_00_00E14_DATA$.next(res);
-
-              // 4.1.1(1.2.1(2))
-            } else {
-              // 4.1.1(1.2.2)
-              // 4.1.1(1.2.2(1)) => 4.1.1(1.3)
-            }
-
-            // 4.1.1(1.3)
-            this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-            // 4.1.1(1.3.1)
-            this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-            // 4.1.1(1.3.2)
-            this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
-            this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-            // 4.1.1(1.4)
-            // 4.1.1(1.4.1)
-            this.ILG60_08_02_00_00E08_DISABLED$.next(false);
-            this.ILG60_08_02_00_00E09_DISABLED$.next(true);
-            this.ILG60_08_02_00_00E11_DISABLED$.next(true);
-            // 4.1.1(1.4.1)
-            this.ILG60_08_02_00_00E14_DISABLED$.next(false);
-
-            this.navService.setSearchBar(false);
-            this.navService.setPrintButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setCancelButton(false);
-            this.navService.setEditButton(true);
-            this.navService.setSaveButton(false);
-            break;
-
-          case 1:
-            // 4.1.1(2.4)
-            // 4.1.1(2.4.1)
-            if (res.length > 0) {
-              // 4.1.1(2.4.1(1))
-              this.ILG60_08_02_00_00E14_DATA$.next(res);
-              // 4.1.1(2.4.1(2)) ==> 4.1.1(2.5)
-            } else {
-              // 4.1.1(2.4.2)
-              // 4.1.1(2.4.2(1)) ==> 4.1.1(2.5)
-            }
-            break;
-        }
-      });
-  }
   private RequestCommandinsAll(param: IRequestCommandinsAll) {
     this.requestCommandService.RequestCommandinsAll(param).subscribe(res => {
       this.RequestCommandinsAll$.next(res);
@@ -830,7 +730,6 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.requestCommandService
       .RequestCommandgetByArrestCode(param)
       .subscribe((res: IRequestCommand[]) => {
-        const RequestCommand: IRequestCommand = res[0];
         switch (event) {
           case '4.1.1(2.5)':
             break;
@@ -851,7 +750,12 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
                     // 4.2.2(1.1.4)
                     PartMoney: 1
                   })
-                )
+                ),
+                CommandDate: this.ILG60_08_02_00_00E09_SAVE.CommandDate,
+                CommandID: this.ILG60_08_02_00_00E09_SAVE.CommandID,
+                CommandNo: this.ILG60_08_02_00_00E09_SAVE.CommandNo,
+                CommandTime: this.ILG60_08_02_00_00E09_SAVE.CommandTime,
+                IsActive: this.ILG60_08_02_00_00E09_SAVE.IsActive
               });
 
               // 4.2.2(1.2)

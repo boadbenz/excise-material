@@ -38,7 +38,7 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       map(term =>
-        term.length < 2
+        term.length < 1
           ? []
           : this.MasOfficeMainList.filter(
               v => v.toLowerCase().indexOf(term.toLowerCase()) > -1

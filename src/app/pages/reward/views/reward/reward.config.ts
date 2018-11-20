@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IRequestCompare } from '../../interfaces/RequestCompare';
 import { IRequestLawsuitJudgement } from '../../interfaces/RequestLawsuitJudgement';
 import { MasDocumentModel } from 'app/models/mas-document.model';
-import { IRequestReward } from '../../interfaces/RequestReward';
+import { IRequestReward, IRequestRewardinsAll } from '../../interfaces/RequestReward';
 export interface IRewardBinding {
   methodName?: string;
   data?: any[];
@@ -25,7 +25,7 @@ export class RewardConfig extends RewardHelper {
     null
   );
   public ILG60_08_04_00_00_E08_FORM_VALID: boolean;
-  public ILG60_08_04_00_00_E08_FORM_DATA: any;
+  public ILG60_08_04_00_00_E08_FORM_DATA: IRequestRewardinsAll;
 
   // ส่วนตารางการแบ่งจ่ายเงินสินบนรางวัล
   public ILG60_08_04_00_00_E12_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel

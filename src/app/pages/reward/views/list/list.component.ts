@@ -24,7 +24,6 @@ export class ListComponent extends ListConfig implements OnInit {
   constructor(
     private navService: NavigationService,
     private requestListService: RequestListService,
-    private preloaderService: PreloaderService,
     private sidebarService: SidebarService
   ) {
     super();
@@ -46,12 +45,10 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   public fetchData(Textsearch) {
-    this.preloaderService.setShowPreloader(true);
     this.requestListService
       .RequestListgetByKeyword({ Textsearch: Textsearch })
       .subscribe((res: IRequestList[]) => {
         this.gridData = this.newData(res);
-        this.preloaderService.setShowPreloader(false);
       });
   }
   private setShowButton() {
@@ -69,7 +66,6 @@ export class ListComponent extends ListConfig implements OnInit {
     }));
   }
   public submitAdvSearch($event: FormGroup) {
-    this.preloaderService.setShowPreloader(true);
     console.log(' $event.value', $event.value);
 
     const formData: IRequestListgetByConAdv = $event.value;
@@ -87,7 +83,6 @@ export class ListComponent extends ListConfig implements OnInit {
     );
     this.requestListService.RequestListgetByConAdv(formData).subscribe(res => {
       this.gridData = this.gridData = this.newData(res);
-      this.preloaderService.setShowPreloader(false);
     });
   }
 }

@@ -18,12 +18,29 @@ export class ManageConfig extends RewardHelper {
 
   public ILG60_08_02_00_00E09_EDIT = false;
 
-  public ILG60_08_02_00_00E08_DATA$ = new BehaviorSubject<IRequestArrestLawsuit[]>(null);
-  public ILG60_08_02_00_00E09_DATA$ = new BehaviorSubject<IRequestCommand[]>(null);
-  public ILG60_08_02_00_00E11_DATA$ = new BehaviorSubject<IRequestBribe[]>(null);
-  public ILG60_08_02_00_00E14_DATA$ = new BehaviorSubject<IRequestReward[]>(null);
+  public ILG60_08_02_00_00E08_DATA$ = new BehaviorSubject<
+    IRequestArrestLawsuit[]
+  >(null);
+  public ILG60_08_02_00_00E09_DATA$ = new BehaviorSubject<IRequestCommand[]>(
+    null
+  );
+  public ILG60_08_02_00_00E11_DATA$ = new BehaviorSubject<IRequestBribe[]>(
+    null
+  );
+  public ILG60_08_02_00_00E14_DATA$ = new BehaviorSubject<IRequestReward[]>(
+    null
+  );
 
-  public ILG60_08_02_00_00E09_SAVE: IRequestCommand = {};
+  public ILG60_08_02_00_00E09_SAVE: IRequestCommand = {
+    ArrestCode: '',
+    CommandDate: '',
+    CommandID: null,
+    CommandNo: '',
+    CommandTime: '',
+    IsActive: 1,
+    RequestCommandDetail: [],
+    TotalPart: 0
+  };
 
   public IndictmentID$ = new BehaviorSubject<number | null>(null);
   public ArrestCode$ = new BehaviorSubject<string | null>(null);
