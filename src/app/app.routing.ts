@@ -49,15 +49,12 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
         ]
-    }, {
-        path: 'reward', component: LayoutComponent,
-        children: [
-            // { path: 'list', loadChildren: './pages/reward/list/list.module#ListModule' },
-            // { path: 'manage/:mode/:code', loadChildren: './pages/reward/manage/manage.module#ManageModule' },
-            // { path: 'bribe/:mode', loadChildren: './pages/reward/bribe/bribe.module#BribeModule' },
-            // { path: 'reward/:mode/:caseSelect', loadChildren: './pages/reward/reward/reward.module#RewardModule' }
-        ]
-    }, {
+    }, 
+  {
+    path: 'reward',
+    component: LayoutComponent,
+    loadChildren: './pages/reward/reward.module#RewardModule'
+  },{
         path: 'reduction', component: LayoutComponent,
         children: [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
