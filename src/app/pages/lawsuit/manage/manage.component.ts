@@ -492,7 +492,6 @@ export class ManageComponent implements OnInit {
   lawsuitFormNoData: boolean;
   LawsuitStaffOnsave: any = [];
   LawsuitLocationOnSave: any = [];
-
   private getDataFromListPage: any;
   private onPrintSubscribe: any;
   private onSaveSubscribe: any;
@@ -543,7 +542,6 @@ export class ManageComponent implements OnInit {
     return this.lawsuitForm.get('LawsuitStaff') as FormArray;
   }
   get LawsuitTableList(): FormArray {
-    // console.log('lawsuitForm',this.lawsuitForm.get('LawsuitTableList'))
     return this.lawsuitForm.get('LawsuitTableList') as FormArray;
   }
   get LawsuitDocument(): FormArray {
@@ -655,7 +653,6 @@ export class ManageComponent implements OnInit {
     this.onSaveSubscribe.unsubscribe();
     this.onCancelSubscribe.unsubscribe();
   }
-
   private async onEdit() {
     console.log("this.lawsuitList===?", this.lawsuitList)
     if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['IsProve'] == 0) {/// IdProve = 0
@@ -672,16 +669,24 @@ export class ManageComponent implements OnInit {
         // console.log(res);
         if (res.length == 0) { /// if not found data
           /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
-          this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
-            const _masstaff = masstaff;
-            _masstaff.map(item => {
-              item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-            });
-            this.masStaffList = _masstaff || [];
-          });
-          this.lawsuitService.MasOfficeMaingetAll().then(masoffice => {
-            this.masOfficeList = masoffice || [];
-          });
+          // this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
+          //   const _masstaff = masstaff;
+          //   _masstaff.map(item => {
+          //     item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+          //   });
+          //   this.masStaffList = _masstaff || [];
+          // });
+          // this.lawsuitService.MasOfficeMaingetAll().then(masoffice => {
+          //   this.masOfficeList = masoffice || [];
+          // });
+          this.navService.setEditField(false);
+          this.navService.setEditButton(false);
+          this.navService.setPrintButton(false);
+          this.navService.setDeleteButton(false);
+          // set true
+          this.navService.setSaveButton(true);
+          this.navService.setCancelButton(true);
+          return;
           // console.log("_masstaff",this.masStaffList);
         } else { ///if found data
           alert('ไม่สามารถทำรายการได้');
@@ -790,7 +795,8 @@ export class ManageComponent implements OnInit {
     /// save IsLawsuitComplete = 1
     if (IsLawsuitComplete == 1) {
       const lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
-      let VerifyLawsuitNo = await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, this.lawsuitForm.controls['IsOutsideCheck'].value)
+      const isOut = this.lawsuitForm.controls['IsOutsideCheck'].value === true ? 1 : 0;
+      let VerifyLawsuitNo = await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut)
       if (VerifyLawsuitNo.length != 0) {
         alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
         this.preLoaderService.setShowPreloader(false);
@@ -805,8 +811,25 @@ export class ManageComponent implements OnInit {
         !this.lawsuitForm.get('DepartmentName').valid ? alert("กรุณากรอกหน่วยงานใหม่") : null;
         !this.lawsuitForm.get('LawsuitStation').valid ? alert("กรุณากรอกสถานที่เขียนใหม่") : null;
         !this.lawsuitForm.get('AccuserTestimony').valid ? alert("กรุณากรอกคำให้การใหม่") : null;
+        await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
+        if(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {
+          let updByCon = await this.lawsuitService.LawsuitupdByCon(this.LawsuitID, lawsuitNo)
+          if(updByCon.IsSuccess == "True") {
+            alert("บันทึกสำเร็จ")
+            let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
+            checkComplete ? console.log("ILG60-04-02-03-00") : console.log("none")
+          }
+        } else {
+          await this.lawsuitService.LawsuitArrestupdByCon(this.lawsuitArrestForm.value.ArrestCode)
+          let lawsuitID = await this.lawsuitService.LawsuitArrestgetByCon(this.IndictmentID)
+          if (lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID > 0) {
+            this.router.navigate(['/lawsuit/manage', 'R'], {
+              queryParams: { IndictmentID: this.IndictmentID, LawsuitID: lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID }
+            });
+          }
+
+        }
         this.preLoaderService.setShowPreloader(false);
-        return;
       }
     }
     /// save IsLawsuitComplete = 0
@@ -894,12 +917,12 @@ export class ManageComponent implements OnInit {
                       await this.lawsuitService.LawsuitArrestupdByCon(this.lawsuitArrestForm.value.ArrestCode)
                       this.showEditField = false;
                       let lawsuitID = await this.lawsuitService.LawsuitArrestgetByCon(this.IndictmentID)
-                      if(lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID > 0) {
+                      if (lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID > 0) {
                         this.router.navigate(['/lawsuit/manage', 'R'], {
                           queryParams: { IndictmentID: this.IndictmentID, LawsuitID: lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID }
                         });
-                      } 
-                      
+                      }
+
                       location.reload();
                     }
                     this.preLoaderService.setShowPreloader(false);
@@ -965,7 +988,7 @@ export class ManageComponent implements OnInit {
   }
 
   private createLawsuitForm() {
-    
+
     this.lawsuitForm = this.fb.group({
       IsLawsuitCheck: new FormControl(null),
       ReasonDontLawsuit: new FormControl(null),
