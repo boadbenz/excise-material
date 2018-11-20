@@ -150,7 +150,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                // this.router.navigate(['/investigation/list']);
+                switch (this.mode) {
+                    case 'C':
+                        this.router.navigate(['/investigation/list']);
+                        break;
+                    case 'R':
+                        this.investigateForm.reset();
+                        this.pageLoad();
+                        break;
+                }
+                // 
             }
         })
 
@@ -238,7 +247,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             id.InvestigateDetailStaff = staff;
         })
-        investDetail.sort((a, b) => { if (a.InvestigateSeq  < b.InvestigateSeq) return -1; })
+        investDetail.sort((a, b) => { if (a.InvestigateSeq < b.InvestigateSeq) return -1; })
         this.setItemFormArray(investDetail, 'InvestigateDetail')
         this.investigateForm.patchValue(x);
 
@@ -327,6 +336,27 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.destroy$.unsubscribe();
         this.investigateForm.reset();
         this.clearFormArray(this.InvestigateDetail);
+
+        this.navService.setOnEdit(false);
+        this.navService.setOnSave(false);
+        this.navService.setOnDelete(false);
+        this.navService.setOnCancel(false);
+        this.navService.setOnSearch(false);
+        this.navService.setOnPrint(false);
+        this.navService.setOnNextPage(false);
+        this.navService.setOnPrevPage(false);
+
+        this.navService.setEditField(false);
+        this.navService.setSearchBar(false);
+        this.navService.setPrintButton(false);
+        this.navService.setEditButton(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
+        this.navService.setNewButton(false);
+        this.navService.setNextPageButton(false);
+        this.navService.setPrevPageButton(false);
+
     }
 
     catchError(error: any) {

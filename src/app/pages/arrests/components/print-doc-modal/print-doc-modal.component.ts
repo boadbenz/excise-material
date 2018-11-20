@@ -3,6 +3,7 @@ import { MainMasterService } from 'app/services/main-master.service';
 import { LoaderService } from 'app/core/loader/loader.service';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { ArrestService } from '../../services';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-print-doc-modal',
@@ -78,39 +79,43 @@ export class PrintDocModalComponent implements OnInit {
     let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
     if (_print.length) {
       _print.map(x => {
+
         this.s_arrest.ArrestReportgetByCon(this.ArrestCode).subscribe(response => {
-          console.log(response);
-          
-          // window.open('data:application/pdf,' + response.text());
-          // create a download anchor tag
-          var downloadLink = document.createElement('a');
-          downloadLink.target = '_blank';
-          downloadLink.download = `${this.ArrestCode}.pdf`;
+          var mediaType = 'application/pdf';
+          var blob = new Blob([response._body], {type: mediaType});
+          var filename = `${this.ArrestCode}.pdf`;
+          saveAs(blob, filename);
 
-          // convert downloaded data to a Blob
-          var blob = new Blob([response.text()], { type: 'application/pdf' });
+          // // window.open('data:application/pdf,' + response.text());
+          // // create a download anchor tag
+          // var downloadLink = document.createElement('a');
+          // downloadLink.target = '_blank';
+          // downloadLink.download = `${this.ArrestCode}.pdf`;
 
-          // create an object URL from the Blob
-          var URL = window.URL;
-          var downloadUrl = URL.createObjectURL(blob);
+          // // convert downloaded data to a Blob
+          // var blob = new Blob([response.text()], { type: 'application/pdf' });
 
-          // set object URL as the anchor's href
-          downloadLink.href = downloadUrl;
+          // // create an object URL from the Blob
+          // var URL = window.URL;
+          // var downloadUrl = URL.createObjectURL(blob);
 
-          // append the anchor to document body
-          document.body.appendChild(downloadLink);
+          // // set object URL as the anchor's href
+          // downloadLink.href = downloadUrl;
 
-          // fire a click event on the anchor
-          downloadLink.click();
+          // // append the anchor to document body
+          // document.body.appendChild(downloadLink);
 
-          // cleanup: remove element and revoke object URL
-          document.body.removeChild(downloadLink);
-          URL.revokeObjectURL(downloadUrl);
+          // // fire a click event on the anchor
+          // downloadLink.click();
+
+          // // cleanup: remove element and revoke object URL
+          // document.body.removeChild(downloadLink);
+          // URL.revokeObjectURL(downloadUrl);
         });
       })
     }
   }
-
+  
   dismiss(e: any) {
     this.d.emit(e);
   }

@@ -279,7 +279,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onPageLoad() {
         this.loaderService.show();
-        await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
+        let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
 
             let invest = this.investigateFG;
@@ -298,6 +298,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
             invest.patchValue(x);
         })
+        Promise.all([invest]);
         this.loaderService.hide();
     }
 
@@ -834,7 +835,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private navigateToManage = () => this.router.navigate([`/investigation/manage`, this.investMode, this.investCode]);
 
     private onRefreshPage = () => this.router.navigate(
-        [`/investigation/detail-manage`, 'R'],
+        [`investigation/detail-manage`, 'R'],
         {
             queryParams: {
                 investMode: this.investMode,
@@ -863,7 +864,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId)
                 .takeUntil(this.destroy$)
                 .subscribe(x => {
-                    if (!this.checkResponse(x)) {
+                    if (this.checkIsSuccess(x)) {
                         alert(Message.delComplete);
                         this.navigateToManage();
                     } else {
@@ -969,13 +970,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 if (!this.checkResponse(x)) return;
                 return x;
             })
-
+        let investCode: string;
         if (resRunning.length) {
             let tr = resRunning.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
             let str = '' + (tr.RunningNo + 1)
             let pad = '00000';
             let ans = pad.substring(0, pad.length - str.length) + str
-            this.investCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
+            investCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
 
             await this.s_transactionRunning.
                 TransactionRunningupdByCon(tr.RunningID.toString())
@@ -994,14 +995,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                     let ans = '00001'
                     let year = ((new Date).getFullYear() + 543).toString()
                     year = year.substring(2, 4);
-                    this.investCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+                    investCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
                     return true;
                 }, () => { this.saveFail(); return; })
                 .catch((error) => this.catchError(error));
         }
 
-        if (this.investCode)
-            await this.insertInvestigate(this.investCode);
+        if (investCode)
+            await this.insertInvestigate(investCode);
     }
 
     private async insertInvestigate(investCode: string) {
@@ -1019,6 +1020,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private async insertInvestigateDetail(investCode: string) {
         this.loaderService.show();
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
+        this.investCode = investCode;
         form.InvestigateCode = investCode;
         form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
         form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
@@ -1131,7 +1133,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
-                            .catch((error) => this.catchError(error));  
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'c':
                         console.log(`InvestigateDetailLocalinsAll : ${index + 1}`, JSON.stringify(x))
