@@ -417,7 +417,7 @@
           <td>{{item.ReceipStaff}}</td>
           <td class="text-center">{{item.ReceiptChanel}}</td>
           <td class="text-center">{{item.ReceiptBookNo}}</td>
-          <td class="text-center">{{item.ReceiptNo}}/{{item.ReferenceNo}}</td>
+          <td class="text-center">{{item.ReceiptNo && item.ReferenceNo ? item.ReceiptNo + ' / ' + item.ReferenceNo : '' }}</td>
           <td class="text-center">{{item.RevernueStatus}}</td>
           <td>
             <a (click)="onClickEditF4(item, i)" class="text-secondary" data-toggle="modal" data-target="#payPopup">
@@ -767,9 +767,21 @@
                 <div class="form-group row">
                   <label class="col-form-label col-md-4">ผู้รับชำระค่าปรับ : </label>
                   <div class="input-group col-md-8">
-                    <input class="form-control" type="text" [(ngModel)]="userCompareReceiptDetail.ReceipStaff"
+                    <input type="text" class="form-control" [(ngModel)]="userCompareReceiptDetail.ReceipStaff"
                            name="ReceipStaff"
+                           placeholder="พิมพ์ข้อความ" aria-label="Number"
+                           matInput [matAutocomplete]="autoStaff" (input)="StaffonAutoChange($event.target.value)"
+                           (focus)="StaffonAutoFocus($event.target.value)"
                            [disabled]="showEditField">
+                    <mat-autocomplete #autoStaff="matAutocomplete">
+                      <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                  (click)="StaffonAutoSelecteWord(sOption, 1)">
+                       {{ sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName }}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <!--<input class="form-control" type="text" [(ngModel)]="userCompareReceiptDetail.ReceipStaff"-->
+                           <!--name="ReceipStaff"-->
+                           <!--[disabled]="showEditField">-->
                   </div>
                 </div>
               </div>

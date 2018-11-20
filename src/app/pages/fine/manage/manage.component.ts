@@ -142,7 +142,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.5');
+    this.sidebarService.setVersion('0.0.0.6');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -467,7 +467,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (p['code3']) {
         this.CompareID = p['code1'];
         if (this.CompareID === '0') {
-          
+
         }
       }
     });
@@ -1228,7 +1228,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
 
-  StaffonAutoSelecteWord(event) {
+  StaffonAutoSelecteWord(event, type: any = 0) {
 
     this.oCompareStaff = {
       StaffID: this.CompareStaffID,
@@ -1259,7 +1259,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.OperationPosName = event.OperationPosName;
     this.OperationDeptName = event.OperationDeptName;
     console.log(this.oCompareStaff);
-    this.dataToSave.compare.CompareStaff = [this.oCompareStaff];
+    if (type === 0) {
+      this.dataToSave.compare.CompareStaff = [this.oCompareStaff];
+    }
   }
   onClickEditF3(item: any) {
     this.editUser = item;
