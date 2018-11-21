@@ -230,7 +230,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     // 2 END
   }
 
-  public buttonSave() {
+  public async buttonSave() {
     // 1.3.2.	รหัสเหตุการณ์ : ILG60-08-04-00-00-E02 (ปุ่ม “บันทึก”)
 
     // 1 START
@@ -246,20 +246,19 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           case 'C':
             // 2.1
 
-            this.transactionRunningService
+           await this.transactionRunningService
               .TransactionRunninggetByCon({
                 RunningTable: 'ops_requestreward',
                 RunningOfficeCode: this.OfficeCode
-              })
-              .subscribe((TransactionRunning: ITransactionRunning[]) => {
+              }).toPromise().then((async (TransactionRunning: ITransactionRunning[]) => {
                 // 2.1.2
                 if (TransactionRunning.length > 0) {
                   const tRunning: ITransactionRunning = TransactionRunning[0];
                   // 2.1.2(1)
                   // 2.1.2(1.1)
-                  this.transactionRunningService.TransactionRunningupdByCon({
+                  await this.transactionRunningService.TransactionRunningupdByCon({
                     RunningID: tRunning.RunningID
-                  });
+                  }).toPromise().then();
 
                   // 2.1.2(1.2)
                   const RunningPrefix = `${this.leftPad(
@@ -284,11 +283,11 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                   // 2.1.2(2)
 
                   // 2.1.2(2.1)
-                  this.transactionRunningService.TransactionRunninginsAll({
+                 await this.transactionRunningService.TransactionRunninginsAll({
                     RunningOfficeCode: this.OfficeCode,
                     RunningTable: 'ops_requestreward',
                     RunningPrefix: 'RW'
-                  });
+                  }).toPromise().then();
 
                   // 2.1.2(2.2)
                   this.RequestRewardCode = `RW${this.leftPad(
@@ -298,7 +297,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                 }
 
                 // 2.1.3
-                this.requestRewardService
+                await  this.requestRewardService
                   .RequestRewardinsAll({
                     RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
                     RequestRewardCode: this.RequestRewardCode,
@@ -341,12 +340,11 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                       .SecondRemainder,
                     StationCode: this.ILG60_08_04_00_00_E08_FORM_DATA
                       .StationCode
-                  })
-                  .subscribe((res: IRequestRewardinsAllRespone) => {
+                  }).toPromise().then(async (res: IRequestRewardinsAllRespone) => {
                     if (res.RequestRewardID) {
                       // 2.1.5
                       // 2.1.5(1)
-                      this.masDocumentMainService
+                      await this.masDocumentMainService
                         .MasDocumentMaininsAll({
                           DocumentType: 9,
                           ReferenceCode: res.RequestRewardID,
@@ -357,8 +355,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                             .FilePath,
                           DocumentName: '',
                           IsActive: 1
-                        })
-                        .subscribe(resMasDocumentMain => {
+                        }).toPromise().then(resMasDocumentMain => {
                           if (resMasDocumentMain['DocumentID']) {
                             // 2.1.5(2) 'WAIT'
                           }
@@ -367,28 +364,27 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                   });
 
                 // 2.1.4
-                this.RequestPaymentFineupdByCon.forEach(PaymentFineID => {
+                await this.RequestPaymentFineupdByCon.forEach(PaymentFineID => {
                   this.requestPaymentFineService
                     .RequestPaymentFineupdByCon({
                       PaymentFineID: PaymentFineID
-                    })
-                    .subscribe();
+                    }).toPromise().then()
                 });
 
                 // 2.1.6 => 3
-              });
+              }));
 
             break;
           case 'R':
             // 2.2
 
             // 2.2.1
-            this.requestRewardService
+            await this.requestRewardService
               .RequestRewardupdByCon(this.RequestRewardUpd$.getValue())
               .subscribe();
 
             // 2.2.2
-            this.RequestRewardDetailupdDelete.forEach(RequestRewardDetailID => {
+            await this.RequestRewardDetailupdDelete.forEach(RequestRewardDetailID => {
               this.requestRewardDetailService
                 .RequestRewardDetailupdDelete({
                   RequestRewardDetailID: RequestRewardDetailID
@@ -397,7 +393,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             });
 
             // 2.2.3
-            this.RequestRewardStaffupdDelete.forEach(StaffID => {
+            await this.RequestRewardStaffupdDelete.forEach(StaffID => {
               this.requestRewardStaffService
                 .RequestRewardStaffupdDelete({
                   StaffID: StaffID
@@ -406,7 +402,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             });
 
             // 2.2.4
-            this.RequestRewardStaffupdByCon.forEach(RequestRewardStaff => {
+            await this.RequestRewardStaffupdByCon.forEach(RequestRewardStaff => {
               this.requestRewardStaffService
                 .RequestRewardStaffupdByCon(RequestRewardStaff)
                 .subscribe();
