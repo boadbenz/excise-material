@@ -37,6 +37,7 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
   }
 
   sortPrintDoc() {
+    // tslint:disable-next-line:triple-equals
     this.sort = this.sort == 'asc' ? 'desc' : 'asc';
     this.printDoc.sort((a, b) => {
       return -1; // asc

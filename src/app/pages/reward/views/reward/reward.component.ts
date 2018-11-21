@@ -1,12 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Location } from '@angular/common';
 import { RewardConfig, IRewardBinding } from './reward.config';
-import { ActivatedRoute } from '@angular/router';
-import { MasTitleService } from '../../services/master/MasTitle.service';
-import { MasTitleModel, MasStaffModel } from 'app/models';
-import { MasOfficeModel } from 'app/models/mas-office.model';
-import { MasStaffService } from '../../services/master/MasStaff.service';
-import { MasOfficeService } from '../../services/master/MasOffice.service';
-import { RequestCommandService } from '../../services/RequestCommand.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RequestCompareService } from '../../services/RequestCompare.service';
 import { RequstLawsuitJudgementService } from '../../services/RequstLawsuitJudgement.service';
 import { IRequestCompare } from '../../interfaces/RequestCompare';
@@ -25,18 +20,21 @@ import { MasDocumentModel } from 'app/models/mas-document.model';
 import { TransactionRunningService } from '../../services/TransactionRunning.service';
 import { ITransactionRunning } from '../../interfaces/TransactionRunning';
 import { RequestPaymentFineService } from '../../services/RequestPaymentFine.service';
-import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { IRequestBribeReward } from '../../interfaces/RequestBribeReward.interface';
 import { IFormChange } from '../../interfaces/FormChange';
 import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { MatDialog } from '@angular/material';
+import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
+import { RequestRewardDetailService } from '../../services/RequestRewardDetail.service';
+import { RequestRewardStaffService } from '../../services/RequestRewardStaff.service';
 
 @Component({
   selector: 'app-reward',
   templateUrl: './reward.component.html',
   styleUrls: ['./reward.component.scss']
 })
-export class RewardComponent extends RewardConfig implements OnInit {
+export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   public ILG60_08_04_00_00_E12_DATA: IRewardBinding[] = [];
   public aggregate = {};
   constructor(
@@ -50,7 +48,12 @@ export class RewardComponent extends RewardConfig implements OnInit {
     private masDocumentMainService: MasDocumentMainService,
     private transactionRunningService: TransactionRunningService,
     private sidebarService: SidebarService,
-    private requestPaymentFineService: RequestPaymentFineService
+    public dialog: MatDialog,
+    private _location: Location,
+    private requestPaymentFineService: RequestPaymentFineService,
+    private requestRewardDetailService: RequestRewardDetailService,
+    private requestRewardStaffService: RequestRewardStaffService,
+    private router: Router
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -60,15 +63,41 @@ export class RewardComponent extends RewardConfig implements OnInit {
       this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
     });
 
-    this.navService.onSave.subscribe(save => {
-      if (save === true) {
-        this.saveButton();
+    this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
+      if (command === true) {
+        this.navService.onCancel.next(false);
+        this.buttonCancel();
+      }
+    });
+    this.navService.onSave.takeUntil(this.destroy$).subscribe(command => {
+      if (command === true) {
+        this.navService.onSave.next(false);
+        this.buttonSave();
+      }
+    });
+    this.navService.onEdit.takeUntil(this.destroy$).subscribe(command => {
+      if (command === true) {
+        this.navService.onEdit.next(false);
+        this.buttonEdit();
+      }
+    });
+
+    this.navService.onDelete.takeUntil(this.destroy$).subscribe(command => {
+      if (command === true) {
+        this.navService.onDelete.next(false);
+        this.buttonDelete();
+      }
+    });
+    this.navService.onPrint.takeUntil(this.destroy$).subscribe(command => {
+      if (command === true) {
+        this.navService.onPrint.next(false);
+        this.buttonPrint();
       }
     });
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.2');
+    this.sidebarService.setVersion('0.0.1.3');
     this.pageLoad();
   }
   private pageLoad() {
@@ -201,7 +230,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
     // 2 END
   }
 
-  public saveButton() {
+  public buttonSave() {
     // 1.3.2.	รหัสเหตุการณ์ : ILG60-08-04-00-00-E02 (ปุ่ม “บันทึก”)
 
     // 1 START
@@ -212,133 +241,268 @@ export class RewardComponent extends RewardConfig implements OnInit {
     // 1.5 'WAIT'
     if (this.ILG60_08_04_00_00_E08_FORM_VALID) {
       // 2
-      switch (this.mode$.getValue()) {
-        case 'C':
-          // 2.1
+      try {
+        switch (this.mode$.getValue()) {
+          case 'C':
+            // 2.1
 
-          this.transactionRunningService
-            .TransactionRunninggetByCon({
-              RunningTable: 'ops_requestreward',
-              RunningOfficeCode: this.OfficeCode
-            })
-            .subscribe((TransactionRunning: ITransactionRunning[]) => {
-              // 2.1.2
-              if (TransactionRunning.length > 0) {
-                const tRunning: ITransactionRunning = TransactionRunning[0];
-                // 2.1.2(1)
-                // 2.1.2(1.1)
-                this.transactionRunningService.TransactionRunningupdByCon({
-                  RunningID: tRunning.RunningID
+            this.transactionRunningService
+              .TransactionRunninggetByCon({
+                RunningTable: 'ops_requestreward',
+                RunningOfficeCode: this.OfficeCode
+              })
+              .subscribe((TransactionRunning: ITransactionRunning[]) => {
+                // 2.1.2
+                if (TransactionRunning.length > 0) {
+                  const tRunning: ITransactionRunning = TransactionRunning[0];
+                  // 2.1.2(1)
+                  // 2.1.2(1.1)
+                  this.transactionRunningService.TransactionRunningupdByCon({
+                    RunningID: tRunning.RunningID
+                  });
+
+                  // 2.1.2(1.2)
+                  const RunningPrefix = `${this.leftPad(
+                    tRunning.RunningPrefix,
+                    2
+                  )}`; // 2.1.2(1.2(1))
+                  const RunningOfficeCode = `${this.leftPad(
+                    tRunning.RunningOfficeCode,
+                    6
+                  )}`; // 2.1.2(1.2(2))
+                  const RunningYear = `${this.leftPad(
+                    tRunning.RunningYear,
+                    2
+                  )}`; // 2.1.2(1.2(3))
+                  const RunningNo = `${this.leftPad(
+                    (Number(tRunning.RunningNo) + 1).toString(),
+                    5
+                  )}`; // 2.1.2(1.2(4))
+                  this.RequestBribeCode =
+                    RunningPrefix + RunningOfficeCode + RunningYear + RunningNo;
+                } else {
+                  // 2.1.2(2)
+
+                  // 2.1.2(2.1)
+                  this.transactionRunningService.TransactionRunninginsAll({
+                    RunningOfficeCode: this.OfficeCode,
+                    RunningTable: 'ops_requestreward',
+                    RunningPrefix: 'RW'
+                  });
+
+                  // 2.1.2(2.2)
+                  this.RequestRewardCode = `RW${this.leftPad(
+                    this.OfficeCode,
+                    0
+                  )}${this.leftPad(this.yy_thaibuddha, 2)}00001`;
+                }
+
+                // 2.1.3
+                this.requestRewardService
+                  .RequestRewardinsAll({
+                    RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
+                    RequestRewardCode: this.RequestRewardCode,
+                    ReferenceNo: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .ReferenceNo,
+                    Station: this.ILG60_08_04_00_00_E08_FORM_DATA.Station,
+                    RequestDate: convertDateForSave(
+                      getDateMyDatepicker(
+                        this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate
+                      )
+                    ),
+                    RequestTime: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .RequestTime,
+                    BribeTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.BribeTotal,
+                    FineType: this.ILG60_08_04_00_00_E08_FORM_DATA.FineType,
+                    FirstMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .FirstMoneyPerPart,
+                    FirstMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .FirstMoneyTotal,
+                    FirstPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .FirstPartTotal,
+                    FirstRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .FirstRemainder,
+                    IsActive: this.ILG60_08_04_00_00_E08_FORM_DATA.IsActive,
+                    RequestRewardDetail: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .RequestRewardDetail,
+                    RequestRewardID: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .RequestRewardID,
+                    RequestRewardStaff: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .RequestRewardStaff,
+                    RewardTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .RewardTotal,
+                    SecondMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .SecondMoneyPerPart,
+                    SecondMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .SecondMoneyTotal,
+                    SecondPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .SecondPartTotal,
+                    SecondRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .SecondRemainder,
+                    StationCode: this.ILG60_08_04_00_00_E08_FORM_DATA
+                      .StationCode
+                  })
+                  .subscribe((res: IRequestRewardinsAllRespone) => {
+                    if (res.RequestRewardID) {
+                      // 2.1.5
+                      // 2.1.5(1)
+                      this.masDocumentMainService
+                        .MasDocumentMaininsAll({
+                          DocumentType: 9,
+                          ReferenceCode: res.RequestRewardID,
+                          DocumentID: null,
+                          DataSource: this.ILG60_08_04_00_00_E19_FORM_DATA
+                            .DataSource,
+                          FilePath: this.ILG60_08_04_00_00_E19_FORM_DATA
+                            .FilePath,
+                          DocumentName: '',
+                          IsActive: 1
+                        })
+                        .subscribe(resMasDocumentMain => {
+                          if (resMasDocumentMain['DocumentID']) {
+                            // 2.1.5(2) 'WAIT'
+                          }
+                        });
+                    }
+                  });
+
+                // 2.1.4
+                this.RequestPaymentFineupdByCon.forEach(PaymentFineID => {
+                  this.requestPaymentFineService
+                    .RequestPaymentFineupdByCon({
+                      PaymentFineID: PaymentFineID
+                    })
+                    .subscribe();
                 });
 
-                // 2.1.2(1.2)
-                const RunningPrefix = `${this.leftPad(
-                  tRunning.RunningPrefix,
-                  2
-                )}`; // 2.1.2(1.2(1))
-                const RunningOfficeCode = `${this.leftPad(
-                  tRunning.RunningOfficeCode,
-                  6
-                )}`; // 2.1.2(1.2(2))
-                const RunningYear = `${this.leftPad(tRunning.RunningYear, 2)}`; // 2.1.2(1.2(3))
-                const RunningNo = `${this.leftPad(
-                  (Number(tRunning.RunningNo) + 1).toString(),
-                  5
-                )}`; // 2.1.2(1.2(4))
-                this.RequestBribeCode =
-                  RunningPrefix + RunningOfficeCode + RunningYear + RunningNo;
-              } else {
-                // 2.1.2(2)
+                // 2.1.6 => 3
+              });
 
-                // 2.1.2(2.1)
-                this.transactionRunningService.TransactionRunninginsAll({
-                  RunningOfficeCode: this.OfficeCode,
-                  RunningTable: 'ops_requestreward',
-                  RunningPrefix: 'RW'
-                });
+            break;
+          case 'R':
+            // 2.2
 
-                // 2.1.2(2.2)
-                this.RequestRewardCode = `RW${this.leftPad(
-                  this.OfficeCode,
-                  0
-                )}${this.leftPad(this.yy_thaibuddha, 2)}00001`;
-              }
+            // 2.2.1
+            this.requestRewardService
+              .RequestRewardupdByCon(this.RequestRewardUpd$.getValue())
+              .subscribe();
 
-              // 2.1.3
-              this.requestRewardService
-                .RequestRewardinsAll({
-                  RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
-                  RequestRewardCode: this.RequestRewardCode,
-                  ReferenceNo: this.ILG60_08_04_00_00_E08_FORM_DATA.ReferenceNo,
-                  Station: this.ILG60_08_04_00_00_E08_FORM_DATA.Station,
-                  RequestDate: convertDateForSave(
-                    getDateMyDatepicker(
-                      this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate
-                    )
-                  ),
-                  RequestTime: this.ILG60_08_04_00_00_E08_FORM_DATA.RequestTime,
-                  BribeTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.BribeTotal,
-                  FineType: this.ILG60_08_04_00_00_E08_FORM_DATA.FineType,
-                  FirstMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .FirstMoneyPerPart,
-                  FirstMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .FirstMoneyTotal,
-                  FirstPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .FirstPartTotal,
-                  FirstRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .FirstRemainder,
-                  IsActive: this.ILG60_08_04_00_00_E08_FORM_DATA.IsActive,
-                  RequestRewardDetail: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .RequestRewardDetail,
-                  RequestRewardID: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .RequestRewardID,
-                  RequestRewardStaff: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .RequestRewardStaff,
-                  RewardTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.RewardTotal,
-                  SecondMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .SecondMoneyPerPart,
-                  SecondMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .SecondMoneyTotal,
-                  SecondPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .SecondPartTotal,
-                  SecondRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
-                    .SecondRemainder,
-                  StationCode: this.ILG60_08_04_00_00_E08_FORM_DATA.StationCode
+            // 2.2.2
+            this.RequestRewardDetailupdDelete.forEach(RequestRewardDetailID => {
+              this.requestRewardDetailService
+                .RequestRewardDetailupdDelete({
+                  RequestRewardDetailID: RequestRewardDetailID
                 })
-                .subscribe((res: IRequestRewardinsAllRespone) => {
-                  if (res.RequestRewardID) {
-                    // 2.1.5
-                    // 2.1.5(1)
-                    this.masDocumentMainService
-                      .MasDocumentMaininsAll({
-                        DocumentType: 9,
-                        ReferenceCode: res.RequestRewardID
-                      })
-                      .subscribe(resMasDocumentMain => {
-                        if (resMasDocumentMain['DocumentID']) {
-                          // 2.1.5(2) 'WAIT'
-                        }
-                      });
-                  }
-                });
-
-              // 2.1.4 'WAIT'
-              // this.requestPaymentFineService.RequestPaymentFineupdByCon({
-              //   PaymentFineID:
-              // })
-
-              // 2.1.6 => 3
+                .subscribe();
             });
 
-          break;
-        case 'R':
-          // 2.2 'WAIT'
+            // 2.2.3
+            this.RequestRewardStaffupdDelete.forEach(StaffID => {
+              this.requestRewardStaffService
+                .RequestRewardStaffupdDelete({
+                  StaffID: StaffID
+                })
+                .subscribe();
+            });
 
-          break;
+            // 2.2.4
+            this.RequestRewardStaffupdByCon.forEach(RequestRewardStaff => {
+              this.requestRewardStaffService
+                .RequestRewardStaffupdByCon(RequestRewardStaff)
+                .subscribe();
+            });
+
+            // 2.2.5 'WAIT'
+            // 2.2.6 'WAIT'
+            // 2.2.7 'WAIT'
+            // 2.2.8 'WAIT'
+            break;
+        }
+        alert('บันทึกสำเร็จ');
+        this.router.navigate([
+          '/reward/reward/R',
+          this.RequestRewardID$.getValue()
+        ]);
+      } catch (error) {
+        alert('บันทึกไม่สำเร็จ');
       }
     } else {
       alert('กรุณากรอกให้ครบถ้วน');
     }
+  }
+  public async buttonPrint() {
+    // ILG60-08-02-00-00-E05
+    // 1 START
+
+    // 1.3.1
+    let RequestReward: IRequestReward[];
+    await this.requestRewardService
+      .RequestRewardgetByCon({
+        RequestRewardID: this.RequestRewardID$.getValue()
+      })
+      .toPromise()
+      .then((res: IRequestReward[]) => {
+        RequestReward = res;
+      });
+
+    // 1.3.2
+    let MasDocument: MasDocumentModel[];
+    await this.masDocumentMainService
+      .MasDocumentMaininsAll({
+        ReferenceCode: this.RequestRewardID$.getValue(),
+        DocumentType: 9
+      })
+      .toPromise()
+      .then((res: MasDocumentModel[]) => {
+        MasDocument = res;
+      });
+
+    const printDoc: any[] = RequestReward.map(m => ({
+      DocName: `${m.RequestRewardCode}: คำร้องขอรับเงินรางวัล`,
+      DocType: 'แบบฟอร์ม'
+    }));
+
+    printDoc.concat(
+      MasDocument.map(m => ({
+        DocName: `${m.DocumentName}`,
+        DocType: 'เอกสารแนบภายใน'
+      }))
+    );
+
+    const dialogRef = this.dialog.open(PrintDialogComponent, {
+      width: '1200px',
+      height: 'auto',
+      data: {
+        printDoc: printDoc
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('The dialog was closed');
+    });
+    // 2 END
+  }
+
+  private buttonCancel() {
+    // 1 START
+    if (confirm('ยืนยันการทำรายการหรือไม่')) {
+      // 1.1
+      switch (this.mode$.getValue()) {
+        case 'C':
+          this._location.back();
+          break;
+        case 'R':
+          this.pageLoad();
+          break;
+      }
+    }
+    // 2 END
+  }
+  private buttonDelete() {}
+  private buttonEdit() {}
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
   public changeForm(form: IFormChange) {
     const { FormName, FormData } = form;
@@ -347,6 +511,14 @@ export class RewardComponent extends RewardConfig implements OnInit {
       case 'ILG60-08-04-00-00-E08':
         this.ILG60_08_04_00_00_E08_FORM_VALID = FormData.valid;
         this.ILG60_08_04_00_00_E08_FORM_DATA = FormData.value;
+        break;
+      case 'ILG60-08-04-00-00-E12':
+        this.ILG60_08_04_00_00_E12_FORM_VALID = FormData.valid;
+        this.ILG60_08_04_00_00_E12_FORM_DATA = FormData.value;
+        break;
+      case 'ILG60-08-04-00-00-E19':
+        this.ILG60_08_04_00_00_E19_FORM_VALID = FormData.valid;
+        this.ILG60_08_04_00_00_E19_FORM_DATA = FormData.value;
         break;
     }
   }

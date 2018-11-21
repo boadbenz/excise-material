@@ -4,6 +4,7 @@ import { IRequestCompare } from '../../interfaces/RequestCompare';
 import { IRequestLawsuitJudgement } from '../../interfaces/RequestLawsuitJudgement';
 import { MasDocumentModel } from 'app/models/mas-document.model';
 import { IRequestReward, IRequestRewardinsAll } from '../../interfaces/RequestReward';
+import { IRequestRewardStaff } from '../../interfaces/RequestRewardStaff';
 export interface IRewardBinding {
   methodName?: string;
   data?: any[];
@@ -39,6 +40,12 @@ export class RewardConfig extends RewardHelper {
   public ILG60_08_04_00_00_E19_DATA$ = new BehaviorSubject<any>(null);
   public ILG60_08_04_00_00_E19_FORM_VALID: boolean;
   public ILG60_08_04_00_00_E19_FORM_DATA: any;
+
+  public RequestPaymentFineupdByCon: number[] = [];
+  public RequestRewardDetailupdDelete: number[] = []
+  public RequestRewardStaffupdDelete: number[] = [];
+  public RequestRewardStaffupdByCon: IRequestRewardStaff[] = [];
+  public RequestRewardUpd$ = new BehaviorSubject<IRequestReward>(null);
 
   public requestCompare$ = new BehaviorSubject<IRequestCompare[]>(null);
   public RequestReward$ = new BehaviorSubject<IRequestReward[]>(null);

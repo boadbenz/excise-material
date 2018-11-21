@@ -117,8 +117,7 @@
               </td>
               <td></td>
             </tr>
-            <tr class="footable" *ngFor="let item of formGroup['controls'].sharedBribeReward.controls; let i=index;"
-              [formGroupName]="i">
+            <tr class="footable" *ngFor="let item of sharedBribeReward.controls; let i=index;" [formGroupName]="i">
               <td>
                 <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
               </td>
@@ -127,7 +126,8 @@
                 <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName">
               </td>
               <td>
-                <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName" (keyup)="changeFullName(FullName.value, i)">
+                <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName"
+                  (keyup)="changeFullName(FullName.value, i)">
               </td>
               <td>
                 <input class="form-control" type="text" formControlName="PositionName">
@@ -138,8 +138,8 @@
               <td>
                 <input type="hidden" formControlName="ContributorName">
                 <select class="form-control" formControlName="ContributorID" #ContributorID (change)="onSelectContributor(ContributorID.value, i)">
-                  <ng-container *ngFor="let item of ContributorList">
-                    <option *ngIf="item.value < 4" [value]="item.value">{{item.text}}</option>
+                  <ng-container *ngFor="let itemCName of ContributorList">
+                    <option *ngIf="itemCName.value < 4" [value]="itemCName.value">{{itemCName?.text}}</option>
                   </ng-container>
                 </select>
               </td>
@@ -196,7 +196,8 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SumMoney || 0) | currency:' '" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(sumTotal()?.SumMoney || 0) | currency:' '"
+              [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -206,7 +207,8 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SumFirstMoney || 0) | currency:' '" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(sumTotal()?.SumFirstMoney || 0) | currency:' '"
+              [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -219,7 +221,8 @@
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="(sumTotal()?.FirstRemainder || 0) | currency:' '" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(sumTotal()?.FirstRemainder || 0) | currency:' '"
+              [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -229,7 +232,8 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SumSecondMoney || 0) | currency:' '" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(sumTotal()?.SumSecondMoney || 0) | currency:' '"
+              [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>

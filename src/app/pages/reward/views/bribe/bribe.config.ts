@@ -20,11 +20,11 @@ export class BribeConfig extends RewardHelper {
 
   public CommandDetailID$ = new BehaviorSubject<number>(null);
 
-  public MasDocument$ = new BehaviorSubject<MasDocumentModel[]>(null);
-  public RequestBribe$ = new BehaviorSubject<IRequestBribe[]>(null);
-  public MasOfficeMain$ = new BehaviorSubject<MasOfficeModel[]>(null);
-  public RequestCommand$ = new BehaviorSubject<IRequestCommand[]>(null);
-  public MasStaffMain$ = new BehaviorSubject<MasStaffModel[]>(null);
+  public MasDocument$ = new BehaviorSubject<any>(null);
+  public RequestBribe$ = new BehaviorSubject<any>(null);
+  public MasOfficeMain$ = new BehaviorSubject<any>(null);
+  public RequestCommand$ = new BehaviorSubject<any>(null);
+  public MasStaffMain$ = new BehaviorSubject<any>(null);
 
   // ส่วนคำร้องขอรับเงินสินบน
   // Icon
