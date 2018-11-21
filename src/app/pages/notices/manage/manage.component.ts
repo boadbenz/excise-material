@@ -41,6 +41,7 @@ import { replaceFakePath } from 'app/config/dataString';
 import { NoticeMasSuspect } from '../../component/notice-suspect-modal/notice-mas-suspect';
 import { MainMasterService } from '../../../services/main-master.service';
 import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
+import { async } from 'q';
 
 @Component({
     selector: 'app-manage',
@@ -130,7 +131,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.12');
+        this.sidebarService.setVersion('0.0.2.13');
 
         this.navigate_service();
 
@@ -444,7 +445,17 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!isSuccess) { IsSuccess = false; return; };
         }, () => { IsSuccess = false; return; });
 
-        // if (IsSuccess) {
+        if (IsSuccess) {
+            const products = this.NoticeProduct.value;
+            if(products && products.length>0){
+                for(let l of products){
+                    if(l.IsNewItem){
+                        await this.noticeService.insProductAll(l).then(async isSuccess => {});
+                    }else{
+                        await this.noticeService.updProduct(l).then(async isSuccess=>{});
+                    }
+                }
+            }
         //     const document = this.NoticeDocument.value;
         //     await document.map(async (item: NoticeDocument) => {
         //         if (item.IsNewItem) {
@@ -458,7 +469,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         //             }, () => { IsSuccess = false; return; })
         //         }
         //     })
-        // }
+        }
 
         if (IsSuccess) {
             alert(Message.saveComplete);
@@ -747,7 +758,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     selectItemProductItem(ele: any, index: number) {
-        this.NoticeProduct.at(index).reset(ele.item)
+        const productId = this.NoticeProduct.at(index).value.ProductID;
+        if(productId){
+            ele.item.ProductID = productId;
+        }
+        this.NoticeProduct.at(index).reset(ele.item);
         this.NoticeProduct.at(index).patchValue({
             IsActive: 1,
             IsNewItem: true,
@@ -756,7 +771,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsDomestic: ele.item.IsDomestic || '1',
             NetVolume: ele.item.NetVolume || 0,
             NetVolumeUnit: ele.item.NetVolumeUnit || 0,
-        })
+        });
+        console.log(ele.item);
+        console.log(this.NoticeProduct);
     }
 
     selectItemStaff(e, i) {
@@ -767,8 +784,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeCode: this.noticeCode,
             IsActive: 1,
             StaffFullName: `${e.item.TitleName || ''} ${e.item.FirstName || ''} ${e.item.LastName || ''}`,
-            PositionCode: e.item.PositionCode || e.item.ManagementPosCode,
-            PositionName: e.item.PositionName || e.item.ManagementPosName,
+            PositionCode: e.item.OperationPosCode || e.item.OperationPosCode,
+            PositionName: e.item.OperationPosName || e.item.OperationPosName,
             DepartmentLevel: e.item.DepartmentLevel || e.item.DeptLevel,
             DepartmentCode: e.item.DepartmentCode || e.item.OfficeCode,
             DepartmentName: `${e.item.DepartmentName || e.item.OfficeName}`,
@@ -782,6 +799,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStationCode: e.item.OfficeCode || '-',
             NoticeStation: e.item.OfficeName
         })
+    }
+
+    getTransaction(){
+        // this.mainMasterService.
     }
 
     async onDeleteProduct(id: string, index: number) {
