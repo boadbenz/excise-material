@@ -75,25 +75,6 @@ export class PrintDocModalComponent implements OnInit {
           link.download = `${this.ArrestCode}.pdf`;
           link.click();
         })
-      // await _print.map(x => {
-      //   const ArrestCode = this.ArrestCode;
-      //   const data = JSON.stringify({
-      //     "ArrestCode": ArrestCode
-      //   });
-      //   const xhr = new XMLHttpRequest();
-      //   xhr.open("POST", `${appConfig.apiReport}/ArrestgetByCon.aspx`);
-      //   xhr.responseType = 'arraybuffer';
-      //   xhr.onload = function (e) {
-      //     if (this.status == 200) {
-      //       const blob = new Blob([this.response], { type: "application/pdf" });
-      //       const link = document.createElement('a');
-      //       link.href = window.URL.createObjectURL(blob);
-      //       link.download = `${ArrestCode}.pdf`;
-      //       link.click();
-      //     }
-      //   };
-      //   xhr.send(data);
-      // })
     }
   }
 
