@@ -13,3 +13,4 @@ export const appConfig = {
     api8887: 'http://192.168.3.158:8887/XCS60',
     mockapi: 'http://demo1735762.mockable.io/XCS60'
 }
+    
