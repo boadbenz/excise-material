@@ -64,7 +64,7 @@ export class PrintDocModalComponent implements OnInit {
     });
   }
 
-  async onPrint() {
+  onPrint() {
     let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
     if (_print.length) {
       this.s_arrest.ArrestReportgetByCon(this.ArrestCode)
