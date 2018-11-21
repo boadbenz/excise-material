@@ -14,7 +14,16 @@ import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-int
 export class ILG6008020000E09Component extends CONFIG implements OnInit {
   public bindingData: IRequestCommandDetail[];
   public bindingForm: ColumnsInterface[] = [];
-  public submitData: IRequestCommand = {};
+  public submitData: IRequestCommand = {
+    ArrestCode: '',
+    CommandDate: '',
+    CommandID: null,
+    CommandNo: '',
+    CommandTime: '',
+    IsActive: 1,
+    RequestCommandDetail: [],
+    TotalPart: 0
+  };
 
   @Output()
   public emitChange = new EventEmitter();
@@ -76,7 +85,10 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
       RequestCommandDetail: this.bindingData.map((m, index) => ({
         ...m,
         PartMoney: this.inputItem[index]
-      }))
+      })),
+      ArrestCode: '',
+      CommandID: null,
+      IsActive: 1
     };
     this.submitData = submitData;
     // console.log('submitData', submitData);
