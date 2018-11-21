@@ -16,6 +16,8 @@ export class ArrestService {
     ) {
     }
 
+    version = '0.0.0.35'
+
     private httpOptions = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
