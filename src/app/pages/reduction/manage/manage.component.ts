@@ -195,6 +195,9 @@ export class ManageComponent implements OnInit, OnDestroy {
           }
         }
       });
+
+    const param = this.activeRoute.snapshot.queryParams;
+    console.log(param);
   }
 
   viewData(id: string) {
