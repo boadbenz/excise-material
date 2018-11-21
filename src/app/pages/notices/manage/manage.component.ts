@@ -42,6 +42,7 @@ import { NoticeMasSuspect } from '../../component/notice-suspect-modal/notice-ma
 import { MainMasterService } from '../../../services/main-master.service';
 import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
 import { async } from 'q';
+import { TransactionRunningService } from 'app/services/transaction-running.service';
 
 @Component({
     selector: 'app-manage',
@@ -59,6 +60,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     programSpect: string = 'ILG60-02-02-00';
     mode: string;
     showEditField: Boolean;
+    localEditField: Boolean;
     modal: any;
     noticeCode: string;
     arrestCode: string;
@@ -120,7 +122,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ngbModel: NgbModal,
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
-        private mainMasterService: MainMasterService
+        private mainMasterService: MainMasterService,
+        private transactionRunningService: TransactionRunningService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -131,7 +134,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.13');
+        this.sidebarService.setVersion('0.0.2.14');
 
         this.navigate_service();
 
@@ -168,8 +171,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.noticeCode = `LS-${(new Date).getTime()}`;
+                this.noticeCode = `LS${(new Date).getTime()}`;
                 this.arrestCode = `TN-${(new Date).getTime()}`;
+
+                this.localEditField = false;
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -183,6 +188,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setNextPageButton(true);
 
                 this.noticeCode = p['code'];
+
+                this.localEditField = true;
             }
         });
     }
@@ -510,6 +517,30 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
 
+        this.getByCon(this.noticeCode);
+
+    }
+
+    getTransactionRunning(officeCode:any):void{
+        this.transactionRunningService.TransactionRunninggetByCon("ops_notice", officeCode).then(res=>{
+            if(res.length>0){
+                const data = res[0];
+                this.transactionRunningService.TransactionRunningupdByCon(data.RunningID).then(res=>{
+                    let str = ""+data.RunningNo;
+                    var pad = "00000"
+                    var ans = pad.substring(0, pad.length - str.length) + str
+                    this.noticeCode = "LS"+officeCode+""+data.RunningYear+ans;
+
+                    this.noticeForm.patchValue({
+                        NoticeCode: this.noticeCode
+                    });
+                });
+            }else{
+                this.transactionRunningService.TransactionRunninginsAll(officeCode, "ops_notice", "LS").then(res=>{
+                    this.getTransactionRunning(officeCode);
+                });
+            }
+        });
     }
 
     _noticeDate: any;
@@ -772,8 +803,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             NetVolume: ele.item.NetVolume || 0,
             NetVolumeUnit: ele.item.NetVolumeUnit || 0,
         });
-        console.log(ele.item);
-        console.log(this.NoticeProduct);
     }
 
     selectItemStaff(e, i) {
@@ -791,7 +820,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             DepartmentName: `${e.item.DepartmentName || e.item.OfficeName}`,
             ContributorCode: e.item.ContributorCode || 2,
             ContributorID: e.item.ContributorID || 1
-        })
+        });
+
+        if(this.mode=="C"){
+            this.getTransactionRunning(e.item.DepartmentCode||e.item.OfficeCode);
+        }
     }
 
     selectItemOffice(e) {
@@ -799,10 +832,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStationCode: e.item.OfficeCode || '-',
             NoticeStation: e.item.OfficeName
         })
-    }
-
-    getTransaction(){
-        // this.mainMasterService.
     }
 
     async onDeleteProduct(id: string, index: number) {
