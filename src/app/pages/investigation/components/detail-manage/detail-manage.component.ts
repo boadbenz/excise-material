@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
@@ -25,6 +24,7 @@ import { TransactionRunningService } from 'app/services/transaction-running.serv
 import { TransactionRunning } from 'app/models/transaction-running.model';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { setViewSuspect } from '../suspect-modal/suspect-modal.component';
 
 @Component({
     selector: 'app-investigate-detail-manage',
@@ -68,6 +68,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     readonly runningTable = 'ops_investigate';
     readonly runningOfficeCode = '900012';
     readonly runningPrefix = 'AI';
+    readonly officeName = '900012';
     readonly documentType = '3';
 
     typeheadOffice = new Array<fromGobalModels.MasOfficeModel>();
@@ -125,7 +126,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.2');
+        this.sidebarService.setVersion('0.0.0.4');
 
         this.createForm();
 
@@ -278,7 +279,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onPageLoad() {
         this.loaderService.show();
-        await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
+        let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
 
             let invest = this.investigateFG;
@@ -297,6 +298,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
             invest.patchValue(x);
         })
+        Promise.all([invest]);
         this.loaderService.hide();
     }
 
@@ -310,10 +312,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async pageRefreshSuspect(suspect: fromModels.InvestigateDetailSuspect[]) {
+
         await suspect.map((y, index) => {
+            y = setViewSuspect(y);
             y.RowId = index + 1;
             y.IsModify = 'r';
             y.FullName = `${y.SuspectTitleName} ${y.SuspectFirstName} ${y.SuspectLastName}`;
+            return y;
         });
         this.setItemFormArray(suspect, 'InvestigateDetailSuspect');
     }
@@ -371,27 +376,21 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private checkDate() {
         if (this._dateStartFrom && this._dateStartTo) {
 
-            let sdate = this.isObject(this._dateStartFrom)
-                ? getDateMyDatepicker(this._dateStartFrom)
-                : new Date(this._dateStartFrom);
-            let edate = this.isObject(this._dateStartTo)
-                ? getDateMyDatepicker(this._dateStartTo)
-                : new Date(this._dateStartTo);
+            let sdate = getDateMyDatepicker(this._dateStartFrom);
+            let edate = getDateMyDatepicker(this._dateStartTo);
 
             if (!compareDate(sdate, edate)) {
                 alert(Message.checkDate)
                 setTimeout(() => {
                     this.investigateFG.patchValue({
-                        InvestigateDateEnd: this.isObject(this._dateStartFrom)
-                            ? { date: this._dateStartFrom.date }
-                            : setDateMyDatepicker(this._dateStartFrom)
+                        InvestigateDateEnd: setDateMyDatepicker(this._dateStartFrom)
                     })
                 }, 0);
             }
         }
     }
 
-    isObject = (obj) => obj === Object(obj);
+    // isObject = (obj) => obj === Object(obj);
 
     private async sortFormArray(arr: any[]) {
         let a = await arr.sort((a, b) => {
@@ -599,15 +598,17 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.investigateFG = this.fb.group({
+            InvestigateDetailID: new FormControl(null),
             InvestigateCode: new FormControl(null),
             InvestigateSeq: new FormControl(null, Validators.required),
-            StationCode: new FormControl(null),
-            StationName: new FormControl(null),
+            StationCode: new FormControl(this.runningOfficeCode),
+            StationName: new FormControl(this.officeName),
             InvestigateDateStart: new FormControl(null, Validators.required),
             InvestigateDateEnd: new FormControl(null, Validators.required),
             ConfidenceOfNews: new FormControl(null, Validators.required),
             ValueOfNews: new FormControl(null, Validators.required),
             InvestigateDetail: new FormControl(null, Validators.required),
+            IsActive: new FormControl(1, Validators.required),
             InvestigateDetailStaff: this.fb.array([]),
             InvestigateDetailProduct: this.fb.array([]),
             InvestigateDetailLocal: this.fb.array([]),
@@ -694,7 +695,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             IsModify: product.IsModify == 'r' ? 'u' : product.IsModify,
             RowId: product.RowId,
             GroupCode: e.item.GroupCode || product.GroupCode,
-            GroupName: e.item.GroupName || e.item.GroupCode,
+            GroupName: e.item.GroupName || e.item.GroupCode || product.GroupCode,
             IsDomestic: e.item.IsDomestic || product.IsDomestic,
             // ProductFrom: product.IsModify == 'c' ? 'mas-product' : product.ProductFrom
         })
@@ -758,10 +759,22 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    ngOnDestroy(): void {
+    async clearForm() {
+        let reset = [
+            await this.investigateFG.reset(),
+            await this.clearFormArray(this.InvestigateDetailStaff),
+            await this.clearFormArray(this.InvestigateDetailSuspect),
+            await this.clearFormArray(this.InvestigateDetailLocal),
+            await this.clearFormArray(this.InvestigateDetailProduct),
+            await this.clearFormArray(this.InvestigateDocument)
+        ];
+        Promise.all(reset);
+    }
+
+    async ngOnDestroy(): Promise<void> {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
-        this.investigateFG.reset();
+        await this.clearForm();
     }
 
     openModal(e) {
@@ -807,30 +820,31 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    onComplete() {
+    async onComplete() {
         if (this._isSuccess) {
-            setTimeout(() => {
-                this.store.dispatch(new fromStore.RemoveInvestigate);
-                this.investigateFG.reset();
-                this.clearFormArray(this.InvestigateDetailStaff);
-                this.clearFormArray(this.InvestigateDetailSuspect);
-                this.clearFormArray(this.InvestigateDetailLocal);
-                this.clearFormArray(this.InvestigateDetailProduct);
-                this.clearFormArray(this.InvestigateDocument);
-            }, 300);
+            alert(Message.saveComplete);
+            switch (this.mode) {
+                case 'C':
+                    await this.store.dispatch(new fromStore.RemoveInvestigate);
+                    await this.clearForm();
 
-            alert(Message.saveComplete)
-            this.onRefreshPage();
+                    this.onRefreshPage();
+                    break;
+                case 'R':
+                    location.reload();
+                    break;
+            }
+
 
         } else {
             alert(Message.saveFail)
         }
     }
 
-    private navigateToManage = () => this.router.navigate([`investigation/manage`, this.investMode, this.investCode])
+    private navigateToManage = () => this.router.navigate([`/investigation/manage`, this.investMode, this.investCode]);
 
     private onRefreshPage = () => this.router.navigate(
-        [`investigation/detail-manage`, 'R'],
+        [`/investigation/detail-manage`, 'R'],
         {
             queryParams: {
                 investMode: this.investMode,
@@ -859,7 +873,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId)
                 .takeUntil(this.destroy$)
                 .subscribe(x => {
-                    if (!this.checkResponse(x)) {
+                    if (this.checkIsSuccess(x)) {
                         alert(Message.delComplete);
                         this.navigateToManage();
                     } else {
@@ -870,15 +884,17 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async onSave() {
-        // if (!this.stateInvest) {
-        //     alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
-        //     return;
-        // }
+        if (this.investCode == 'NEW') {
+            if (!this.stateInvest) {
+                alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
+                return;
+            }
 
-        // if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart || !this.stateInvest.DateEnd) {
-        //     alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
-        //     return;
-        // }
+            if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart || !this.stateInvest.DateEnd) {
+                alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
+                return;
+            }
+        }
 
         if (this.investigateFG.invalid) {
             alert(Message.checkData);
@@ -931,7 +947,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     private async createWithInvestCode() {
         this.loaderService.show();
-        await this.insertInvestigate(this.investCode);
+        await this.insertInvestigateDetail(this.investCode);
 
         this.onComplete();
 
@@ -949,7 +965,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     private async onRevice() {
         this.loaderService.show();
-        this.updateInvestigateDetail();
+        await this.updateInvestigateDetail();
         this.onComplete();
 
         this.loaderService.hide();
@@ -963,13 +979,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 if (!this.checkResponse(x)) return;
                 return x;
             })
-
+        let investCode: string;
         if (resRunning.length) {
             let tr = resRunning.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
             let str = '' + (tr.RunningNo + 1)
             let pad = '00000';
             let ans = pad.substring(0, pad.length - str.length) + str
-            this.investCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
+            investCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
 
             await this.s_transactionRunning.
                 TransactionRunningupdByCon(tr.RunningID.toString())
@@ -988,14 +1004,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                     let ans = '00001'
                     let year = ((new Date).getFullYear() + 543).toString()
                     year = year.substring(2, 4);
-                    this.investCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+                    investCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
                     return true;
                 }, () => { this.saveFail(); return; })
                 .catch((error) => this.catchError(error));
         }
 
-        if (this.investCode)
-            await this.insertInvestigate(this.investCode);
+        if (investCode)
+            await this.insertInvestigate(investCode);
     }
 
     private async insertInvestigate(investCode: string) {
@@ -1011,7 +1027,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async insertInvestigateDetail(investCode: string) {
+        this.loaderService.show();
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
+        this.investCode = investCode;
         form.InvestigateCode = investCode;
         form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
         form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
@@ -1020,41 +1038,43 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
         await this.s_investDetail.InvestigateDetailinsAll(form).then(async x => {
             if (!this.checkIsSuccess(x)) return;
-            this.investCode = x.InvestigateCode;
             this.invesDetailId = x.InvestigateDetailID;
             let staff = await this.modifyInvestigateDetailStaff(x.InvestigateDetailID);
             let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
             let local = await this.modifyInvestigateDetailLocal(x.InvestigateDetailID);
             let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
             let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
-
             return Promise.all([staff, suspect, local, product, ducument]);
         }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
-
+        this.loaderService.hide();
     }
 
-    private updateInvestigateDetail() {
+    private async updateInvestigateDetail() {
+        this.loaderService.show();
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
         form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
         form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
 
-        this.s_investDetail.InvestigateDetailupdByCon(form).then(async x => {
-            if (!this.checkIsSuccess(x)) return;
-            let staff = await this.modifyInvestigateDetailStaff(x.InvestigateDetailID);
-            let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
-            let local = await this.modifyInvestigateDetailLocal(x.InvestigateDetailID);
-            let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
-            let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
+        console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));
 
+        await this.s_investDetail.InvestigateDetailupdByCon(form).then(async x => {
+            if (!this.checkIsSuccess(x)) return;
+            let staff = await this.modifyInvestigateDetailStaff(parseInt(this.invesDetailId));
+            let suspect = await this.modifyInvestigateDetailSuspect(parseInt(this.invesDetailId));
+            let local = await this.modifyInvestigateDetailLocal(parseInt(this.invesDetailId));
+            let product = await this.modifyInvestigateDetailProduct(parseInt(this.invesDetailId));
+            let ducument = await this.modifyMasDocument(parseInt(this.invesDetailId));
             return Promise.all([staff, suspect, local, product, ducument]);
         }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
+
+        this.loaderService.hide();
     }
 
     private async modifyInvestigateDetailStaff(investDetailId: number) {
         const staff = await this.InvestigateDetailStaff.value
-            .map(async (x: fromModels.InvestigateDetailStaff) => {
+            .map(async (x: fromModels.InvestigateDetailStaff, index) => {
                 x.InvestigateDetailID = investDetailId;
                 switch (x.IsModify) {
                     case 'd':
@@ -1066,6 +1086,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
+                        console.log(`InvestigateDetailStaffinsAll : ${index + 1}`, JSON.stringify(x));
                         await this.s_investDetail.InvestigateDetailStaffinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -1105,14 +1126,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
                         break;
-                    case 'u':
-                    case 'r':
-                        await this.s_investDetail.InvestigateDetailSuspectupdByCon(x)
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            }, () => { this.saveFail(); return; })
-                            .catch((error) => this.catchError(error));
-                        break;
                 }
             });
         return Promise.all(suspect);
@@ -1120,7 +1133,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     private async modifyInvestigateDetailLocal(investDetailId: number) {
         const product = await this.InvestigateDetailLocal.value
-            .map(async (x: fromModels.InvestigateDetailLocal) => {
+            .map(async (x: fromModels.InvestigateDetailLocal, index) => {
                 x.InvestigateDetailID = investDetailId;
                 switch (x.IsModify) {
                     case 'd':
@@ -1132,6 +1145,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
+                        console.log(`InvestigateDetailLocalinsAll : ${index + 1}`, JSON.stringify(x))
                         await this.s_investDetail.InvestigateDetailLocalinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;

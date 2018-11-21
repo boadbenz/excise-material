@@ -34,6 +34,7 @@
     "@ngrx/store-devtools": "4.0.0",
     "@types/jquery": "^2.0.42",
     "core-js": "^2.4.1",
+    "file-saver": "^2.0.0",
     "jquery": "^3.3.1",
     "mydatepicker": "^2.6.6",
     "mydatepicker-th": "^0.1.1",

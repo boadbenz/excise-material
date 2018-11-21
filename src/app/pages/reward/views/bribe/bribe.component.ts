@@ -39,6 +39,7 @@ import { RequestBribeDetailService } from '../../services/RequestBribeDetail.ser
   providers: [BribeService]
 })
 export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private masStaffService: MasStaffService,

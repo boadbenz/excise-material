@@ -17,16 +17,16 @@ export class InvestgateMasLawbreakerService {
       })
   };
 
-  InvestigateMasLawbreakergetByKeyword(TextSearch: any) {
+  async InvestigateMasLawbreakergetByKeyword(TextSearch: any) {
     const params = TextSearch === '' ? { 'TextSearch': '' } : TextSearch;
     const url = `${appConfig.api8888}/InvestigateMasLawbreakergetByKeyword`;
-    return this.http.post(url, params).map(x => x.json());
+    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
-  InvestigateMasLawbreakergetByConAdv(form: any) {
+  async InvestigateMasLawbreakergetByConAdv(form: any) {
     const params = form;
     const url = `${appConfig.api8888}/InvestigateMasLawbreakergetByConAdv`;
-    return this.http.post(url, params).map(x => x.json());
+    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
   async InvestigateMasLawbreakergetByCon(LawbreakerID: string) {

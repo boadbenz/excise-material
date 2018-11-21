@@ -30,10 +30,10 @@ export class InvestgateService {
     return this.http.post(url, params).map(x => x.json());
   }
 
-  async InvestigategetByCon(InvestigateCode: string) {
+  InvestigategetByCon(InvestigateCode: string) {
     const params = { InvestigateCode };
     const url = `${appConfig.api8888}/InvestigategetByCon`;
-    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    return this.http.post(url, params).map(x => x.json());
   }
 
   async InvestigateinsAll(invest: any) {
@@ -42,16 +42,16 @@ export class InvestgateService {
     return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
-  async InvestigateupdAll(invest: any) {
+  InvestigateupdAll(invest: any) {
     const params = invest;
     const url = `${appConfig.api8888}/InvestigateupdAll`;
-    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    return this.http.post(url, params).map(x => x.json());
   }
 
-  async InvestigateupdDelete(InvestigateCode: string) {
+  InvestigateupdDelete(InvestigateCode: string) {
     const params = { InvestigateCode };
     const url = `${appConfig.api8888}/InvestigateupdDelete`;
-    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    return this.http.post(url, params).map(x => x.json());
   }
 
   async InvestigateLawsuitResultCountgetByLawbreakerID(LawbreakerID: string) {
