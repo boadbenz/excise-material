@@ -43,7 +43,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="footable">
+            <tr class="footable" *ngIf="HaveNotice==1">
               <td>
                 <mat-checkbox class="filled-in chk-col-indigo" [checked]="true" [attr.disabled]="'disabled'"></mat-checkbox>
               </td>
@@ -196,7 +196,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumMoney | currency:' '" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(sumTotal()?.SumMoney || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -206,7 +206,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumFirstMoney | currency:' '" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(sumTotal()?.SumFirstMoney || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -214,12 +214,12 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumFirstMoneyPerPart | currency:' '"
+            <input class="form-control" type="text" [value]="(sumTotal()?.SumFirstMoneyPerPart || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="sumTotal()?.FirstRemainder | currency:' '" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(sumTotal()?.FirstRemainder || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -229,7 +229,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoney | currency:' '" [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(sumTotal()?.SumSecondMoney || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -237,12 +237,12 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="sumTotal()?.SumSecondMoneyPerPart | currency:' '"
+            <input class="form-control" type="text" [value]="(sumTotal()?.SumSecondMoneyPerPart || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="sumTotal()?.SecondRemainder | currency:' '"
+            <input class="form-control" type="text" [value]="(sumTotal()?.SecondRemainder || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
         </div>

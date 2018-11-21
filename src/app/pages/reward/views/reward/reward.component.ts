@@ -68,7 +68,7 @@ export class RewardComponent extends RewardConfig implements OnInit {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.1');
+    this.sidebarService.setVersion('0.0.1.2');
     this.pageLoad();
   }
   private pageLoad() {

@@ -46,6 +46,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
   public SumSecondMoney = 0;
   public SecondPartTotal = 0;
   public SecondMoneyTotal = 0;
+  public HaveNotice = 0;
   // public nonRequestRewardStaffData: any[] = [];
 
   public datatable: any[] = [];
@@ -212,31 +213,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
           case 'RequestBribeRewardgetByIndictmentID':
             console.log('RequestBribeRewardgetByIndictmentID', data.data);
 
-            // data.data.forEach(e => {
-            //   // instantiate a new day FormGroup;
-            //   if (e.HaveNotice === 1) {
-            //     const newDayGroup: FormGroup = this.fb.group({
-            //       check: [true],
-            //       TitleName: [''],
-            //       FullName: [''],
-            //       PositionName: [''],
-            //       PosLevelName: [''],
-            //       ContributorName: [
-            //         `${e.HaveNotice === 1 ? 'ผู้แจ้งความนำจับ' : ''}`,
-            //         Validators.required
-            //       ],
-            //       ContributorID: [''],
-            //       FirstPart: [''],
-            //       SecondPart: [''],
-            //       FirstMoney: [''],
-            //       SecondMoney: [''],
-            //       ToTalMoney: [e.HaveNotice === 1 ? this.SumBribeMoney : 0]
-            //     });
-
-            //     // Add it to our formArray
-            //     control.push(newDayGroup);
-            //   }
-            // });
+            this.HaveNotice = data.data[0].HaveNotice || 0;
             break;
 
           case 'RequestRewardgetByCon':
