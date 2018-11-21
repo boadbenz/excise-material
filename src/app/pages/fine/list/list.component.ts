@@ -113,7 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.5');
+        this.sidebarService.setVersion('0.0.0.6');
         const form = new FormGroup({
             ArrestCode: new FormControl(""),
             LawsuitCode: new FormControl(""),
@@ -207,7 +207,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.CompareList = list.map((item, i) => {
             item.RowsId = i + 1;
             try {
-              item.CompareDate = toLocalShort(item.CompareDate);
+              item.CompareDate = item.CompareDate ? toLocalShort(item.CompareDate) : '';
             } catch (error) {
 
             }

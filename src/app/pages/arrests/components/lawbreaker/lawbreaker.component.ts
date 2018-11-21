@@ -39,6 +39,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private s_mainMaster: MainMasterService,
         private s_lawbreaker: fromServices.ArrestLawbreakerService,
         private s_masLawbreaker: fromServices.ArrestMasLawbreakerService,
+        private s_arrest: fromServices.ArrestService,
         private activatedRoute: ActivatedRoute,
         private navService: NavigationService,
         private fb: FormBuilder,
@@ -96,7 +97,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.LawbreakerFG = this.createForm();
-        this.sidebarService.setVersion('0.0.0.34');
+        this.sidebarService.setVersion(this.s_arrest.version);
 
         await this.active_route();
         await this.navigate_service();
