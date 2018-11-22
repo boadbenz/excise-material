@@ -17,7 +17,7 @@ import { RequestPaymentFineDetailService } from 'app/pages/reward/services/Reque
 import { IRequestPaymentFineDetail } from 'app/pages/reward/interfaces/RequestPaymentFineDetail';
 import { MasOfficeService } from 'app/pages/reward/services/master/MasOffice.service';
 import { MasOfficeModel } from 'app/models/mas-office.model';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -72,9 +72,8 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
   ) {
     super();
     this.RequestCommand$.subscribe((resCom: IRequestCommand[]) => {
-      if (resCom) {
-        const RequestCommand: IRequestCommand =
-          resCom.length > 0 ? resCom[0] : {};
+      if (resCom[0]) {
+        const RequestCommand: IRequestCommand = resCom[0];
         this.totalPart = RequestCommand.TotalPart;
         this.partMoney = RequestCommand.RequestCommandDetail[0].PartMoney;
 
@@ -91,8 +90,8 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
       }
     });
     this.RequestBribe$.subscribe((resBri: IRequestBribe[]) => {
-      if (resBri) {
-        const RequestBribe: IRequestBribe = resBri.length > 0 ? resBri[0] : {};
+      if (resBri[0]) {
+        const RequestBribe: IRequestBribe = resBri[0];
         this.totalPart = RequestBribe.TotalPart;
         this.partMoney = RequestBribe.PartMoney;
 
@@ -124,10 +123,10 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
 
   ngOnInit() {
     this.masOfficeService
-    .MasOfficeMaingetAll()
-    .subscribe((Office: MasOfficeModel[]) => {
-      this.MasOfficeMainList = Office.map(m => m.OfficeName);
-    });
+      .MasOfficeMaingetAll()
+      .subscribe((Office: MasOfficeModel[]) => {
+        this.MasOfficeMainList = Office.map(m => m.OfficeName);
+      });
   }
   public RequestArrestLawsuitgetByIndictmentID(
     param: IRequestArrestLawsuitGetByIndictmentId

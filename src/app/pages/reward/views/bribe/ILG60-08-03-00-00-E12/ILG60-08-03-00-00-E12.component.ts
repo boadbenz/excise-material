@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import {
   debounceTime,
   distinctUntilChanged,

@@ -6,7 +6,7 @@
       {{aggregate08 | async | json}}
 
       {{SumBribeMoney}}
-      <form [formGroup]="formGroup" *ngIf="formGroup">
+      <form [formGroup]="formGroup" *ngIf="formGroup" novalidate>
         <div class="text-right">
           <button (click)="addRow()" [attr.disabled]="(ILG60_08_04_00_00_E13_BUTTON$ | async)?.DISABLED ? 'disabled' : null"
             class="btn waves-effect waves-light btn-navy">เพิ่มจนท.สนับสนุน</button>
@@ -82,7 +82,7 @@
             </tr>
             <tr class="footable" *ngFor="let item of datatable | sort: i; let i=index;">
               <td>
-                <mat-checkbox class="filled-in chk-col-indigo" ></mat-checkbox>
+                <mat-checkbox class="filled-in chk-col-indigo" [checked]="true"></mat-checkbox>
               </td>
               <td class="text-center">{{i+2}}</td>
               <td>
@@ -117,17 +117,17 @@
               </td>
               <td></td>
             </tr>
-            <tr class="footable" *ngFor="let item of formGroup['controls'].sharedBribeReward.controls | sort: i; let i=index;"
+            <tr class="footable" *ngFor="let item of formGroup['controls'].sharedBribeReward.controls; let i=index;"
               [formGroupName]="i">
               <td>
                 <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
               </td>
-              <td class="text-center">{{i+2}}</td>
+              <td class="text-center">{{(i+2) + datatable.length}}</td>
               <td>
-                <input class="form-control" type="text" formControlName="TitleName">
+                <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName">
               </td>
               <td>
-                <input class="form-control" type="text" formControlName="FullName">
+                <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName" (keyup)="changeFullName(FullName.value, i)">
               </td>
               <td>
                 <input class="form-control" type="text" formControlName="PositionName">
@@ -137,7 +137,7 @@
               </td>
               <td>
                 <input type="hidden" formControlName="ContributorName">
-                <select class="form-control" formControlName="ContributorID">
+                <select class="form-control" formControlName="ContributorID" #ContributorID (change)="onSelectContributor(ContributorID.value, i)">
                   <ng-container *ngFor="let item of ContributorList">
                     <option *ngIf="item.value < 4" [value]="item.value">{{item.text}}</option>
                   </ng-container>
@@ -171,10 +171,10 @@
               <td></td>
               <td class="text-right">รวมทั้งสิ้น:</td>
               <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstPart.sum | currency:' '">
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstPart.sum">
               </td>
               <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondPart.sum | currency:' '">
+                <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondPart.sum">
               </td>
               <td>
                 <input class="form-control" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstMoney.sum | currency:' '">

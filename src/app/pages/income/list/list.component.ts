@@ -7,9 +7,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { IncomeService } from '../income.service';
 
 import { HttpErrorResponse } from '@angular/common/http';
-
-import { Revenue } from '../Revenue';
-
+import { Revenue } from '../revenue';
 import { pagination } from '../../../config/pagination';
 
 import { Message } from '../../../config/message';
@@ -134,7 +132,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {               
+            if (Textsearch) {
                 await this.navService.setOnSearch('');
 
 

@@ -21,7 +21,8 @@ import { RequestBribeService } from '../../services/RequestBribe.service';
 import {
   IRequestBribeinsAll,
   IRequestBribe,
-  IRequestBribegetByCon
+  IRequestBribegetByCon,
+  IRequestBribeupdDeleteResponse
 } from '../../interfaces/RequestBribe.interface';
 import { MasDocumentMainService } from '../../services/master/MasDocumentMain.service';
 import { MasDocumentModel } from 'app/models/mas-document.model';
@@ -31,6 +32,9 @@ import { RequestPaymentFineDetailService } from '../../services/RequestPaymentFi
 import { FormGroup } from '@angular/forms';
 import { IFormChange } from '../../interfaces/FormChange';
 import { RequestBribeDetailService } from '../../services/RequestBribeDetail.service';
+import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-bribe',
@@ -53,7 +57,9 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     private requestBribeService: RequestBribeService,
     private requestPaymentFineDetailService: RequestPaymentFineDetailService,
     private requestBribeDetailService: RequestBribeDetailService,
-    private router: Router
+    private router: Router,
+    private sidebarService: SidebarService,
+    public dialog: MatDialog
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -64,19 +70,44 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     });
     this.navService.onSave.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
-        this.navService.setOnSave(false);
-        this.saveButton();
+        this.navService.onSave.next(false);
+        this.buttonSave();
       }
     });
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(cancel => {
       if (cancel === true) {
-        this.navService.setOnCancel(false);
-        this.cancelButton();
+        this.navService.onCancel.next(false);
+        this.buttonCancel();
+      }
+    });
+    this.navService.onPrint.takeUntil(this.destroy$).subscribe(save => {
+      if (save === true) {
+        this.navService.onPrint.next(false);
+        this.buttonPrint();
+      }
+    });
+    this.navService.onEdit.takeUntil(this.destroy$).subscribe(cancel => {
+      if (cancel === true) {
+        this.navService.onEdit.next(false);
+        this.buttonEdit();
+      }
+    });
+    this.navService.onDelete.takeUntil(this.destroy$).subscribe(save => {
+      if (save === true) {
+        this.navService.onDelete.next(false);
+        this.buttonDelete();
+      }
+    });
+    this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(save => {
+      if (save === true) {
+        this.navService.onPrevPage.next(false);
+        this.buttonPrevPage();
       }
     });
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.1.1');
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
     this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(res => {
@@ -160,7 +191,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     // 2 END
   }
 
-  private async saveButton() {
+  private async buttonSave() {
     // 1 START
     // 1.1
     // 1.2
@@ -217,7 +248,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
                   .TransactionRunninginsAll({
                     RunningOfficeCode: this.OfficeCode, // 2.1.2(2.1.1)
                     RunningTable: 'ops_requestbribe', // 2.1.2(2.1.2)
-                    RunningPrefix: 'BR' // 2.1.2(2.1.3)
+                    RunningPrefix: 'BR', // 2.1.2(2.1.3)
                   })
                   .subscribe();
 
@@ -241,7 +272,26 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
                 .CommandDetailID, // 2.1.3(4)
               Station: this.ILG60_08_03_00_00_E08_FORM_DATA.Station,
               RequestDate: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestDate,
-              RequestTime: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestTime
+              RequestTime: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestTime,
+              BribeRemainder: 0,
+              BribeTotal: 0,
+              FirstName: '',
+              Informeracknowledge: '',
+              IsActive: 1,
+              LastName: '',
+              NoticeCode: '',
+              POADate: '',
+              POANo: '',
+              POATime: '',
+              PartMoney: 0,
+              RequestBribeDetail: [],
+              RequestBribeID: null,
+              RequestBribeStaff: null,
+              StationCode: '',
+              StationCodeOfPOA: '',
+              StationOfPOA: '',
+              TitleName: '',
+              TotalPart: 0
             })
             .subscribe();
 
@@ -304,7 +354,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     }
   }
 
-  private cancelButton() {
+  private buttonCancel() {
     if (confirm('ยืนยันการทำรายการหรือไม่')) {
       switch (this.mode$.getValue()) {
         case 'C':
@@ -317,6 +367,63 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     }
   }
 
+  private buttonPrint() {
+    // ILG60-08-03-00-00-E03 (ปุ่ม “ยกเลิก”)
+    // 1 START
+    const dialogRef = this.dialog.open(PrintDialogComponent, {
+      width: '1200px',
+      height: 'auto',
+      data: {
+        RequestBribeID: this.RequestBribeID$.getValue()
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+    // 2 END
+  }
+  private buttonEdit() {
+    // ILG60-08-03-00-00-E05 (ปุ่ม “แก้ไข”)
+    // 1 START
+  }
+  private buttonDelete() {
+    // ILG60-08-03-00-00-E06 (ปุ่ม “ลบ”)
+    // 1 START
+    if (confirm('ยืนยันการทำรายการหรือไม่')) {
+      // 1.1
+      // 1.1.1
+      this.requestBribeService
+        .RequestBribeupdDelete({
+          RequestBribeID: this.RequestBribeID$.getValue()
+        })
+        .subscribe((resDel: IRequestBribeupdDeleteResponse) => {
+          // 1.1.2
+          if (resDel.IsSuccess) {
+            // 1.1.2(1)
+            // 1.1.2(1.1)
+            alert('ลบข้อมูลสำเร็จ');
+            // 1.1.2(1.2) 'WAIT'
+          } else {
+            // 1.1.2(2)
+            // 1.1.2(2.1)
+            alert('ลบข้อมูลไม่สำเร็จ');
+          }
+        });
+    } else {
+      // 1.2.1
+    }
+    // 2 END
+  }
+  private buttonPrevPage() {
+    // : ILG60-08-03-00-00-E07 (ปุ่ม “กลับ >>”)
+    // 1 START
+    this.router.navigate([
+      '/reward/manage/B',
+      this.RequestBribeRewardID$.getValue()
+    ]);
+    // 2 END
+  }
   private RequestBribegetByCon(param: IRequestBribegetByCon) {
     // 1.2.1
     this.requestBribeService

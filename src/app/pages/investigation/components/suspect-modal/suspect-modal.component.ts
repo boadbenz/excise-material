@@ -200,6 +200,7 @@ export class SuspectModalComponent implements OnInit {
 
         if (suspect.length) {
             await suspect.map(item => {
+                item.ResultCount = null;
                 let obj: any = item;
                 switch (item.EntityType) {
                     case 1: // บุคคลธรรมดา
