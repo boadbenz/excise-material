@@ -198,8 +198,31 @@
         <tbody *ngIf="ListCompareDetail?.length > 0">
         <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable"
             [style]="item.sum ? 'font-weight: bold' : '' ">
-          <td>{{ item.LawbreakerName }}</td>
-          <td>{{ item.Mistreat }}</td>
+          <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.LawbreakerName }}</td>
+          <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.Mistreat }}</td>
+
+          <td *ngIf="!item.isSum && !item.isFirstLoop" colspan="2"></td>
+          <td *ngIf="item.isSum" colspan="6"></td>
+
+          <td *ngIf="!item.isSum && item.product">{{ item.product.BrandNameTH }}</td>
+          <td *ngIf="!item.isSum">{{ item.multi }}</td>
+          <td *ngIf="!item.isSum && item.product">{{ item.product.VatProve }}</td>
+          <td *ngIf="!item.isSum && item.product">{{ item.all }}</td>
+
+          <td *ngIf="!item.isSum"><input [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum()"></td>
+          <td *ngIf="item.isSum">{{ item.all }}</td>
+
+          <td *ngIf="item.product">{{ item.BribeMoney }}</td>
+          <td *ngIf="item.product">{{ item.RewardMoney }}</td>
+          <td *ngIf="item.product">{{ item.TreasuryMoney }}</td>
+        </tr>
+        <tr>
+          <td colspan="5"></td>
+          <td>รวม</td>
+          <td>{{ sumAllCompare.sum }}</td>
+          <td>{{ sumAllCompare.sum1 }}</td>
+          <td>{{ sumAllCompare.sum2 }}</td>
+          <td>{{ sumAllCompare.sum3 }}</td>
         </tr>
         </tbody>
       </table>
@@ -247,7 +270,7 @@
                 <mat-autocomplete #auto7="matAutocomplete">
                   <mat-option *ngFor="let station of optionsStation"
                               [value]="station.OfficeShortName"
-                              (click)="onAutoSelecteWord(station)">
+                              (click)="onAutoSelecteWord(station, 1)">
                     {{ station.OfficeShortName }} .
                   </mat-option>
                 </mat-autocomplete>
@@ -271,7 +294,7 @@
                 <mat-autocomplete #auto3="matAutocomplete">
                   <mat-option *ngFor="let sOption of Staffoptions"
                               [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                              (click)="StaffonAutoSelecteWord(sOption)">
+                              (click)="StaffonAutoSelecteWord(sOption, 2)">
                     {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                   </mat-option>
                 </mat-autocomplete>
@@ -357,7 +380,7 @@
           <div class="form-group row">
             <div class="custom-control custom-checkbox col-form-label col-md-4">
               <input class="col-form-label filled-in chk-col-indigo" id="IsOutside" type="checkbox"
-                     [(ngModel)]="IsOutside" name="IsOutside"
+                     [(ngModel)]="receipt.IsOutside" name="IsOutside"
                      [disabled]="showEditField" (checked)="IsOutside==1">
               <label for="IsOutside">คดีเปรียบเทียบนอกสถานที่ทำการ</label>
             </div>
@@ -636,7 +659,7 @@
               <div class="col-md-12">
                 <div class="form-popup form-group row">
                   <div class="custom-control custom-radio col-form-label col-md-10">
-                    <input name="RequestRadio" id="yRequest" [(ngModel)]="editUser.request"
+                    <input name="RequestRadio" id="yRequest" [(ngModel)]="editUser.request" [value]="1"
                            class="col-form-label with-gap radio-col-indigo" type="radio"
                            [disabled]="showEditField">
                     <!-- [checked]="oCompareDetail.IsRequest=='1'" -->
@@ -650,7 +673,7 @@
               <div class="col-md-12">
                 <div class="form-group row">
                   <div class="custom-control custom-radio col-form-label col-md-10">
-                    <input name="RequestRadio" id="nRequest"
+                    <input name="RequestRadio" id="nRequest" [(ngModel)]="editUser.request" [value]="0"
                            class="col-form-label with-gap radio-col-indigo"
                            type="radio" [disabled]="showEditField">
                     <!-- [checked]="oCompareDetail.IsRequest=='0'" -->
@@ -964,7 +987,7 @@
                            [disabled]="showEditField">
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options" [value]="option.OfficeShortName"
-                                  (click)="onAutoSelecteWord(option)">
+                                  (click)="onAutoSelecteWord(option, '2')">
                         {{ option.OfficeShortName }}
                       </mat-option>
                     </mat-autocomplete>
@@ -991,17 +1014,17 @@
                 <div class="form-group row">
                   <label class="col-form-label col-md-2">แบบอนุมัติ : </label>
                   <div class="custom-control custom-radio col-form-label col-md-8">
-                    <input name="approveRadio" id="typeOne" [value]="'แบบอนุมัติ 1'"
+                    <input name="approveRadio" id="typeOne" [value]="1"
                            class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType" type="radio">
                     <label for="typeOne" class="col-4">แบบอนุมัติ 1</label>
-                    <input name="approveRadio" id="typeTwo" [value]="'แบบอนุมัติ 2'"
+                    <input name="approveRadio" id="typeTwo" [value]="2"
                            class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="compareUserDetailPopup.ApproveType">
                     <label for="typeTwo" class="col-4">แบบอนุมัติ 2</label>
-                    <input name="approveRadio" id="typeThree" [value]="'แบบอนุมัติ 3'"
+                    <input name="approveRadio" id="typeThree" [value]="3"
                            class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType"
                            type="radio">
                     <label for="typeThree" class="col-4">แบบอนุมัติ 3</label>
-                    <input name="approveRadio" id="typeFour" [value]="'แบบอนุมัติ 4'"
+                    <input name="approveRadio" id="typeFour" [value]="4"
                            class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType"
                            type="radio">
                     <label for="typeFour" class="col-4">แบบอนุมัติ 4</label>
