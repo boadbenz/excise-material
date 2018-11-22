@@ -98,7 +98,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.2');
+    this.sidebarService.setVersion('0.0.1.3');
     this.setShowButton();
     this.pageLoad();
   }
