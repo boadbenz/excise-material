@@ -19,14 +19,8 @@ export class MasDocumentMainService extends MasterHelperService {
     });
   }
 
-  public MasDocumentMaininsAll({
-    DocumentType,
-    ReferenceCode
-  }): Observable<any> {
-    return this.http.post(`${this.ApiPrefixUrl}/MasDocumentMaininsAll`, {
-      DocumentType: DocumentType,
-      ReferenceCode: ReferenceCode
-    });
+  public MasDocumentMaininsAll(obj): Observable<any> {
+    return this.http.post(`${this.ApiPrefixUrl}/MasDocumentMaininsAll`, obj);
   }
 
   public MasDocumentMainupdDelete({ DocumentID }): Observable<any> {

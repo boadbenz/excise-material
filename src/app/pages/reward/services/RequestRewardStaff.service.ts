@@ -1,8 +1,33 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { HelperService } from './HelperService';
+import {
+  IRequestRewardStaffupdDelete,
+  IRequestRewardStaffupdByCon
+} from '../interfaces/RequestRewardStaff';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class RequestRewardStaffService {
+export class RequestRewardStaffService extends HelperService {
+  constructor(private http: HttpClient) {
+    super();
+  }
 
-constructor() { }
+  public RequestRewardStaffupdDelete(
+    param: IRequestRewardStaffupdDelete
+  ): Observable<any> {
+    return this.http.post(
+      `${this.ApiPrefixUrl}/RequestRewardStaffupdDelete`,
+      param
+    );
+  }
 
+  public RequestRewardStaffupdByCon(
+    param: IRequestRewardStaffupdByCon
+  ): Observable<any> {
+    return this.http.post(
+      `${this.ApiPrefixUrl}/RequestRewardStaffupdByCon`,
+      param
+    );
+  }
 }

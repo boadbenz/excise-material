@@ -64,42 +64,40 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       this.ArrestCode$.next(param['ArrestCode']);
     });
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
-      console.log('command', command);
-
       if (command === true) {
         this.navService.onCancel.next(false);
-        this.cancelButton();
+        this.buttonCancel();
       }
     });
     this.navService.onSave.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onSave.next(false);
-        this.saveButton();
+        this.buttonSave();
       }
     });
     this.navService.onEdit.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onEdit.next(false);
-        this.editButton();
+        this.buttonEdit();
       }
     });
 
     this.navService.onDelete.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onDelete.next(false);
-        this.deleteButton();
+        this.buttonDelete();
       }
     });
     this.navService.onPrint.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onPrint.next(false);
-        this.printButton();
+        this.buttonPrint();
       }
     });
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.1');
+    this.sidebarService.setVersion('0.0.1.2');
     this.setShowButton();
     this.pageLoad();
   }
@@ -136,8 +134,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       });
   }
 
-
-  public saveButton() {
+  public buttonSave() {
     // ILG60-08-02-00-00-E03
     // 1 START
     this.ILG60_08_02_00_00E09_SAVE.CommandID = null;
@@ -192,7 +189,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     }
     // 4 END
   }
-  public editButton() {
+  public buttonEdit() {
     // ILG60-08-02-00-00
     // 1
     this.ILG60_08_02_00_00E09_EDIT = true;
@@ -212,7 +209,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
 
     // 3 END
   }
-  public deleteButton() {
+  public buttonDelete() {
     // ILG60-08-02-00-00-E07
 
     let RequestBribeRewardupdDeleteStatus = false;
@@ -292,7 +289,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     }
     // 2 END
   }
-  public cancelButton() {
+  public buttonCancel() {
     // ILG60-03-02-00-00-E04
     // 1 START
     if (confirm('ยืนยันการทำรายการหรือไม่')) {
@@ -380,13 +377,49 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     }
     // 2 END
   }
-  public printButton() {
+  public async buttonPrint() {
     // ILG60-08-02-00-00-E05
     // 1 START
+
+    // 1.1
+    let RequestBribe: IRequestBribe[];
+    await this.requestBribeService
+      .RequestBribegetByRequestBribeRewardID({
+        RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+      })
+      .toPromise()
+      .then((res: IRequestBribe[]) => {
+        RequestBribe = res;
+      });
+
+    // 1.2
+    let RequestReward: IRequestReward[];
+    await this.requestRewardService
+      .RequestRewardgetByRequestBribeRewardID({
+        RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+      })
+      .toPromise()
+      .then((res: IRequestReward[]) => {
+        RequestReward = res;
+      });
+
+      const printDoc: any[] = RequestBribe.map(m => ({
+        DocName: `${m.RequestBribeCode}: คำร้องขอรับเงินสินบน`,
+        DocType: 'แบบฟอร์ม'
+      }))
+
+      printDoc.concat(RequestReward.map(m => ({
+        DocName: `${m.RequestRewardCode}: คำร้องขอรับเงินรางวัล`,
+        DocType: 'แบบฟอร์ม'
+      })))
+
+
     const dialogRef = this.dialog.open(PrintDialogComponent, {
       width: '1200px',
       height: 'auto',
-      data: {}
+      data: {
+        printDoc: printDoc
+      }
     });
 
     dialogRef.afterClosed().subscribe(() => {

@@ -46,6 +46,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
   public SumSecondMoney = 0;
   public SecondPartTotal = 0;
   public SecondMoneyTotal = 0;
+  public HaveNotice = 0;
   // public nonRequestRewardStaffData: any[] = [];
 
   public datatable: any[] = [];
@@ -81,6 +82,10 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
               .map(m => m.text)
       )
     );
+
+    get sharedBribeReward(): FormArray {
+      return this.formGroup.get('sharedBribeReward') as FormArray;
+    }
   constructor(
     private fb: FormBuilder,
     private masTitleService: MasTitleService,
@@ -93,7 +98,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
 
     this.inputData$.subscribe((data: IRewardBinding) => {
       if (data) {
-        // const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
+        // const control = <FormArray>this.sharedBribeReward;
         switch (data.methodName) {
           case 'nonRequestRewardStaff':
             // console.log('nonRequestRewardStaff', data.data);
@@ -212,31 +217,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
           case 'RequestBribeRewardgetByIndictmentID':
             console.log('RequestBribeRewardgetByIndictmentID', data.data);
 
-            // data.data.forEach(e => {
-            //   // instantiate a new day FormGroup;
-            //   if (e.HaveNotice === 1) {
-            //     const newDayGroup: FormGroup = this.fb.group({
-            //       check: [true],
-            //       TitleName: [''],
-            //       FullName: [''],
-            //       PositionName: [''],
-            //       PosLevelName: [''],
-            //       ContributorName: [
-            //         `${e.HaveNotice === 1 ? 'ผู้แจ้งความนำจับ' : ''}`,
-            //         Validators.required
-            //       ],
-            //       ContributorID: [''],
-            //       FirstPart: [''],
-            //       SecondPart: [''],
-            //       FirstMoney: [''],
-            //       SecondMoney: [''],
-            //       ToTalMoney: [e.HaveNotice === 1 ? this.SumBribeMoney : 0]
-            //     });
-
-            //     // Add it to our formArray
-            //     control.push(newDayGroup);
-            //   }
-            // });
+            this.HaveNotice = data.data[0].HaveNotice || 0;
             break;
 
           case 'RequestRewardgetByCon':
@@ -257,14 +238,14 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
         this.SumRewardMoney = res['RewardMoney'];
       }
     });
-    this.formGroup.controls['sharedBribeReward'].valueChanges.subscribe(
+    this.sharedBribeReward.valueChanges.subscribe(
       (selectedValue: any[]) => {
         console.log(
-          `this.formGroup.controls['sharedBribeReward'].valid`,
-          this.formGroup.controls['sharedBribeReward']
+          `this.sharedBribeReward.valid`,
+          this.sharedBribeReward
         );
 
-        if (this.formGroup.controls['sharedBribeReward'].valid) {
+        if (this.sharedBribeReward.valid) {
           this.ILG60_08_04_00_00_E13_BUTTON$.next({ DISABLED: false });
         }
         if (selectedValue.length > 0) {
@@ -298,7 +279,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
       });
   }
   public changeFullName(text, index) {
-    const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
+    const control = <FormArray>this.sharedBribeReward;
     const StaffCodeMap = this.Staff_StaffCode_List.filter(f => f.text === text)
       .map(m => m.value)
       .shift();
@@ -333,7 +314,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
   }
   public onSelectContributor(id, index: number) {
     if (index > -1) {
-      const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
+      const control = <FormArray>this.sharedBribeReward;
       // tslint:disable-next-line:max-line-length
       control.controls[index].get('ContributorName').patchValue(
         this.ContributorList.filter(f => f.value === id)
@@ -347,7 +328,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
     // and pushes it to our FormArray
 
     // We get our FormArray
-    const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
+    const control = <FormArray>this.sharedBribeReward;
 
     // instantiate a new day FormGroup;
     const newDayGroup: FormGroup = this.initItems();
@@ -394,7 +375,7 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
     };
   }
   public deleteHandle(rowItem) {
-    const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
+    const control = <FormArray>this.sharedBribeReward;
     // remove the chosen row
     control.removeAt(rowItem);
   }

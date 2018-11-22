@@ -31,7 +31,7 @@ export const ContributorList: DropdownInterface[] = [
   }
 ];
 export class CONFIG extends RewardConfig {
-  public ContributorList = ContributorList;
+  public ContributorList: DropdownInterface[] = ContributorList;
   @Input()
   set inputData(val) {
     this.inputData$.next(val);

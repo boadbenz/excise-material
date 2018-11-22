@@ -14,6 +14,8 @@ import { NonRequestRewardStaffService } from './NonRequestRewardStaff.service';
 import { RequstLawsuitJudgementService } from './RequstLawsuitJudgement.service';
 import { RequestPaymentFineService } from './RequestPaymentFine.service';
 import { RequestBribeDetailService } from './RequestBribeDetail.service';
+import { RequestRewardDetailService } from './RequestRewardDetail.service';
+import { RequestRewardStaffService } from './RequestRewardStaff.service';
 
 export const REWARD_SERVICES = [
   ...REWARD_MASTER_SERVICES,
@@ -31,5 +33,7 @@ export const REWARD_SERVICES = [
   NonRequestRewardStaffService,
   RequstLawsuitJudgementService,
   RequestPaymentFineService,
-  RequestBribeDetailService
+  RequestBribeDetailService,
+  RequestRewardDetailService,
+  RequestRewardStaffService
 ];

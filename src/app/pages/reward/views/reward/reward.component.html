@@ -11,7 +11,8 @@
         <!-- <pre>
           {{ILG60_08_04_00_00_E08_DATA$ | async | json}}
         </pre> -->
-        <ILG60-08-04-00-00-E08 [inputData]="ILG60_08_04_00_00_E08_DATA$ | async" (aggregateHandle)="emitAggregate($event)" (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E08>
+        <ILG60-08-04-00-00-E08 [inputData]="ILG60_08_04_00_00_E08_DATA$ | async" (aggregateHandle)="emitAggregate($event)"
+          (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E08>
       </div>
     </ng-template>
   </mat-expansion-panel>
@@ -40,7 +41,7 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-04-00-00-E19></ILG60-08-04-00-00-E19>
+        <ILG60-08-04-00-00-E19 (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E19>
       </div>
     </ng-template>
   </mat-expansion-panel>
