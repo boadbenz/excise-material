@@ -135,7 +135,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.15');
+        this.sidebarService.setVersion('0.0.2.16');
 
         this.navigate_service();
 
@@ -290,7 +290,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             DataSource: new FormControl(null),
             FilePath: new FormControl(null),
             ArrestCode: new FormControl(null),
-            IsArrest: new FormControl(1),
+            IsArrest: new FormControl(0),
             IsActive: new FormControl(1),
             NoticeStaff: this.fb.array([this.createStaffForm()]),
             NoticeInformer: this.fb.array([this.createInformerForm()]),
@@ -424,26 +424,32 @@ export class ManageComponent implements OnInit, OnDestroy {
         let noticeDocument = [];
         for(let l of noticeForm.NoticeStaff){
             l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
             noticeStaff.push(l);
         }
         for(let l of noticeForm.NoticeInformer){
             l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
             noticeInformer.push(l);
         }
         for(let l of noticeForm.NoticeLocale){
             l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
             noticeLocale.push(l);
         }
         for(let l of noticeForm.NoticeProduct){
             l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
             noticeProduct.push(l);
         }
         for(let l of noticeForm.NoticeSuspect){
             l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
             noticeSuspect.push(l);
         }
         for(let l of noticeForm.NoticeDocument){
             l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
             noticeDocument.push(l);
         }
         this.noticeForm.value.NoticeStaff = noticeStaff;
@@ -500,6 +506,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                         await this.noticeService.insProductAll(l).then(async isSuccess => {});
                     }else{
                         await this.noticeService.updProduct(l).then(async isSuccess=>{});
+                    }
+                }
+            }
+
+            const suspects = this.NoticeSuspect.value;
+            if(suspects && suspects.length>0){
+                for(let l of suspects){
+                    if(l.IsNewItem){
+                        await this.noticeService.insSuspect(l).then(async isSuccess => {});
                     }
                 }
             }

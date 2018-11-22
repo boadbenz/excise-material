@@ -128,6 +128,11 @@ export class NoticeService {
     //     return this.responsePromisModify(JSON.stringify(params), url);
     // }
 
+    insSuspect(suspect: NoticeSuspect): Promise<boolean> {
+        const params = suspect;
+        const url = `${appConfig.api8082}/NoticeSuspectinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
     updSuspect(suspect: Suspect): Promise<boolean> {
         const params = suspect;
         const url = `${appConfig.api8082}/SuspectupdByCon`;
