@@ -1,15 +1,21 @@
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+
 import { ReductionApiService } from '../reduction.api.service';
 
+import { Subject } from 'rxjs/Subject';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ReductionModelListComponent } from './reduction-model-list/reduction-model-list.component';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.scss']
 })
-export class ManageComponent implements OnInit, OnDestroy {
-
+export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
+  @ViewChild(ReductionModelListComponent)
+  reductionModelList: ReductionModelListComponent;
 
   tableData = [
     {
@@ -143,22 +149,21 @@ export class ManageComponent implements OnInit, OnDestroy {
   selectAll: any;
   private getDataFromListPage: any;
 
-  @ViewChild('reductionPopup') modalReduction: ElementRef;
+  // @ViewChild('reductionPopup') modalReduction: ElementRef;
+
+  private destroy$: Subject<boolean> = new Subject<boolean>();
+
+  public model: any;
 
   constructor
   (private router: Router,
     private activeRoute: ActivatedRoute,
     private navService: NavigationService,
-    private apiServer: ReductionApiService
+    private apiServer: ReductionApiService,
+    private ngbModel: NgbModal,
   ) { }
 
   ngOnInit() {
-
-    this.apiServer.get('google.com').subscribe(
-      response => console.log(response),
-      error => console.log(error)
-    );
-
     // set show button
     this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;
@@ -198,6 +203,16 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     const param = this.activeRoute.snapshot.queryParams;
     console.log(param);
+
+    this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
+      if (status) {
+          this.onSave();
+      }
+    });
+  }
+
+  private onSave() {
+    console.log('5555');
   }
 
   viewData(id: string) {
@@ -215,8 +230,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
   }
 
-  showReductionPopup() {
+  showReductionPopup(e) {
     // jQuery(this.modalReduction.nativeElement).modal('show');
+    // console.log(this.reductionModelList.listTest);
+
+    this.model = this.ngbModel.open(e, { size: 'lg', centered: true });
+    // this.reductionModelList.activeModel();
+  }
+
+  ngAfterViewInit() {
+    console.log(this.reductionModelList);
+  }
+
+  result(event) {
+    console.log(event);
   }
 
   ngOnDestroy() {

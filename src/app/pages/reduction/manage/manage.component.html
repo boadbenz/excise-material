@@ -184,9 +184,13 @@
   </div>
   <div class="card-body">
     <div class="text-right m-b-10">
-      <button [ngClass]="{disabled : showField}" class="btn waves-effect waves-light btn-navy" [disabled]="showField" (click)="showReductionPopup()">
-      ปรับเพิ่ม-ลด </button>
+      <button [ngClass]="{disabled : showField}" class="btn waves-effect waves-light btn-navy" [disabled]="showField" (click)="showReductionPopup(reductionList)">
+        ปรับเพิ่ม-ลด 
+      </button>
     </div>
+    <ng-template #reductionList let-c="close" let-d="dismiss">
+      <app-reduction-model-list [id]="1" (d)="model.dismiss()" (result)="result($event)"></app-reduction-model-list>
+    </ng-template>
     <div class="table-responsive table-striped no-wrap">
       <table class="table">
         <thead>

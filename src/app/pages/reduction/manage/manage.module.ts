@@ -3,8 +3,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ManageComponent } from './manage.component';
 import { ReductionApiService } from '../reduction.api.service';
+import { ReductionModelListComponent } from './reduction-model-list/reduction-model-list.component';
 
 const routes: Routes = [
   {
@@ -17,7 +19,7 @@ const routes: Routes = [
       ],
       pageType: 'manage',
       codePage: 'ILG60-09-02-00-00',
-      nextPage: { title: 'จัดการข้อมูลรายละเอียดการปรับเพิ่ม-ปรับลด', url: '/reduction/manage-detail/:code' }
+      nextPage: { title: 'จัดการข้อมูลรายละเอียดการปรับเพิ่ม-ปรับลด', url: '/reduction/manage-det, ReductionModelListComponentail/:code' }
     },
     component: ManageComponent
   }
@@ -29,9 +31,11 @@ const routes: Routes = [
     FormsModule,
     CommonModule,
     CardActionsModule,
+    NgbModule.forRoot(),
     RouterModule.forChild(routes)
   ],
-  declarations: [ManageComponent],
+  declarations: [ManageComponent, ReductionModelListComponent],
+  exports: [ ],
   providers: [ReductionApiService]
 })
 export class ManageModule { }
