@@ -97,10 +97,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.3');
+    this.sidebarService.setVersion('0.0.1.4');
     this.pageLoad();
   }
-  private pageLoad() {
+  private async pageLoad() {
     // 1 START
     switch (this.mode$.getValue()) {
       case 'C':
@@ -122,65 +122,60 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         //     this.MasOfficeMain = Office;
         //   }); // 1.1.3
 
-        this.requestCompareService
+        const RequestCompare: IRequestCompare[] = await this.requestCompareService
           .RequestComparegetByIndictmentID({
             IndictmentID: this.IndictmentID$.getValue()
           })
-          .subscribe((RequestCompare: IRequestCompare[]) => {
-            if (RequestCompare.length > 0) {
-              this.ILG60_08_04_00_00_E08_DATA$.next({
-                methodName: 'RequestComparegetByIndictmentID',
-                data: RequestCompare
-              });
-            }
-            // 1.1.6
-          }); // 1.1.4
+          .toPromise();
+        this.ILG60_08_04_00_00_E08_DATA$.next({
+          methodName: 'RequestComparegetByIndictmentID',
+          data: RequestCompare
+        });
+        // 1.1.6
+        // 1.1.4
 
-        this.requstLawsuitJudgementService
+        const LawsuitJudgement: IRequestLawsuitJudgement[] = await this.requstLawsuitJudgementService
           .RequstLawsuitJudgementgetByIndictmentID({
             IndictmentID: Number(this.IndictmentID$.getValue())
           })
-          .subscribe((LawsuitJudgement: IRequestLawsuitJudgement[]) => {
-            if (LawsuitJudgement.length > 0) {
-              this.requstLawsuitJudgement$.next(LawsuitJudgement); // 1.1.6
-              this.ILG60_08_04_00_00_E08_DATA$.next({
-                methodName: 'RequstLawsuitJudgementgetByIndictmentID',
-                data: LawsuitJudgement
-              });
-            }
-          }); // 1.1.5
+          .toPromise();
+        this.requstLawsuitJudgement$.next(LawsuitJudgement);
+        this.ILG60_08_04_00_00_E08_DATA$.next({
+          methodName: 'RequstLawsuitJudgementgetByIndictmentID',
+          data: LawsuitJudgement
+        });
+        // 1.1.5
 
         // 1.1.7
-        this.nonRequestRewardStaffService
+        const nonRequestRewardStaff: INonRequestRewardStaff[] = await this.nonRequestRewardStaffService
           .NonRequestRewardStaffgetByIndictmentID({
             IndictmentID: this.IndictmentID$.getValue()
           })
-          .subscribe((nonRequestRewardStaff: INonRequestRewardStaff[]) => {
-            this.ILG60_08_04_00_00_E12_DATA$.next({
-              methodName: 'nonRequestRewardStaff',
-              data: nonRequestRewardStaff
-            });
-            // this.ILG60_08_04_00_00_E12_DATA$.next(nonRequestRewardStaff); // 1.1.8
-          });
+          .toPromise();
+        this.ILG60_08_04_00_00_E12_DATA$.next({
+          methodName: 'nonRequestRewardStaff',
+          data: nonRequestRewardStaff
+        });
+
+        // this.ILG60_08_04_00_00_E12_DATA$.next(nonRequestRewardStaff); // 1.1.8
 
         // 1.1.9
-        this.requestBribeReward
+        const RequestBribeReward = await this.requestBribeReward
           .RequestBribeRewardgetByIndictmentID({
             IndictmentID: this.IndictmentID$.getValue()
           })
-          .subscribe((RequestBribeReward: IRequestBribeReward[]) => {
-            this.ILG60_08_04_00_00_E08_DATA$.next({
-              methodName: 'RequestBribeRewardgetByIndictmentID',
-              data: RequestBribeReward
-            }); // 1.1.10
+          .toPromise();
+        this.ILG60_08_04_00_00_E08_DATA$.next({
+          methodName: 'RequestBribeRewardgetByIndictmentID',
+          data: RequestBribeReward
+        }); // 1.1.10
 
-            this.ILG60_08_04_00_00_E12_DATA$.next({
-              methodName: 'RequestBribeRewardgetByIndictmentID',
-              data: RequestBribeReward
-            });
+        this.ILG60_08_04_00_00_E12_DATA$.next({
+          methodName: 'RequestBribeRewardgetByIndictmentID',
+          data: RequestBribeReward
+        });
 
-            // this.ILG60_08_04_00_00_E12_DATA$.next(RequestBribeReward); // 1.1.10
-          });
+        // this.ILG60_08_04_00_00_E12_DATA$.next(RequestBribeReward); // 1.1.10
 
         // 1.1.11 'WAIT'
 
@@ -197,33 +192,29 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         // 1.2
 
         // 1.2.1
-        this.requestRewardService
+        const RequestReward: IRequestReward[] = await this.requestRewardService
           .RequestRewardgetByCon({
             RequestRewardID: this.RequestRewardID$.getValue()
           })
-          .subscribe((RequestReward: IRequestReward[]) => {
-            if (RequestReward.length > 0) {
-              this.ILG60_08_04_00_00_E08_DATA$.next({
-                methodName: 'RequestRewardgetByCon',
-                data: RequestReward
-              });
+          .toPromise();
+        this.ILG60_08_04_00_00_E08_DATA$.next({
+          methodName: 'RequestRewardgetByCon',
+          data: RequestReward
+        });
 
-              this.ILG60_08_04_00_00_E12_DATA$.next({
-                methodName: 'RequestRewardgetByCon',
-                data: RequestReward
-              });
-            }
-          });
+        this.ILG60_08_04_00_00_E12_DATA$.next({
+          methodName: 'RequestRewardgetByCon',
+          data: RequestReward
+        });
 
         // 1.2.2
-        this.masDocumentMainService
+        const masDocumentMain: MasDocumentModel[] = await this.masDocumentMainService
           .MasDocumentMaingetAll({
             DocumentType: 9,
             ReferenceCode: this.RequestRewardID$.getValue()
           })
-          .subscribe((masDocumentMain: MasDocumentModel[]) => {
-            this.MasDocument$.next(masDocumentMain);
-          });
+          .toPromise();
+        this.MasDocument$.next(masDocumentMain);
 
         break;
     }
@@ -246,133 +237,131 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           case 'C':
             // 2.1
 
-           await this.transactionRunningService
+            const TransactionRunning: ITransactionRunning[] = await this.transactionRunningService
               .TransactionRunninggetByCon({
                 RunningTable: 'ops_requestreward',
                 RunningOfficeCode: this.OfficeCode
-              }).toPromise().then((async (TransactionRunning: ITransactionRunning[]) => {
-                // 2.1.2
-                if (TransactionRunning.length > 0) {
-                  const tRunning: ITransactionRunning = TransactionRunning[0];
-                  // 2.1.2(1)
-                  // 2.1.2(1.1)
-                  await this.transactionRunningService.TransactionRunningupdByCon({
-                    RunningID: tRunning.RunningID
-                  }).toPromise().then();
+              })
+              .toPromise();
+            // 2.1.2
+            if (TransactionRunning.length > 0) {
+              const tRunning: ITransactionRunning = TransactionRunning[0];
+              // 2.1.2(1)
+              // 2.1.2(1.1)
+              await this.transactionRunningService
+                .TransactionRunningupdByCon({
+                  RunningID: tRunning.RunningID
+                })
+                .toPromise()
+                .then();
 
-                  // 2.1.2(1.2)
-                  const RunningPrefix = `${this.leftPad(
-                    tRunning.RunningPrefix,
-                    2
-                  )}`; // 2.1.2(1.2(1))
-                  const RunningOfficeCode = `${this.leftPad(
-                    tRunning.RunningOfficeCode,
-                    6
-                  )}`; // 2.1.2(1.2(2))
-                  const RunningYear = `${this.leftPad(
-                    tRunning.RunningYear,
-                    2
-                  )}`; // 2.1.2(1.2(3))
-                  const RunningNo = `${this.leftPad(
-                    (Number(tRunning.RunningNo) + 1).toString(),
-                    5
-                  )}`; // 2.1.2(1.2(4))
-                  this.RequestBribeCode =
-                    RunningPrefix + RunningOfficeCode + RunningYear + RunningNo;
-                } else {
-                  // 2.1.2(2)
+              // 2.1.2(1.2)
+              const RunningPrefix = `${this.leftPad(
+                tRunning.RunningPrefix,
+                2
+              )}`; // 2.1.2(1.2(1))
+              const RunningOfficeCode = `${this.leftPad(
+                tRunning.RunningOfficeCode,
+                6
+              )}`; // 2.1.2(1.2(2))
+              const RunningYear = `${this.leftPad(tRunning.RunningYear, 2)}`; // 2.1.2(1.2(3))
+              const RunningNo = `${this.leftPad(
+                (Number(tRunning.RunningNo) + 1).toString(),
+                5
+              )}`; // 2.1.2(1.2(4))
+              this.RequestBribeCode =
+                RunningPrefix + RunningOfficeCode + RunningYear + RunningNo;
+            } else {
+              // 2.1.2(2)
 
-                  // 2.1.2(2.1)
-                 await this.transactionRunningService.TransactionRunninginsAll({
-                    RunningOfficeCode: this.OfficeCode,
-                    RunningTable: 'ops_requestreward',
-                    RunningPrefix: 'RW'
-                  }).toPromise().then();
+              // 2.1.2(2.1)
+              await this.transactionRunningService
+                .TransactionRunninginsAll({
+                  RunningOfficeCode: this.OfficeCode,
+                  RunningTable: 'ops_requestreward',
+                  RunningPrefix: 'RW'
+                })
+                .toPromise()
+                .then();
 
-                  // 2.1.2(2.2)
-                  this.RequestRewardCode = `RW${this.leftPad(
-                    this.OfficeCode,
-                    0
-                  )}${this.leftPad(this.yy_thaibuddha, 2)}00001`;
-                }
+              // 2.1.2(2.2)
+              this.RequestRewardCode = `RW${this.leftPad(
+                this.OfficeCode,
+                0
+              )}${this.leftPad(this.yy_thaibuddha, 2)}00001`;
+            }
 
-                // 2.1.3
-                await  this.requestRewardService
-                  .RequestRewardinsAll({
-                    RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
-                    RequestRewardCode: this.RequestRewardCode,
-                    ReferenceNo: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .ReferenceNo,
-                    Station: this.ILG60_08_04_00_00_E08_FORM_DATA.Station,
-                    RequestDate: convertDateForSave(
-                      getDateMyDatepicker(
-                        this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate
-                      )
-                    ),
-                    RequestTime: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .RequestTime,
-                    BribeTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.BribeTotal,
-                    FineType: this.ILG60_08_04_00_00_E08_FORM_DATA.FineType,
-                    FirstMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .FirstMoneyPerPart,
-                    FirstMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .FirstMoneyTotal,
-                    FirstPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .FirstPartTotal,
-                    FirstRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .FirstRemainder,
-                    IsActive: this.ILG60_08_04_00_00_E08_FORM_DATA.IsActive,
-                    RequestRewardDetail: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .RequestRewardDetail,
-                    RequestRewardID: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .RequestRewardID,
-                    RequestRewardStaff: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .RequestRewardStaff,
-                    RewardTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .RewardTotal,
-                    SecondMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .SecondMoneyPerPart,
-                    SecondMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .SecondMoneyTotal,
-                    SecondPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .SecondPartTotal,
-                    SecondRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .SecondRemainder,
-                    StationCode: this.ILG60_08_04_00_00_E08_FORM_DATA
-                      .StationCode
-                  }).toPromise().then(async (res: IRequestRewardinsAllRespone) => {
-                    if (res.RequestRewardID) {
-                      // 2.1.5
-                      // 2.1.5(1)
-                      await this.masDocumentMainService
-                        .MasDocumentMaininsAll({
-                          DocumentType: 9,
-                          ReferenceCode: res.RequestRewardID,
-                          DocumentID: null,
-                          DataSource: this.ILG60_08_04_00_00_E19_FORM_DATA
-                            .DataSource,
-                          FilePath: this.ILG60_08_04_00_00_E19_FORM_DATA
-                            .FilePath,
-                          DocumentName: '',
-                          IsActive: 1
-                        }).toPromise().then(resMasDocumentMain => {
-                          if (resMasDocumentMain['DocumentID']) {
-                            // 2.1.5(2) 'WAIT'
-                          }
-                        });
-                    }
-                  });
+            // 2.1.3
+            const RequestRewardinsAllRespone: IRequestRewardinsAllRespone = await this.requestRewardService
+              .RequestRewardinsAll({
+                RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
+                RequestRewardCode: this.RequestRewardCode,
+                ReferenceNo: this.ILG60_08_04_00_00_E08_FORM_DATA.ReferenceNo,
+                Station: this.ILG60_08_04_00_00_E08_FORM_DATA.Station,
+                RequestDate: convertDateForSave(
+                  getDateMyDatepicker(
+                    this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate
+                  )
+                ),
+                RequestTime: this.ILG60_08_04_00_00_E08_FORM_DATA.RequestTime,
+                BribeTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.BribeTotal,
+                FineType: this.ILG60_08_04_00_00_E08_FORM_DATA.FineType,
+                FirstMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .FirstMoneyPerPart,
+                FirstMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .FirstMoneyTotal,
+                FirstPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .FirstPartTotal,
+                FirstRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .FirstRemainder,
+                IsActive: this.ILG60_08_04_00_00_E08_FORM_DATA.IsActive,
+                RequestRewardDetail: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .RequestRewardDetail,
+                RequestRewardID: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .RequestRewardID,
+                RequestRewardStaff: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .RequestRewardStaff,
+                RewardTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.RewardTotal,
+                SecondMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .SecondMoneyPerPart,
+                SecondMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .SecondMoneyTotal,
+                SecondPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .SecondPartTotal,
+                SecondRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
+                  .SecondRemainder,
+                StationCode: this.ILG60_08_04_00_00_E08_FORM_DATA.StationCode
+              })
+              .toPromise();
+            if (RequestRewardinsAllRespone.RequestRewardID) {
+              // 2.1.5
+              // 2.1.5(1)
+              const resMasDocumentMain = await this.masDocumentMainService
+                .MasDocumentMaininsAll({
+                  DocumentType: 9,
+                  ReferenceCode: RequestRewardinsAllRespone.RequestRewardID,
+                  DocumentID: null,
+                  DataSource: this.ILG60_08_04_00_00_E19_FORM_DATA.DataSource,
+                  FilePath: this.ILG60_08_04_00_00_E19_FORM_DATA.FilePath,
+                  DocumentName: '',
+                  IsActive: 1
+                })
+                .toPromise();
+              if (resMasDocumentMain['DocumentID']) {
+                // 2.1.5(2) 'WAIT'
+              }
+            }
 
-                // 2.1.4
-                await this.RequestPaymentFineupdByCon.forEach(PaymentFineID => {
-                  this.requestPaymentFineService
-                    .RequestPaymentFineupdByCon({
-                      PaymentFineID: PaymentFineID
-                    }).toPromise().then()
-                });
+            // 2.1.4
+            this.RequestPaymentFineupdByCon.forEach(async PaymentFineID => {
+              await this.requestPaymentFineService
+                .RequestPaymentFineupdByCon({
+                  PaymentFineID: PaymentFineID
+                })
+                .toPromise();
+            });
 
-                // 2.1.6 => 3
-              }));
+            // 2.1.6 => 3
 
             break;
           case 'R':
@@ -381,16 +370,18 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             // 2.2.1
             await this.requestRewardService
               .RequestRewardupdByCon(this.RequestRewardUpd$.getValue())
-              .subscribe();
+              .toPromise();
 
             // 2.2.2
-            await this.RequestRewardDetailupdDelete.forEach(RequestRewardDetailID => {
-              this.requestRewardDetailService
-                .RequestRewardDetailupdDelete({
-                  RequestRewardDetailID: RequestRewardDetailID
-                })
-                .subscribe();
-            });
+            await this.RequestRewardDetailupdDelete.forEach(
+              RequestRewardDetailID => {
+                this.requestRewardDetailService
+                  .RequestRewardDetailupdDelete({
+                    RequestRewardDetailID: RequestRewardDetailID
+                  })
+                  .toPromise();
+              }
+            );
 
             // 2.2.3
             await this.RequestRewardStaffupdDelete.forEach(StaffID => {
@@ -398,15 +389,17 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                 .RequestRewardStaffupdDelete({
                   StaffID: StaffID
                 })
-                .subscribe();
+                .toPromise();
             });
 
             // 2.2.4
-            await this.RequestRewardStaffupdByCon.forEach(RequestRewardStaff => {
-              this.requestRewardStaffService
-                .RequestRewardStaffupdByCon(RequestRewardStaff)
-                .subscribe();
-            });
+            await this.RequestRewardStaffupdByCon.forEach(
+              RequestRewardStaff => {
+                this.requestRewardStaffService
+                  .RequestRewardStaffupdByCon(RequestRewardStaff)
+                  .toPromise();
+              }
+            );
 
             // 2.2.5 'WAIT'
             // 2.2.6 'WAIT'
