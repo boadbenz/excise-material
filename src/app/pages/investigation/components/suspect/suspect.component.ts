@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
-import { MyDatePickerOptions, getDateMyDatepicker, convertDateForSave, setDateMyDatepicker } from 'app/config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, setDateMyDatepicker } from 'app/config/dateFormat';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MainMasterService } from 'app/services/main-master.service';
@@ -32,7 +32,8 @@ export class SuspectComponent implements OnInit {
     private navService: NavigationService,
     private fb: FormBuilder,
     private sidebarService: SidebarService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private s_invest: fromServices.InvestgateService
   ) {
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);
@@ -78,7 +79,7 @@ export class SuspectComponent implements OnInit {
 
   async ngOnInit() {
     this.SuspectFG = this.createForm();
-    this.sidebarService.setVersion('0.0.0.4');
+    this.sidebarService.setVersion(this.s_invest.version);
 
     await this.active_route();
     await this.navigate_service();
