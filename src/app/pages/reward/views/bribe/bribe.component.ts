@@ -116,17 +116,22 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
     });
   }
-  private pageLoad() {
+  private async pageLoad() {
     // 1 START
     switch (this.mode$.getValue()) {
       case 'C':
         // 1.1
-        this.MasStaffMaingetAll(); // 1.1.1
-        this.MasOfficeMaingetAll(); // 1.1.2
+        // this.MasStaffMaingetAll(); // 1.1.1
+        // this.MasOfficeMaingetAll(); // 1.1.2
 
-        this.RequestCommandgetByArrestCode({
-          ArrestCode: this.ArrestCode$.getValue()
-        }); // 1.1.3
+        // 1.1.3
+        const RequestCommand: IRequestCommand[] = await this.requestCommandService
+          .RequestCommandgetByArrestCode({
+            ArrestCode: this.ArrestCode$.getValue()
+          })
+          .toPromise();
+        // 1.1.4
+        this.RequestCommand$.next(RequestCommand);
 
         // 1.1.5
         this.controlEnableAll();
@@ -142,11 +147,23 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         break;
       case 'R':
         // 1.2
-        this.RequestBribegetByCon({
-          RequestBribeID: this.RequestBribeID$.getValue()
-        });
+        // 1.2.1
+        const RequestBribe: IRequestBribe[] = await this.requestBribeService
+          .RequestBribegetByCon({
+            RequestBribeID: this.RequestBribeID$.getValue()
+          })
+          .toPromise();
 
-        this.MasDocumentMaingetAll();
+        // 1.2.3
+        this.RequestBribe$.next(RequestBribe);
+        // 1.2.2
+        const MasDocument: MasDocumentModel[] = await this.masDocumentMainService
+          .MasDocumentMaingetAll({
+            DocumentType: 8,
+            ReferenceCode: this.RequestBribeID$.getValue()
+          })
+          .toPromise();
+        this.MasDocument$.next(MasDocument); // 1.2.3
 
         // 1.2.4
         // ส่วนคำร้องขอรับเงินสินบน
@@ -203,63 +220,63 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         case 'C':
           // 2.1
           // 2.1.1
-          await this.transactionRunningService
+          const ITransactionRunning: ITransactionRunning[] = await this.transactionRunningService
             .TransactionRunninggetByCon({
               RunningTable: 'ops_requestbribe',
               RunningOfficeCode: this.OfficeCode
             })
-            .subscribe(async (res: ITransactionRunning[]) => {
-              // 2.1.2
-              if (res.length > 0) {
-                // 2.1.2(1)
-                const TransactionRunning: ITransactionRunning = res[0];
+            .toPromise();
+          // 2.1.2
+          if (ITransactionRunning.length > 0) {
+            // 2.1.2(1)
+            const TransactionRunning: ITransactionRunning =
+              ITransactionRunning[0];
 
-                // 2.1.2(1.1)
-                await this.transactionRunningService
-                  .TransactionRunningupdByCon({
-                    RunningID: TransactionRunning.RunningID
-                  })
-                  .subscribe();
+            // 2.1.2(1.1)
+            await this.transactionRunningService
+              .TransactionRunningupdByCon({
+                RunningID: TransactionRunning.RunningID
+              })
+              .toPromise();
 
-                // 2.1.2(1.2)
-                const RunningPrefix: string = this.leftPad(
-                  TransactionRunning.RunningPrefix,
-                  2
-                ); // 2.1.2(1.2(1))
-                const RunningOfficeCode: string = this.leftPad(
-                  TransactionRunning.RunningOfficeCode,
-                  6
-                ); // 2.1.2(1.2(2))
-                const RunningYear: string = this.leftPad(
-                  TransactionRunning.RunningYear,
-                  2
-                ); // 2.1.2(1.2(3))
-                const RunningNo: string = this.leftPad(
-                  (Number(TransactionRunning.RunningNo) + 1).toString(),
-                  5
-                ); // 2.1.2(1.2(4))
-                const RequestBribeCode = `${RunningPrefix}${RunningOfficeCode}${RunningYear}${RunningNo}`;
-                this.RequestBribeCode$.next(RequestBribeCode);
-              } else {
-                // 2.1.2(2)
-                // 2.1.2(2.1)
-                await this.transactionRunningService
-                  .TransactionRunninginsAll({
-                    RunningOfficeCode: this.OfficeCode, // 2.1.2(2.1.1)
-                    RunningTable: 'ops_requestbribe', // 2.1.2(2.1.2)
-                    RunningPrefix: 'BR', // 2.1.2(2.1.3)
-                  })
-                  .subscribe();
+            // 2.1.2(1.2)
+            const RunningPrefix: string = this.leftPad(
+              TransactionRunning.RunningPrefix,
+              2
+            ); // 2.1.2(1.2(1))
+            const RunningOfficeCode: string = this.leftPad(
+              TransactionRunning.RunningOfficeCode,
+              6
+            ); // 2.1.2(1.2(2))
+            const RunningYear: string = this.leftPad(
+              TransactionRunning.RunningYear,
+              2
+            ); // 2.1.2(1.2(3))
+            const RunningNo: string = this.leftPad(
+              (Number(TransactionRunning.RunningNo) + 1).toString(),
+              5
+            ); // 2.1.2(1.2(4))
+            const RequestBribeCode = `${RunningPrefix}${RunningOfficeCode}${RunningYear}${RunningNo}`;
+            this.RequestBribeCode$.next(RequestBribeCode);
+          } else {
+            // 2.1.2(2)
+            // 2.1.2(2.1)
+            await this.transactionRunningService
+              .TransactionRunninginsAll({
+                RunningOfficeCode: this.OfficeCode, // 2.1.2(2.1.1)
+                RunningTable: 'ops_requestbribe', // 2.1.2(2.1.2)
+                RunningPrefix: 'BR' // 2.1.2(2.1.3)
+              })
+              .toPromise();
 
-                // 2.1.2(2.2)
-                const RunningOfficeCode = this.leftPad(this.OfficeCode, 6);
-                const yy_thaibuddha = (new Date().getFullYear() + 543)
-                  .toString()
-                  .substr(2, 1);
-                const RequestBribeCode = `BR${RunningOfficeCode}${yy_thaibuddha}00001`;
-                this.RequestBribeCode$.next(RequestBribeCode);
-              }
-            });
+            // 2.1.2(2.2)
+            const RunningOfficeCode = this.leftPad(this.OfficeCode, 6);
+            const yy_thaibuddha = (new Date().getFullYear() + 543)
+              .toString()
+              .substr(2, 1);
+            const RequestBribeCode = `BR${RunningOfficeCode}${yy_thaibuddha}00001`;
+            this.RequestBribeCode$.next(RequestBribeCode);
+          }
 
           // 2.1.3
 
@@ -292,7 +309,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
               TitleName: '',
               TotalPart: 0
             })
-            .subscribe();
+            .toPromise();
 
           // 2.1.4
           this.ILG60_08_03_00_00_E08_FORM_DATA.insDetailIDs.forEach(
@@ -301,7 +318,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
                 .RequestPaymentFineDetailupdByCon({
                   PaymentFineDetailID: PaymentFineDetailID
                 })
-                .subscribe();
+                .toPromise();
             }
           );
 
@@ -316,7 +333,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
               RequestDate: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestDate,
               RequestTime: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestTime
             })
-            .subscribe();
+            .toPromise();
 
           // 2.2.2(1)
           this.ILG60_08_03_00_00_E08_FORM_DATA.delDetailIDs.forEach(
@@ -325,7 +342,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
                 .RequestBribeDetailupdDelete({
                   RequestBribeDetailID: PaymentFineDetailID
                 })
-                .subscribe();
+                .toPromise();
             }
           );
 
@@ -386,29 +403,28 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     // ILG60-08-03-00-00-E05 (ปุ่ม “แก้ไข”)
     // 1 START
   }
-  private buttonDelete() {
+  private async buttonDelete() {
     // ILG60-08-03-00-00-E06 (ปุ่ม “ลบ”)
     // 1 START
     if (confirm('ยืนยันการทำรายการหรือไม่')) {
       // 1.1
       // 1.1.1
-      this.requestBribeService
+      const RequestBribeupdDeleteResponse: IRequestBribeupdDeleteResponse = await this.requestBribeService
         .RequestBribeupdDelete({
           RequestBribeID: this.RequestBribeID$.getValue()
         })
-        .subscribe((resDel: IRequestBribeupdDeleteResponse) => {
-          // 1.1.2
-          if (resDel.IsSuccess) {
-            // 1.1.2(1)
-            // 1.1.2(1.1)
-            alert('ลบข้อมูลสำเร็จ');
-            // 1.1.2(1.2) 'WAIT'
-          } else {
-            // 1.1.2(2)
-            // 1.1.2(2.1)
-            alert('ลบข้อมูลไม่สำเร็จ');
-          }
-        });
+        .toPromise();
+      // 1.1.2
+      if (RequestBribeupdDeleteResponse.IsSuccess) {
+        // 1.1.2(1)
+        // 1.1.2(1.1)
+        alert('ลบข้อมูลสำเร็จ');
+        // 1.1.2(1.2) 'WAIT'
+      } else {
+        // 1.1.2(2)
+        // 1.1.2(2.1)
+        alert('ลบข้อมูลไม่สำเร็จ');
+      }
     } else {
       // 1.2.1
     }
@@ -422,27 +438,6 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       this.RequestBribeRewardID$.getValue()
     ]);
     // 2 END
-  }
-  private RequestBribegetByCon(param: IRequestBribegetByCon) {
-    // 1.2.1
-    this.requestBribeService
-      .RequestBribegetByCon(param)
-      .subscribe((res: IRequestBribe[]) => {
-        // 1.2.3
-        this.RequestBribe$.next(res);
-      });
-  }
-  private MasDocumentMaingetAll() {
-    // 1.2.2
-    this.masDocumentMainService
-      .MasDocumentMaingetAll({
-        DocumentType: 8,
-        ReferenceCode: this.RequestBribeID$.getValue()
-      })
-      .subscribe((res: MasDocumentModel[]) => {
-        // 1.2.3
-        this.MasDocument$.next(res);
-      });
   }
 
   private controlEnableAll() {
@@ -473,14 +468,6 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     // Icon
     this.ILG60_08_03_00_00_E18_DISABLED$.next(false); // Icon ค้นหาที่อยู่เอกสารแนบ […]
     this.ILG60_08_03_00_00_E19_DISABLED$.next(false); // [ลบ]
-  }
-  private RequestCommandgetByArrestCode(param: IRequestCommandgetByArrestCode) {
-    this.requestCommandService
-      .RequestCommandgetByArrestCode(param)
-      .subscribe((res: IRequestCommand[]) => {
-        // 1.1.4
-        this.RequestCommand$.next(res);
-      });
   }
   private MasStaffMaingetAll() {
     this.masStaffService

@@ -1,8 +1,9 @@
 import { RewardConfig } from '../reward.config';
-import { Input } from '@angular/core';
+import { Input, Output, EventEmitter } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IButtonAttr } from 'app/pages/reward/interfaces/ButtonAttr';
 import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
+import { IFormChange } from 'app/pages/reward/interfaces/FormChange';
 
 export const ContributorList: DropdownInterface[] = [
   {
@@ -49,8 +50,11 @@ export class CONFIG extends RewardConfig {
     return this.aggregate08$.asObservable();
   }
   public aggregate08$ = new BehaviorSubject<any>(null);
-
-  public ILG60_08_04_00_00_E13_BUTTON$: BehaviorSubject<IButtonAttr> = new BehaviorSubject<IButtonAttr>({
+  @Output()
+  public emitChange: EventEmitter<IFormChange> = new EventEmitter();
+  public ILG60_08_04_00_00_E13_BUTTON$: BehaviorSubject<
+    IButtonAttr
+  > = new BehaviorSubject<IButtonAttr>({
     DISABLED: false
   });
 

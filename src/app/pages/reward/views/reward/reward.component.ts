@@ -503,7 +503,14 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         break;
       case 'ILG60-08-04-00-00-E12':
         this.ILG60_08_04_00_00_E12_FORM_VALID = FormData.valid;
-        this.ILG60_08_04_00_00_E12_FORM_DATA = FormData.value;
+        const mergeArrayFormData: any = [
+          ...FormData.controls['RequestBribeRewardForm'].value,
+          ...FormData.controls['RequestRewardForm'].value,
+          ...FormData.controls['nonRequestRewardStaffForm'].value,
+          ...FormData.controls['sharedBribeRewardForm'].value
+        ];
+
+        this.ILG60_08_04_00_00_E12_FORM_DATA = mergeArrayFormData;
         break;
       case 'ILG60-08-04-00-00-E19':
         this.ILG60_08_04_00_00_E19_FORM_VALID = FormData.valid;
