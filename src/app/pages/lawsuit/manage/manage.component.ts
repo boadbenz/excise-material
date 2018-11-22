@@ -116,7 +116,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.11');
+    this.sidebarService.setVersion('0.0.0.12');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -587,8 +587,10 @@ export class ManageComponent implements OnInit {
           this.preLoaderService.setShowPreloader(false);
           return;
         } else {
-          let _lawDate = (this.lawsuitForm.controls['LawsuitDate'].value)
+          let dateNow = (this.lawsuitForm.controls['LawsuitDate'].value).date
+          let _lawDate = dateNow.year + '-' + dateNow.month + '-' + dateNow.day + "T00:00:00.0";
           let tempLawsuitStaff = [];
+
           tempLawsuitStaff.push({
             "StaffID": '',
             "ProgramCode": "XCS-60",
@@ -604,7 +606,7 @@ export class ManageComponent implements OnInit {
             "PosLevelName": this.LawsuitStaffOnsave.PosLevelName,
             "DepartmentCode": "",
             "DepartmentName": "",
-            "DepartmentLevel": this.LawsuitStaffOnsave.DeptLevel,
+            "DepartmentLevel": this.LawsuitStaffOnsave.DeptLevel ? this.LawsuitStaffOnsave.DeptLevel : "",
             "OfficeCode": this.LawsuitStaffOnsave.OfficeCode,
             "OfficeName": this.LawsuitStaffOnsave.OfficeName,
             "OfficeShortName": this.LawsuitStaffOnsave.OfficeShortName,
@@ -612,27 +614,27 @@ export class ManageComponent implements OnInit {
             "IsActive": this.LawsuitStaffOnsave.IsActive
           })
 
-          const json = {
+          let json = {
             "LawsuitID": this.LawsuitID,
             "IndictmentID": this.IndictmentID,
             "IsLawsuit": isLaw,
-            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : null,
+            "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",
             "LawsuitNo": lawsuitNo,
-            "LawsuitDate": _lawDate.jsdate,
+            "LawsuitDate": _lawDate,
             "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
-            "LawsuitStationCode": '',
-            "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
+            "LawsuitStationCode": (this.lawsuitForm.controls['LawsuitStation'].value).OfficeCode,
+            "LawsuitStation": (this.lawsuitForm.controls['LawsuitStation'].value).OfficeName,
             "IsOutside": isOut,
             "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
             "LawsuitResult": '',
             "DeliveryDocNo": '',
-            "DeliveryDate": _lawDate.jsdate,
+            "DeliveryDate": _lawDate,
             "IsActive": 1,
             "LawsuitType": this.LawsuitTableList.value[0].LawsuitType,
             "LawsuitEnd": this.LawsuitTableList.value[0].LawsuitEnd,
             "LawsuitStaff": tempLawsuitStaff
           }
-          console.log(json)
+
           if (this.lawsuitForm.controls['LawsuitTableList'].value.length == 0) {
             json.LawsuitType = 2
             json.LawsuitEnd = 2
@@ -1058,7 +1060,6 @@ export class ManageComponent implements OnInit {
   }
 
   onChangeFullname(textSearch) {
-    console.log(this.lawsuitForm)
     let _masStaffList = this.masStaffList;
     if (textSearch) {
       let result = _masStaffList.filter(item => (item.FullName.includes(textSearch))).slice(0, 10);
