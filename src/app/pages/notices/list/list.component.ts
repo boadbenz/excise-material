@@ -60,7 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.sidebarService.setVersion('0.0.2.14');
+        this.sidebarService.setVersion('0.0.2.15');
         this.paginage.TotalItems = 0;
 
         // this.preLoaderService.setShowPreloader(true);
@@ -132,6 +132,32 @@ export class ListComponent implements OnInit, OnDestroy {
             alert(Message.noRecord)
             return false;
         }
+        this.paginage = pagination;
+        this.paginage.TotalItems = 0;
+        this.paginage.CurrentPage = 1;
+        this.paginage.PageSize = 5;
+
+        let datas = [];
+        let cnt = 1;
+        for(let l of list){
+            l.index = "";
+            let insert = true;
+            for(let i of datas){
+                if(i.NoticeCode==l.NoticeCode){
+                    l.NoticeDate = "";
+                    l.StaffTitleName = "";
+                    l.StaffFirstName = "";
+                    l.StaffLastName = "";
+                    l.StaffOfficeName = "";
+                    insert = false;
+                }
+            }
+
+            datas.push(l);
+            if(insert){
+                l.index = cnt++;
+            }
+        }
 
         // await list.filter(item => item.IsActive == 1).map((item, i) => {
         //     item.RowId = i + 1;
@@ -144,7 +170,7 @@ export class ListComponent implements OnInit, OnDestroy {
         //     });
         // });
 
-        this.notice = list;
+        this.notice = datas;
         // set total record
         this.paginage.TotalItems = this.notice.length;
     }

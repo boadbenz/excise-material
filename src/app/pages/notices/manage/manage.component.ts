@@ -1,3 +1,4 @@
+import { NoticeStaff } from './../notice-staff';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -134,7 +135,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.14');
+        this.sidebarService.setVersion('0.0.2.15');
 
         this.navigate_service();
 
@@ -412,6 +413,45 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log('===================');
         console.log('Create Notice : ', JSON.stringify(this.noticeForm.value));
         console.log('===================');
+
+        let noticeForm = this.noticeForm.value;
+
+        let noticeStaff = [];
+        let noticeInformer = [];
+        let noticeLocale = [];
+        let noticeProduct = [];
+        let noticeSuspect = [];
+        let noticeDocument = [];
+        for(let l of noticeForm.NoticeStaff){
+            l.NoticeCode = this.noticeCode;
+            noticeStaff.push(l);
+        }
+        for(let l of noticeForm.NoticeInformer){
+            l.NoticeCode = this.noticeCode;
+            noticeInformer.push(l);
+        }
+        for(let l of noticeForm.NoticeLocale){
+            l.NoticeCode = this.noticeCode;
+            noticeLocale.push(l);
+        }
+        for(let l of noticeForm.NoticeProduct){
+            l.NoticeCode = this.noticeCode;
+            noticeProduct.push(l);
+        }
+        for(let l of noticeForm.NoticeSuspect){
+            l.NoticeCode = this.noticeCode;
+            noticeSuspect.push(l);
+        }
+        for(let l of noticeForm.NoticeDocument){
+            l.NoticeCode = this.noticeCode;
+            noticeDocument.push(l);
+        }
+        this.noticeForm.value.NoticeStaff = noticeStaff;
+        this.noticeForm.value.NoticeInformer = noticeInformer;
+        this.noticeForm.value.NoticeLocale = noticeLocale;
+        this.noticeForm.value.NoticeProduct = noticeProduct;
+        this.noticeForm.value.NoticeSuspect = noticeSuspect;
+        this.noticeForm.value.NoticeDocument = noticeDocument;
 
         let IsSuccess: boolean = true;
         await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
