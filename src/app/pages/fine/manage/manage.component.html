@@ -343,10 +343,10 @@
               <span *ngIf="item.IsProvisionalAcquittal == 1">/</span>
             </td>
             <td class=" text-center">
-              <a (click)="onClickEditF3(item)" class="text-secondary" data-toggle="modal" data-target="#testimonyPopup">
+              <a (click)="onClickEditF3(item, i)" class="text-secondary" data-toggle="modal" data-target="#testimonyPopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a (click)="onClickEditF3(item)" class="text-secondary" [hidden]="showEditField" data-toggle="modal"
+              <a (click)="onClickEditF3(item, i)" class="text-secondary" [hidden]="showEditField" data-toggle="modal"
                  data-target="#testimonyPopup">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
@@ -508,7 +508,7 @@
                    [disabled]="showEditField">
           </td>
           <td>
-            <i class="ti-trash btn-action" [hidden]="showEditField"></i>
+            <i class="ti-trash btn-action" [hidden]="showEditField" (click)="deleteFile(item.DocumentID, i)"></i>
           </td>
         </tr>
         <!--<tr class="footable">-->
@@ -985,7 +985,19 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้เสนอพิจารณาเห็นชอบ : </label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" name="staff" [(ngModel)]="compareUserDetailPopup.staff" [disabled]="showEditField">
+                  <input type="text" class="form-control" [(ngModel)]="compareUserDetailPopup.staff" name="staff"
+                         placeholder="พิมพ์ข้อความ" aria-label="Number"
+                         matInput [matAutocomplete]="autoStaff2" (input)="StaffonAutoChange($event.target.value)"
+                         (focus)="StaffonAutoFocus($event.target.value)"
+                         [disabled]="showEditField">
+                  <mat-autocomplete #autoStaff2="matAutocomplete">
+                    <mat-option *ngFor="let sOption of Staffoptions"
+                                [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffonAutoSelecteWord(sOption, 2)">
+                      {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <!--<input class="form-control" type="text" name="staff" [(ngModel)]="compareUserDetailPopup.staff" [disabled]="showEditField">-->
                 </div>
               </div>
             </div>
@@ -1015,7 +1027,19 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้พิจารณาเห็นชอบ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="reviewer" [disabled]="showEditField" [(ngModel)]="compareUserDetailPopup.reviewer">
+                  <input type="text" class="form-control" [(ngModel)]="compareUserDetailPopup.reviewer" name="reviewer"
+                         placeholder="พิมพ์ข้อความ" aria-label="Number"
+                         matInput [matAutocomplete]="autoStaff3" (input)="StaffonAutoChange($event.target.value)"
+                         (focus)="StaffonAutoFocus($event.target.value)"
+                         [disabled]="showEditField">
+                  <mat-autocomplete #autoStaff3="matAutocomplete">
+                    <mat-option *ngFor="let sOption of Staffoptions"
+                                [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffonAutoSelecteWord(sOption, 3)">
+                      {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <!--<input class="form-control" type="text" name="reviewer" [disabled]="showEditField" [(ngModel)]="compareUserDetailPopup.reviewer">-->
                 </div>
               </div>
             </div>
@@ -1046,7 +1070,19 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้มีอำนาจอนุมัติ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="approver" [(ngModel)]="compareUserDetailPopup.approver" [disabled]="showEditField">
+                  <input type="text" class="form-control" [(ngModel)]="compareUserDetailPopup.approver" name="approver"
+                         placeholder="พิมพ์ข้อความ" aria-label="Number"
+                         matInput [matAutocomplete]="autoStaff4" (input)="StaffonAutoChange($event.target.value)"
+                         (focus)="StaffonAutoFocus($event.target.value)"
+                         [disabled]="showEditField">
+                  <mat-autocomplete #autoStaff4="matAutocomplete">
+                    <mat-option *ngFor="let sOption of Staffoptions"
+                                [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffonAutoSelecteWord(sOption, 4)">
+                      {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <!--<input class="form-control" type="text" name="approver" [(ngModel)]="compareUserDetailPopup.approver" [disabled]="showEditField">-->
                 </div>
               </div>
             </div>
@@ -1065,7 +1101,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="department" [(ngModel)]="compareUserDetailPopup.department2" disabled>
+                  <input class="form-control" type="text" name="department" [(ngModel)]="compareUserDetailPopup.department3" disabled>
                 </div>
               </div>
             </div>
