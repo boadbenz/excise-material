@@ -64,6 +64,9 @@ export const routes: Routes = [
         component: LayoutComponent,
         loadChildren: './pages/reward/reward.module#RewardModule'
     },
+    {
+        path: 'logout', loadChildren: './pages/login/login.module#LoginModule'
+    },
      {
         path: 'reduction', component: LayoutComponent,
         children: [
