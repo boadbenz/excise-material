@@ -126,7 +126,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.4');
+        this.sidebarService.setVersion(this.s_invest.version);
 
         this.createForm();
 
@@ -151,6 +151,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         break;
                 }
             });
+
+        this.resetConfig();
 
         this.navService.showFieldEdit
             .takeUntil(this.destroy$)
@@ -213,6 +215,20 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                     this.navigateToManage();
                 }
             })
+    }
+
+    private resetConfig() {
+        let routerConfig = this.router['config'];
+        routerConfig
+            .find(x => x.path == 'investigation')['_loadedConfig'].routes // core investigation path
+            .filter(x => x.path.indexOf('detail-manage') >= 0) // curent path
+            .map(x => {
+                x.data.urls
+                    .find(y => y.url.indexOf('/investigation/manage') >= 0)
+                    .url = `/investigation/manage/${this.investMode}/${this.investCode}`; // previous path
+                return x;
+            })
+        this.router.resetConfig(routerConfig);
     }
 
     private enableBtnModeC() {

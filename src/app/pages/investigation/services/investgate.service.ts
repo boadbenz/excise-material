@@ -18,6 +18,8 @@ export class InvestgateService {
       })
   };
 
+  version = '0.0.0.5'
+
   InvestigateListgetByKeyword(TextSearch: string, StaffCode: string) {
     const params = { TextSearch, StaffCode };
     const url = `${appConfig.api8888}/InvestigateListgetByKeyword`;
