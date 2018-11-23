@@ -28,19 +28,19 @@ export class LoginComponent implements OnInit {
   onSubmit(form: any) {
     var User = form.userName
     var Pass = form.password;
-    console.log("User : ", User, "Pass : ", Pass);
-    if (User == "") {
+    // console.log("User : ", User, "Pass : ", Pass);
+    if (!User) {
       this.errMsg = "กรุณาระบุชื่อเข้าระบบ";
-    } else if (Pass == "") {
+    } else if (!Pass) {
       this.errMsg = "กรุณาระบุรหัสผ่าน";
     }
-    if (User != "" && Pass != "") {
+    if (User && Pass) {
       if (this.authService.signin(form)) {
         this.router.navigate([this.returnUrl]);
       };
     }
   }
-  ClearErrMsg(){
+  ClearErrMsg() {
     this.errMsg = '';
   }
 
