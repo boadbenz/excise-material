@@ -76,7 +76,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   isCheckAll: boolean = false;
 
   runningTable = 'ops_arrest';
-  runningOfficeCode = '900112';
+  runningOfficeCode = '901112';
   runningPrefix = 'TN';
 
   // param: Params
@@ -818,10 +818,9 @@ export class AllegationComponent implements OnInit, OnDestroy {
         this.indictmentId = x.IndictmentID;
         this.guiltbaseId = i.GuiltBaseID;
 
-        await this.insertArrestProduct(arrestCode, x.IndictmentID).then(async product => {
-          await this.insertArrestLawbreaker(arrestCode, x.IndictmentID, product)
-        })
-        // return Promise.all([product, lawbreaker]);
+        let product = await this.insertArrestProduct(arrestCode, x.IndictmentID).then(product => product);
+        let lawbreaker = await this.insertArrestLawbreaker(arrestCode, x.IndictmentID, product)
+        return Promise.all([product, lawbreaker]);
 
       }, () => { this.saveFail(); return false; })
       .catch((error) => this.catchError(error));
@@ -869,7 +868,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
       .then(async x => {
         if (!this.checkIsSuccess(x)) return;
 
-        let prod = await this.insertArrestProductDetail(x.IndictmentDetailID, productArr);
+        await this.insertArrestProductDetail(x.IndictmentDetailID, productArr);
 
       }, () => { this.saveFail(); return; })
       .catch((error) => this.catchError(error));
@@ -922,8 +921,11 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async insertArrestProductDetail(indictmentDetailID: number, productArr: fromModels.ArrestProduct[]) {
 
-    let pd = await productArr.map(async p => {
+    let pd = await productArr
+    .filter(p => p.IsChecked)
+    .map(async p => {
       let pd = new fromModels.ArrestProductDetail();
+      pd.ProductID = parseInt(p.ProductID);
       pd.IsProdcutCo = '1';
       pd.Qty = p.Qty || '0';
       pd.QtyUnit = p.QtyUnit || '-';
