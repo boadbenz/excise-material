@@ -135,7 +135,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.16');
+        this.sidebarService.setVersion('0.0.2.17');
 
         this.navigate_service();
 
@@ -172,7 +172,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.noticeCode = `LS${(new Date).getTime()}`;
+                this.noticeCode = "NEW";//`LS${(new Date).getTime()}`;
                 this.arrestCode = `TN-${(new Date).getTime()}`;
 
                 this.localEditField = false;
@@ -227,10 +227,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                if (!this.NoticeSuspect.value.length) {
-                    alert(Message.checkData);
-                    return;
-                }
+                // if (!this.NoticeSuspect.value.length) {
+                //     alert(Message.checkData);
+                //     return;
+                // }
 
                 const noticeDate = this.noticeForm.value.NoticeDate;
                 const noticeDueDate = this.noticeForm.value.NoticeDueDate;
@@ -440,6 +440,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         for(let l of noticeForm.NoticeProduct){
             l.NoticeCode = this.noticeCode;
             l.IsActive = 1;
+            l.NetVolume = l.NetVolume?l.NetVolume:0;
             noticeProduct.push(l);
         }
         for(let l of noticeForm.NoticeSuspect){
@@ -830,6 +831,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: ele.item.ZipCode
         });
     }
+    blurSelectItemInformmerRegion() {
+        let obj = this.NoticeInformer.at(0).value;
+        if(!obj.ProvinceCode){
+            this.NoticeInformer.at(0).patchValue({
+                Region: ""
+            });
+        }
+    }
 
     selectItemLocaleRegion(ele: any) {
         this.NoticeLocale.at(0).patchValue({
@@ -841,6 +850,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             Province: ele.item.ProvinceNameTH,
             ZipCode: 'N/A'
         });
+    }
+    blurSelectItemLocaleRegion() {
+        let obj = this.NoticeLocale.at(0).value;
+        console.log(obj);
+        if(!obj.ProvinceCode){
+            this.NoticeLocale.at(0).patchValue({
+                Region: ""
+            });
+        }
     }
 
     selectItemProductItem(ele: any, index: number) {
@@ -858,6 +876,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             NetVolume: ele.item.NetVolume || 0,
             NetVolumeUnit: ele.item.NetVolumeUnit || 0,
         });
+    }
+    blurSelectItemProductItem(index: number) {
+        const productID = this.NoticeProduct.at(index).value.ProductID;
+        if(!productID){
+            this.NoticeProduct.at(index).patchValue({
+                BrandFullName: ""
+            });
+        }
     }
 
     selectItemStaff(e, i) {
@@ -881,12 +907,25 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.getTransactionRunning(e.item.DepartmentCode||e.item.OfficeCode);
         }
     }
+    blurSelectItemStaff(i){
+        let noticeStaff = this.NoticeStaff.at(i).value;
+        if(!noticeStaff.StaffCode){
+            this.NoticeStaff.at(i).patchValue({
+                StaffFullName: ""
+            });
+        }
+    }
 
     selectItemOffice(e) {
         this.noticeForm.patchValue({
             NoticeStationCode: e.item.OfficeCode || '-',
             NoticeStation: e.item.OfficeName
-        })
+        });
+    }
+    blurSelectItemOffice(){
+        if(!this.noticeForm.value.NoticeStationCode){
+            this.noticeForm.patchValue({NoticeStation:""});
+        }
     }
 
     async onDeleteProduct(id: string, index: number) {
