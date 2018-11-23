@@ -102,8 +102,8 @@
                 </tbody> -->
                 <tbody>
                     <tr *ngFor="let item of notice; let i=index;">
-                        <td class="text-center">{{i+1}}</td>
-                        <td>{{item.NoticeCode}}</td>
+                        <td class="text-center">{{item.index}}</td>
+                        <td>{{item.index?item.NoticeCode:""}}</td>
                         <td>{{item.NoticeDate}}</td>
                         <td>{{item.StaffTitleName}}{{item.StaffFirstName}} {{item.StaffLastName}}</td>
                         <td>{{item.StaffOfficeName}}</td>

@@ -1,3 +1,4 @@
+import { NoticeProduct } from './notice-product';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from '../../app.config';
@@ -115,6 +116,11 @@ export class NoticeService {
         const url = `${appConfig.api8082}/NoticeinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
+    insProductAll(NoticeProduct: NoticeProduct): Promise<any> {
+        const params = NoticeProduct;
+        const url = `${appConfig.api8082}/NoticeProductinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
 
     // updLawbreaker(lawbreaker: Lawbreaker): Promise<boolean> {
     //     const params = lawbreaker;
@@ -122,6 +128,11 @@ export class NoticeService {
     //     return this.responsePromisModify(JSON.stringify(params), url);
     // }
 
+    insSuspect(suspect: NoticeSuspect): Promise<boolean> {
+        const params = suspect;
+        const url = `${appConfig.api8082}/NoticeSuspectinsAll`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
     updSuspect(suspect: Suspect): Promise<boolean> {
         const params = suspect;
         const url = `${appConfig.api8082}/SuspectupdByCon`;
@@ -140,9 +151,14 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
+    updProduct(NoticeProduct: NoticeProduct): Promise<any> {
+        const params = NoticeProduct;
+        const url = `${appConfig.api8082}/NoticeProductupdByCon`;
+        return this.responsePromisModify(JSON.stringify(params), url);
+    }
     async productupdDelete(ProductID: string): Promise<any> {
         const params = { ProductID };
-        const url = `${appConfig.api8082}/NoticeproductupdDelete`;
+        const url = `${appConfig.api8082}/NoticeProductupdDelete`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
