@@ -102,11 +102,6 @@ export class ListComponent implements OnInit {
 
     this.allPageCount = this.listData.length / this.numberPage;
     this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i + 1);
-
-    this.apiServer.get('google.com').subscribe(
-      response => console.log(response),
-      error => console.log(error)
-    );
   }
 
   viewData(arrestCode: string, compareID: string = '', indictmentID: string = '') {

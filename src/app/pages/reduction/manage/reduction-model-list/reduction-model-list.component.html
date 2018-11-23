@@ -35,7 +35,7 @@
               <tbody>
                 <tr *ngFor="let item of listTest; let i=index;">
                   <td class="text-center">
-                    <input name="IsChecked" type="checkbox" id="td{{i}}" class="with-gap check-col-indigo" />
+                    <input name="IsChecked" value="{{item.receiptNo}}" type="checkbox" id="td{{i}}" class="with-gap check-col-indigo" />
                     <label for="td{{i}}" class="m-0"></label>
                   </td>
                   <td class="text-center">{{i + 1}}</td>

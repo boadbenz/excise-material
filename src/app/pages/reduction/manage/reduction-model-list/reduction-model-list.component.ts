@@ -37,7 +37,7 @@ export class ReductionModelListComponent implements OnInit {
       newFine: '',
       dateFine: '10-ม.ค.-2560',
       payment: 'เงินสด',
-      receiptNo: '33',
+      receiptNo: '34',
       receiptRef: '001/2561',
       statusCase: 'รับรายการนำส่ง',
       typeCase: 'เปรียบเทียบคดี',
