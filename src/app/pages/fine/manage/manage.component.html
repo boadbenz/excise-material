@@ -809,7 +809,7 @@
                     <mat-autocomplete #autoStaff="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                  (click)="StaffonAutoSelecteWord(sOption, 1)">
+                                  (click)="StaffonAutoSelecteWord(sOption, '1')">
                         {{ sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName }}
                       </mat-option>
                     </mat-autocomplete>
@@ -1048,7 +1048,7 @@
                     <mat-autocomplete #autoStaff2="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                  (click)="StaffonAutoSelecteWord(sOption, 2)">
+                                  (click)="StaffonAutoSelecteWord(sOption, 3)">
                         {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                       </mat-option>
                     </mat-autocomplete>
@@ -1094,7 +1094,7 @@
                     <mat-autocomplete #autoStaff3="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                  (click)="StaffonAutoSelecteWord(sOption, 3)">
+                                  (click)="StaffonAutoSelecteWord(sOption, 4)">
                         {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                       </mat-option>
                     </mat-autocomplete>
@@ -1141,7 +1141,7 @@
                     <mat-autocomplete #autoStaff4="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                  (click)="StaffonAutoSelecteWord(sOption, 4)">
+                                  (click)="StaffonAutoSelecteWord(sOption, '5')">
                         {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                       </mat-option>
                     </mat-autocomplete>
