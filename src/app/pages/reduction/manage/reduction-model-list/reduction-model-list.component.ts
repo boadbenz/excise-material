@@ -53,7 +53,6 @@ export class ReductionModelListComponent implements OnInit {
   public selected: any[] = [];
 
   constructor(private formBuilder: FormBuilder) {
-    console.log('reduction model start');
     // Create a new array with a form control for each order
     const controls = this.listTest.map(c => new FormControl(false));
     this.checkNo = 0;

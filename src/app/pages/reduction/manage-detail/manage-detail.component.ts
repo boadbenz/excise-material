@@ -151,18 +151,21 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
              + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
     }]
 
-  fileItem = [{
+  public fileItem = [{
     fileName: '',
     filePath: '',
   }];
 
-  fullName: any;
-  detailData: any;
-  showField: any;
-  viewMode = true;
-  navServiceSub: any;
+  public fullName: any;
+  public detailData: any;
+  public showField: any;
+  public viewMode = true;
+  public navServiceSub: any;
 
-  errorShow: any;
+  public errorShow: any;
+
+  public compareID: string;
+  public indictmentID: string;
 
   private getDataFromListPage: any;
 
@@ -170,6 +173,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    console.log(this.activeRoute.snapshot.params);
+    console.log(this.activeRoute.snapshot.paramMap.get('mode'));
+    console.log(this.activeRoute.snapshot.paramMap.get('code'));
     // set show button
     this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;

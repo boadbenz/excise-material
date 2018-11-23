@@ -147,13 +147,13 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   showField: any;
   navServiceSub: any;
   selectAll: any;
+
+
   private getDataFromListPage: any;
-
-  // @ViewChild('reductionPopup') modalReduction: ElementRef;
-
   private destroy$: Subject<boolean> = new Subject<boolean>();
-
-  public model: any;
+  public dialog: any;
+  public compareID: string;
+  public indictmentID: string;
 
   constructor
   (private router: Router,
@@ -164,6 +164,17 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    if (this.activeRoute.snapshot.queryParamMap.get('compareID') == null
+    || this.activeRoute.snapshot.queryParamMap.get('compareID') === '') {
+      alert('ไม่สามารถดึงค่าข้อมูลรายการเปรียบเทียบได้');
+      this.router.navigate(['/reduction/list']);
+    }
+
+    const param = this.activeRoute.snapshot.queryParams;
+    this.compareID = param.compareID;
+    this.indictmentID = param.indictmentID;
+
+    this.navService.setEditField(true);
     // set show button
     this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;
@@ -185,7 +196,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
-
     this.getDataFromListPage = this.activeRoute.queryParams
       .subscribe(params => {
         // check id from list page
@@ -200,9 +210,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
           }
         }
       });
-
-    const param = this.activeRoute.snapshot.queryParams;
-    console.log(param);
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
@@ -234,12 +241,12 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     // jQuery(this.modalReduction.nativeElement).modal('show');
     // console.log(this.reductionModelList.listTest);
 
-    this.model = this.ngbModel.open(e, { size: 'lg', centered: true });
+    this.dialog = this.ngbModel.open(e, { size: 'lg', centered: true });
     // this.reductionModelList.activeModel();
   }
 
   ngAfterViewInit() {
-    console.log(this.reductionModelList);
+
   }
 
   result(event) {

@@ -189,7 +189,7 @@
       </button>
     </div>
     <ng-template #reductionList let-c="close" let-d="dismiss">
-      <app-reduction-model-list [id]="1" (d)="model.dismiss()" (result)="result($event)"></app-reduction-model-list>
+      <app-reduction-model-list [id]="1" (d)="dialog.dismiss()" (result)="result($event)"></app-reduction-model-list>
     </ng-template>
     <div class="table-responsive table-striped no-wrap">
       <table class="table">

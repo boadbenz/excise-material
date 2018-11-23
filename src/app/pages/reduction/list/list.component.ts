@@ -15,6 +15,7 @@ export class ListComponent implements OnInit {
     {
       arrestCode: 'TN90806026000001',
       compareID: 'TN90806026000001',
+      indictmentID: 'TN11111111111',
       lawsuitNo: '001/2561',
       proofNo: '001/2561',
       caseNumber: '001/2561',
@@ -27,6 +28,7 @@ export class ListComponent implements OnInit {
     {
       arrestCode: 'TN90806026000002',
       compareID: 'TN90806026000002',
+      indictmentID: 'TN11111111112',
       lawsuitNo: 'น.001/2561',
       proofNo: 'น.001/2561',
       caseNumber: '001/2561',
@@ -39,6 +41,7 @@ export class ListComponent implements OnInit {
     {
       arrestCode: 'TN90806026000003',
       compareID: 'TN90806026000003',
+      indictmentID: 'TN11111111113',
       lawsuitNo: '002/2561',
       proofNo: '002/2561',
       caseNumber: '002/2561',
@@ -51,6 +54,7 @@ export class ListComponent implements OnInit {
     {
       arrestCode: 'TN90806026000004',
       compareID: 'TN90806026000004',
+      indictmentID: 'TN11111111114',
       lawsuitNo: '003/2561',
       proofNo: '003/2561',
       caseNumber: '003/2561',
@@ -63,6 +67,7 @@ export class ListComponent implements OnInit {
     {
       arrestCode: 'TN90806026000005',
       compareID: 'TN90806026000005',
+      indictmentID: 'TN11111111115',
       lawsuitNo: '004/2561',
       proofNo: '004/2561',
       caseNumber: '004/2561',
