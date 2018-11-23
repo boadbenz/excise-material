@@ -1,17 +1,17 @@
 <div class="row">
   <div class="col-md-12">
 
-    <div class="table-responsive" *ngIf="(aggregate08 | async)">
+    <div class="table-responsive" *ngIf="(aggregate08$ | async)">
       <!-- {{ formGroup.value | json}} -->
-      {{aggregate08 | async | json}}
+      {{aggregate08$ | async | json}}
 
       {{SumBribeMoney}}
-      <form [formGroup]="formGroup" *ngIf="formGroup" novalidate>
+      <form [formGroup]="formGroup" *ngIf="formGroup" (change)="formChange($event)" novalidate>
         <div class="text-right">
           <button (click)="addRow()" [attr.disabled]="(ILG60_08_04_00_00_E13_BUTTON$ | async)?.DISABLED ? 'disabled' : null"
             class="btn waves-effect waves-light btn-navy">เพิ่มจนท.สนับสนุน</button>
         </div>
-        <table class="dataTable table table-sm table-striped table-hover" formArrayName="sharedBribeReward">
+        <table class="dataTable table table-sm table-striped table-hover">
           <thead>
             <tr>
               <th class="footable-sortable" colspan="1"></th>
@@ -43,123 +43,204 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="footable" *ngIf="HaveNotice==1">
-              <td>
-                <mat-checkbox class="filled-in chk-col-indigo" [checked]="true" [attr.disabled]="'disabled'"></mat-checkbox>
-              </td>
-              <td class="text-center">1</td>
-              <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" value="สายลับ (ขอปิดนาม)" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" value="ผู้แจ้งความนำจับ" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="number" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="number" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="number" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="number" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="number" [value]="SumBribeMoney" [attr.disabled]="'disabled'">
-              </td>
-              <td></td>
-            </tr>
-            <tr class="footable" *ngFor="let item of datatable | sort: i; let i=index;">
-              <td>
-                <mat-checkbox class="filled-in chk-col-indigo" [checked]="true"></mat-checkbox>
-              </td>
-              <td class="text-center">{{i+2}}</td>
-              <td>
-                <input class="form-control" type="text" [value]="item.TitleName" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.FullName" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.PositionName" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.PosLevelName" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.ContributorName" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.FirstPart" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.SecondPart" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.FirstMoney" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.SecondMoney" [attr.disabled]="'disabled'">
-              </td>
-              <td>
-                <input class="form-control" type="text" [value]="item.SecondMoney" [attr.disabled]="'disabled'">
-              </td>
-              <td></td>
-            </tr>
-            <tr class="footable" *ngFor="let item of sharedBribeReward.controls; let i=index;" [formGroupName]="i">
-              <td>
-                <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
-              </td>
-              <td class="text-center">{{(i+2) + datatable.length}}</td>
-              <td>
-                <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName">
-              </td>
-              <td>
-                <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName"
-                  (keyup)="changeFullName(FullName.value, i)">
-              </td>
-              <td>
-                <input class="form-control" type="text" formControlName="PositionName">
-              </td>
-              <td>
-                <input class="form-control" type="text" formControlName="PosLevelName">
-              </td>
-              <td>
-                <input type="hidden" formControlName="ContributorName">
-                <select class="form-control" formControlName="ContributorID" #ContributorID (change)="onSelectContributor(ContributorID.value, i)">
-                  <ng-container *ngFor="let itemCName of ContributorList">
-                    <option *ngIf="itemCName.value < 4" [value]="itemCName.value">{{itemCName?.text}}</option>
-                  </ng-container>
-                </select>
-              </td>
-              <td>
-                <input class="form-control" type="number" formControlName="FirstPart">
-              </td>
-              <td>
-                <input class="form-control" type="number" formControlName="SecondPart">
-              </td>
-              <td>
-                <input class="form-control" type="number" formControlName="FirstMoney">
-              </td>
-              <td>
-                <input class="form-control" type="number" formControlName="SecondMoney">
-              </td>
-              <td>
-                <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
-              </td>
-              <td><i class="ti-trash btn-action" (click)="deleteHandle(i)"></i></td>
-            </tr>
+            <ng-container formArrayName="RequestBribeRewardForm">
+
+              <tr class="footable" *ngFor="let item of RequestBribeRewardForm.controls; let i=index;" [formGroupName]="i">
+                <td>
+                  <mat-checkbox class="filled-in chk-col-indigo" formControlName="check" [attr.disabled]="'disabled'"></mat-checkbox>
+                </td>
+                <td class="text-center">{{i+1}}</td>
+                <td>
+                  <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName"
+                    [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName"
+                    (keyup)="changeFullName(FullName.value, i)" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="PositionName" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="PosLevelName" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="ContributorName" [attr.disabled]="'disabled'">
+                  <!-- <select class="form-control" formControlName="ContributorID" #ContributorID (change)="onSelectContributor(ContributorID.value, i)">
+                    <ng-container *ngFor="let itemCName of ContributorList">
+                      <option *ngIf="itemCName.value < 4" [value]="itemCName.value">{{itemCName?.text}}</option>
+                    </ng-container>
+                  </select> -->
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="FirstPart" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="SecondPart" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="FirstMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="SecondMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <!-- <i class="ti-trash btn-action" (click)="deleteHandle(i)"></i> -->
+                </td>
+              </tr>
+
+            </ng-container>
+
+            <ng-container formArrayName="RequestRewardForm">
+
+              <tr class="footable" *ngFor="let item of RequestRewardForm.controls; let i=index;" [formGroupName]="i">
+                <td>
+                  <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
+                </td>
+                <td class="text-center">{{(i+1) + RequestBribeRewardForm.controls.length}}</td>
+                <td>
+                  <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName"
+                    [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName"
+                    (keyup)="changeFullName(FullName.value, i)" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="PositionName" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="PosLevelName" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="ContributorName" [attr.disabled]="'disabled'">
+                  <!-- <select class="form-control" formControlName="ContributorID" #ContributorID (change)="onSelectContributor(ContributorID.value, i)">
+                    <ng-container *ngFor="let itemCName of ContributorList">
+                      <option *ngIf="itemCName.value < 4" [value]="itemCName.value">{{itemCName?.text}}</option>
+                    </ng-container>
+                  </select> -->
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="FirstPart" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="SecondPart" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="FirstMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="SecondMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <!-- <i class="ti-trash btn-action" (click)="deleteHandle(i)"></i> -->
+                </td>
+              </tr>
+
+            </ng-container>
+            <ng-container formArrayName="nonRequestRewardStaffForm">
+              <tr class="footable" *ngFor="let item of nonRequestRewardStaffForm.controls; let i=index;"
+                [formGroupName]="i">
+                <td>
+                  <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
+                </td>
+                <td class="text-center">{{(i+1) + (RequestBribeRewardForm.controls.length +
+                  RequestRewardForm.controls.length)}}</td>
+                <td>
+                  <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName"
+                    [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName"
+                    (keyup)="changeFullName(FullName.value, i)" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="PositionName" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="PosLevelName" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="ContributorName" [attr.disabled]="'disabled'">
+                  <!-- <select class="form-control" formControlName="ContributorID" #ContributorID (change)="onSelectContributor(ContributorID.value, i)">
+                    <ng-container *ngFor="let itemCName of ContributorList">
+                      <option *ngIf="itemCName.value < 4" [value]="itemCName.value">{{itemCName?.text}}</option>
+                    </ng-container>
+                  </select> -->
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="FirstPart" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="SecondPart" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="FirstMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="SecondMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <!-- <i class="ti-trash btn-action" (click)="deleteHandle(i)"></i> -->
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container formArrayName="sharedBribeRewardForm">
+              <tr class="footable" *ngFor="let item of sharedBribeRewardForm.controls; let i=index;" [formGroupName]="i">
+                <td>
+                  <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
+                </td>
+                <td class="text-center">{{(i+1) + (RequestBribeRewardForm.controls.length +
+                  RequestRewardForm.controls.length + nonRequestRewardStaffForm.controls.length)}}</td>
+                <td>
+                  <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName"
+                  >
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName"
+                    (keyup)="changeFullName(FullName.value, i)">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="PositionName">
+                </td>
+                <td>
+                  <input class="form-control" type="text" formControlName="PosLevelName">
+                </td>
+                <td>
+                  <input class="form-control" type="hidden" formControlName="ContributorName">
+                  <select class="form-control" formControlName="ContributorID" #ContributorID (change)="onSelectContributor(ContributorID.value, i)">
+                    <ng-container *ngFor="let itemCName of ContributorList">
+                      <option *ngIf="itemCName.value < 4" [value]="itemCName.value">{{itemCName?.text}}</option>
+                    </ng-container>
+                  </select>
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="FirstPart" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="SecondPart">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="FirstMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="SecondMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td>
+                  <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+                </td>
+                <td><i class="ti-trash btn-action" (click)="deleteHandle(i)"></i></td>
+              </tr>
+            </ng-container>
           </tbody>
           <tfoot>
             <tr class="footable">
@@ -196,7 +277,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SumMoney || 0) | currency:' '"
+            <input class="form-control" type="text" [value]="(SumMoney() || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
         </div>
@@ -207,7 +288,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SumFirstMoney || 0) | currency:' '"
+            <input class="form-control" type="text" [value]="(SumFirstMoney() || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
         </div>
@@ -216,12 +297,12 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SumFirstMoneyPerPart || 0) | currency:' '"
+            <input class="form-control" type="text" [value]="(SumFirstMoneyPerPart() || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="(sumTotal()?.FirstRemainder || 0) | currency:' '"
+            <input class="form-control" type="text" [value]="(FirstRemainder() || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
         </div>
@@ -232,7 +313,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SumSecondMoney || 0) | currency:' '"
+            <input class="form-control" type="text" [value]="(SumSecondMoney() || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
         </div>
@@ -241,12 +322,12 @@
         <div class="form-group row">
           <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SumSecondMoneyPerPart || 0) | currency:' '"
+            <input class="form-control" type="text" [value]="(SumSecondMoneyPerPart() || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="(sumTotal()?.SecondRemainder || 0) | currency:' '"
+            <input class="form-control" type="text" [value]="(SecondRemainder() || 0) | currency:' '"
               [attr.disabled]="'disabled'">
           </div>
         </div>
