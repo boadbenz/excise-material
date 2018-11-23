@@ -20,7 +20,7 @@
       <div class="col-sm-4">
         <div class="row">
           <input class="form-control" type="text" id="userName" ngModel required placeholder="ชื่อผู้ใช้งาน" name="userName"
-            style="margin-left: 90px">
+            style="margin-left: 90px" (keydown)='ClearErrMsg()'>
         </div>
       </div>
       <div class="col-sm-4"></div>
@@ -33,14 +33,18 @@
       <div class="col-sm-4">
         <div class="row">
           <input class="form-control " type="password" name="password" id="password" ngModel required placeholder="รหัสผ่าน"
-            style="margin-left: 90px">
+            style="margin-left: 90px" (keydown)='ClearErrMsg()'>
         </div>
       </div>
       <div class="col-sm-4"></div>
     </div>
+    <div>
+      <span class="center" style="color:red" >{{errMsg}}</span>
+    </div>
     <div class="row" style="padding-top: 20px">
       <div class="col-sm-12">
-        <button class="btn" type="submit" [disabled]="!form.valid">เข้าสู่ระบบ</button>
+        <button class="btn" type="submit" >เข้าสู่ระบบ</button>
+        <!-- [disabled]="!form.valid" -->
       </div>
     </div>
     <div class="col-sm-12" style="padding-top: 10px">
