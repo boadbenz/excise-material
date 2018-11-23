@@ -135,7 +135,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.17');
+        this.sidebarService.setVersion('0.0.2.18');
 
         this.navigate_service();
 
@@ -424,6 +424,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         let noticeDocument = [];
         for(let l of noticeForm.NoticeStaff){
             l.NoticeCode = this.noticeCode;
+            l.ContributorID = 4;
             l.IsActive = 1;
             noticeStaff.push(l);
         }
