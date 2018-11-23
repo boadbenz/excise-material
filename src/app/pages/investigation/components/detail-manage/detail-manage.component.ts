@@ -126,7 +126,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.3');
+        this.sidebarService.setVersion(this.s_invest.version);
 
         this.createForm();
 
@@ -151,6 +151,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         break;
                 }
             });
+
+        this.resetConfig();
 
         this.navService.showFieldEdit
             .takeUntil(this.destroy$)
@@ -213,6 +215,20 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                     this.navigateToManage();
                 }
             })
+    }
+
+    private resetConfig() {
+        let routerConfig = this.router['config'];
+        routerConfig
+            .find(x => x.path == 'investigation')['_loadedConfig'].routes // core investigation path
+            .filter(x => x.path.indexOf('detail-manage') >= 0) // curent path
+            .map(x => {
+                x.data.urls
+                    .find(y => y.url.indexOf('/investigation/manage') >= 0)
+                    .url = `/investigation/manage/${this.investMode}/${this.investCode}`; // previous path
+                return x;
+            })
+        this.router.resetConfig(routerConfig);
     }
 
     private enableBtnModeC() {
@@ -279,7 +295,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onPageLoad() {
         this.loaderService.show();
-        await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
+        let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
 
             let invest = this.investigateFG;
@@ -298,6 +314,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
             invest.patchValue(x);
         })
+        Promise.all([invest]);
         this.loaderService.hide();
     }
 
@@ -821,10 +838,19 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onComplete() {
         if (this._isSuccess) {
-            await this.store.dispatch(new fromStore.RemoveInvestigate);
-            await this.clearForm();
-            alert(Message.saveComplete)
-            this.onRefreshPage();
+            alert(Message.saveComplete);
+            switch (this.mode) {
+                case 'C':
+                    await this.store.dispatch(new fromStore.RemoveInvestigate);
+                    await this.clearForm();
+
+                    this.onRefreshPage();
+                    break;
+                case 'R':
+                    location.reload();
+                    break;
+            }
+
 
         } else {
             alert(Message.saveFail)
@@ -863,7 +889,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId)
                 .takeUntil(this.destroy$)
                 .subscribe(x => {
-                    if (!this.checkResponse(x)) {
+                    if (this.checkIsSuccess(x)) {
                         alert(Message.delComplete);
                         this.navigateToManage();
                     } else {
@@ -969,13 +995,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 if (!this.checkResponse(x)) return;
                 return x;
             })
-
+        let investCode: string;
         if (resRunning.length) {
             let tr = resRunning.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
             let str = '' + (tr.RunningNo + 1)
             let pad = '00000';
             let ans = pad.substring(0, pad.length - str.length) + str
-            this.investCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
+            investCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
 
             await this.s_transactionRunning.
                 TransactionRunningupdByCon(tr.RunningID.toString())
@@ -994,14 +1020,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                     let ans = '00001'
                     let year = ((new Date).getFullYear() + 543).toString()
                     year = year.substring(2, 4);
-                    this.investCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+                    investCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
                     return true;
                 }, () => { this.saveFail(); return; })
                 .catch((error) => this.catchError(error));
         }
 
-        if (this.investCode)
-            await this.insertInvestigate(this.investCode);
+        if (investCode)
+            await this.insertInvestigate(investCode);
     }
 
     private async insertInvestigate(investCode: string) {
@@ -1019,6 +1045,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private async insertInvestigateDetail(investCode: string) {
         this.loaderService.show();
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
+        this.investCode = investCode;
         form.InvestigateCode = investCode;
         form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
         form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
@@ -1131,7 +1158,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }, () => { this.saveFail(); return; })
-                            .catch((error) => this.catchError(error));  
+                            .catch((error) => this.catchError(error));
                         break;
                     case 'c':
                         console.log(`InvestigateDetailLocalinsAll : ${index + 1}`, JSON.stringify(x))

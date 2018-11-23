@@ -14,7 +14,8 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ครั้งที่สืบสวน : </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="InvestigateSeq" class="form-control form-control-sm" [readOnly]="showEditField">
+                        <input type="text" formControlName="InvestigateSeq" class="form-control form-control-sm"
+                            [readOnly]="showEditField">
                     </div>
                 </div>
 
@@ -22,12 +23,14 @@
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group input-group">
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" formControlName="InvestigateDateStart"
-                            [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
+                            [disabled]="showEditField" [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)"
+                            ngModel></my-date-picker-th>
 
                         <label for="DateEnd">&nbsp;ถึง&nbsp;</label>
 
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" id="DateEnd"
-                            formControlName="InvestigateDateEnd" [options]="myDatePickerOptions" (dateChanged)="onEDateChange($event)"></my-date-picker-th>
+                            [disabled]="showEditField" formControlName="InvestigateDateEnd" [options]="myDatePickerOptions"
+                            (dateChanged)="onEDateChange($event)"></my-date-picker-th>
                     </div>
                 </div>
             </div>
@@ -38,7 +41,7 @@
                 <div class="col-lg-10 col-sm-8">
                     <div class="form-group ">
                         <select formControlName="ValueOfNews" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                            required>
+                            required [attr.disabled]="showEditField ? '' : null">
                             <option value="" selected disabled></option>
                             <option *ngFor="let item of valueofNews; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
                         </select>
@@ -52,7 +55,7 @@
                 <div class="col-lg-10 col-sm-8">
                     <div class="form-group ">
                         <select formControlName="ConfidenceOfNews" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                            required>
+                            required [attr.disabled]="showEditField ? '' : null">
                             <option value="" selected disabled></option>
                             <option *ngFor="let item of costofNews; let i=index;" [value]="item.value" [disabled]="showEditField">{{item.text}}</option>
                         </select>
@@ -103,7 +106,7 @@
                                 </ng-template>
 
                                 <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff"
-                                    [resultTemplate]="rt" แ [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
+                                    [resultTemplate]="rt" [readonly]="showEditField" [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
                                     value="{{item.value.FullName}}" />
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'">
@@ -344,7 +347,7 @@
                 <div class="col-lg-10 col-sm-8">
                     <div class="form-group ">
                         <textarea formControlName="InvestigateDetail" cols="30" rows="5" class="form-control form-control-sm"
-                            [disabled]="showEditField"></textarea>
+                            [readOnly]="showEditField" required></textarea>
                     </div>
                 </div>
             </div>
