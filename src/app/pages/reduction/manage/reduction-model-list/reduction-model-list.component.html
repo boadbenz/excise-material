@@ -20,39 +20,40 @@
       <div class="card unset-radius m-b-15">
         <div class="card-body p-0">
           <div class="table-responsive">
-            <table id="reductionListModal" #reductionListModal class="table table-sm table-striped">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="text-center">ลำดับ</th>
-                  <th>ชื่อผู้ต้องหา</th>
-                  <th>ลักษณะคดี</th>
-                  <th>เลขที่เปรียบเทียบ/คำพิพากษาฎีกา</th>
-                  <th>วันที่ชำระเงิน</th>
-                  <th>งวดชำระ</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of listTest; let i=index;">
-                  <td class="text-center">
-                    <input name="IsChecked" value="{{item.receiptNo}}" type="checkbox" id="td{{i}}" class="with-gap check-col-indigo" />
-                    <label for="td{{i}}" class="m-0"></label>
-                  </td>
-                  <td class="text-center">{{i + 1}}</td>
-                  <td>{{item.fullName}}</td>
-                  <td>{{item.typeCase}}</td>
-                  <td>{{item.receiptRef}}</td>
-                  <td>{{item.dateFine}}</td>
-                  <td>{{item.period}}</td>
-                  <td class="text-center">
-                    <a class="text-center text-secondary" 
-                      [routerLink]="['/investigation/suspect', 'R', i]" target="_blank">
-                      <i class="fa fa-eye fa-lg"></i>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <form [formGroup]="checkBoxForm">
+              <table id="reductionListModal" #reductionListModal class="table table-sm table-striped">
+                <thead>
+                  <tr>
+                    <th>check</th>
+                    <th class="text-center">ลำดับ</th>
+                    <th>ชื่อผู้ต้องหา</th>
+                    <th>ลักษณะคดี</th>
+                    <th>เลขที่เปรียบเทียบ/คำพิพากษาฎีกา</th>
+                    <th>วันที่ชำระเงิน</th>
+                    <th>งวดชำระ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr formArrayName="listTest" *ngFor="let item of checkBoxForm.controls.listTest.controls; let i = index;">
+                    <td class="text-center">
+                      <input class="with-gap check-col-indigo" id="td{{i}}" type="checkbox" [formControlName]="i" (change)="chicking($event)" />
+                    </td>
+                    <td class="text-center">{{i + 1}}</td>
+                    <td>{{listTest[i].fullName}}</td>
+                    <td>{{listTest[i].typeCase}}</td>
+                    <td>{{listTest[i].receiptRef}}</td>
+                    <td>{{listTest[i].dateFine}}</td>
+                    <td>{{listTest[i].period}}</td>
+                    <td class="text-center">
+                      <a class="text-center text-secondary" 
+                        [routerLink]="['/investigation/suspect', 'R', i]" target="_blank">
+                        <i class="fa fa-eye fa-lg"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
           </div>
         </div>
         <div class="card-footer card-footer-unset">

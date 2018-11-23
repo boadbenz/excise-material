@@ -2,7 +2,7 @@ import { CardActionsModule } from '../../component/card-actions/card-actions.mod
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ManageComponent } from './manage.component';
 import { ReductionApiService } from '../reduction.api.service';
@@ -29,6 +29,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     CardActionsModule,
     NgbModule.forRoot(),

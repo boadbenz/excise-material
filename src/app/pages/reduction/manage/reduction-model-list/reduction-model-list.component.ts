@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-reduction-model-list',
@@ -45,8 +46,18 @@ export class ReductionModelListComponent implements OnInit {
     },
   ];
 
-  constructor() {
+  // decrear form angular
+  public checkBoxForm: FormGroup;
+  public allChecked = false;
+  public checkNo = 0;
+  public selected: any[] = [];
+
+  constructor(private formBuilder: FormBuilder) {
     console.log('reduction model start');
+    // Create a new array with a form control for each order
+    const controls = this.listTest.map(c => new FormControl(false));
+    this.checkNo = 0;
+    this._formBuilderGroup(controls);
   }
 
   ngOnInit() {
@@ -61,6 +72,56 @@ export class ReductionModelListComponent implements OnInit {
   }
   public next() {
     console.log('next');
+    const result = this._checked();
+    console.log(result);
+  }
+
+  private _checked() {
+    const selected = this.checkBoxForm.value.listTest
+      .map((v, i) => v ? this.listTest[i].receiptNo : null)
+      .filter(v => v !== null);
+
+    return selected;
+  }
+
+  private _formBuilderGroup(controls) {
+    this.checkBoxForm = this.formBuilder.group({
+      listTest: new FormArray(controls)
+    });
+  }
+
+  public checkAll(value: boolean) {
+    if (!value) {
+      this.checkNo = this.listTest.length;
+    } else {
+      this.checkNo = 0;
+    }
+
+    // Create a new array with a form control for each order
+    const controls = this.listTest.map(c => new FormControl(false));
+
+    const checkAllControls = controls.map(control => {
+      control.setValue(!value);
+      return control;
+    });
+
+    this._formBuilderGroup(checkAllControls);
+  }
+
+  public chicking(event) {
+    const check = event.target.checked;
+
+    if (check) {
+      this.checkNo += 1;
+    } else {
+      this.checkNo -= 1;
+    }
+
+    if (this.checkNo === this.listTest.length) {
+      this.allChecked = true;
+    } else {
+      this.allChecked = false;
+    }
   }
 
 }
