@@ -177,7 +177,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
-        this.showEditField = !status;
+        this.showEditField = status;
         console.log(this.params.CompareID);
         if (this.params.CompareID.toString() === '0') {
           console.log('here');
