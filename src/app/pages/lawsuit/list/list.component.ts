@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.11');
+    this.sidebarService.setVersion('0.0.0.12');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
     // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
