@@ -50,7 +50,7 @@ export class CONFIG extends RewardConfig {
   }
   public aggregate08$ = new BehaviorSubject<any>(null);
 
-  public ILG60_08_04_00_00_E13_BUTTON$ = new BehaviorSubject<IButtonAttr>({
+  public ILG60_08_04_00_00_E13_BUTTON$: BehaviorSubject<IButtonAttr> = new BehaviorSubject<IButtonAttr>({
     DISABLED: false
   });
 

@@ -133,5 +133,6 @@ export const InvestigateMasLawbreakerFC = {
     LinkPhoto: new FormControl(''),
     PhotoDesc: new FormControl(''),
     IsActive: new FormControl(''),
-    ResultCount: new FormControl('')
+    ResultCount: new FormControl(''),
+    Region: new FormControl('')
 }

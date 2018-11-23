@@ -55,7 +55,7 @@ export class LawbreakerComponent implements OnInit {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
   // param: Params
-  // private mode: string;
+  private mode: string;
   // private arrestMode: string;
   // private arrestCode: string;
   // private indictmentDetailId: string;
@@ -84,7 +84,7 @@ export class LawbreakerComponent implements OnInit {
 
   async ngOnInit() {
     this.LawbreakerFG = this.createForm();
-    this.sidebarService.setVersion('0.0.0.03');
+    this.sidebarService.setVersion('0.0.0.4');
 
     await this.active_route();
     await this.navigate_service();
@@ -95,6 +95,25 @@ export class LawbreakerComponent implements OnInit {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
     this.LawbreakerFG.reset();
+    this.navService.setOnEdit(false);
+    this.navService.setOnSave(false);
+    this.navService.setOnDelete(false);
+    this.navService.setOnCancel(false);
+    this.navService.setOnSearch(false);
+    this.navService.setOnPrint(false);
+    this.navService.setOnNextPage(false);
+    this.navService.setOnPrevPage(false);
+
+    this.navService.setEditField(false);
+    this.navService.setSearchBar(false);
+    this.navService.setPrintButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setNewButton(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setPrevPageButton(false);
   }
 
   private createForm(): FormGroup {
@@ -109,17 +128,8 @@ export class LawbreakerComponent implements OnInit {
       .map(results => ({ params: results[0], queryParams: results[1] }))
       .takeUntil(this.destroy$)
       .subscribe(async results => {
-        // this.mode = results.params.mode;
+        this.mode = results.params.mode;
         this.lawbreakerId = results.params.code;
-
-        // switch (this.mode) {
-        //     case 'C':
-        //         this.enableBtnModeC();
-        //         break;
-        //     case 'R':
-        //         this.enableBtnModeR();
-        //         break;
-        // }
         this.enableBtnModeR();
         this.pageLoad();
       });
@@ -266,21 +276,6 @@ export class LawbreakerComponent implements OnInit {
         this.onCancel();
       }
     })
-
-    // this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
-    //   if (status) {
-    //     await this.navService.setOnNextPage(false);
-    //     this.router.navigate(
-    //       [`arrest/allegation`, this.allegationMode],
-    //       {
-    //         queryParams: {
-    //           arrestCode: this.arrestCode,
-    //           indictmentId: this.indictmentId,
-    //           guiltbaseId: this.guiltbaseId
-    //         }
-    //       });
-    //   }
-    // })
   }
 
   async ArrestLawbreakerGetByCon(LawbreakerID: string) {
@@ -491,19 +486,6 @@ export class LawbreakerComponent implements OnInit {
     }
   }
 
-  // OnCreate(lawbreaker: fromModels.InvestigateMasLawbreakerModel) {
-  //     this.s_masLawbreaker.(lawbreaker)
-  //         .takeUntil(this.destroy$)
-  //         .subscribe(res => {
-  //             if (!this.checkResponse(res)) {
-  //                 alert(Message.saveFail);
-  //                 return;
-  //             }
-  //             alert(Message.saveComplete);
-  //             this.router.navigate([`/arrest/lawbreaker/R/${res.LawbreakerID}`]);
-  //         });
-  // }
-
   OnRevice(lawbreaker: fromModels.InvestigateMasLawbreakerModel) {
     this.s_masLawbreaker.InvestigateMasLawbreakerupdByCon(lawbreaker)
       .takeUntil(this.destroy$)
@@ -521,25 +503,7 @@ export class LawbreakerComponent implements OnInit {
     if (!confirm(Message.confirmAction))
       return
 
-    this.router.navigate([`investigation/lawbreaker`, this.lawbreakerId]);
-    // switch (this.mode) {
-    //   case 'C':
-    //     this.router.navigate(
-    //       [`arrest/allegation`, 'C'],
-    //       {
-    //         queryParams: {
-    //           arrestMode: this.arrestMode,
-    //           arrestCode: this.arrestCode,
-    //           indictmentId: this.indictmentId,
-    //           guiltbaseId: this.guiltbaseId
-    //         }
-    //       });
-    //     break;
-
-    //   case 'R':
-    //     this.enableBtnModeR();
-    //     break;
-    // }
+    this.router.navigate([`investigation/lawbreaker`, this.mode, this.lawbreakerId]);
   }
 
 }

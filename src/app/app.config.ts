@@ -11,6 +11,12 @@ export const appConfig = {
     api8883: 'http://192.168.3.158:8883/XCS60',
     api8087: 'http://192.168.3.158:8087/XCS60',
     api8887: 'http://192.168.3.158:8887/XCS60',
+<<<<<<< HEAD
     mockapi: 'http://demo1735762.mockable.io/XCS60',
     apiReport: 'http://techlogn.ddns.net:4100/Report_XCS'
+=======
+    apiReport:'',
+    mockapi: 'http://demo1735762.mockable.io/XCS60'
+>>>>>>> 31f9d7ab383ba65eec290cbb67826bdfd0efefb6
 }
+    

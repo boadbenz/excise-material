@@ -78,7 +78,7 @@ export class SuspectComponent implements OnInit {
 
   async ngOnInit() {
     this.SuspectFG = this.createForm();
-    this.sidebarService.setVersion('0.0.0.32');
+    this.sidebarService.setVersion('0.0.0.4');
 
     await this.active_route();
     await this.navigate_service();
@@ -88,6 +88,25 @@ export class SuspectComponent implements OnInit {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
     this.SuspectFG.reset();
+    this.navService.setOnEdit(false);
+    this.navService.setOnSave(false);
+    this.navService.setOnDelete(false);
+    this.navService.setOnCancel(false);
+    this.navService.setOnSearch(false);
+    this.navService.setOnPrint(false);
+    this.navService.setOnNextPage(false);
+    this.navService.setOnPrevPage(false);
+
+    this.navService.setEditField(false);
+    this.navService.setSearchBar(false);
+    this.navService.setPrintButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setNewButton(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setPrevPageButton(false);
   }
 
   private createForm(): FormGroup {
@@ -255,21 +274,6 @@ export class SuspectComponent implements OnInit {
         this.onCancel();
       }
     })
-
-    // this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
-    //     if (status) {
-    //         await this.navService.setOnNextPage(false);
-    //         this.router.navigate(
-    //             [`arrest/allegation`, this.allegationMode],
-    //             {
-    //                 queryParams: {
-    //                     arrestCode: this.arrestCode,
-    //                     indictmentId: this.indictmentId,
-    //                     guiltbaseId: this.guiltbaseId
-    //                 }
-    //             });
-    //     }
-    // })
   }
 
   async ArrestSuspectGetByCon(SuspectID: string) {
@@ -516,25 +520,16 @@ export class SuspectComponent implements OnInit {
     if (!confirm(Message.confirmAction))
       return
 
-    switch (this.mode) {
-      case 'C':
-        window.close();
-      // this.router.navigate(
-      //   [`arrest/allegation`, 'C'],
-      //   {
-      //     queryParams: {
-      //       arrestMode: this.arrestMode,
-      //       arrestCode: this.arrestCode,
-      //       indictmentId: this.indictmentId,
-      //       guiltbaseId: this.guiltbaseId
-      //     }
-      //   });
-      // break;
+      this.router.navigate([`investigation/lawbreaker`, this.mode, this.suspectId]);
+    // switch (this.mode) {
+    //   case 'C':
+    //     this.router.navigate([`arrest/allegation`, this.mode, this.suspectId]);
+    //     break;
 
-      case 'R':
-        this.enableBtnModeR();
-        break;
-    }
+    //   case 'R':
+    //     this.enableBtnModeR();
+    //     break;
+    // }
   }
 
 }
