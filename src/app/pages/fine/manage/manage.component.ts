@@ -81,7 +81,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.8');
+    this.sidebarService.setVersion('0.0.0.9');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -407,15 +407,44 @@ export class ManageComponent implements OnInit, OnDestroy {
   ClearStaffData() {
   }
   StaffonAutoSelecteWord(event, type: any = 0) {
-    if (type === 0) {
+    type = (+type);
+    console.log(type);
+    if (type == 0) {
       this.accused.OperationPosName = event.OperationPosName;
       this.accused.OperationDeptName = event.OfficeShortName;
-    } else if (type === 2) {
+      console.log('type' + type);
+    } else if (type == 2) {
       this.accused.OperationPosName = event.OperationPosName;
       this.accused.OperationDeptName = event.OfficeShortName;
       this.accused.staff = event;
       this.accused.ProgramCode = 'ILG60-06-02-00';
       this.accused.ProcessCode = null;
+      this.accused['staff'] = event;
+      console.log('type' + type);
+    } else if (type == 1) {
+      this.userCompareReceiptDetail.staff = event;
+      this.userCompareReceiptDetail.ReceipPosition = event.OperationPosName;
+      this.userCompareReceiptDetail.ReceipDepartment = event.OfficeShortName;
+      this.userCompareReceiptDetail.ProgramCode = 'XCS60-06-02-03-00';
+      console.log('type' + type);
+    } else if (type == 3) {
+      this.compareUserDetailPopup.staff1 = event;
+      this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
+      this.compareUserDetailPopup.position1 = event.OperationPosName;
+      this.compareUserDetailPopup.department1 = event.OfficeShortName;
+      console.log('type' + type);
+    } else if (type == 4) {
+      this.compareUserDetailPopup.staff2 = event;
+      this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
+      this.compareUserDetailPopup.rank = event.OperationPosName;
+      this.compareUserDetailPopup.department2 = event.OfficeShortName;
+      console.log('type' + type);
+    } else if (type == 5) {
+      this.compareUserDetailPopup.staff3 = event;
+      this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
+      this.compareUserDetailPopup.rank2 = event.OperationPosName;
+      this.compareUserDetailPopup.department3 = event.OfficeShortName;
+      console.log('type' + type);
     }
   }
   editAccused(item: any, index: any, type: any) {
@@ -582,8 +611,53 @@ export class ManageComponent implements OnInit, OnDestroy {
         id++;
       }
     }
+    CompareData.CompareStaff = this.getAllStaff();
     console.log(CompareData);
     return CompareData;
+  }
+  getAllStaff() {
+    const staff: any = [];
+    console.log(this.accused);
+    console.log(this.approveReportList);
+    staff.push(this.accused.staff);
+    for (const d of this.receipt.list) {
+      d.staff.ProgramCode = d.ProgramCode;
+      d.staff.ProcessCode = '';
+      staff.push(d.staff);
+    }
+    let i = 0;
+    for (const d of this.receipt.list) {
+      d.staff.ProgramCode = d.ProgramCode;
+      d.staff.ProcessCode = i;
+      staff.push(d.staff);
+      i++;
+    }
+    i = 0;
+    for (const d of this.approveReportList) {
+      d.staff1.ProgramCode = d.ProgramCode;
+      d.staff1.ProcessCode = i + '.1';
+      d.staff2.ProgramCode = d.ProgramCode;
+      d.staff2.ProcessCode = i + '.2';
+      d.staff3.ProgramCode = d.ProgramCode;
+      d.staff3.ProcessCode = i + '.3';
+      staff.push(d.staff1);
+      staff.push(d.staff2);
+      staff.push(d.staff3);
+      i++;
+    }
+    console.log(staff);
+    return staff;
+  }
+  getStaffData(data: any) {
+    const staffData: any = this.jsonCopy(data);
+    staffData.PositionCide = staffData.OperationPosCode;
+    staffData.PositionName = staffData.OperationPosName;
+    staffData.DepartmentCode = staffData.OperationDeptCode;
+    staffData.DepartmentName = staffData.OperationDeptName;
+    staffData.DepartmentLevel = staffData.DeptLevel;
+    staffData.ContributorID = null;
+    staffData.IsActive = 1;
+    return staffData;
   }
   convertToNormalDate(date: any) {
       return `${date.year}-${date.month}-${date.day}`;
