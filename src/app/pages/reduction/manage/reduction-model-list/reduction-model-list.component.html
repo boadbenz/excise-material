@@ -2,7 +2,7 @@
     <div class="row">
       <div class="col-lg-5">
         <h4 class="modal-title text-white">
-            เลือกรายการที่ต้องการปรับเพิ่ม-ลดค่าเปรียบเทียบ
+          เลือกรายการที่ต้องการปรับเพิ่ม-ลดค่าเปรียบเทียบ
         </h4>
       </div>
       <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
@@ -24,7 +24,9 @@
               <table id="reductionListModal" #reductionListModal class="table table-sm table-striped">
                 <thead>
                   <tr>
-                    <th>check</th>
+                    <th>
+                      <input id="allChecked" type="checkbox" [(ngModel)]="allChecked" [ngModelOptions]="{standalone: true}" (click)="checkAll(allChecked)" style="left: 10px; top: 8px;" />
+                    </th>
                     <th class="text-center">ลำดับ</th>
                     <th>ชื่อผู้ต้องหา</th>
                     <th>ลักษณะคดี</th>
@@ -35,8 +37,8 @@
                 </thead>
                 <tbody>
                   <tr formArrayName="listTest" *ngFor="let item of checkBoxForm.controls.listTest.controls; let i = index;">
-                    <td class="text-center">
-                      <input class="with-gap check-col-indigo" id="td{{i}}" type="checkbox" [formControlName]="i" (change)="chicking($event)" />
+                    <td>
+                      <input class="form-check-input" id="td{{i}}" type="checkbox" [formControlName]="i" (change)="chicking($event)" />
                     </td>
                     <td class="text-center">{{i + 1}}</td>
                     <td>{{listTest[i].fullName}}</td>
