@@ -162,6 +162,13 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
+  async LawsuitArrestupDeleteLawsuit(ArrestCode,IndictmentID){
+    const params = { ArrestCode: ArrestCode,
+                     IndictmentID: IndictmentID};
+    const url = `${appConfig.api7789}/LawsuitArrestupDeleteLawsuit`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }
+
   async LawsuitArrestIndicmentupdByCon(IndictmentID) {
     const params = { IndictmentID: IndictmentID };
     const url = `${appConfig.api8083}/LawsuitArrestIndictmentupdByCon`;

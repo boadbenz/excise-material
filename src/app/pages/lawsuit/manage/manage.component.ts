@@ -526,6 +526,7 @@ export class ManageComponent implements OnInit {
   private onSaveSubscribe: any;
   private onCancelSubscribe: any;
   private onEditSubscribe: any;
+  private onDeleteSubscribe: any;
   private onNextPageSubscribe: any;
 
   private LawsuitID: number;
@@ -642,7 +643,12 @@ export class ManageComponent implements OnInit {
         this.onEdit();
       }
     });
-
+    this.onDeleteSubscribe = this.navService.onDelete.subscribe(async status=>{
+      if (status)
+      {
+        this.onDelete();
+      }
+    })
 
   }
   public findInvalidControls() {
@@ -681,7 +687,88 @@ export class ManageComponent implements OnInit {
     this.onPrintSubscribe.unsubscribe();
     this.onSaveSubscribe.unsubscribe();
     this.onCancelSubscribe.unsubscribe();
+    this.onDeleteSubscribe.unsubscribe();
+    this.onEditSubscribe.unsubscribe();
   }
+  private async onDelete(){
+    this.preLoaderService.setShowPreloader(true);
+    let indictmentID:string
+    let lawsuitID:string
+    this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
+      params => {
+        indictmentID = params.IndictmentID;
+        lawsuitID = params.LawsuitID;
+      }
+    );
+    await this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(async (res)=>{
+      res[0].LawsuitArrestIndicment.forEach(inc => {
+        let IsProve = inc.IsProve;
+        if(IsProve == 0){
+          let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail']
+          LawsuitArrestIndicmentDetail.forEach(detail => {
+            if(detail.LawsuitType == 0){
+              this.lawsuitService.LawsuitPaymentFinegetByJudgementID(detail.JudgementID).then(jugderes=>{
+                if(jugderes.IsRequestBribe==1||jugderes.IsRequestReward ==1){
+                  alert('ไม่สามารถทำรายการได้')
+                  return;
+                }else{
+                  this.DeleteConfirm(indictmentID,res[0].ArrestCode)
+                }
+                this.preLoaderService.setShowPreloader(false);
+              }).catch((error)=>{
+                this.preLoaderService.setShowPreloader(false);
+                console.log(error)
+              })
+            }else{
+              this.lawsuitService.LawsuitComparegetByLawsuitID(lawsuitID).then(async (compareres)=>{
+                if(compareres){
+                  alert('ไม่สามารถทำรายการได้')
+                  this.preLoaderService.setShowPreloader(false);
+                  return;
+                }else{
+                  this.preLoaderService.setShowPreloader(false);
+                  this.DeleteConfirm(indictmentID,res[0].ArrestCode)
+                }
+              })
+            }
+          });
+        }else{
+          this.lawsuitService.LawsuitProvegetByLawsuitID(lawsuitID).then((proveres)=>{
+            if(proveres){
+              alert('ไม่สามารถทำรายการได้')
+              this.preLoaderService.setShowPreloader(false);
+              return;
+            }else{
+              this.preLoaderService.setShowPreloader(false);
+              this.DeleteConfirm(indictmentID,res[0].ArrestCode)
+            }
+          }).catch((error)=>{
+            this.preLoaderService.setShowPreloader(false);
+            console.log(error)
+          })
+        }
+      });
+      
+    })
+  }
+
+  DeleteConfirm(indictmentID,ArrestCode){
+    if(confirm('ยืนยันกำรทำรายการหรือไม่')){
+      this.lawsuitService.LawsuitArrestupDeleteLawsuit(indictmentID,ArrestCode).then((deleteres)=>{
+        if(deleteres.Msg == 'Complete'){
+          alert('ลบข้อมูลสำเร็จ')
+          this.router.navigate(["/lawsuit/list"])
+        }
+        this.preLoaderService.setShowPreloader(false);
+      }).catch(error=>{
+        this.preLoaderService.setShowPreloader(false);
+        alert('ลบข้อมูลไม่สำเร็จ '+error)
+      })
+    } else {
+      return 
+    }
+  }
+
   private async onEdit() {
     console.log("this.lawsuitList===?", this.lawsuitList)
     if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['IsProve'] == 0) {/// IdProve = 0
@@ -714,7 +801,6 @@ export class ManageComponent implements OnInit {
             this.navService.setPrintButton(false);
             this.navService.setDeleteButton(false);
             // set true
-            this.showEditField = true
             this.navService.setSaveButton(true);
             this.navService.setCancelButton(true);
             return;
@@ -784,7 +870,7 @@ export class ManageComponent implements OnInit {
   }
 
   private async onCancel() {
-    // this.preLoaderService.setShowPreloader(true);
+    this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
     console.log(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail']);
     let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail']
@@ -809,19 +895,23 @@ export class ManageComponent implements OnInit {
     //   IsLawsuitComplete = res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
     // });
     
-    if (!confirm("ยืนยันการทำรายการหรือไม่")) {
-      return;
-    } else {
+    if (confirm("ยืนยันการทำรายการหรือไม่")) {
       if (IsLawsuitComplete == 1) {
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
+        // // set false
         this.navService.setEditField(true);
+        this.navService.setEditButton(true);
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        // set true
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
         this.navService.showFieldEdit.subscribe(async p => {
-          this.showEditField = true;
-          this.ngOnInit();
+          this.showEditField = p;
+          await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
           
         });
       } else {
+        let round = 1;
         LawsuitArrestIndicmentDetail.forEach(detail => {
           this.lawsuitService.GetArrestIndicmentDetailgetByCon(detail.IndictmentDetailID).then(result => {
             console.log('result====>', result);
@@ -834,6 +924,7 @@ export class ManageComponent implements OnInit {
                     console.log(error)
                   })
                 }else{
+                  this.preLoaderService.setShowPreloader(false);
                   this.router.navigate(['/lawsuit/list']);
                 }
                 if(judge.isFine == 1){
@@ -843,26 +934,34 @@ export class ManageComponent implements OnInit {
                     console.log(error)
                   })
                 }else{
+                  this.preLoaderService.setShowPreloader(false);
                   this.router.navigate(['/lawsuit/list']);
                 }
               });
             }
           });
         })
-        // this.ngOnInit();
-        this.navService.showFieldEdit.subscribe(async p => {
-          this.showEditField = p;
-
+        if(round >= LawsuitArrestIndicmentDetail.length){
           // this.ngOnInit();
-        });
+          this.navService.showFieldEdit.subscribe(async p => {
+            this.showEditField = p;
+            this.preLoaderService.setShowPreloader(false);
+            // this.ngOnInit();
+          });
 
-        this.navService.setEditField(true);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
+          // // set false
+          this.navService.setEditField(true);
+          this.navService.setEditButton(true);
+          this.navService.setPrintButton(true);
+          this.navService.setDeleteButton(true);
+          // set true
+          this.navService.setSaveButton(false);
+          this.navService.setCancelButton(false);
+        }
       }
-      this.navService.setPrintButton(true);
-      this.navService.setDeleteButton(true);
-      this.navService.setEditButton(true);
+      
+    } else {
+      return
     }
   }
 
