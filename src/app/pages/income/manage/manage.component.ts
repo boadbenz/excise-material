@@ -686,6 +686,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.preloader.setShowPreloader(false);
         } else {
             alert(Message.saveFail);
+            this.preloader.setShowPreloader(false);
         }
     }
 
