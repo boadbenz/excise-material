@@ -46,5 +46,5 @@ export const NoticeStaffFormControl = {
     OfficeShortName: new FormControl(null),
     ContributorCode: new FormControl(null),
     IsActive: new FormControl(1),
-    StaffFullName: new FormControl(null)
+    StaffFullName: new FormControl(null, Validators.required)
 }

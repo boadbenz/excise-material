@@ -69,6 +69,6 @@ export const NoticeProductFormControl = {
     Remarks: new FormControl(null),
     IsActive: new FormControl(1),
 
-    BrandFullName: new FormControl(null),
+    BrandFullName: new FormControl(null, Validators.required),
     IsNewItem: new FormControl(false)
 }
