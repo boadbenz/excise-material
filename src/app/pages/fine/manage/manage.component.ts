@@ -277,7 +277,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       // คำให้การผู้ต้องหา
       this.setAccusedData(resp);
-     
+
       await this.getProductToCompareDetail(resp[0]);
       console.log(resp);
     } catch (err) {
@@ -702,6 +702,3 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-
-

@@ -351,6 +351,21 @@ export class ManageComponent implements OnInit {
   }
 
   private async onCancel() {
+
+    // this.preLoaderService.setShowPreloader(true);
+    // let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
+    // let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
+    // let indictmentID: string;
+    // if (IsLawsuitComplete == 0) {
+    //
+    // }else {
+    // // let IsLawsuitComplete = 1;
+    //   this.activeRoute.queryParams.subscribe(
+    //     params => { this.LawsuitID = params.LawsuitID;  indictmentID = params.IndictmentID; }
+    //   );
+    //   let ArrestIndicmentDetail = await this.lawsuitService.GetArrestIndicmentDetailgetByCon(IndictmentDetailID)
+    //   console.log(ArrestIndicmentDetail)
+
     let indictmentID = this.IndictmentID;
     let IsLawsuitComplete = await this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
       return res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
@@ -397,7 +412,7 @@ export class ManageComponent implements OnInit {
       this.navService.setDeleteButton(true);
       this.navService.setEditButton(true);
     }
-    
+
 
     // let IsLawsuitComplete = 0;
     // this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
