@@ -11,7 +11,8 @@
                 <img src="assets/images/users/1.jpg" alt="user" /> </div>
             <!-- User profile text-->
             <div class="profile-text">
-                <a href="#" class="dropdown-toggle link u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">นายเดชา บุญอินทร์
+                <a href="#" class="dropdown-toggle link u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true"
+                    aria-expanded="true">นายเดชา บุญอินทร์
                     <span class="caret"></span>
                 </a>
                 <div class="dropdown-menu animated flipInY">
@@ -34,15 +35,25 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
-                <!-- <li class="nav-small-cap">PERSONAL</li> -->
                 <li>
-                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/investigation/list">
-                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
                         <strong>1</strong>
-                        <span class="hide-menu">รายงานการสืบสวน</span>
+                        <span class="hide-menu">งานปราบปราม</span>
                     </a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/investigation/list">
+                                <span>1.1 รายงานการสืบสวน</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/arrest/list">
+                                <!-- <strong>1.2</strong> -->
+                                <span>1.2 บันทึกการจับกุม(ส.ส. 2/39)</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li>
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
@@ -52,51 +63,44 @@
                 </li>
                 <li>
                 <li>
-                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/arrest/list">
-                        <!-- <i class="mdi mdi-account-alert"></i> -->
-                        <strong>3</strong>
-                        <span class="hide-menu">บันทึกการจับกุม(ส.ส. 2/39)</span>
-                    </a>
-                </li>
-                <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/lawsuit/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
-                        <strong>4</strong>
+                        <strong>3</strong>
                         <span class="hide-menu">รับคำกล่าวโทษ </span>
                     </a>
                 </li>
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/prove/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
-                        <strong>5</strong>
+                        <strong>4</strong>
                         <span class="hide-menu">งานตรวจรับและพิสูจน์ของกลาง</span>
                     </a>
                 </li>
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/fine/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
-                        <strong>6</strong>
+                        <strong>5</strong>
                         <span class="hide-menu">งานเปรียบเทียบและชำระค่าปรับ</span>
                     </a>
                 </li>
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/income/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
-                        <strong>7</strong>
+                        <strong>6</strong>
                         <span class="hide-menu">นำส่งเงินรายได้</span>
                     </a>
                 </li>
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/reward/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
-                        <strong>8</strong>
+                        <strong>7</strong>
                         <span class="hide-menu">คำร้องขอรับเงินสินบนรางวัล</span>
                     </a>
                 </li>
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/reduction/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
-                        <strong>9</strong>
+                        <strong>8</strong>
                         <span class="hide-menu">รายการปรับเพิ่ม-ปรับลด </span>
                     </a>
                 </li>
