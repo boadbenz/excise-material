@@ -25,6 +25,7 @@ import {
   filter
 } from 'rxjs/operators';
 import { MyDatePickerOptions } from 'app/config/dateFormat';
+import { IRequestCommandDetail } from 'app/pages/reward/interfaces/RequestCommandDetail';
 interface IDetailCustom {
   PaymentFineDetailID?: number;
   LawbreakerName: string;
@@ -72,30 +73,40 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
   ) {
     super();
     this.RequestCommand$.subscribe((resCom: IRequestCommand[]) => {
-      if (resCom[0]) {
-        const RequestCommand: IRequestCommand = resCom[0];
-        this.totalPart = RequestCommand.TotalPart;
-        this.partMoney = RequestCommand.RequestCommandDetail[0].PartMoney;
+      if (resCom !== null) {
+        if (resCom.length > 0) {
+          const RequestCommand: IRequestCommand = resCom[0];
+          this.totalPart = RequestCommand.TotalPart;
 
-        this.checkList = RequestCommand.RequestCommandDetail.map(m => true);
-        this.RequestCommand_NoticeCode_list = RequestCommand.RequestCommandDetail.map(
-          m => ({
-            text: `${m.NoticeCode || ''}/${m.TitleName || ''} ${m.FirstName ||
-              ''} ${m.LastName || ''}`,
-            value: m.NoticeCode,
-            value2: m.CommandDetailID
-          })
-        );
-        this.formGroup.controls['RequestBribeCode'].setValue('Auto Generate');
+          this.partMoney =
+            RequestCommand.RequestCommandDetail.length > 0
+              ? RequestCommand.RequestCommandDetail[0].PartMoney
+              : 0;
+
+          this.checkList = RequestCommand.RequestCommandDetail.map(m => true);
+          this.RequestCommand_NoticeCode_list = RequestCommand.RequestCommandDetail.map(
+            m => ({
+              text: `${m.NoticeCode || ''}/${m.TitleName || ''} ${m.FirstName ||
+                ''} ${m.LastName || ''}`,
+              value: m.NoticeCode,
+              value2: m.CommandDetailID
+            })
+          );
+          this.formGroup.controls['RequestBribeCode'].setValue('Auto Generate');
+        }
       }
     });
     this.RequestBribe$.subscribe((resBri: IRequestBribe[]) => {
-      if (resBri[0]) {
-        const RequestBribe: IRequestBribe = resBri[0];
-        this.totalPart = RequestBribe.TotalPart;
-        this.partMoney = RequestBribe.PartMoney;
+      if (resBri !== null) {
+        if (resBri.length > 0) {
+          const RequestBribe: IRequestBribe = resBri[0];
+          this.totalPart = RequestBribe.TotalPart;
+          this.partMoney = RequestBribe.PartMoney;
 
-        this.tableDetail = this.mapDetailData(RequestBribe.RequestBribeDetail);
+          this.tableDetail = this.mapDetailData(
+            RequestBribe.RequestBribeDetail
+          );
+        }
       }
     });
     this.formGroup = this.fb.group({

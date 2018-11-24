@@ -8,13 +8,13 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="" (click)="card1 = !card1">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': card1, 'fa-chevron-up': !card1}"></i>
+                <a class="" (click)="onCollapse(ILG60_03_02_00_00_E08)">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': (ILG60_03_02_00_00_E08 | async), 'fa-chevron-up': !(ILG60_03_02_00_00_E08 | async)}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">ข้อมูลการจับกุม</h4>
         </div>
-        <div *ngIf="card1" class="card-body">
+        <div *ngIf="ILG60_03_02_00_00_E08 | async" class="card-body">
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">ส.ส.2/27 :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -50,9 +50,8 @@
 
                     <input type="text" class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}"
                         required [ngbTypeahead]="serachOffice" [resultTemplate]="rt" [readOnly]="showEditField"
-                        [inputFormatter]="formatterOffice" (selectItem)="selectItemOffice($event)" 
-                        [value]="arrestFG.get('ArrestStation').value" 
-                        (change)="onChangeArrestStation($event)"/>
+                        [inputFormatter]="formatterOffice" (selectItem)="selectItemOffice($event)" [value]="arrestFG.get('ArrestStation').value"
+                        (change)="onChangeArrestStation($event)" />
 
                     <input type="text" style="display: none;" formControlName="ArrestStation">
                 </div>
@@ -88,13 +87,13 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="" (click)="noticeCard = !noticeCard">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': noticeCard, 'fa-chevron-up': !noticeCard}"></i>
+                <a class="" (click)="onCollapse(ILG60_03_02_00_00_E10)">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': (ILG60_03_02_00_00_E10 | async), 'fa-chevron-up': !(ILG60_03_02_00_00_E10 | async)}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">ใบแจ้งความนำจับ</h4>
         </div>
-        <div *ngIf="noticeCard" class="card-body">
+        <div *ngIf="ILG60_03_02_00_00_E10 | async" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -149,13 +148,13 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="" (click)="card2 = !card2">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>
+                <a class="" (click)="onCollapse(ILG60_03_02_00_00_E13)">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': (ILG60_03_02_00_00_E13 | async), 'fa-chevron-up': !(ILG60_03_02_00_00_E13 | async)}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">ผู้จับกุม</h4>
         </div>
-        <div *ngIf="card2" class="card-body">
+        <div *ngIf="ILG60_03_02_00_00_E13 | async" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -222,13 +221,13 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="" (click)="card3 = !card3">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': card3, 'fa-chevron-up': !card3}"></i>
+                <a class="" (click)="onCollapse(ILG60_03_02_00_00_E18)">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': (ILG60_03_02_00_00_E18 | async), 'fa-chevron-up': !(ILG60_03_02_00_00_E18 | async)}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">สถานที่เกิดเหตุ</h4>
         </div>
-        <div *ngIf="card3" class="card-body" formArrayName="ArrestLocale">
+        <div *ngIf="ILG60_03_02_00_00_E18 | async" class="card-body" formArrayName="ArrestLocale">
             <div *ngFor="let item of ArrestLocale.controls; let i = index;" [formGroupName]="i">
                 <!-- <input type="text" formControlName="LocaleID" class="hidden"> -->
                 <div class="row">
@@ -295,13 +294,13 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="" (click)="card7 = !card7">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': card7, 'fa-chevron-up': !card7}"></i>
+                <a class="" (click)="onCollapse(ILG60_03_02_00_00_E20)">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': (ILG60_03_02_00_00_E20 | async), 'fa-chevron-up': !(ILG60_03_02_00_00_E20 | async)}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">รายละเอียดการจับกุม</h4>
         </div>
-        <div *ngIf="card7" class="card-body">
+        <div *ngIf="ILG60_03_02_00_00_E20 | async" class="card-body">
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
                 <div class="col-lg-10 col-sm-8 form-group ">
@@ -329,13 +328,13 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="" (click)="card5 = !card5">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': card5, 'fa-chevron-up': !card5}"></i>
+                <a class="" (click)="onCollapse(ILG60_03_02_00_00_E21)">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': (ILG60_03_02_00_00_E21 | async), 'fa-chevron-up': !(ILG60_03_02_00_00_E21 | async)}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">ของกลาง</h4>
         </div>
-        <div *ngIf="card5" class="card-body">
+        <div *ngIf="ILG60_03_02_00_00_E21 | async" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -383,7 +382,7 @@
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 30px;">
                                 <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
-                                [readonly]="showEditField">
+                                    [readonly]="showEditField">
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
                                 <ng-template #netVolumeUnit let-r="result" let-t="term">
@@ -408,13 +407,13 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="" (click)="card6 = !card6">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': card6, 'fa-chevron-up': !card6}"></i>
+                <a class="" (click)="onCollapse(ILG60_03_02_00_00_E25)">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': (ILG60_03_02_00_00_E25 | async), 'fa-chevron-up': !(ILG60_03_02_00_00_E25 | async)}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">ข้อกล่าวหา</h4>
         </div>
-        <div *ngIf="card6" class="card-body">
+        <div *ngIf="ILG60_03_02_00_00_E25 | async" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -477,13 +476,13 @@
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
-                <a class="" (click)="card8 = !card8">
-                    <i class="fa" [ngClass]="{'fa-chevron-down': card8, 'fa-chevron-up': !card8}"></i>
+                <a class="" (click)="onCollapse(ILG60_03_02_00_00_E28)">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': (ILG60_03_02_00_00_E28 | async), 'fa-chevron-up': !(ILG60_03_02_00_00_E28 | async)}"></i>
                 </a>
             </div>
             <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
         </div>
-        <div *ngIf="card8" class="card-body">
+        <div *ngIf="ILG60_03_02_00_00_E28 | async" class="card-body">
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
