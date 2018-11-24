@@ -28,6 +28,8 @@ import { MatDialog } from '@angular/material';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { RequestRewardDetailService } from '../../services/RequestRewardDetail.service';
 import { RequestRewardStaffService } from '../../services/RequestRewardStaff.service';
+import { RequestRewardStaffModel } from '../../models/RequestRewardStaff.Model';
+import { RequestRewardinsAllModel } from '../../models/RequestRewardinsAll.Model';
 
 @Component({
   selector: 'app-reward',
@@ -292,47 +294,24 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             }
 
             // 2.1.3
+            this.ILG60_08_04_00_00_E08_FORM_DATA.RequestBribeRewardID = this.RequestBribeRewardID$.getValue();
+            this.ILG60_08_04_00_00_E08_FORM_DATA.RequestRewardCode = this.RequestRewardCode;
+            this.ILG60_08_04_00_00_E08_FORM_DATA.RequestRewardStaff = this.ILG60_08_04_00_00_E12_FORM_DATA;
+            this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate = this.ConvDateTimeToDate(
+              convertDateForSave(
+                getDateMyDatepicker(
+                  this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate
+                )
+              )
+            );
             const RequestRewardinsAllRespone: IRequestRewardinsAllRespone = await this.requestRewardService
-              .RequestRewardinsAll({
-                RequestBribeRewardID: this.RequestBribeRewardID$.getValue(),
-                RequestRewardCode: this.RequestRewardCode,
-                ReferenceNo: this.ILG60_08_04_00_00_E08_FORM_DATA.ReferenceNo,
-                Station: this.ILG60_08_04_00_00_E08_FORM_DATA.Station,
-                RequestDate: convertDateForSave(
-                  getDateMyDatepicker(
-                    this.ILG60_08_04_00_00_E08_FORM_DATA.RequestDate
-                  )
-                ),
-                RequestTime: this.ILG60_08_04_00_00_E08_FORM_DATA.RequestTime,
-                BribeTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.BribeTotal,
-                FineType: this.ILG60_08_04_00_00_E08_FORM_DATA.FineType,
-                FirstMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .FirstMoneyPerPart,
-                FirstMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .FirstMoneyTotal,
-                FirstPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .FirstPartTotal,
-                FirstRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .FirstRemainder,
-                IsActive: this.ILG60_08_04_00_00_E08_FORM_DATA.IsActive,
-                RequestRewardDetail: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .RequestRewardDetail,
-                RequestRewardID: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .RequestRewardID,
-                RequestRewardStaff: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .RequestRewardStaff,
-                RewardTotal: this.ILG60_08_04_00_00_E08_FORM_DATA.RewardTotal,
-                SecondMoneyPerPart: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .SecondMoneyPerPart,
-                SecondMoneyTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .SecondMoneyTotal,
-                SecondPartTotal: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .SecondPartTotal,
-                SecondRemainder: this.ILG60_08_04_00_00_E08_FORM_DATA
-                  .SecondRemainder,
-                StationCode: this.ILG60_08_04_00_00_E08_FORM_DATA.StationCode
-              })
+              .RequestRewardinsAll(this.ILG60_08_04_00_00_E08_FORM_DATA)
               .toPromise();
+            console.log(
+              'ILG60_08_04_00_00_E08_FORM_DATA',
+              this.ILG60_08_04_00_00_E08_FORM_DATA
+            );
+
             if (RequestRewardinsAllRespone.RequestRewardID) {
               // 2.1.5
               // 2.1.5(1)
@@ -413,7 +392,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           this.RequestRewardID$.getValue()
         ]);
       } catch (error) {
-        alert('บันทึกไม่สำเร็จ');
+        alert('บันทึกไม่สำเร็จ' + error);
       }
     } else {
       alert('กรุณากรอกให้ครบถ้วน');
@@ -499,18 +478,35 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     switch (FormName) {
       case 'ILG60-08-04-00-00-E08':
         this.ILG60_08_04_00_00_E08_FORM_VALID = FormData.valid;
-        this.ILG60_08_04_00_00_E08_FORM_DATA = FormData.value;
+        const FormData08 = FormData.value;
+        const m08 = RequestRewardinsAllModel;
+        Object.keys(m08).forEach(x => {
+          m08[x] = FormData08[x] || '';
+        });
+        this.ILG60_08_04_00_00_E08_FORM_DATA = this.ConvObjectValue(m08);
+
         break;
       case 'ILG60-08-04-00-00-E12':
         this.ILG60_08_04_00_00_E12_FORM_VALID = FormData.valid;
-        const mergeArrayFormData: any = [
-          ...FormData.controls['RequestBribeRewardForm'].value,
-          ...FormData.controls['RequestRewardForm'].value,
-          ...FormData.controls['nonRequestRewardStaffForm'].value,
-          ...FormData.controls['sharedBribeRewardForm'].value
-        ];
 
-        this.ILG60_08_04_00_00_E12_FORM_DATA = mergeArrayFormData;
+        const mergeArrayFormData: any = [
+          ...(FormData.controls['RequestBribeRewardForm'].value || []),
+          ...(FormData.controls['RequestRewardForm'].value || []),
+          ...(FormData.controls['nonRequestRewardStaffForm'].value || []),
+          ...(FormData.controls['sharedBribeRewardForm'].value || [])
+        ];
+        const newMapData: any[] = [];
+        mergeArrayFormData.forEach(element => {
+          const m12 = RequestRewardStaffModel;
+          Object.keys(m12).forEach(x => {
+            m12[x] = element[x] || '';
+          });
+          newMapData.push(this.ConvObjectValue(m12));
+        });
+
+        console.log('mergeArrayFormData', newMapData);
+
+        this.ILG60_08_04_00_00_E12_FORM_DATA = newMapData;
         break;
       case 'ILG60-08-04-00-00-E19':
         this.ILG60_08_04_00_00_E19_FORM_VALID = FormData.valid;

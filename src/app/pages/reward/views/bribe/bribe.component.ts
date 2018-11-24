@@ -284,8 +284,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
           await this.requestBribeService
             .RequestBribeinsAll({
               ...this.ILG60_08_03_00_00_E08_FORM_DATA,
-              RequestBribeRewardID: this.RequestBribeRewardID$.getValue(), // 2.1.3(1)
-              RequestBribeCode: this.RequestBribeCode$.getValue(), // 2.1.3(2)
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue().toString(), // 2.1.3(1)
+              RequestBribeCode: this.RequestBribeCode$.getValue().toString(), // 2.1.3(2)
               POADate: '23-SEP-2561',
               RequestDate: '23-SEP-2561',
               POATime: '15.59',
