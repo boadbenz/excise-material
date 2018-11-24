@@ -99,7 +99,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.4');
+    this.sidebarService.setVersion('0.0.1.5');
     this.pageLoad();
   }
   private async pageLoad() {
