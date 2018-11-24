@@ -638,9 +638,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadProduct
                     .filter(v =>
-                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.SubBrandNameTH} ${v.BrandNameTH} ${v.ModelName}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
@@ -648,9 +648,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        (v.SubdistrictNameTH && v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -658,9 +658,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadStaff
                     .filter(v =>
-                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.TitleName} ${v.FirstName} ${v.LastName}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>
