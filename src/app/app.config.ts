@@ -12,6 +12,7 @@ export const appConfig = {
     // api8087: 'http://150.95.81.223:8087/XCS60',
     // mockapi: 'http://demo1735762.mockable.io/XCS60',
     //
+
     apiUrl: 'http://103.233.193.62:8888/XCS60',
     api8888: 'http://103.233.193.62:8888/XCS60',
     api7788: 'http://103.233.193.62:7788/XCS60',
@@ -23,5 +24,19 @@ export const appConfig = {
     api8882: 'http://103.233.193.62:8882/XCS60',
     api8883: 'http://103.233.193.62:8883/XCS60',
     api8087: 'http://103.233.193.62:8087/XCS60',
-    mockapi: 'http://demo1735762.mockable.io/XCS60',
+    // mockapi: 'http://demo1735762.mockable.io/XCS60',
+
+    // apiUrl: 'http://techlogn.ddns.net:8888/XCS60',
+    // api8888: 'http://techlogn.ddns.net:8888/XCS60',
+    // api7788: 'http://techlogn.ddns.net:7788/XCS60',
+    // api7789: 'http://techlogn.ddns.net:7789/XCS60',
+    // api8881: 'http://techlogn.ddns.net:8881/XCS60',
+    // api8082: 'http://techlogn.ddns.net:8082/XCS60',
+    // api8083: 'http://techlogn.ddns.net:8083/XCS60',
+    // api8084: 'http://techlogn.ddns.net:8084/XCS60',
+    // api8882: 'http://techlogn.ddns.net:8882/XCS60',
+    // api8883: 'http://techlogn.ddns.net:8883/XCS60',
+    // api8087: 'http://techlogn.ddns.net:8087/XCS60',
+    // mockapi: 'http://demo1735762.mockable.io/XCS60',
+    
 }

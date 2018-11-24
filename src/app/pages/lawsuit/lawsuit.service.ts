@@ -73,15 +73,15 @@ export class LawsuitService {
   }
 
   async LawsuitArrestupdDeleteLawsuit(ArrestCode: any, IndictmentID: Number) {
-    const params = { 
-      ArrestCode: ArrestCode ,
+    const params = {
+      ArrestCode: ArrestCode,
       IndictmentID: IndictmentID
     };
     const url = `${appConfig.api8083}/LawsuitArrestupdDeleteLawsuit`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  async GetArrestIndicmentDetailgetByCon(indictmentDetailID: string) {
+  async LawsuitArrestIndicmentDetailgetByCon(indictmentDetailID: string) {
     const params = { IndictmentDetailID: indictmentDetailID };
     const url = `${appConfig.api8083}/LawsuitArrestIndicmentDetailgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
@@ -165,11 +165,28 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  async LawsuitJudgementupdByCon(lawsuitForm) {
+  async LawsuitJudgementupdByCon(JudgementID) {
+    const params = { JudgementID: JudgementID };
     const url = `${appConfig.api8083}/LawsuitJudgementupdByCon`;
-    return this.responsePromiseGetWithoutStatus(JSON.stringify(lawsuitForm), url);
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
+  async LawsuitPaymentFineDetailupdDelete(PaymentFineID) {
+    const params = { PaymentFineID: PaymentFineID };
+    const url = `${appConfig.api7789}/LawsuitJudgementupdDelete`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }
+
+  async LawsuitPaymentFineDetailinsAll(PaymentFineID) {
+    const params = { PaymentFineID: PaymentFineID };
+    const url = `${appConfig.api7789}/LawsuitPaymentFineDetailinsAll`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }
+
+  async LawsuitJudgementinsAll(lawsuitForm) {
+    const url = `${appConfig.api8083}/LawsuitJudgementinsAll`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(lawsuitForm), url);
+  }
   async LawsuitArrestIndicmentupdByCon(IndictmentID) {
     const params = { IndictmentID: IndictmentID };
     const url = `${appConfig.api8083}/LawsuitArrestIndictmentupdByCon`;
@@ -179,6 +196,15 @@ export class LawsuitService {
   async LawsuitformupdByCon(lawsuitForm) {
     const url = `${appConfig.api8083}/LawsuitupdByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(lawsuitForm), url);
+  }
+
+  async MasDocumentMaininsAll(DocumentType, ReferenceCode) {
+    const params = { 
+      DocumentType: DocumentType ,
+      ReferenceCode: ReferenceCode
+    };
+    const url = `${appConfig.api8083}/LawsuitupdByCon`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
   // async MasStaffMaingetAll() {
   //   const params = {};
@@ -247,7 +273,7 @@ export class LawsuitService {
   }
 
   async LawsuitArrestIndicmentDetailupdByCon(IndictmentDetailID, LawsuitType, LawsuitEnd) {
-    const params = { 
+    const params = {
       IndictmentDetailID: IndictmentDetailID,
       LawsuitType: LawsuitType,
       LawsuitEnd: LawsuitEnd
@@ -256,7 +282,7 @@ export class LawsuitService {
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
   async LawsuitArrestupdByCon(ArrestCode) {
-    const params = { 
+    const params = {
       ArrestCode: ArrestCode,
     };
     const url = `${appConfig.api8083}/LawsuitArrestupdByCon`;
