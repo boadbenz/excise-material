@@ -1,4 +1,4 @@
-import { NoticeProduct } from './../notice-product';
+// import { NoticeProduct } from './../notice-product';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
