@@ -64,10 +64,10 @@ export const NoticeProductFormControl = {
     CarNo: new FormControl(null),
     Qty: new FormControl(null, Validators.required),
     QtyUnit: new FormControl(null, Validators.required),
-    NetVolume: new FormControl(null),
+    NetVolume: new FormControl(0),
     NetVolumeUnit: new FormControl(null),
     Remarks: new FormControl(null),
-    IsActive: new FormControl(null),
+    IsActive: new FormControl(1),
 
     BrandFullName: new FormControl(null),
     IsNewItem: new FormControl(false)

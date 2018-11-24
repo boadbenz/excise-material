@@ -33,6 +33,6 @@ export const NoticeDocumentFormControl = {
     ReferenceCode: new FormControl(null),
     FilePath: new FormControl(null),
     DataSource: new FormControl(null),
-    IsActive: new FormControl(null),
+    IsActive: new FormControl(1),
     IsNewItem: new FormControl(null)
 }

@@ -195,7 +195,6 @@ export class SuspectComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnSave(false);
 
-                console.log(this.SuspectFG.value);
                 if (!this.SuspectFG.valid) {
                     this.isRequired = true;
                     alert(Message.checkData)

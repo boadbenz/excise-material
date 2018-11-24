@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import {
   IRequestRewardgetByRequestBribeRewardID,
   IRequestRewardgetByCon,
-  IRequestRewardinsAll
+  IRequestRewardinsAll,
+  IRequestRewardupdByCon
 } from '../interfaces/RequestReward';
 
 @Injectable()
@@ -26,8 +27,10 @@ export class RequestRewardService extends HelperService {
   public RequestRewardgetByCon(param: IRequestRewardgetByCon): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/RequestRewardgetByCon`, param);
   }
-
   public RequestRewardinsAll(param: IRequestRewardinsAll): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/RequestRewardinsAll`, param);
+  }
+  public RequestRewardupdByCon(param: IRequestRewardupdByCon): Observable<any> {
+    return this.http.post(`${this.ApiPrefixUrl}/RequestRewardupdByCon`, param);
   }
 }

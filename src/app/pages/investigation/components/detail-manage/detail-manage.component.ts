@@ -126,7 +126,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.4');
+        this.sidebarService.setVersion(this.s_invest.version);
 
         this.createForm();
 
@@ -151,6 +151,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         break;
                 }
             });
+
+        this.resetConfig();
 
         this.navService.showFieldEdit
             .takeUntil(this.destroy$)
@@ -213,6 +215,20 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                     this.navigateToManage();
                 }
             })
+    }
+
+    private resetConfig() {
+        let routerConfig = this.router['config'];
+        routerConfig
+            .find(x => x.path == 'investigation')['_loadedConfig'].routes // core investigation path
+            .filter(x => x.path.indexOf('detail-manage') >= 0) // curent path
+            .map(x => {
+                x.data.urls
+                    .find(y => y.url.indexOf('/investigation/manage') >= 0)
+                    .url = `/investigation/manage/${this.investMode}/${this.investCode}`; // previous path
+                return x;
+            })
+        this.router.resetConfig(routerConfig);
     }
 
     private enableBtnModeC() {
@@ -622,9 +638,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadProduct
                     .filter(v =>
-                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.SubBrandNameTH} ${v.BrandNameTH} ${v.ModelName}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
@@ -632,9 +648,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        (v.SubdistrictNameTH && v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -642,9 +658,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadStaff
                     .filter(v =>
-                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.TitleName} ${v.FirstName} ${v.LastName}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>

@@ -21,7 +21,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { DetailModule } from "../detail/detail.module";
 import { MyDatePickerTHModule } from "mydatepicker-th";
 import { MyDatePickerModule } from "mydatepicker";
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 const routes: Routes = [
   {
     path: "",
@@ -58,6 +58,7 @@ const routes: Routes = [
     MatDialogModule,
     MyDatePickerTHModule,
     MyDatePickerModule,
+    MatAutocompleteModule
     // DetailModule,
   ],
   entryComponents: [DialogJudgment],
