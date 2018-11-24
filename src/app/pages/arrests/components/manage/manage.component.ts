@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -32,6 +32,7 @@ import { ArrestsService } from '../../arrests.service';
 import { LoaderService } from 'app/core/loader/loader.service';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { IMyDateModel } from 'mydatepicker-th';
+import { ManageConfig } from './manage.config';
 
 @Component({
     selector: 'app-manage',
@@ -48,7 +49,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // r: รายการแสดง
     // u: รายการอัพเดท
     // d: รายการที่ถูกลบ
-    card1: boolean = true;
+    // card1: boolean = true;
     noticeCard: boolean = false;
     card2: boolean = false;
     card3: boolean = false;
@@ -57,6 +58,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     card6: boolean = false;
     card7: boolean = false;
     card8: boolean = false;
+
+    // ILG60_03_02_00_00_E08: any;
+    // ILG60_03_02_00_00_E10: any;
+    // ILG60_03_02_00_00_E13: any;
+    // ILG60_03_02_00_00_E18: any;
+    // ILG60_03_02_00_00_E20: any;
+    // ILG60_03_02_00_00_E21: any;
+    // ILG60_03_02_00_00_E25: any;
+    // ILG60_03_02_00_00_E28: any;
 
     myDatePickerOptions = MyDatePickerOptions;
     _isSuccess: boolean = false;
@@ -169,7 +179,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private s_notice: fromServices.ArrestNoticeService,
         private s_staff: fromServices.ArrestStaffService,
         private s_lawsuit: fromServices.ArrestLawSuitService,
-        private loaderService: LoaderService
+        private loaderService: LoaderService,
+        private manageConfig: ManageConfig
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -182,6 +193,17 @@ export class ManageComponent implements OnInit, OnDestroy {
             .takeUntil(this.destroy$)
             .subscribe((x: fromModels.Arrest) => this.stateArrest = x)
     }
+
+    onCollapse = this.manageConfig.onCollapse;
+    
+    ILG60_03_02_00_00_E08 = this.manageConfig.ILG60_03_02_00_00_E08;
+    ILG60_03_02_00_00_E10 = this.manageConfig.ILG60_03_02_00_00_E10;
+    ILG60_03_02_00_00_E13 = this.manageConfig.ILG60_03_02_00_00_E13;
+    ILG60_03_02_00_00_E18 = this.manageConfig.ILG60_03_02_00_00_E18;
+    ILG60_03_02_00_00_E20 = this.manageConfig.ILG60_03_02_00_00_E20;
+    ILG60_03_02_00_00_E21 = this.manageConfig.ILG60_03_02_00_00_E21;
+    ILG60_03_02_00_00_E25 = this.manageConfig.ILG60_03_02_00_00_E25;
+    ILG60_03_02_00_00_E28 = this.manageConfig.ILG60_03_02_00_00_E28;
 
     async ngOnInit() {
         this.sidebarService.setVersion(this.s_arrest.version);
@@ -336,7 +358,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                await this.loadMasterData();
+                // await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
                     if (this.arrestCode != this.stateArrest.ArrestCode)
@@ -590,7 +612,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             );
         })
-        
+
         this.arrestFG.setControl('ArrestNotice', arrestNotice);
     }
     // 2
