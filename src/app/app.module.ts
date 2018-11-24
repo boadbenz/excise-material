@@ -29,6 +29,7 @@ import * as fromInvestReducers from './pages/investigation/store/reducers';
 import { TransactionRunningService } from './services/transaction-running.service';
 import { MasDocumentMainService } from './services/mas-document-main.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ManageConfig } from './pages/arrests/components/manage/manage.config';
 @NgModule({
     declarations: [
         AppComponent,
@@ -61,6 +62,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AuthGuard,
         NavigationService,
+        ManageConfig,
         SidebarService,
         MainMasterService,
         MasDocumentMainService,
