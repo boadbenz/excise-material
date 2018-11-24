@@ -46,7 +46,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.sidebarService.setVersion('0.0.0.11');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
-    // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
+    await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       if (Textsearch) {
         await this.navService.setOnSearch('');

@@ -478,8 +478,37 @@ export class ManageComponent implements OnInit {
   errorShow: any;
   modal: any;
   lawBraker: any[] = [];
-  lawsuitArrestForm: FormGroup;
-  lawsuitForm: FormGroup;
+  lawsuitArrestForm: FormGroup = new FormGroup({
+    ArrestCode: new FormControl(),
+    OccurrenceDate: new FormControl(),
+    OccurrenceTime: new FormControl(),
+    ArrestStation: new FormControl(),
+    FullName: new FormControl(),
+    PositionName: new FormControl(),
+    DepartmentName: new FormControl(),
+    SubSectionType: new FormControl(),
+    GuiltBaseName: new FormControl(),
+    SectionNo: new FormControl(),
+    PenaltyDesc: new FormControl(),
+    LawsuitArrestStaff: new FormControl()
+  });
+  lawsuitForm: FormGroup = new FormGroup({
+    IsLawsuitCheck: new FormControl(),
+    ReasonDontLawsuit: new FormControl(),
+    IsOutsideCheck: new FormControl(),
+    LawsuitNo: new FormControl(),
+    LawsuitNoSub: new FormControl(),
+    LawsuitDate: new FormControl(),
+    LawsuitTime: new FormControl(),
+    FullName: new FormControl(),
+    PositionName: new FormControl(),
+    DepartmentName: new FormControl(),
+    LawsuitStation: new FormControl(),
+    LawsuitType: new FormControl(),
+    LawsuitEnd: new FormControl(),
+    DocumentName: new FormControl(),
+    FilePath: new FormControl()
+  });
   showEditField: Boolean;
   disabled: Boolean;
   isRequired: boolean;
@@ -665,42 +694,56 @@ export class ManageComponent implements OnInit {
 
       }
     } else { /// IdProve
-      await this.lawsuitService.LawsuitProvegetByLawsuitID(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']).then(res => {
-        // console.log(res);
-        if (res.length == 0) { /// if not found data
-          /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
-          // this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
-          //   const _masstaff = masstaff;
-          //   _masstaff.map(item => {
-          //     item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-          //   });
-          //   this.masStaffList = _masstaff || [];
-          // });
-          // this.lawsuitService.MasOfficeMaingetAll().then(masoffice => {
-          //   this.masOfficeList = masoffice || [];
-          // });
+      if(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length > 0){
+        await this.lawsuitService.LawsuitProvegetByLawsuitID(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']).then(res => {
+          // console.log(res);
+          if (res.length == 0) { /// if not found data
+            /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
+            this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
+              const _masstaff = masstaff;
+              _masstaff.map(item => {
+                item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+              });
+              this.masStaffList = _masstaff || [];
+            });
+            this.lawsuitService.MasOfficeMaingetAll().then(masoffice => {
+              this.masOfficeList = masoffice || [];
+            });
+            this.navService.setEditField(false);
+            this.navService.setEditButton(false);
+            this.navService.setPrintButton(false);
+            this.navService.setDeleteButton(false);
+            // set true
+            this.showEditField = true
+            this.navService.setSaveButton(true);
+            this.navService.setCancelButton(true);
+            return;
+            // console.log("_masstaff",this.masStaffList);
+          } else { ///if found data
+            alert('ไม่สามารถทำรายการได้');
+            // // set false
+            this.navService.setEditField(true);
+            this.navService.setEditButton(true);
+            this.navService.setPrintButton(true);
+            this.navService.setDeleteButton(true);
+            // set true
+            this.navService.setSaveButton(false);
+            this.navService.setCancelButton(false);
+            return;
+          }
+        })
+      }else{
           this.navService.setEditField(false);
           this.navService.setEditButton(false);
           this.navService.setPrintButton(false);
           this.navService.setDeleteButton(false);
           // set true
+          this.showEditField = true
           this.navService.setSaveButton(true);
           this.navService.setCancelButton(true);
           return;
-          // console.log("_masstaff",this.masStaffList);
-        } else { ///if found data
-          alert('ไม่สามารถทำรายการได้');
-          // // set false
-          this.navService.setEditField(true);
-          this.navService.setEditButton(true);
-          this.navService.setPrintButton(true);
-          this.navService.setDeleteButton(true);
-          // set true
-          this.navService.setSaveButton(false);
-          this.navService.setCancelButton(false);
-          return;
-        }
-      })
+      }
+      
     }
   }
 
@@ -742,63 +785,86 @@ export class ManageComponent implements OnInit {
   }
 
   private async onCancel() {
-    this.preLoaderService.setShowPreloader(true);
+    // this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
-    let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
-    let indictmentID: string;
-    if (IsLawsuitComplete == 0) {
-
-    }else {
-    // let IsLawsuitComplete = 1;
-      this.activeRoute.queryParams.subscribe(
-        params => { this.LawsuitID = params.LawsuitID;  indictmentID = params.IndictmentID; }
-      );
-      let ArrestIndicmentDetail = await this.lawsuitService.GetArrestIndicmentDetailgetByCon(IndictmentDetailID)
-      console.log(ArrestIndicmentDetail)
-    }
+    console.log(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail']);
+    let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail']
+    // let indictmentID: string;
+    // if (IsLawsuitComplete == 0) {
+    //   // this.lawsuitService.LawsuitArrestIndicmentupdByCon(IndictmentDetailID).then((res:any)=>{
+    //   //   console.log('cancel',res)
+    //   // })
+    // }else {
+    // // let IsLawsuitComplete = 1;
+    //   this.activeRoute.queryParams.subscribe(
+    //     params => { this.LawsuitID = params.LawsuitID;  indictmentID = params.IndictmentID; }
+    //   );
+    //   let ArrestIndicmentDetail = await this.lawsuitService.GetArrestIndicmentDetailgetByCon(IndictmentDetailID)
+    //   console.log(ArrestIndicmentDetail)
+    // }
     
 
     // let IsLawsuitComplete = 0;
-    // this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
-
+    // this.lawsuitService.LawsuitArrestGetByCon(IndictmentDetailID).then(res => {
+    //   console.log(res);
     //   IsLawsuitComplete = res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
     // });
+    
+    if (!confirm("ยืนยันการทำรายการหรือไม่")) {
+      return;
+    } else {
+      if (IsLawsuitComplete == 1) {
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+        this.navService.setEditField(true);
+        this.navService.showFieldEdit.subscribe(async p => {
+          this.showEditField = true;
+          this.ngOnInit();
+          
+        });
+      } else {
+        LawsuitArrestIndicmentDetail.forEach(detail => {
+          this.lawsuitService.GetArrestIndicmentDetailgetByCon(detail.IndictmentDetailID).then(result => {
+            console.log('result====>', result);
+            if (result.LawsuitJudgement) {
+              result.LawsuitJudgement.forEach(judge => {
+                if(judge.LawsuitType != 0){
+                  this.lawsuitService.LawsuitJudgementupdDelete(judge.JudgementID).then((deleteres)=>{
+                    console.log(deleteres)
+                  }).catch((error)=>{
+                    console.log(error)
+                  })
+                }else{
+                  this.router.navigate(['/lawsuit/list']);
+                }
+                if(judge.isFine == 1){
+                  this.lawsuitService.LawsuitPaymentFineDetailupdDelete(judge.PaymentFineID).then((deleteres)=>{
+                    console.log(deleteres)
+                  }).catch((error)=>{
+                    console.log(error)
+                  })
+                }else{
+                  this.router.navigate(['/lawsuit/list']);
+                }
+              });
+            }
+          });
+        })
+        // this.ngOnInit();
+        this.navService.showFieldEdit.subscribe(async p => {
+          this.showEditField = true;
 
-    // if (!confirm("ยืนยันการทำรายการหรือไม่")) {
-    //   return;
-    // } else {
-    //   if (IsLawsuitComplete == 1) {
-    //     this.navService.setCancelButton(false);
-    //     this.navService.setSaveButton(false);
-    //     this.navService.setEditField(true);
-    //     this.navService.showFieldEdit.subscribe(async p => {
-    //       this.showEditField = true;
-    //       this.ngOnInit();
-    //     });
-    //   } else {
-    //     this.lawsuitService.GetArrestIndicmentDetailgetByCon(indictmentID).then(result => {
-    //       console.log('result====>', result);
-    //       if (result.LawsuitJudgement) {
-    //         // case 2.1.1
-    //       } else {
-    //         // this.ngOnInit();
-    //         this.navService.setEditField(true);
-    //         this.navService.showFieldEdit.subscribe(async p => {
-    //           this.showEditField = true;
+          // this.ngOnInit();
+        });
 
-    //           // this.ngOnInit();
-    //         });
-    //       }
-    //     });
-
-    //     this.navService.setEditField(true);
-    //     this.navService.setCancelButton(false);
-    //     this.navService.setSaveButton(false);
-    //   }
-    //   this.navService.setPrintButton(true);
-    //   this.navService.setDeleteButton(true);
-    //   this.navService.setEditButton(true);
-    // }
+        this.navService.setEditField(true);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+      }
+      this.navService.setPrintButton(true);
+      this.navService.setDeleteButton(true);
+      this.navService.setEditButton(true);
+    }
   }
 
   private async onSave() {
@@ -884,7 +950,7 @@ export class ManageComponent implements OnInit {
           const json = {
             "LawsuitID": this.LawsuitID,
             "IndictmentID": this.IndictmentID,
-            "IsLawsuit": isLaw,
+            "IsLawsuit": isLaw ,
             "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : null,
             "LawsuitNo": lawsuitNo,
             "LawsuitDate": _lawDate.jsdate,
@@ -1072,7 +1138,7 @@ export class ManageComponent implements OnInit {
         if (IsLawsuitComplete == 1) {
           if (res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length != 0) {
             await this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID'])
-            let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
+            let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'] ? 1 : 0;
             let IsLawsuitCheck = true;
             if (islaw == 1) {
               IsLawsuitCheck = false;
@@ -1190,7 +1256,10 @@ export class ManageComponent implements OnInit {
 
           /// LawsuitComplete status = 0
         } else {
-          this.setlawsuitForm(res)
+          if (res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length != 0) {
+            this.setlawsuitForm(res)
+          }
+          
           let IsProve = res[0]['LawsuitArrestIndicment'][0].IsProve;
           let IsLawsuitComplete = res[0]['LawsuitArrestIndicment'][0].IsLawsuitComplete;
           let arrList = [];
@@ -1270,9 +1339,8 @@ export class ManageComponent implements OnInit {
   }
   async setlawsuitForm(res) {
     /// get IsLawsuit check box (IsLawsuitCheck)
-    console.log(res)
-
-    let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
+    // console.log('setlawsuitForm',res)
+    let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'] ? 1 : 0;
     let IsLawsuitCheck = true;
     if (islaw == 1) {
       IsLawsuitCheck = false;
