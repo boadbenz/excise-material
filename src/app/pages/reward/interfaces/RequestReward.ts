@@ -31,6 +31,8 @@ export interface IRequestRewardgetByRequestBribeRewardID {
   RequestBribeRewardID: number;
 }
 
+// tslint:disable-next-line:no-empty-interface
+export interface IRequestRewardupdByCon extends IRequestReward {}
 export interface IRequestRewardgetByCon {
   RequestRewardID: number;
 }

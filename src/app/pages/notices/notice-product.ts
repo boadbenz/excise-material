@@ -67,7 +67,7 @@ export const NoticeProductFormControl = {
     NetVolume: new FormControl(null),
     NetVolumeUnit: new FormControl(null),
     Remarks: new FormControl(null),
-    IsActive: new FormControl(null),
+    IsActive: new FormControl(1),
 
     BrandFullName: new FormControl(null),
     IsNewItem: new FormControl(false)
