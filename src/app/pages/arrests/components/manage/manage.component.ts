@@ -573,12 +573,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     // 1
     setNoticeForm(n: fromModels.ArrestNotice[]) {
         let arrestNotice = this.ArrestNotice;
-        let arr = new FormArray([]);
         let i = 0;
         n.map(x => {
-            const modify = arrestNotice.value.filter(x => x.IsModify != 'd');
+            let modify = arrestNotice.value.filter(x => x.IsModify != 'd');
             i = (modify.length) && modify[modify.length - 1].RowId;
-            arr.push(
+            arrestNotice.push(
                 this.fb.group({
                     ArrestCode: this.arrestCode,
                     NoticeCode: x.NoticeCode,
@@ -591,7 +590,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             );
         })
-        this.arrestFG.setControl('ArrestNotice', arr);
+        
+        this.arrestFG.setControl('ArrestNotice', arrestNotice);
     }
     // 2
     private setArrestNoticeStaff(o: fromModels.ArrestNoticeStaff[]) {
