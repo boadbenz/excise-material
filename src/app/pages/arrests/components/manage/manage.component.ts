@@ -358,7 +358,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                // await this.loadMasterData();
+                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
                     if (this.arrestCode != this.stateArrest.ArrestCode)
