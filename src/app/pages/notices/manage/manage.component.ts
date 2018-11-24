@@ -1,4 +1,4 @@
-import { NoticeStaff } from './../notice-staff';
+import { NoticeProduct } from './../notice-product';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -57,6 +57,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
 
+    actionFrom:string;
     months:any[];
     programSpect: string = 'ILG60-02-02-00';
     mode: string;
@@ -124,15 +125,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
         private mainMasterService: MainMasterService,
-        private transactionRunningService: TransactionRunningService
+        private transactionRunningService: TransactionRunningService, private activatedRoute:ActivatedRoute
     ) {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
-        this.navService.setInnerTextNextPageButton('งานจับกุม')
+        this.navService.setInnerTextNextPageButton('งานจับกุม');
     }
 
     async ngOnInit() {
+        this.activatedRoute.queryParams.subscribe(params => {
+          this.actionFrom = params['from'];
+        });
         this.preloader.setShowPreloader(true);
 
         this.sidebarService.setVersion('0.0.2.18');
@@ -152,6 +156,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         // await this.setCommunicateStore();
 
         this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+
+        // this.activatedRoute.params.subscribe(params => {
+        //     let reload = params['reload'];
+        //     if(reload){
+        //         console.log(reload);
+        //     }
+        // });
 
         if (this.mode == 'R') {
             this.getByCon(this.noticeCode);
@@ -286,7 +297,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeDueDate: new FormControl(noticeDueDate, Validators.required),
             NoticeDueTime: new FormControl(null),
             GroupNameDesc: new FormControl('N/A'),
-            CommunicationChanelID: new FormControl(null, Validators.required),
+            CommunicationChanelID: new FormControl(null),
             DataSource: new FormControl(null),
             FilePath: new FormControl(null),
             ArrestCode: new FormControl(null),
@@ -295,29 +306,136 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStaff: this.fb.array([this.createStaffForm()]),
             NoticeInformer: this.fb.array([this.createInformerForm()]),
             NoticeLocale: this.fb.array([this.createLocaleForm()]),
-            NoticeProduct: this.fb.array([this.createProductForm()]),
+            NoticeProduct: this.fb.array([]),
             NoticeSuspect: this.fb.array([]),
             NoticeDocument: this.fb.array([])
-        })
+        });
     }
 
     private createStaffForm(): FormGroup {
         NoticeStaffFormControl.NoticeCode = new FormControl(this.noticeCode);
+        if(this.actionFrom=="new"){
+            NoticeStaffFormControl.StaffFullName = new FormControl(null, Validators.required);
+            NoticeStaffFormControl.StaffID = new FormControl(null);
+            NoticeStaffFormControl.NoticeCode = new FormControl(null, Validators.required);
+            NoticeStaffFormControl.StaffCode = new FormControl(null, Validators.required);
+            NoticeStaffFormControl.TitleName = new FormControl(null);
+            NoticeStaffFormControl.FirstName = new FormControl(null, Validators.required);
+            NoticeStaffFormControl.LastName = new FormControl(null);
+            NoticeStaffFormControl.PositionCode = new FormControl(null);
+            NoticeStaffFormControl.PositionName = new FormControl(null);
+            NoticeStaffFormControl.PosLevel = new FormControl(null);
+            NoticeStaffFormControl.PosLevelName = new FormControl(null);
+            NoticeStaffFormControl.DepartmentCode = new FormControl(null);
+            NoticeStaffFormControl.DepartmentName = new FormControl(null);
+            NoticeStaffFormControl.DepartmentLevel = new FormControl(null);
+            NoticeStaffFormControl.OfficeCode = new FormControl(null);
+            NoticeStaffFormControl.OfficeName = new FormControl(null);
+            NoticeStaffFormControl.OfficeShortName = new FormControl(null);
+            NoticeStaffFormControl.ContributorCode = new FormControl(null);
+            NoticeStaffFormControl.IsActive = new FormControl(1);
+        }
         return this.fb.group(NoticeStaffFormControl)
     }
 
     private createInformerForm(): FormGroup {
         NoticeInformerFormControl.NoticeCode = new FormControl(this.noticeCode);
+        if(this.actionFrom=="new"){
+            NoticeInformerFormControl.InformerID = new FormControl('22');
+            NoticeInformerFormControl.InformerType = new FormControl(null);
+            NoticeInformerFormControl.TitleCode = new FormControl(null);
+            NoticeInformerFormControl.TitleName = new FormControl(null);
+            NoticeInformerFormControl.FirstName = new FormControl(null, Validators.required);
+            NoticeInformerFormControl.LastName = new FormControl(null);
+            NoticeInformerFormControl.IDCard = new FormControl('N/A');
+            NoticeInformerFormControl.Age = new FormControl(null);
+            NoticeInformerFormControl.GenderType = new FormControl('-');
+            NoticeInformerFormControl.Location = new FormControl('N/A');
+            NoticeInformerFormControl.Address = new FormControl(null);
+            NoticeInformerFormControl.Village = new FormControl(null);
+            NoticeInformerFormControl.Building = new FormControl(null);
+            NoticeInformerFormControl.Floor = new FormControl(null);
+            NoticeInformerFormControl.Room = new FormControl(null);
+            NoticeInformerFormControl.Alley = new FormControl(null);
+            NoticeInformerFormControl.Road = new FormControl(null);
+            NoticeInformerFormControl.SubDistrictCode = new FormControl(null);
+            NoticeInformerFormControl.SubDistrict = new FormControl(null);
+            NoticeInformerFormControl.DistrictCode = new FormControl(null);
+            NoticeInformerFormControl.District = new FormControl(null);
+            NoticeInformerFormControl.ProvinceCode = new FormControl(null);
+            NoticeInformerFormControl.Province = new FormControl(null);
+            NoticeInformerFormControl.ZipCode = new FormControl('N/A');
+            NoticeInformerFormControl.TelephoneNo = new FormControl('N/A');
+            NoticeInformerFormControl.InformerInfo = new FormControl('N/A');
+            NoticeInformerFormControl.IsActive = new FormControl(1);
+            NoticeInformerFormControl.FullName = new FormControl(null);
+            NoticeInformerFormControl.Region = new FormControl(null);
+        }
         return this.fb.group(NoticeInformerFormControl)
     }
 
     private createLocaleForm(): FormGroup {
         NoticeLocaleFormControl.NoticeCode = new FormControl(this.noticeCode);
+        if(this.actionFrom=="new"){
+            NoticeLocaleFormControl.LocaleID = new FormControl(null);
+            NoticeLocaleFormControl.Location = new FormControl(null);
+            NoticeLocaleFormControl.Address = new FormControl(null);
+            NoticeLocaleFormControl.Village = new FormControl(null);
+            NoticeLocaleFormControl.Building = new FormControl(null);
+            NoticeLocaleFormControl.Floor = new FormControl(null);
+            NoticeLocaleFormControl.Room = new FormControl(null);
+            NoticeLocaleFormControl.Alley = new FormControl(null);
+            NoticeLocaleFormControl.Road = new FormControl(null);
+            NoticeLocaleFormControl.SubDistrictCode = new FormControl(null);
+            NoticeLocaleFormControl.SubDistrict = new FormControl(null);
+            NoticeLocaleFormControl.DistrictCode = new FormControl(null);
+            NoticeLocaleFormControl.District = new FormControl(null);
+            NoticeLocaleFormControl.ProvinceCode = new FormControl(null);
+            NoticeLocaleFormControl.Province = new FormControl(null);
+            NoticeLocaleFormControl.ZipCode = new FormControl('N/A');
+            NoticeLocaleFormControl.Policestation = new FormControl(null);
+            NoticeLocaleFormControl.IsActive = new FormControl(1);
+            NoticeLocaleFormControl.Region = new FormControl(null);
+        }
         return this.fb.group(NoticeLocaleFormControl)
     }
 
     private createProductForm(): FormGroup {
         NoticeProductFormControl.NoticeCode = new FormControl(this.noticeCode);
+        if(this.actionFrom=="new"){
+            NoticeProductFormControl.ProductID = new FormControl(null);
+            NoticeProductFormControl.GroupCode = new FormControl(null);
+            NoticeProductFormControl.IsDomestic = new FormControl(null);
+            NoticeProductFormControl.ProductCode = new FormControl(null);
+            NoticeProductFormControl.BrandCode = new FormControl(null);
+            NoticeProductFormControl.BrandNameTH = new FormControl(null);
+            NoticeProductFormControl.BrandNameEN = new FormControl(null);
+            NoticeProductFormControl.SubBrandCode = new FormControl(null);
+            NoticeProductFormControl.SubBrandNameTH = new FormControl(null);
+            NoticeProductFormControl.SubBrandNameEN = new FormControl(null);
+            NoticeProductFormControl.ModelCode = new FormControl(null);
+            NoticeProductFormControl.ModelName = new FormControl(null);
+            NoticeProductFormControl.FixNo1 = new FormControl(null);
+            NoticeProductFormControl.DegreeCode = new FormControl(null);
+            NoticeProductFormControl.Degree = new FormControl(null);
+            NoticeProductFormControl.SizeCode = new FormControl(null);
+            NoticeProductFormControl.Size = new FormControl(null);
+            NoticeProductFormControl.SizeUnitCode = new FormControl(null);
+            NoticeProductFormControl.SizeUnitName = new FormControl(null);
+            NoticeProductFormControl.FixNo2 = new FormControl(null);
+            NoticeProductFormControl.SequenceNo = new FormControl(null);
+            NoticeProductFormControl.ProductDesc = new FormControl(null);
+            NoticeProductFormControl.CarNo = new FormControl(null);
+            NoticeProductFormControl.Qty = new FormControl(null);
+            NoticeProductFormControl.QtyUnit = new FormControl(null);
+            NoticeProductFormControl.NetVolume = new FormControl(0);
+            NoticeProductFormControl.NetVolumeUnit = new FormControl(null);
+            NoticeProductFormControl.Remarks = new FormControl(null);
+            NoticeProductFormControl.IsActive = new FormControl(1);
+        
+            NoticeProductFormControl.BrandFullName = new FormControl(null);
+            NoticeProductFormControl.IsNewItem = new FormControl(false);
+        }
         return this.fb.group(NoticeProductFormControl)
     }
 
@@ -407,9 +525,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onCreate() {
 
-        // Set Preloader
-        this.preloader.setShowPreloader(true);
-
         console.log('===================');
         console.log('Create Notice : ', JSON.stringify(this.noticeForm.value));
         console.log('===================');
@@ -442,6 +557,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             l.NoticeCode = this.noticeCode;
             l.IsActive = 1;
             l.NetVolume = l.NetVolume?l.NetVolume:0;
+            if(!l.ProductCode){
+                this.isRequired = true;
+                alert(Message.checkData)
+                return false;
+            }
             noticeProduct.push(l);
         }
         for(let l of noticeForm.NoticeSuspect){
@@ -461,6 +581,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeSuspect = noticeSuspect;
         this.noticeForm.value.NoticeDocument = noticeDocument;
 
+        // Set Preloader
+        this.preloader.setShowPreloader(true);
         let IsSuccess: boolean = true;
         await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
             if (!isSuccess) { IsSuccess = false; return false; };
@@ -477,8 +599,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         // }
 
         if (IsSuccess) {
-            alert(Message.saveComplete)
-            this.router.navigate(['/notice/manage', 'R', this.noticeCode]);
+            alert(Message.saveComplete);
+            this.router.routeReuseStrategy.shouldReuseRoute = function() {
+              return false;
+            };
+            this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
         } else {
             alert(Message.saveFail)
         }
@@ -487,6 +612,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onReviced() {
+        let noticeForm = this.noticeForm.value;
+        for(let l of noticeForm.NoticeProduct){
+            if(!l.ProductCode){
+                this.isRequired = true;
+                alert(Message.checkData)
+                return false;
+            }
+        }
 
         // Set Preloader
         this.preloader.setShowPreloader(true);
@@ -503,8 +636,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (IsSuccess) {
             const products = this.NoticeProduct.value;
             if(products && products.length>0){
-                for(let l of products){
+                for(let i in products){
+                    let l = products[i];
                     if(l.IsNewItem){
+                        l.IsActive = 1;
+                        l.NetVolume = l.NetVolume?l.NetVolume:0;
                         await this.noticeService.insProductAll(l).then(async isSuccess => {});
                     }else{
                         await this.noticeService.updProduct(l).then(async isSuccess=>{});
@@ -514,7 +650,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             const suspects = this.NoticeSuspect.value;
             if(suspects && suspects.length>0){
-                for(let l of suspects){
+                for(let i in suspects){
+                    let l = suspects[i];
                     if(l.IsNewItem){
                         await this.noticeService.insSuspect(l).then(async isSuccess => {});
                     }

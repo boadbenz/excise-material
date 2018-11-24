@@ -346,14 +346,13 @@
                                 [inputFormatter]="formatterProduct"
                                 (selectItem)="selectItemProductItem($event, i)"
                                 (blur)="blurSelectItemProductItem(i)"
-                                [value]="item.get('BrandFullName').value"
-                                [ngClass]="{'ng-touched':isRequired}" required/>
+                                [value]="item.get('BrandFullName').value" [ngClass]="{'ng-touched':isRequired}" required/>
                         </td>
                         <td>
                             <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
-                            <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
+                            <select formControlName="QtyUnit" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null" [ngClass]="{'ng-touched':isRequired}" required>
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
                             </select>
@@ -433,7 +432,7 @@
         </div>
     </div>
 
-    <div class="card card-outline-bluish unset-radius">
+    <!-- <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">หลักฐานการแจ้งความ</h4>
@@ -470,7 +469,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">

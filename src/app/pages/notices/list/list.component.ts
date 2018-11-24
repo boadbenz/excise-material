@@ -17,6 +17,7 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 export class ListComponent implements OnInit, OnDestroy {
 
     months:any[];
+    monthsTh:any[];
 
     advSearch: any;
     isRequired = false;
@@ -59,7 +60,6 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-
         this.sidebarService.setVersion('0.0.2.18');
         this.paginage.TotalItems = 0;
 
@@ -76,11 +76,12 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navservice.setOnNextPage(false);
-                this._router.navigate(['/notice/manage', 'C', 'NEW']);
+                this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
             }
         });
 
         this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+        this.monthsTh = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 
         // this.preLoaderService.setShowPreloader(false);
     }
@@ -203,6 +204,22 @@ export class ListComponent implements OnInit, OnDestroy {
 
     view(noticeCode: string) {
         this._router.navigate([`/notice/manage/R/${noticeCode}`]);
+    }
+
+    formatDate(date:string){
+        if(date){
+            let tmps = date.split("-");
+            for(let i in this.months){
+                let m = this.months[i];
+                if(tmps[1]==m){
+                    date = tmps[0]+" "+this.monthsTh[i]+" "+tmps[2];
+                    break;
+                }
+            }
+
+            return date;
+        }
+        return "";
     }
 
     async pageChanges(event) {
