@@ -738,7 +738,6 @@ export class ManageComponent implements OnInit {
           this.navService.setPrintButton(false);
           this.navService.setDeleteButton(false);
           // set true
-          this.showEditField = true
           this.navService.setSaveButton(true);
           this.navService.setCancelButton(true);
           return;
@@ -852,7 +851,7 @@ export class ManageComponent implements OnInit {
         })
         // this.ngOnInit();
         this.navService.showFieldEdit.subscribe(async p => {
-          this.showEditField = true;
+          this.showEditField = p;
 
           // this.ngOnInit();
         });
