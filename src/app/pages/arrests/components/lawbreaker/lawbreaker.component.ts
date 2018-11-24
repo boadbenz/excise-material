@@ -369,9 +369,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+                        .toLowerCase()
+                        .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchTitleName = (text$: Observable<string>) =>
