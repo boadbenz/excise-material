@@ -1,4 +1,3 @@
-import { NoticeProduct } from './../notice-product';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -139,7 +138,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.18');
+        this.sidebarService.setVersion('0.0.2.19');
 
         this.navigate_service();
 
