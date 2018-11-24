@@ -67,7 +67,7 @@
             <div class="form-group row">
               <label class="col-form-label col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
               <div class="col-md-8">
-                <input class="form-control" [(ngModel)]="headerData.LawsuitNo" type="text" name="LawsuiltCode" disabled>
+                <input class="form-control" [(ngModel)]="headerData.LawsuitID" type="text" name="LawsuiltCode" disabled>
               </div>
             </div>
           </div>
@@ -117,7 +117,7 @@
             <div class="form-group row">
               <label class="col-form-label col-md-4">หน่วยงาน : </label>
               <div class="col-md-8">
-                <input class="form-control" type="text" [(ngModel)]="headerData.DepartmentName" name="DepartmentName" disabled>
+                <input class="form-control" type="text" [(ngModel)]="headerData.OfficeShortName" name="DepartmentName" disabled>
               </div>
             </div>
           </div>
@@ -206,23 +206,23 @@
 
           <td *ngIf="!item.isSum && item.product">{{ item.product.BrandNameTH }}</td>
           <td *ngIf="!item.isSum">{{ item.multi }}</td>
-          <td *ngIf="!item.isSum && item.product">{{ item.product.VatProve }}</td>
-          <td *ngIf="!item.isSum && item.product">{{ item.all }}</td>
+          <td *ngIf="!item.isSum && item.product">{{ roundDigit(item.FineAmount) }}</td>
+          <td *ngIf="!item.isSum && item.product">{{ roundDigit(item.all) }}</td>
 
-          <td *ngIf="!item.isSum"><input [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum()"></td>
-          <td *ngIf="item.isSum">{{ item.all }}</td>
+          <td *ngIf="!item.isSum"><input class="form-control" [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum()" [disabled]="showEditField"></td>
+          <td *ngIf="item.isSum">{{ roundDigit(item.all) }}</td>
 
-          <td *ngIf="item.product">{{ item.BribeMoney }}</td>
-          <td *ngIf="item.product">{{ item.RewardMoney }}</td>
-          <td *ngIf="item.product">{{ item.TreasuryMoney }}</td>
+          <td *ngIf="item.product">{{ roundDigit(item.BribeMoney) }}</td>
+          <td *ngIf="item.product">{{ roundDigit(item.RewardMoney) }}</td>
+          <td *ngIf="item.product">{{ roundDigit(item.TreasuryMoney) }}</td>
         </tr>
         <tr>
           <td colspan="5"></td>
           <td>รวม</td>
-          <td>{{ sumAllCompare.sum }}</td>
-          <td>{{ sumAllCompare.sum1 }}</td>
-          <td>{{ sumAllCompare.sum2 }}</td>
-          <td>{{ sumAllCompare.sum3 }}</td>
+          <td>{{ roundDigit(sumAllCompare.sum) }}</td>
+          <td>{{ roundDigit(sumAllCompare.sum1) }}</td>
+          <td>{{ roundDigit(sumAllCompare.sum2) }}</td>
+          <td>{{ roundDigit(sumAllCompare.sum3) }}</td>
         </tr>
         </tbody>
       </table>
@@ -237,7 +237,7 @@
     <h4 class="card-title m-b-0">คำให้การของผู้ต้องหา</h4>
   </div>
   <div class="card-body">
-    <form #accusedForm="ngForm">
+    <form #accusedForm="ngForm" (ngSubmit)="saveAccusedHeader()" ngNativeValidate>
       <div class="form-body">
         <div class="row">
           <div class="col-md-6">
@@ -266,7 +266,7 @@
                        placeholder="พิมพ์ข้อความ" aria-label="Number"
                        matInput [matAutocomplete]="auto7" (input)="onAutoChange($event.target.value)"
                        (focus)="onAutoFocus($event.target.value)"
-                       [disabled]="showEditField">
+                       [disabled]="showEditField" required>
                 <mat-autocomplete #auto7="matAutocomplete">
                   <mat-option *ngFor="let station of optionsStation"
                               [value]="station.OfficeShortName"
@@ -290,7 +290,7 @@
                        matInput [matAutocomplete]="auto3"
                        (input)="StaffonAutoChange($event.target.value)"
                        (focus)="StaffonAutoFocus($event.target.value)"
-                       [disabled]="showEditField">
+                       [disabled]="showEditField" required>
                 <mat-autocomplete #auto3="matAutocomplete">
                   <mat-option *ngFor="let sOption of Staffoptions"
                               [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -306,7 +306,7 @@
               <label class="col-form-label col-md-4">ตำแหน่ง : </label>
               <div class="col-md-7">
                 <input class="form-control" type="text" [(ngModel)]="accused.OperationPosName"
-                       name="OperationPosName" disabled>
+                       name="OperationPosName" required disabled>
               </div>
             </div>
           </div>
@@ -318,11 +318,12 @@
               <div class="col-md-9">
                 <input class="form-control" type="text" [(ngModel)]="accused.OperationDeptName"
                        name="OperationDeptName"
-                       disabled>
+                       required disabled>
               </div>
             </div>
           </div>
         </div>
+        <button type="submit" id="btnAccusedHeader" hidden></button>
       </div>
       <div class="table-responsive">
         <table class="dataTable table table-sm table-striped table-hover">
@@ -344,14 +345,14 @@
             </td>
             <td class="text-center">{{item.PaymentVatDateShow ? (item.PaymentVatDateShow) : '-'}}</td>
             <td class="text-center">
-              <span *ngIf="item.IsProvisionalAcquittal == 1">/</span>
+              <span *ngIf="item.IsProvisionalAcquittal > 0">/</span>
             </td>
             <td class=" text-center">
               <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
                  data-target="#testimonyPopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a *ngIf="item.PaymentFineAppointShow" (click)="editAccused(item, i, 1)" class="text-secondary" [hidden]="showEditField"
+              <a *ngIf="item.PaymentFineAppointShow" (click)="editAccused(item, i, 1)" class="text-warning" [hidden]="showEditField"
                  data-toggle="modal"
                  data-target="#testimonyPopup">
                 <i class="ti-pencil-alt btn-action"></i>
@@ -474,10 +475,10 @@
           <td>{{ item.ApproveType }}</td>
           <td>
             <a (click)="editApproveReport(item, i, 0)" class="text-secondary" data-toggle="modal"
-               data-target="#approvePopup">
+               data-target="#approvePopup" *ngIf="receipt.list[i].PaymentDate">
               <i class="mdi mdi-eye fa-lg"></i>
             </a>
-            <a (click)="editApproveReport(item, i, 1)" class="text-warning" [hidden]="showEditField"
+            <a (click)="editApproveReport(item, i, 1)" *ngIf="receipt.list[i].PaymentDate" class="text-warning" [hidden]="showEditField"
                data-toggle="modal"
                data-target="#approvePopup">
               <i class="ti-pencil-alt btn-action"></i>
@@ -560,7 +561,7 @@
         </div>
       </div>
       <div class="modal-body" *ngIf="editUser">
-        <form #accusedPopupForm="ngForm">
+        <form #accusedPopupForm="ngForm" (ngSubmit)="submitAccused()" ngNativeValidate>
           <div class="text-right"> XCS60-06-02-02-00</div>
           <div class="form-body m-t-10">
             <div class="row">
@@ -581,7 +582,7 @@
                     <my-date-picker-th [(ngModel)]="editUser.PaymentFineAppointDate" name="PaymentFineAppointDate" placeholder=""
                                        locale="th" (dateChanged)="canCheck($event)"
                                        [options]="DateOption"
-                                       [disabled]="showEditField"
+                                       [disabled]="showEditField" required
                     ></my-date-picker-th>
                   </div>
                   <!-- <div class="col-md-7">
@@ -613,35 +614,35 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="editUser.cancheck === true || editUser.cancheck === false">
               <div class="col-md-12">
                 <div class="form-group row">
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" name="checkBox1" [(ngModel)]="editUser.checkBox1" id="insurance"
                            type="checkbox"
-                           [attr.disable]="editUser.cancheck">
+                           [disabled]="editUser.cancheck || showEditField" [required]="!editUser.cancheck && !editUser.checkBox2">
                     <label for="insurance">ประกัน :</label>
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Bail" name="Bail"
-                           [disabled]="!editUser.checkBox1">
+                           [disabled]="!editUser.checkBox1" [required]="editUser.checkBox1">
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="row">
+            <div class="row"  *ngIf="editUser.cancheck === true || editUser.cancheck === false">
               <div class="col-md-12">
                 <div class="form-group row">
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" id="collateral"
-                           type="checkbox" name="checkBox2" [(ngModel)]="editUser.checkBox2" [attr.disable]="editUser.cancheck">
+                           type="checkbox" name="checkBox2" [(ngModel)]="editUser.checkBox2" [disabled]="showEditField || editUser.cancheck" [required]="!editUser.cancheck && !editUser.checkBox1">
                     <label for="collateral">ประกันและหลักประกัน :</label>
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Guaruntee"
                            name="Guaruntee"
-                           [disabled]="!editUser.checkBox2">
+                           [disabled]="!editUser.checkBox2" [required]="editUser.checkBox2">
                   </div>
                 </div>
               </div>
@@ -661,7 +662,7 @@
                   <div class="custom-control custom-radio col-form-label col-md-10">
                     <input name="RequestRadio" id="yRequest" [(ngModel)]="editUser.request" [value]="1"
                            class="col-form-label with-gap radio-col-indigo" type="radio"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" required>
                     <!-- [checked]="oCompareDetail.IsRequest=='1'" -->
                     <label for="yRequest">ร้องขอ</label>
 
@@ -675,7 +676,7 @@
                   <div class="custom-control custom-radio col-form-label col-md-10">
                     <input name="RequestRadio" id="nRequest" [(ngModel)]="editUser.request" [value]="0"
                            class="col-form-label with-gap radio-col-indigo"
-                           type="radio" [disabled]="showEditField">
+                           type="radio" [attr.disabled]="showEditField">
                     <!-- [checked]="oCompareDetail.IsRequest=='0'" -->
                     <label for="nRequest">ไม่ร้องขอ</label>
 
@@ -697,9 +698,10 @@
             </div>
           </div>
           <div class="text-right">
+            <button type="submit" class="btn waves-effect waves-light btn-navy">บันทึก</button>
             <button type="button" class="btn waves-effect waves-light btn-navy" [disabled]="showEditField"
-                    data-toggle="modal" data-target="#testimonyPopup"
-                    (click)="saveAccused()">บันทึก
+                    data-toggle="modal" data-target="#testimonyPopup" id="btnAccuse"
+                    (click)="saveAccused()" hidden>บันทึก
             </button>
           </div>
         </form>
@@ -713,7 +715,7 @@
 <div class="modal fade" id="payPopup" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <form #Form3="ngForm">
+      <form #Form3="ngForm" (ngSubmit)="submitReceipt()" ngNativeValidate>
         <div class="modal-header text-white top-navbar">
           ชำระค่าปรับ
           <div class="card-actions">
@@ -741,8 +743,7 @@
                   <div class="col-md-7">
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.TotalFine"
-                           name="TotalFine"
-                           [disabled]="showEditField">
+                           name="TotalFine" disabled>
                   </div>
                 </div>
               </div>
@@ -757,7 +758,7 @@
                                        placeholder="" locale="th"
                                        [options]="DateOption"
                                        [disabled]="showEditField"
-                    ></my-date-picker-th>
+                    aria-required="true" required></my-date-picker-th>
                     <!--<input class="form-control" type="date" [(ngModel)]="userCompareReceiptDetail.PaymentDate" name="PaymentDate"-->
                     <!--[disabled]="showEditField">-->
                   </div>
@@ -781,10 +782,10 @@
                            matInput [matAutocomplete]="auto"
                            (input)="onAutoChange($event.target.value)"
                            (focus)="onAutoFocus($event.target.value)"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" required>
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options" [value]="option.OfficeShortName"
-                                  (click)="onAutoSelecteWord(option)">
+                                  (click)="onAutoSelecteWord(option, 3)">
                         {{ option.OfficeShortName }}
                       </mat-option>
                     </mat-autocomplete>
@@ -849,7 +850,7 @@
                   <div class="col-md-7">
                     <select class="custom-select col-12"
                             [(ngModel)]="userCompareReceiptDetail.ReceiptChanel"
-                            name="ReceiptChanel">
+                            name="ReceiptChanel" required>
                       <option value="1" selected>เงินสด</option>
                       <option value="2">EDC</option>
                       <option value="3">เครดิต</option>
@@ -868,7 +869,7 @@
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.ReceiptBookNo"
                            name="ReceiptBookNo"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" [required]="!(userCompareReceiptDetail.ReceiptChanel > 1)">
                   </div>
                 </div>
               </div>
@@ -879,7 +880,7 @@
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.ReceiptNo"
                            name="ReceiptNo"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" [required]="!(userCompareReceiptDetail.ReceiptChanel > 1)">
                   </div>
                 </div>
               </div>
@@ -893,7 +894,7 @@
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.ReferenceNo"
                            name="ReferenceNo"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField || !(userCompareReceiptDetail.ReceiptChanel > 1)" [required]="userCompareReceiptDetail.ReceiptChanel > 1">
                   </div>
                 </div>
               </div>
@@ -905,9 +906,10 @@
                     data-toggle="modal"
                     data-target="#payPopup">ยกเลิกใบเสร็จ
             </button>
+            <button class="btn waves-effect waves-light btn-navy">บันทึก</button>
             <button (click)="userReceiptSave()" type="button" class="btn waves-effect waves-light btn-navy"
-                    data-toggle="modal"
-                    data-target="#payPopup">บันทึก
+                    data-toggle="modal" id="receiptSave" 
+                    data-target="#payPopup" hidden>บันทึก
             </button>
           </div>
         </div>
@@ -928,7 +930,7 @@
         </div>
       </div>
       <div class="modal-body">
-        <form #Form4="ngForm">
+        <form #Form4="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate>
           <div class="text-right"> XCS60-06-02-04-00</div>
           <div class="form-body m-t-10">
 
@@ -951,7 +953,7 @@
                   <div class="col-md-3">
                     <my-date-picker-th [(ngModel)]="compareUserDetailPopup.payDate" name="payDate" placeholder="" locale="th"
                                        [options]="DateOption"
-                                       [disabled]="showEditField"
+                                       [disabled]="true"
                     ></my-date-picker-th>
                   </div>
                   <label class="col-form-label text-center col-md-2">เวลา</label>
@@ -984,7 +986,7 @@
                            matInput [matAutocomplete]="auto"
                            (input)="onAutoChange($event.target.value)"
                            (focus)="onAutoFocus($event.target.value)"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" required>
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options" [value]="option.OfficeShortName"
                                   (click)="onAutoSelecteWord(option, '2')">
@@ -1044,7 +1046,7 @@
                            matInput [matAutocomplete]="autoStaff2"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" [required]="(compareUserDetailPopup.ApproveType) > 1">
                     <mat-autocomplete #autoStaff2="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -1060,7 +1062,7 @@
                 <div class="form-group row">
                   <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                   <div class="input-group col-md-8">
-                    <input class="form-control" type="text" name="postion"
+                    <input class="form-control" type="text" name="postion1"
                            [(ngModel)]="compareUserDetailPopup.position1" disabled>
                   </div>
                 </div>
@@ -1072,7 +1074,7 @@
                 <div class="form-group row">
                   <label class="col-form-label col-md-4">หน่วยงาน : </label>
                   <div class="input-group col-md-8">
-                    <input class="form-control" type="text" name="deparment"
+                    <input class="form-control" type="text" name="deparment1"
                            [(ngModel)]="compareUserDetailPopup.department1" disabled>
                   </div>
                 </div>
@@ -1090,7 +1092,7 @@
                            matInput [matAutocomplete]="autoStaff3"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" required>
                     <mat-autocomplete #autoStaff3="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -1119,7 +1121,7 @@
                 <div class="form-group row">
                   <label class="col-form-label col-md-4">หน่วยงาน : </label>
                   <div class="input-group col-md-8">
-                    <input class="form-control" type="text" name="deparment"
+                    <input class="form-control" type="text" name="deparment2"
                            [(ngModel)]="compareUserDetailPopup.department2" disabled>
                   </div>
                 </div>
@@ -1137,7 +1139,7 @@
                            matInput [matAutocomplete]="autoStaff4"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" required>
                     <mat-autocomplete #autoStaff4="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -1154,7 +1156,7 @@
                 <div class="form-group row">
                   <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                   <div class="input-group col-md-8">
-                    <input class="form-control" type="text" name="rank"
+                    <input class="form-control" type="text" name="rank2"
                            [(ngModel)]="compareUserDetailPopup.rank2" disabled>
                   </div>
                 </div>
@@ -1165,7 +1167,7 @@
                 <div class="form-group row">
                   <label class="col-form-label col-md-4">หน่วยงาน : </label>
                   <div class="input-group col-md-8">
-                    <input class="form-control" type="text" name="department"
+                    <input class="form-control" type="text" name="department3"
                            [(ngModel)]="compareUserDetailPopup.department3" disabled>
                   </div>
                 </div>
@@ -1176,7 +1178,7 @@
                   <div class="input-group col-md-8">
                     <input class="form-control" type="text" name="departOrder"
                            [(ngModel)]="compareUserDetailPopup.departOrder"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" required>
                   </div>
                 </div>
               </div>
@@ -1189,7 +1191,7 @@
                   <div class="col-md-8">
                     <my-date-picker-th [(ngModel)]="compareUserDetailPopup.dateOfIssue" name="dateOfIssue" placeholder="" locale="th"
                                        [options]="DateOption"
-                                       [disabled]="showEditField"
+                                       [disabled]="showEditField" [required]="true"
                     ></my-date-picker-th>
                     <!--<input class="form-control" type="date"  [(ngModel)]="compareUserDetailPopup.ApproveReportDate" name="ApproveReportDate"-->
                     <!--[disabled]="showEditField">-->
@@ -1206,7 +1208,7 @@
                   <div class="col-md-8">
                                         <textarea class="form-control" [disabled]="showEditField" rows="5"
                                                   name="detailFact"
-                                                  [(ngModel)]="compareUserDetailPopup.detailFact"></textarea>
+                                                  [(ngModel)]="compareUserDetailPopup.detailFact" required></textarea>
                   </div>
                 </div>
               </div>
@@ -1227,9 +1229,10 @@
 
           </div>
           <div class="text-right">
+            <button type="submit" class="btn waves-effect waves-light btn-navy">บันทึก</button>
             <button type="button" (click)="saveApprove()" class="btn waves-effect waves-light btn-navy"
                     data-toggle="modal"
-                    data-target="#approvePopup">บันทึก
+                    data-target="#approvePopup" id="btnApprove" hidden>บันทึก
             </button>
           </div>
         </form>
