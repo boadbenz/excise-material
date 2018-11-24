@@ -870,7 +870,7 @@ export class ManageComponent implements OnInit {
   }
 
   private async onCancel() {
-    this.preLoaderService.setShowPreloader(true);
+    
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
     console.log(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail']);
     let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail']
@@ -896,6 +896,7 @@ export class ManageComponent implements OnInit {
     // });
     
     if (confirm("ยืนยันการทำรายการหรือไม่")) {
+      this.preLoaderService.setShowPreloader(true);
       if (IsLawsuitComplete == 1) {
         // // set false
         this.navService.setEditField(true);
@@ -905,11 +906,8 @@ export class ManageComponent implements OnInit {
         // set true
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
-        this.navService.showFieldEdit.subscribe(async p => {
-          this.showEditField = p;
-          await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
-          
-        });
+        
+        await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
       } else {
         let round = 1;
         LawsuitArrestIndicmentDetail.forEach(detail => {
@@ -943,12 +941,8 @@ export class ManageComponent implements OnInit {
         })
         if(round >= LawsuitArrestIndicmentDetail.length){
           // this.ngOnInit();
-          this.navService.showFieldEdit.subscribe(async p => {
-            this.showEditField = p;
-            this.preLoaderService.setShowPreloader(false);
-            // this.ngOnInit();
-          });
-
+          
+          this.preLoaderService.setShowPreloader(false);
           // // set false
           this.navService.setEditField(true);
           this.navService.setEditButton(true);
