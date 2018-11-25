@@ -117,14 +117,21 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  async MasDocumentMaingetAll(DocumentType: number, ReferenceCode: number) {
-    const params = { DocumentType: DocumentType, ReferenceCode: ReferenceCode };
+  async MasDocumentMaingetAll(DocumentType: any, ReferenceCode: any) {
+    const params = {DocumentType, ReferenceCode};
     const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  async MasDocumentMaingetAllString(DocumentType: number, ReferenceCode: string) {
-    const params = { DocumentType: DocumentType, ReferenceCode: ReferenceCode };
+  async MasDocumentMaingetinsAll(document: any) {
+    const params = document; 
+    const url = `${appConfig.api7789}/MasDocumentMaininsAll`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }
+
+  
+  async MasDocumentMaingetAllString(documentType: DocumentType, ReferenceCode: string) {
+    const params = { DocumentType: documentType, ReferenceCode: ReferenceCode };
     const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
@@ -177,10 +184,9 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  async LawsuitPaymentFineDetailinsAll(PaymentFineID) {
-    const params = { PaymentFineID: PaymentFineID };
+  async LawsuitPaymentFineDetailinsAll(Payment) {
     const url = `${appConfig.api7789}/LawsuitPaymentFineDetailinsAll`;
-    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(Payment), url);
   }
 
   async LawsuitJudgementinsAll(lawsuitForm) {

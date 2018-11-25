@@ -1,6 +1,11 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
   <app-print-lawsuit-modal (c)="modal.close()" (d)="modal.dismiss()" [IndictmentID]="IndictmentID"></app-print-lawsuit-modal>
 </ng-template>
+
+<ng-template #indicmetModal let-c="close" let-d="dismiss">
+  <app-indicment-modal (c)="modal.close()" (d)="modal.dismiss()" [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode"></app-indicment-modal>
+</ng-template>
+
 <form [formGroup]="lawsuitArrestForm">
   <div class="wizard-content">
     <div class="wizard-circle wizard clearfix clearfix">
