@@ -138,7 +138,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.19');
+        this.sidebarService.setVersion('0.0.2.20');
 
         this.navigate_service();
 
@@ -365,7 +365,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeInformerFormControl.Province = new FormControl(null);
             NoticeInformerFormControl.ZipCode = new FormControl('N/A');
             NoticeInformerFormControl.TelephoneNo = new FormControl('N/A');
-            NoticeInformerFormControl.InformerInfo = new FormControl('N/A');
+            NoticeInformerFormControl.InformerInfo = new FormControl(null);
             NoticeInformerFormControl.IsActive = new FormControl(1);
             NoticeInformerFormControl.FullName = new FormControl(null);
             NoticeInformerFormControl.Region = new FormControl(null);
