@@ -306,7 +306,7 @@ export function setViewSuspect(item: fromModels.InvestigateDetailSuspect) {
                     item.ReferenceID = item.IDCard;
                     break;
             }
-
+            break;
         case 2: // นิติบุคคล
             item.ReferenceID = item.CompanyRegistrationNo;
             break;

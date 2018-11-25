@@ -102,7 +102,9 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
         item.RowId = i + 1;
         item.ResultCount = this.s_masLawbreaker.ArrestLawsuitResultCountgetByLawbreakerID(item.LawbreakerID.toString())
         item.IsChecked = Acceptability.INACCEPTABLE;
-        law.push(setViewLawbreaker(item));
+        let l = setViewLawbreaker(item);
+        debugger
+        law.push(l);
       })
 
     this.lawbreaker = law;
@@ -140,10 +142,6 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     // let law = this.Lawbreaker;
     let law = this.Lawbreaker.value
       .filter(x => x.IsChecked == Acceptability.ACCEPTABLE)
-    // .map(x => {
-    //   x.IsModify = 'c';
-    //   return x;
-    // })
 
     if (!law) return;
 
@@ -162,6 +160,7 @@ export function setViewLawbreaker(item: fromModel.ArrestLawbreaker) {
   item.LawbreakerFullName = `${item.LawbreakerTitleName || ''}`;
   item.LawbreakerFullName += ` ${item.LawbreakerFirstName || ''}`;
   item.LawbreakerFullName += ` ${item.LawbreakerLastName || ''}`;
+
   switch (item.EntityType) {
     case 1: // บุคคลธรรมดา
       switch (item.LawbreakerType) {
@@ -172,6 +171,7 @@ export function setViewLawbreaker(item: fromModel.ArrestLawbreaker) {
           item.ReferenceID = item.IDCard;
           break;
       }
+      break;
     case 2: // นิติบุคคล
       item.ReferenceID = item.CompanyRegistrationNo;
       break;
