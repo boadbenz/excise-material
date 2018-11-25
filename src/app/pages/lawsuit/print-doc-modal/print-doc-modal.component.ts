@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { PreloaderService } from "../../../shared/preloader/preloader.component";
 import { LawsuitService } from "../lawsuit.service";
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute } from '@angular/router';
@@ -10,7 +11,11 @@ import { ActivatedRoute } from '@angular/router';
 export class PrintLawsuitModalComponent implements OnInit {
   private indictmentID: number;
   private lawsuitID: number;
-  constructor(private lawsuitService: LawsuitService, private activatedRoute: ActivatedRoute) {
+  constructor(
+    private lawsuitService: LawsuitService, 
+    private activatedRoute: ActivatedRoute,
+    private preLoaderService: PreloaderService
+    ) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.indictmentID = params['IndictmentID'];
       this.lawsuitID = params['LawsuitID'];
@@ -38,11 +43,11 @@ export class PrintLawsuitModalComponent implements OnInit {
   // private lawsuitService: LawsuitService
 
   ngOnInit() {
+    this.preLoaderService.setShowPreloader(true);
     console.log(this.IndictmentID);
     // console.log('malawwww', this.lawsuitService)
     this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(data => {
         this.printDocData = data || [];
-        console.log('data-->', data)
         return true;
       }
     )
@@ -64,6 +69,7 @@ export class PrintLawsuitModalComponent implements OnInit {
     /*this.lawsuitService.LawsuitCompareDocumentgetByCon(this.lawsuitid).then(res => {
       this.printDoc = res || [ ];
     });*/
+    this.preLoaderService.setShowPreloader(false);
   }
 
   onPrint(f: any) {
