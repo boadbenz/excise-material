@@ -1725,6 +1725,7 @@ export class DialogJudgment {
   public arrestData = [];
   public MasCourtList = []
   public lawsuitArrestFormDialog: FormGroup = new FormGroup({
+      IndicmentDetailID: new FormControl(),
       arrestName: new FormControl(Validators.required),
       CourtName: new FormControl(Validators.required),
       UndecidedCaseNo: new FormControl(Validators.required),
@@ -1785,7 +1786,7 @@ export class DialogJudgment {
       this.lawsuitArrestFormDialog.get('CourtFine').disable()
     }
     let Fullname = this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName || '' + this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerFirstName + ' ' + this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerLastName
-      
+    this.lawsuitArrestFormDialog.controls['IndicmentDetailID'].setValue(this.data.lawsuitArrest.IndictmentDetailID);
     this.lawsuitArrestFormDialog.controls['arrestName'].setValue(Fullname,Validators.required);
     this.lawsuitArrestFormDialog.controls['CourtName'].setValue(this.arrestData['CourtName'],Validators.required);
     this.lawsuitArrestFormDialog.controls['UndecidedCaseNo'].setValue(this.arrestData['UndecidedCaseNo'],Validators.required);
@@ -1946,7 +1947,7 @@ export class DialogJudgment {
                 this.closePopup()
               }
             }else{
-              alert(res.Msg)
+              alert(res.IsSuccess)
             }
           }).catch((error)=>{
             alert(error)
