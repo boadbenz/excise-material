@@ -119,7 +119,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.13');
+    this.sidebarService.setVersion('0.0.0.14');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -1456,8 +1456,8 @@ export class DialogJudgment {
     } else {
       let PaymentFine = this.insert()
       if (this.lawsuitArrestFormDialog.IsFine == true) {
-        PaymentFine.PaymentFineID
-        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(this.arrestData['PaymentFineID'])
+        PaymentFine['PaymentFineID']
+        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine['PaymentFineID'])
         //   await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(this.arrestData['PaymentFineID'])
         //   for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
         //     let payment = {
