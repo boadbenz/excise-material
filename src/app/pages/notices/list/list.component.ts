@@ -17,6 +17,7 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 export class ListComponent implements OnInit, OnDestroy {
 
     months:any[];
+    monthsTh:any[];
 
     advSearch: any;
     isRequired = false;
@@ -24,7 +25,7 @@ export class ListComponent implements OnInit, OnDestroy {
     paginage = pagination;
 
     notice = [];
-    noticeList = new Array<Notice>();
+    noticeList = [];
 
     dateStartFrom: any;
     dateStartTo: any;
@@ -59,8 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-
-        this.sidebarService.setVersion('0.0.2.18');
+        this.sidebarService.setVersion('0.0.2.19');
         this.paginage.TotalItems = 0;
 
         // this.preLoaderService.setShowPreloader(true);
@@ -76,16 +76,18 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navservice.setOnNextPage(false);
-                this._router.navigate(['/notice/manage', 'C', 'NEW']);
+                this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
             }
         });
 
         this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+        this.monthsTh = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 
         // this.preLoaderService.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
+
         if (this.subOnsearchByKeyword)
             this.subOnsearchByKeyword.unsubscribe();
 
@@ -127,15 +129,11 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preLoaderService.setShowPreloader(false);
     }
 
-    async onSearchComplete(list) {
+    onSearchComplete(list) {
         if (list === undefined) {
             alert(Message.noRecord)
             return false;
         }
-        this.paginage = pagination;
-        this.paginage.TotalItems = 0;
-        this.paginage.CurrentPage = 1;
-        this.paginage.PageSize = 5;
 
         let datas = [];
         let cnt = 1;
@@ -150,25 +148,18 @@ export class ListComponent implements OnInit, OnDestroy {
                     l.StaffLastName = "";
                     l.StaffOfficeName = "";
                     insert = false;
+                    
+                    i.childs.push(l);
+                    break;
                 }
             }
 
-            datas.push(l);
             if(insert){
+                l.childs = [];
+                datas.push(l);
                 l.index = cnt++;
             }
         }
-
-        // await list.filter(item => item.IsActive == 1).map((item, i) => {
-        //     item.RowId = i + 1;
-        //     item.NoticeDate = toLocalShort(item.NoticeDate);
-        //     item.NoticeStaff.filter(_s => _s.IsActive == 1).map(s => {
-        //         s.StaffFullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
-        //     });
-        //     item.NoticeSuspect.filter(_s => _s.IsActive == 1).map(s => {
-        //         s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
-        //     });
-        // });
 
         this.notice = datas;
         // set total record
@@ -203,6 +194,22 @@ export class ListComponent implements OnInit, OnDestroy {
 
     view(noticeCode: string) {
         this._router.navigate([`/notice/manage/R/${noticeCode}`]);
+    }
+
+    formatDate(date:string){
+        if(date){
+            let tmps = date.split("-");
+            for(let i in this.months){
+                let m = this.months[i];
+                if(tmps[1]==m){
+                    date = tmps[0]+" "+this.monthsTh[i]+" "+(parseInt(tmps[2])+543);
+                    break;
+                }
+            }
+
+            return date;
+        }
+        return "";
     }
 
     async pageChanges(event) {

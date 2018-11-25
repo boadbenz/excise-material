@@ -6,7 +6,7 @@
       {{aggregate08$ | async | json}}
 
       {{SumBribeMoney}}
-      <form [formGroup]="formGroup" *ngIf="formGroup" (change)="formChange($event)" novalidate>
+      <form [formGroup]="formGroup" *ngIf="formGroup" (change)="formChange(formGroup)" novalidate>
         <div class="text-right">
           <button (click)="addRow()" [attr.disabled]="(ILG60_08_04_00_00_E13_BUTTON$ | async)?.DISABLED ? 'disabled' : null"
             class="btn waves-effect waves-light btn-navy">เพิ่มจนท.สนับสนุน</button>
@@ -73,19 +73,22 @@
                   </select> -->
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="FirstPart" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="number" formControlName="FirstPart" #FirstPart (change)="onChangeFirstPart(RequestBribeRewardForm, i, FirstPart.value)" [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="SecondPart" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="number" formControlName="SecondPart" #SecondPart (change)="onChangeSecondPart(RequestBribeRewardForm ,i, SecondPart.value)" [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="FirstMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="RequestBribeRewardForm.at(i).get('FirstMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="SecondMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="RequestBribeRewardForm.at(i).get('SecondMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="RequestBribeRewardForm.at(i).get('ToTalMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
                   <!-- <i class="ti-trash btn-action" (click)="deleteHandle(i)"></i> -->
@@ -124,19 +127,22 @@
                   </select> -->
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="FirstPart" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="number" formControlName="FirstPart" #FirstPart (change)="onChangeFirstPart(RequestRewardForm, i, FirstPart.value)" [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="SecondPart" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="number" formControlName="SecondPart" #SecondPart (change)="onChangeSecondPart(RequestRewardForm ,i, SecondPart.value)" [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="FirstMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="RequestRewardForm.at(i).get('FirstMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="SecondMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="RequestRewardForm.at(i).get('SecondMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="RequestRewardForm.at(i).get('ToTalMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
                   <!-- <i class="ti-trash btn-action" (click)="deleteHandle(i)"></i> -->
@@ -175,19 +181,22 @@
                   </select> -->
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="FirstPart" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="number" formControlName="FirstPart" #FirstPart (change)="onChangeFirstPart(nonRequestRewardStaffForm, i, FirstPart.value)" [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="SecondPart" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="number" formControlName="SecondPart" #SecondPart (change)="onChangeSecondPart(nonRequestRewardStaffForm ,i, SecondPart.value)">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="FirstMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="nonRequestRewardStaffForm.at(i).get('FirstMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="SecondMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="nonRequestRewardStaffForm.at(i).get('SecondMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="nonRequestRewardStaffForm.at(i).get('ToTalMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
                   <!-- <i class="ti-trash btn-action" (click)="deleteHandle(i)"></i> -->
@@ -202,8 +211,7 @@
                 <td class="text-center">{{(i+1) + (RequestBribeRewardForm.controls.length +
                   RequestRewardForm.controls.length + nonRequestRewardStaffForm.controls.length)}}</td>
                 <td>
-                  <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName"
-                  >
+                  <input class="form-control" type="text" formControlName="TitleName" [ngbTypeahead]="searchTitleName">
                 </td>
                 <td>
                   <input class="form-control" type="text" formControlName="FullName" #FullName [ngbTypeahead]="searchFullName"
@@ -224,19 +232,22 @@
                   </select>
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="FirstPart" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="number" formControlName="FirstPart" #FirstPart (change)="onChangeFirstPart(sharedBribeRewardForm, i, FirstPart.value)" [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="SecondPart">
+                  <input class="form-control" type="number" formControlName="SecondPart" #SecondPart (change)="onChangeSecondPart(sharedBribeRewardForm ,i)">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="FirstMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="sharedBribeRewardForm.at(i).get('FirstMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="SecondMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="sharedBribeRewardForm.at(i).get('SecondMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td>
-                  <input class="form-control" type="number" formControlName="ToTalMoney" [attr.disabled]="'disabled'">
+                  <input class="form-control" type="text" [value]="sharedBribeRewardForm.at(i).get('ToTalMoney').value | currency:' '"
+                    [attr.disabled]="'disabled'">
                 </td>
                 <td><i class="ti-trash btn-action" (click)="deleteHandle(i)"></i></td>
               </tr>
@@ -277,8 +288,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(SumMoney() || 0) | currency:' '"
-              [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(SumMoney() || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -288,8 +298,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(SumFirstMoney() || 0) | currency:' '"
-              [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(SumFirstMoney() || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -302,8 +311,7 @@
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="(FirstRemainder() || 0) | currency:' '"
-              [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(FirstRemainder() || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -313,8 +321,7 @@
         <div class="form-group row">
           <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
           <div class="col-md-7">
-            <input class="form-control" type="text" [value]="(SumSecondMoney() || 0) | currency:' '"
-              [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(SumSecondMoney() || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>
@@ -327,8 +334,7 @@
           </div>
           <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
           <div class="col-md-3">
-            <input class="form-control" type="text" [value]="(SecondRemainder() || 0) | currency:' '"
-              [attr.disabled]="'disabled'">
+            <input class="form-control" type="text" [value]="(SecondRemainder() || 0) | currency:' '" [attr.disabled]="'disabled'">
           </div>
         </div>
       </div>

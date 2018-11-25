@@ -1,6 +1,11 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
   <app-print-lawsuit-modal (c)="modal.close()" (d)="modal.dismiss()" [IndictmentID]="IndictmentID"></app-print-lawsuit-modal>
 </ng-template>
+
+<ng-template #indicmetModal let-c="close" let-d="dismiss">
+  <app-indicment-modal (c)="modal.close()" (d)="modal.dismiss()" [IndictmentID]="IndictmentID" [ArrestCode]="ArrestCode"></app-indicment-modal>
+</ng-template>
+
 <form [formGroup]="lawsuitArrestForm">
   <div class="wizard-content">
     <div class="wizard-circle wizard clearfix clearfix">
@@ -341,12 +346,12 @@
               <td>{{item.controls['LawsuitNoRef'].value}}</td>
               <td>{{item.controls['LawBrakerFullName'].value}}</td>
               <td>
-                <select formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField || item.controls['LawsuitType'].value == 2 ? '' : null">
+                <select formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField || item.controls['LawsuitType'].value == 3 ? '' : null">
                   <option [value]="type.id" *ngFor="let type of lstype; let i=index">{{type.name}}</option>
                 </select>
               </td>
               <td>
-                <select formControlName="LawsuitEnd" class="form-control form-control-sm" [attr.disabled]="showEditField || item.controls['LawsuitType'].value == 2 ? '' : null">
+                <select formControlName="LawsuitEnd" class="form-control form-control-sm" [attr.disabled]="showEditField || item.controls['LawsuitType'].value == 3 ? '' : null">
                   <option [value]="end.id" *ngFor="let end of lsend">{{end.name}}</option>
                 </select>
               </td>
@@ -354,7 +359,7 @@
                 <!-- <a href="javaScript:void(0);" class="text-danger" (click)="editTable(item, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a> -->
-                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 0"
+                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 1"
                   (click)="editTable(item.value, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a>

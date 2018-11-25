@@ -10,8 +10,10 @@ export class RewardHelper {
   public yy_thaibuddha = (new Date().getFullYear() + 543)
     .toString()
     .substr(2, 1);
-  public setDateNow =  setDateMyDatepicker(new Date());
-  public setTimeNow = `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`;
+  public setDateNow = setDateMyDatepicker(new Date());
+  public setTimeNow = `${setZero(new Date().getHours())}.${setZero(
+    new Date().getMinutes()
+  )} น.`;
   constructor() {}
   public setZero(num: number) {
     return num < 10 ? '0' + num : num;
@@ -20,6 +22,20 @@ export class RewardHelper {
     len = len - str.length + 1;
     return len > 0 ? new Array(len).join(ch) + str : str;
   }
+  ConvObjectValue = obj => {
+    const newObj = {};
+    Object.keys(obj).forEach(f => {
+      if (typeof obj[f] === 'number') {
+        newObj[f] = obj[f].toString();
+      } else if (typeof obj[f] === 'undefined') {
+        newObj[f] = '';
+      } else {
+        newObj[f] = obj[f] || '';
+      }
+    });
+    return newObj;
+  };
+  ConvDateTimeToDate = (datetime: string) => datetime ? datetime.substr(0, 10) : '';
   // ===== create form =====
   validateSetting(valid) {
     const arr = [];

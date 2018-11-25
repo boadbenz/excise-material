@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Subject, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
@@ -40,6 +40,7 @@ import { ManageConfig } from './manage.config';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
+ 
     // FormGroup ตรวจสอบสถานะในการบันทึก TN905016100058
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
@@ -156,7 +157,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
-
+    
     // Redux based variables
     obArrest: Observable<fromModels.Arrest>;
     stateArrest: fromModels.Arrest;
@@ -213,9 +214,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.arrestFG.reset();
             }, 300);
         }
+        
         this.arrestFG = this.createForm();
         this.navigate_Service();
-
     }
 
     ngOnDestroy(): void {
@@ -358,7 +359,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                // await this.loadMasterData();
+                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
                     if (this.arrestCode != this.stateArrest.ArrestCode)
