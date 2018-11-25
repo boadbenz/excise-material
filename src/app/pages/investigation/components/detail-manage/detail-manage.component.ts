@@ -225,7 +225,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .map(x => {
                 x.data.urls
                     .find(y => y.url.indexOf('/investigation/manage') >= 0)
-                    .url = `/investigation/manage/${this.investMode}/${this.investCode}`; // previous path
+                    .url = `/investigation/manage/R/${this.investCode}`; // previous path
                 return x;
             })
         this.router.resetConfig(routerConfig);
