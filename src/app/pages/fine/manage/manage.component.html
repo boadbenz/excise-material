@@ -427,7 +427,7 @@
           <td>{{item.ReceiptStaff}}</td>
           <td class="text-center">{{item.ReceiptChanel}}</td>
           <td class="text-center">{{item.ReceiptBookNo}}</td>
-          <td class="text-center">{{ (item.ReceiptNo ? item.ReceiptNo : '' ) + ' / ' + (item.ReferenceNo ? item.ReferenceNo : '') }}
+          <td class="text-center">{{ (item.ReceiptNo ? item.ReceiptNo : '' ) + (item.ReceiptNo && item.ReferenceNo ? ' / ' : '') + (item.ReferenceNo ? item.ReferenceNo : '') }}
           </td>
           <td class="text-center">{{item.RevernueStatus}}</td>
           <td>
@@ -619,7 +619,7 @@
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" name="checkBox1" [(ngModel)]="editUser.checkBox1" id="insurance"
                            type="checkbox"
-                           [disabled]="editUser.cancheck || showEditField" [required]="!editUser.cancheck && !editUser.checkBox2">
+                           [disabled]="!editUser.cancheck || showEditField" [required]="!editUser.checkBox2">
                     <label for="insurance">ประกัน :</label>
                   </div>
                   <div class="col-md-7">
@@ -635,7 +635,7 @@
                 <div class="form-group row">
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" id="collateral"
-                           type="checkbox" name="checkBox2" [(ngModel)]="editUser.checkBox2" [disabled]="showEditField || editUser.cancheck" [required]="!editUser.cancheck && !editUser.checkBox1">
+                           type="checkbox" name="checkBox2" [(ngModel)]="editUser.checkBox2" [disabled]="showEditField || !editUser.cancheck" [required]="!editUser.cancheck && !editUser.checkBox1">
                     <label for="collateral">ประกันและหลักประกัน :</label>
                   </div>
                   <div class="col-md-7">
