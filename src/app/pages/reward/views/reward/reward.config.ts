@@ -26,7 +26,7 @@ export class RewardConfig extends RewardHelper {
     null
   );
   public ILG60_08_04_00_00_E08_FORM_VALID: boolean;
-  public ILG60_08_04_00_00_E08_FORM_DATA: IRequestRewardinsAll;
+  public ILG60_08_04_00_00_E08_FORM_DATA: any;
 
   // ส่วนตารางการแบ่งจ่ายเงินสินบนรางวัล
   public ILG60_08_04_00_00_E12_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel

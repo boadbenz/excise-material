@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { Subject, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -32,6 +32,7 @@ import { ArrestsService } from '../../arrests.service';
 import { LoaderService } from 'app/core/loader/loader.service';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { IMyDateModel } from 'mydatepicker-th';
+import { ManageConfig } from './manage.config';
 
 @Component({
     selector: 'app-manage',
@@ -39,6 +40,7 @@ import { IMyDateModel } from 'mydatepicker-th';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
+ 
     // FormGroup ตรวจสอบสถานะในการบันทึก TN905016100058
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
@@ -48,7 +50,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // r: รายการแสดง
     // u: รายการอัพเดท
     // d: รายการที่ถูกลบ
-    card1: boolean = true;
+    // card1: boolean = true;
     noticeCard: boolean = false;
     card2: boolean = false;
     card3: boolean = false;
@@ -57,6 +59,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     card6: boolean = false;
     card7: boolean = false;
     card8: boolean = false;
+
+    // ILG60_03_02_00_00_E08: any;
+    // ILG60_03_02_00_00_E10: any;
+    // ILG60_03_02_00_00_E13: any;
+    // ILG60_03_02_00_00_E18: any;
+    // ILG60_03_02_00_00_E20: any;
+    // ILG60_03_02_00_00_E21: any;
+    // ILG60_03_02_00_00_E25: any;
+    // ILG60_03_02_00_00_E28: any;
 
     myDatePickerOptions = MyDatePickerOptions;
     _isSuccess: boolean = false;
@@ -146,7 +157,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
-
+    
     // Redux based variables
     obArrest: Observable<fromModels.Arrest>;
     stateArrest: fromModels.Arrest;
@@ -169,7 +180,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private s_notice: fromServices.ArrestNoticeService,
         private s_staff: fromServices.ArrestStaffService,
         private s_lawsuit: fromServices.ArrestLawSuitService,
-        private loaderService: LoaderService
+        private loaderService: LoaderService,
+        private manageConfig: ManageConfig
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -183,6 +195,17 @@ export class ManageComponent implements OnInit, OnDestroy {
             .subscribe((x: fromModels.Arrest) => this.stateArrest = x)
     }
 
+    onCollapse = this.manageConfig.onCollapse;
+    
+    ILG60_03_02_00_00_E08 = this.manageConfig.ILG60_03_02_00_00_E08;
+    ILG60_03_02_00_00_E10 = this.manageConfig.ILG60_03_02_00_00_E10;
+    ILG60_03_02_00_00_E13 = this.manageConfig.ILG60_03_02_00_00_E13;
+    ILG60_03_02_00_00_E18 = this.manageConfig.ILG60_03_02_00_00_E18;
+    ILG60_03_02_00_00_E20 = this.manageConfig.ILG60_03_02_00_00_E20;
+    ILG60_03_02_00_00_E21 = this.manageConfig.ILG60_03_02_00_00_E21;
+    ILG60_03_02_00_00_E25 = this.manageConfig.ILG60_03_02_00_00_E25;
+    ILG60_03_02_00_00_E28 = this.manageConfig.ILG60_03_02_00_00_E28;
+
     async ngOnInit() {
         this.sidebarService.setVersion(this.s_arrest.version);
         this.active_route();
@@ -191,9 +214,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.arrestFG.reset();
             }, 300);
         }
+        
         this.arrestFG = this.createForm();
         this.navigate_Service();
-
     }
 
     ngOnDestroy(): void {
@@ -214,9 +237,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestStationCode: new FormControl(null),
             ArrestStation: new FormControl(null, Validators.required),
             HaveCulprit: new FormControl(0),
-            Behaviour: new FormControl(null),
-            Testimony: new FormControl(null),
-            Prompt: new FormControl(null),
+            Behaviour: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
+            Testimony: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
+            Prompt: new FormControl('แจ้งให้ญาติทราบ'),
             IsMatchNotice: new FormControl(null),
             ArrestDesc: new FormControl('N/A'),
             NoticeCode: new FormControl(null),
@@ -336,7 +359,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                await this.loadMasterData();
+                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
                     if (this.arrestCode != this.stateArrest.ArrestCode)
@@ -573,12 +596,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     // 1
     setNoticeForm(n: fromModels.ArrestNotice[]) {
         let arrestNotice = this.ArrestNotice;
-        let arr = new FormArray([]);
         let i = 0;
         n.map(x => {
-            const modify = arrestNotice.value.filter(x => x.IsModify != 'd');
+            let modify = arrestNotice.value.filter(x => x.IsModify != 'd');
             i = (modify.length) && modify[modify.length - 1].RowId;
-            arr.push(
+            arrestNotice.push(
                 this.fb.group({
                     ArrestCode: this.arrestCode,
                     NoticeCode: x.NoticeCode,
@@ -591,7 +613,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             );
         })
-        this.arrestFG.setControl('ArrestNotice', arr);
+
+        this.arrestFG.setControl('ArrestNotice', arrestNotice);
     }
     // 2
     private setArrestNoticeStaff(o: fromModels.ArrestNoticeStaff[]) {
@@ -858,9 +881,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadProduct
                     .filter(v =>
-                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.SubBrandNameTH} ${v.BrandNameTH} ${v.ModelName}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
@@ -868,9 +891,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        (v.SubdistrictNameTH && v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -878,9 +901,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadStaff
                     .filter(v =>
-                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.TitleName} ${v.FirstName} ${v.LastName}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>

@@ -349,9 +349,9 @@ export class SuspectComponent implements OnInit {
       .map(term => term === '' ? []
         : this.typeheadRegion
           .filter(v =>
-            v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-            v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-            v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+            (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+              .toLowerCase()
+              .indexOf(term.toLowerCase()) > -1
           ).slice(0, 10));
 
   searchTitleName = (text$: Observable<string>) =>
@@ -521,7 +521,7 @@ export class SuspectComponent implements OnInit {
     if (!confirm(Message.confirmAction))
       return
 
-      this.router.navigate([`investigation/lawbreaker`, this.mode, this.suspectId]);
+    this.router.navigate([`investigation/lawbreaker`, this.mode, this.suspectId]);
     // switch (this.mode) {
     //   case 'C':
     //     this.router.navigate([`arrest/allegation`, this.mode, this.suspectId]);

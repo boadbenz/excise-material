@@ -35,6 +35,7 @@ import { RequestBribeDetailService } from '../../services/RequestBribeDetail.ser
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { convertDateForSave, getDateMyDatepicker } from 'app/config/dateFormat';
 
 @Component({
   selector: 'app-bribe',
@@ -107,7 +108,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.3');
+    this.sidebarService.setVersion('0.0.1.4');
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
     this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(res => {
@@ -283,32 +284,13 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
 
           await this.requestBribeService
             .RequestBribeinsAll({
-              RequestBribeRewardID: this.RequestBribeRewardID$.getValue(), // 2.1.3(1)
-              RequestBribeCode: this.RequestBribeCode$.getValue(), // 2.1.3(2)
-              CommandDetailID: this.ILG60_08_03_00_00_E08_FORM_DATA
-                .CommandDetailID, // 2.1.3(4)
-              Station: this.ILG60_08_03_00_00_E08_FORM_DATA.Station,
-              RequestDate: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestDate,
-              RequestTime: this.ILG60_08_03_00_00_E08_FORM_DATA.RequestTime,
-              BribeRemainder: 0,
-              BribeTotal: 0,
-              FirstName: '',
-              Informeracknowledge: '',
-              IsActive: 1,
-              LastName: '',
-              NoticeCode: '',
-              POADate: '',
-              POANo: '',
-              POATime: '',
-              PartMoney: 0,
-              RequestBribeDetail: [],
-              RequestBribeID: null,
-              RequestBribeStaff: null,
-              StationCode: '',
-              StationCodeOfPOA: '',
-              StationOfPOA: '',
-              TitleName: '',
-              TotalPart: 0
+              ...this.ILG60_08_03_00_00_E08_FORM_DATA,
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue().toString(), // 2.1.3(1)
+              RequestBribeCode: this.RequestBribeCode$.getValue().toString(), // 2.1.3(2)
+              POADate: '23-SEP-2561',
+              RequestDate: '23-SEP-2561',
+              POATime: '15.59',
+              RequestTime: '15.59'
             })
             .toPromise();
 

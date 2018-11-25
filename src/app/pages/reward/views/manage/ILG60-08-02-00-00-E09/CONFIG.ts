@@ -37,6 +37,7 @@ export class CONFIG extends ManageConfig {
     {
       title: 'วันที่ออกคำสั่ง',
       field: 'CommandDate',
+      inputType: 'date',
       default: '',
       title2: 'เวลา',
       field2: 'CommandTime',
