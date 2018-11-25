@@ -208,8 +208,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.IsProdScience = false;
         this.showScienceField = true;
         this.ShowReceiveField = true;
-        // this.IsReferenceVatRate = false;
-        // this.IsReferenceVatQty  = false;
 
         let date = new Date();
         this.ProveYear = (date.getFullYear() + 543).toString();
@@ -219,12 +217,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         //this.DeliveryTime = await this.getCurrentTime();
         //this.ProveScienceTime = await this.getCurrentTime();
 
-        // if (this.ProveID != '0') {
-        //     await this.getProveByID();
-        // }
-
-        debugger
         await this.ProveArrestgetByCon();
+        // this.preloader.setShowPreloader(false);
     }
 
     private active_Route() {
@@ -293,7 +287,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         return false;
                     }
 
-                    debugger
+                    
                     if (this.lsProveProduct.length > 0) {
                         // *******************************
                         // ----- ส่วน “พิสูจน์ของกลาง” -----
@@ -520,7 +514,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         }
 
                         await this.proveService.ProveProductinsAll(item).then(async pRes => {
-                            debugger
+                            
                             if (!pRes.IsSuccess) {
                                 isSuccess = pRes.IsSuccess;
                                 return false;
@@ -645,7 +639,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
 
-        debugger
+        
         // -----------------------------------------------------------
         //                  แก้ไขข้อมูลนำส่งของกลาง
         // -----------------------------------------------------------
@@ -729,10 +723,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }, (error) => { console.error(error); return false; });
                 });
 
-
-
-            // Del Document
-            debugger
+            // Del Document    
             this.ListProveDoc.filter(item => item.IsDelItem === true)
                 .map(async item => {
 
@@ -1135,15 +1126,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setInnerTextNextPageButton('งานเปรียบเทียบปรับ');
                 this.navService.setNextPageButton(false);
 
-                if(lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail.length > 0)
+                if(this.mode == 'R')
                 {
-                    for (var i = 0; i < lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail.length; i += 1) {
-                        if(lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[i].LawsuitType == "1"){
-                            this.navService.setNextPageButton(true);
-                            break;
+                    if(lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail.length > 0)
+                    {
+                        for (var i = 0; i < lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail.length; i += 1) {
+                            if(lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[i].LawsuitType == "1"){
+                                this.navService.setNextPageButton(true);
+                                break;
+                            }
                         }
                     }
                 }
+                
 
                 await this.proveService.ArrestIndictmentProductgetByIndictmentID(this.IndictmentID).then(async res => {
                     if (res.length > 0) {
@@ -1273,7 +1268,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oProve.ProveStationCode = "";
             this.oProve.ProveStation = "";
         } else {
-            debugger
             this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
@@ -1287,6 +1281,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     onAutoSelecteWord(event) {
         this.oProve.ProveStationCode = event.OfficeCode;
         this.oProve.ProveStation = event.OfficeName;
+    }
+
+    chooseFirstProveStation(): void {
+        this.ProveStation = this.options[0].OfficeName;
+        this.oProve.ProveStationCode = this.options[0].OfficeCode;
+        this.oProve.ProveStation = this.options[0].OfficeName;
     }
     // ----- End เขียนที่ ---
 
@@ -1314,6 +1314,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve.DeliveryStationCode = event.OfficeCode;
         this.oProve.DeliveryStation = event.OfficeName;
     }
+
+    chooseFirstDelivery(): void {
+        this.DeliveryStation = this.Deliveryoptions[0].OfficeName;
+        this.oProve.DeliveryStationCode = this.Deliveryoptions[0].OfficeCode;
+        this.oProve.DeliveryStation = this.Deliveryoptions[0].OfficeName;
+    }
+    
     // ----- End หน่วยงานที่นำส่ง ---
 
 
@@ -1339,6 +1346,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.oProve.DeliveryStationCode = event.OfficeCode;
         // this.oProve.DeliveryStation = event.OfficeName;
     }
+
+    chooseFirstDestination(): void {
+        this.DeliverTo = this.Destinationoptions[0].OfficeName;
+    }
     // ----- End หน่วยงานที่นำส่ง ---
 
 
@@ -1354,7 +1365,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     StaffonAutoChange(value: string) {
-        debugger
         if (value == '') {
             this.Staffoptions = [];
             this.ClearStaffData();
@@ -1400,6 +1410,35 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.PosExaminer = event.OperationPosName;
         this.DeptExaminer = event.OfficeName;
+    }
+
+    chooseFirstStaff(): void {
+        this.oProveStaff = {
+            StaffID: this.StaffID,
+            ProveID: this.ProveID,
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            LawsuitID: this.LawsuitID,
+            StaffCode: this.Staffoptions[0].StaffCode,
+            TitleName: this.Staffoptions[0].TitleName,
+            FirstName: this.Staffoptions[0].FirstName,
+            LastName: this.Staffoptions[0].LastName,
+            PositionCode: this.Staffoptions[0].OperationPosCode,
+            PositionName: this.Staffoptions[0].OperationPosName,
+            PosLevel: this.Staffoptions[0].PosLevel,
+            PosLevelName: this.Staffoptions[0].PosLevelName,
+            DepartmentCode: this.Staffoptions[0].OperationDeptCode,
+            DepartmentName: this.Staffoptions[0].OperationDeptName,
+            DepartmentLevel: this.Staffoptions[0].DeptLevel,
+            OfficeCode: this.Staffoptions[0].OfficeCode,
+            OfficeName: this.Staffoptions[0].OfficeName,
+            OfficeShortName: this.Staffoptions[0].OfficeShortName,
+            ContributorID: "14"
+        }
+
+        this.ProveStaffName = this.Staffoptions[0].TitleName + this.Staffoptions[0].FirstName + ' ' + this.Staffoptions[0].LastName;
+        this.PosExaminer = this.Staffoptions[0].OperationPosName;
+        this.DeptExaminer = this.Staffoptions[0].OfficeName;
     }
     // ----- End ผู้ตรวจรับ ---
 
@@ -1453,6 +1492,35 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.PosScience = event.OperationPosName;
         this.DeptScience = event.OfficeName;
     }
+
+    chooseFirstScienceStaff(): void {
+        this.oProveScienceStaff = {
+            StaffID: this.StaffID,
+            ProveID: this.ProveID,
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            LawsuitID: this.LawsuitID,
+            StaffCode: this.Scienceoptions[0].StaffCode,
+            TitleName: this.Scienceoptions[0].TitleName,
+            FirstName: this.Scienceoptions[0].FirstName,
+            LastName: this.Scienceoptions[0].LastName,
+            PositionCode: this.Scienceoptions[0].OperationPosCode,
+            PositionName: this.Scienceoptions[0].OperationPosName,
+            PosLevel: this.Scienceoptions[0].PosLevel,
+            PosLevelName: this.Scienceoptions[0].PosLevelName,
+            DepartmentCode: this.Scienceoptions[0].OperationDeptCode,
+            DepartmentName: this.Scienceoptions[0].OperationDeptName,
+            DepartmentLevel: this.Scienceoptions[0].DeptLevel,
+            OfficeCode: this.Scienceoptions[0].OfficeCode,
+            OfficeName: this.Scienceoptions[0].OfficeName,
+            OfficeShortName: this.Scienceoptions[0].OfficeShortName,
+            ContributorID: "15"
+        }
+
+        this.ScienceStaffName = this.Scienceoptions[0].TitleName + this.Scienceoptions[0].FirstName + ' ' + this.Scienceoptions[0].LastName;
+        this.PosScience = this.Scienceoptions[0].OperationPosName;
+        this.DeptScience = this.Scienceoptions[0].OfficeName;
+    }
     // ----- End ผู้ตรวจพิสูจน์ ---
 
 
@@ -1504,6 +1572,35 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.PosStaffSend = event.OperationPosName;
         this.DeptStaffSend = event.OfficeName;
+    }
+
+    chooseFirstStaffSend(): void {
+        this.oProveStaffSend = {
+            StaffID: this.StaffID,
+            ProveID: this.ProveID,
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            LawsuitID: this.LawsuitID,
+            StaffCode: this.StaffSendoptions[0].StaffCode,
+            TitleName: this.StaffSendoptions[0].TitleName,
+            FirstName: this.StaffSendoptions[0].FirstName,
+            LastName: this.StaffSendoptions[0].LastName,
+            PositionCode: this.StaffSendoptions[0].OperationPosCode,
+            PositionName: this.StaffSendoptions[0].OperationPosName,
+            PosLevel: this.StaffSendoptions[0].PosLevel,
+            PosLevelName: this.StaffSendoptions[0].PosLevelName,
+            DepartmentCode: this.StaffSendoptions[0].OperationDeptCode,
+            DepartmentName: this.StaffSendoptions[0].OperationDeptName,
+            DepartmentLevel: this.StaffSendoptions[0].DeptLevel,
+            OfficeCode: this.StaffSendoptions[0].OfficeCode,
+            OfficeName: this.StaffSendoptions[0].OfficeName,
+            OfficeShortName: this.StaffSendoptions[0].OfficeShortName,
+            ContributorID: "13"
+        }
+
+        this.StaffSendName = this.StaffSendoptions[0].TitleName + this.StaffSendoptions[0].FirstName + ' ' + this.StaffSendoptions[0].LastName;
+        this.PosStaffSend = this.StaffSendoptions[0].OperationPosName;
+        this.DeptStaffSend = this.StaffSendoptions[0].OfficeName;
     }
     // ----- End ผู้นำส่งของกลาง ---
 
@@ -1661,6 +1758,71 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.oProveProduct = this.oTempProduct;
     }
+
+    chooseFirstProduct(): void {
+        this.oTempProduct = {};
+
+        this.oTempProduct = {
+            ProductID: this.oProveProduct.ProductID,
+            ProductType: this.Productoptions[0].ProductType,
+            ProveID: this.ProveID,
+            ProductRefID: this.Productoptions[0].ProductID,
+            GroupCode: this.Productoptions[0].GroupCode,
+            IsDomestic: this.Productoptions[0].IsDomestic,
+            ProductCode: this.Productoptions[0].ProductCode,
+            BrandCode: this.Productoptions[0].BrandCode,
+            BrandNameTH: this.Productoptions[0].BrandNameTH,
+            BrandNameEN: this.Productoptions[0].BrandNameEN,
+            SubBrandCode: this.Productoptions[0].SubBrandCode,
+            SubBrandNameTH: this.Productoptions[0].SubBrandNameTH,
+            SubBrandNameEN: this.Productoptions[0].SubBrandNameEN,
+            ModelCode: this.Productoptions[0].ModelCode,
+            ModelName: this.Productoptions[0].ModelName,
+            FixNo1: this.Productoptions[0].FixNo1,
+            DegreeCode: this.Productoptions[0].DegreeCode,
+            Degree: this.Productoptions[0].Degree,
+            SizeCode: this.Productoptions[0].SizeCode,
+            Size: this.Productoptions[0].Size,
+            SizeUnitCode: this.Productoptions[0].SizeUnitCode,
+            SizeUnitName: this.Productoptions[0].SizeUnitName,
+            FixNo2: this.Productoptions[0].FixNo2,
+            SequenceNo: this.Productoptions[0].SequenceNo,
+            ProductDesc: this.Productoptions[0].ProductDesc,
+            CarNo: this.Productoptions[0].CarNo,
+            Qty: this.oProveProduct.Qty,
+            QtyUnit: this.oProveProduct.QtyUnit,
+            QtyBalance: this.oProveProduct.QtyBalance,
+            QtyBalanceUnit: this.oProveProduct.QtyBalanceUnit,
+            NetVolume: this.oProveProduct.NetVolume,
+            NetVolumeUnit: this.oProveProduct.NetVolumeUnit,
+            NetVolumeBalance: this.oProveProduct.NetVolumeBalance,
+            NetVolumeBalanceUnit: this.oProveProduct.NetVolumeBalanceUnit,
+            IsProveScience: this.oProveProduct.IsProveScience,
+            ProveScienceID: this.oProveProduct.ProveScienceID,
+            ProveScienceResult: this.oProveProduct.ProveScienceResult,
+            ReferenceRetailPrice: this.oProveProduct.ReferenceRetailPrice,
+            ReferenceRetailUnit: this.oProveProduct.ReferenceRetailUnit,
+            ReferenceVatRate: this.oProveProduct.ReferenceVatRate,
+            ReferenceVatQty: this.oProveProduct.ReferenceVatQty,
+            ReferenceVatValue: this.oProveProduct.ReferenceVatValue,
+            ReferenceVatUnit: this.oProveProduct.ReferenceVatUnit,
+            ReferenceDate: "",
+            RetailPrice: this.oProveProduct.RetailPrice,
+            RetailUnit: this.oProveProduct.RetailUnit,
+            VatValue: this.oProveProduct.VatValue,
+            VatUnit: this.oProveProduct.VatUnit,
+            VatProve: this.oProveProduct.VatProve,
+            ProveResult: this.oProveProduct.ProveResult,
+            Remarks: this.oProveProduct.Remarks,
+            IsStatusExhibit: this.oProveProduct.IsStatusExhibit,
+            IsActive: this.oProveProduct.IsActive,
+            IsReferenceVatRate: this.oProveProduct.IsReferenceVatRate,
+            IsReferenceVatQty: this.oProveProduct.IsReferenceVatQty,
+            IsProdScience: this.oProveProduct.IsProdScience
+        }
+
+        this.oProveProduct = this.oTempProduct;
+    }
     // ----- End Product ---
 
 
@@ -1755,7 +1917,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private onDeleteProduct(i: number) {
         if (confirm(Message.confirmDeleteProduct)) {
-            debugger
+            
             var aIndex;
             aIndex = this.getIndexOf(this.lsProveProduct, i, "ProductSeq");
 
@@ -1892,7 +2054,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     DelDocument(i: number) {
         if (confirm(Message.confirmDeleteProduct)) {
-            debugger
+            
             var aIndex;
             aIndex = this.getIndexOf(this.ListProveDoc, i, "DocumentSeq");
 
@@ -2019,4 +2181,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     VatProveFormat() {
         this.oProveProduct.VatProve = (+this.oProveProduct.VatProve).toFixed(4);
     }
+
+   
 }
