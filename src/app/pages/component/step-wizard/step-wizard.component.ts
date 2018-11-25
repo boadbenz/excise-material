@@ -13,7 +13,7 @@ export class StepWizardComponent implements OnInit {
 
   section = [
     { id: 1, name: 'ใบแจ้งความนำจับ' },
-    { id: 2, name: 'งานจับกุม', disabledLine: true },
+    { id: 2, name: 'งานจับกุม', disabledLine: false },
     { id: 3, name: 'รับคำกล่าวโทษ' },
     { id: 4, name: 'งานตรวจรับและพิสูจน์ของกลาง' },
     { id: 5, name: 'งานเปรียบเทียบปรับและชำระค่าปรับ' },
