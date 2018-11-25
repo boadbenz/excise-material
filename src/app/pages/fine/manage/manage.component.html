@@ -438,7 +438,7 @@
             </a>
             <a (click)="editReceipt(item, i, 1)" class="text-warning" [hidden]="showEditField"
                data-toggle="modal"
-               data-target="#payPopup">
+               data-target="#payPopup" *ngIf="item.PaymentDateShow">
               <i class="ti-pencil-alt btn-action"></i>
             </a>
           </td>
@@ -478,7 +478,7 @@
                data-target="#approvePopup" *ngIf="receipt.list[i].PaymentDate">
               <i class="mdi mdi-eye fa-lg"></i>
             </a>
-            <a (click)="editApproveReport(item, i, 1)" *ngIf="receipt.list[i].PaymentDate" class="text-warning" [hidden]="showEditField"
+            <a (click)="editApproveReport(item, i, 1)" *ngIf="item.PaymentDate" class="text-warning" [hidden]="showEditField"
                data-toggle="modal"
                data-target="#approvePopup">
               <i class="ti-pencil-alt btn-action"></i>
@@ -743,7 +743,7 @@
                   <div class="col-md-7">
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.TotalFine"
-                           name="TotalFine" disabled>
+                           name="TotalFine">
                   </div>
                 </div>
               </div>
