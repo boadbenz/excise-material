@@ -99,7 +99,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.5');
+    this.sidebarService.setVersion('0.0.1.6');
     this.pageLoad();
   }
   private async pageLoad() {
@@ -315,19 +315,28 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             if (RequestRewardinsAllRespone.RequestRewardID) {
               // 2.1.5
               // 2.1.5(1)
-              const resMasDocumentMain = await this.masDocumentMainService
-                .MasDocumentMaininsAll({
-                  DocumentType: 9,
-                  ReferenceCode: RequestRewardinsAllRespone.RequestRewardID,
-                  DocumentID: null,
-                  DataSource: this.ILG60_08_04_00_00_E19_FORM_DATA.DataSource,
-                  FilePath: this.ILG60_08_04_00_00_E19_FORM_DATA.FilePath,
-                  DocumentName: '',
-                  IsActive: 1
-                })
-                .toPromise();
-              if (resMasDocumentMain['DocumentID']) {
-                // 2.1.5(2) 'WAIT'
+              if (
+                this.ILG60_08_04_00_00_E19_FORM_DATA &&
+                this.ILG60_08_04_00_00_E19_FORM_DATA.length > 0
+              ) {
+                this.ILG60_08_04_00_00_E19_FORM_DATA.forEach(async element => {
+                  const resMasDocumentMain = await this.masDocumentMainService
+                    .MasDocumentMaininsAll({
+                      DocumentType: `9`,
+                      ReferenceCode: `${
+                        RequestRewardinsAllRespone.RequestRewardID
+                      }`,
+                      DocumentID: '',
+                      DataSource: `${element.DataSource}`,
+                      FilePath: `${element.FilePath}`,
+                      DocumentName: '',
+                      IsActive: `1`
+                    })
+                    .toPromise();
+                  if (resMasDocumentMain['DocumentID']) {
+                    // 2.1.5(2) 'WAIT'
+                  }
+                });
               }
             }
 
@@ -504,13 +513,14 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           newMapData.push(this.ConvObjectValue(m12));
         });
 
-        console.log('mergeArrayFormData', newMapData);
+        // console.log('mergeArrayFormData', newMapData);
 
         this.ILG60_08_04_00_00_E12_FORM_DATA = newMapData;
         break;
       case 'ILG60-08-04-00-00-E19':
         this.ILG60_08_04_00_00_E19_FORM_VALID = FormData.valid;
-        this.ILG60_08_04_00_00_E19_FORM_DATA = FormData.value;
+        const Documents = FormData.value.Documents;
+        this.ILG60_08_04_00_00_E19_FORM_DATA = Documents;
         break;
     }
   }

@@ -3,9 +3,9 @@
 
     <div class="table-responsive" *ngIf="(aggregate08$ | async)">
       <!-- {{ formGroup.value | json}} -->
-      {{aggregate08$ | async | json}}
+      <!-- {{aggregate08$ | async | json}}
 
-      {{SumBribeMoney}}
+      {{SumBribeMoney}} -->
       <form [formGroup]="formGroup" *ngIf="formGroup" (change)="formChange(formGroup)" novalidate>
         <div class="text-right">
           <button (click)="addRow()" [attr.disabled]="(ILG60_08_04_00_00_E13_BUTTON$ | async)?.DISABLED ? 'disabled' : null"
