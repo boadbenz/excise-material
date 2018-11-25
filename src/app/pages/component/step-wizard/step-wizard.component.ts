@@ -9,10 +9,11 @@ export class StepWizardComponent implements OnInit {
 
   // steps: any;
   @Input() sectionId: EventEmitter<number>;
+  @Input() disabledLine: EventEmitter<boolean>;
 
   section = [
     { id: 1, name: 'ใบแจ้งความนำจับ' },
-    { id: 2, name: 'งานจับกุม' },
+    { id: 2, name: 'งานจับกุม', disabledLine: false },
     { id: 3, name: 'รับคำกล่าวโทษ' },
     { id: 4, name: 'งานตรวจรับและพิสูจน์ของกลาง' },
     { id: 5, name: 'งานเปรียบเทียบปรับและชำระค่าปรับ' },
