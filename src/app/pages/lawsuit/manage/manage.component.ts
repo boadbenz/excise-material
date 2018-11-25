@@ -119,7 +119,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.14');
+    this.sidebarService.setVersion('0.0.0.15');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -778,15 +778,28 @@ export class ManageComponent implements OnInit {
       formGroup.setControl(formControl, itemFormArray);
     }
   }
-
+  getNowTime() {
+    let hours = "000" + (new Date()).getHours()
+    return hours.substr(hours.length - 2,hours.length) + ":00"
+  }
+  getNowDate() {
+    let now = new Date())
+    return {
+      date: {
+        day: now.getDate(),
+        month: now.getMonth() + 1,
+        year: now.getFullYear(),
+      }
+    }
+  }
   private createLawsuitForm() {
-
+    
     this.lawsuitForm = this.fb.group({
       IsLawsuitCheck: new FormControl(null),
       ReasonDontLawsuit: new FormControl(null),
       IsOutsideCheck: new FormControl(false),
-      LawsuitDate: new FormControl(null, Validators.required),
-      LawsuitTime: new FormControl(null, Validators.required),
+      LawsuitDate: new FormControl(this.getNowDate() || null, Validators.required),
+      LawsuitTime: new FormControl(this.getNowTime() || null, Validators.required),
       FullName: new FormControl(null, Validators.required),
       PositionName: new FormControl(null, Validators.required),
       DepartmentName: new FormControl(null, Validators.required),
@@ -869,7 +882,6 @@ export class ManageComponent implements OnInit {
         this.disabled = true;
         let IsLawsuitComplete = res[0]['IsLawsuitComplete'];
         console.log('IsLawsuitComplete==>', IsLawsuitComplete)
-
         /// LawsuitComplete status = 1
         if (IsLawsuitComplete == 1) {
           console.log(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0])
@@ -1013,9 +1025,11 @@ export class ManageComponent implements OnInit {
             this.LawsuitTableListShow = true;
             item['LawsuitArrestLawbreaker'].map(arrestLaw => {
               const middleName = (arrestLaw.LawbreakerMiddleName) ? arrestLaw.LawbreakerMiddleName : '';
-              console.log('middleName', middleName)
+              // item.LawsuitType = 1
+              // item.LawsuitEnd = 1
+              
               item.lawBrakerFullName = `${arrestLaw.LawbreakerTitleName ? arrestLaw.LawbreakerTitleName : ""} ${arrestLaw.LawbreakerFirstName} ${middleName} ${arrestLaw.LawbreakerLastName}`
-              console.log(item.lawBrakerFullName)
+              console.log(item)
             });
 
             /// add LawsuitTableList
@@ -1024,8 +1038,15 @@ export class ManageComponent implements OnInit {
             } else {
               item.ProductDesc = '';
             }
-            console.log(item.LawsuitType)
-            console.log(item.LawsuitEnd)
+            if (item.LawbreakerID > 0) {
+              item.LawsuitType = 1
+              item.LawsuitEnd = 1
+              this.lstype = [{ id: '0', name: 'ส่งฟ้องศาล' }, { id: '1', name: 'เปรียบเทียบปรับ', }];
+            } else {
+              item.LawsuitType = 2
+              item.LawsuitEnd = 2
+              this.lstype = [{ id: '0', name: 'ส่งฟ้องศาล' }, { id: '1', name: 'เปรียบเทียบปรับ', }, { id: '2', name: 'ไม่มีตัวตน', }];
+            }
 
             let a = {
               'EntityType': "",
@@ -1186,7 +1207,7 @@ export class ManageComponent implements OnInit {
   onChangeStationReslut(text) {
     this.staff.LawsuitStation = text.OfficeName
     this.staff.LawsuitStationCode = text.OfficeCode
-    console.log(this.staff)
+
     this.lawsuitForm.controls['LawsuitStation'].setValue(this.validateData(text.OfficeName));
     this.suggestionsStation = [];
   }
@@ -1198,6 +1219,10 @@ export class ManageComponent implements OnInit {
       this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
     }
     // this.form.controls["firstName"].setValidators([Validators.minLength(1), Validators.maxLength(30)]);
+  }
+  changeLawsuitEnd(value,index) {
+    let array = this.lawsuitForm.get('LawsuitTableList') as FormArray;
+    array.controls[index].get('LawsuitEnd').setValue(value);
   }
   IsOutsideCheckReq() {
     if (this.lawsuitForm.controls['IsOutsideCheck'].value === true) {
