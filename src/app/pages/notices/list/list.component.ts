@@ -60,7 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.19');
+        this.sidebarService.setVersion('0.0.2.20');
         this.paginage.TotalItems = 0;
 
         // this.preLoaderService.setShowPreloader(true);
@@ -149,13 +149,15 @@ export class ListComponent implements OnInit, OnDestroy {
                     l.StaffOfficeName = "";
                     insert = false;
                     
-                    i.childs.push(l);
+                    // i.childs.push(l);
+                    i.SuspectFullname += "<br/>"+l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
                     break;
                 }
             }
 
             if(insert){
-                l.childs = [];
+                // l.childs = [];
+                l.SuspectFullname = l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
                 datas.push(l);
                 l.index = cnt++;
             }
