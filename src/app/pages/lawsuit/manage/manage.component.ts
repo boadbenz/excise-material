@@ -1641,12 +1641,19 @@ export class ManageComponent implements OnInit {
     };
   }
 
-  viewData(item) {
+  async viewData(item: any, index: number) {
     ///###change path to lawsuit detail
     console.log('viewData===>', item);
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
+      height: '95%',
       maxWidth: 'none',
+      data: {
+        lawsuitArrest: item,
+        indicmentID: this.IndictmentID,
+        dialogtype:'R'
+      },
+
     });
 
     dialogRef.afterClosed().subscribe(async result => {
@@ -1673,6 +1680,7 @@ export class ManageComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
       height: '95%',
+      maxWidth: 'none',
       data: {
         lawsuitArrest: item,
         indicmentID: this.IndictmentID,
@@ -1681,8 +1689,8 @@ export class ManageComponent implements OnInit {
 
     });
     
-    dialogRef.afterClosed().subscribe(result => {
-      
+    dialogRef.afterClosed().subscribe(async result => {
+      await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
     });
     // this.router.navigate(["/lawsuit/detail", "R"], {
     //   queryParams: {
@@ -1751,11 +1759,33 @@ export class DialogJudgment {
   async ngOnInit() {
     console.log(this.data)
     this.arrestData = await this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.data.lawsuitArrest.IndictmentDetailID)
+    console.log('U',this.arrestData,this.data.lawsuitArrest)
     if(this.data.dialogtype == "U") {
       this.MasCourtList = await this.lawsuitService.MasCourtMaingetAll()
       
     }else{
+
       this.disabled = true;
+      this.lawsuitArrestFormDialog.get('IndicmentDetailID').disable();
+      this.lawsuitArrestFormDialog.get('arrestName').disable();
+      this.lawsuitArrestFormDialog.get('CourtName').disable();
+      this.lawsuitArrestFormDialog.get('UndecidedCaseNo').disable();
+      this.lawsuitArrestFormDialog.get('DecidedCaseNo').disable();
+      this.lawsuitArrestFormDialog.get('JudgementNo').disable();
+      this.lawsuitArrestFormDialog.get('JudgementID').disable();
+      this.lawsuitArrestFormDialog.get('JudgementDate').disable();
+      this.lawsuitArrestFormDialog.get('IsFine').disable();
+      this.lawsuitArrestFormDialog.get('CourtFine').disable();
+      this.lawsuitArrestFormDialog.get('IsImprison').disable();
+      this.lawsuitArrestFormDialog.get('ImprisonTime').disable();
+      this.lawsuitArrestFormDialog.get('ImprisonUnit').disable();
+      this.lawsuitArrestFormDialog.get('IsPayOnce').disable();
+      this.lawsuitArrestFormDialog.get('IsPayPeroid').disable();
+      this.lawsuitArrestFormDialog.get('PaymentDate').disable();
+      this.lawsuitArrestFormDialog.get('PaymentPeroid').disable();
+      this.lawsuitArrestFormDialog.get('PaymentPeroidStartDate').disable();
+      this.lawsuitArrestFormDialog.get('PaymentPeroidRound').disable();
+      this.lawsuitArrestFormDialog.get('PaymentUnit').disable();
     }
     await this.newForm();
     
@@ -1766,25 +1796,27 @@ export class DialogJudgment {
     // this.MasCourtList = await this.lawsuitService.MasCourtMaingetAll()
     console.log(this.MasCourtList)
 
-    console.log(this.arrestData)
+    
     console.log(this.LawsuitArrest)
   }
 
   newForm() {
     this.IsPayOnce = this.arrestData['IsPayOnce']
+    if(this.data.dialogtype == 'U'){
+      if(this.arrestData['IsImprison']){
+        this.lawsuitArrestFormDialog.get('ImprisonTime').enable() 
+        this.lawsuitArrestFormDialog.get('ImprisonUnit').enable() 
+      }else{
+        this.lawsuitArrestFormDialog.get('ImprisonTime').disable() 
+        this.lawsuitArrestFormDialog.get('ImprisonUnit').disable() 
+      }
+      if(this.arrestData['IsFine']){
+        this.lawsuitArrestFormDialog.get('CourtFine').enable() 
+      }else{
+        this.lawsuitArrestFormDialog.get('CourtFine').disable()
+      }
+    }
     
-    if(this.arrestData['IsImprison']){
-      this.lawsuitArrestFormDialog.get('ImprisonTime').enable() 
-      this.lawsuitArrestFormDialog.get('ImprisonUnit').enable() 
-    }else{
-      this.lawsuitArrestFormDialog.get('ImprisonTime').disable() 
-      this.lawsuitArrestFormDialog.get('ImprisonUnit').disable() 
-    }
-    if(this.arrestData['IsFine']){
-      this.lawsuitArrestFormDialog.get('CourtFine').enable() 
-    }else{
-      this.lawsuitArrestFormDialog.get('CourtFine').disable()
-    }
     let Fullname = this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName || '' + this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerFirstName + ' ' + this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerLastName
     this.lawsuitArrestFormDialog.controls['IndicmentDetailID'].setValue(this.data.lawsuitArrest.IndictmentDetailID);
     this.lawsuitArrestFormDialog.controls['arrestName'].setValue(Fullname,Validators.required);

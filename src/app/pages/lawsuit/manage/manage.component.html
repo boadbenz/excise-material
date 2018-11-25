@@ -344,12 +344,12 @@
                 <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 0" (click)="editTable(item.value, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a>
-                <!-- <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="item.controls['LawsuitType'].value == 0">
+                <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.value, i)" *ngIf="item.controls['LawsuitType'].value == 0">
                   <i class="mdi mdi-eye fa-lg"></i>
-                </a> -->
-                <!-- <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)" *ngIf="!showEditField && item.value.LawsuitEnd == 1" >
+                </a>
+                <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.value, i)" *ngIf="!showEditField && item.value.LawsuitEnd == 1" >
                   <i class="mdi mdi-eye fa-lg"></i>
-                </a> -->
+                </a>
               </td>
             </tr>
           </tbody>

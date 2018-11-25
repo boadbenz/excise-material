@@ -26,7 +26,7 @@
               <label class="col-form-label text-right col-md-3">ชื่อศาล: </label>
               <div class="col-md-9">
                 <input class="form-control" (input)="onChangeCourtName($event.target.value)" type="text"
-                 [attr.disabled]="disabled ? '' : null" formControlName="CourtName">
+                  formControlName="CourtName">
                 <div class="list-group" *ngIf="MasCourtListsuggestions.length">
                     <a class="list-group-item list-group-item-action" style="cursor: pointer;" (click)="onChangeCourtNameResult(s)" 
                       *ngFor="let s of MasCourtListsuggestions">{{s.CourtName}}</a>
@@ -42,7 +42,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">หมายเลขคดีดำ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="UndecidedCaseNo">
+                <input class="form-control" type="text"  formControlName="UndecidedCaseNo">
               </div>
             </div>
           </div>
@@ -51,7 +51,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">หมายเลขคดีแดง: </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="DecidedCaseNo">
+                <input class="form-control" type="text"  formControlName="DecidedCaseNo">
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">คำพิพากษาฎีกาที่ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="JudgementNo">
+                <input class="form-control" type="text"  formControlName="JudgementNo">
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@
               <label class="col-form-label text-right col-md-3">วันที่อ่านคดีพิพากษา: </label>
               <div class="col-md-9">
                 
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="JudgementDate">
+                <input class="form-control" type="text"  formControlName="JudgementDate">
               </div>
             </div>
           </div>
@@ -186,7 +186,7 @@
         
       </div>
       <div  style="float:right">
-          <button class="btn btn-primary" (click)="OnSave()"> บันทึก </button>
+          <button class="btn btn-primary" (click)="OnSave()" *ngIf="!disabled"> บันทึก </button>
       </div>
     </div>
   </form>
