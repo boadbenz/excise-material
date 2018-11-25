@@ -926,11 +926,14 @@ export class ManageComponent implements OnInit {
                   this.router.navigate(['/lawsuit/list']);
                 }
                 if(judge.isFine == 1){
-                  this.lawsuitService.LawsuitPaymentFineDetailupdDelete(judge.PaymentFineID).then((deleteres)=>{
-                    console.log(deleteres)
-                  }).catch((error)=>{
-                    console.log(error)
-                  })
+                  judge.LawsuitPaymentFine.forEach(paymentres => {
+                    this.lawsuitService.LawsuitPaymentFineDetailupdDelete(paymentres.PaymentFineID).then((deleteres)=>{
+                      console.log(deleteres)
+                    }).catch((error)=>{
+                      console.log(error)
+                    })
+                  });
+                  
                 }else{
                   this.preLoaderService.setShowPreloader(false);
                   this.router.navigate(['/lawsuit/list']);
@@ -1646,8 +1649,9 @@ export class ManageComponent implements OnInit {
       maxWidth: 'none',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log(`Dialog result: ${result}`);
+    dialogRef.afterClosed().subscribe(async result => {
+
+        await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
     });
     // this.router.navigate(["/lawsuit/detail", "R"], {
     //   queryParams: {
@@ -1658,21 +1662,27 @@ export class ManageComponent implements OnInit {
     // });
   }
 
-  editTable(item: any, index: number) {
+
+
+ async editTable(item: any, index: number) {
     ///####use this value to get api
     // /item.controls['IndictmentDetailID'].value
+    
+
+
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
-      maxWidth: 'none',
+      height: '95%',
       data: {
         lawsuitArrest: item,
         indicmentID: this.IndictmentID,
+        dialogtype:'U'
       },
 
     });
-
+    
     dialogRef.afterClosed().subscribe(result => {
-      //console.log(`Dialog result: ${result}`);
+      
     });
     // this.router.navigate(["/lawsuit/detail", "R"], {
     //   queryParams: {
@@ -1698,7 +1708,10 @@ export class DialogJudgment {
   private indictmentID: string;
   private lawsuitID: number;
   public judgmentModel = new JudgmentModel();
-
+  private disabled:boolean=false;
+  private MasCourtListsuggestions = []
+  private IsPayOnce:boolean=null;
+  private LawsuitArrest:any;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
@@ -1711,55 +1724,239 @@ export class DialogJudgment {
   public isPayAll = null;
   public arrestData = [];
   public MasCourtList = []
-  lawsuitArrestFormDialog: FormGroup;
+  public lawsuitArrestFormDialog: FormGroup = new FormGroup({
+      arrestName: new FormControl(Validators.required),
+      CourtName: new FormControl(Validators.required),
+      UndecidedCaseNo: new FormControl(Validators.required),
+      DecidedCaseNo: new FormControl(Validators.required),
+      JudgementNo: new FormControl(Validators.required),
+      JudgementID: new FormControl(),
+      JudgementDate: new FormControl(Validators.required),
+      IsFine: new FormControl(),
+      CourtFine: new FormControl(),
+      IsImprison: new FormControl(),
+      ImprisonTime: new FormControl(),
+      ImprisonUnit: new FormControl(),
+      IsPayOnce: new FormControl(),
+      IsPayPeroid: new FormControl(),
+      PaymentDate: new FormControl(),
+      PaymentPeroid: new FormControl(),
+      PaymentPeroidStartDate: new FormControl(),
+      PaymentPeroidRound: new FormControl(),
+      PaymentUnit: new FormControl(),
+      
+  });
 
   async ngOnInit() {
+    console.log(this.data)
     this.arrestData = await this.lawsuitService.GetArrestIndicmentDetailgetByCon(this.data.lawsuitArrest.IndictmentDetailID)
+    if(this.data.dialogtype == "U") {
+      this.MasCourtList = await this.lawsuitService.MasCourtMaingetAll()
+      
+    }else{
+      this.disabled = true;
+    }
     await this.newForm();
-    let LawsuitArrest = await this.lawsuitService.LawsuitArrestGetByCon(this.data.indicmentID)
-    // if(this.data.indicmentID == "U") {
-    //   this.MasCourtList = await this.lawsuitService.MasCourtMaingetAll()
-    // }
-    this.MasCourtList = await this.lawsuitService.MasCourtMaingetAll()
+    
+    
+    
+    this.LawsuitArrest = await this.lawsuitService.LawsuitArrestGetByCon(this.data.indicmentID)
+    
+    // this.MasCourtList = await this.lawsuitService.MasCourtMaingetAll()
     console.log(this.MasCourtList)
 
-    console.log(this.lawsuitArrestFormDialog.value)
-    console.log(LawsuitArrest)
+    console.log(this.arrestData)
+    console.log(this.LawsuitArrest)
   }
 
   newForm() {
+    this.IsPayOnce = this.arrestData['IsPayOnce']
+    
+    if(this.arrestData['IsImprison']){
+      this.lawsuitArrestFormDialog.get('ImprisonTime').enable() 
+      this.lawsuitArrestFormDialog.get('ImprisonUnit').enable() 
+    }else{
+      this.lawsuitArrestFormDialog.get('ImprisonTime').disable() 
+      this.lawsuitArrestFormDialog.get('ImprisonUnit').disable() 
+    }
+    if(this.arrestData['IsFine']){
+      this.lawsuitArrestFormDialog.get('CourtFine').enable() 
+    }else{
+      this.lawsuitArrestFormDialog.get('CourtFine').disable()
+    }
     let Fullname = this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerTitleName || '' + this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerFirstName + ' ' + this.arrestData['LawsuitArrestLawbreaker'][0].LawbreakerLastName
-    return this.lawsuitArrestFormDialog = this.fb.group({
-      arrestName: new FormControl(Fullname, Validators.required),
-      CourtName: new FormControl(this.arrestData['CourtName'], Validators.required),
-      UndecidedCaseNo: new FormControl(this.arrestData['UndecidedCaseNo'], Validators.required),
-      DecidedCaseNo: new FormControl(this.arrestData['DecidedCaseNo'], Validators.required),
-      JudgementNo: new FormControl(this.arrestData['JudgementNo'], Validators.required),
-      JudgementDate: new FormControl(this.arrestData['JudgementDate'], Validators.required),
-      IsFine: new FormControl(this.arrestData['IsFine']),
-      CourtFine: new FormControl(this.arrestData['CourtFine']),
-      IsImprison: new FormControl(this.arrestData['IsImprison']),
-      ImprisonTime: new FormControl(this.arrestData['ImprisonTime']),
-      ImprisonUnit: new FormControl(this.arrestData['ImprisonUnit']),
-      IsPayOnce: new FormControl(this.arrestData['IsPayOnce']),
-      PaymentDate: new FormControl(this.arrestData['PaymentDate']),
-      PaymentPeroid: new FormControl(this.arrestData['PaymentPeroid']),
-      PaymentPeroidStartDate: new FormControl(this.arrestData['PaymentPeroidStartDate']),
-      PaymentPeroidRound: new FormControl(this.arrestData['PaymentPeroidRound']),
-      PaymentUnit: new FormControl(this.arrestData['PaymentUnit']),
-    });
-
+      
+    this.lawsuitArrestFormDialog.controls['arrestName'].setValue(Fullname,Validators.required);
+    this.lawsuitArrestFormDialog.controls['CourtName'].setValue(this.arrestData['CourtName'],Validators.required);
+    this.lawsuitArrestFormDialog.controls['UndecidedCaseNo'].setValue(this.arrestData['UndecidedCaseNo'],Validators.required);
+    this.lawsuitArrestFormDialog.controls['DecidedCaseNo'].setValue(this.arrestData['DecidedCaseNo'],Validators.required);
+    this.lawsuitArrestFormDialog.controls['JudgementNo'].setValue(this.arrestData['JudgementNo'],Validators.required);
+    this.lawsuitArrestFormDialog.controls['JudgementID'].setValue(this.arrestData['JudgementID']);
+    this.lawsuitArrestFormDialog.controls['JudgementDate'].setValue(this.arrestData['JudgementDate'],Validators.required);
+    this.lawsuitArrestFormDialog.controls['IsFine'].setValue(this.arrestData['IsFine']);
+    this.lawsuitArrestFormDialog.controls['CourtFine'].setValue(this.arrestData['CourtFine']);
+    this.lawsuitArrestFormDialog.controls['IsImprison'].setValue(this.arrestData['IsImprison']);
+    this.lawsuitArrestFormDialog.controls['ImprisonTime'].setValue(this.arrestData['ImprisonTime']);
+    this.lawsuitArrestFormDialog.controls['ImprisonUnit'].setValue(this.arrestData['ImprisonUnit']);
+    this.lawsuitArrestFormDialog.controls['IsPayOnce'].setValue(this.arrestData['IsPayOnce']);
+    this.lawsuitArrestFormDialog.controls['IsPayPeroid'].setValue(this.arrestData['IsPayPeroid']);
+    this.lawsuitArrestFormDialog.controls['PaymentDate'].setValue(this.arrestData['PaymentDate']);
+    this.lawsuitArrestFormDialog.controls['PaymentPeroid'].setValue(this.arrestData['PaymentPeroid']);
+    this.lawsuitArrestFormDialog.controls['PaymentPeroidStartDate'].setValue(this.arrestData['PaymentPeroidStartDate']);
+    this.lawsuitArrestFormDialog.controls['PaymentPeroidRound'].setValue(this.arrestData['PaymentPeroidRound']);
+    this.lawsuitArrestFormDialog.controls['PaymentUnit'].setValue(this.arrestData['PaymentUnit']);
+    return this.lawsuitArrestFormDialog
   }
 
 
   public closePopup = function () {
     this.dialogRef.close(DialogJudgment);
   }
+
+  onChangeCourtName(textSearch) {
+    let _MasCourtList = this.MasCourtList;
+    if (textSearch) {
+      let result = _MasCourtList.filter(item => (item.CourtName.includes(textSearch))).slice(0, 10);
+      this.MasCourtListsuggestions = result;
+      console.log(result)
+      // if (result.length == 1) {
+      //   this.lawsuitForm.controls['PositionName'].setValue(this.validateData(result[0].OperationPosName));
+      //   this.lawsuitForm.controls['DepartmentName'].setValue(this.validateData(result[0].OfficeShortName));
+      //   this.lawsuitForm.controls['officeCode'].setValue(this.validateData(result[0].OfficeCode));
+      // } else {
+      //   this.lawsuitForm.controls['PositionName'].setValue('');
+      //   this.lawsuitForm.controls['DepartmentName'].setValue('');
+      //   this.lawsuitForm.controls['officeCode'].setValue('');
+      // }
+    } else {
+      // this.lawsuitForm.controls['PositionName'].setValue('');
+      // this.lawsuitForm.controls['DepartmentName'].setValue('');
+      // this.lawsuitForm.controls['officeCode'].setValue('');
+    }
+  }
+
+  onChangeCourtNameResult(result){
+    console.log(result)
+    this.lawsuitArrestFormDialog.controls['CourtName'].setValue(this.validateData(result.CourtName))
+    this.MasCourtListsuggestions = []
+  }
   public validateData = function (data) {
     if (data) {
       return data;
     }
     return '';
+  }
+
+  onChangeFine(){
+    let status = this.lawsuitArrestFormDialog.controls['IsFine'].value
+    if(status){
+      this.lawsuitArrestFormDialog.get('CourtFine').enable()
+    }else{
+      this.lawsuitArrestFormDialog.get('CourtFine').disable()
+    }
+  }
+
+  onChangeImprison(){
+    let status = this.lawsuitArrestFormDialog.controls['IsImprison'].value
+    if(status){
+      this.lawsuitArrestFormDialog.get('ImprisonTime').enable()
+      this.lawsuitArrestFormDialog.get('ImprisonUnit').enable()
+    }else{
+      this.lawsuitArrestFormDialog.get('ImprisonTime').disable()
+      this.lawsuitArrestFormDialog.get('ImprisonUnit').disable()
+    }
+  }
+
+  
+
+  onChangePayOnce(status){
+    
+    this.IsPayOnce = status
+    if(!status){
+      this.lawsuitArrestFormDialog.controls['PaymentDate'].setValue('')
+      this.lawsuitArrestFormDialog.controls['IsPayOnce'].setValue(0)
+    }else{
+      this.lawsuitArrestFormDialog.controls['IsPayPeroid'].setValue(0)
+      this.lawsuitArrestFormDialog.controls['PaymentPeroid'].setValue('')
+      this.lawsuitArrestFormDialog.controls['PaymentPeroidStartDate'].setValue('')
+      this.lawsuitArrestFormDialog.controls['PaymentPeroidRound'].setValue('')
+      this.lawsuitArrestFormDialog.controls['PaymentUnit'].setValue('')
+    }
+  }
+
+  validator(){
+
+    !this.lawsuitArrestFormDialog.get('arrestName').valid ? alert("กรุณาเช็คชื่อผู้ต้องหาใหม่") : null;
+    !this.lawsuitArrestFormDialog.get('UndecidedCaseNo').valid ? alert("กรุณากรอกหมายเลขคดีดำใหม่") : null;
+    !this.lawsuitArrestFormDialog.get('DecidedCaseNo').valid ? alert("กรุณากรอกหมายเลขคดีแดงใหม่") : null;
+    !this.lawsuitArrestFormDialog.get('JudgementNo').valid ? alert("กรุณากรอกคำพิพากษาฎีกาที่ใหม่") : null;
+    !this.lawsuitArrestFormDialog.get('JudgementDate').valid ? alert("กรุณากรอกวันที่อ่านคดีพิพากษาใหม่") : null;
+    let _MasCourtList = this.MasCourtList;
+    let result = _MasCourtList.filter(item => (item.CourtName == this.lawsuitArrestFormDialog.get('CourtName').value));
+    !result ? alert("กรุณาชื่อศาลใหม่") : null;
+    
+    if(this.lawsuitArrestFormDialog.valid){
+      if(this.lawsuitArrestFormDialog.controls['IsFine'].value){
+        this.lawsuitArrestFormDialog.controls['IsFine'].setValue(1);
+      }else{
+        this.lawsuitArrestFormDialog.controls['IsFine'].setValue(0);
+      }
+      if(this.lawsuitArrestFormDialog.controls['IsImprison'].value){
+        this.lawsuitArrestFormDialog.controls['IsImprison'].setValue(1);
+      }else{
+        this.lawsuitArrestFormDialog.controls['IsImprison'].setValue(0);
+      }
+      return true
+    }else{
+      return false
+    }
+    
+  }
+
+  OnSave(){
+    if(this.validator()){
+      if(confirm('ยืนยันการทำรายการหรือไม่')){
+        if(this.arrestData['JudgementID']){
+          this.lawsuitService.LawsuitJudgementupdByCon(this.lawsuitArrestFormDialog.value)
+          if(this.arrestData['PaymentFineID']){
+            this.lawsuitService.LawsuitPaymentFineDetailupdDelete(this.arrestData['PaymentFineID'])
+          }
+          if(this.lawsuitArrestFormDialog.controls['IsFine'].value == 1){
+            let count = this.LawsuitArrest[0].NoticeCode.length * (this.lawsuitArrestFormDialog.controls['IsPayOnce'].value == 1 ? 1 : this.lawsuitArrestFormDialog.controls['PaymentPeroid'].value);
+            for (let index = 0; index < count; index++) {
+              this.LawsuitArrest[0].LawsuitNotice.forEach(notice => {
+                this.lawsuitService.LawsuitPaymentFineDetailinsAll(notice)
+              });
+              
+            }
+          }else{
+            this.closePopup()
+          }
+        }else{
+          this.lawsuitService.LawsuitJudgementinsAll(this.lawsuitArrestFormDialog.value).then((res)=>{
+            if(res.Msg =='Complete'){
+              if(this.lawsuitArrestFormDialog.controls['IsFine'].value == 1){
+                let count = this.LawsuitArrest[0].LawsuitNotice.length * (this.lawsuitArrestFormDialog.controls['IsPayOnce'].value == 1 ? 1 : this.lawsuitArrestFormDialog.controls['PaymentPeroid'].value);
+                for (let index = 0; index < count; index++) {
+                  this.LawsuitArrest[0].LawsuitNotice.forEach(notice => {
+                    this.lawsuitService.LawsuitPaymentFineDetailinsAll(notice)
+                  });
+                }
+              }else{
+                this.closePopup()
+              }
+            }else{
+              alert(res.Msg)
+            }
+          }).catch((error)=>{
+            alert(error)
+          })
+        }
+        
+        
+      }
+    }
+    
   }
 
 }

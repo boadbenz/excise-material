@@ -50,6 +50,8 @@ export class LawsuitService {
     const url = `${appConfig.api8083}/LawsuitgetByKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
+  
+  
   async LawsuitArrestGetByKeyword(Textsearch: any): Promise<Lawsuit[]> {
     const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
     const url = `${appConfig.api8083}/LawsuitArrestgetByKeyword`;
@@ -162,6 +164,14 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
+  async LawsuitPaymentFineDetailinsAll(form:any) {
+    const params = form;
+    const url = `${appConfig.api7789}/LawsuitPaymentFineinsAll`;
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+  }
+
+  
+
   async LawsuitArrestupDeleteLawsuit(ArrestCode,IndictmentID){
     const params = { ArrestCode: ArrestCode,
                      IndictmentID: IndictmentID};
@@ -197,6 +207,16 @@ export class LawsuitService {
     } catch (error) {
       await alert(error);
     }
+  }
+
+  async LawsuitJudgementinsAll(form:any){
+    const url = `${appConfig.api7788}/LawsuitJudgementinsAll`;
+    return await this.http.post<any>(url, JSON.stringify(form), this.httpOptions).toPromise();
+  }
+
+  async LawsuitJudgementupdByCon(form:any){
+    const url = `${appConfig.api8083}/LawsuitJudgementupdByCon`;
+    return await this.http.post<any>(url, JSON.stringify(form), this.httpOptions).toPromise();
   }
 
   async ArrestLawbreakergetByCon(LawbreakerID) {

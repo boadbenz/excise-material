@@ -1,11 +1,11 @@
+
 <div class="card card-outline-bluish unset-radius">
-  <div class="card-actions">
-    <a (click)="closePopup()" style="float:right">
-      <i class="ti-close"></i>
-    </a>
-  </div>
+  
   <div class="card-header unset-radius">
-    <h5 class="card-title m-b-0">ข้อมูลการจับกุม</h5>
+    <h5 class="card-title m-b-0">คำพิพากษาของศาล</h5>
+    <a (click)="closePopup()" style="float:right">
+        <i class="ti-close"></i>
+      </a>
   </div>
   <form [formGroup]="lawsuitArrestFormDialog">
     <div class="card-body">
@@ -25,7 +25,12 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">ชื่อศาล: </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="justicName">
+                <input class="form-control" (input)="onChangeCourtName($event.target.value)" type="text"
+                 [attr.disabled]="disabled ? '' : null" formControlName="CourtName">
+                <div class="list-group" *ngIf="MasCourtListsuggestions.length">
+                    <a class="list-group-item list-group-item-action" style="cursor: pointer;" (click)="onChangeCourtNameResult(s)" 
+                      *ngFor="let s of MasCourtListsuggestions">{{s.CourtName}}</a>
+                </div>
               </div>
             </div>
           </div>
@@ -37,7 +42,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">หมายเลขคดีดำ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="numberBlackList">
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="UndecidedCaseNo">
               </div>
             </div>
           </div>
@@ -46,7 +51,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">หมายเลขคดีแดง: </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="numberRedList">
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="DecidedCaseNo">
               </div>
             </div>
           </div>
@@ -58,7 +63,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">คำพิพากษาฎีกาที่ : </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="location">
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="JudgementNo">
               </div>
             </div>
           </div>
@@ -67,7 +72,8 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">วันที่อ่านคดีพิพากษา: </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="dateJustic">
+                
+                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="JudgementDate">
               </div>
             </div>
           </div>
@@ -80,12 +86,12 @@
             <div class="row form-group">
               <div class="col">
                 <div class="form-check">
-                  <input formControlName="fine" class="form-check-input" type="checkbox" id="fine" name="fine">
-                  <label class="form-check-label" for="fine">สั่งปรับเป็นจำนวนเงิน (บาท)</label>
+                  <input (change) = "onChangeFine()" formControlName="IsFine" class="form-check-input" type="checkbox" id="IsFine" name="IsFine">
+                  <label class="form-check-label" for="IsFine">สั่งปรับเป็นจำนวนเงิน (บาท)</label>
                 </div>
               </div>
               <div class="col-8">
-                <input class="form-control" type="text" formControlName="fineRate" class="form-check-input" id="fineRate"
+                <input class="form-control" type="text" formControlName="CourtFine" class="form-check-input" id="CourtFine"
                   required>
               </div>
             </div>
@@ -96,12 +102,12 @@
             <div class="row form-group">
               <div class="col">
                 <div class="form-check">
-                  <input formControlName="isPrison" class="form-check-input" type="checkbox" id="isPrison" name="isPrison">
-                  <label class="form-check-label" for="isPrison">สั่งจำคุกเป็นเวลา</label>
+                  <input (change) = "onChangeImprison()"  formControlName="IsImprison" class="form-check-input"  type="checkbox" id="IsImprison" name="IsImprison">
+                  <label class="form-check-label" for="IsImprison">สั่งจำคุกเป็นเวลา</label>
                 </div>
               </div>
               <div class="col-8">
-                <input class="form-control" type="text" formControlName="prisonDay" class="form-check-input" id="prisonDay"
+                <input class="form-control" type="text" formControlName="ImprisonTime" class="form-check-input" id="ImprisonTime"
                   required>
               </div>
             </div>
@@ -110,7 +116,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">หน่วย: </label>
               <div class="col-md-9">
-                <input class="form-control" type="text" formControlName="unit" name="unit">
+                <input class="form-control" type="text" formControlName="ImprisonUnit" name="ImprisonUnit">
               </div>
             </div>
           </div>
@@ -124,18 +130,18 @@
             <div class="row form-group">
               <div class="col">
                 <div class="form-check">
-                  <input formControlName="payRadio1" class="form-check-input" type="radio" id="payRadio1" name="payRadio"
-                    (change)="isPayAll = true">
-                  <label class="form-check-label" for="payRadio1">ชำระครั้งเดียว</label>
+                  <input formControlName="IsPayOnce" class="form-check-input" type="radio" id="IsPayOnce" name="IsPayOnce"
+                    (change)="onChangePayOnce(1)" [value]="1">
+                  <label class="form-check-label" for="IsPayOnce">ชำระครั้งเดียว</label>
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="isPayAll">
+            <div class="row" *ngIf="IsPayOnce == 1">
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-form-label text-right col-md-3">วันที่กำหนดชำระ: </label>
                   <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="payDate" name="payDate">
+                    <input class="form-control" type="text" formControlName="PaymentDate" name="PaymentDate">
                   </div>
                 </div>
               </div>
@@ -148,18 +154,18 @@
             <div class="row form-group">
               <div class="col">
                 <div class="form-check">
-                  <input formControlName="payRadio2" class="form-check-input" type="radio" id="payRadio2" name="payRadio"
-                    (change)="isPayAll = false">
-                  <label class="form-check-label" for="payRadio2">แบ่งชำระป็นงวด</label>
+                  <input formControlName="IsPayPeroid" class="form-check-input" type="radio" id="IsPayPeroid" name="IsPayPeroid"
+                    (change)="onChangePayOnce(0)" [value]="1">
+                  <label class="form-check-label" for="IsPayPeroid">แบ่งชำระป็นงวด</label>
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="isPayAll == false">
+            <div class="row" *ngIf="IsPayOnce == 0">
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-form-label text-right col-md-3">จำนวนงาด: </label>
                   <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="quantityPay">
+                    <input class="form-control" type="text" formControlName="PaymentPeroid">
                   </div>
                 </div>
               </div>
@@ -167,34 +173,22 @@
                 <div class="form-group row">
                   <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
                   <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="startPayDate">
+                    <input class="form-control" type="text" formControlName="PaymentPeroidStartDate">
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="row" *ngIf="isPayAll == false">
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">จำนวนงาด: </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="roundPay">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="payUnit">
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
+          
         </div>
-
+        
+      </div>
+      <div  style="float:right">
+          <button class="btn btn-primary" (click)="OnSave()"> บันทึก </button>
       </div>
     </div>
   </form>
+  
 </div>
