@@ -112,7 +112,7 @@ var CoreInterceptor = /** @class */ (function () {
             this._pendingRequests++;
             if (1 === this._pendingRequests) {
                 this._pendingRequestsStatus.next(true);
-                this.preloaderService.setShowPreloader(true);
+                // this.preloaderService.setShowPreloader(true);
             }
         }
         // const token = JSON.parse(localStorage.getItem('user'));

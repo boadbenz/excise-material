@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, Injectable } from '@ang
 import { MainMasterService } from 'app/services/main-master.service';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { LoaderService } from 'app/core/loader/loader.service';
-import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+// import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { ArrestService } from '../../services';
 
 @Component({
