@@ -113,7 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.9');
+        this.sidebarService.setVersion('0.0.0.10');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
@@ -242,7 +242,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(IndictmentID: string, ArrestCode: string, CompareID: string) {
-      if (CompareID == null || CompareID === '' || CompareID === '0') {
+      if (CompareID) {
         this._router.navigate([`/fine/manage/C/0/${IndictmentID}/${ArrestCode}`]);
       } else {
         this._router.navigate([`/fine/manage/R/${CompareID}/${IndictmentID}/${ArrestCode}`]);

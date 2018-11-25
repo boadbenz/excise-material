@@ -266,7 +266,7 @@
                        placeholder="พิมพ์ข้อความ" aria-label="Number"
                        matInput [matAutocomplete]="auto7" (input)="onAutoChange($event.target.value)"
                        (focus)="onAutoFocus($event.target.value)"
-                       [disabled]="showEditField" required>
+                       [disabled]="showEditField" (keydown.Tab)="chooseFirstOption($event)" required>
                 <mat-autocomplete #auto7="matAutocomplete">
                   <mat-option *ngFor="let station of optionsStation"
                               [value]="station.OfficeShortName"
@@ -427,8 +427,7 @@
           <td>{{item.ReceiptStaff}}</td>
           <td class="text-center">{{item.ReceiptChanel}}</td>
           <td class="text-center">{{item.ReceiptBookNo}}</td>
-          <td class="text-center">{{item.ReceiptNo && item.ReferenceNo ? item.ReceiptNo + ' / ' +
-            item.ReferenceNo : '' }}
+          <td class="text-center">{{ (item.ReceiptNo ? item.ReceiptNo : '' ) + ' / ' + (item.ReferenceNo ? item.ReferenceNo : '') }}
           </td>
           <td class="text-center">{{item.RevernueStatus}}</td>
           <td>
