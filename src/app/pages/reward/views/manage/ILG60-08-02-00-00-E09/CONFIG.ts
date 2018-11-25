@@ -38,10 +38,10 @@ export class CONFIG extends ManageConfig {
       title: 'วันที่ออกคำสั่ง',
       field: 'CommandDate',
       inputType: 'date',
-      default: '',
+      default: this.setDateNow,
       title2: 'เวลา',
       field2: 'CommandTime',
-      default2: ''
+      default2: this.setTimeNow
     }
   ];
   public columnsTableDefault: ColumnsInterface[] = [
@@ -51,7 +51,8 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'วันที่แจ้งความ',
-      field: 'NoticeDate'
+      field: 'NoticeDate',
+      inputType: 'date'
     },
     {
       title: 'ผู้แจ้งความ',

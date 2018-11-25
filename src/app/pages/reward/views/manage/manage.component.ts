@@ -98,7 +98,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.3');
+    this.sidebarService.setVersion('0.0.1.4');
     this.setShowButton();
     this.pageLoad();
   }
@@ -110,10 +110,13 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
   }
+  private initIsEditDefault() {
+    this.ILG60_08_02_00_00E09_EDIT = false;
+  }
   private async pageLoad() {
     // ILG60-08-02-00-00-E01
+    this.initIsEditDefault();
     // 1 START
-
     const RequestArrestLawsuit: IRequestArrestLawsuit[] = await this.requestArrestLawsuitService
       .RequestArrestLawsuitgetByIndictmentID({
         IndictmentID: this.IndictmentID$.getValue()
@@ -236,7 +239,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
 
           if (RequestCommand.length > 0) {
             // 4.1.1(2.6)
-
+            this.ILG60_08_02_00_00E09_DATA$.next(RequestCommand);
             // 4.1.1(2.6.1)
             if (
               RequestCommand[0] &&
@@ -474,8 +477,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.ILG60_08_02_00_00E09_SAVE.IsActive = 1;
     // console.log('ILG60_08_02_00_00E09_SAVE', this.ILG60_08_02_00_00E09_SAVE);
 
-    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
-    const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
+    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
+    const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
     let ValidateVerify = false;
     if (requestBribe.length === 0 && requestReward.length > 0) {
       // 1.1
@@ -535,7 +538,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);
     this.navService.setCancelButton(true);
-    this.navService.setEditButton(true);
+    this.navService.setEditButton(false);
     this.navService.setSaveButton(true);
 
     // 3 END
@@ -626,15 +629,14 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       if (this.ILG60_08_02_00_00E11_EXPANDED$.getValue() === true) {
         // 1.1.1
         // 1.1.1(1)
-        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
+        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
         if (requestBribe.length === 0) {
           // 1.1.1(1.1)
           // 1.1.1(1.1.1) => // 1.1.1(1.2)
-        } else {
-          // 1.1.1(1.2)
-          // 1.1.1(1.2.1)
-          this.pageLoad();
         }
+        // 1.1.1(1.2)
+        // 1.1.1(1.2.1)
+        this.pageLoad();
       }
 
       if (this.ILG60_08_02_00_00E14_EXPANDED$.getValue() === true) {
@@ -711,38 +713,29 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     // 1 START
 
     // 1.1
-    let RequestBribe: IRequestBribe[];
-    await this.requestBribeService
+    const RequestBribe: IRequestBribe[] = await this.requestBribeService
       .RequestBribegetByRequestBribeRewardID({
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
-      .toPromise()
-      .then((res: IRequestBribe[]) => {
-        RequestBribe = res;
-      });
+      .toPromise();
 
     // 1.2
-    let RequestReward: IRequestReward[];
-    await this.requestRewardService
+    const RequestReward: IRequestReward[] = await this.requestRewardService
       .RequestRewardgetByRequestBribeRewardID({
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
-      .toPromise()
-      .then((res: IRequestReward[]) => {
-        RequestReward = res;
-      });
+      .toPromise();
 
-    const printDoc: any[] = RequestBribe.map(m => ({
-      DocName: `${m.RequestBribeCode}: คำร้องขอรับเงินสินบน`,
+    const printDocRequestBribe: any[] = RequestBribe.map(m => ({
+      DocName: `${m.RequestBribeCode || ''}: คำร้องขอรับเงินสินบน`,
       DocType: 'แบบฟอร์ม'
     }));
 
-    printDoc.concat(
-      RequestReward.map(m => ({
-        DocName: `${m.RequestRewardCode}: คำร้องขอรับเงินรางวัล`,
-        DocType: 'แบบฟอร์ม'
-      }))
-    );
+    const printDocRequestReward: any[] = RequestReward.map(m => ({
+      DocName: `${m.RequestRewardCode || ''}: คำร้องขอรับเงินรางวัล`,
+      DocType: 'แบบฟอร์ม'
+    }));
+    const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
 
     const dialogRef = this.dialog.open(PrintDialogComponent, {
       width: '1200px',

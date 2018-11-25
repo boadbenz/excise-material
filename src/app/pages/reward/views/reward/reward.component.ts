@@ -313,6 +313,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             );
 
             if (RequestRewardinsAllRespone.RequestRewardID) {
+              this.RequestRewardID$.next(RequestRewardinsAllRespone.RequestRewardID);
               // 2.1.5
               // 2.1.5(1)
               if (

@@ -150,45 +150,6 @@ export class ILG6008040000E12Component extends CONFIG
             case 'nonRequestRewardStaff':
               this.nonRequestRewardStaff = data.data;
 
-              // this.aggregate.FirstPart.sum += data.data
-              //   .map(m =>
-              //     m.ContributorID === '6' || m.ContributorID === '7' ? 1 : null
-              //   )
-              //   .reduce((a, b) => (a += b));
-
-              // this.aggregate.FirstMoney.sum += data.data
-              //   .map(
-              //     m =>
-              //       (Number(this.aggregate.FirstMoney.sum || 0) /
-              //         Number(this.aggregate.FirstPart.sum || 0)) *
-              //       Number(
-              //         m.ContributorID === '6' || m.ContributorID === '7'
-              //           ? 1
-              //           : null || 0
-              //       )
-              //   )
-              //   .reduce((a, b) => (a += b));
-
-              // this.aggregate.SecondPart.sum += 0;
-              // this.aggregate.SecondMoney.sum += data.data
-              //   .map(
-              //     () =>
-              //       (Number(this.aggregate.SecondMoney.sum || 0) /
-              //         Number(this.aggregate.SecondPart.sum || 0)) *
-              //       Number(null || 0)
-              //   )
-              //   .reduce((a, b) => (a += b));
-
-              // Object.keys(this.aggregate).forEach(element => {
-              //   const keyObj = {};
-              //   // Object.assign(keyObj, element);
-
-              //   keyObj[element] = data.data.map(m => m[element]);
-              //   this.aggregate[element].sum = keyObj[element].reduce(
-              //     (a, b) => (a += b)
-              //   );
-              // });
-
               const datatable_nonRequestRewardStaff = this.nonRequestRewardStaff.map(
                 m => ({
                   ...m,
@@ -227,7 +188,7 @@ export class ILG6008040000E12Component extends CONFIG
               break;
 
             case 'RequestBribeRewardgetByIndictmentID':
-              console.log('RequestBribeRewardgetByIndictmentID', data.data);
+              // console.log('RequestBribeRewardgetByIndictmentID', data.data);
 
               const datatable_RequestBribeReward = data.data;
 
@@ -241,6 +202,7 @@ export class ILG6008040000E12Component extends CONFIG
                     check: [true],
                     TitleName: [''],
                     FullName: ['สายลับ (ขอปิดนาม)'],
+                    FirstName: ['สายลับ (ขอปิดนาม)'],
                     PositionName: [''],
                     PosLevelName: [''],
                     ContributorName: ['ผู้แจ้งความนำจับ'],
@@ -257,12 +219,13 @@ export class ILG6008040000E12Component extends CONFIG
               break;
 
             case 'RequestRewardgetByCon':
-              console.log('RequestRewardgetByCon', data.data);
+              // console.log('RequestRewardgetByCon', data.data);
               const datatable_RequestReward = data.data[0].RequestRewardStaff.map(
                 m => ({
                   ...m,
                   check: true,
-                  FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
+                  FullName: `${m.TitleName || ''}${m.FirstName ||
+                    ''}${m.LastName || ''}`,
                   ContributorName: m.ContributorName
                 })
               );
@@ -464,38 +427,30 @@ export class ILG6008040000E12Component extends CONFIG
         if (this.sharedBribeRewardForm.valid) {
           this.ILG60_08_04_00_00_E13_BUTTON$.next({ DISABLED: false });
         }
-        if (selectedValue.length > 0) {
-          Object.keys(this.aggregate).forEach(element => {
-            const arr: number[] = selectedValue.map(m => Number(m[element]));
-            // this.aggregate[element].sum = arr.reduce((a, b) => (a += b));
-          });
-        }
       });
   }
-  ngOnInit() {
-    this.masTitleService
+  async ngOnInit() {
+    const TitleMain: MasTitleModel[] = await this.masTitleService
       .MasTitleMaingetAll()
-      .takeUntil(this.destroy$)
-      .subscribe((TitleMain: MasTitleModel[]) => {
-        this.TitleList = TitleMain.map(m => m.TitleNameTH);
-      });
-    this.masStaffService
+      .toPromise();
+
+    this.TitleList = TitleMain.map(m => m.TitleNameTH);
+    const StaffMain: MasStaffModel[] = await this.masStaffService
       .MasStaffMaingetAll()
-      .takeUntil(this.destroy$)
-      .subscribe((StaffMain: MasStaffModel[]) => {
-        this.staffAll = StaffMain;
-        this.Staff_StaffCode_List = StaffMain.map(m => ({
-          text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
-          value: m.StaffCode
-        }));
-        this.StaffList = StaffMain.map(
-          m => `${m.TitleName}${m.FirstName} ${m.LastName}`
-        );
+      .toPromise();
 
-        // this.PositionNameList = TitleMain.map(m => m.PosLevelName);
-      });
+    this.staffAll = StaffMain;
+    this.Staff_StaffCode_List = StaffMain.map(m => ({
+      text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
+      value: m.StaffCode
+    }));
+    this.StaffList = StaffMain.map(
+      m => `${m.TitleName}${m.FirstName} ${m.LastName}`
+    );
 
-      this.formChange(this.formGroup);
+    // this.PositionNameList = TitleMain.map(m => m.PosLevelName);
+
+    this.formChange(this.formGroup);
   }
   public calChangeAll() {
     Object.keys(this.formGroup.value).forEach(controls => {

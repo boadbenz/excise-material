@@ -1,4 +1,4 @@
-{{formGroup.value | json}}
+<!-- {{formGroup.value | json}} -->
 <form [formGroup]="formGroup" (change)="changeForm(formGroup)">
   <div class="row">
     <div class="col-md-6">
@@ -89,7 +89,7 @@
         <td class="text-center">{{i+1}}</td>
         <td class="">{{item.LawbreakerName}}</td>
         <td class="">{{item.FineTypeName}}</td>
-        <td>{{item.PaymentDate}}</td>
+        <td>{{item.PaymentDate | thaiDate}}</td>
         <td class="text-center">{{item.ReceiptBookNo}}</td>
         <td class="">{{item.Receipt}}</td>
         <td class="">{{item.PaymentPeriodNo}}</td>

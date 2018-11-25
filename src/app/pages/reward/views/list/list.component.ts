@@ -36,9 +36,9 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.1');
+    this.sidebarService.setVersion('0.0.1.2');
     this.setShowButton();
-    this.fetchData('');
+    // this.fetchData('');
   }
   public closeAdvSearch() {
     this.navService.showAdvSearch.next(false);

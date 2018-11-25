@@ -45,7 +45,9 @@ export class ILG6008030000E12Component extends CONFIG implements OnInit {
           ? []
           : this.MasStaffMaingetAllList.filter(
               v => v.FullName.toLowerCase().indexOf(term.toLowerCase()) > -1
-            ).slice(0, 10).map(m => m.FullName)
+            )
+              .slice(0, 10)
+              .map(m => m.FullName)
       )
     );
   constructor(
@@ -54,14 +56,47 @@ export class ILG6008030000E12Component extends CONFIG implements OnInit {
     private masStaffService: MasStaffService
   ) {
     super();
-    this.formGroup = this.fb.group(this.createForm(this.columns));
+    this.formGroup = this.fb.group({
+      StationOfPOA: [''],
+      POADate: [this.setDateNow],
+      POATime: [this.setTimeNow],
+      StaffID: [''],
+      ProgramCode: [''],
+      ProcessCode: [''],
+      RequestBribeID: [''],
+      StaffCode: [''],
+      StaffMainName: [''],
+      TitleName: [''],
+      FirstName: [''],
+      LastName: [''],
+      PositionCode: [''],
+      PositionName: [''],
+      PosLevel: [''],
+      PosLevelName: [''],
+      DepartmentCode: [''],
+      DepartmentName: [''],
+      DepartmentLevel: [''],
+      OfficeCode: [''],
+      OfficeName: [''],
+      OfficeShortName: [''],
+      ContributorID: [''],
+      IsActive: ['1']
+    });
 
     this.formGroup.controls['StaffMainName'].valueChanges.subscribe(form => {
       // console.log('form', form);
-      const valChangePos = this.MasStaffMaingetAllList.filter(f => f.FullName === form).map(m => m.OperationPosName).shift();
-      const valChangeOffice = this.MasStaffMaingetAllList.filter(f => f.FullName === form).map(m => m.OfficeName).shift();
-      this.formGroup.controls['PositionName'].setValue(valChangePos)
-      this.formGroup.controls['OfficeName'].setValue(valChangeOffice)
+      const valChangePos = this.MasStaffMaingetAllList.filter(
+        f => f.FullName === form
+      )
+        .map(m => m.OperationPosName)
+        .shift();
+      const valChangeOffice = this.MasStaffMaingetAllList.filter(
+        f => f.FullName === form
+      )
+        .map(m => m.OfficeName)
+        .shift();
+      this.formGroup.controls['PositionName'].setValue(valChangePos);
+      this.formGroup.controls['OfficeName'].setValue(valChangeOffice);
     });
   }
 
@@ -77,12 +112,12 @@ export class ILG6008030000E12Component extends CONFIG implements OnInit {
       .subscribe((Staff: MasStaffModel[]) => {
         this.MasStaffMaingetAllList = Staff.map(m => ({
           ...m,
-          FullName: m.TitleName + m.FirstName + ' ' + m.LastName,
+          FullName: m.TitleName + m.FirstName + ' ' + m.LastName
         }));
       });
   }
   public formChange(formData: FormGroup) {
-    console.log('formData', formData);
+    // console.log('formData', formData);
     this.emitChange.emit({
       FormName: 'ILG60-08-03-00-00-E12',
       FormData: formData

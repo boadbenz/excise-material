@@ -45,7 +45,7 @@
           <tbody>
             <ng-container formArrayName="RequestBribeRewardForm">
 
-              <tr class="footable" *ngFor="let item of RequestBribeRewardForm.controls; let i=index;" [formGroupName]="i">
+              <tr class="footable" *ngFor="let item of RequestBribeRewardForm.controls | sort : ['ToTalMoney', 'ContributorID']; let i=index;" [formGroupName]="i">
                 <td>
                   <mat-checkbox class="filled-in chk-col-indigo" formControlName="check" [attr.disabled]="'disabled'"></mat-checkbox>
                 </td>
@@ -99,7 +99,7 @@
 
             <ng-container formArrayName="RequestRewardForm">
 
-              <tr class="footable" *ngFor="let item of RequestRewardForm.controls; let i=index;" [formGroupName]="i">
+              <tr class="footable" *ngFor="let item of RequestRewardForm.controls | sort : ['ToTalMoney', 'ContributorID']; let i=index;" [formGroupName]="i">
                 <td>
                   <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox>
                 </td>
