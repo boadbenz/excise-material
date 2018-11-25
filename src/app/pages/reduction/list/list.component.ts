@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { Component, OnInit } from '@angular/core';
 import { ReductionApiService } from '../reduction.api.service';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-list',
@@ -9,7 +10,7 @@ import { ReductionApiService } from '../reduction.api.service';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
-
+  private destroy$: Subject<boolean> = new Subject<boolean>();
 
   listData = [
     {
@@ -24,58 +25,6 @@ export class ListComponent implements OnInit {
       lastName: 'บิงขุนทด',
       lawsuitDate: '10-ม.ค.-2560',
       departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    },
-    {
-      arrestCode: 'TN90806026000002',
-      compareID: 'TN90806026000002',
-      indictmentID: 'TN11111111112',
-      lawsuitNo: 'น.001/2561',
-      proofNo: 'น.001/2561',
-      caseNumber: '001/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '19-มี.ค.-2560',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    },
-    {
-      arrestCode: 'TN90806026000003',
-      compareID: 'TN90806026000003',
-      indictmentID: 'TN11111111113',
-      lawsuitNo: '002/2561',
-      proofNo: '002/2561',
-      caseNumber: '002/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '22-ต.ค.-2560',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    },
-    {
-      arrestCode: 'TN90806026000004',
-      compareID: 'TN90806026000004',
-      indictmentID: 'TN11111111114',
-      lawsuitNo: '003/2561',
-      proofNo: '003/2561',
-      caseNumber: '003/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '11-ธ.ค.-2560',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    },
-    {
-      arrestCode: 'TN90806026000005',
-      compareID: 'TN90806026000005',
-      indictmentID: 'TN11111111115',
-      lawsuitNo: '004/2561',
-      proofNo: '004/2561',
-      caseNumber: '004/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '03-มี.ค.-2561',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
     }
   ];
 
@@ -106,7 +55,13 @@ export class ListComponent implements OnInit {
     this.navService.setSaveButton(false);
 
     this.allPageCount = this.listData.length / this.numberPage;
-    this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i + 1);
+    this.numberSelectPage = Array(Math.ceil(this.allPageCount)).fill(0).map((x, i) => i + 1);
+
+    this.navService.searchByKeyword.subscribe(async text => {
+      if (text) {
+        this.onSearch(text.Textsearch);
+      }
+    });
   }
 
   viewData(arrestCode: string, compareID: string = '', indictmentID: string = '') {
@@ -124,6 +79,16 @@ export class ListComponent implements OnInit {
     this.numberPage = numPage;
     this.allPageCount = Math.ceil(this.listData.length / this.numberPage);
     this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i + 1);
+  }
+
+  public onSearch(text: string): void {
+    console.log('text = ', text);
+    const param = {
+      Textsearch: text
+    };
+
+    this.apiServer.post('/XCS60/AdjustListgetByKeyword', param)
+        .subscribe(response => console.log(response), error => console.log(error));
   }
 
 

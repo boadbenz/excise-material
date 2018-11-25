@@ -5,16 +5,22 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, tap } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment';
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
 @Injectable()
 export class ReductionApiService {
+  private _api = '';
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) {
+    this._api = environment.api90;
+    // this._api = '';
+  }
 
   /**
      * GET data from the server
@@ -23,7 +29,7 @@ export class ReductionApiService {
      */
   public get(url: string): Observable<any> {
     return this.http
-      .get<any>(url, httpOptions)
+      .get<any>(this._api + url, httpOptions)
       .pipe(// ถ้าต้องการใช้ response data ** tap((res: ResponseData) => this.access(res)),
         catchError(this.handleError<any>('GetApi'))
       );
@@ -40,7 +46,7 @@ export class ReductionApiService {
    */
   public post(url: string, param: any): Observable<any> {
     return this.http
-      .post<any>(url, JSON.stringify(param), httpOptions)
+      .post<any>(this._api + url, JSON.stringify(param), httpOptions)
       .pipe(
         catchError(this.handleError<any>('PostApi'))
       );
@@ -54,7 +60,7 @@ export class ReductionApiService {
    */
   public put(url: string, param: any): Observable<any> {
     return this.http
-      .put<any>(url, JSON.stringify(param), httpOptions)
+      .put<any>(this._api + url, JSON.stringify(param), httpOptions)
       .pipe(
         catchError(this.handleError<any>('PutApi'))
       );
@@ -68,7 +74,7 @@ export class ReductionApiService {
    */
   public delete(url: string): Observable<any> {
     return this.http
-      .delete<any>(url, httpOptions)
+      .delete<any>(this._api + url, httpOptions)
       .pipe(
         catchError(this.handleError<any>('PutApi'))
       );
