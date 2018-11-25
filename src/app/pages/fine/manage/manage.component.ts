@@ -397,7 +397,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(this.DataToSave);
       const data: any = {
         "CompareCode" : this.receipt.CompareNo + '/' + this.receipt.CompareYear,
-        "OfficeCode" : this.DataToSave.CompareStationData.OfficeCode,
+        "OfficeCode" : this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
         "IsOutside" : this.receipt.IsOutside ? 1 : 0
       }
       return await this.fineService.postMethod('/CompareVerifyCompareCode', data);
@@ -423,53 +423,58 @@ export class ManageComponent implements OnInit, OnDestroy {
     try {
       const resp: any = await this.fineService.postMethod('/CompareArrestgetByIndictmentID', { IndictmentID: this.params.IndictmentID});
       // ส่วนรายละเอียด Header
-      this.headerData.ArrestCode = resp[0].ArrestCode;
-      this.headerData.LawsuitNo = resp[0].LawsuitNo;
-      if (resp[0].CompareProve[0]) {
-        this.headerData.ProveReportNo = resp[0].CompareProve[0].ProveReportNo;
+      if (resp && resp.length > 0) {
+        this.headerData.ArrestCode = resp[0].ArrestCode;
+        this.headerData.LawsuitNo = resp[0].LawsuitNo;
+        if (resp[0].CompareProve[0]) {
+          this.headerData.ProveReportNo = resp[0].CompareProve[0].ProveReportNo;
+        }
+        this.headerData.LawsuitID = resp[0].LawsuitID;
+        this.headerData.OfficeShortName = resp[0].OfficeShortName;
+        this.headerData.PositionName = resp[0].PositionName;
+        this.headerData.LawsuitDate = resp[0].LawsuitDate.toLocaleString('en-GB', { timeZone: 'UTC' });
+        this.headerData.LawsuitTime = resp[0].LawsuitTime;
+        this.headerData.SectionNo = resp[0].SectionNo;
+        this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
+        this.headerData.PenaltyDesc = resp[0].PenaltyDesc;
+        this.params.ArrestCode = resp[0].ArrestCode;
+        this.headerData.ArrestLocation = `${resp[0].SubDistrict} ${resp[0].District}`;
+        this.headerData.ArrestStaffName = `${resp[0].TitleName}${resp[0].FirstName} ${resp[0].LastName}`;
+        // รายละเอียดค่าปรับ
+        for (const lawbreaker of resp[0].CompareArrestIndictmentDetail) {
+          this.DataToSave.Product = lawbreaker.CompareArrestProductDetail;
+          const CompareDetail: any = {};
+          const LawBreaker: any = lawbreaker.CompareArrestLawbreaker[0];
+          CompareDetail.LawbreakerName = `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}`;
+          const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
+          CompareDetail.Mistreat = Mistreat.Mistreat ? Mistreat.Mistreat : 1;
+          this.ListCompareDetail.push(CompareDetail);
+          // ชื่อผู้ต้องหาคำให้การ
+          const accuse: any = {};
+          accuse.LawbreakerName = CompareDetail.LawbreakerName;
+          this.accused.list.push(accuse);
+          // บันทึกการเปรียบเทียบและชำระค่าปรับ
+          const receiptData: any = {};
+          receiptData.LawBrakerName = CompareDetail.LawbreakerName;
+          this.receipt.list.push(receiptData);
+          // รายงานการขออนุมัติ
+          const approve: any = {};
+          approve.LawBrakerName = CompareDetail.LawbreakerName;
+          this.approveReportList.push(approve);
+          const userData: any = {};
+          userData.LawbrakerName =  CompareDetail.LawbreakerName;
+          userData.IndictmentDetailID = lawbreaker.IndictmentDetailID;
+          userData.MistreatNo = CompareDetail.Mistreat;
+          this.DataToSave.userData.push(userData);
+        }
+        // คำให้การผู้ต้องหา
+        this.setAccusedData(resp);
+        await this.getProductToCompareDetail(resp[0]);
+        console.log(resp);
+      } else {
+        alert('ไม่สามารถแสดงข้อมูลได้');
       }
-      this.headerData.LawsuitID = resp[0].LawsuitID;
-      this.headerData.OfficeShortName = resp[0].OfficeShortName;
-      this.headerData.PositionName = resp[0].PositionName;
-      this.headerData.LawsuitDate = resp[0].LawsuitDate.toLocaleString('en-GB', { timeZone: 'UTC' });
-      this.headerData.LawsuitTime = resp[0].LawsuitTime;
-      this.headerData.SectionNo = resp[0].SectionNo;
-      this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
-      this.headerData.PenaltyDesc = resp[0].PenaltyDesc;
-      this.params.ArrestCode = resp[0].ArrestCode;
-      this.headerData.ArrestLocation = `${resp[0].SubDistrict} ${resp[0].District}`;
-      this.headerData.ArrestStaffName = `${resp[0].TitleName}${resp[0].FirstName} ${resp[0].LastName}`;
-      // รายละเอียดค่าปรับ
-      for (const lawbreaker of resp[0].CompareArrestIndictmentDetail) {
-        this.DataToSave.Product = lawbreaker.CompareArrestProductDetail;
-        const CompareDetail: any = {};
-        const LawBreaker: any = lawbreaker.CompareArrestLawbreaker[0];
-        CompareDetail.LawbreakerName = `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}`;
-        const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
-        CompareDetail.Mistreat = Mistreat.Mistreat ? Mistreat.Mistreat : 1;
-        this.ListCompareDetail.push(CompareDetail);
-        // ชื่อผู้ต้องหาคำให้การ
-        const accuse: any = {};
-        accuse.LawbreakerName = CompareDetail.LawbreakerName;
-        this.accused.list.push(accuse);
-        // บันทึกการเปรียบเทียบและชำระค่าปรับ
-        const receiptData: any = {};
-        receiptData.LawBrakerName = CompareDetail.LawbreakerName;
-        this.receipt.list.push(receiptData);
-        // รายงานการขออนุมัติ
-        const approve: any = {};
-        approve.LawBrakerName = CompareDetail.LawbreakerName;
-        this.approveReportList.push(approve);
-        const userData: any = {};
-        userData.LawbrakerName =  CompareDetail.LawbreakerName;
-        userData.IndictmentDetailID = lawbreaker.IndictmentDetailID;
-        userData.MistreatNo = CompareDetail.Mistreat;
-        this.DataToSave.userData.push(userData);
-      }
-      // คำให้การผู้ต้องหา
-      this.setAccusedData(resp);
-      await this.getProductToCompareDetail(resp[0]);
-      console.log(resp);
+      
     } catch (err) {
       console.log(err);
     }
