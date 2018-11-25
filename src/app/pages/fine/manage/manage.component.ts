@@ -93,7 +93,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.12');
+    this.sidebarService.setVersion('0.0.0.13');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -381,7 +381,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           if (data.length === 0) {
 
           } else {
-            return await this.fineService.postMethod('/CompareinsAll  ', data);
+            return await this.fineService.postMethod('/CompareinsAll', data);
           }
       } else {
         alert('คดีเปรียบเทียบซ้ำ กรุณาใส่ใหม่');
@@ -930,8 +930,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         const compareDetailFine: any = {
           CompareFineID: null,
           CompareDetailID: null,
-          ProductID: user.product.ProductID,
-          ProductFine: user.all,
+          ProductID: user.product? user.product.ProductID : '',
+          ProductFine: user.all ? user.all : this.receipt.list[id].TotalFine,
           VatValue: user.FineAmount,
           FineRate: user.multi,
           IsActive: 1,
