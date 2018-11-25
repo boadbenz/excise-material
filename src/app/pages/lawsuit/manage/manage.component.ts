@@ -783,7 +783,7 @@ export class ManageComponent implements OnInit {
     return hours.substr(hours.length - 2,hours.length) + ":00"
   }
   getNowDate() {
-    let now = new Date())
+    let now = new Date()
     return {
       date: {
         day: now.getDate(),
