@@ -40,7 +40,7 @@ import { ManageConfig } from './manage.config';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
- 
+
     // FormGroup ตรวจสอบสถานะในการบันทึก TN905016100058
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
@@ -157,7 +157,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
-    
+
     // Redux based variables
     obArrest: Observable<fromModels.Arrest>;
     stateArrest: fromModels.Arrest;
@@ -196,7 +196,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onCollapse = this.manageConfig.onCollapse;
-    
+
     ILG60_03_02_00_00_E08 = this.manageConfig.ILG60_03_02_00_00_E08;
     ILG60_03_02_00_00_E10 = this.manageConfig.ILG60_03_02_00_00_E10;
     ILG60_03_02_00_00_E13 = this.manageConfig.ILG60_03_02_00_00_E13;
@@ -214,7 +214,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.arrestFG.reset();
             }, 300);
         }
-        
+
         this.arrestFG = this.createForm();
         this.navigate_Service();
     }
@@ -241,7 +241,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             Testimony: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
             Prompt: new FormControl('แจ้งให้ญาติทราบ'),
             IsMatchNotice: new FormControl(null),
-            ArrestDesc: new FormControl('N/A'),
+            ArrestDesc: new FormControl(''),
             NoticeCode: new FormControl(null),
             InvestigationSurveyDocument: new FormControl(null),
             InvestigationCode: new FormControl(null),
@@ -359,7 +359,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                 await this.loadMasterData();
+                await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
                     if (this.arrestCode != this.stateArrest.ArrestCode)
@@ -1109,8 +1109,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     .then(y => isCheck = this.checkResponse(y))
                     .catch((error) => this.catchError(error));
             })
-
-        this.loaderService.hide();
+debugger
         Promise.all(indict).then(() => {
             if (isCheck) {
                 alert(Message.cannotModify);
@@ -1119,6 +1118,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.loadMasterData();
             }
         }).catch((error) => this.catchError(error));
+
+        this.loaderService.hide();
     }
 
     private async onDelete() {
