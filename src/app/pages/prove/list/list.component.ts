@@ -66,7 +66,7 @@ export class ListComponent implements OnInit {
         this.DeliveryDateTo = null;
         this.ProveDateTo = null;
 
-        this.sidebarService.setVersion('Prove 0.0.0.10');
+        this.sidebarService.setVersion('Prove 0.0.0.11');
 
         //this.preLoaderService.setShowPreloader(true);
         //this.onSearch({ Textsearch: "" });

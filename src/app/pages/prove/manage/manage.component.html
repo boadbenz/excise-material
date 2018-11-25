@@ -167,7 +167,7 @@
                 </div>
                 <label for="" class="col-lg-2 col-md-4 control-label">เขียนที่ :</label>
                 <div class="col-lg-4 col-md-7">
-                    <input type="text" class="form-control" [(ngModel)]="ProveStation" name="ProveStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                    <input type="text" class="form-control" [(ngModel)]="ProveStation" name="ProveStation" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                         [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete #auto="matAutocomplete">
@@ -196,7 +196,7 @@
                 </div>
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานนำส่ง :</label>
                 <div class="form-group col-lg-4 col-md-7">
-                    <input type="text" class="form-control" [(ngModel)]="DeliveryStation" name="DeliveryStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                    <input type="text" class="form-control" [(ngModel)]="DeliveryStation" name="DeliveryStation" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto4" (input)="DeliveryOnAutoChange($event.target.value)" (focus)="DeliveryOnAutoFocus($event.target.value)"
                         [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete #auto4="matAutocomplete">
@@ -212,7 +212,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้ตรวจรับ :</label>
                 <div class="col-lg-4 col-md-7">
                     <div class="form-group ">
-                        <input type="text" class="form-control" [(ngModel)]="ProveStaffName" name="ProveStaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                        <input type="text" class="form-control" [(ngModel)]="ProveStaffName" name="ProveStaffName" placeholder="" aria-label="Number"
                             matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
                             [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}" required>
                         <mat-autocomplete #auto2="matAutocomplete">
@@ -264,7 +264,7 @@
                 <div class="col-lg-4 col-md-7">
                     <div class="form-group ">
                         <input type="text" [(ngModel)]="ScienceDeliveryDocNo" name="ScienceDeliveryDocNo" 
-                            class="form-control form-control-sm" [disabled]="showEditField || showScienceField"
+                            class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField || showScienceField"
                             [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
@@ -272,7 +272,7 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <my-date-picker-th name="ProveScienceDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
-                        [(ngModel)]="ProveScienceDate" [disabled]="showEditField || showScienceField" [ngClass]="{'ng-touched':isRequired}"
+                        [(ngModel)]="ProveScienceDate" [disabled]="showEditField || ShowDeliveryField || showScienceField" [ngClass]="{'ng-touched':isRequired}"
                         required></my-date-picker-th>
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="DeliveryDate" name="DeliveryDate" [disabled]="showEditField"> -->
 
@@ -285,12 +285,12 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">เลขที่คำขอ :</label>
                 <div class="col-lg-4 col-md-7">
                     <div class="form-group ">
-                        <input type="text" [(ngModel)]="RequestNo" name="RequestNo" class="form-control form-control-sm" [disabled]="showEditField || showScienceField">
+                        <input type="text" [(ngModel)]="RequestNo" name="RequestNo" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField || showScienceField">
                     </div>
                 </div>
                 <label for="" class="col-lg-2 col-md-4 control-label">เลขที่รายงานผล :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField ||  showScienceField">
+                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField ||  showScienceField">
                 </div>
             </div>
 
@@ -310,7 +310,7 @@
 
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้ตรวจพิสูจน์ :</label>
                 <div class="form-group col-lg-4 col-md-7">
-                    <input type="text" class="form-control" [(ngModel)]="ScienceStaffName" name="ScienceStaffName" placeholder="พิมพ์ข้อความ"
+                    <input type="text" class="form-control" [(ngModel)]="ScienceStaffName" name="ScienceStaffName" placeholder=""
                         aria-label="Number" matInput [matAutocomplete]="auto3" (input)="ScienceStaffonAutoChange($event.target.value)"
                         (focus)="ScienceStaffonAutoFocus($event.target.value)" [disabled]="showEditField || ShowDeliveryField"
                         [ngClass]="{'ng-touched':isRequired}" required>
@@ -359,8 +359,8 @@
                                 <tr>
                                     <th style="text-align: center">ลำดับ</th>
                                     <th>ของกลาง</th>
-                                    <th style="text-align: center">ตามปริมาณ</th>
-                                    <th style="text-align: center">ตามมูลค่า</th>
+                                    <!-- <th style="text-align: center">ตามปริมาณ</th>
+                                    <th style="text-align: center">ตามมูลค่า</th> -->
                                     <th style="text-align: center">พิสูจน์ทางเคมีหรือวิทยาศาสตร์</th>
                                     <th style="text-align: right">มูลค่าภาษีพิสูจน์</th>
                                     <th></th>
@@ -372,8 +372,8 @@
                                 <tr *ngFor="let lsPD of lsProveProduct; let i=index;">
                                     <td style="text-align: center">{{i+1}}</td>
                                     <td>{{lsPD.ProductDesc}}</td>
-                                    <td style="text-align: center">{{lsPD.ReferenceVatRate != '' ?'/':''}}</td>
-                                    <td style="text-align: center">{{lsPD.ReferenceVatQty != '' ?'/':''}}</td>
+                                    <!-- <td style="text-align: center">{{lsPD.ReferenceVatRate != '' ?'/':''}}</td>
+                                    <td style="text-align: center">{{lsPD.ReferenceVatQty != '' ?'/':''}}</td> -->
                                     <td style="text-align: center">{{lsPD.IsProdScience == '1' ?'/':''}} </td>
                                     <td style="text-align: right;">{{lsPD.VatProve }}</td>
                                     <td>
@@ -411,7 +411,7 @@
             <div class="row form-group">
                 <div class="col">
                     <input type="checkbox" id="md_checkbox_5" [(ngModel)]="IsReceive" name="IsReceive" class="filled-in chk-col-indigo" 
-                        (click)="changeReceive()" [disabled]="mode=='R' && IsReceiveOld==true">
+                        (click)="changeReceive()" [disabled]="showEditField">
                     <label for="md_checkbox_5">จัดเก็บของกลาง</label>
                 </div>
             </div>
@@ -441,7 +441,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :</label>
                 <div class="form-group col-lg-4 col-md-7">
-                    <input type="text" class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                    <input type="text" class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto6" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
                         [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required>
                     <!--  -->
@@ -466,7 +466,7 @@
 
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานปลายทาง :</label>
                 <div class="form-group col-lg-4 col-md-7">
-                    <input type="text" class="form-control" [(ngModel)]="DeliverTo" name="DeliverTo" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                    <input type="text" class="form-control" [(ngModel)]="DeliverTo" name="DeliverTo" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto5" (input)="DestinationOnAutoChange($event.target.value)" (focus)="DestinationOnAutoFocus($event.target.value)"
                         [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete #auto5="matAutocomplete">
@@ -587,7 +587,7 @@
                                             name="oProveProduct.ProductDesc"
                                             [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isPopupRequired}"
                                             required> -->
-                                        <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" name="oProveProduct.ProductDesc" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                                        <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" name="oProveProduct.ProductDesc" placeholder="" aria-label="Number"
                                             matInput [matAutocomplete]="auto7" (input)="onAutoProductChange($event.target.value)" (focus)="onAutoProductFocus($event.target.value)"
                                             [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}"
                                             required>
@@ -828,7 +828,7 @@
                                 <div class="col-lg-9 col-md-6">
                                     <div class="form-group ">
                                         <input type="text" [(ngModel)]="oProveProduct.ProveScienceResult" name="oProveProduct.ProveScienceResult" class="form-control form-control-sm"
-                                            [disabled]="showEditField">
+                                            [disabled]="showEditField || !oProveProduct.IsProdScience">
                                     </div>
                                 </div>
                             </div>
@@ -838,7 +838,7 @@
                                 <div class="col-lg-9 col-md-6">
                                     <div class="form-group ">
                                         <textarea [(ngModel)]="oProveProduct.ProveResult" name="oProveProduct.ProveResult" cols="" rows="5" class="form-control form-control-sm"
-                                            [disabled]="showEditField || !oProveProduct.IsProdScience"></textarea>
+                                            [disabled]="showEditField"></textarea>
                                     </div>
                                 </div>
                             </div>
