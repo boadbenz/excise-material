@@ -113,7 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.10');
+        this.sidebarService.setVersion('0.0.0.11');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
@@ -156,6 +156,7 @@ export class ListComponent implements OnInit, OnDestroy {
             Textsearch = {Textsearch:''};
         }
         await this.fineService.getByKeyword(Textsearch).subscribe(list => {
+            this.Compare = list;
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
             console.log('fail onSearch');
@@ -196,6 +197,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearchComplete(list: any) {
+        this.Compare = list;
         var IsOutside = 0;
         var CompareCode = '';
         this.CompareList = [];
@@ -242,10 +244,10 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(IndictmentID: string, ArrestCode: string, CompareID: string) {
-      if (CompareID) {
-        this._router.navigate([`/fine/manage/C/0/${IndictmentID}/${ArrestCode}`]);
-      } else {
+      if (+CompareID) {
         this._router.navigate([`/fine/manage/R/${CompareID}/${IndictmentID}/${ArrestCode}`]);
+      } else {
+        this._router.navigate([`/fine/manage/C/0/${IndictmentID}/${ArrestCode}`]);
       }
     }
 

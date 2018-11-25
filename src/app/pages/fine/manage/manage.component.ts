@@ -79,7 +79,9 @@ export class ManageComponent implements OnInit, OnDestroy {
   receiptSave: HTMLElement = document.getElementById('receiptSave') as HTMLElement;
   btnApprove: HTMLElement = document.getElementById('btnApprove') as HTMLElement;
   btnAccusedHeader: HTMLElement = document.getElementById('btnAccusedHeader') as HTMLElement;
-  
+  // DataForUpdate
+  compareDataUpdate: any = {};
+  compareDataUpdateTmp: any = {};
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -91,7 +93,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.10');
+    this.sidebarService.setVersion('0.0.0.11');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -114,6 +116,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     await this.getRouteParams();
     await this.subscribeHeaderBtn();
     await this.CompareArrestgetByIndictmentID();
+    await this.getCompareData();
     this.accused.CompareDate = this.compareDate;
     console.log(this.accused);
     this.preloader.setShowPreloader(false);
@@ -125,6 +128,21 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
   }
+  async getCompareData() {
+    if (+this.params.CompareID) {
+      await this.CompareDetailgetByCon();
+    }
+  }
+  async CompareDetailgetByCon() {
+    try {
+      const data: any = { CompareID: +this.params.CompareID }
+      const resp: any = await this.fineService.postMethod('/ComparegetByCon', data);
+      this.compareDataUpdate = this.jsonCopy(resp);
+      this.compareDataUpdateTmp = this.jsonCopy(resp);
+    } catch (err) {
+
+    }
+  } 
   getTimeNow() {
     const d = new Date();       
     let h = d.getHours().toString();
@@ -380,6 +398,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   async CompareArrestgetByIndictmentID() {
     this.DataToSave.userData = [];
+    this.DataToSave.Product = [];
     this.accused.list = []
     try {
       const resp: any = await this.fineService.postMethod('/CompareArrestgetByIndictmentID', { IndictmentID: this.params.IndictmentID});
@@ -397,10 +416,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.headerData.SectionNo = resp[0].SectionNo;
       this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
       this.headerData.PenaltyDesc = resp[0].PenaltyDesc;
+      this.params.ArrestCode = resp[0].ArrestCode;
       this.headerData.ArrestLocation = `${resp[0].SubDistrict} ${resp[0].District}`;
       this.headerData.ArrestStaffName = `${resp[0].TitleName}${resp[0].FirstName} ${resp[0].LastName}`;
       // รายละเอียดค่าปรับ
       for (const lawbreaker of resp[0].CompareArrestIndictmentDetail) {
+        this.DataToSave.Product = lawbreaker.CompareArrestProductDetail;
         const CompareDetail: any = {};
         const LawBreaker: any = lawbreaker.CompareArrestLawbreaker[0];
         CompareDetail.LawbreakerName = `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}`;
@@ -484,7 +505,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             case 2 : {
               for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
                 const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
-                const checkCase2: any = (p.NetVolume === fCmp.MistreatStartVolume);
+                const checkCase2: any = (p.NetVolume > fCmp.MistreatStartVolume) && (p.NetVolume <= fCmp.MistreatToVolume);
                 if (checkCase1 || checkCase2) {
                   if (fCmp.FineRate === 0) {
                     detail.multi = 1;
@@ -500,28 +521,31 @@ export class ManageComponent implements OnInit, OnDestroy {
             case 3 : {
               let fineOfMatch = fineCompare.CompareMasLawGuiltbaseFine.filter(f => f.GroupCode === p.GroupCode);
               let isMatch = fineOfMatch.length > 0 ? true : false;
-              // console.log('Match');
-              // console.log(isMatch);
+              console.log('Match');
+              console.log(isMatch);
               if (!isMatch) {
                 fineOfMatch = this.jsonCopy(fineCompare.CompareMasLawGuiltbaseFine);
               }
-              // console.log(fineOfMatch);
+              console.log(fineOfMatch);
               for (const fMatch of fineOfMatch) {
-                if (detail.Mistreat === fMatch.MistreatStartNo || fMatch === fineOfMatch[fineOfMatch.length - 1]) {
-                  if (fMatch.FineRate === 0) {
-                    detail.multi = 1;
-                    detail.FineAmount = fMatch.FineAmount;
-                  } else {
-                    detail.multi = fMatch.FineRate;
-                    detail.FineAmount = p.VatProve;
+                if (!fMatch.GroupCode) {
+                  if (detail.Mistreat === fMatch.MistreatStartNo || fMatch === fineOfMatch[fineOfMatch.length - 1]) {
+                    if (fMatch.FineRate === 0) {
+                      detail.multi = 1;
+                      detail.FineAmount = fMatch.FineAmount;
+                    } else {
+                      detail.multi = fMatch.FineRate;
+                      detail.FineAmount = p.VatProve;
+                    }
+                    break;
                   }
-                  break;
                 }
+                
               }
-              // console.log(detail); 
+              console.log(detail); 
             } break;
           }
-          // console.log(p);
+          console.log(p);
           detail.all = this.roundDigit((detail.multi * detail.FineAmount));
           detail.BribeMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
           detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
@@ -672,7 +696,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   editAccused(item: any, index: any, type: any) {
     this.editUser = this.jsonCopy(item);
-    this.editUser.cancheck  = false;
+    this.editUser.cancheck  = true;
     this.editUser.index = index;
     if (!this.editUser.PaymentFineAppointDate) {
       this.editUser.PaymentFineAppointDate = this.jsonCopy(this.DateToday);
@@ -689,7 +713,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
     const d: any = event;
     const PaymentFineAppointDate: any = new Date(d.date.year, d.date.month, d.date.day);
-    if (accuseDate.getTime() > PaymentFineAppointDate.getTime()) {
+    if (accuseDate >= PaymentFineAppointDate) {
       this.editUser.cancheck = true;
     } else {
       this.editUser.cancheck = false;
@@ -842,9 +866,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             MistreatNo: user.MistreatNo,
             FineType: null,
             AdjustReason: null,
-            CompareDetailFine: [
-            ]
+            CompareDetailFine: [],
+            CompareDetailReceipt: []
           };
+          detail.CompareDetailReceipt = this.prepareReceiptData();
           CompareData.CompareDetail.push(detail);
         } catch (err) {
           console.log(err);
@@ -869,20 +894,81 @@ export class ManageComponent implements OnInit, OnDestroy {
           VatValue: user.FineAmount,
           FineRate: user.multi,
           IsActive: 1,
-          FineType: user.FineType
+          FineType: user.FineType,
+          CompareArrestProductDetail: this.DataToSave.Product
         }
         CompareData.CompareDetail[id].CompareDetailFine.push(compareDetailFine);
         id++;
       }
     }
+    
     CompareData.CompareStaff = this.getAllStaff();
     console.log(CompareData);
     return CompareData;
+  }
+  prepareProductData() {
+    // const product: any = [];
+    // for (const p of this.DataToSave.Product) {
+    //   try {
+    //     const data: any = {
+    //       ProductID: p.ProductID,
+    //       IsProdcutCo: 1,
+    //       Qty: p.Qty,
+    //       QtyUnit: p.QtyUnit,
+    //       Size: p.Size,
+    //       SizeUnit: p.SizeUnitName,
+    //       Volume: p.NetVolume,
+    //       VolumeUnit: p.NetVolumeUnit,
+    //       MistreatRate: '',
+    //       Fine: 0,
+    //       IndictmentDetailID: '',
+    //       IsActive: ''
+    //     };
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // }
+    
+  }
+  prepareReceiptData() {
+    let receiptData: any = [];
+    for (const rec of this.receipt.list) {
+      if (this.isNotValidTxtField(rec.PaymentDate)) {
+        return [];
+      } else {
+        try {
+          const rec1: any = {
+            ReceiptType: 'A',
+            ReceiptBookNo: rec.ReceiptNo,
+            ReceiptNo: rec.ReceiptChanel,
+            ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+            StationCode: rec.StationCode,
+            Station: rec.ReceipStation,
+            PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+            TotalFine: rec.TotalFine,
+            RevenueStatus: 0,
+            RevenueDate: '',
+            IsActive: 1,
+            ReceiptChanel: rec.ReceiptChanel,
+            ReferenceNo: rec.ReferenceNo,
+            CompareAuthority: 0,
+            FineType: 1
+          };
+          receiptData.push(rec1);
+        } catch (err) {
+          return [];
+          console.log(err);
+        }
+      }
+    }
+    return receiptData;
   }
   getAllStaff() {
     const staff: any = [];
     console.log(this.accused);
     console.log(this.approveReportList);
+    this.accused.staff.ProcessCode = this.accused.ProcessCode;
+    this.accused.staff.ProgramCode = this.accused.ProgramCode;
     staff.push(this.accused.staff);
     // for (const d of this.accused.list) {
     //   d.staff.ProgramCode = d.ProgramCode;
@@ -896,11 +982,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         d.staff.ProgramCode = d.ProgramCode;
         d.staff.ProcessCode = i;
         staffReceipt.push(d.staff);
-        i++;
       } else {
         staffReceipt = [];
         break;
       }
+      i++;
     }
     i = 0;
     let staffApprove: any = [];
