@@ -210,7 +210,7 @@ export class LawsuitService {
   }
 
   async LawsuitJudgementinsAll(form:any){
-    const url = `${appConfig.api7788}/LawsuitJudgementinsAll`;
+    const url = `${appConfig.api8083}/LawsuitJudgementinsAll`;
     return await this.http.post<any>(url, JSON.stringify(form), this.httpOptions).toPromise();
   }
 
