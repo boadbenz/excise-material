@@ -102,9 +102,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
         item.RowId = i + 1;
         item.ResultCount = this.s_masLawbreaker.ArrestLawsuitResultCountgetByLawbreakerID(item.LawbreakerID.toString())
         item.IsChecked = Acceptability.INACCEPTABLE;
-        let l = setViewLawbreaker(item);
-        debugger
-        law.push(l);
+        law.push(setViewLawbreaker(item));
       })
 
     this.lawbreaker = law;
