@@ -47,18 +47,18 @@
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/arrest/list">
-                                <!-- <strong>1.2</strong> -->
-                                <span>1.2 บันทึกการจับกุม(ส.ส. 2/39)</span>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                                <!-- <i class="mdi mdi-account-alert"></i> -->
+                                <span> 1.2 ใบแจ้งความนำจับ </span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li>
-                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
-                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                    
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/arrest/list">
                         <strong>2</strong>
-                        <span class="hide-menu">ใบแจ้งความนำจับ</span>
+                        <span class="hide-menu"> บันทึกการจับกุม(ส.ส. 2/39)</span>
                     </a>
                 </li>
                 <li>
