@@ -346,12 +346,12 @@
               <td>{{item.controls['LawsuitNoRef'].value}}</td>
               <td>{{item.controls['LawBrakerFullName'].value}}</td>
               <td>
-                <select formControlName="LawsuitType" class="form-control form-control-sm" [attr.disabled]="showEditField || item.controls['LawsuitType'].value == 3 ? '' : null">
+                <select formControlName="LawsuitType" class="form-control form-control-sm" (input)="changeLawsuitEnd($event.target.value, i)">
                   <option [value]="type.id" *ngFor="let type of lstype; let i=index">{{type.name}}</option>
                 </select>
               </td>
               <td>
-                <select formControlName="LawsuitEnd" class="form-control form-control-sm" [attr.disabled]="showEditField || item.controls['LawsuitType'].value == 3 ? '' : null">
+                <select formControlName="LawsuitEnd" class="form-control form-control-sm" disabled>
                   <option [value]="end.id" *ngFor="let end of lsend">{{end.name}}</option>
                 </select>
               </td>
@@ -359,7 +359,7 @@
                 <!-- <a href="javaScript:void(0);" class="text-danger" (click)="editTable(item, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a> -->
-                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 1"
+                <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField && item.controls['LawsuitType'].value == 0"
                   (click)="editTable(item.value, i)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a>
