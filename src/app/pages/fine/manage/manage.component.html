@@ -195,7 +195,7 @@
           <!--<th class="footable-sortable" style="width:7%">รวม</th>-->
         </tr>
         </thead>
-        <tbody *ngIf="ListCompareDetail?.length > 0">
+        <tbody *ngIf="ListCompareDetail?.length > 0 && ListCompareDetail[0].all">
         <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable"
             [style]="item.sum ? 'font-weight: bold' : '' ">
           <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.LawbreakerName }}</td>
@@ -266,7 +266,7 @@
                        placeholder="พิมพ์ข้อความ" aria-label="Number"
                        matInput [matAutocomplete]="auto7" (input)="onAutoChange($event.target.value)"
                        (focus)="onAutoFocus($event.target.value)"
-                       [disabled]="showEditField" (keydown.Tab)="chooseFirstOption($event)" required>
+                       [disabled]="showEditField" (keydown.Tab)="chooseFirstOption($event, 1)" required>
                 <mat-autocomplete #auto7="matAutocomplete">
                   <mat-option *ngFor="let station of optionsStation"
                               [value]="station.OfficeShortName"
@@ -290,11 +290,12 @@
                        matInput [matAutocomplete]="auto3"
                        (input)="StaffonAutoChange($event.target.value)"
                        (focus)="StaffonAutoFocus($event.target.value)"
-                       [disabled]="showEditField" required>
+                       [disabled]="showEditField" required (keydown.Tab)="StaffonAutoSelecteWord(sOption, 2)">
                 <mat-autocomplete #auto3="matAutocomplete">
                   <mat-option *ngFor="let sOption of Staffoptions"
                               [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                              (click)="StaffonAutoSelecteWord(sOption, 2)">
+                              (click)="StaffonAutoSelecteWord(sOption, 2)"
+                              (onSelectionChange)="StaffonAutoSelecteWord(sOption, 2)">
                     {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                   </mat-option>
                 </mat-autocomplete>
@@ -781,7 +782,7 @@
                            matInput [matAutocomplete]="auto"
                            (input)="onAutoChange($event.target.value)"
                            (focus)="onAutoFocus($event.target.value)"
-                           [disabled]="showEditField" required>
+                           [disabled]="showEditField" required (keydown.Tab)="chooseFirstOption($event, 3)">
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options" [value]="option.OfficeShortName"
                                   (click)="onAutoSelecteWord(option, 3)">
@@ -805,11 +806,11 @@
                            matInput [matAutocomplete]="autoStaff"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField">
+                           [disabled]="showEditField" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)">
                     <mat-autocomplete #autoStaff="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                  (click)="StaffonAutoSelecteWord(sOption, '1')">
+                                  (click)="StaffonAutoSelecteWord(sOption, '1')" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 1)">
                         {{ sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName }}
                       </mat-option>
                     </mat-autocomplete>
@@ -985,7 +986,7 @@
                            matInput [matAutocomplete]="auto"
                            (input)="onAutoChange($event.target.value)"
                            (focus)="onAutoFocus($event.target.value)"
-                           [disabled]="showEditField" required>
+                           [disabled]="showEditField" required (keydown.Tab)="chooseFirstOption($event, 2)">
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options" [value]="option.OfficeShortName"
                                   (click)="onAutoSelecteWord(option, '2')">
@@ -1045,11 +1046,11 @@
                            matInput [matAutocomplete]="autoStaff2"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField" [required]="(compareUserDetailPopup.ApproveType) > 1">
+                           [disabled]="showEditField" [required]="(compareUserDetailPopup.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
                     <mat-autocomplete #autoStaff2="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                  (click)="StaffonAutoSelecteWord(sOption, 3)">
+                                  (click)="StaffonAutoSelecteWord(sOption, 3)" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 3)">
                         {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                       </mat-option>
                     </mat-autocomplete>
@@ -1091,11 +1092,11 @@
                            matInput [matAutocomplete]="autoStaff3"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField" required>
+                           [disabled]="showEditField" required  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 4)">
                     <mat-autocomplete #autoStaff3="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                  (click)="StaffonAutoSelecteWord(sOption, 4)">
+                                  (click)="StaffonAutoSelecteWord(sOption, 4)" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 4)">
                         {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                       </mat-option>
                     </mat-autocomplete>
@@ -1138,11 +1139,11 @@
                            matInput [matAutocomplete]="autoStaff4"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField" required>
+                           [disabled]="showEditField" required (keydown.Tab)="StaffonAutoSelecteWord(sOption, 5)">
                     <mat-autocomplete #autoStaff4="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                  (click)="StaffonAutoSelecteWord(sOption, '5')">
+                                  (click)="StaffonAutoSelecteWord(sOption, '5')" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 5)">
                         {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                       </mat-option>
                     </mat-autocomplete>
