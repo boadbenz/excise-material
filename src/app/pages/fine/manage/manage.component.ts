@@ -93,7 +93,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.11');
+    this.sidebarService.setVersion('0.0.0.12');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -124,6 +124,28 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.receiptSave = document.getElementById('receiptSave') as HTMLElement;
     this.btnApprove = document.getElementById('btnApprove') as HTMLElement;
     this.btnAccusedHeader = document.getElementById('btnAccusedHeader') as HTMLElement;
+    if (this.params.CompareID == '0') {
+      this.showEditField = false;
+    } else {
+      this.showEditField = true;
+    }
+    if (this.showEditField) {
+      this.navService.setPrintButton(true);
+      this.navService.setDeleteButton(true);
+      this.navService.setEditButton(true);
+      this.navService.setSearchBar(false);
+      this.navService.setCancelButton(false);
+      this.navService.setSaveButton(false);
+    } else {
+      this.navService.setSaveButton(true);
+      this.navService.setCancelButton(true);
+      this.navService.setPrintButton(false);
+      this.navService.setSearchBar(false);
+      this.navService.setDeleteButton(false);
+      this.navService.setEditButton(false);
+      this.navService.setNextPageButton(false);
+    }
+    console.log( this.showEditField);
     // this.navigate_Service();
   }
   ngOnDestroy() {
@@ -172,11 +194,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (p['code3']) {
         this.params.ArrestCode = p['code3'];
       }
-      if (this.params.CompareID === '0') {
-        this.showEditField = true;
-      } else {
-        this.showEditField = false;
-      }
     });
   }
   async subscribeHeaderBtn() {
@@ -189,6 +206,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setDeleteButton(false);
         this.navService.setEditButton(false);
+        this.navService.setNextPageButton(false);
       } else {
         this.navService.setPrintButton(true);
         this.navService.setDeleteButton(true);
@@ -315,6 +333,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
   async saveAccusedHeader() {
+    this.preloader.setShowPreloader(true);
     console.log('here');
     const resp: any = await this.CompareinsAll()
     console.log('compare');
@@ -336,6 +355,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     } else {
       console.log('pass2');
     }
+    this.preloader.setShowPreloader(false);
   }
   async CompareinsAll () {
     try {
@@ -656,47 +676,59 @@ export class ManageComponent implements OnInit, OnDestroy {
   StaffonAutoSelecteWord(event, type: any = 0) {
     type = (+type);
     console.log(type);
-    if (type == 0) {
-      this.accused.OperationPosName = event.OperationPosName;
-      this.accused.OperationDeptName = event.OfficeShortName;
-      console.log('type' + type);
-    } else if (type == 2) {
-      this.accused.OperationPosName = event.OperationPosName;
-      this.accused.OperationDeptName = event.OfficeShortName;
-      this.accused.staff = event;
-      this.accused.ProgramCode = 'ILG60-06-02-00';
-      this.accused.ProcessCode = null;
-      this.accused['staff'] = event;
-      console.log('type' + type);
-    } else if (type == 1) {
-      this.userCompareReceiptDetail.staff = event;
-      this.userCompareReceiptDetail.ReceipPosition = event.OperationPosName;
-      this.userCompareReceiptDetail.ReceipDepartment = event.OfficeShortName;
-      this.userCompareReceiptDetail.ProgramCode = 'XCS60-06-02-03-00';
-      console.log('type' + type);
-    } else if (type == 3) {
-      this.compareUserDetailPopup.staff1 = event;
-      this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
-      this.compareUserDetailPopup.position1 = event.OperationPosName;
-      this.compareUserDetailPopup.department1 = event.OfficeShortName;
-      console.log('type' + type);
-    } else if (type == 4) {
-      this.compareUserDetailPopup.staff2 = event;
-      this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
-      this.compareUserDetailPopup.rank = event.OperationPosName;
-      this.compareUserDetailPopup.department2 = event.OfficeShortName;
-      console.log('type' + type);
-    } else if (type == 5) {
-      this.compareUserDetailPopup.staff3 = event;
-      this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
-      this.compareUserDetailPopup.rank2 = event.OperationPosName;
-      this.compareUserDetailPopup.department3 = event.OfficeShortName;
-      console.log('type' + type);
+    console.log(event);
+    if (!event) {
+      event = this.Staffoptions[0];
+    }
+    if (event) {
+      const name: any = (event.TitleName? event.TitleName:'') + event.FirstName + ' ' + event.LastName;
+      if (type == 0) {
+        this.accused.OperationPosName = event.OperationPosName;
+        this.accused.OperationDeptName = event.OfficeShortName;
+        console.log('type' + type);
+      } else if (type == 2) {
+        this.accused.CompareStaffName = (event.TitleName? event.TitleName:'') + event.FirstName + ' ' + event.LastName;
+        this.accused.OperationPosName = event.OperationPosName;
+        this.accused.OperationDeptName = event.OfficeShortName;
+        this.accused.staff = event;
+        this.accused.ProgramCode = 'ILG60-06-02-00';
+        this.accused.ProcessCode = null;
+        this.accused['staff'] = event;
+        console.log('type' + type);
+      } else if (type == 1) {
+        this.userCompareReceiptDetail.ReceiptStaff = name;
+        this.userCompareReceiptDetail.staff = event;
+        this.userCompareReceiptDetail.ReceipPosition = event.OperationPosName;
+        this.userCompareReceiptDetail.ReceipDepartment = event.OfficeShortName;
+        this.userCompareReceiptDetail.ProgramCode = 'XCS60-06-02-03-00';
+        console.log('type' + type);
+      } else if (type == 3) {
+        this.compareUserDetailPopup.staff = name;
+        this.compareUserDetailPopup.staff1 = event;
+        this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
+        this.compareUserDetailPopup.position1 = event.OperationPosName;
+        this.compareUserDetailPopup.department1 = event.OfficeShortName;
+        console.log('type' + type);
+      } else if (type == 4) {
+        this.compareUserDetailPopup.reviewer = name;
+        this.compareUserDetailPopup.staff2 = event;
+        this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
+        this.compareUserDetailPopup.rank = event.OperationPosName;
+        this.compareUserDetailPopup.department2 = event.OfficeShortName;
+        console.log('type' + type);
+      } else if (type == 5) {
+        this.compareUserDetailPopup.approver = name;
+        this.compareUserDetailPopup.staff3 = event;
+        this.compareUserDetailPopup.ProgramCode = 'XCS60-06-02-04-00';
+        this.compareUserDetailPopup.rank2 = event.OperationPosName;
+        this.compareUserDetailPopup.department3 = event.OfficeShortName;
+        console.log('type' + type);
+      }
     }
   }
   editAccused(item: any, index: any, type: any) {
     this.editUser = this.jsonCopy(item);
-    this.editUser.cancheck  = true;
+    this.editUser.cancheck  = false;
     this.editUser.index = index;
     if (!this.editUser.PaymentFineAppointDate) {
       this.editUser.PaymentFineAppointDate = this.jsonCopy(this.DateToday);
@@ -713,8 +745,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
     const d: any = event;
     const PaymentFineAppointDate: any = new Date(d.date.year, d.date.month, d.date.day);
-    if (accuseDate >= PaymentFineAppointDate) {
+    if (accuseDate <= PaymentFineAppointDate) {
       this.editUser.cancheck = true;
+      if (this.accused.CompareDate.date.day == d.date.day) {
+        this.editUser.cancheck = false;
+      }
     } else {
       this.editUser.cancheck = false;
     }
@@ -816,12 +851,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     // console.log(this.accused);
     // console.log(this.DataToSave);
     // console.log('data');
-
+    
     const CompareData: any = {
       CompareCode: this.receipt.CompareNo + '/' + this.receipt.CompareYear,
       CompareDate: `${this.convertToNormalDate(this.accused.CompareDate.date).toString()} ${this.accused.CompareTime.toString()}:00 +07.00`,
       CompareStation: this.accused.StationName,
-      CompareStationCode: this.DataToSave.CompareStationData.OfficeCode,
+      CompareStationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
       IsOutside: this.receipt.IsOutside ? 1 : 0,
       LawsuitID: this.headerData.LawsuitID,
       IsActive: 1,
@@ -884,8 +919,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(CompareData);
     console.log(this.ListCompareDetail);
     id = 0;
+    let compareFine: any = [];
     for (const user of this.ListCompareDetail) {
-      if (user.isSum) {
+      if (!user.isSum) {
         const compareDetailFine: any = {
           CompareFineID: null,
           CompareDetailID: null,
@@ -897,7 +933,10 @@ export class ManageComponent implements OnInit, OnDestroy {
           FineType: user.FineType,
           CompareArrestProductDetail: this.DataToSave.Product
         }
-        CompareData.CompareDetail[id].CompareDetailFine.push(compareDetailFine);
+        compareFine.push(compareDetailFine);
+      } else {
+        CompareData.CompareDetail[id].CompareDetailFine = compareFine;
+        compareFine = [];
         id++;
       }
     }
@@ -1084,6 +1123,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
   submitAccused() {
+
     this.btnAccuse.click();
   }
   submitReceipt() {
@@ -1097,12 +1137,22 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(type);
     return type ? (+type.replace('แบบอนุมัติ ', '')) : 0;
   }
-  chooseFirstOption(event): void {
+  chooseFirstOption(event, type = null): void {
     console.log(event.key );
     console.log(this.optionsStation.length);
-      if (this.optionsStation.length > 0) {
-        this.accused.StationName = this.optionsStation[0].OfficeShortName;
-        console.log('here');
+    if (this.optionsStation[0]) {
+      this.onAutoSelecteWord(this.optionsStation[0], type);
+    }
+    if (this.optionsStation.length > 0) {
+      if (type == 2) {
+        this.compareUserDetailPopup.ApproveStation = this.optionsStation[0].OfficeShortName;
       }
+      if (type == 3) {
+        this.userCompareReceiptDetail.ReceipStation = this.optionsStation[0].OfficeShortName
+      } else {
+        this.accused.StationName = this.optionsStation[0].OfficeShortName;
+      }
+      console.log('here');
+    }
   }
 }
