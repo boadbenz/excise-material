@@ -1,200 +1,210 @@
 <div class="card card-outline-bluish unset-radius">
-  <div class="card-actions">
-    <a (click)="closePopup()" style="float:right">
-      <i class="ti-close"></i>
-    </a>
-  </div>
   <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a (click)="closePopup()" style="float:right">
+        <i class="ti-close"></i>
+      </a>
+    </div>
     <h5 class="card-title m-b-0">ข้อมูลการจับกุม</h5>
   </div>
-  <form [formGroup]="lawsuitArrestFormDialog">
-    <div class="card-body">
-      <div class="form-body">
-        <div class="row">
-          <div class="col-md-6">
-
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">ชื่อผู้ต้องหา : </label>
-              <div class="col-md-9">
-                <input class="form-control" formControlName="arrestName" type="text" disabled>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">ชื่อศาล: </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="justicName">
-              </div>
+  <div class="form-control">
+    <form>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">ชื่อผู้ต้องหา : </label>
+            <div class="col-md-9">
+              <input class="form-control" [(ngModel)]="lawsuitArrestFormDialog.ArrestName" name="ArrestName" type="text" disabled>
             </div>
           </div>
         </div>
-
-        <div class="row">
-          <div class="col-md-6">
-
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">หมายเลขคดีดำ : </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="numberBlackList">
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">หมายเลขคดีแดง: </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="numberRedList">
-              </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">ชื่อศาล: </label>
+            <div class="col-md-9">
+              <input class="form-control" [matAutocomplete]="auto4" (input)="onChangeCourt($event.target.value)"
+                [(ngModel)]="lawsuitArrestFormDialog.CourtName" type="text" name="CourtName" required>
+              <mat-autocomplete #auto4="matAutocomplete">
+                <mat-option *ngFor="let value of SearchMasCourtList" [value]="value.CourtName" (onSelectionChange)="selectCourt(value)">
+                  {{ value.CourtName }}
+                </mat-option>
+              </mat-autocomplete>
             </div>
           </div>
         </div>
-
-        <div class="row">
-          <div class="col-md-6">
-
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">คำพิพากษาฎีกาที่ : </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="location">
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">วันที่อ่านคดีพิพากษา: </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" [attr.disabled]="disabled ? '' : null" formControlName="dateJustic">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="card-title m-b-0">คำพิพากษาของศาล</h5>
-        <br>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="row form-group">
-              <div class="col">
-                <div class="form-check">
-                  <input formControlName="fine" class="form-check-input" type="checkbox" id="fine" name="fine">
-                  <label class="form-check-label" for="fine">สั่งปรับเป็นจำนวนเงิน (บาท)</label>
-                </div>
-              </div>
-              <div class="col-8">
-                <input class="form-control" type="text" formControlName="fineRate" class="form-check-input" id="fineRate"
-                  required>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="row form-group">
-              <div class="col">
-                <div class="form-check">
-                  <input formControlName="isPrison" class="form-check-input" type="checkbox" id="isPrison" name="isPrison">
-                  <label class="form-check-label" for="isPrison">สั่งจำคุกเป็นเวลา</label>
-                </div>
-              </div>
-              <div class="col-8">
-                <input class="form-control" type="text" formControlName="prisonDay" class="form-check-input" id="prisonDay"
-                  required>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label text-right col-md-3">หน่วย: </label>
-              <div class="col-md-9">
-                <input class="form-control" type="text" formControlName="unit" name="unit">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="card-title m-b-0">คำพิพากษาของศาล</h5>
-        <br>
-
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row form-group">
-              <div class="col">
-                <div class="form-check">
-                  <input formControlName="payRadio1" class="form-check-input" type="radio" id="payRadio1" name="payRadio"
-                    (change)="isPayAll = true">
-                  <label class="form-check-label" for="payRadio1">ชำระครั้งเดียว</label>
-                </div>
-              </div>
-            </div>
-            <div class="row" *ngIf="isPayAll">
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">วันที่กำหนดชำระ: </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="payDate" name="payDate">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row form-group">
-              <div class="col">
-                <div class="form-check">
-                  <input formControlName="payRadio2" class="form-check-input" type="radio" id="payRadio2" name="payRadio"
-                    (change)="isPayAll = false">
-                  <label class="form-check-label" for="payRadio2">แบ่งชำระป็นงวด</label>
-                </div>
-              </div>
-            </div>
-            <div class="row" *ngIf="isPayAll == false">
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">จำนวนงาด: </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="quantityPay">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="startPayDate">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" *ngIf="isPayAll == false">
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">จำนวนงาด: </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="roundPay">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" formControlName="payUnit">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
-    </div>
-  </form>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">หมายเลขคดีดำ : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="lawsuitArrestFormDialog.UndecidedCaseNo" name="UndecidedCaseNo">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">หมายเลขคดีแดง: </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="lawsuitArrestFormDialog.DecidedCaseNo"
+                name="DecidedCaseNo">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">คำพิพากษาฎีกาที่ : </label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" [(ngModel)]="lawsuitArrestFormDialog.JudgementNo"
+                name="JudgementNo">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">วันที่อ่านคดีพิพากษา: </label>
+            <div class="col-md-9">
+              <my-date-picker-th name="JudgementDate" [(ngModel)]="lawsuitArrestFormDialog.JudgementDate" placeholder="" locale="th" [options]="LawsuitDateOptions"
+                required></my-date-picker-th>
+              <!-- <input class="form-control" type="text" [(ngModel)]="JudgementDate"> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <h5 class="card-title m-b-0">คำพิพากษาของศาล</h5>
+      <br>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row form-group">
+            <div class="col">
+              <div class="form-check">
+                <input [(ngModel)]="lawsuitArrestFormDialog.IsFine" name="IsCourtFine" class="form-check-input" type="checkbox" id="fine" name="fine">
+                <label class="form-check-label" for="fine">สั่งปรับเป็นจำนวนเงิน (บาท)</label>
+              </div>
+            </div>
+            <div class="col-8">
+              <input class="form-control" type="text" type="number" [(ngModel)]="lawsuitArrestFormDialog.CourtFine" class="form-check-input" id="fineRate"
+                required>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row form-group">
+            <div class="col">
+              <div class="form-check">
+                <input [(ngModel)]="lawsuitArrestFormDialog.IsImprison" name="IsImprison" class="form-check-input" type="checkbox" id="isPrison"
+                  name="isPrison">
+                <label class="form-check-label" for="isPrison">สั่งจำคุกเป็นเวลา</label>
+              </div>
+            </div>
+            <div class="col-8">
+              <input class="form-control" type="text" [(ngModel)]="lawsuitArrestFormDialog.ImprisonTime" name="ImprisonTime" class="form-check-input"
+                id="prisonDay" required>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label text-right col-md-3">หน่วย: </label>
+            <div class="col-md-9">
+              <select [(ngModel)]="lawsuitArrestFormDialog.ImprisonUnit" name="ImprisonUnit" class="form-control form-control-sm">
+                <option type="number" value="0">วัน</option>
+                <option type="number" value="1">เดือน</option>
+                <option type="number" value="2">ปี</option>
+                <option type="number" value="3">ตลอดชีวิต</option>
+              </select>
+              <!-- <input class="form-control" type="text" [(ngModel)]="ImprisonUnit" name="ImprisonUnit"> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <h5 class="card-title m-b-0">คำพิพากษาของศาล</h5>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row form-group">
+            <div class="col">
+              <div class="form-check">
+                <input [(ngModel)]="lawsuitArrestFormDialog.IsPayOnce" class="form-check-input" type="radio" id="payRadio1" name="IsPayOnce"
+                  (change)="isPayAll = true">
+                <label class="form-check-label" for="payRadio1">ชำระครั้งเดียว</label>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="isPayAll">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label text-right col-md-3">วันที่กำหนดชำระ: </label>
+                <div class="col-md-9">
+                    <my-date-picker-th name="JudgementDate"  [(ngModel)]="lawsuitArrestFormDialog.PaymentDate" name="PaymentDate" placeholder="" locale="th" [options]="LawsuitDateOptions"
+                    required></my-date-picker-th>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row form-group">
+            <div class="col">
+              <div class="form-check">
+                <input [(ngModel)]="lawsuitArrestFormDialog.IsPayOnce" class="form-check-input" type="radio" id="payRadio2" name="IsPayOnce"
+                  (change)="isPayAll = false">
+                <label class="form-check-label" for="payRadio2">แบ่งชำระป็นงวด</label>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="isPayAll == false">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label text-right col-md-3">จำนวนงวด: </label>
+                <div class="col-md-9">
+                  <input class="form-control" type="text" [(ngModel)]="lawsuitArrestFormDialog.PaymentPeroid" name="PaymentPeroid">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
+                <div class="col-md-9">
+                  <my-date-picker-th name="PaymentPeroidStartDate" [(ngModel)]="lawsuitArrestFormDialog.PaymentPeroidStartDate" placeholder=""
+                    locale="th" [options]="LawsuitDateOptions" required></my-date-picker-th>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="isPayAll == false">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label text-right col-md-3">รอบชำระค่าปรับทุกๆ: </label>
+                <div class="col-md-9">
+                  <input class="form-control" type="text" [(ngModel)]="lawsuitArrestFormDialog.PaymentPeroidRound" name="PaymentPeroidRound">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label text-right col-md-3">หน่วย: </label>
+                <div class="col-md-9">
+                  <select [(ngModel)]="lawsuitArrestFormDialog.PaymentUnit" name="PaymentUnit" class="form-control form-control-sm">
+                    <option value="0">วัน</option>
+                    <option value="1">เดือน</option>
+                    <option value="2">ปี</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row text-right">
+        <button type="submit" class="btn waves-effect waves-light text-white btn-themecolor" (click)="Submit()">บันทึก</button>
+      </div>
+    </form>
+  </div>
 </div>

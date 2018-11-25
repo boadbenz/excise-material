@@ -1,12 +1,12 @@
-<!-- {{formGroup.value | json}} -->
+{{formGroup.value | json}}
 <form [formGroup]="formGroup" (change)="changeForm(formGroup)">
   <div class="row">
     <div class="col-md-6">
       <div class="form-group row">
-        <input type="hidden" formControlName="NoticeCodeAndName">
+        <input type="hidden" formControlName="CommandDetailID">
         <label class="col-form-label col-md-4">เลขที่ใบแจ้งความนำจับ : </label>
         <div class="col-md-8">
-          <select formControlName="NoticeCodeAndName" class="form-control" (change)="selectChange(formGroup.controls['NoticeCodeAndName'].value)">
+          <select formControlName="CommandDetailID" class="form-control" #CommandDetailID (change)="selectChange(CommandDetailID.value)">
             <option value="" selected>
               - เลือกเลขที่ใบแจ้งความนำจับ -
             </option>
@@ -21,7 +21,7 @@
       <div class="form-group row">
         <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
         <div class="col-md-8">
-          <input class="form-control" type="text" formControlName="RequestBribeCode" disabled>
+          <input class="form-control" type="text" formControlName="RequestBribeCode" [attr.disabled]="'disabled'">
         </div>
       </div>
     </div>
@@ -41,7 +41,7 @@
       <div class="form-group row">
         <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
         <div class="col-md-3">
-          <my-date-picker formControlName="RequestDate" placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions" ></my-date-picker>
+          <my-date-picker formControlName="RequestDate" placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions"></my-date-picker>
           <!-- <input class="form-control" type="text" formControlName="RequestDate"> -->
         </div>
         <label class="col-form-label text-center col-md-2">เวลา</label>
@@ -83,7 +83,8 @@
     <tbody>
       <tr class="footable" *ngFor="let item of tableDetail;let i=index">
         <td>
-          <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]"></mat-checkbox>
+          <mat-checkbox class="filled-in chk-col-indigo" #check (change)="checkListChange(item.PaymentFineDetailID, check.checked)"
+            [(ngModel)]="checkList[i]"></mat-checkbox>
         </td>
         <td class="text-center">{{i+1}}</td>
         <td class="">{{item.LawbreakerName}}</td>
@@ -92,9 +93,9 @@
         <td class="text-center">{{item.ReceiptBookNo}}</td>
         <td class="">{{item.Receipt}}</td>
         <td class="">{{item.PaymentPeriodNo}}</td>
-        <td>{{item.PaymentFine}}</td>
-        <td>{{item.BribeMoney}}</td>
-        <td>{{item.NetBribeMoney }}</td>
+        <td>{{item.PaymentFine | currency:' '}}</td>
+        <td>{{item.BribeMoney | currency:' '}}</td>
+        <td>{{item.NetBribeMoney | currency:' ' }}</td>
       </tr>
     </tbody>
     <tfoot>
@@ -102,9 +103,9 @@
         <th class="text-right" colspan="8">
           รวม :
         </th>
-        <td>{{total()?.PaymentFine}}</td>
-        <td>{{total()?.BribeMoney}}</td>
-        <td>{{total()?.NetBribeMoney }}</td>
+        <td>{{total()?.PaymentFine | currency:' '}}</td>
+        <td>{{total()?.BribeMoney | currency:' '}}</td>
+        <td>{{total()?.NetBribeMoney | currency:' ' }}</td>
       </tr>
     </tfoot>
   </table>

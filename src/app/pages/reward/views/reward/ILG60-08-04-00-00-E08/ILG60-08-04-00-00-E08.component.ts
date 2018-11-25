@@ -8,7 +8,7 @@ import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-i
 import { IRequestPaymentFine } from 'app/pages/reward/interfaces/RequestPaymentFine';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MyDatePickerOptions } from 'app/config/dateFormat';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -38,7 +38,7 @@ export class ILG6008040000E08Component extends CONFIG implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       map(term =>
-        term.length < 2
+        term.length < 1
           ? []
           : this.MasOfficeMainList.filter(
               v => v.toLowerCase().indexOf(term.toLowerCase()) > -1

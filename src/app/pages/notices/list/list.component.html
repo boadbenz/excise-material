@@ -79,41 +79,37 @@
                         <th></th>
                     </tr>
                 </thead>
-                <!-- <tbody>
-                    <tr *ngFor="let item of noticeList; let i=index;">
-                        <td class="text-center">{{item.RowId}}</td>
-                        <td>{{item.NoticeCode}}</td>
-                        <td>{{item.NoticeDate}}</td>
-                        <td>
-                            <div *ngFor="let staff of item.NoticeStaff;">{{staff.StaffFullName}}</div>
-                        </td>
-                        <td>
-                            <div *ngFor="let staff of item.NoticeStaff;">{{staff.DepartmentName}}</div>
-                        </td>
-                        <td>
-                            <div *ngFor="let suspect of item.NoticeSuspect;">{{suspect.SuspectFullName}}</div>
-                        </td>
-                        <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.NoticeCode)">
-                                <i class="fa fa-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody> -->
                 <tbody>
-                    <tr *ngFor="let item of notice; let i=index;">
-                        <td class="text-center">{{i+1}}</td>
-                        <td>{{item.NoticeCode}}</td>
-                        <td>{{item.NoticeDate}}</td>
-                        <td>{{item.StaffTitleName}}{{item.StaffFirstName}} {{item.StaffLastName}}</td>
-                        <td>{{item.StaffOfficeName}}</td>
-                        <td>{{item.SuspectTitleName}}{{item.SuspectFirstName}} {{item.SuspectLastName}}</td>
-                        <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.NoticeCode)">
-                                <i class="fa fa-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
+                    <ng-template ngFor let-item [ngForOf]="noticeList" let-i="index">
+                        <tr>
+                            <td class="text-center">{{item.index}}</td>
+                            <td>{{item.index?item.NoticeCode:""}}</td>
+                            <td>{{formatDate(item.NoticeDate)}}</td>
+                            <td>{{item.StaffTitleName}}{{item.StaffFirstName}} {{item.StaffLastName}}</td>
+                            <td>{{item.StaffOfficeName}}</td>
+                            <td>{{item.SuspectTitleName}}{{item.SuspectFirstName}} {{item.SuspectLastName}}</td>
+                            <td class="text-center">
+                                <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.NoticeCode)">
+                                    <i class="fa fa-eye fa-lg"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <ng-template ngFor let-sub [ngForOf]="item.childs" let-i="index">
+                            <tr>
+                                <td class="text-center"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{sub.SuspectTitleName}}{{sub.SuspectFirstName}} {{sub.SuspectLastName}}</td>
+                                <td class="text-center">
+                                    <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.NoticeCode)">
+                                        <i class="fa fa-eye fa-lg"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </ng-template>
                 </tbody>
             </table>
         </div>

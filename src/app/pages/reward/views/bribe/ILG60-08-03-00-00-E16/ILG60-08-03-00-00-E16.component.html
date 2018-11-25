@@ -1,30 +1,47 @@
-<div class="text-right">
-  <input type="file" id="btn-browse" #file>
-  <label for="btn-browse" [ngClass]="{disabled : viewMode}" class="btn waves-effect waves-light btn-navy">
-    เพิ่มเอกสารแนบ </label>
+<div class="row form-group">
+  <div class="col-lg-10 col-md-9 col-sm-8"></div>
+  <div class="col-lg-2 col-md-3 col-sm-4">
+    <button type="button" class="btn btn-block btn-themecolor" [attr.disabled]="formGroup.invalid ? 'disabled': null"
+      (click)="addDocument()">เพิ่มเอกสารแนบ</button>
+  </div>
 </div>
-<div class="table-responsive table-striped no-wrap">
-  <table class="table">
-    <thead>
-      <tr>
-        <th class="footable-sortable text-center">ลำดับ</th>
-        <th class="footable-sortable">ชื่อเอกสารแนบ</th>
-        <th class="footable-sortable">ที่อยู่เอกสารแนบ</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="footable">
-        <td class="text-center">1</td>
-        <td>
-          <input class="form-control" type="text" nmae="fileName">
-        </td>
-        <td>
-          <input class="form-control" type="text" name="filePath">
-        </td>
-        <td>
-          <i class="ti-trash btn-action"></i>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+<form [formGroup]="formGroup" (change)="formChange($event)">
+  <div class="table-responsive">
+    <table class="table table-sm table-striped table-set-border">
+      <thead>
+        <tr>
+          <th class="text-center">ลำดับ</th>
+          <th>ชื่อเอกสารแนบ</th>
+          <th>ที่อยู่เอกสารแนบ</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody formArrayName="Document">
+        <tr *ngFor="let item of Document.controls; let i=index;" [formGroupName]="i">
+          <td class="text-center">{{i+1}}</td>
+          <td>
+            <input type="text" formControlName="DataSource" class="form-control form-control-sm">
+          </td>
+          <td>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;" readonly>
+              <div class="input-group-append">
+                <input [id]="'Doc'+i" type="file" (change)="changeDocument($event, i)" [style.display]="'none'">
+                <label [for]="'Doc'+i" class="input-group-text custom-file-upload text-secondary">
+                  <i class="ti-more-alt"></i>
+                </label>
+              </div>
+            </div>
+          </td>
+          <td>
+            <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteDocument(i)">
+              <i class="fa fa-trash-o fa-lg"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</form>

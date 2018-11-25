@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { IncomeService } from '../income.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Revenue, RevenueDetail } from '../Revenue';
+import { Revenue, RevenueDetail } from '../revenue';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
@@ -686,6 +686,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.preloader.setShowPreloader(false);
         } else {
             alert(Message.saveFail);
+            this.preloader.setShowPreloader(false);
         }
     }
 
