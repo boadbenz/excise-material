@@ -1227,7 +1227,7 @@ export class ManageComponent implements OnInit {
   }
   changeLawsuitEnd(value, index) {
     let array = this.lawsuitForm.get('LawsuitTableList') as FormArray;
-    value == 0 ? array.controls[index].get('LawsuitEnd').setValue(1): array.controls[index].get('LawsuitEnd').setValue(0);
+    value == 0 ? array.controls[index].get('LawsuitEnd').setValue(1) : array.controls[index].get('LawsuitEnd').setValue(0);
   }
   IsOutsideCheckReq() {
     if (this.lawsuitForm.controls['IsOutsideCheck'].value === true) {
@@ -1355,8 +1355,9 @@ export class ManageComponent implements OnInit {
     // /item.controls['IndictmentDetailID'].value
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
-      maxWidth: 'none',
-      height: '600px',
+      // maxWidth: 'none',
+      height: '100%',
+      maxHeight: 'none',
       data: {
         lawsuitArrest: item,
         index: index,
@@ -1573,6 +1574,7 @@ export class DialogJudgment {
       }
       console.log("Case have JudgementID", this.arrestData['LawsuitJudgement'][0]['JudgementID'])
       let updateByCon = await this.lawsuitService.LawsuitJudgementupdByCon(submit)
+      await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
       console.log(updateByCon)
       if (updateByCon.__zone_symbol__value.IsSuccess) {
         await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.__zone_symbol__value.PaymentFineID)
@@ -1590,8 +1592,13 @@ export class DialogJudgment {
           console.log(status)
         }
       }
+      alert("บันทึกสำเร็จ")
+      this.dialogRef.close();
+
+
     } else {
       let PaymentFine = this.insert()
+      await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
       if (this.lawsuitArrestFormDialog.IsFine == true) {
         console.log("Case first insert")
         for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
@@ -1685,6 +1692,9 @@ export class DialogJudgment {
     return await this.lawsuitService.LawsuitJudgementinsAll(submit)
 
   }
+  closePopup() {
+    this.dialogRef.close();
+  }
   public validateData = function (data) {
     if (data) {
       return data;
@@ -1693,45 +1703,3 @@ export class DialogJudgment {
   }
 
 }
-
-// {
-//   "IndictmentDetailID": 1,
-//   "IsCourtFine": 1,
-//   "CourtName": "test_coutName",
-//   "UndecidedCaseNo": "111",
-//   "DecidedCaseNo": "002",
-//   "JudgementNo": "2561/422",
-//   "JudgementDate": "2018-08-14T16:20:55.0",
-//   "IsFine": 1,
-//   "CourtFine": 2000,
-//   "CourtFineDate": "2018-08-14T16:20:55.0",
-//   "IsImprison": 1,
-//   "ImprisonTime": "1",
-//   "ImprisonUnit": 1,
-//   "IsPayOnce": 1,
-//   "PaymentDate": "2018-08-14T16:20:55.0",
-//   "PaymentPeroid": 1,
-//   "PaymentPeroidRound": 5,
-//   "PaymentUnit": 2,
-//   "PaymentPeroidStartDate": "2018-08-14T16:20:55.0",
-//   "IsActive": 1,
-//   "LawsuitPaymentFine": [
-//       {
-//           "FineType": 1,
-//           "PaymentPeriodNo": 1,
-//           "PaymentFine": 8888888,
-//           "PaymentDueDate": "2018-09-04T00:00:00.0",
-//           "PaymentActualDate": "1961-09-04T00:00:00.0",
-//           "ReceiveFinRate": "2018-09-04T00:00:00.0",
-//           "IsActive": 1,
-//           "IsRequestReward": 0,
-//           "LawsuitPaymentFineDetail": [
-//               {
-//                   "NoticeCode": "Tara",
-//                   "IsRequestBribe": 1,
-//                   "IsActive": 1
-//               }
-//           ]
-//       }
-//   ]
-// }
