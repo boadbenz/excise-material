@@ -251,9 +251,9 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
         this.RequestBribeDetail.push(
           this.fb.group({
             RequestBribeDetailID: '',
-            PaymentFineDetailID: element.PaymentFineDetailID,
+            PaymentFineDetailID: `${element.PaymentFineDetailID}`,
             RequestBribeID: '',
-            IsActive: 1
+            IsActive: '1'
           })
         );
       });

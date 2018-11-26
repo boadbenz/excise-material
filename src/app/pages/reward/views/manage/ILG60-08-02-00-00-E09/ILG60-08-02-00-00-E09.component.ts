@@ -4,6 +4,13 @@ import { IRequestCommandDetail } from 'app/pages/reward/interfaces/RequestComman
 import { IRequestCommand } from 'app/pages/reward/interfaces/RequestCommand';
 import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interface';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
+import { RequestCommandupdByConModel } from 'app/pages/reward/models/RequestCommandupdByCon.Model';
+import { FormGroup } from '@angular/forms';
+import {
+  getDateMyDatepicker,
+  convertDateForSave,
+  toLocalShort
+} from 'app/config/dateFormat';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -14,7 +21,7 @@ import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-int
 export class ILG6008020000E09Component extends CONFIG implements OnInit {
   public bindingData: IRequestCommandDetail[];
   public bindingForm: ColumnsInterface[] = [];
-  public submitData: IRequestCommand = {
+  public submitData: any = {
     ArrestCode: '',
     CommandDate: '',
     CommandID: null,
@@ -43,6 +50,7 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
             ' ' +
             (m.StaffLastName || '')
         }));
+
         this.inputItem = inp[0].RequestCommandDetail.map(m => m.PartMoney);
 
         this.bindingForm = this.FormInputDefault.map(m => ({
@@ -52,6 +60,7 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
           isDisabled: !this.isEdit$.getValue(),
           isDisabled2: !this.isEdit$.getValue()
         }));
+        console.log('this.bindingForm', this.bindingForm);
       }
     });
     this.isEdit$.subscribe(edit => {
@@ -75,23 +84,34 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
     }
     return 0;
   }
-  public changeForm(data: IRequestCommand) {
+  public changeForm(formGroup: FormGroup) {
     // console.log('data', data);
-    const submitData: IRequestCommand = {
-      CommandNo: data.CommandNo,
-      CommandDate: data.CommandDate,
-      CommandTime: data.CommandTime,
-      TotalPart: this.sumItem(),
-      RequestCommandDetail: this.bindingData.map((m, index) => ({
-        ...m,
-        PartMoney: this.inputItem[index]
-      })),
-      ArrestCode: '',
-      CommandID: null,
-      IsActive: 1
-    };
-    this.submitData = submitData;
-    // console.log('submitData', submitData);
+    const data: IRequestCommand = formGroup.value;
+    const newData = RequestCommandupdByConModel;
+    Object.keys(RequestCommandupdByConModel).forEach(f => {
+      newData[f] = data[f] || '';
+    });
+    newData['TotalPart'] = this.sumItem().toString();
+    newData['CommandDate'] = this.ConvDateTimeToDate(
+      convertDateForSave(getDateMyDatepicker(data['CommandDate']))
+    );
+    newData['RequestCommandDetail'] = this.bindingData.map((m, index) => ({
+      CommandDetailID: `${m.CommandDetailID}`,
+      NoticeCode: `${m.NoticeCode}`,
+      CommandID: `${m.CommandID}`,
+      IsActive: '1',
+      PartMoney: this.inputItem[index]
+    }));
+
+    this.submitData = newData;
+    console.log(
+      'submitData',
+      toLocalShort(
+        this.ConvDateTimeToDate(
+          convertDateForSave(getDateMyDatepicker(data['CommandDate']))
+        )
+      )
+    );
     this.sendEmitData();
   }
   public itemChange() {

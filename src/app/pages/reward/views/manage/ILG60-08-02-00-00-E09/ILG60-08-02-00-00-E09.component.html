@@ -42,7 +42,12 @@
                   </ng-container>
                   <ng-template #any>
                     <td class="footable-sortable">
-                      {{dataItem[item.field]}}
+                      <ng-container *ngIf="item.inputType === 'date'; else typeAny">
+                          {{dataItem[item.field] | thaiDate}}
+                      </ng-container>
+                      <ng-template #typeAny>
+                          {{dataItem[item.field]}}
+                      </ng-template>
                     </td>
                   </ng-template>
 

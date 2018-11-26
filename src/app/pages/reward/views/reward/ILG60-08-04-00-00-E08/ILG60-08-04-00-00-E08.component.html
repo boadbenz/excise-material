@@ -104,7 +104,7 @@
             <tbody>
               <tr *ngFor="let dataItem of listData; let i=index">
                 <td>
-                  <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]" (change)="checkboxHandle()"></mat-checkbox>
+                  <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]" (change)="checkboxHandle(dataItem.PaymentFineID, i , checkList[i])"></mat-checkbox>
                 </td>
                 <td>{{i+1}}</td>
                 <td class="footable-sortable ng-star-inserted">
@@ -112,7 +112,7 @@
                 </td>
 
                 <td class="footable-sortable ng-star-inserted">
-                  {{dataItem['PaymentDueDate']}}
+                  {{dataItem['PaymentDueDate'] | thaiDate}}
                 </td>
 
                 <td class="footable-sortable ng-star-inserted">
