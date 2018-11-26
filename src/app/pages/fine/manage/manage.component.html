@@ -426,7 +426,7 @@
           <td>{{item.LawBrakerName}}</td>
           <td class="text-center">{{item.PaymentDateShow}}</td>
           <td>{{item.ReceiptStaff}}</td>
-          <td class="text-center">{{ paymentChanel[item.ReceiptChanel] }}</td>
+          <td class="text-center">{{ paymentChanel[(+item.ReceiptChanel) - 1] }}</td>
           <td class="text-center">{{item.ReceiptBookNo}}</td>
           <td class="text-center">{{ (item.ReceiptNo ? item.ReceiptNo : '' ) + (item.ReceiptNo && item.ReferenceNo ? ' / ' : '') + (item.ReferenceNo ? item.ReferenceNo : '') }}
           </td>

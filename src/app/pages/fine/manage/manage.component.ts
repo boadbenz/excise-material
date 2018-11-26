@@ -81,8 +81,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   btnApprove: HTMLElement = document.getElementById('btnApprove') as HTMLElement;
   btnAccusedHeader: HTMLElement = document.getElementById('btnAccusedHeader') as HTMLElement;
   // DataForUpdate
-  compareDataUpdate: any = {};
-  compareDataUpdateTmp: any = {};
+  compareDataUpdate: any;
+  compareDataUpdateTmp: any;
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -94,7 +94,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.15');
+    this.sidebarService.setVersion('0.0.0.16');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -172,8 +172,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
   async setAllCompareData() {
-    await this.setAccusedDataList();
-    await this.setCompareDetail();
+    if (this.compareDataUpdateTmp) {
+      await this.setAccusedDataList();
+      await this.setCompareDetail();
+      await this.setReceiptData();
+    }
   }
   async setAccusedDataList() {
     const staff: any = this.searchStaffByContributorID(17);
@@ -208,10 +211,27 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.accused.list[i].LawbrakerTestimony = compare.LawbrakerTestimony;
       this.accused.list[i].IsProvisionalAcquittal = compare.IsProvisionalAcquittal;
       // this.e ditUser.PaymentFineAppointDate.formatted
+
+      if (compare.CompareDetailReceipt.length > 0) {
+        const length: any = compare.CompareDetailReceipt.length - 1;
+        this.receipt.list[i].TotalFine = compare.CompareDetailReceipt[length].TotalFine;
+        this.receipt.list[i].PaymentDate = this.convertToNormalDate(new Date(compare.CompareDetailReceipt[length].PaymentDate));
+        this.receipt.list[i].ReceipStation = compare.CompareDetailReceipt[length].Station;
+        this.receipt.list[i].ReceiptChanel = compare.CompareDetailReceipt[length].ReceiptChanel;
+        this.receipt.list[i].ReceiptBookNo = compare.CompareDetailReceipt[length].ReceiptBookNo;
+        this.receipt.list[i].ReferenceNo = compare.CompareDetailReceipt[length].ReferenceNo;
+        this.receipt.list[i].ReceiptNo = compare.CompareDetailReceipt[length].ReceiptNo;
+      }
       i++;
     }
   }
+  setReceiptData() {
+    const compNo: any = this.compareDataUpdateTmp.CompareCode.split('/');
+    this.receipt.CompareNo = compNo[0];
+    this.receipt.CompareYear = compNo[1];
+  }
   searchStaffByContributorID(ContributorID) {
+
     return this.compareDataUpdateTmp.CompareStaff.filter(f => f.ContributorID === ContributorID);
   }
   getTimeNow(d: any = new Date) {
@@ -295,9 +315,10 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
     })
   }
-  async checkReceiptData(CompareDetailID: any) {
+  async checkReceiptData(CompareDetailID: any, index: any = 0) {
     let receiptData: any = {};
-    for (const rec of this.receipt.list) {
+    const rec = this.receipt.list[index];
+    {
       if (this.isNotValidTxtField(rec.PaymentDate)) {
         return false;
       } else {
@@ -392,10 +413,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log('ข้อมูลการรีเทิร์นจาก CompareinsAll');
     console.log(resp);
     if (resp) {
-      if (resp.CompareDetailID && resp.CompareDetailID[0].CompareDetailID) {
-        await this.checkReceiptData(resp.CompareDetailID);
-      } else {
-        console.log('ไม่พบข้อมูล CompareDetailID');
+      for (const r of resp.CompareDetail) {
+        if (resp.CompareDetail && resp.CompareDetail[0].CompareDetailID) {
+          await this.checkReceiptData(r.CompareDetailID);
+        } else {
+          console.log('ไม่พบข้อมูล CompareDetailID');
+        }
       }
       await this.navService.setOnSave(false);
       await this.navService.setOnCancel(false);
@@ -503,27 +526,32 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.DataToSave.Product = lawbreaker.CompareArrestProductDetail;
           const CompareDetail: any = {};
           const LawBreaker: any = lawbreaker.CompareArrestLawbreaker[0];
-          CompareDetail.LawbreakerName = `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}`;
-          const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
-          CompareDetail.Mistreat = Mistreat.Mistreat ? Mistreat.Mistreat : 1;
-          this.ListCompareDetail.push(CompareDetail);
-          // ชื่อผู้ต้องหาคำให้การ
-          const accuse: any = {};
-          accuse.LawbreakerName = CompareDetail.LawbreakerName;
-          this.accused.list.push(accuse);
-          // บันทึกการเปรียบเทียบและชำระค่าปรับ
-          const receiptData: any = {};
-          receiptData.LawBrakerName = CompareDetail.LawbreakerName;
-          this.receipt.list.push(receiptData);
-          // รายงานการขออนุมัติ
-          const approve: any = {};
-          approve.LawBrakerName = CompareDetail.LawbreakerName;
-          this.approveReportList.push(approve);
-          const userData: any = {};
-          userData.LawbrakerName =  CompareDetail.LawbreakerName;
-          userData.IndictmentDetailID = lawbreaker.IndictmentDetailID;
-          userData.MistreatNo = CompareDetail.Mistreat;
-          this.DataToSave.userData.push(userData);
+          if (!LawBreaker) {
+            alert('ไม่พบข้อมูลผู้ต้องหา');
+            this.router.navigate([`/fine/list`]);
+          } else {
+            CompareDetail.LawbreakerName = LawBreaker ? `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}` : '';
+            const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
+            CompareDetail.Mistreat = Mistreat.Mistreat ? Mistreat.Mistreat : 1;
+            this.ListCompareDetail.push(CompareDetail);
+            // ชื่อผู้ต้องหาคำให้การ
+            const accuse: any = {};
+            accuse.LawbreakerName = CompareDetail.LawbreakerName;
+            this.accused.list.push(accuse);
+            // บันทึกการเปรียบเทียบและชำระค่าปรับ
+            const receiptData: any = {};
+            receiptData.LawBrakerName = CompareDetail.LawbreakerName;
+            this.receipt.list.push(receiptData);
+            // รายงานการขออนุมัติ
+            const approve: any = {};
+            approve.LawBrakerName = CompareDetail.LawbreakerName;
+            this.approveReportList.push(approve);
+            const userData: any = {};
+            userData.LawbrakerName =  CompareDetail.LawbreakerName;
+            userData.IndictmentDetailID = lawbreaker.IndictmentDetailID;
+            userData.MistreatNo = CompareDetail.Mistreat;
+            this.DataToSave.userData.push(userData);
+          }
         }
         // คำให้การผู้ต้องหา
         this.setAccusedData(resp);
