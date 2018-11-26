@@ -164,15 +164,15 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if (this.activeRoute.snapshot.queryParamMap.get('compareID') == null
-    || this.activeRoute.snapshot.queryParamMap.get('compareID') === '') {
+    if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
+    || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
       alert('ไม่สามารถดึงค่าข้อมูลรายการเปรียบเทียบได้');
       this.router.navigate(['/reduction/list']);
     }
 
     const param = this.activeRoute.snapshot.queryParams;
-    this.compareID = param.compareID;
-    this.indictmentID = param.indictmentID;
+    this.compareID = param.CompareID;
+    this.indictmentID = param.IndictmentID;
 
     this.navService.setEditField(true);
     // set show button

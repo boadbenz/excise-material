@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { ReductionApiService } from '../reduction.api.service';
 import { Subject } from 'rxjs/Subject';
 
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -12,21 +14,7 @@ import { Subject } from 'rxjs/Subject';
 export class ListComponent implements OnInit {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  listData = [
-    {
-      arrestCode: 'TN90806026000001',
-      compareID: 'TN90806026000001',
-      indictmentID: 'TN11111111111',
-      lawsuitNo: '001/2561',
-      proofNo: '001/2561',
-      caseNumber: '001/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '10-ม.ค.-2560',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี'
-    }
-  ];
+  listData = [];
 
   arrestCode: string;
   lawsuitNo: string;
@@ -42,7 +30,12 @@ export class ListComponent implements OnInit {
   numberSelectPage;
 
 
-  constructor(private navService: NavigationService, private router: Router, private apiServer: ReductionApiService) {
+  constructor(
+    private navService: NavigationService,
+    private router: Router,
+    private apiServer: ReductionApiService,
+    private preloaderService: PreloaderService
+    ) {
     this.advSearch = this.navService.showAdvSearch;
   }
 
@@ -64,10 +57,10 @@ export class ListComponent implements OnInit {
     });
   }
 
-  viewData(arrestCode: string, compareID: string = '', indictmentID: string = '') {
+  public viewData(compareID: string = '', indictmentID: string = '') {
     // this.router.navigate(['/reduction/manage', 'R'], { queryParams: { code: arrestCode } });
     this.router.navigate(['/reduction/manage', 'R'],
-                         { queryParams: { code: arrestCode, compareID: compareID, indictmentID:  indictmentID} }
+                         { queryParams: {CompareID: compareID, IndictmentID:  indictmentID} }
                         );
   }
 
@@ -82,14 +75,62 @@ export class ListComponent implements OnInit {
   }
 
   public onSearch(text: string): void {
-    console.log('text = ', text);
     const param = {
       Textsearch: text
     };
-
+    this.preloaderService.setShowPreloader(true);
     this.apiServer.post('/XCS60/AdjustListgetByKeyword', param)
-        .subscribe(response => console.log(response), error => console.log(error));
+        .subscribe(response => this.adjustListByKeywordDone(response), error => this.adjustListByKeywordError(error));
   }
 
+  public adjustListByKeywordDone(lists: any[]): void {
+    this.listData = lists;
+
+    if (this.listData.length === 0) {
+      alert('ไม่พบข้อมูล')
+    }
+
+    this.preloaderService.setShowPreloader(false);
+  }
+
+  public adjustListByKeywordError(error: any): void {
+    console.log(error);
+    alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
+    this.preloaderService.setShowPreloader(false);
+  }
+
+  public onAdvSearch() {
+    const param = {
+      ArrestCode: this.arrestCode || '',
+      LawsuitNo: this.lawsuitNo || '',
+      CompareCode: this.caseNumber || '',
+      ProveReportNo: this.proofNo || '',
+      CompareDateFrom: this.lawsuitDateStart || '',
+      CompareDateTo: this.lawsuitDateEnd || '',
+      StaffName: this.lawName || '',
+      OfficeShortName: this.departmentlawName || ''
+    };
+
+    this.preloaderService.setShowPreloader(true);
+    this.apiServer.post('/XCS60/AdjustListgetByConAdv', param)
+        .subscribe(response => this.adjustListgetByConAdvDone(response), error => console.log(error));
+  }
+
+  public adjustListgetByConAdvDone(data: any): void {
+    console.log(data);
+    if (data) {
+      this.listData.push(data);
+    } else {
+      alert('ไม่พบข้อมูล');
+    }
+
+    this.preloaderService.setShowPreloader(false);
+  }
+
+  public adjustListgetByConAdvError(error: any): void {
+    console.log(error);
+    alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
+    this.preloaderService.setShowPreloader(false);
+  }
 
 }
