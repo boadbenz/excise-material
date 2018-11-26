@@ -21,6 +21,7 @@ export class ILG6008040000E19Component extends CONFIG implements OnInit {
     this.formGroup = this.fb.group({
       Document: this.fb.array([])
     });
+    this.formChange(this.formGroup);
   }
   public addDocument() {
     this.Document.push(

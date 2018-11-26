@@ -44,14 +44,14 @@ export class CONFIG extends RewardConfig {
   }
   public requestCompare$ = new BehaviorSubject<any>(null);
 
-  @Input()
-  set MasOfficeMain(val) {
-    this.MasOfficeMain$.next(val);
-  }
-  get MasOfficeMain() {
-    return this.MasOfficeMain$.asObservable();
-  }
-  public MasOfficeMain$ = new BehaviorSubject<any>(null);
+  // @Input()
+  // set MasOfficeMain(val) {
+  //   this.MasOfficeMain$.next(val);
+  // }
+  // get MasOfficeMain() {
+  //   return this.MasOfficeMain$.asObservable();
+  // }
+  // public MasOfficeMain$ = new BehaviorSubject<any>(null);
 
   public columnsForm: ColumnsInterface[] = [];
   public columnsFormDefault: ColumnsInterface[] = [

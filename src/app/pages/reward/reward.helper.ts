@@ -13,7 +13,7 @@ export class RewardHelper {
   public setDateNow = setDateMyDatepicker(new Date());
   public setTimeNow = `${setZero(new Date().getHours())}.${setZero(
     new Date().getMinutes()
-  )} น.`;
+  )}`;
   constructor() {}
   public setZero(num: number) {
     return num < 10 ? '0' + num : num;

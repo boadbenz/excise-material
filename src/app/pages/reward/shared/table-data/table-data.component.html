@@ -27,7 +27,7 @@
                     </ng-container>
                     <ng-template #showDefault>
                       <ng-container *ngIf="column?.inputType == 'date';else inputTypeAny">
-                          {{ (item[column?.field] | date) || '-' }}
+                          {{ (item[column?.field] | thaiDate) || '-' }}
                       </ng-container>
                       <ng-template #inputTypeAny>
                           {{ (item[column?.field]) || '-' }} 

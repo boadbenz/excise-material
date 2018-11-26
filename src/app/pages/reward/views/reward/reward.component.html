@@ -1,3 +1,5 @@
+<app-timeline></app-timeline>
+
 <mat-accordion [multi]="true">
   <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E08_DISABLED$ | async"
     (opened)="ILG60_08_04_00_00_E08_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E08_EXPANDED$.next(false)">
