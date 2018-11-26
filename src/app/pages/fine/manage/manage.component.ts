@@ -1176,9 +1176,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ListCompareDetail[i].TreasuryMoney = sum3;
         this.ListCompareDetail[i].all = sum;
         this.sumAllCompare.sum = (+this.sumAllCompare.sum) + sum;
-        this.sumAllCompare.sum1 = (+this.sumAllCompare.sum) + sum1;
-        this.sumAllCompare.sum2 = (+this.sumAllCompare.sum) + sum2;
-        this.sumAllCompare.sum3 = (+this.sumAllCompare.sum) + sum3;
+        this.sumAllCompare.sum1 = (+this.sumAllCompare.sum1) + sum1;
+        this.sumAllCompare.sum2 = (+this.sumAllCompare.sum2) + sum2;
+        this.sumAllCompare.sum3 = (+this.sumAllCompare.sum3) + sum3;
         this.DataToSave.userData[cmp.userNo].CompareFine = sum;
         this.DataToSave.userData[cmp.userNo].BribeMoney = sum1;
         this.DataToSave.userData[cmp.userNo].RewardMoney = sum2;
