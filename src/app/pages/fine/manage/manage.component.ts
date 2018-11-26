@@ -473,6 +473,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(resp);
       } else {
         alert('ไม่สามารถแสดงข้อมูลได้');
+        this.router.navigate([`/fine/list`]);
       }
       
     } catch (err) {
