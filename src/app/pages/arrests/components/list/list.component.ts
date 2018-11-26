@@ -5,7 +5,7 @@ import { pagination } from 'app/config/pagination';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { Arrest } from '../../models/arrest';
-import { getDateMyDatepicker, compareDate, toLocalShort, convertDateForSave } from 'app/config/dateFormat';
+import { getDateMyDatepicker, compareDate, toLocalShort, convertDateForSave, MyDatePickerOptions } from 'app/config/dateFormat';
 import { Message } from 'app/config/message';
 import { ArrestService } from '../../services';
 import { Subscription, Subject } from 'rxjs';
@@ -33,11 +33,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     @ViewChild('arrestTable') arrestTable: ElementRef;
 
-    myDatePickerOptions: IMyOptions = {
-        dateFormat: 'dd mmm yyyy',
-        showClearDateBtn: false,
-        height: '30px'
-    };
+    myDatePickerOptions = MyDatePickerOptions;
 
     constructor(
         private navService: NavigationService,

@@ -19,6 +19,8 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 
+declare var $ :any;
+
 @Component({
     selector: 'app-manage',
     templateUrl: './manage.component.html',
@@ -41,6 +43,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     showScienceField: any;
     ShowDeliveryField: any;
     ShowReceiveField: any;
+    ShowNextPage: any;
 
     // -- Parameter ---
     LawsuitID: string;
@@ -140,7 +143,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     // **************************************
     // IsReferenceVatRate: boolean;    // checkbox ตามมูลค่าร้อยละ
     // IsReferenceVatQty: boolean;     // checkbox ตามปริมาณต่อ
-    test: string;
 
     iPopup: number;
     modePopup: string = 'I';
@@ -259,6 +261,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sub = this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
             this.ShowDeliveryField = p;
+
+            this.checkNextPage();
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
@@ -287,7 +291,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         return false;
                     }
 
-                    
+
                     if (this.lsProveProduct.length > 0) {
                         // *******************************
                         // ----- ส่วน “พิสูจน์ของกลาง” -----
@@ -345,6 +349,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 } else if (this.mode === 'R') {
                     await this.onUpdProve();
                 }
+
+                this.checkNextPage();
             }
         });
 
@@ -514,7 +520,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         }
 
                         await this.proveService.ProveProductinsAll(item).then(async pRes => {
-                            
+
                             if (!pRes.IsSuccess) {
                                 isSuccess = pRes.IsSuccess;
                                 return false;
@@ -639,7 +645,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
 
-        
+
         // -----------------------------------------------------------
         //                  แก้ไขข้อมูลนำส่งของกลาง
         // -----------------------------------------------------------
@@ -967,6 +973,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    checkNextPage() {
+        if (this.ShowNextPage == true && this.showEditField == true) {
+            this.navService.setNextPageButton(true);
+        } else {
+            this.navService.setNextPageButton(false);
+        }
+    }
+
     async getProveByID() {
         // this.preloader.setShowPreloader(true);
         await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
@@ -1026,7 +1040,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 var PSendStaff = this.oProve.ProveStaff.filter(f => f.ContributorID == "13");
                 if (PSendStaff.length) {
-                    this.StaffSendName = `${PSendStaff[0].TitleName == null ? '' : PSendStaff[0].TitleName}` + `${PSendStaff[0].FirstName == null ? '' : PSendStaff[0].FirstName}`  + ' ' + `${PSendStaff[0].LastName == null ? '' : PSendStaff[0].LastName}` ;
+                    this.StaffSendName = `${PSendStaff[0].TitleName == null ? '' : PSendStaff[0].TitleName}` + `${PSendStaff[0].FirstName == null ? '' : PSendStaff[0].FirstName}` + ' ' + `${PSendStaff[0].LastName == null ? '' : PSendStaff[0].LastName}`;
                     this.PosStaffSend = PSendStaff[0].PositionName;
                     this.DeptStaffSend = PSendStaff[0].DepartmentName;
                     this.StaffSendID = PSendStaff[0].StaffID;
@@ -1105,6 +1119,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     alert(err.message);
                 });
 
+                this.checkNextPage();
+
                 this.preloader.setShowPreloader(false);
             }
         }, (err: HttpErrorResponse) => {
@@ -1126,19 +1142,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setInnerTextNextPageButton('งานเปรียบเทียบปรับ');
                 this.navService.setNextPageButton(false);
 
-                if(this.mode == 'R')
-                {
-                    if(lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail.length > 0)
-                    {
-                        for (var i = 0; i < lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail.length; i += 1) {
-                            if(lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[i].LawsuitType == "1"){
-                                this.navService.setNextPageButton(true);
-                                break;
-                            }
+                if (lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail.length > 0) {
+                    for (var i = 0; i < lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail.length; i += 1) {
+                        if (lRes[0].LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[i].LawsuitType == "1") {
+                            this.ShowNextPage = true;
+                            break;
                         }
                     }
                 }
-                
 
                 await this.proveService.ArrestIndictmentProductgetByIndictmentID(this.IndictmentID).then(async res => {
                     if (res.length > 0) {
@@ -1320,7 +1331,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve.DeliveryStationCode = this.Deliveryoptions[0].OfficeCode;
         this.oProve.DeliveryStation = this.Deliveryoptions[0].OfficeName;
     }
-    
+
     // ----- End หน่วยงานที่นำส่ง ---
 
 
@@ -1372,8 +1383,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (this.rawStaffOptions.length == 0) {
                 this.getProveStaff();
             }
-            this.Staffoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
-
+            this.Staffoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -1454,7 +1464,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.getProveStaff();
             }
 
-            this.Scienceoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.Scienceoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -1535,7 +1545,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.getProveStaff();
             }
 
-            this.StaffSendoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.StaffSendoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -1866,21 +1876,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ClosePopupProduct() {
-        // if (this.oProveProduct.IsReferenceVatRate == true) {
-        //     if (this.oProveProduct.ReferenceVatRate == "" || this.oProveProduct.ReferenceVatRate == undefined
-        //         || this.oProveProduct.ReferenceRetailPrice == "" || this.oProveProduct.ReferenceRetailPrice == undefined
-        //         || this.oProveProduct.ReferenceRetailUnit == "" || this.oProveProduct.ReferenceRetailUnit == undefined
-        //         || this.oProveProduct.RetailPrice == "" || this.oProveProduct.RetailPrice == undefined
-        //         || this.oProveProduct.RetailUnit == "" || this.oProveProduct.RetailUnit == undefined
-        //         || this.oProveProduct.VatProve == "" || this.oProveProduct.VatProve == undefined
-        //     ) {
-        //         this.isPopupRequired = true;
-        //         alert(Message.checkData);
+        if (this.oProveProduct.ProductDesc == "" || this.oProveProduct.ProductDesc == undefined
+            || this.oProveProduct.Qty == "" || this.oProveProduct.Qty == undefined
+            || this.oProveProduct.NetVolume == "" || this.oProveProduct.NetVolume == undefined
+            || this.oProveProduct.VatProve == "" || this.oProveProduct.VatProve == undefined
+            || this.oProveProduct.QtyBalance == "" || this.oProveProduct.QtyBalance == undefined
+            || this.oProveProduct.NetVolumeBalance == "" || this.oProveProduct.NetVolumeBalance == undefined
+            || this.oProveProduct.ProveResult == "" || this.oProveProduct.ProveResult == undefined
+        ) {
+            this.isPopupRequired = true;
+            alert(Message.checkData);
 
-        //         this.modal = this.modal.open(;
-        //         //return false;
-        //     }
-        // } 
+            return false;
+        }
 
         this.oProveProduct.ProductID = this.ProductID;
         this.lsProveProduct[this.iPopup] = this.oProveProduct;
@@ -1889,6 +1897,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.IsProveScience = true;
             this.showScienceField = false;
         }
+
+        $("#SciencePopup .close").click();
     }
 
     CancelPopupProduct() {
@@ -1917,7 +1927,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private onDeleteProduct(i: number) {
         if (confirm(Message.confirmDeleteProduct)) {
-            
+
             var aIndex;
             aIndex = this.getIndexOf(this.lsProveProduct, i, "ProductSeq");
 
@@ -2054,7 +2064,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     DelDocument(i: number) {
         if (confirm(Message.confirmDeleteProduct)) {
-            
+
             var aIndex;
             aIndex = this.getIndexOf(this.ListProveDoc, i, "DocumentSeq");
 
@@ -2182,5 +2192,5 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProveProduct.VatProve = (+this.oProveProduct.VatProve).toFixed(4);
     }
 
-   
+
 }
