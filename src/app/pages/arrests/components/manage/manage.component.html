@@ -1,4 +1,4 @@
-<app-step-wizard [sectionId]="3"></app-step-wizard>
+<app-step-wizard [sectionId]="2" [disabledLine]="!ArrestNotice.value.length"></app-step-wizard>
 
 <ng-template #printDocModal let-c="close" let-d="dismiss">
     <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>

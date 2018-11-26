@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
@@ -157,6 +157,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
+    @ViewChild('myArrestDate') myArrestDate: ElementRef;
 
     // Redux based variables
     obArrest: Observable<fromModels.Arrest>;
@@ -217,6 +218,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.arrestFG = this.createForm();
         this.navigate_Service();
+        
     }
 
     ngOnDestroy(): void {
@@ -1109,7 +1111,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     .then(y => isCheck = this.checkResponse(y))
                     .catch((error) => this.catchError(error));
             })
-debugger
+
         Promise.all(indict).then(() => {
             if (isCheck) {
                 alert(Message.cannotModify);
