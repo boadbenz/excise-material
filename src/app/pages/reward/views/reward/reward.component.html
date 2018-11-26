@@ -1,7 +1,50 @@
 <app-timeline></app-timeline>
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_04_00_00_E08_EXPANDED = !ILG60_08_04_00_00_E08_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E08_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E08_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">คำร้องขอรับเงินรางวัล</h4>
+  </div>
+  <div *ngIf="ILG60_08_04_00_00_E08_EXPANDED" class="card-body">
+    <ILG60-08-04-00-00-E08 [inputData]="ILG60_08_04_00_00_E08_DATA$ | async" (aggregateHandle)="emitAggregate($event)"
+      (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E08>
+  </div>
+</div>
 
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_04_00_00_E12_EXPANDED = !ILG60_08_04_00_00_E12_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E12_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E12_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">ตารางการแบ่งจ่ายเงินสินบนรางวัล</h4>
+  </div>
+  <div *ngIf="ILG60_08_04_00_00_E12_EXPANDED" class="card-body">
+    <ILG60-08-04-00-00-E12 (emitChange)="changeForm($event)" [aggregate08]="aggregate" [Input_nonRequestRewardStaff]="Input_nonRequestRewardStaff$ | async"
+      [Input_RequestBribeRewardgetByIndictmentID]="Input_RequestBribeRewardgetByIndictmentID$ | async"
+      [Input_RequestRewardgetByCon]="Input_RequestRewardgetByCon$ | async">
+    </ILG60-08-04-00-00-E12>
+  </div>
+</div>
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_04_00_00_E19_EXPANDED = !ILG60_08_04_00_00_E19_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E19_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E19_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+  </div>
+  <div *ngIf="ILG60_08_04_00_00_E19_EXPANDED" class="card-body">
+    <ILG60-08-04-00-00-E19 (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E19>
+  </div>
+</div>
 <mat-accordion [multi]="true">
-  <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E08_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E08_DISABLED$ | async"
     (opened)="ILG60_08_04_00_00_E08_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E08_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -10,16 +53,13 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <!-- <pre>
-          {{ILG60_08_04_00_00_E08_DATA$ | async | json}}
-        </pre> -->
         <ILG60-08-04-00-00-E08 [inputData]="ILG60_08_04_00_00_E08_DATA$ | async" (aggregateHandle)="emitAggregate($event)"
           (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E08>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E12_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E12_DISABLED$ | async"
     (opened)="ILG60_08_04_00_00_E12_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E12_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -36,9 +76,9 @@
         </ILG60-08-04-00-00-E12>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E19_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E19_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E19_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E19_DISABLED$ | async"
     (opened)="ILG60_08_04_00_00_E19_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E19_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -50,5 +90,5 @@
         <ILG60-08-04-00-00-E19 (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E19>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 </mat-accordion>

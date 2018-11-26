@@ -22,15 +22,15 @@
                   <td>
 
                     <ng-container *ngIf="column?.showInput; else showDefault;">
-                      <input class="form-control text-center" [type]="column?.inputType || 'text'" [(ngModel)]="ShowInputModel[i]"
+                      <input class="form-control form-control-sm text-center" [type]="column?.inputType || 'text'" [(ngModel)]="ShowInputModel[i]"
                         [value]="item[column?.field]">
                     </ng-container>
                     <ng-template #showDefault>
                       <ng-container *ngIf="column?.inputType == 'date';else inputTypeAny">
-                          {{ (item[column?.field] | thaiDate) || '-' }}
+                          {{ (item[column?.field] ? (item[column?.field] | thaiDate) : '') || '' }}
                       </ng-container>
                       <ng-template #inputTypeAny>
-                          {{ (item[column?.field]) || '-' }} 
+                          {{ (item[column?.field]) || '' }} 
                       </ng-template>
                         
                       
@@ -43,7 +43,8 @@
               </ng-container>
 
               <td *ngIf="options?.action === 'VIEW'">
-                <a href="javaScript:void(0);" class="text-secondary" [routerLink]="customRouteFor(options?.actionUrl,item, options?.actionFieldParams)">
+                <!-- {{item['view']}} -->
+                <a *ngIf="item['view']" href="javaScript:void(0);" class="text-secondary" [routerLink]="customRouteFor(options?.actionUrl,item, options?.actionFieldParams)">
                   <i class="mdi mdi-eye fa-lg"></i>
                 </a>
               </td>
@@ -59,7 +60,7 @@
                 <th class="text-right">
 
                   <ng-container *ngIf="column?.showInput; else showDefault;" >
-                    <input class="form-control text-center" type="text" width="50" disabled [value]="ShowInputModel | sumArray">
+                    <input class="form-control form-control-sm text-center" type="text" width="50" disabled [value]="ShowInputModel | sumArray">
                   </ng-container>
                   <ng-template #showDefault>
                     <span *ngIf="last">

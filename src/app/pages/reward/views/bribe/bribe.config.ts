@@ -29,7 +29,7 @@ export class BribeConfig extends RewardHelper {
   // ส่วนคำร้องขอรับเงินสินบน
   // Icon
   public ILG60_08_03_00_00_E08_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel
-  public ILG60_08_03_00_00_E08_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
+  public ILG60_08_03_00_00_E08_EXPANDED = true; // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E08_DATA$ = new BehaviorSubject<any>(null);
   public ILG60_08_03_00_00_E08_FORM_VALID: boolean;
   public ILG60_08_03_00_00_E08_FORM_DATA: any;
@@ -45,7 +45,7 @@ export class BribeConfig extends RewardHelper {
   // ส่วนหนังสือมอบอำนาจ
   // Icon
   public ILG60_08_03_00_00_E12_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel
-  public ILG60_08_03_00_00_E12_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
+  public ILG60_08_03_00_00_E12_EXPANDED = true; // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E12_FORM_VALID: boolean;
   public ILG60_08_03_00_00_E12_FORM_DATA: any;
   // Input Box
@@ -55,7 +55,7 @@ export class BribeConfig extends RewardHelper {
   // ส่วนเอกสารแนบ
   // Icon
   public ILG60_08_03_00_00_E16_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม ย่อขยาย Collapse Panel
-  public ILG60_08_03_00_00_E16_EXPANDED$ = new BehaviorSubject<boolean>(true); // ปุ่ม ย่อขยาย Collapse Panel
+  public ILG60_08_03_00_00_E16_EXPANDED = true; // ปุ่ม ย่อขยาย Collapse Panel
   public ILG60_08_03_00_00_E16_FORM_VALID: boolean;
   // Button
   public ILG60_08_03_00_00_E17_DISABLED$ = new BehaviorSubject<boolean>(false); // ปุ่ม เพิ่มเอกสารแนบ

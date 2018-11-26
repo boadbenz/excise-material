@@ -89,6 +89,7 @@ export class CONFIG extends RewardConfig {
 
   public formObject = {
     check: true,
+    sort: 4,
     TitleName: '',
     FullName: '',
     PositionName: '',

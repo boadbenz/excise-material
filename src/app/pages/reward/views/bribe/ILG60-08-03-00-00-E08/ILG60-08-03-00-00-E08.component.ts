@@ -26,6 +26,7 @@ import {
 } from 'rxjs/operators';
 import { MyDatePickerOptions } from 'app/config/dateFormat';
 import { IRequestCommandDetail } from 'app/pages/reward/interfaces/RequestCommandDetail';
+import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 interface IDetailCustom {
   PaymentFineDetailID?: number;
   LawbreakerName: string;
@@ -51,7 +52,9 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
   public totalPart = 0;
   public partMoney = 0;
   public checkList: boolean[] = [];
+  public checkedIdList: any[] = [];
   public MasOfficeMainList: string[] = [];
+  public isEdit = true;
   searchStation = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -75,9 +78,27 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
     private requestArrestLawsuitService: RequestArrestLawsuitService,
     private bribeService: BribeService,
     private requestPaymentFineDetailService: RequestPaymentFineDetailService,
-    private masOfficeService: MasOfficeService
+    private masOfficeService: MasOfficeService,
+    private navService: NavigationService
   ) {
     super();
+    this.mode$.takeUntil(this.destroy$).subscribe(mode => {
+      if (mode !== null) {
+        switch (mode) {
+          case 'R':
+            this.isEdit = false;
+            break;
+
+          default:
+            break;
+        }
+      }
+    });
+    this.navService.onEdit.takeUntil(this.destroy$).subscribe(onEdit => {
+      if (onEdit === true) {
+        this.isEdit = true;
+      }
+    });
     this.formGroup = this.fb.group({
       RequestBribeID: [null],
       RequestBribeRewardID: [null],
@@ -127,11 +148,37 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
       if (resBri !== null) {
         if (resBri.length > 0) {
           const RequestBribe: IRequestBribe = resBri[0];
+          this.RequestCommand_NoticeCode_list = resBri.map(m => ({
+            text: `${m.NoticeCode || ''}/${m.TitleName || ''} ${m.FirstName ||
+              ''} ${m.LastName || ''}`,
+            value: m.CommandDetailID
+          }));
+          Object.keys(this.formGroup.value).forEach(f => {
+            this.formGroup.get(f).patchValue(RequestBribe[f]);
+          });
+
+          RequestBribe.RequestBribeDetail.forEach(f => {
+            const newKey = f;
+            newKey['BribeMoney'] = Number(f.PaymentFine) * 0.2;
+            newKey['NetBribeMoney'] = (Number(newKey['BribeMoney']) / Number(RequestBribe.TotalPart)) * Number(RequestBribe.PartMoney);
+            this.RequestBribeDetail.push(this.fb.group(newKey));
+          });
+          RequestBribe.RequestBribeStaff.forEach(f => {
+            this.RequestBribeStaff.push(this.fb.group(f));
+          });
+
+          RequestBribe.RequestBribeDetail.forEach(f => {
+            this.checkedIdList.push({
+              PaymentFineDetailID: f.PaymentFineDetailID,
+              checked: true
+            });
+          });
+
           this.totalPart = RequestBribe.TotalPart;
           this.partMoney = RequestBribe.PartMoney;
 
           this.tableDetail = this.mapDetailData(
-            RequestBribe.RequestBribeDetail
+            this.RequestBribeDetail.value
           );
         }
       }
@@ -230,6 +277,14 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
         })
       );
     }
+
+    const indexDetailID = this.checkedIdList.findIndex(
+      i => i.PaymentFineDetailID === PaymentFineDetailID
+    );
+
+    if (indexDetailID !== -1) {
+      this.checkedIdList[indexDetailID].checked = value;
+    }
   }
   public async selectChange(CommandDetailID) {
     this.tableDetail = [];
@@ -262,6 +317,7 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
     }
   }
   public mapDetailData(detailData: any[]): IDetailCustom[] {
+    this.checkList = detailData.map(m => true);
     return detailData.map(m => ({
       ...m,
       LawbreakerName: `${m.LawbreakerTitleName || ''}${m.LawbreakerFirstName ||
@@ -282,6 +338,12 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
     // );
     // this.formGroup.controls['DetailIDs'].setValue(DetailIDs);
 
-    this.formData.emit({ FormName: 'ILG60-08-03-00-00-E08', FormData: $event });
+    this.formData.emit({
+      FormName: 'ILG60-08-03-00-00-E08',
+      FormData: $event,
+      Object: {
+        checkedIdList: this.checkedIdList
+      }
+    });
   }
 }

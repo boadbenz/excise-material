@@ -194,6 +194,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         this.navService.setDeleteButton(false);
         this.navService.setPrevPageButton(false);
         this.navService.setSearchBar(false);
+        this.navService.setNextPageButton(false);
         break;
       case 'R':
         // 1.2
@@ -509,9 +510,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         this.ILG60_08_04_00_00_E12_FORM_VALID = FormData.valid;
 
         const mergeArrayFormData: any = [
-          ...(FormData.controls['RequestBribeRewardForm'].value || []),
-          ...(FormData.controls['RequestRewardForm'].value || []),
-          ...(FormData.controls['nonRequestRewardStaffForm'].value || []),
+          // ...(FormData.controls['RequestBribeRewardForm'].value || []),
+          // ...(FormData.controls['RequestRewardForm'].value || []),
+          // ...(FormData.controls['nonRequestRewardStaffForm'].value || []),
           ...(FormData.controls['sharedBribeRewardForm'].value || [])
         ];
         const newMapData: any[] = [];
