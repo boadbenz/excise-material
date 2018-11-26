@@ -16,6 +16,7 @@ import { MasTitleService } from 'app/pages/reward/services/master/MasTitle.servi
 import { MasTitleModel, MasStaffModel } from 'app/models';
 import { MasStaffService } from 'app/pages/reward/services/master/MasStaff.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ILG60-08-04-00-00-E12',
@@ -105,15 +106,15 @@ export class ILG6008040000E12Component extends CONFIG
     ); // ชื่อ-สกุล	Column	Key Press	ILG60-08-04-00-00-E16
   // ชื่อ-สกุล	Column	Text Change	ILG60-08-04-00-00-E17
 
-  get RequestBribeRewardForm(): FormArray {
-    return this.formGroup.get('RequestBribeRewardForm') as FormArray;
-  }
-  get RequestRewardForm(): FormArray {
-    return this.formGroup.get('RequestRewardForm') as FormArray;
-  }
-  get nonRequestRewardStaffForm(): FormArray {
-    return this.formGroup.get('nonRequestRewardStaffForm') as FormArray;
-  }
+  // get RequestBribeRewardForm(): FormArray {
+  //   return this.formGroup.get('RequestBribeRewardForm') as FormArray;
+  // }
+  // get RequestRewardForm(): FormArray {
+  //   return this.formGroup.get('RequestRewardForm') as FormArray;
+  // }
+  // get nonRequestRewardStaffForm(): FormArray {
+  //   return this.formGroup.get('nonRequestRewardStaffForm') as FormArray;
+  // }
   get sharedBribeRewardForm(): FormArray {
     return this.formGroup.get('sharedBribeRewardForm') as FormArray;
   }
@@ -125,150 +126,151 @@ export class ILG6008040000E12Component extends CONFIG
   ) {
     super();
     this.formGroup = this.fb.group({
-      RequestBribeRewardForm: this.fb.array([]),
-      RequestRewardForm: this.fb.array([]),
-      nonRequestRewardStaffForm: this.fb.array([]),
+      // RequestBribeRewardForm: this.fb.array([]),
+      // RequestRewardForm: this.fb.array([]),
+      // nonRequestRewardStaffForm: this.fb.array([]),
       sharedBribeRewardForm: this.fb.array([])
     });
     this.aggregate08.takeUntil(this.destroy$).subscribe(aggregate08 => {
       if (aggregate08 !== null) {
         this.SumBribeMoney = aggregate08['BribeMoney'];
         this.SumRewardMoney = aggregate08['RewardMoney'];
-        if (this.RequestBribeRewardForm.length > 0) {
-          this.RequestBribeRewardForm.at(0)
+        if (this.sharedBribeRewardForm.length > 0) {
+          this.sharedBribeRewardForm.at(0)
             .get('ToTalMoney')
             .patchValue(aggregate08['BribeMoney']);
         }
         this.calChangeAll();
       }
     });
-    this.inputData$
-      .takeUntil(this.destroy$)
-      .subscribe((data: IRewardBinding) => {
-        if (data) {
-          switch (data.methodName) {
-            case 'nonRequestRewardStaff':
-              this.nonRequestRewardStaff = data.data;
+    this.Input_nonRequestRewardStaff$.takeUntil(this.destroy$).subscribe(
+      data => {
+        if (data !== null) {
+          this.nonRequestRewardStaff = data;
 
-              const datatable_nonRequestRewardStaff = this.nonRequestRewardStaff.map(
-                m => ({
-                  ...m,
-                  check: true,
-                  FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
-                  PositionName: `${m.PositionName || ''}`,
-                  PosLevelName: `${m.PosLevelName || ''}`,
-                  ContributorName: this.ConvertContributorName(m.ContributorID),
-                  FirstPart:
-                    m.ContributorID === '6' || m.ContributorID === '7'
-                      ? 1
-                      : null,
-                  SecondPart: null,
+          const datatable_nonRequestRewardStaff = this.nonRequestRewardStaff.map(
+            m => ({
+              ...m,
+              sort: 3,
+              check: true,
+              FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
+              PositionName: `${m.PositionName || ''}`,
+              PosLevelName: `${m.PosLevelName || ''}`,
+              ContributorName: this.ConvertContributorName(m.ContributorID),
+              FirstPart:
+                m.ContributorID === '6' || m.ContributorID === '7' ? 1 : null,
+              SecondPart: null,
 
-                  FirstMoney: 0,
+              FirstMoney: 0,
 
-                  SecondMoney: 0,
-                  ToTalMoney: 0
-                })
-              );
+              SecondMoney: 0,
+              ToTalMoney: 0
+            })
+          );
 
-              const control_nonRequestRewardStaff: FormArray = <FormArray>(
-                this.nonRequestRewardStaffForm
-              );
+          // const control_nonRequestRewardStaff: FormArray = <FormArray>(
+          //   this.nonRequestRewardStaffForm
+          // );
 
-              datatable_nonRequestRewardStaff.forEach(x => {
-                const objForm = {};
-                Object.keys(x).forEach(f => {
-                  objForm[f] = [x[f]];
-                });
+          datatable_nonRequestRewardStaff.forEach(x => {
+            const objForm = {};
+            Object.keys(x).forEach(f => {
+              objForm[f] = [x[f]];
+            });
+            const newGroup: FormGroup = this.fb.group(objForm);
+            this.sharedBribeRewardForm.push(newGroup);
+          });
+        }
+      }
+    );
+    this.Input_RequestBribeRewardgetByIndictmentID$.takeUntil(
+      this.destroy$
+    ).subscribe(data => {
+      if (data !== null) {
+        const datatable_RequestBribeReward = data;
 
-                this.aggregate.ToTalMoney.sum += this.SumBribeMoney;
-                const newGroup: FormGroup = this.fb.group(objForm);
-                control_nonRequestRewardStaff.push(newGroup);
+        // const control_RequestBribeRewardForm: FormArray = <FormArray>(
+        //   this.RequestBribeRewardForm
+        // );
+        datatable_RequestBribeReward
+          .filter(f => f.HaveNotice === 1)
+          .forEach(x => {
+            const newGroup: FormGroup = this.fb.group({
+              check: [true],
+              sort: [1],
+              TitleName: [''],
+              FullName: ['สายลับ (ขอปิดนาม)'],
+              FirstName: ['สายลับ (ขอปิดนาม)'],
+              PositionName: [''],
+              PosLevelName: [''],
+              ContributorName: ['ผู้แจ้งความนำจับ'],
+              ContributorID: [''],
+              FirstPart: [null],
+              FirstMoney: [null],
+              SecondPart: [null],
+              SecondMoney: [null],
+              ToTalMoney: [this.SumBribeMoney]
+            });
+            this.sharedBribeRewardForm.push(newGroup);
+          });
+      }
+    });
+    this.Input_RequestRewardgetByCon$.takeUntil(this.destroy$).subscribe(
+      (data: any[]) => {
+        if (data !== null) {
+          console.log('data', data);
+          if (data.length > 0) {
+            const RequestReward: IRequestReward = data[0];
+            const datatable_RequestReward = RequestReward.RequestRewardStaff.map(
+              m => ({
+                ...m,
+                check: true,
+                sort: 2,
+                FullName: `${m.TitleName || ''}${m.FirstName ||
+                  ''}${m.LastName || ''}`,
+                ContributorName: m.ContributorName
+              })
+            );
+
+            // const control_RequestReward: FormArray = <FormArray>(
+            //   this.RequestRewardForm
+            // );
+            datatable_RequestReward.forEach(x => {
+              const objForm = {};
+              Object.keys(x).forEach(f => {
+                objForm[f] = [x[f]];
               });
-              break;
-
-            case 'RequestBribeRewardgetByIndictmentID':
-              // console.log('RequestBribeRewardgetByIndictmentID', data.data);
-
-              const datatable_RequestBribeReward = data.data;
-
-              const control_RequestBribeRewardForm: FormArray = <FormArray>(
-                this.RequestBribeRewardForm
-              );
-              datatable_RequestBribeReward
-                .filter(f => f.HaveNotice === 1)
-                .forEach(x => {
-                  const newGroup: FormGroup = this.fb.group({
-                    check: [true],
-                    TitleName: [''],
-                    FullName: ['สายลับ (ขอปิดนาม)'],
-                    FirstName: ['สายลับ (ขอปิดนาม)'],
-                    PositionName: [''],
-                    PosLevelName: [''],
-                    ContributorName: ['ผู้แจ้งความนำจับ'],
-                    ContributorID: [''],
-                    FirstPart: [null],
-                    FirstMoney: [null],
-                    SecondPart: [null],
-                    SecondMoney: [null],
-                    ToTalMoney: [this.SumBribeMoney]
-                  });
-                  this.aggregate.ToTalMoney.sum += this.SumBribeMoney;
-                  control_RequestBribeRewardForm.push(newGroup);
-                });
-              break;
-
-            case 'RequestRewardgetByCon':
-              // console.log('RequestRewardgetByCon', data.data);
-              const datatable_RequestReward = data.data[0].RequestRewardStaff.map(
-                m => ({
-                  ...m,
-                  check: true,
-                  FullName: `${m.TitleName || ''}${m.FirstName ||
-                    ''}${m.LastName || ''}`,
-                  ContributorName: m.ContributorName
-                })
-              );
-
-              const control_RequestReward: FormArray = <FormArray>(
-                this.RequestRewardForm
-              );
-              datatable_RequestReward.forEach(x => {
-                const objForm = {};
-                Object.keys(x).forEach(f => {
-                  objForm[f] = [x[f]];
-                });
-                const newGroup: FormGroup = this.fb.group(objForm);
-                control_RequestReward.push(newGroup);
-              });
-              break;
+              const newGroup: FormGroup = this.fb.group(objForm);
+              this.sharedBribeRewardForm.push(newGroup);
+            });
           }
         }
-      });
+      }
+    );
 
     this.formGroup.valueChanges
       .takeUntil(this.destroy$)
       .subscribe(selectedValue => {
         // console.log(`formGroup`, selectedValue);
-        const sumFirstPartRequestBribeRewardForm =
-          selectedValue.RequestBribeRewardForm.map(m => m.FirstPart).length > 0
-            ? selectedValue.RequestBribeRewardForm.map(m => m.FirstPart).reduce(
-                (a, b) => (a += b)
-              )
-            : 0;
-        const sumFirstPartRequestRewardForm =
-          selectedValue.RequestRewardForm.map(m => m.FirstPart).length > 0
-            ? selectedValue.RequestRewardForm.map(m => m.FirstPart).reduce(
-                (a, b) => (a += b)
-              )
-            : 0;
-        const sumFirstPartnonRequestRewardStaffForm =
-          selectedValue.nonRequestRewardStaffForm.map(m => m.FirstPart).length >
-          0
-            ? selectedValue.nonRequestRewardStaffForm
-                .map(m => m.FirstPart)
-                .reduce((a, b) => (a += b))
-            : 0;
+        // const sumFirstPartRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.FirstPart).length > 0
+        //     ? selectedValue.RequestBribeRewardForm.map(m => m.FirstPart).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumFirstPartRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.FirstPart).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.FirstPart).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumFirstPartnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.FirstPart).length >
+        //   0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.FirstPart)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
         const sumFirstPartsharedBribeRewardForm =
           selectedValue.sharedBribeRewardForm.map(m => m.FirstPart).length > 0
             ? selectedValue.sharedBribeRewardForm
@@ -278,30 +280,30 @@ export class ILG6008040000E12Component extends CONFIG
 
         // tslint:disable-next-line:max-line-length
         this.aggregate.FirstPart.sum =
-          sumFirstPartRequestBribeRewardForm +
-          sumFirstPartRequestRewardForm +
-          sumFirstPartnonRequestRewardStaffForm +
+          // sumFirstPartRequestBribeRewardForm +
+          // sumFirstPartRequestRewardForm +
+          // sumFirstPartnonRequestRewardStaffForm +
           sumFirstPartsharedBribeRewardForm;
 
-        const sumSecondPartRequestBribeRewardForm =
-          selectedValue.RequestBribeRewardForm.map(m => m.SecondPart).length > 0
-            ? selectedValue.RequestBribeRewardForm.map(
-                m => m.SecondPart
-              ).reduce((a, b) => (a += b))
-            : 0;
-        const sumSecondPartRequestRewardForm =
-          selectedValue.RequestRewardForm.map(m => m.SecondPart).length > 0
-            ? selectedValue.RequestRewardForm.map(m => m.SecondPart).reduce(
-                (a, b) => (a += b)
-              )
-            : 0;
-        const sumSecondPartnonRequestRewardStaffForm =
-          selectedValue.nonRequestRewardStaffForm.map(m => m.SecondPart)
-            .length > 0
-            ? selectedValue.nonRequestRewardStaffForm
-                .map(m => m.SecondPart)
-                .reduce((a, b) => (a += b))
-            : 0;
+        // const sumSecondPartRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.SecondPart).length > 0
+        //     ? selectedValue.RequestBribeRewardForm.map(
+        //         m => m.SecondPart
+        //       ).reduce((a, b) => (a += b))
+        //     : 0;
+        // const sumSecondPartRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.SecondPart).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.SecondPart).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumSecondPartnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.SecondPart)
+        //     .length > 0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.SecondPart)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
         const sumSecondPartsharedBribeRewardForm =
           selectedValue.sharedBribeRewardForm.map(m => m.SecondPart).length > 0
             ? selectedValue.sharedBribeRewardForm
@@ -311,30 +313,30 @@ export class ILG6008040000E12Component extends CONFIG
 
         // tslint:disable-next-line:max-line-length
         this.aggregate.SecondPart.sum =
-          sumSecondPartRequestBribeRewardForm +
-          sumSecondPartRequestRewardForm +
-          sumSecondPartnonRequestRewardStaffForm +
+          // sumSecondPartRequestBribeRewardForm +
+          // sumSecondPartRequestRewardForm +
+          // sumSecondPartnonRequestRewardStaffForm +
           sumSecondPartsharedBribeRewardForm;
 
-        const sumFirstRequestBribeRewardForm =
-          selectedValue.RequestBribeRewardForm.map(m => m.FirstMoney).length > 0
-            ? selectedValue.RequestBribeRewardForm.map(
-                m => m.FirstMoney
-              ).reduce((a, b) => (a += b))
-            : 0;
-        const sumFirstRequestRewardForm =
-          selectedValue.RequestRewardForm.map(m => m.FirstMoney).length > 0
-            ? selectedValue.RequestRewardForm.map(m => m.FirstMoney).reduce(
-                (a, b) => (a += b)
-              )
-            : 0;
-        const sumFirstnonRequestRewardStaffForm =
-          selectedValue.nonRequestRewardStaffForm.map(m => m.FirstMoney)
-            .length > 0
-            ? selectedValue.nonRequestRewardStaffForm
-                .map(m => m.FirstMoney)
-                .reduce((a, b) => (a += b))
-            : 0;
+        // const sumFirstRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.FirstMoney).length > 0
+        //     ? selectedValue.RequestBribeRewardForm.map(
+        //         m => m.FirstMoney
+        //       ).reduce((a, b) => (a += b))
+        //     : 0;
+        // const sumFirstRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.FirstMoney).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.FirstMoney).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumFirstnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.FirstMoney)
+        //     .length > 0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.FirstMoney)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
         const sumFirstsharedBribeRewardForm =
           selectedValue.sharedBribeRewardForm.map(m => m.FirstMoney).length > 0
             ? selectedValue.sharedBribeRewardForm
@@ -344,31 +346,31 @@ export class ILG6008040000E12Component extends CONFIG
 
         // tslint:disable-next-line:max-line-length
         this.aggregate.FirstMoney.sum =
-          sumFirstRequestBribeRewardForm +
-          sumFirstRequestRewardForm +
-          sumFirstnonRequestRewardStaffForm +
+          // sumFirstRequestBribeRewardForm +
+          // sumFirstRequestRewardForm +
+          // sumFirstnonRequestRewardStaffForm +
           sumFirstsharedBribeRewardForm;
 
-        const sumSecondRequestBribeRewardForm =
-          selectedValue.RequestBribeRewardForm.map(m => m.SecondMoney).length >
-          0
-            ? selectedValue.RequestBribeRewardForm.map(
-                m => m.SecondMoney
-              ).reduce((a, b) => (a += b))
-            : 0;
-        const sumSecondRequestRewardForm =
-          selectedValue.RequestRewardForm.map(m => m.SecondMoney).length > 0
-            ? selectedValue.RequestRewardForm.map(m => m.SecondMoney).reduce(
-                (a, b) => (a += b)
-              )
-            : 0;
-        const sumSecondnonRequestRewardStaffForm =
-          selectedValue.nonRequestRewardStaffForm.map(m => m.SecondMoney)
-            .length > 0
-            ? selectedValue.nonRequestRewardStaffForm
-                .map(m => m.SecondMoney)
-                .reduce((a, b) => (a += b))
-            : 0;
+        // const sumSecondRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.SecondMoney).length >
+        //   0
+        //     ? selectedValue.RequestBribeRewardForm.map(
+        //         m => m.SecondMoney
+        //       ).reduce((a, b) => (a += b))
+        //     : 0;
+        // const sumSecondRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.SecondMoney).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.SecondMoney).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumSecondnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.SecondMoney)
+        //     .length > 0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.SecondMoney)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
         const sumSecondsharedBribeRewardForm =
           selectedValue.sharedBribeRewardForm.map(m => m.SecondMoney).length > 0
             ? selectedValue.sharedBribeRewardForm
@@ -378,30 +380,30 @@ export class ILG6008040000E12Component extends CONFIG
 
         // tslint:disable-next-line:max-line-length
         this.aggregate.SecondMoney.sum =
-          sumSecondRequestBribeRewardForm +
-          sumSecondRequestRewardForm +
-          sumSecondnonRequestRewardStaffForm +
+          // sumSecondRequestBribeRewardForm +
+          // sumSecondRequestRewardForm +
+          // sumSecondnonRequestRewardStaffForm +
           sumSecondsharedBribeRewardForm;
 
-        const sumTotalRequestBribeRewardForm =
-          selectedValue.RequestBribeRewardForm.map(m => m.ToTalMoney).length > 0
-            ? selectedValue.RequestBribeRewardForm.map(
-                m => m.ToTalMoney
-              ).reduce((a, b) => (a += b))
-            : 0;
-        const sumTotalRequestRewardForm =
-          selectedValue.RequestRewardForm.map(m => m.ToTalMoney).length > 0
-            ? selectedValue.RequestRewardForm.map(m => m.ToTalMoney).reduce(
-                (a, b) => (a += b)
-              )
-            : 0;
-        const sumTotalnonRequestRewardStaffForm =
-          selectedValue.nonRequestRewardStaffForm.map(m => m.ToTalMoney)
-            .length > 0
-            ? selectedValue.nonRequestRewardStaffForm
-                .map(m => m.ToTalMoney)
-                .reduce((a, b) => (a += b))
-            : 0;
+        // const sumTotalRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.ToTalMoney).length > 0
+        //     ? selectedValue.RequestBribeRewardForm.map(
+        //         m => m.ToTalMoney
+        //       ).reduce((a, b) => (a += b))
+        //     : 0;
+        // const sumTotalRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.ToTalMoney).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.ToTalMoney).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumTotalnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.ToTalMoney)
+        //     .length > 0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.ToTalMoney)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
         const sumTotalsharedBribeRewardForm =
           selectedValue.sharedBribeRewardForm.map(m => m.ToTalMoney).length > 0
             ? selectedValue.sharedBribeRewardForm
@@ -411,9 +413,9 @@ export class ILG6008040000E12Component extends CONFIG
 
         // tslint:disable-next-line:max-line-length
         this.aggregate.ToTalMoney.sum =
-          sumTotalRequestBribeRewardForm +
-          sumTotalRequestRewardForm +
-          sumTotalnonRequestRewardStaffForm +
+          // sumTotalRequestBribeRewardForm +
+          // sumTotalRequestRewardForm +
+          // sumTotalnonRequestRewardStaffForm +
           sumTotalsharedBribeRewardForm;
       });
     this.sharedBribeRewardForm.valueChanges
@@ -537,18 +539,18 @@ export class ILG6008040000E12Component extends CONFIG
     return name;
   }
   public onSelectContributor(id, index: number) {
-    if (index > -1) {
-      const control = <FormArray>this.nonRequestRewardStaffForm;
-      // tslint:disable-next-line:max-line-length
-      control
-        .at(index)
-        .get('ContributorName')
-        .patchValue(
-          this.ContributorList.filter(f => f.value === id)
-            .map(m => m.text)
-            .shift() || ' '
-        );
-    }
+    // if (index > -1) {
+    //   const control = <FormArray>this.nonRequestRewardStaffForm;
+    //   // tslint:disable-next-line:max-line-length
+    //   control
+    //     .at(index)
+    //     .get('ContributorName')
+    //     .patchValue(
+    //       this.ContributorList.filter(f => f.value === id)
+    //         .map(m => m.text)
+    //         .shift() || ' '
+    //     );
+    // }
   }
   public addRow() {
     // This function instantiates a FormGroup for each day

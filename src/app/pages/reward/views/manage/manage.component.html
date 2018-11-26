@@ -1,7 +1,68 @@
 <app-timeline></app-timeline>
 
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_02_00_00E08_EXPANDED = !ILG60_08_02_00_00E08_EXPANDED" >
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_02_00_00E08_EXPANDED, 'fa-chevron-up': !ILG60_08_02_00_00E08_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">รายละเอียดคดี</h4>
+  </div>
+  <div *ngIf="ILG60_08_02_00_00E08_EXPANDED" class="card-body">
+    <ILG60-08-02-00-00-E08 [inputData]="ILG60_08_02_00_00E08_DATA$ | async"></ILG60-08-02-00-00-E08>
+  </div>
+</div>
+
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_02_00_00E09_EXPANDED = !ILG60_08_02_00_00E09_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_02_00_00E09_EXPANDED, 'fa-chevron-up': !ILG60_08_02_00_00E09_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">คำสั่งกรมฯ กรณีที่มีผู้แจ้งความนำจับหลายคน</h4>
+  </div>
+  <div *ngIf="ILG60_08_02_00_00E09_EXPANDED" class="card-body">
+    <ILG60-08-02-00-00-E09 [inputData]="ILG60_08_02_00_00E09_DATA$ | async" [isEdit]="ILG60_08_02_00_00E09_EDIT"
+      (emitChange)="ILG60_08_02_00_00E09_RETURN($event)"></ILG60-08-02-00-00-E09>
+  </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_02_00_00E11_EXPANDED = !ILG60_08_02_00_00E11_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_02_00_00E11_EXPANDED, 'fa-chevron-up': !ILG60_08_02_00_00E11_EXPANDED}" ></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">คำร้องขอรับเงินสินบน</h4>
+  </div>
+  <div *ngIf="ILG60_08_02_00_00E11_EXPANDED" class="card-body">
+    <ILG60-08-02-00-00-E11 [inputData]="ILG60_08_02_00_00E11_DATA$ | async" [mode]="mode$ | async"
+      [RequestBribeRewardID]="RequestBribeRewardID$ | async" [ArrestCode]="ArrestCode$ | async"></ILG60-08-02-00-00-E11>
+  </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_02_00_00E14_EXPANDED = !ILG60_08_02_00_00E14_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_02_00_00E14_EXPANDED, 'fa-chevron-up': !ILG60_08_02_00_00E14_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">คำร้องขอรับเงินรางวัล</h4>
+  </div>
+  <div *ngIf="ILG60_08_02_00_00E14_EXPANDED" class="card-body">
+    <ILG60-08-02-00-00-E14 [inputData]="ILG60_08_02_00_00E14_DATA$ | async" [mode]="mode$ | async"
+      [RequestBribeRewardID]="RequestBribeRewardID$ | async" [IndictmentID]="IndictmentID$ | async"></ILG60-08-02-00-00-E14>
+  </div>
+</div>
+
+
 <mat-accordion [multi]="true">
-  <mat-expansion-panel [expanded]="ILG60_08_02_00_00E08_EXPANDED$ | async" [disabled]="ILG60_08_02_00_00E08_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_02_00_00E08_EXPANDED$ | async" [disabled]="ILG60_08_02_00_00E08_DISABLED$ | async"
     (opened)="ILG60_08_02_00_00E08_EXPANDED$.next(true)" (closed)="ILG60_08_02_00_00E08_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -13,9 +74,9 @@
         <ILG60-08-02-00-00-E08 [inputData]="ILG60_08_02_00_00E08_DATA$ | async"></ILG60-08-02-00-00-E08>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_02_00_00E09_EXPANDED$ | async" [disabled]="ILG60_08_02_00_00E09_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_02_00_00E09_EXPANDED$ | async" [disabled]="ILG60_08_02_00_00E09_DISABLED$ | async"
     (opened)="ILG60_08_02_00_00E09_EXPANDED$.next(true)" (closed)="ILG60_08_02_00_00E09_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -28,9 +89,9 @@
           (emitChange)="ILG60_08_02_00_00E09_RETURN($event)"></ILG60-08-02-00-00-E09>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_02_00_00E11_EXPANDED$ | async" [disabled]="ILG60_08_02_00_00E11_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_02_00_00E11_EXPANDED$ | async" [disabled]="ILG60_08_02_00_00E11_DISABLED$ | async"
     (opened)="ILG60_08_02_00_00E11_EXPANDED$.next(true)" (closed)="ILG60_08_02_00_00E11_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -43,9 +104,9 @@
           [RequestBribeRewardID]="RequestBribeRewardID$ | async" [ArrestCode]="ArrestCode$ | async"></ILG60-08-02-00-00-E11>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_02_00_00E14_EXPANDED$ | async" [disabled]="ILG60_08_02_00_00E14_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_02_00_00E14_EXPANDED$ | async" [disabled]="ILG60_08_02_00_00E14_DISABLED$ | async"
     (opened)="ILG60_08_02_00_00E14_EXPANDED$.next(true)" (closed)="ILG60_08_02_00_00E14_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -58,5 +119,5 @@
           [RequestBribeRewardID]="RequestBribeRewardID$ | async" [IndictmentID]="IndictmentID$ | async"></ILG60-08-02-00-00-E14>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 </mat-accordion>
