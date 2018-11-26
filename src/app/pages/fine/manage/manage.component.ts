@@ -275,6 +275,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
+        this.navService.setNextPageButton(true);
       }
     });
     this.OnSubscribe.save = this.navService.onSave.subscribe(async status => {
