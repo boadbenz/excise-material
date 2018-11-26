@@ -93,7 +93,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.13');
+    this.sidebarService.setVersion('0.0.0.14');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -1013,6 +1013,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(this.approveReportList);
     this.accused.staff.ProcessCode = this.accused.ProcessCode;
     this.accused.staff.ProgramCode = this.accused.ProgramCode;
+    this.accused.staff.ContributorID = 17;
     staff.push(this.accused.staff);
     // for (const d of this.accused.list) {
     //   d.staff.ProgramCode = d.ProgramCode;
@@ -1025,10 +1026,11 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (d.staff) {
         d.staff.ProgramCode = d.ProgramCode;
         d.staff.ProcessCode = i;
+        d.staff.ContributorID = 19;
         staffReceipt.push(d.staff);
       } else {
-        staffReceipt = [];
-        break;
+        // staffReceipt = [];
+        // break;
       }
       i++;
     }
@@ -1042,13 +1044,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         d.staff2.ProcessCode = i + '.2';
         d.staff3.ProgramCode = d.ProgramCode;
         d.staff3.ProcessCode = i + '.3';
+        d.staff1.ContributorID = 39;
         staffApprove.push(d.staff1);
+        d.staff2.ContributorID = 40;
         staffApprove.push(d.staff2);
+        d.staff3.ContributorID = 41;
         staffApprove.push(d.staff3);
         i++;
       } else {
-        staffApprove = [];
-        break;
+        // staffApprove = [];
+        // break;
       }
     }
     for (const st of staffReceipt) {
