@@ -487,10 +487,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     const requestReward: IRequestReward[] =
       this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
     let ValidateVerify = false;
-    if (requestBribe.length === 0 && requestReward.length > 0) {
+    if (requestBribe.length === 0 || requestReward.length > 0) {
       // 1.1
       ValidateVerify = true;
-    } else if (requestReward.length === 0 && requestBribe.length > 0) {
+    } else if (requestReward.length === 0 || requestBribe.length > 0) {
       // 1.2
       ValidateVerify = true;
     }
