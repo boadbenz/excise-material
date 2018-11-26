@@ -57,6 +57,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   receipt: any = {}; // รายละเอียดค่าปรับ
   approveReportList: any = []; // รายละเอียดค่าปรับ
   sumAllCompare: any = { sum: 0, sum1: 0, sum2: 0, sum3: 0};
+  paymentChanel: any = ['เงินสด', 'EDC', 'เครดิต', 'เดบิต'];
   // AutoComplete
   options: any = [];
   optionsStation: any = [];
@@ -93,7 +94,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.14');
+    this.sidebarService.setVersion('0.0.0.15');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -116,7 +117,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     await this.getRouteParams();
     await this.subscribeHeaderBtn();
     await this.CompareArrestgetByIndictmentID();
-    await this.getCompareData();
     this.accused.CompareDate = this.compareDate;
     console.log(this.accused);
     this.preloader.setShowPreloader(false);
@@ -136,6 +136,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.navService.setSearchBar(false);
       this.navService.setCancelButton(false);
       this.navService.setSaveButton(false);
+      this.navService.setNextPageButton(true);
     } else {
       this.navService.setSaveButton(true);
       this.navService.setCancelButton(true);
@@ -145,10 +146,15 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.navService.setEditButton(false);
       this.navService.setNextPageButton(false);
     }
+    await this.getCompareData();
+    await this.setAllCompareData();
     console.log( this.showEditField);
     // this.navigate_Service();
   }
   ngOnDestroy() {
+  }
+  toDatePickerFormat(d: any) {
+    return { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
   }
   async getCompareData() {
     if (+this.params.CompareID) {
@@ -164,9 +170,51 @@ export class ManageComponent implements OnInit, OnDestroy {
     } catch (err) {
 
     }
-  } 
-  getTimeNow() {
-    const d = new Date();       
+  }
+  async setAllCompareData() {
+    await this.setAccusedDataList();
+    await this.setCompareDetail();
+  }
+  async setAccusedDataList() {
+    const staff: any = this.searchStaffByContributorID(17);
+    if (staff.length > 0) {
+      this.accused.staff = staff[0];
+      this.accused.CompareStaffName = staff[0].TitleName + ' ' + staff[0].FirstName + ' ' + staff[0].LastName;
+      this.accused.OperationPosName = staff[0].PositionName;
+      this.accused.OperationDeptName = staff[0].OfficeShortName;
+    }
+    this.accused.StationName = this.compareDataUpdateTmp.CompareStation;
+    this.accused.StationCode = this.compareDataUpdateTmp.CompareStationCode;
+    this.accused.CompareDate = this.toDatePickerFormat(new Date(this.compareDataUpdateTmp.CompareDate));
+    this.accused.CompareTime = this.getTimeNow(new Date(this.compareDataUpdateTmp.CompareDate));
+    console.log(staff);
+  }
+  async setCompareDetail() {
+    let i = 0;
+    for (const compare of this.compareDataUpdateTmp.CompareDetail) {
+      this.accused.list[i].PaymentFineAppointDate = this.toDatePickerFormat(new Date(compare.PaymentFineAppointDate));
+      this.accused.list[i].PaymentFineAppointShow = this.accused.list[i].PaymentFineAppointDate.formatted;
+      this.accused.list[i].PaymentVatDate = this.toDatePickerFormat(new Date(compare.PaymentVatDate));
+      this.accused.list[i].PaymentVatDateShow = this.accused.list[i].PaymentVatDate.formatted;
+      this.accused.list[i].request = compare.IsRequest;
+      this.accused.list[i].Bail = compare.Bail;
+      this.accused.list[i].Guaruntee = compare.Guaruntee;
+      if (compare.Guaruntee && compare.Guaruntee.length > 0) {
+        this.accused.list[i].checkBox2 = true;
+      }
+      if (compare.Bail && compare.Bail.length > 0) {
+        this.accused.list[i].checkBox1 = true;
+      }
+      this.accused.list[i].LawbrakerTestimony = compare.LawbrakerTestimony;
+      this.accused.list[i].IsProvisionalAcquittal = compare.IsProvisionalAcquittal;
+      // this.e ditUser.PaymentFineAppointDate.formatted
+      i++;
+    }
+  }
+  searchStaffByContributorID(ContributorID) {
+    return this.compareDataUpdateTmp.CompareStaff.filter(f => f.ContributorID === ContributorID);
+  }
+  getTimeNow(d: any = new Date) {
     let h = d.getHours().toString();
     let m = d.getMinutes().toString();
     if((+h) < 10) {
@@ -214,6 +262,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
+        this.navService.setNextPageButton(true);
       }
     });
     this.OnSubscribe.cancel = this.navService.onCancel.subscribe(async status => {
@@ -226,6 +275,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
+        this.navService.setNextPageButton(true);
       }
     });
     this.OnSubscribe.save = this.navService.onSave.subscribe(async status => {
@@ -254,8 +304,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         try {
           const rec1: any = {
             ReceiptType: 'A',
-            ReceiptBookNo: rec.ReceiptNo,
-            ReceiptNo: rec.ReceiptChanel,
+            ReceiptBookNo: rec.ReceiptBookNo,
+            ReceiptNo: rec.ReceiptNo,
             ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
             StationCode: rec.StationCode,
             Station: rec.ReceipStation,
@@ -271,7 +321,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             FineType: 1
           };
           receiptData = rec1;
+          console.log('ข้อมูลการส่งใบเสร็จ');
+          console.log(rec1);
           const resp :any = await this.CompareDetailReceipinsAll(receiptData);
+          console.log('ค่าการรีเทิร์น');
+          console.log(resp);
           if (resp.CompareReceiptID) {
             await this.ComparePaymentFineinsAll(resp.CompareReceiptID);
           }
@@ -334,13 +388,15 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   async saveAccusedHeader() {
     this.preloader.setShowPreloader(true);
-    console.log('here');
     const resp: any = await this.CompareinsAll()
-    console.log('compare');
+    console.log('ข้อมูลการรีเทิร์นจาก CompareinsAll');
     console.log(resp);
     if (resp) {
-      await this.checkReceiptData(resp.CompareDetailID);
-      console.log('pass');
+      if (resp.CompareDetailID && resp.CompareDetailID[0].CompareDetailID) {
+        await this.checkReceiptData(resp.CompareDetailID);
+      } else {
+        console.log('ไม่พบข้อมูล CompareDetailID');
+      }
       await this.navService.setOnSave(false);
       await this.navService.setOnCancel(false);
       this.navService.setPrintButton(true);
@@ -381,6 +437,8 @@ export class ManageComponent implements OnInit, OnDestroy {
           if (data.length === 0) {
 
           } else {
+            console.log('ข้อมูล Data เพื่อส่ง CompareinsAll');
+            console.log(data);
             return await this.fineService.postMethod('/CompareinsAll', data);
           }
       } else {
@@ -473,6 +531,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(resp);
       } else {
         alert('ไม่สามารถแสดงข้อมูลได้');
+        this.router.navigate([`/fine/list`]);
       }
       
     } catch (err) {
@@ -737,6 +796,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.editUser.index = index;
     if (!this.editUser.PaymentFineAppointDate) {
       this.editUser.PaymentFineAppointDate = this.jsonCopy(this.DateToday);
+    } else {
+      this.canCheck(this.editUser.PaymentFineAppointDate);
     }
     if (!this.editUser.PaymentVatDate) {
       this.editUser.PaymentVatDate = this.jsonCopy(this.DateToday);
@@ -806,7 +867,27 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(this.receipt);
     this.clearDataList(this.userCompareReceiptDetail);
   }
-  userReceiptDelete() {}
+  userReceiptDelete() {
+    const index = this.userCompareReceiptDetail.index;
+    const r = confirm('ต้องการลบใบเสร็จจริงหรือไม่!');
+    if (r) {
+      if (index || index == 0) {
+        try {
+          const name: any = this.userCompareReceiptDetail.LawBrakerName;
+          this.clearDataList(this.receipt.list[index]);
+          this.receipt.list[index].LawBrakerName = name;
+          alert('ลบสำเร็จ');
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      if (index || index === 0) {
+        if (index > -1) {
+          this.filePath.splice(index, 1);
+        }
+      }
+    }
+  }
   handleFileInput(files: any) {
     // this.fileToUpload = files.item(0);
     console.log(files);
@@ -873,7 +954,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     let id = 0;
     const isFillForm1: any = '';
     for (const user of this.DataToSave.userData) {
-      if (this.accused.list[id].PaymentVatDateShow) {
+      if (this.accused.list[id].PaymentFineAppointDate) {
         console.log(this.approveReportList);
         const isAppFill: any = !this.isNotValidTxtField(this.approveReportList[id].ApproveReportDate);
         try {
@@ -891,7 +972,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             CompareFine: user.CompareFine,
             PaymentFineDate: '',
             PaymentFineAppointDate: this.convertToNormalDate(this.accused.list[id].PaymentFineAppointDate.date) + ' 00:00:00 +07.00',
-            PaymentVatDate: this.convertToNormalDate(this.accused.list[id].PaymentVatDate.date) + ' 00:00:00 +07.00',
+            PaymentVatDate: this.accused.list[id].PaymentVatDate ? this.convertToNormalDate(this.accused.list[id].PaymentVatDate.date) + ' 00:00:00 +07.00' : '',
             TreasuryMoney: user.TreasuryMoney,
             BribeMoney: user.BribeMoney,
             RewardMoney: user.RewardMoney,
@@ -1095,9 +1176,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ListCompareDetail[i].TreasuryMoney = sum3;
         this.ListCompareDetail[i].all = sum;
         this.sumAllCompare.sum = (+this.sumAllCompare.sum) + sum;
-        this.sumAllCompare.sum1 = (+this.sumAllCompare.sum) + sum1;
-        this.sumAllCompare.sum2 = (+this.sumAllCompare.sum) + sum2;
-        this.sumAllCompare.sum3 = (+this.sumAllCompare.sum) + sum3;
+        this.sumAllCompare.sum1 = (+this.sumAllCompare.sum1) + sum1;
+        this.sumAllCompare.sum2 = (+this.sumAllCompare.sum2) + sum2;
+        this.sumAllCompare.sum3 = (+this.sumAllCompare.sum3) + sum3;
         this.DataToSave.userData[cmp.userNo].CompareFine = sum;
         this.DataToSave.userData[cmp.userNo].BribeMoney = sum1;
         this.DataToSave.userData[cmp.userNo].RewardMoney = sum2;
