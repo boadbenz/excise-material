@@ -3,7 +3,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IRequestCompare } from '../../interfaces/RequestCompare';
 import { IRequestLawsuitJudgement } from '../../interfaces/RequestLawsuitJudgement';
 import { MasDocumentModel } from 'app/models/mas-document.model';
-import { IRequestReward, IRequestRewardinsAll } from '../../interfaces/RequestReward';
+import {
+  IRequestReward,
+  IRequestRewardinsAll
+} from '../../interfaces/RequestReward';
 import { IRequestRewardStaff } from '../../interfaces/RequestRewardStaff';
 export interface IRewardBinding {
   methodName?: string;
@@ -42,7 +45,7 @@ export class RewardConfig extends RewardHelper {
   public ILG60_08_04_00_00_E19_FORM_DATA: any;
 
   public RequestPaymentFineupdByCon: number[] = [];
-  public RequestRewardDetailupdDelete: number[] = []
+  public RequestRewardDetailupdDelete: number[] = [];
   public RequestRewardStaffupdDelete: number[] = [];
   public RequestRewardStaffupdByCon: IRequestRewardStaff[] = [];
   public RequestRewardUpd$ = new BehaviorSubject<IRequestReward>(null);
@@ -54,4 +57,10 @@ export class RewardConfig extends RewardHelper {
   public requstLawsuitJudgement$ = new BehaviorSubject<
     IRequestLawsuitJudgement[]
   >(null);
+
+  public Input_nonRequestRewardStaff$ = new BehaviorSubject<any>(null);
+  public Input_RequestBribeRewardgetByIndictmentID$ = new BehaviorSubject<any>(
+    null
+  );
+  public Input_RequestRewardgetByCon$ = new BehaviorSubject<any>(null);
 }

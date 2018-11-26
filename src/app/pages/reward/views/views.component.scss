@@ -5,7 +5,14 @@
 .pages a {
   color: #67757c;
 }
-
+::ng-deep .mat-checkbox .mat-checkbox-frame {
+  border-color: #67757c;
+  background: white;
+}
+::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+  border-color: #67757c !important;
+  background-color: rgb(69, 147, 196) !important;
+}
 .padding-adv-search {
   padding-right: 0;
   padding-left: 0px;

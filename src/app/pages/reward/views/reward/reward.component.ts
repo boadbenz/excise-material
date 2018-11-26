@@ -154,10 +154,12 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             IndictmentID: this.IndictmentID$.getValue()
           })
           .toPromise();
-        this.ILG60_08_04_00_00_E12_DATA$.next({
-          methodName: 'nonRequestRewardStaff',
-          data: nonRequestRewardStaff
-        });
+
+        this.Input_nonRequestRewardStaff$.next(nonRequestRewardStaff);
+        // this.ILG60_08_04_00_00_E12_DATA$.next({
+        //   methodName: 'nonRequestRewardStaff',
+        //   data: nonRequestRewardStaff
+        // });
 
         // this.ILG60_08_04_00_00_E12_DATA$.next(nonRequestRewardStaff); // 1.1.8
 
@@ -172,10 +174,13 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           data: RequestBribeReward
         }); // 1.1.10
 
-        this.ILG60_08_04_00_00_E12_DATA$.next({
-          methodName: 'RequestBribeRewardgetByIndictmentID',
-          data: RequestBribeReward
-        });
+        this.Input_RequestBribeRewardgetByIndictmentID$.next(
+          RequestBribeReward
+        );
+        // this.ILG60_08_04_00_00_E12_DATA$.next({
+        //   methodName: 'RequestBribeRewardgetByIndictmentID',
+        //   data: RequestBribeReward
+        // });
 
         // this.ILG60_08_04_00_00_E12_DATA$.next(RequestBribeReward); // 1.1.10
 
@@ -203,11 +208,13 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           methodName: 'RequestRewardgetByCon',
           data: RequestReward
         });
+        console.log('RequestReward', RequestReward);
 
-        this.ILG60_08_04_00_00_E12_DATA$.next({
-          methodName: 'RequestRewardgetByCon',
-          data: RequestReward
-        });
+        this.Input_RequestRewardgetByCon$.next(RequestReward);
+        // this.ILG60_08_04_00_00_E12_DATA$.next({
+        //   methodName: 'RequestRewardgetByCon',
+        //   data: RequestReward
+        // });
 
         // 1.2.2
         const masDocumentMain: MasDocumentModel[] = await this.masDocumentMainService
@@ -313,7 +320,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             );
 
             if (RequestRewardinsAllRespone.RequestRewardID) {
-              this.RequestRewardID$.next(RequestRewardinsAllRespone.RequestRewardID);
+              this.RequestRewardID$.next(
+                RequestRewardinsAllRespone.RequestRewardID
+              );
               // 2.1.5
               // 2.1.5(1)
               if (

@@ -28,7 +28,11 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="card-body">
-        <ILG60-08-04-00-00-E12 (emitChange)="changeForm($event)" [inputData]="ILG60_08_04_00_00_E12_DATA$ | async" [aggregate08]="aggregate">
+        <ILG60-08-04-00-00-E12 (emitChange)="changeForm($event)"  [aggregate08]="aggregate"
+        [Input_nonRequestRewardStaff]="Input_nonRequestRewardStaff$ | async" 
+        [Input_RequestBribeRewardgetByIndictmentID]="Input_RequestBribeRewardgetByIndictmentID$ | async" 
+        [Input_RequestRewardgetByCon]="Input_RequestRewardgetByCon$ | async"
+        >
         </ILG60-08-04-00-00-E12>
       </div>
     </ng-template>

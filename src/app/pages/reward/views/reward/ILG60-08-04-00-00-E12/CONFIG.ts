@@ -58,6 +58,35 @@ export class CONFIG extends RewardConfig {
     DISABLED: false
   });
 
+  @Input()
+  set Input_nonRequestRewardStaff(val) {
+    this.Input_nonRequestRewardStaff$.next(val);
+  }
+  get Input_nonRequestRewardStaff() {
+    return this.Input_nonRequestRewardStaff$.asObservable();
+  }
+  public Input_nonRequestRewardStaff$ = new BehaviorSubject<any>([]);
+
+  @Input()
+  set Input_RequestBribeRewardgetByIndictmentID(val) {
+    this.Input_RequestBribeRewardgetByIndictmentID$.next(val);
+  }
+  get Input_RequestBribeRewardgetByIndictmentID() {
+    return this.Input_RequestBribeRewardgetByIndictmentID$.asObservable();
+  }
+  public Input_RequestBribeRewardgetByIndictmentID$ = new BehaviorSubject<any>(
+    []
+  );
+
+  @Input()
+  set Input_RequestRewardgetByCon(val) {
+    this.Input_RequestRewardgetByCon$.next(val);
+  }
+  get Input_RequestRewardgetByCon() {
+    return this.Input_RequestRewardgetByCon$.asObservable();
+  }
+  public Input_RequestRewardgetByCon$ = new BehaviorSubject<any>([]);
+
   public formObject = {
     check: true,
     TitleName: '',

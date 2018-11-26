@@ -472,13 +472,14 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   public async buttonSave() {
     // ILG60-08-02-00-00-E03
     // 1 START
-    this.ILG60_08_02_00_00E09_SAVE.CommandID = null;
     this.ILG60_08_02_00_00E09_SAVE.ArrestCode = this.ArrestCode$.getValue();
     this.ILG60_08_02_00_00E09_SAVE.IsActive = 1;
     // console.log('ILG60_08_02_00_00E09_SAVE', this.ILG60_08_02_00_00E09_SAVE);
 
-    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
-    const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
+    const requestBribe: IRequestBribe[] =
+      this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
+    const requestReward: IRequestReward[] =
+      this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
     let ValidateVerify = false;
     if (requestBribe.length === 0 && requestReward.length > 0) {
       // 1.1
@@ -492,17 +493,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       // 2
       // 2.1
       const ResponseCommon: IResponseCommon = await this.requestCommandService
-        .RequestCommandupdByCon({
-          ArrestCode: this.ILG60_08_02_00_00E09_SAVE.ArrestCode,
-          CommandDate: this.ILG60_08_02_00_00E09_SAVE.CommandDate,
-          CommandID: this.ILG60_08_02_00_00E09_SAVE.CommandID,
-          CommandNo: this.ILG60_08_02_00_00E09_SAVE.CommandNo,
-          CommandTime: this.ILG60_08_02_00_00E09_SAVE.CommandTime,
-          IsActive: this.ILG60_08_02_00_00E09_SAVE.IsActive,
-          RequestCommandDetail: this.ILG60_08_02_00_00E09_SAVE
-            .RequestCommandDetail,
-          TotalPart: this.ILG60_08_02_00_00E09_SAVE.TotalPart
-        })
+        .RequestCommandupdByCon(this.ILG60_08_02_00_00E09_SAVE)
         .toPromise();
       // 3
       const responseSave = ResponseCommon.IsSuccess;
@@ -629,7 +620,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       if (this.ILG60_08_02_00_00E11_EXPANDED$.getValue() === true) {
         // 1.1.1
         // 1.1.1(1)
-        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
+        const requestBribe: IRequestBribe[] =
+          this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
         if (requestBribe.length === 0) {
           // 1.1.1(1.1)
           // 1.1.1(1.1.1) => // 1.1.1(1.2)
@@ -818,6 +810,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     param: IRequestBribegetByRequestBribeRewardID
   ) {}
   ngOnDestroy(): void {
+    this.setShowButton();
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }

@@ -16,6 +16,7 @@ import { MasTitleService } from 'app/pages/reward/services/master/MasTitle.servi
 import { MasTitleModel, MasStaffModel } from 'app/models';
 import { MasStaffService } from 'app/pages/reward/services/master/MasStaff.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ILG60-08-04-00-00-E12',
@@ -142,109 +143,107 @@ export class ILG6008040000E12Component extends CONFIG
         this.calChangeAll();
       }
     });
-    this.inputData$
-      .takeUntil(this.destroy$)
-      .subscribe((data: IRewardBinding) => {
-        if (data) {
-          switch (data.methodName) {
-            case 'nonRequestRewardStaff':
-              this.nonRequestRewardStaff = data.data;
+    this.Input_nonRequestRewardStaff$.takeUntil(this.destroy$).subscribe(
+      data => {
+        if (data !== null) {
+          this.nonRequestRewardStaff = data;
 
-              const datatable_nonRequestRewardStaff = this.nonRequestRewardStaff.map(
-                m => ({
-                  ...m,
-                  check: true,
-                  FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
-                  PositionName: `${m.PositionName || ''}`,
-                  PosLevelName: `${m.PosLevelName || ''}`,
-                  ContributorName: this.ConvertContributorName(m.ContributorID),
-                  FirstPart:
-                    m.ContributorID === '6' || m.ContributorID === '7'
-                      ? 1
-                      : null,
-                  SecondPart: null,
+          const datatable_nonRequestRewardStaff = this.nonRequestRewardStaff.map(
+            m => ({
+              ...m,
+              check: true,
+              FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
+              PositionName: `${m.PositionName || ''}`,
+              PosLevelName: `${m.PosLevelName || ''}`,
+              ContributorName: this.ConvertContributorName(m.ContributorID),
+              FirstPart:
+                m.ContributorID === '6' || m.ContributorID === '7' ? 1 : null,
+              SecondPart: null,
 
-                  FirstMoney: 0,
+              FirstMoney: 0,
 
-                  SecondMoney: 0,
-                  ToTalMoney: 0
-                })
-              );
+              SecondMoney: 0,
+              ToTalMoney: 0
+            })
+          );
 
-              const control_nonRequestRewardStaff: FormArray = <FormArray>(
-                this.nonRequestRewardStaffForm
-              );
+          const control_nonRequestRewardStaff: FormArray = <FormArray>(
+            this.nonRequestRewardStaffForm
+          );
 
-              datatable_nonRequestRewardStaff.forEach(x => {
-                const objForm = {};
-                Object.keys(x).forEach(f => {
-                  objForm[f] = [x[f]];
-                });
+          datatable_nonRequestRewardStaff.forEach(x => {
+            const objForm = {};
+            Object.keys(x).forEach(f => {
+              objForm[f] = [x[f]];
+            });
+            const newGroup: FormGroup = this.fb.group(objForm);
+            control_nonRequestRewardStaff.push(newGroup);
+          });
+        }
+      }
+    );
+    this.Input_RequestBribeRewardgetByIndictmentID$.takeUntil(
+      this.destroy$
+    ).subscribe(data => {
+      if (data !== null) {
+        const datatable_RequestBribeReward = data;
 
-                this.aggregate.ToTalMoney.sum += this.SumBribeMoney;
-                const newGroup: FormGroup = this.fb.group(objForm);
-                control_nonRequestRewardStaff.push(newGroup);
+        const control_RequestBribeRewardForm: FormArray = <FormArray>(
+          this.RequestBribeRewardForm
+        );
+        datatable_RequestBribeReward
+          .filter(f => f.HaveNotice === 1)
+          .forEach(x => {
+            const newGroup: FormGroup = this.fb.group({
+              check: [true],
+              TitleName: [''],
+              FullName: ['สายลับ (ขอปิดนาม)'],
+              FirstName: ['สายลับ (ขอปิดนาม)'],
+              PositionName: [''],
+              PosLevelName: [''],
+              ContributorName: ['ผู้แจ้งความนำจับ'],
+              ContributorID: [''],
+              FirstPart: [null],
+              FirstMoney: [null],
+              SecondPart: [null],
+              SecondMoney: [null],
+              ToTalMoney: [this.SumBribeMoney]
+            });
+            control_RequestBribeRewardForm.push(newGroup);
+          });
+      }
+    });
+    this.Input_RequestRewardgetByCon$.takeUntil(this.destroy$).subscribe(
+      (data: any[]) => {
+        if (data !== null) {
+          console.log('data', data);
+          if (data.length > 0) {
+            const RequestReward: IRequestReward = data[0];
+            const datatable_RequestReward = RequestReward.RequestRewardStaff.map(
+              m => ({
+                ...m,
+                check: true,
+                FullName: `${m.TitleName || ''}${m.FirstName ||
+                  ''}${m.LastName || ''}`,
+                ContributorName: m.ContributorName
+              })
+            );
+
+            const control_RequestReward: FormArray = <FormArray>(
+              this.RequestRewardForm
+            );
+            datatable_RequestReward.forEach(x => {
+              const objForm = {};
+              Object.keys(x).forEach(f => {
+                objForm[f] = [x[f]];
               });
-              break;
-
-            case 'RequestBribeRewardgetByIndictmentID':
-              // console.log('RequestBribeRewardgetByIndictmentID', data.data);
-
-              const datatable_RequestBribeReward = data.data;
-
-              const control_RequestBribeRewardForm: FormArray = <FormArray>(
-                this.RequestBribeRewardForm
-              );
-              datatable_RequestBribeReward
-                .filter(f => f.HaveNotice === 1)
-                .forEach(x => {
-                  const newGroup: FormGroup = this.fb.group({
-                    check: [true],
-                    TitleName: [''],
-                    FullName: ['สายลับ (ขอปิดนาม)'],
-                    FirstName: ['สายลับ (ขอปิดนาม)'],
-                    PositionName: [''],
-                    PosLevelName: [''],
-                    ContributorName: ['ผู้แจ้งความนำจับ'],
-                    ContributorID: [''],
-                    FirstPart: [null],
-                    FirstMoney: [null],
-                    SecondPart: [null],
-                    SecondMoney: [null],
-                    ToTalMoney: [this.SumBribeMoney]
-                  });
-                  this.aggregate.ToTalMoney.sum += this.SumBribeMoney;
-                  control_RequestBribeRewardForm.push(newGroup);
-                });
-              break;
-
-            case 'RequestRewardgetByCon':
-              // console.log('RequestRewardgetByCon', data.data);
-              const datatable_RequestReward = data.data[0].RequestRewardStaff.map(
-                m => ({
-                  ...m,
-                  check: true,
-                  FullName: `${m.TitleName || ''}${m.FirstName ||
-                    ''}${m.LastName || ''}`,
-                  ContributorName: m.ContributorName
-                })
-              );
-
-              const control_RequestReward: FormArray = <FormArray>(
-                this.RequestRewardForm
-              );
-              datatable_RequestReward.forEach(x => {
-                const objForm = {};
-                Object.keys(x).forEach(f => {
-                  objForm[f] = [x[f]];
-                });
-                const newGroup: FormGroup = this.fb.group(objForm);
-                control_RequestReward.push(newGroup);
-              });
-              break;
+              const newGroup: FormGroup = this.fb.group(objForm);
+              control_RequestReward.push(newGroup);
+            });
           }
         }
-      });
+      }
+    );
 
     this.formGroup.valueChanges
       .takeUntil(this.destroy$)

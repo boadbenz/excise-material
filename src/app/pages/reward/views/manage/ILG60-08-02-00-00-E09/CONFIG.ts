@@ -27,7 +27,7 @@ export class CONFIG extends ManageConfig {
   public isEdit$ = new BehaviorSubject<any>(null);
 
   public FormInput$ = new BehaviorSubject<any>(null);
-
+  public columns: any;
   public FormInputDefault: ColumnsInterface[] = [
     {
       title: 'คำสั่งกรมเลขที่',
