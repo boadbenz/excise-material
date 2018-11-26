@@ -40,7 +40,7 @@ import {
   RequestBribeinsAllModel,
   RequestBribeStaffModel
 } from '../../models/RequestBribeinsAll.model';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-bribe',
   templateUrl: './bribe.component.html',
@@ -64,7 +64,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     private requestBribeDetailService: RequestBribeDetailService,
     private router: Router,
     private sidebarService: SidebarService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private _location: Location
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -73,6 +74,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       this.RequestBribeID$.next(param['RequestBribeID']);
       this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
     });
+    this.navService.setInnerTextNextPageButton('กลับ')
     this.navService.onSave.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
         this.navService.onSave.next(false);
@@ -103,9 +105,9 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.buttonDelete();
       }
     });
-    this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(save => {
+    this.navService.onNextPage.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
-        this.navService.onPrevPage.next(false);
+        this.navService.onNextPage.next(false);
         this.buttonPrevPage();
       }
     });
@@ -115,7 +117,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.sidebarService.setVersion('0.0.1.5');
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
-    this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(res => {
+    this.navService.onNextPage.takeUntil(this.destroy$).subscribe(res => {
       this.rewardService.bribeState$.next({
         mode: 'B',
         RequestBribeRewardID: this.RequestBribeRewardID
@@ -159,7 +161,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
             RequestBribeID: this.RequestBribeID$.getValue()
           })
           .toPromise();
-
+          this.RequestBribeRewardID$.next(RequestBribe[0].RequestBribeRewardID);
         // 1.2.3
         this.RequestBribe$.next(RequestBribe);
         // 1.2.2
@@ -206,7 +208,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.navService.setPrintButton(true); // 1.2.5(1)
         this.navService.setEditButton(true); // 1.2.5(2)
         this.navService.setDeleteButton(true); // 1.2.5(3)
-        this.navService.setPrevPageButton(true); // 1.2.5(4)
+        this.navService.setNextPageButton(true); // 1.2.5(4)
         this.navService.setSearchBar(false);
         break;
     }
@@ -432,10 +434,11 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   private buttonPrevPage() {
     // : ILG60-08-03-00-00-E07 (ปุ่ม “กลับ >>”)
     // 1 START
-    this.router.navigate([
-      '/reward/manage/B',
-      this.RequestBribeRewardID$.getValue()
-    ]);
+    this._location.back();
+    // this.router.navigate([
+    //   '/reward/manage/B',
+    //   this.RequestBribeRewardID$.getValue()
+    // ]);
     // 2 END
   }
 
@@ -489,7 +492,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
-    this.navService.setPrevPageButton(true);
+    this.navService.setNextPageButton(true);
   }
 
   public changeForm(form: IFormChange) {

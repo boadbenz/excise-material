@@ -28,7 +28,7 @@
                 </ng-container>
                 <ng-template #text>
                   <input type="{{c?.inputType || 'text'}}" [min]="c?.minDate || ''" [max]="c?.maxDate || ''" [id]="c?.field"
-                    [formControlName]="c?.field" class="form-control" [attr.disabled]="c?.isDisabled ? 'disabled' : null">
+                    [formControlName]="c?.field" class="form-control form-control-sm" [attr.disabled]="c?.isDisabled ? 'disabled' : null">
                 </ng-template>
               </div>
               <div class="col-sm-2">
@@ -42,7 +42,7 @@
                 </ng-container>
                 <ng-template #text>
                   <input type="{{c?.inputType2 || 'text'}}" [min]="c?.minDate || ''" [max]="c?.maxDate || ''" [id]="c?.field2"
-                    [formControlName]="c?.field2" class="form-control" [attr.disabled]="c?.isDisabled2 ? 'disabled' : null">
+                    [formControlName]="c?.field2" class="form-control form-control-sm" [attr.disabled]="c?.isDisabled2 ? 'disabled' : null">
                 </ng-template>
               </div>
             </ng-container>
@@ -53,7 +53,7 @@
                 </ng-container>
                 <ng-template #text>
                   <input type="{{c?.inputType ? c?.inputType : 'text'}}" [min]="c?.minDate || ''" [max]="c?.maxDate || ''"
-                    [id]="c?.field" [formControlName]="c?.field" class="form-control" [attr.disabled]="c?.isDisabled ? 'disabled' : null">
+                    [id]="c?.field" [formControlName]="c?.field" class="form-control form-control-sm" [attr.disabled]="c?.isDisabled ? 'disabled' : null">
                 </ng-template>
                 <!--  -->
               </div>

@@ -119,7 +119,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.16');
+    this.sidebarService.setVersion('0.0.0.17');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -1024,12 +1024,8 @@ export class ManageComponent implements OnInit {
               item.ProductDesc = '';
             }
             if (item.LawbreakerID > 0) {
-              item.LawsuitType = 1
-              item.LawsuitEnd = 1
               this.lstype = [{ id: '0', name: 'ส่งฟ้องศาล' }, { id: '1', name: 'เปรียบเทียบปรับ', }];
             } else {
-              item.LawsuitType = 2
-              item.LawsuitEnd = 2
               this.lstype = [{ id: '0', name: 'ส่งฟ้องศาล' }, { id: '1', name: 'เปรียบเทียบปรับ', }, { id: '2', name: 'ไม่มีตัวตน', }];
             }
 
@@ -1108,7 +1104,7 @@ export class ManageComponent implements OnInit {
             }
             if (item.LawbreakerID > 0) {
               item.LawsuitType = 1
-              item.LawsuitEnd = 1
+              item.LawsuitEnd = 0
               this.lstype = [{ id: '0', name: 'ส่งฟ้องศาล' }, { id: '1', name: 'เปรียบเทียบปรับ', }];
             } else {
               item.LawsuitType = 2
@@ -1290,7 +1286,7 @@ export class ManageComponent implements OnInit {
   }
   changeLawsuitEnd(value, index) {
     let array = this.lawsuitForm.get('LawsuitTableList') as FormArray;
-    array.controls[index].get('LawsuitEnd').setValue(value);
+    value == 0 ? array.controls[index].get('LawsuitEnd').setValue(1): array.controls[index].get('LawsuitEnd').setValue(0);
   }
   IsOutsideCheckReq() {
     if (this.lawsuitForm.controls['IsOutsideCheck'].value === true) {

@@ -62,7 +62,8 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'วันที่จัดทำคำร้องขอ',
-      field: 'RequestDate'
+      field: 'RequestDate',
+      inputType: 'date'
     },
     {
       title: 'ชื่อผู้ต้องหา',
@@ -74,7 +75,8 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'วันที่ชำระเงิน',
-      field: 'PaymentDueDate'
+      field: 'PaymentDueDate',
+      inputType: 'date'
     },
     {
       title: 'งวดชำระ',
