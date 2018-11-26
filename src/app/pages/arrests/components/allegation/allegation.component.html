@@ -1,4 +1,4 @@
-<app-step-wizard [sectionId]="2"></app-step-wizard>
+<app-step-wizard [sectionId]="2" [disabledLine]="!ArrestStore?.ArrestNotice.length"></app-step-wizard>
 <form action="" [formGroup]="arrestIndictmentFG">
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
