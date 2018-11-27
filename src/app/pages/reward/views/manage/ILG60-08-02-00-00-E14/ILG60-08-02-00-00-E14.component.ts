@@ -10,27 +10,57 @@ import { IRequestRewardDetail } from 'app/pages/reward/interfaces/RequestRewardD
   styleUrls: ['./ILG60-08-02-00-00-E14.component.scss']
 })
 export class ILG6008020000E14Component extends CONFIG implements OnInit {
-  public tableData: IRequestRewardDetail[] = [];
+  public tableData: any[] = [];
+  public sumRewardTotal;
+  public dataBinding = [];
   constructor() {
     super();
-    this.inputData$.subscribe((reqRewards: IRequestReward[]) => {
-      if (reqRewards !== null) {
-        const reqReward: IRequestReward = reqRewards[0];
-        // console.log('reqReward', reqReward);
+    this.inputData$.subscribe((data: any[]) => {
+      if (data !== null) {
+        this.sumRewardTotal = data
+          .map(m => Number(m.RewardTotal))
+          .reduce((a, b) => (a += b));
 
-        this.tableData = reqReward.RequestRewardDetail.map(m => ({
-          ...m,
-          RequestRewardCode: reqReward.RequestRewardCode,
-          RequestDate: reqReward.RequestDate,
-          // tslint:disable-next-line:max-line-length
-          LawbreakerFullName: `${m.LawbreakerTitleName ||
-            ''} ${m.LawbreakerFirstName || ''} ${m.LawbreakerMiddleName ||
-            ''} ${m.LawbreakerLastName || ''} ${m.LawbreakerOtherName || ''}`,
-          FineTypeName: `${m.FineType === 1 ? 'ส่งฟ้องศาล' : 'เปรียบเทียบคดี'}`,
-          PaymentDueDate: `${
-            m.FineType === 1 ? m.PaymentDueDate : m.PaymentActualDate
-          }`
-        }));
+        const mapData = data.map((m, rowIndex) => {
+          return m.RequestRewardDetail.map((x, index) => ({
+            rowIndex: index === 0 ? rowIndex + 1 : '',
+            view: index === 0 ? true : false,
+            RequestRewardID: m.RequestRewardID,
+            RequestRewardCode: index === 0 ? m.RequestRewardCode : '',
+            RequestDate: index === 0 ? m.RequestDate : '',
+            LawbreakerFullName: `${x.LawbreakerTitleName ||
+              ' '}${x.LawbreakerFirstName || ' '}${x.LawbreakerMiddleName ||
+              ' '}${x.LawbreakerLastName || ' '}${x.LawbreakerOtherName ||
+              ' '}`,
+            FineTypeName: x.FineType === 0 ? 'เปรียบเทียบคดี' : 'ส่งฟ้องศาล',
+            PaymentDueDate:
+              x.FineType === 0 ? x.PaymentActualDate : x.PaymentDueDate,
+            PaymentPeriodNo: x.PaymentPeriodNo
+          }));
+        });
+        this.dataBinding = [].concat(...mapData);
+        // this.tableData = reqRewards.filter(f => f.RequestRewardDetail.length > 0).map(m => {
+        //   const objNew = {
+        //     RequestRewardCode: m.RequestRewardCode,
+        //     RequestDate: m.RequestDate,
+        //     detail: m.RequestRewardDetail.map(x => ({
+        //       LawbreakerFullName: `${x.LawbreakerTitleName ||
+        //         ''} ${x.LawbreakerFirstName || ''} ${x.LawbreakerMiddleName ||
+        //         ''} ${x.LawbreakerLastName || ''} ${x.LawbreakerOtherName ||
+        //         ''}`,
+        //       FineTypeName: `${
+        //         x.FineType === 1 ? 'ส่งฟ้องศาล' : 'เปรียบเทียบคดี'
+        //       }`,
+        //       PaymentDueDate: `${
+        //         m.FineType === 1 ? x.PaymentDueDate : x.PaymentActualDate
+        //       }
+        //   }`
+        //     }))
+        //   };
+        //   return  objNew;
+        // });
+
+        console.log('reqReward', this.tableData);
       }
     });
   }

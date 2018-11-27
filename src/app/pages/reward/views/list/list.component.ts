@@ -36,9 +36,9 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.1');
+    this.sidebarService.setVersion('0.0.1.2');
     this.setShowButton();
-    this.fetchData('');
+    // this.fetchData('');
   }
   public closeAdvSearch() {
     this.navService.showAdvSearch.next(false);
@@ -62,6 +62,7 @@ export class ListComponent extends ListConfig implements OnInit {
   private newData(data): IRequestList[] {
     return data.map((m: IRequestList) => ({
       ...m,
+      view: true,
       StaffName: `${m.TitleName}${m.FirstName} ${m.LastName}`
     }));
   }
@@ -82,7 +83,7 @@ export class ListComponent extends ListConfig implements OnInit {
       getDateMyDatepicker(formData.OccurrenceDateTo)
     );
     this.requestListService.RequestListgetByConAdv(formData).subscribe(res => {
-      this.gridData = this.gridData = this.newData(res);
+      this.gridData = this.newData(res);
     });
   }
 }

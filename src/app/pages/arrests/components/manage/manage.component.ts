@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, OnChanges, AfterContentInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
@@ -40,7 +40,8 @@ import { ManageConfig } from './manage.config';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
- 
+
+
     // FormGroup ตรวจสอบสถานะในการบันทึก TN905016100058
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
@@ -59,15 +60,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     card6: boolean = false;
     card7: boolean = false;
     card8: boolean = false;
-
-    // ILG60_03_02_00_00_E08: any;
-    // ILG60_03_02_00_00_E10: any;
-    // ILG60_03_02_00_00_E13: any;
-    // ILG60_03_02_00_00_E18: any;
-    // ILG60_03_02_00_00_E20: any;
-    // ILG60_03_02_00_00_E21: any;
-    // ILG60_03_02_00_00_E25: any;
-    // ILG60_03_02_00_00_E28: any;
 
     myDatePickerOptions = MyDatePickerOptions;
     _isSuccess: boolean = false;
@@ -157,7 +149,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
-    
+
     // Redux based variables
     obArrest: Observable<fromModels.Arrest>;
     stateArrest: fromModels.Arrest;
@@ -196,7 +188,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onCollapse = this.manageConfig.onCollapse;
-    
+
     ILG60_03_02_00_00_E08 = this.manageConfig.ILG60_03_02_00_00_E08;
     ILG60_03_02_00_00_E10 = this.manageConfig.ILG60_03_02_00_00_E10;
     ILG60_03_02_00_00_E13 = this.manageConfig.ILG60_03_02_00_00_E13;
@@ -214,9 +206,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.arrestFG.reset();
             }, 300);
         }
-        
+
         this.arrestFG = this.createForm();
         this.navigate_Service();
+        
     }
 
     ngOnDestroy(): void {
@@ -241,7 +234,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             Testimony: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
             Prompt: new FormControl('แจ้งให้ญาติทราบ'),
             IsMatchNotice: new FormControl(null),
-            ArrestDesc: new FormControl('N/A'),
+            ArrestDesc: new FormControl(''),
             NoticeCode: new FormControl(null),
             InvestigationSurveyDocument: new FormControl(null),
             InvestigationCode: new FormControl(null),
@@ -359,7 +352,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                 await this.loadMasterData();
+                await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
                     if (this.arrestCode != this.stateArrest.ArrestCode)
@@ -370,6 +363,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             case 'R':
                 this.enableBthModeR();
+                this.expandCard();
                 this.pageRefresh(arrestCode);
                 break;
         }
@@ -395,6 +389,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setEditButton(true);
         this.navService.setDeleteButton(true);
         this.navService.setEditField(true);
+    }
+
+    private expandCard() {
+        this.ILG60_03_02_00_00_E08.next(true);
+        this.ILG60_03_02_00_00_E10.next(true);
+        this.ILG60_03_02_00_00_E13.next(true);
+        this.ILG60_03_02_00_00_E18.next(true);
+        this.ILG60_03_02_00_00_E20.next(true);
+        this.ILG60_03_02_00_00_E21.next(true);
+        this.ILG60_03_02_00_00_E25.next(true);
+        this.ILG60_03_02_00_00_E28.next(true);
     }
 
     private async pageRefresh(arrestCode: string) {
@@ -1110,7 +1115,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     .catch((error) => this.catchError(error));
             })
 
-        this.loaderService.hide();
         Promise.all(indict).then(() => {
             if (isCheck) {
                 alert(Message.cannotModify);
@@ -1119,6 +1123,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.loadMasterData();
             }
         }).catch((error) => this.catchError(error));
+
+        this.loaderService.hide();
     }
 
     private async onDelete() {

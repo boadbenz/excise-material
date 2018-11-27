@@ -90,7 +90,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.investigateForm = this.fb.group({
-            InvestigateCode: new FormControl(this.investCode),
+            InvestigateCode: new FormControl(this.investCode, Validators.required),
             InvestigateNo: new FormControl(null, Validators.required),
             DateStart: new FormControl(null, Validators.required),
             DateEnd: new FormControl(null, Validators.required),

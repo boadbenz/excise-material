@@ -1,4 +1,4 @@
-<app-step-wizard [sectionId]="2"></app-step-wizard>
+<app-step-wizard [sectionId]="2" [disabledLine]="!ArrestNotice.value.length"></app-step-wizard>
 
 <ng-template #printDocModal let-c="close" let-d="dismiss">
     <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
@@ -60,7 +60,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เขียน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group input-group">
-                        <my-date-picker-th #myArrestDate class="form-control form-control-sm unset-form-control" [options]="myDatePickerOptions"
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" [options]="myDatePickerOptions"
                             [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required formControlName="ArrestDate"
                             (dateChanged)="onSDateChange($event)"></my-date-picker-th>
                         <label for="">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
