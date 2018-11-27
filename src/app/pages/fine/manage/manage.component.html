@@ -67,7 +67,7 @@
             <div class="form-group row">
               <label class="col-form-label col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
               <div class="col-md-8">
-                <input class="form-control" [(ngModel)]="headerData.LawsuitID" type="text" name="LawsuiltCode" disabled>
+                <input class="form-control" [(ngModel)]="headerData.LawsuitNo" type="text" name="LawsuiltCode" disabled>
               </div>
             </div>
           </div>
@@ -426,7 +426,7 @@
           <td>{{item.LawBrakerName}}</td>
           <td class="text-center">{{item.PaymentDateShow}}</td>
           <td>{{item.ReceiptStaff}}</td>
-          <td class="text-center">{{item.ReceiptChanel}}</td>
+          <td class="text-center">{{ paymentChanel[(+item.ReceiptChanel) - 1] }}</td>
           <td class="text-center">{{item.ReceiptBookNo}}</td>
           <td class="text-center">{{ (item.ReceiptNo ? item.ReceiptNo : '' ) + (item.ReceiptNo && item.ReferenceNo ? ' / ' : '') + (item.ReferenceNo ? item.ReferenceNo : '') }}
           </td>
@@ -625,7 +625,7 @@
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Bail" name="Bail"
-                           [disabled]="!editUser.checkBox1" [required]="editUser.checkBox1">
+                           [disabled]="!editUser.checkBox1 || showEditField" [required]="editUser.checkBox1">
                   </div>
                 </div>
               </div>
@@ -642,7 +642,7 @@
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Guaruntee"
                            name="Guaruntee"
-                           [disabled]="!editUser.checkBox2" [required]="editUser.checkBox2">
+                           [disabled]="!editUser.checkBox2 || showEditField" [required]="editUser.checkBox2">
                   </div>
                 </div>
               </div>
