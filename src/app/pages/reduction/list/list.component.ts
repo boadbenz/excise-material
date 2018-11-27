@@ -76,7 +76,7 @@ export class ListComponent implements OnInit {
 
   public onSearch(text: string): void {
     const param = {
-      Textsearch: text
+      Textsearch: text || ''
     };
     this.preloaderService.setShowPreloader(true);
     this.apiServer.post('/XCS60/AdjustListgetByKeyword', param)
@@ -87,6 +87,7 @@ export class ListComponent implements OnInit {
     this.listData = lists;
 
     if (this.listData.length === 0) {
+      this.listData = [];
       alert('ไม่พบข้อมูล')
     }
 
@@ -95,6 +96,7 @@ export class ListComponent implements OnInit {
 
   public adjustListByKeywordError(error: any): void {
     console.log(error);
+    this.listData = [];
     alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
     this.preloaderService.setShowPreloader(false);
   }
@@ -121,6 +123,7 @@ export class ListComponent implements OnInit {
     if (data) {
       this.listData.push(data);
     } else {
+      this.listData = [];
       alert('ไม่พบข้อมูล');
     }
 
@@ -129,6 +132,7 @@ export class ListComponent implements OnInit {
 
   public adjustListgetByConAdvError(error: any): void {
     console.log(error);
+    this.listData = [];
     alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
     this.preloaderService.setShowPreloader(false);
   }
