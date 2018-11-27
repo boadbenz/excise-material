@@ -10,6 +10,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 @Component({
     selector: 'dialog-judgment',
     templateUrl: 'dialog-judgment.html',
+    styleUrls: ['./dialog-judgment.scss']
 })
 export class DialogJudgment {
 

@@ -121,7 +121,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.18');
+    this.sidebarService.setVersion('0.0.0.19');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -1283,8 +1283,8 @@ export class ManageComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
       // maxWidth: 'none',
-      height: '100%',
-      maxHeight: 'none',
+      // height: '100%',
+      // maxHeight: 'none',
       data: {
         lawsuitArrest: item,
         index: index,
