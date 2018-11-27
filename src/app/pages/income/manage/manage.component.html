@@ -87,7 +87,7 @@
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="InformTo" name="InformTo" placeholder="พิมพ์ข้อความ" aria-label="Number"
                     matInput [matAutocomplete]="auto4" (input)="InformToonAutoChange($event.target.value)"
                     [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                <mat-autocomplete #auto4="matAutocomplete">
+                <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
                     <mat-option *ngFor="let infOption of InformTooptions" [value]="infOption.TitleName + infOption.FirstName + ' ' + infOption.LastName">
                         {{ infOption.TitleName }}{{ infOption.FirstName }} {{ infOption.LastName }}
                     </mat-option>
@@ -103,7 +103,7 @@
                         <input type="text" class="form-control form-control-sm" [(ngModel)]="RevenueStation" name="RevenueStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
                             matInput [matAutocomplete]="auto3" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
                             [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                        <mat-autocomplete #auto3="matAutocomplete">
+                        <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete">
                             <mat-option *ngFor="let option of options" [value]="option.OfficeName" 
                                 (click)="onAutoSelecteWord(option)" (onSelectionChange)="onAutoSelecteWord(option)">
                                 {{ option.OfficeName }}
@@ -118,7 +118,7 @@
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ" aria-label="Number"
                         matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                    <mat-autocomplete #auto="matAutocomplete">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                         <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
                             (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
                             {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
@@ -151,7 +151,7 @@
                         <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffName" name="StaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
                             matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
                             [ngClass]="{'ng-touched':isRequired}" required [disabled]="mode=='R'">
-                        <mat-autocomplete #auto2="matAutocomplete">
+                        <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
                             <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                                 (click)="StaffonAutoSelecteWord(sOption)" (onSelectionChange)="StaffonAutoSelecteWord(sOption)">
                                 {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}

@@ -381,7 +381,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                             CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
                                                             CompareID: item[j].CompareID,
                                                             CompareCode: item[j].CompareCode,
-                                                            LawBreaker: item[j].RevenueCompareDetail[i].LawbreakerTitleName + item[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + item[j].RevenueCompareDetail[i].LawbreakerLastName,
+                                                            LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + item[j].RevenueCompareDetail[i].LawbreakerLastName,
                                                             StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
                                                             PaymentDate: toLocalShort(item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
                                                             TotalFine: +`${item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
@@ -742,7 +742,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.getReveneueStaff();
             }
 
-            this.StaffSendoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.StaffSendoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -822,7 +822,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
             }
-            this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -902,7 +902,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
             }
-            this.InformTooptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.InformTooptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
