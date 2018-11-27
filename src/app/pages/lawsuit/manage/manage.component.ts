@@ -1589,8 +1589,8 @@ export class DialogJudgment {
           console.log(status)
         }
       }
-      if (updateByCon.__zone_symbol__value.IsSuccess) {
-        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.__zone_symbol__value.PaymentFineID)
+      if (updateByCon.IsSuccess) {
+        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.PaymentFineID)
         alert("บันทึกสำเร็จ")
         this.dialogRef.close();
       } else {
@@ -1601,7 +1601,7 @@ export class DialogJudgment {
 
     } else {
       let PaymentFine = await this.insert()
-      await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
+      await this.lawsuitService.LawsuitJudgementupdDelete(PaymentFine.JudgementID)
       if (this.lawsuitArrestFormDialog.IsFine == true) {
         console.log("Case first insert")
         for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
@@ -1617,8 +1617,8 @@ export class DialogJudgment {
       } else {
         this.dialogRef.close();
       }
-      if (PaymentFine.__zone_symbol__value.IsSuccess) {
-        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine.__zone_symbol__value.PaymentFineID)
+      if (PaymentFine.IsSuccess) {
+        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine.PaymentFineID)
         alert("บันทึกสำเร็จ")
         this.dialogRef.close();
       }
