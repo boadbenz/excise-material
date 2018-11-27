@@ -119,7 +119,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.17');
+    this.sidebarService.setVersion('0.0.0.18');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -1576,9 +1576,6 @@ export class DialogJudgment {
       let updateByCon = await this.lawsuitService.LawsuitJudgementupdByCon(submit)
       await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
       console.log(updateByCon)
-      if (updateByCon.__zone_symbol__value.IsSuccess) {
-        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.__zone_symbol__value.PaymentFineID)
-      }
       if (this.lawsuitArrestFormDialog.IsFine == true) {
         for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
           let payment = {
@@ -1592,12 +1589,18 @@ export class DialogJudgment {
           console.log(status)
         }
       }
-      alert("บันทึกสำเร็จ")
-      this.dialogRef.close();
-
+      if (updateByCon.__zone_symbol__value.IsSuccess) {
+        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.__zone_symbol__value.PaymentFineID)
+        alert("บันทึกสำเร็จ")
+        this.dialogRef.close();
+      } else {
+        alert("บันทึกไม่สำเร็จ")
+        this.dialogRef.close();
+      }
+     
 
     } else {
-      let PaymentFine = this.insert()
+      let PaymentFine = await this.insert()
       await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
       if (this.lawsuitArrestFormDialog.IsFine == true) {
         console.log("Case first insert")
@@ -1614,8 +1617,13 @@ export class DialogJudgment {
       } else {
         this.dialogRef.close();
       }
+      if (PaymentFine.__zone_symbol__value.IsSuccess) {
+        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine.__zone_symbol__value.PaymentFineID)
+        alert("บันทึกสำเร็จ")
+        this.dialogRef.close();
+      }
     }
-    this.dialogRef.close();
+    
   }
 
   convertTime(date) {
