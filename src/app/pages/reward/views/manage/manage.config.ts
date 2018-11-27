@@ -6,15 +6,16 @@ import { IRequestReward } from '../../interfaces/RequestReward';
 import { IRequestArrestLawsuit } from '../../interfaces/RequestArrestLawsuit.interface';
 
 export class ManageConfig extends RewardHelper {
-  public ILG60_08_02_00_00E08_EXPANDED$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E09_EXPANDED$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E11_EXPANDED$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E14_EXPANDED$ = new BehaviorSubject<any>(true);
 
-  public ILG60_08_02_00_00E08_DISABLED$ = new BehaviorSubject<any>(false);
-  public ILG60_08_02_00_00E09_DISABLED$ = new BehaviorSubject<any>(false);
-  public ILG60_08_02_00_00E11_DISABLED$ = new BehaviorSubject<any>(false);
-  public ILG60_08_02_00_00E14_DISABLED$ = new BehaviorSubject<any>(false);
+  public ILG60_08_02_00_00E08_EXPANDED = true;
+  public ILG60_08_02_00_00E09_EXPANDED = true;
+  public ILG60_08_02_00_00E11_EXPANDED = true;
+  public ILG60_08_02_00_00E14_EXPANDED = true;
+
+  public ILG60_08_02_00_00E08_DISABLED = false;
+  public ILG60_08_02_00_00E09_DISABLED = false;
+  public ILG60_08_02_00_00E11_DISABLED = false;
+  public ILG60_08_02_00_00E14_DISABLED = false;
 
   public ILG60_08_02_00_00E09_EDIT = false;
 

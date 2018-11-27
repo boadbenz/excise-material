@@ -36,7 +36,11 @@ import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.com
 import { MatDialog } from '@angular/material/dialog';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { convertDateForSave, getDateMyDatepicker } from 'app/config/dateFormat';
-
+import {
+  RequestBribeinsAllModel,
+  RequestBribeStaffModel
+} from '../../models/RequestBribeinsAll.model';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-bribe',
   templateUrl: './bribe.component.html',
@@ -60,7 +64,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     private requestBribeDetailService: RequestBribeDetailService,
     private router: Router,
     private sidebarService: SidebarService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private _location: Location
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -69,6 +74,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       this.RequestBribeID$.next(param['RequestBribeID']);
       this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
     });
+    this.navService.setInnerTextNextPageButton('กลับ')
     this.navService.onSave.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
         this.navService.onSave.next(false);
@@ -99,19 +105,19 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.buttonDelete();
       }
     });
-    this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(save => {
+    this.navService.onNextPage.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
-        this.navService.onPrevPage.next(false);
+        this.navService.onNextPage.next(false);
         this.buttonPrevPage();
       }
     });
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.4');
+    this.sidebarService.setVersion('0.0.1.5');
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
-    this.navService.onPrevPage.takeUntil(this.destroy$).subscribe(res => {
+    this.navService.onNextPage.takeUntil(this.destroy$).subscribe(res => {
       this.rewardService.bribeState$.next({
         mode: 'B',
         RequestBribeRewardID: this.RequestBribeRewardID
@@ -155,7 +161,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
             RequestBribeID: this.RequestBribeID$.getValue()
           })
           .toPromise();
-
+          this.RequestBribeRewardID$.next(RequestBribe[0].RequestBribeRewardID);
         // 1.2.3
         this.RequestBribe$.next(RequestBribe);
         // 1.2.2
@@ -202,7 +208,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.navService.setPrintButton(true); // 1.2.5(1)
         this.navService.setEditButton(true); // 1.2.5(2)
         this.navService.setDeleteButton(true); // 1.2.5(3)
-        this.navService.setPrevPageButton(true); // 1.2.5(4)
+        this.navService.setNextPageButton(true); // 1.2.5(4)
         this.navService.setSearchBar(false);
         break;
     }
@@ -281,25 +287,32 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
           }
 
           // 2.1.3
-
-          await this.requestBribeService
-            .RequestBribeinsAll({
-              ...this.ILG60_08_03_00_00_E08_FORM_DATA,
-              RequestBribeRewardID: this.RequestBribeRewardID$.getValue().toString(), // 2.1.3(1)
-              RequestBribeCode: this.RequestBribeCode$.getValue().toString(), // 2.1.3(2)
-              POADate: '23-SEP-2561',
-              RequestDate: '23-SEP-2561',
-              POATime: '15.59',
-              RequestTime: '15.59'
-            })
+          this.ILG60_08_03_00_00_E08_FORM_DATA[
+            'RequestBribeRewardID'
+          ] = this.RequestBribeRewardID$.getValue().toString();
+          this.ILG60_08_03_00_00_E08_FORM_DATA[
+            'RequestBribeCode'
+          ] = this.RequestBribeCode$.getValue().toString();
+          this.ILG60_08_03_00_00_E08_FORM_DATA[
+            'RequestDate'
+          ] = this.ConvDateTimeToDate(
+            convertDateForSave(
+              getDateMyDatepicker(
+                this.ILG60_08_03_00_00_E08_FORM_DATA['RequestDate']
+              )
+            )
+          );
+          const requestBribe = await this.requestBribeService
+            .RequestBribeinsAll(this.ILG60_08_03_00_00_E08_FORM_DATA)
             .toPromise();
 
+          this.RequestBribeID$.next(requestBribe.RequestBribeID);
           // 2.1.4
-          this.ILG60_08_03_00_00_E08_FORM_DATA.insDetailIDs.forEach(
+          this.ILG60_08_03_00_00_E08_FORM_DATA.RequestBribeDetail.forEach(
             async PaymentFineDetailID => {
               await this.requestPaymentFineDetailService
                 .RequestPaymentFineDetailupdByCon({
-                  PaymentFineDetailID: PaymentFineDetailID
+                  PaymentFineDetailID: PaymentFineDetailID.PaymentFineDetailID
                 })
                 .toPromise();
             }
@@ -343,11 +356,16 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
 
           break;
       }
-      alert('บันทึกสำเร็จ');
-      this.router.navigate([
-        '/reward/bribe/R',
-        this.RequestBribeID$.getValue()
-      ]);
+      // tslint:disable-next-line:curly
+      if (!this.RequestBribeID$.getValue()) {
+        alert('บันทึกไม่สำเร็จ');
+      } else {
+        alert('บันทึกสำเร็จ');
+        this.router.navigate([
+          '/reward/bribe/R',
+          this.RequestBribeID$.getValue()
+        ]);
+      }
     } else {
       alert('บันทึกไม่สำเร็จ');
     }
@@ -416,10 +434,11 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   private buttonPrevPage() {
     // : ILG60-08-03-00-00-E07 (ปุ่ม “กลับ >>”)
     // 1 START
-    this.router.navigate([
-      '/reward/manage/B',
-      this.RequestBribeRewardID$.getValue()
-    ]);
+    this._location.back();
+    // this.router.navigate([
+    //   '/reward/manage/B',
+    //   this.RequestBribeRewardID$.getValue()
+    // ]);
     // 2 END
   }
 
@@ -473,7 +492,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
-    this.navService.setPrevPageButton(true);
+    this.navService.setNextPageButton(true);
   }
 
   public changeForm(form: IFormChange) {
@@ -482,11 +501,40 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     switch (FormName) {
       case 'ILG60-08-03-00-00-E08':
         this.ILG60_08_03_00_00_E08_FORM_VALID = FormData.valid;
-        this.ILG60_08_03_00_00_E08_FORM_DATA = FormData.value;
+        const dataE08 = FormData.value;
+        console.log(
+          'ILG60-08-03-00-00-E08',
+          this.ILG60_08_03_00_00_E08_FORM_DATA
+        );
+        const newDataE08 = RequestBribeinsAllModel;
+        Object.keys(RequestBribeinsAllModel).forEach(f => {
+          newDataE08[f] = dataE08[f] || '';
+        });
+        this.ILG60_08_03_00_00_E08_FORM_DATA = this.ConvObjectValue(newDataE08);
         break;
       case 'ILG60-08-03-00-00-E12':
         this.ILG60_08_03_00_00_E12_FORM_VALID = FormData.valid;
-        this.ILG60_08_03_00_00_E12_FORM_DATA = FormData.valid;
+        const dataE12 = FormData.value;
+        const newDataE12 = RequestBribeStaffModel;
+        Object.keys(RequestBribeStaffModel).forEach(f => {
+          newDataE12[f] = dataE12[f] || '';
+        });
+        this.ILG60_08_03_00_00_E12_FORM_DATA = this.ConvObjectValue(newDataE12);
+        this.ILG60_08_03_00_00_E08_FORM_DATA['RequestBribeStaff'] = [
+          this.ConvObjectValue(this.ILG60_08_03_00_00_E12_FORM_DATA)
+        ];
+        this.ILG60_08_03_00_00_E08_FORM_DATA['StationOfPOA'] = `${dataE12[
+          'StationOfPOA'
+        ] || ''}`;
+        this.ILG60_08_03_00_00_E08_FORM_DATA[
+          'POADate'
+        ] = `${this.ConvDateTimeToDate(
+          convertDateForSave(getDateMyDatepicker(dataE12['POADate']))
+        ) || ''}`;
+        this.ILG60_08_03_00_00_E08_FORM_DATA['POATime'] = `${dataE12[
+          'POATime'
+        ] || ''}`;
+
         break;
     }
   }

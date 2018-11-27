@@ -1,5 +1,51 @@
+<app-timeline></app-timeline>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_03_00_00_E08_EXPANDED = !ILG60_08_03_00_00_E08_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_03_00_00_E08_EXPANDED, 'fa-chevron-up': !ILG60_08_03_00_00_E08_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">คำร้องขอรับเงินสินบน</h4>
+  </div>
+  <div *ngIf="ILG60_08_03_00_00_E08_EXPANDED" class="card-body">
+    <ILG60-08-03-00-00-E08 [RequestCommand]="RequestCommand$ | async" [RequestBribe]="RequestBribe$ | async" [mode]="mode$ | async"
+      [inputData]="ILG60_08_03_00_00_E08_DATA$ | async" (formData)="changeForm($event)"></ILG60-08-03-00-00-E08>
+  </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_03_00_00_E12_EXPANDED = !ILG60_08_03_00_00_E12_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_03_00_00_E12_EXPANDED, 'fa-chevron-up': !ILG60_08_03_00_00_E12_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">หนังสือมอบอำนาจ</h4>
+  </div>
+  <div *ngIf="ILG60_08_03_00_00_E12_EXPANDED" class="card-body">
+    <ILG60-08-03-00-00-E12 (emitChange)="changeForm($event)"></ILG60-08-03-00-00-E12>
+  </div>
+</div>
+
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <div class="card-actions">
+      <a class="" (click)="ILG60_08_03_00_00_E16_EXPANDED = !ILG60_08_03_00_00_E16_EXPANDED">
+        <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_03_00_00_E16_EXPANDED, 'fa-chevron-up': !ILG60_08_03_00_00_E16_EXPANDED}"></i>
+      </a>
+    </div>
+    <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+  </div>
+  <div *ngIf="ILG60_08_03_00_00_E16_EXPANDED" class="card-body">
+    <ILG60-08-03-00-00-E16 (emitChange)="changeForm($event)"></ILG60-08-03-00-00-E16>
+  </div>
+</div>
+
+
 <mat-accordion [multi]="true">
-  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E08_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E08_DISABLED$ | async"
     (opened)="ILG60_08_03_00_00_E08_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E08_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -12,9 +58,9 @@
           [inputData]="ILG60_08_03_00_00_E08_DATA$ | async" (formData)="changeForm($event)"></ILG60-08-03-00-00-E08>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E12_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E12_DISABLED$ | async"
     (opened)="ILG60_08_03_00_00_E12_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E12_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -26,9 +72,9 @@
         <ILG60-08-03-00-00-E12 (emitChange)="changeForm($event)"></ILG60-08-03-00-00-E12>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E16_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E16_DISABLED$ | async"
+  <!-- <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E16_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E16_DISABLED$ | async"
     (opened)="ILG60_08_03_00_00_E16_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E16_EXPANDED$.next(false)">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -40,5 +86,5 @@
         <ILG60-08-03-00-00-E16 (emitChange)="changeForm($event)"></ILG60-08-03-00-00-E16>
       </div>
     </ng-template>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 </mat-accordion>
