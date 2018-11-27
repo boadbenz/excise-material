@@ -168,19 +168,18 @@ export class LawsuitService {
 
   async LawsuitJudgementupdDelete(JudgementID) {
     const params = { JudgementID: JudgementID };
-    const url = `${appConfig.api7789}/LawsuitJudgementupdDelete`;
+    const url = `${appConfig.api8083}/LawsuitJudgementupdDelete`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
-
-  async LawsuitJudgementupdByCon(JudgementID) {
-    const params = { JudgementID: JudgementID };
+  
+  async LawsuitJudgementupdByCon(Judgement) {
     const url = `${appConfig.api8083}/LawsuitJudgementupdByCon`;
-    return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
+    return this.responsePromiseGetWithoutStatus(JSON.stringify(Judgement), url);
   }
 
   async LawsuitPaymentFineDetailupdDelete(PaymentFineID) {
     const params = { PaymentFineID: PaymentFineID };
-    const url = `${appConfig.api7789}/LawsuitJudgementupdDelete`;
+    const url = `${appConfig.api7789}/LawsuitPaymentFineDetailupdDelete`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
