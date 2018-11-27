@@ -5,11 +5,12 @@ import { IRequestCommand } from 'app/pages/reward/interfaces/RequestCommand';
 import { IRequestBribe } from 'app/pages/reward/interfaces/RequestBribe.interface';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
 import { RequestCommandupdByConModel } from 'app/pages/reward/models/RequestCommandupdByCon.Model';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import {
   getDateMyDatepicker,
   convertDateForSave,
-  toLocalShort
+  toLocalShort,
+  setDateMyDatepicker
 } from 'app/config/dateFormat';
 
 @Component({
@@ -35,8 +36,14 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
   @Output()
   public emitChange = new EventEmitter();
   public inputItem: number[] = [];
-  constructor() {
+  constructor(private fb: FormBuilder) {
     super();
+    this.formGroup = this.fb.group({
+      CommandID: [''],
+      CommandNo: [''],
+      CommandDate: [''],
+      CommandTime: ['']
+    });
     this.inputData$.subscribe((inp: IRequestCommand[]) => {
       if (inp && inp.length > 0) {
         // console.log('IRequestBribe', inp[0]);
@@ -53,23 +60,12 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
 
         this.inputItem = inp[0].RequestCommandDetail.map(m => m.PartMoney);
 
-        this.bindingForm = this.FormInputDefault.map(m => ({
-          ...m,
-          default: inp[0][m.field],
-          default2: inp[0][m.field2],
-          isDisabled: !this.isEdit$.getValue(),
-          isDisabled2: !this.isEdit$.getValue()
-        }));
-        console.log('this.bindingForm', this.bindingForm);
-      }
-    });
-    this.isEdit$.subscribe(edit => {
-      if (edit !== undefined && edit != null) {
-        this.bindingForm = this.bindingForm.map(m => ({
-          ...m,
-          isDisabled: !edit,
-          isDisabled2: !edit
-        }));
+        this.formGroup.get('CommandID').patchValue(inp[0].CommandID);
+        this.formGroup.get('CommandNo').patchValue(inp[0].CommandNo);
+        this.formGroup
+          .get('CommandDate')
+          .patchValue(setDateMyDatepicker(new Date(inp[0].CommandDate)));
+        this.formGroup.get('CommandTime').patchValue(inp[0].CommandTime);
       }
     });
   }
@@ -104,14 +100,7 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
     }));
 
     this.submitData = newData;
-    console.log(
-      'submitData',
-      toLocalShort(
-        this.ConvDateTimeToDate(
-          convertDateForSave(getDateMyDatepicker(data['CommandDate']))
-        )
-      )
-    );
+    console.log('newData', newData);
     this.sendEmitData();
   }
   public itemChange() {

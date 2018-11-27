@@ -14,7 +14,7 @@ export class CONFIG extends ManageConfig {
   }
   public inputData$ = new BehaviorSubject<any>(null);
 
-  public columns: IRequestArrestLawsuit;
+  public columns: any = {};
 
   // = {
   //   ArrestCode: '',

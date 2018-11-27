@@ -168,20 +168,20 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           }
 
           // 4.1.1(1.3)
-          this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+          this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.1.1(1.3.1)
-          this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+          this.ILG60_08_02_00_00E09_EXPANDED = false;
           // 4.1.1(1.3.2)
-          this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
-          this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+          this.ILG60_08_02_00_00E11_EXPANDED = false;
+          this.ILG60_08_02_00_00E14_EXPANDED = true;
 
           // 4.1.1(1.4)
           // 4.1.1(1.4.1)
-          this.ILG60_08_02_00_00E08_DISABLED$.next(false);
-          this.ILG60_08_02_00_00E09_DISABLED$.next(true);
-          this.ILG60_08_02_00_00E11_DISABLED$.next(true);
+          this.ILG60_08_02_00_00E08_DISABLED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = true;
+          this.ILG60_08_02_00_00E11_DISABLED = true;
           // 4.1.1(1.4.1)
-          this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+          this.ILG60_08_02_00_00E14_DISABLED = false;
 
           this.navService.setSearchBar(false);
           this.navService.setPrintButton(true);
@@ -189,6 +189,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setCancelButton(false);
           this.navService.setEditButton(true);
           this.navService.setSaveButton(false);
+          this.navService.setNextPageButton(false);
 
           break;
 
@@ -204,7 +205,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.1.1(2.2.1)
           if (RequestBribe.length > 0) {
             // 4.1.1(2.2.1(1))
-            this.RequestBribegetByRequestBribeRewardID$.next(RequestBribe);
+            this.ILG60_08_02_00_00E11_DATA$.next(RequestBribe);
 
             // 4.1.1(2.2.1(2))
           } else {
@@ -246,20 +247,20 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               RequestCommand[0].RequestCommandDetail.length === 1
             ) {
               // 4.1.1(2.6.1(1))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+              this.ILG60_08_02_00_00E08_EXPANDED = true;
               // 4.1.1(2.6.1(1.1))
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+              this.ILG60_08_02_00_00E09_EXPANDED = false;
+              this.ILG60_08_02_00_00E11_EXPANDED = true;
+              this.ILG60_08_02_00_00E14_EXPANDED = true;
 
               // 4.1.1(2.6.1(2))
               // 4.1.1(2.6.1(2.1))
-              this.ILG60_08_02_00_00E08_DISABLED$.next(false);
-              this.ILG60_08_02_00_00E09_DISABLED$.next(true);
+              this.ILG60_08_02_00_00E08_DISABLED = false;
+              this.ILG60_08_02_00_00E09_DISABLED = true;
               // 4.1.1(2.6.1(2.2)) || 4.1.1(2.6.1(2.4))
-              this.ILG60_08_02_00_00E11_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E11_DISABLED = false;
               // 4.1.1(2.6.1(2.3)) || 4.1.1(2.6.1(2.5))
-              this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E14_DISABLED = false;
 
               // 4.1.1(2.6.1(3))
               this.navService.setSearchBar(false);
@@ -271,6 +272,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               this.navService.setDeleteButton(true);
               this.navService.setCancelButton(false);
               this.navService.setSaveButton(false);
+              this.navService.setNextPageButton(false);
             } else if (
               RequestCommand[0] &&
               RequestCommand[0].RequestCommandDetail.length > 1
@@ -280,20 +282,20 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               this.ILG60_08_02_00_00E09_DATA$.next(RequestCommand);
 
               // 4.1.1(2.6.2(2))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+              this.ILG60_08_02_00_00E08_EXPANDED = true;
+              this.ILG60_08_02_00_00E09_EXPANDED = true;
+              this.ILG60_08_02_00_00E11_EXPANDED = true;
+              this.ILG60_08_02_00_00E14_EXPANDED = true;
 
               // 4.1.1(2.6.2(3))
               // 4.1.1(2.6.2(3.1))
-              this.ILG60_08_02_00_00E08_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E08_DISABLED = false;
               // 4.1.1(2.6.2(3.2))
-              this.ILG60_08_02_00_00E09_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E09_DISABLED = false;
               // 4.1.1(2.6.2(3.3)) || 4.1.1(2.6.2(3.5))
-              this.ILG60_08_02_00_00E11_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E11_DISABLED = false;
               // 4.1.1(2.6.2(3.4)) || 4.1.1(2.6.2(3.6))
-              this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E14_DISABLED = false;
 
               // 4.1.1(2.6.2(4))
               // 4.1.1(2.6.2(4.1))
@@ -305,6 +307,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               this.navService.setCancelButton(false);
               this.navService.setSearchBar(false);
               this.navService.setSaveButton(false);
+              this.navService.setNextPageButton(false);
             }
           }
 
@@ -369,11 +372,11 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           RequestCommand[0].RequestCommandDetail.length === 1
         ) {
           // 4.2.2(1.4.1(1))
-          this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+          this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.2.2(1.4.1(1.1))
-          this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-          this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-          this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+          this.ILG60_08_02_00_00E09_EXPANDED = false;
+          this.ILG60_08_02_00_00E11_EXPANDED = true;
+          this.ILG60_08_02_00_00E14_EXPANDED = true;
 
           // 4.2.2(1.4.1(2))
           // 4.2.2(1.4.1(2.1)) 'WAIT'
@@ -389,6 +392,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setEditButton(false);
           this.navService.setDeleteButton(false);
           this.navService.setSearchBar(false);
+          this.navService.setNextPageButton(false);
         } else if (
           RequestCommand &&
           RequestCommand[0] &&
@@ -399,10 +403,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.ILG60_08_02_00_00E09_DATA$.next(RequestCommand);
 
           // 4.2.2(1.4.2(2))
-          this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-          this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
-          this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-          this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+          this.ILG60_08_02_00_00E08_EXPANDED = true;
+          this.ILG60_08_02_00_00E09_EXPANDED = true;
+          this.ILG60_08_02_00_00E11_EXPANDED = true;
+          this.ILG60_08_02_00_00E14_EXPANDED = true;
 
           // 4.2.2(1.4.2(3))
           // 4.2.2(1.4.2(3.1)) 'WAIT'
@@ -418,6 +422,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setEditButton(false);
           this.navService.setDeleteButton(false);
           this.navService.setSearchBar(false);
+          this.navService.setNextPageButton(false);
         } else {
           // 4.2.2(2)
           // 4.2.2(2.1)
@@ -433,12 +438,12 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
             .toPromise();
 
           // 4.2.2(2.2)
-          this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+          this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.2.2(2.2.1)
-          this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
+          this.ILG60_08_02_00_00E09_EXPANDED = false;
           // 4.2.2(2.2.2)
-          this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
-          this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+          this.ILG60_08_02_00_00E11_EXPANDED = false;
+          this.ILG60_08_02_00_00E14_EXPANDED = true;
 
           // 4.2.2(2.3)
           // 4.2.2(2.3.1) 'WAIT'
@@ -453,6 +458,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setEditButton(false);
           this.navService.setDeleteButton(false);
           this.navService.setSearchBar(false);
+          this.navService.setNextPageButton(false);
         }
       } else {
         await this.requestBribeRewardService
@@ -472,18 +478,19 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   public async buttonSave() {
     // ILG60-08-02-00-00-E03
     // 1 START
-    this.ILG60_08_02_00_00E09_SAVE.CommandID = null;
     this.ILG60_08_02_00_00E09_SAVE.ArrestCode = this.ArrestCode$.getValue();
     this.ILG60_08_02_00_00E09_SAVE.IsActive = 1;
     // console.log('ILG60_08_02_00_00E09_SAVE', this.ILG60_08_02_00_00E09_SAVE);
 
-    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
-    const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
+    const requestBribe: IRequestBribe[] =
+      this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
+    const requestReward: IRequestReward[] =
+      this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
     let ValidateVerify = false;
-    if (requestBribe.length === 0 && requestReward.length > 0) {
+    if (requestBribe.length === 0 || requestReward.length > 0) {
       // 1.1
       ValidateVerify = true;
-    } else if (requestReward.length === 0 && requestBribe.length > 0) {
+    } else if (requestReward.length === 0 || requestBribe.length > 0) {
       // 1.2
       ValidateVerify = true;
     }
@@ -492,17 +499,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       // 2
       // 2.1
       const ResponseCommon: IResponseCommon = await this.requestCommandService
-        .RequestCommandupdByCon({
-          ArrestCode: this.ILG60_08_02_00_00E09_SAVE.ArrestCode,
-          CommandDate: this.ILG60_08_02_00_00E09_SAVE.CommandDate,
-          CommandID: this.ILG60_08_02_00_00E09_SAVE.CommandID,
-          CommandNo: this.ILG60_08_02_00_00E09_SAVE.CommandNo,
-          CommandTime: this.ILG60_08_02_00_00E09_SAVE.CommandTime,
-          IsActive: this.ILG60_08_02_00_00E09_SAVE.IsActive,
-          RequestCommandDetail: this.ILG60_08_02_00_00E09_SAVE
-            .RequestCommandDetail,
-          TotalPart: this.ILG60_08_02_00_00E09_SAVE.TotalPart
-        })
+        .RequestCommandupdByCon(this.ILG60_08_02_00_00E09_SAVE)
         .toPromise();
       // 3
       const responseSave = ResponseCommon.IsSuccess;
@@ -529,7 +526,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.ILG60_08_02_00_00E09_EDIT = true;
     // 1.1
 
-    if (this.ILG60_08_02_00_00E09_EXPANDED$.getValue() === true) {
+    if (this.ILG60_08_02_00_00E09_EXPANDED === true) {
       // 1.2 'WAIT'
     }
 
@@ -540,6 +537,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.navService.setCancelButton(true);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(true);
+    this.navService.setNextPageButton(false);
 
     // 3 END
   }
@@ -626,10 +624,11 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     // 1 START
     if (confirm('ยืนยันการทำรายการหรือไม่')) {
       // 1.1
-      if (this.ILG60_08_02_00_00E11_EXPANDED$.getValue() === true) {
+      if (this.ILG60_08_02_00_00E11_EXPANDED === true) {
         // 1.1.1
         // 1.1.1(1)
-        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
+        const requestBribe: IRequestBribe[] =
+          this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
         if (requestBribe.length === 0) {
           // 1.1.1(1.1)
           // 1.1.1(1.1.1) => // 1.1.1(1.2)
@@ -639,7 +638,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         this.pageLoad();
       }
 
-      if (this.ILG60_08_02_00_00E14_EXPANDED$.getValue() === true) {
+      if (this.ILG60_08_02_00_00E14_EXPANDED === true) {
         // 1.1.2
         // 1.1.2(1)
         const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
@@ -818,6 +817,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     param: IRequestBribegetByRequestBribeRewardID
   ) {}
   ngOnDestroy(): void {
+    this.setShowButton();
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
