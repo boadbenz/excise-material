@@ -4,7 +4,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Routes, RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ManageComponent, DialogJudgment } from "./manage.component";
+import { ManageComponent } from "./manage.component";
 import { NavigationComponent } from "../../../shared/header-navigation/navigation.component";
 import { HttpClientModule } from "@angular/common/http";
 import { HttpModule } from "@angular/http";
@@ -23,6 +23,8 @@ import { MyDatePickerTHModule } from "mydatepicker-th";
 import { MyDatePickerModule } from "mydatepicker";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { IndicmentModalComponent } from '../indictment/indicment-modal.component';
+import { DialogJudgment } from './dialog-judgment'
+
 const routes: Routes = [
   {
     path: "",
