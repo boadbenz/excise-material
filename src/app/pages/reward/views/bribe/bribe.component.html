@@ -1,0 +1,44 @@
+<mat-accordion [multi]="true">
+  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E08_DISABLED$ | async"
+    (opened)="ILG60_08_03_00_00_E08_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E08_EXPANDED$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">คำร้องขอรับเงินสินบน</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-03-00-00-E08 [RequestCommand]="RequestCommand$ | async" [RequestBribe]="RequestBribe$ | async" [mode]="mode$ | async"
+          [inputData]="ILG60_08_03_00_00_E08_DATA$ | async" (formData)="changeForm($event)"></ILG60-08-03-00-00-E08>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E12_DISABLED$ | async"
+    (opened)="ILG60_08_03_00_00_E12_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E12_EXPANDED$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">หนังสือมอบอำนาจ</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-03-00-00-E12 (emitChange)="changeForm($event)"></ILG60-08-03-00-00-E12>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E16_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E16_DISABLED$ | async"
+    (opened)="ILG60_08_03_00_00_E16_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E16_EXPANDED$.next(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="card-body">
+        <ILG60-08-03-00-00-E16 (emitChange)="changeForm($event)"></ILG60-08-03-00-00-E16>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>

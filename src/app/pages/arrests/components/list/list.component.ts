@@ -62,7 +62,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.31');
+        this.sidebarService.setVersion(this.arrestService.version);
 
         this.navService.searchByKeyword
             .takeUntil(this.destroy$)

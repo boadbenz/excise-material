@@ -3,7 +3,7 @@
         <div class="steps tab-wizard">
             <ul role="tablist" class="font-14">
                 <li *ngFor="let item of section; let i=index;" role="tab" 
-                [ngClass]="{'current': sectionId == item.id}" aria-disabled="true">
+                [ngClass]="{'current': sectionId == item.id, 'disabled-line': item.disabledLine}" aria-disabled="true">
                     <a>
                         <span class="current-info audible">current step: </span>
                         <span class="step"></span> 

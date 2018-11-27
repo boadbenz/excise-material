@@ -20,21 +20,32 @@ const routes: Routes = [
             { title: 'ค้นหารายการคำร้องขอรับเงินสินบนรางวัล' }
           ],
           pageType: 'list',
-          codePage: 'ILG60-08-01-00-00',
+          codePage: 'ILG60-08-01-00-00'
         }
       },
       {
-        path: 'manage/:IndictmentID',
+        path: 'manage/:IndictmentID/:ArrestCode',
         loadChildren: './views/manage/manage.module#ManageModule',
         data: {
           urls: [
             { title: 'หน้าหลัก', url: '/' },
-            { title: 'ค้นหารายการคำร้องขอรับเงินสินบนรางวัล' , url: '/reward/list' },
+            {
+              title: 'ค้นหารายการคำร้องขอรับเงินสินบนรางวัล',
+              url: '/reward/list'
+            },
             { title: 'จัดการคำร้องขอรับเงินสินบนรางวัล' }
           ],
           pageType: 'manage',
-          codePage: 'ILG60-08-02-00-00',
+          codePage: 'ILG60-08-02-00-00'
         }
+      },
+      {
+        path: 'bribe',
+        loadChildren: './views/bribe/bribe.module#BribeModule'
+      },
+      {
+        path: 'reward',
+        loadChildren: './views/reward/reward.module#RewardModule'
       }
     ]
   }

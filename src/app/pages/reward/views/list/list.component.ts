@@ -3,8 +3,17 @@ import { ListConfig } from './list.config';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { RequestListService } from '../../services/RequestList.service';
 import { PreloaderService } from 'app/shared/preloader/preloader.component';
-import { IRequestList, IRequestListgetByConAdv } from '../../interfaces/RequestList.interface';
+import {
+  IRequestList,
+  IRequestListgetByConAdv
+} from '../../interfaces/RequestList.interface';
 import { FormGroup } from '@angular/forms';
+import {
+  convertDateForSave,
+  toLocalNumeric,
+  getDateMyDatepicker
+} from 'app/config/dateFormat';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-list',
@@ -15,7 +24,7 @@ export class ListComponent extends ListConfig implements OnInit {
   constructor(
     private navService: NavigationService,
     private requestListService: RequestListService,
-    private preloaderService: PreloaderService
+    private sidebarService: SidebarService
   ) {
     super();
     this.advSearch = this.navService.showAdvSearch;
@@ -27,6 +36,7 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.1.1');
     this.setShowButton();
     this.fetchData('');
   }
@@ -35,12 +45,10 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   public fetchData(Textsearch) {
-    this.preloaderService.setShowPreloader(true);
     this.requestListService
       .RequestListgetByKeyword({ Textsearch: Textsearch })
       .subscribe((res: IRequestList[]) => {
         this.gridData = this.newData(res);
-        this.preloaderService.setShowPreloader(false);
       });
   }
   private setShowButton() {
@@ -58,11 +66,23 @@ export class ListComponent extends ListConfig implements OnInit {
     }));
   }
   public submitAdvSearch($event: FormGroup) {
-    this.preloaderService.setShowPreloader(true);
+    console.log(' $event.value', $event.value);
+
     const formData: IRequestListgetByConAdv = $event.value;
+    formData.LawsuitDateFrom = convertDateForSave(
+      getDateMyDatepicker(formData.LawsuitDateFrom)
+    );
+    formData.LawsuitDateTo = convertDateForSave(
+      getDateMyDatepicker(formData.LawsuitDateTo)
+    );
+    formData.OccurrenceDateFrom = convertDateForSave(
+      getDateMyDatepicker(formData.OccurrenceDateFrom)
+    );
+    formData.OccurrenceDateTo = convertDateForSave(
+      getDateMyDatepicker(formData.OccurrenceDateTo)
+    );
     this.requestListService.RequestListgetByConAdv(formData).subscribe(res => {
       this.gridData = this.gridData = this.newData(res);
-      this.preloaderService.setShowPreloader(false);
     });
   }
 }

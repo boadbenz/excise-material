@@ -39,6 +39,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private s_mainMaster: MainMasterService,
         private s_lawbreaker: fromServices.ArrestLawbreakerService,
         private s_masLawbreaker: fromServices.ArrestMasLawbreakerService,
+        private s_arrest: fromServices.ArrestService,
         private activatedRoute: ActivatedRoute,
         private navService: NavigationService,
         private fb: FormBuilder,
@@ -96,7 +97,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.LawbreakerFG = this.createForm();
-        this.sidebarService.setVersion('0.0.0.31');
+        this.sidebarService.setVersion(this.s_arrest.version);
 
         await this.active_route();
         await this.navigate_service();
@@ -368,9 +369,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+                        .toLowerCase()
+                        .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchTitleName = (text$: Observable<string>) =>

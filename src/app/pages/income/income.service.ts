@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Revenue, RevenueDetail } from './Revenue';
+import { Revenue, RevenueDetail } from './revenue';
 import { appConfig } from '../../app.config';
 
 

@@ -7,9 +7,7 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { IncomeService } from '../income.service';
 
 import { HttpErrorResponse } from '@angular/common/http';
-
-import { Revenue } from '../Revenue';
-
+import { Revenue } from '../revenue';
 import { pagination } from '../../../config/pagination';
 
 import { Message } from '../../../config/message';
@@ -115,8 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
     async ngOnInit() {
-
-        this.sidebarService.setVersion('Revenue 0.0.0.11 (L)');
+        this.sidebarService.setVersion('Revenue 0.0.0.12 (L)');
 
 
 
@@ -135,9 +132,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-
             if (Textsearch) {
-
                 await this.navService.setOnSearch('');
 
 
@@ -189,6 +184,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
     onSearch(Textsearch: any) {
+        this.preloader.setShowPreloader(true);
 
         this.incomeService.getByKeyword(Textsearch).subscribe(list => {
 
@@ -203,9 +199,7 @@ export class ListComponent implements OnInit, OnDestroy {
             alert(Message.noRecord);
 
             this.RevenueList = [];
-
-            this.preloader.setShowPreloader(true);
-
+            this.preloader.setShowPreloader(false);
         });
 
     }
@@ -261,10 +255,6 @@ export class ListComponent implements OnInit, OnDestroy {
             form.value.RevenueStatus = null;
 
         }
-
-
-
-        debugger
 
         await this.incomeService.getByConAdv(form.value).then(async list => {
 
@@ -323,9 +313,7 @@ export class ListComponent implements OnInit, OnDestroy {
             if(StaffSendMoney.length > 0){
 
                 item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
-
-                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeName;
-
+                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeShortName;
             }
 
 
@@ -418,7 +406,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this._dateStartTo = event.date;
         this.checkDateDelivery();
-
     }
 
 

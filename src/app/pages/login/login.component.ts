@@ -9,11 +9,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  private errMsg: string;
+
   returnUrl: string;
 
   constructor(private authService: AuthService,
-  private router: Router,
-  private route: ActivatedRoute) { 
+    private router: Router,
+    private route: ActivatedRoute) {
     // reset signin status
     this.authService.signout();
     // get return url from route parameters or default to '/'
@@ -24,9 +26,29 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(form: any) {
-    if (this.authService.signin(form)) {
-      this.router.navigate([this.returnUrl]);
-    };
+    var User = form.userName
+    var Pass = form.password;
+    // console.log("User : ", User, "Pass : ", Pass);
+    if (!User) {
+      this.errMsg = "กรุณาระบุชื่อเข้าระบบ";
+    } else if (!Pass) {
+      this.errMsg = "กรุณาระบุรหัสผ่าน";
+    }
+    if (User && Pass) {
+      if (this.authService.signin(form)) {
+        this.router.navigate([this.returnUrl]);
+      };
+    }
   }
+  ClearErrMsg() {
+    this.errMsg = '';
+  }
+
+  // onSubmit(form: any) {
+  //   if (this.authService.signin(form)) {
+  //     this.router.navigate([this.returnUrl]);
+  //   };
+
+  // }
 
 }

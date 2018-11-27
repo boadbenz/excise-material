@@ -19,6 +19,7 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 export class ListComponent implements OnInit {
 
     private subOnSearch: any;
+
     dataTable: any;
     advSearch: any;
     _dateDeliveryStartFrom: any;
@@ -65,11 +66,11 @@ export class ListComponent implements OnInit {
         this.DeliveryDateTo = null;
         this.ProveDateTo = null;
 
-        this.sidebarService.setVersion('Prove 0.0.0.5');
+        this.sidebarService.setVersion('Prove 0.0.0.12');
 
-        this.onSearch({ Textsearch: "" });
+        //this.preLoaderService.setShowPreloader(true);
+        //this.onSearch({ Textsearch: "" });
 
-        this.preLoaderService.setShowPreloader(true);
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
@@ -80,12 +81,8 @@ export class ListComponent implements OnInit {
 
                 if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
                 else { this.onSearch(Textsearch); }
-
-                this.preLoaderService.setShowPreloader(false);
             }
-        })
-
-       
+        }) 
     }
 
     ngOnDestroy(): void {
@@ -94,11 +91,15 @@ export class ListComponent implements OnInit {
 
     async onSearch(Textsearch: any) {
         this.preLoaderService.setShowPreloader(true);
+
         await this.proveService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
+
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord + " (API Disconnected)");
+            alert(Message.noRecord);
+            this.ListProve = [];
+            this.preLoaderService.setShowPreloader(false);
         });
        
     }
@@ -144,21 +145,20 @@ export class ListComponent implements OnInit {
             }
         }
 
-        form.value.DeliveryProgramCode = "XCS05";
-        form.value.DeliveryProcessCode = "01";
-        form.value.ProveProgramCode = "XCS05";
-        form.value.ProveProcessCode = "01";
+        // form.value.DeliveryProgramCode = "XCS05";
+        // form.value.DeliveryProcessCode = "01";
+        // form.value.ProveProgramCode = "XCS05";
+        // form.value.ProveProcessCode = "01";
 
 
         this.preLoaderService.setShowPreloader(true);
 
+        debugger
         await this.proveService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
-
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord + " (API Disconnected)");
-
+            alert(Message.noRecord);
             this.preLoaderService.setShowPreloader(false);
         });
     }
@@ -168,17 +168,40 @@ export class ListComponent implements OnInit {
 
         if (!list.length) {
             alert(Message.noRecord);
+            this.ListProve = [];
+
             return false;
         }
 
         await list.map((item) => {
-            item.DeliveryDate = toLocalShort(item.DeliveryDate);
-            item.ProveDate = toLocalShort(item.ProveDate);
-            item.ProveOneStaff = item.ProveStaff.filter(item => item.ContributorCode === '14');
-            item.ProveOneStaffScience = item.ProveStaff.filter(item => item.ContributorCode === '15');
+            var vProveStaff, vProveStaffScience;
+
+            if(item.DeliveryDate){
+                item.DeliveryDate = toLocalShort(item.DeliveryDate);
+            }
+           
+            if(item.ProveDate){
+                item.ProveDate = toLocalShort(item.ProveDate);
+            }
+            
+
+            vProveStaff = item.ProveStaff.filter(item => item.ContributorID === 14);
+            vProveStaffScience = item.ProveStaff.filter(item => item.ContributorID === 15);
+
+            item.ProveOneStaff = "";
+            item.ProveOneStaffScience = "";
+            item.ProveOneDeptScience = "";
+
+            if(vProveStaff.length > 0){
+                item.ProveOneStaff = vProveStaff[0].TitleName + vProveStaff[0].FirstName + " " + vProveStaff[0].LastName;
+            }
+
+            if(vProveStaffScience.length > 0){
+                item.ProveOneStaffScience = vProveStaffScience[0].TitleName + vProveStaffScience[0].FirstName + " " + vProveStaffScience[0].LastName;
+                item.ProveOneDeptScience =  vProveStaffScience[0].OfficeShortName;
+            }
         })
 
-        
         if (Array.isArray(list)) {
             this.Prove = list;
         } else {
@@ -195,7 +218,17 @@ export class ListComponent implements OnInit {
     }
 
     clickView(LawsuitID: string, ArrestCode: string, IndictmentID: string, GuiltBaseID: string, ProveID: string) {
-        this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${IndictmentID}/${GuiltBaseID}/${ProveID}`]);
+        //this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${IndictmentID}/${GuiltBaseID}/${ProveID}`]);
+        debugger
+        if(ProveID == "" || ProveID == undefined)
+        {
+            ProveID = "0";
+            this._router.navigate([`/prove/manage/C/${ProveID}/${IndictmentID}`]);
+        }
+        else
+        {
+            this._router.navigate([`/prove/manage/R/${ProveID}/${IndictmentID}`]);
+        }
     }
 
     getCurrentDate() {
@@ -210,9 +243,7 @@ export class ListComponent implements OnInit {
 
     onEDeliveryDateChange(event: IMyDateModel) {
         this._dateDeliveryStartTo = event.date;
-        if (this.checkDateDelivery()) {
-
-        }
+        this.checkDateDelivery();
     }
 
     checkDateDelivery() {
@@ -236,9 +267,7 @@ export class ListComponent implements OnInit {
 
     onEProveDateChange(event: IMyDateModel) {
         this._dateProveStartTo = event.date;
-        if (this.checkDateProve()) {
-
-        }
+        this.checkDateProve();
     }
 
     checkDateProve() {

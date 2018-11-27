@@ -4,12 +4,12 @@ export interface IRequestList {
   IndictmentID: number;
   LawsuitID: number;
   LawsuitNo: string;
-  OccurrenceDate: Date;
-  OccurrenceDateFrom?: Date;
-  OccurrenceDateTo?: Date;
-  LawsuitDate: Date;
-  LawsuitDateFrom: Date;
-  LawsuitDateTo: Date;
+  OccurrenceDate: string;
+  OccurrenceDateFrom?: string;
+  OccurrenceDateTo?: string;
+  LawsuitDate: string;
+  LawsuitDateFrom: string;
+  LawsuitDateTo: string;
   TitleName: string;
   FirstName: string;
   LastName: string;
@@ -22,10 +22,10 @@ export interface IRequestListgetByKeyword {
 export interface IRequestListgetByConAdv {
   ArrestCode: string;
   LawsuitNo: string;
-  OccurrenceDateFrom: Date;
-  OccurrenceDateTo: Date;
-  LawsuitDateFrom: Date;
-  LawsuitDateTo: Date;
+  OccurrenceDateFrom: string;
+  OccurrenceDateTo: string;
+  LawsuitDateFrom: string;
+  LawsuitDateTo: string;
   StaffName: string;
   OfficeName: string;
 }
