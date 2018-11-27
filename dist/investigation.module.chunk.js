@@ -398,7 +398,7 @@ var DetailManageComponent = /** @class */ (function () {
             .map(function (x) {
             x.data.urls
                 .find(function (y) { return y.url.indexOf('/investigation/manage') >= 0; })
-                .url = "/investigation/manage/" + _this.investMode + "/" + _this.investCode; // previous path
+                .url = "/investigation/manage/R/" + _this.investCode; // previous path
             return x;
         });
         this.router.resetConfig(routerConfig);
@@ -2770,7 +2770,7 @@ var ManageComponent = /** @class */ (function () {
     };
     ManageComponent.prototype.createForm = function () {
         this.investigateForm = this.fb.group({
-            InvestigateCode: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* FormControl */](this.investCode),
+            InvestigateCode: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* FormControl */](this.investCode, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["m" /* Validators */].required),
             InvestigateNo: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["m" /* Validators */].required),
             DateStart: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["m" /* Validators */].required),
             DateEnd: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["m" /* Validators */].required),
@@ -3689,6 +3689,7 @@ function setViewSuspect(item) {
                     item.ReferenceID = item.IDCard;
                     break;
             }
+            break;
         case 2: // นิติบุคคล
             item.ReferenceID = item.CompanyRegistrationNo;
             break;
@@ -5432,7 +5433,7 @@ var InvestgateService = /** @class */ (function () {
                 'Content-Type': 'application/json'
             })
         };
-        this.version = '0.0.0.5';
+        this.version = '0.0.0.6';
     }
     InvestgateService.prototype.InvestigateListgetByKeyword = function (TextSearch, StaffCode) {
         var params = { TextSearch: TextSearch, StaffCode: StaffCode };

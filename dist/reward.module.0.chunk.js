@@ -112,7 +112,7 @@ var CoreInterceptor = /** @class */ (function () {
             this._pendingRequests++;
             if (1 === this._pendingRequests) {
                 this._pendingRequestsStatus.next(true);
-                // this.preloaderService.setShowPreloader(true);
+                this.preloaderService.setShowPreloader(true);
             }
         }
         // const token = JSON.parse(localStorage.getItem('user'));
@@ -181,9 +181,7 @@ var CoreInterceptor = /** @class */ (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return REWARD_COMPONENTS; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_views_component__ = __webpack_require__("./src/app/pages/reward/views/views.component.ts");
 
-var REWARD_COMPONENTS = [
-    __WEBPACK_IMPORTED_MODULE_0__views_views_component__["a" /* ViewsComponent */]
-];
+var REWARD_COMPONENTS = [__WEBPACK_IMPORTED_MODULE_0__views_views_component__["a" /* ViewsComponent */]];
 
 
 /***/ }),
@@ -387,7 +385,7 @@ var REWARD_MASTER_SERVICES = [
 /***/ "./src/app/pages/reward/views/views.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row m-t-10\">\r\n  <div class=\"col-12\">\r\n    <div class=\"wizard-content\">\r\n      <div class=\"wizard-circle wizard clearfix clearfix\">\r\n        <div class=\"steps tab-wizard\">\r\n          <ul role=\"tablist\">\r\n            <li role=\"tab\" class=\"current\" aria-disabled=\"false\" aria-selected=\"true\">\r\n              <a>\r\n                <span class=\"current-info audible\">current step: </span>\r\n                <span class=\"step\"></span> 1. ใบแจ้งความนำจับ</a>\r\n            </li>\r\n            <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n              <a>\r\n                <span class=\"step\"></span> 2. งานจับกุม </a>\r\n            </li>\r\n            <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n              <a>\r\n                <span class=\"step\"></span> 3. รับคำกล่าวโทษ </a>\r\n            </li>\r\n            <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n              <a>\r\n                <span class=\"step\"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>\r\n            </li>\r\n            <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n              <a>\r\n                <span class=\"step\"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>\r\n            </li>\r\n            <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n              <a>\r\n                <span class=\"step\"></span> 6. นำส่งเงินรายได้ </a>\r\n            </li>\r\n            <li role=\"tab\" class=\"current\" aria-disabled=\"true\">\r\n              <a>\r\n                <span class=\"step\"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <router-outlet></router-outlet>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"row m-t-10\">\r\n  <div class=\"col-12\">\r\n    \r\n    <router-outlet></router-outlet>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
