@@ -64,7 +64,7 @@ export class FineService {
 
     }
     async compareArrestGetByCon(ArrestCode: string) {
-      // http://103.233.193.62:8881/XCS60/CompareListgetByConAdv
+      // http://192.168.3.158:8881/XCS60/CompareListgetByConAdv
       const params = { 'ArrestCode' : ArrestCode };
       const url = `${appConfig.api8887}/CompareListgetByConAdv`;
 
