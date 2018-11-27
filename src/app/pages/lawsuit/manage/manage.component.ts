@@ -27,6 +27,8 @@ import { async } from "q";
 import { JudgmentModel } from "../models/judgment";
 import { IMyDpOptions } from "mydatepicker";
 import { MatAutocomplete } from '@angular/material';
+
+import { DialogJudgment } from './dialog-judgment'
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html"
@@ -119,7 +121,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.18');
+    this.sidebarService.setVersion('0.0.0.19');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -493,7 +495,6 @@ export class ManageComponent implements OnInit {
     //   })
     // }
     if (IsLawsuitComplete == 1) {
-      // // let VerifyLawsuitNo = await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut)
       let lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
       let dateNow = (this.lawsuitForm.controls['LawsuitDate'].value).date
       let _lawDate = dateNow.year + '-' + dateNow.month + '-' + dateNow.day + "T00:00:00.0";
@@ -566,10 +567,6 @@ export class ManageComponent implements OnInit {
         let index = 0;
         await LawsuitArrestIndicmentDetail.forEach(async element => {
           let ArrestIndicmentDetail = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID)
-          console.log(element.IndictmentDetailID)
-          console.log(Number(this.LawsuitTableList.value[index].LawsuitType))
-          console.log(Number(this.LawsuitTableList.value[index].LawsuitEnd))
-
           await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(this.LawsuitTableList.value[index].LawsuitType), Number(this.LawsuitTableList.value[index].LawsuitEnd))
           // if (ArrestIndicmentDetail.LawsuitType == 0) {
           // } else {
@@ -599,76 +596,6 @@ export class ManageComponent implements OnInit {
           alert("บันทึกไม่สำเร็จ")
         }
       }
-
-
-      // if (ArrestIndicmentDetail.LawsuitType == 0) {
-      //   await this.lawsuitService.LawsuitupdByCon(this.LawsuitID, lawsuitNo)
-      //   let _lawDate = (this.lawsuitForm.controls['LawsuitDate'].value)
-      //   let tempLawsuitStaff = [];
-      //   let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
-      //   let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
-      //   tempLawsuitStaff.push({
-      //     "StaffID": '',
-      //     "ProgramCode": "XCS-60",
-      //     "ProcessCode": "XCS-60-001",
-      //     "LawsuitID": this.LawsuitID,
-      //     "StaffCode": this.LawsuitStaffOnsave.StaffCode,
-      //     "TitleName": this.LawsuitStaffOnsave.TitleName,
-      //     "FirstName": this.LawsuitStaffOnsave.FirstName,
-      //     "LastName": this.LawsuitStaffOnsave.LastName,
-      //     "PositionCode": "",
-      //     "PositionName": this.lawsuitForm.controls['PositionName'].value,
-      //     "PosLevel": this.LawsuitStaffOnsave.PosLevel,
-      //     "PosLevelName": this.LawsuitStaffOnsave.PosLevelName,
-      //     "DepartmentCode": "",
-      //     "DepartmentName": "",
-      //     "DepartmentLevel": this.LawsuitStaffOnsave.DeptLevel,
-      //     "OfficeCode": this.LawsuitStaffOnsave.OfficeCode,
-      //     "OfficeName": this.LawsuitStaffOnsave.OfficeName,
-      //     "OfficeShortName": this.LawsuitStaffOnsave.OfficeShortName,
-      //     "ContributorID": 12,
-      //     "IsActive": this.LawsuitStaffOnsave.IsActive
-      //   })
-
-      //   const json = {
-      //     "LawsuitID": this.LawsuitID,
-      //     "IndictmentID": this.IndictmentID,
-      //     "IsLawsuit": isLaw,
-      //     "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : null,
-      //     "LawsuitNo": lawsuitNo,
-      //     "LawsuitDate": _lawDate.jsdate,
-      //     "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
-      //     "LawsuitStationCode": '',
-      //     "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
-      //     "IsOutside": isOut,
-      //     "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
-      //     "LawsuitResult": '',
-      //     "DeliveryDocNo": '',
-      //     "DeliveryDate": _lawDate.jsdate,
-      //     "IsActive": 1,
-      //     "LawsuitType": this.LawsuitTableList.value[0].LawsuitType,
-      //     "LawsuitEnd": this.LawsuitTableList.value[0].LawsuitEnd,
-      //     "LawsuitStaff": tempLawsuitStaff
-      //   }
-      //   console.log(json)
-      //   let update = await this.lawsuitService.LawsuitJudgementupdByCon(json)
-      //   if (update.IsSuccess == "True") {
-      //     alert("บันทึกสำเร็จ")
-      //     let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
-      //     checkComplete ? console.log("ILG60-04-02-03-00") : console.log("none")
-      //   }
-      // } else {
-      //   await this.lawsuitService.LawsuitArrestupdByCon(this.lawsuitArrestForm.value.ArrestCode)
-      //   let lawsuitID = await this.lawsuitService.LawsuitArrestgetByCon(this.IndictmentID)
-      //   if (lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID > 0) {
-      //     this.router.navigate(['/lawsuit/manage', 'R'], {
-      //       queryParams: { IndictmentID: this.IndictmentID, LawsuitID: lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID }
-      //     });
-      //   }
-
-      // }
-      // this.preLoaderService.setShowPreloader(false);
-
     }
     /// save IsLawsuitComplete = 0
     else {
@@ -1414,8 +1341,8 @@ export class ManageComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
       // maxWidth: 'none',
-      height: '100%',
-      maxHeight: 'none',
+      // height: '100%',
+      // maxHeight: 'none',
       data: {
         lawsuitArrest: item,
         index: index,
@@ -1439,6 +1366,7 @@ export class ManageComponent implements OnInit {
 
 
 }
+<<<<<<< HEAD
 
 import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
@@ -1769,3 +1697,5 @@ export class DialogJudgment {
   }
 
 }
+=======
+>>>>>>> Em_Dev
