@@ -87,19 +87,19 @@ export class CONFIG extends RewardConfig {
   }
   public Input_RequestRewardgetByCon$ = new BehaviorSubject<any>([]);
 
-  public formObject = {
-    check: true,
-    sort: 4,
-    TitleName: '',
-    FullName: '',
-    PositionName: '',
-    PosLevelName: '',
-    ContributorName: '',
-    ContributorID: '',
-    FirstPart: 0,
-    FirstMoney: 0,
-    SecondPart: 0,
-    SecondMoney: 0,
-    ToTalMoney: 0
-  };
+  // public formObject = {
+  //   check: true,
+  //   sort: 4,
+  //   TitleName: '',
+  //   FullName: '',
+  //   PositionName: '',
+  //   PosLevelName: '',
+  //   ContributorName: '',
+  //   ContributorID: '',
+  //   FirstPart: 0,
+  //   FirstMoney: 0,
+  //   SecondPart: 0,
+  //   SecondMoney: 0,
+  //   ToTalMoney: 0
+  // };
 }
