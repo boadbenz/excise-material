@@ -20,4 +20,5 @@ export class NoticeSuspect {
     public RowId: number;
     public IsChecked: boolean;
     public IsNewItem: boolean;
+    public MistreatNo: string;
 }

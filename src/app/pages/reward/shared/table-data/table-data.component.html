@@ -5,39 +5,79 @@
         <thead>
           <tr>
             <th *ngIf="showIndex">ลำดับ</th>
-            <ng-container *ngFor="let column of columns;trackBy: column?.field">
-              <ng-container *ngIf="!column?.isHiddenTable">
-                <th>{{column?.title}}</th>
+            <ng-container *ngFor="let column of (columns$ | async);trackBy: column?.field">
+              <ng-container *ngIf="column?.inputType !== 'hidden' && !column?.isHiddenTable">
+                <th [class]="column?.class" [width]="column?.width">{{column?.title}}</th>
               </ng-container>
             </ng-container>
-            <th></th>
+            <th *ngIf="options?.action === 'VIEW'"></th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let item of pagedItems; let i = index;">
-            <td *ngIf="showIndex">{{i + 1}}</td>
-            <ng-container *ngFor="let column of columns; trackBy: column?.field">
-              <ng-container *ngIf="!column?.isHiddenTable">
-                <td>{{ item[column?.field] || '-' }}</td>
+        <tbody *ngIf="pagedItems?.length > 0">
+          <ng-container *ngFor="let item of pagedItems; let i = index;">
+            <tr>
+              <td *ngIf="showIndex">{{i + 1}}</td>
+              <ng-container *ngFor="let column of (columns$ | async); trackBy: column?.field">
+                <ng-container *ngIf="column?.inputType !== 'hidden' && !column?.isHiddenTable">
+                  <td>
+
+                    <ng-container *ngIf="column?.showInput; else showDefault;">
+                      <input class="form-control text-center" [type]="column?.inputType || 'text'" [(ngModel)]="ShowInputModel[i]"
+                        [value]="item[column?.field]">
+                    </ng-container>
+                    <ng-template #showDefault>
+                      <ng-container *ngIf="column?.inputType == 'date';else inputTypeAny">
+                          {{ (item[column?.field] | date) || '-' }}
+                      </ng-container>
+                      <ng-template #inputTypeAny>
+                          {{ (item[column?.field]) || '-' }} 
+                      </ng-template>
+                        
+                      
+
+                      <input type="hidden" [name]="column?.field + i">
+                    </ng-template>
+                  </td>
+                </ng-container>
+
               </ng-container>
 
-            </ng-container>
-
-            <td>
-              <ng-container *ngIf="options?.action === 'VIEW'">
-                <a href="javaScript:void(0);" class="text-secondary" [routerLink]="[options?.actionUrl, item[options?.actionFieldParams]]">
+              <td *ngIf="options?.action === 'VIEW'">
+                <a href="javaScript:void(0);" class="text-secondary" [routerLink]="customRouteFor(options?.actionUrl,item, options?.actionFieldParams)">
                   <i class="mdi mdi-eye fa-lg"></i>
                 </a>
-              </ng-container>
+              </td>
+            </tr>
+          </ng-container>
 
-            </td>
-          </tr>
         </tbody>
+        <tfoot *ngIf="options?.isSumFooter">
+          <tr>
+            <th *ngIf="showIndex"></th>
+            <ng-container *ngFor="let column of (columns$ | async);trackBy: column?.field;let last=last">
+              <ng-container *ngIf="column?.inputType !== 'hidden'">
+                <th class="text-right">
+
+                  <ng-container *ngIf="column?.showInput; else showDefault;" >
+                    <input class="form-control text-center" type="text" width="50" disabled [value]="ShowInputModel | sumArray">
+                  </ng-container>
+                  <ng-template #showDefault>
+                    <span *ngIf="last">
+                      รวม :
+                    </span>
+                  </ng-template>
+                </th>
+
+              </ng-container>
+            </ng-container>
+
+            <th *ngIf="options?.action === 'VIEW'">
+
+            </th>
+          </tr>
+        </tfoot>
       </table>
     </div>
-    <!-- <pre>
-      {{pager | json}}
-    </pre> -->
   </div>
   <div class="card-footer card-footer-unset">
     <app-pagination-table [TotalItems]="pager?.totalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"

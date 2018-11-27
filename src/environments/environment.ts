@@ -5,6 +5,6 @@
 
 export const environment = {
     production: false,
-    hostXCS60: 'http://103.233.193.62:8883/XCS60',
-    api: 'http://150.95.81.223:8883'
+    hostXCS60: 'http://192.168.3.158:8883/XCS60',
+    api: 'http://192.168.3.158:8883'
 };

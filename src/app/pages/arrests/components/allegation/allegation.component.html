@@ -135,7 +135,6 @@
           <ng-template #allegationDetail let-c="close" let-d="dismiss">
             <app-allegation-detail-modal (c)="modal.close()" (d)="modal.dismiss()" 
             (OutputLawbreaker)="addArrestLawbreaker($event)"
-            [ArrestIndictment]="arrestIndictmentFG.value"
             ></app-allegation-detail-modal>
           </ng-template>
         </div>

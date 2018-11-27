@@ -94,10 +94,13 @@ export class PrintDocModalComponent implements OnInit {
     }
 
     dismiss(e: any) {
+        console.log('dd');
+        this.d.emit('esc');
         this.d.emit(e);
     }
 
     close(e: any) {
+        console.log('close');
         this.c.emit(e);
         this._router.navigate([`/fine/list`]);
     }

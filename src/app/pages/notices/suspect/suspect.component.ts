@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, TitleNames, Nationalitys, Races, Religions, RegionModel } from '../../../models';
-import { FormGroup, FormControl } from '@angular/forms';
+import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, RegionModel, MaritalStatus } from '../../../models';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Suspect } from './suspect.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -25,13 +25,15 @@ import { MainMasterService } from '../../../services/main-master.service';
     styleUrls: ['./suspect.component.scss']
 })
 export class SuspectComponent implements OnInit, OnDestroy {
+    months:any[];
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private preloader: PreloaderService,
         private navService: NavigationService,
         private noticeService: NoticeService,
-        private mainMasterService: MainMasterService
+        private mainMasterService: MainMasterService,
+        private fb: FormBuilder,
     ) {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
@@ -56,57 +58,64 @@ export class SuspectComponent implements OnInit, OnDestroy {
     entityTypes: DropDown[] = EntityTypes;
     genderTypes: DropDown[] = GenderTypes;
     suspectTypes: DropDown[] = LawbreakerTypes;
-    titleNames: DropDown[] = TitleNames;
-    nationnalitys: DropDown[] = Nationalitys;
-    races: DropDown[] = Races;
-    religions: DropDown[] = Religions;
-    materialStatus: DropDown[] ;
+    materialStatus: DropDown[] = MaritalStatus;
+    titleNames: any[] ;
+    nationnalitys: any[];
+    races: any[];
+    religions: any[] ;
+    countries: any[];
 
     typeheadRegion: RegionModel[] = []
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
+        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 
-        this.SuspectFG = this.createForm();
+        await this.createForm();
 
         await this.setRegionStore();
+        await this.getTitleNames();
+        await this.getNationality();
+        await this.getRace();
+        await this.getReligion();
+        await this.getCountry();
         this.active_route();
         this.navigate_service();
 
         this.preloader.setShowPreloader(false);
     }
 
-    private createForm(): FormGroup {
-        return new FormGroup({
+    private createForm(): void {
+        this.SuspectFG = new FormGroup({
             SuspectID: new FormControl(null),
-            EntityType: new FormControl(null),
+            EntityType: new FormControl(null, Validators.required),
             CompanyTitleCode: new FormControl(null),
             CompanyTitle: new FormControl(null),
             CompanyName: new FormControl(null),
             CompanyOtherName: new FormControl(null),
             CompanyRegistrationNo: new FormControl(null),
             CompanyLicenseNo: new FormControl(null),
-            FoundedDate: new FormControl(null),
-            LicenseDateForm: new FormControl(null),
-            LicenseDateTo: new FormControl(null),
+            FoundedDate: new FormControl(""),
+            LicenseDateForm: new FormControl(""),
+            LicenseDateTo: new FormControl(""),
             TaxID: new FormControl(null),
             ExciseRegNo: new FormControl(null),
-            SuspectType: new FormControl(null),
+            SuspectType: new FormControl(null, Validators.required),
             SuspectTitleCode: new FormControl(null),
             SuspectTitleName: new FormControl(null),
-            SuspectFirstName: new FormControl(null),
+            SuspectFirstName: new FormControl(null, Validators.required),
             SuspectMiddleName: new FormControl(null),
-            SuspectLastName: new FormControl(null),
+            SuspectLastName: new FormControl(null, Validators.required),
             SuspectOtherName: new FormControl(null),
             SuspectDesc: new FormControl(null),
-            IDCard: new FormControl(null),
+            IDCard: new FormControl(null, Validators.required),
             PassportNo: new FormControl(null),
             VISAType: new FormControl(null),
             PassportCountryCode: new FormControl(null),
             PassportCountryName: new FormControl(null),
-            PassportDateIn: new FormControl(null),
-            PassportDateOut: new FormControl(null),
-            BirthDate: new FormControl(null),
+            PassportDateIn: new FormControl(""),
+            PassportDateOut: new FormControl(""),
+            BirthDate: new FormControl(""),
             GenderType: new FormControl(null),
             BloodType: new FormControl(null),
             NationalityCode: new FormControl(null),
@@ -140,7 +149,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
             Remarks: new FormControl(null),
             LinkPhoto: new FormControl(null),
             PhotoDesc: new FormControl(null),
-            IsActive: new FormControl(null)
+            IsActive: new FormControl(1)
         })
     }
 
@@ -186,16 +195,29 @@ export class SuspectComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnSave(false);
 
-                const birthDay = getDateMyDatepicker(this.SuspectFG.value.BirthDate);
-                const passportDateIn = getDateMyDatepicker(this.SuspectFG.value.PassportDateIn);
-                const passportDateOut = getDateMyDatepicker(this.SuspectFG.value.PassportDateOut);
+                if (!this.SuspectFG.valid) {
+                    this.isRequired = true;
+                    alert(Message.checkData)
+                    return false;
+                }
 
-                this.SuspectFG.value.BirthDate = convertDateForSave(birthDay);
-                this.SuspectFG.value.PassportDateIn = convertDateForSave(passportDateIn);
-                this.SuspectFG.value.PassportDateOut = convertDateForSave(passportDateOut);
+                // let birthDay = getDateMyDatepicker(this.SuspectFG.value.BirthDate);
+                let birthDay = this.SuspectFG.value.BirthDate;
+                if(birthDay && birthDay.date!=undefined){
+                    birthDay = birthDay.date.day+"-"+this.months[birthDay.date.month-1]+"-"+birthDay.date.year;
+                }
+                let passportDateIn = this.SuspectFG.value.PassportDateIn;//getDateMyDatepicker(this.SuspectFG.value.PassportDateIn);
+                if(passportDateIn && passportDateIn.date!=undefined){
+                    passportDateIn = passportDateIn.date.day+"-"+this.months[passportDateIn.date.month-1]+"-"+passportDateIn.date.year;
+                }
+                let passportDateOut = this.SuspectFG.value.PassportDateOut;//getDateMyDatepicker(this.SuspectFG.value.PassportDateOut);
+                if(passportDateOut && passportDateOut.date!=undefined){
+                    passportDateOut = passportDateOut.date.day+"-"+this.months[passportDateOut.date.month-1]+"-"+passportDateOut.date.year;
+                }
 
-                console.log(JSON.stringify(this.SuspectFG.value));
-                
+                this.SuspectFG.value.BirthDate = birthDay;//convertDateForSave(birthDay);
+                this.SuspectFG.value.PassportDateIn = passportDateIn;//convertDateForSave(passportDateIn);
+                this.SuspectFG.value.PassportDateOut = passportDateOut;//convertDateForSave(passportDateOut);
 
                 if (this.mode === 'C') {
                     this.OnCreate();
@@ -207,9 +229,10 @@ export class SuspectComponent implements OnInit, OnDestroy {
         })
     }
 
-    async GetByCon(SuspectID: string) {
+    GetByCon(SuspectID: string) {
 
-        await this.noticeService.noticeSuspectgetByCon(SuspectID).then(res => {
+        this.preloader.setShowPreloader(true);
+        this.noticeService.noticeSuspectgetByCon(SuspectID).then(res => {
             this.SuspectFG.reset({
                 SuspectID: res.SuspectID,
                 EntityType: res.EntityType,
@@ -279,7 +302,8 @@ export class SuspectComponent implements OnInit, OnDestroy {
             if (res.LinkPhoto) {
                 this.imgNobody.nativeElement.src = res.LinkPhoto;
             }
-        })
+            this.preloader.setShowPreloader(false);
+        });
 
     }
 
@@ -303,6 +327,15 @@ export class SuspectComponent implements OnInit, OnDestroy {
     async OnRevice() {
         // Set Preloader
         this.preloader.setShowPreloader(true);
+
+        let passportDateIn = this.SuspectFG.value.PassportDateIn;//convertDateForSave(passportDateIn);
+        let passportDateOut = this.SuspectFG.value.PassportDateOut;//convertDateForSave(passportDateOut);
+        if(!passportDateIn || passportDateIn.myDate==null){
+            this.SuspectFG.value.PassportDateIn = "";
+        }
+        if(!passportDateOut || passportDateOut.myDate==null){
+            this.SuspectFG.value.PassportDateOut = "";
+        }
 
         let IsSuccess: boolean = false;
         await this.noticeService.noticeMasSuspectupdByCon(this.SuspectFG.value).then(isSuccess => {
@@ -340,6 +373,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
         })
     }
 
+    //Master
     searchRegion = (text3$: Observable<string>) =>
         text3$
             .debounceTime(300)
@@ -364,6 +398,91 @@ export class SuspectComponent implements OnInit, OnDestroy {
             ProvinceCode: ele.item.ProvinceCode,
             Province: ele.item.ProvinceNameTH
         });
+    }
+
+    getTitleNames(){
+        this.mainMasterService.MasTitleMaingetAll().then(res=>{this.titleNames = res;});
+    }
+    searchTitleName = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.titleNames
+                    .filter(v =>
+                        (v.TitleNameTH && v.TitleNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.TitleNameEN && v.TitleNameEN.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    ).slice(0, 10));
+    formatterTitleName = (x: { TitleNameTH: string }) => `${x.TitleNameTH || ''}`
+    selectItemTitleName(ele: any) {
+        this.SuspectFG.patchValue({
+            SuspectTitleCode: ele.item.TitleCode,
+            SuspectTitleName: ele.item.TitleNameTH
+        });
+    }
+
+    getNationality(){
+        this.mainMasterService.MasNationalityMaingetAll().then(res=>this.nationnalitys=res);
+    }
+    searchNationality = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.nationnalitys
+                    .filter(v =>
+                        (v.NationalityNameTh && v.NationalityNameTh.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.NationalityNameEn && v.NationalityNameEn.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    ).slice(0, 10));
+    formatterNationality = (x: { NationalityNameTh: string }) => `${x.NationalityNameTh || ''}`
+    selectItemNationality(ele: any) {
+        this.SuspectFG.patchValue({
+            NationalityCode: ele.item.NationalityCode,
+            NationalityNameTH: ele.item.NationalityNameTh
+        });
+    }
+    getRace(){
+        this.mainMasterService.MasRaceMaingetAll().then(res=>this.races=res);
+    }
+    searchRace = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.races
+                    .filter(v =>
+                        (v.RaceNameTH && v.RaceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.RaceNameEN && v.RaceNameEN.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    ).slice(0, 10));
+    formatterRace = (x: { RaceNameTH: string }) => `${x.RaceNameTH || ''}`
+    selectItemRace(ele: any) {
+        this.SuspectFG.patchValue({
+            RaceCode: ele.item.RaceCode,
+            RaceName: ele.item.RaceNameTH
+        });
+    }
+    getReligion(){
+        this.mainMasterService.MasReligionMaingetAll().then(res=>this.religions=res);
+    }
+    searchReligion = (text3$: Observable<string>) =>
+        text3$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .map(term => term === '' ? []
+                : this.religions
+                    .filter(v =>
+                        (v.ReligionNameTH && v.ReligionNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        (v.ReligionNameEN && v.ReligionNameEN.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    ).slice(0, 10));
+    formatterReligion = (x: { RaceNameTH: string }) => `${x.RaceNameTH || ''}`
+    selectItemReligion(ele: any) {
+        this.SuspectFG.patchValue({
+            ReligionCode: ele.item.ReligionCode,
+            ReligionName: ele.item.ReligionNameTH
+        });
+    }
+    getCountry(){
+        this.mainMasterService.MasCountryMaingetAll().then(res=>this.countries=res);
     }
 
     changeImage(e: any, img: any) {

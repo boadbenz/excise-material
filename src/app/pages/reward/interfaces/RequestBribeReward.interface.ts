@@ -15,10 +15,10 @@ export interface IRequestBribeRewardgetByIndictmentID {
 
 // tslint:disable-next-line:no-empty-interface
 export interface IRequestBribeRewardinsAll {
-  RequestBribeRewardID: number;
-  IndictmentID: number;
-  HaveNotice: number;
-  IsActive: number;
+  RequestBribeRewardID?: number;
+  IndictmentID?: number;
+  HaveNotice?: number;
+  IsActive?: number;
 }
 // tslint:disable-next-line:class-name
 export interface IRequestBribeRewardinsAllResponse extends IResponseCommon {

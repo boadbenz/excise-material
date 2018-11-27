@@ -16,8 +16,6 @@ import { CardActionsModule } from '../component/card-actions/card-actions.module
 import { StepWizardModule } from '../component/step-wizard/step-wizard.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalOffenseModule } from '../component/modal-offense/modal-offense.module';
-import { StoreModule } from '@ngrx/store';
-import * as fromReducers from './store/reducers/';
 import { ROUTES } from './arrest.routing';
 import { ArrestsService } from './arrests.service';
 import { PreloaderModule } from 'app/shared/preloader/preloader.module';
@@ -29,9 +27,6 @@ import { PreloaderModule } from 'app/shared/preloader/preloader.module';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forChild(ROUTES),
-    // StoreModule.forFeature('arrests', {
-    //   arrestProduct: fromReducers.productReducer
-    // }),
     NgbModule.forRoot(),
     CardActionsModule,
     PaginationTableModule,

@@ -10,8 +10,8 @@ export interface IRequestBribeDetail {
   LawbreakerLastName: string;
   LawbreakerOtherName: string;
   FineType: number;
-  PaymentDueDate: Date;
-  PaymentActualDate: Date;
+  PaymentDueDate: string;
+  PaymentActualDate: string;
   ReceiptBookNo: string;
   ReceiptNo: string;
   JudgementNo: string;
@@ -26,12 +26,12 @@ export interface IRequestBribeDetail {
 export interface IRequestBribeDetailinsAll extends IRequestBribeDetail {
 
 }
-export interface IRequestBribeDetail {
-  RequestBribeDetailID: number;
-  PaymentFineDetailID: number;
-  RequestBribeID: number;
-  IsActive: number;
-}
+// export interface IRequestBribeDetail {
+//   RequestBribeDetailID: number;
+//   PaymentFineDetailID: number;
+//   RequestBribeID: number;
+//   IsActive: number;
+// }
 
 export interface IRequestBribeDetailResponse extends IResponseCommon {
   RequestBribeDetailID?: number;
