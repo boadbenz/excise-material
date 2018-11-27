@@ -94,7 +94,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.16');
+    this.sidebarService.setVersion('0.0.0.17');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -348,7 +348,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           console.log('ค่าการรีเทิร์น');
           console.log(resp);
           if (resp.CompareReceiptID) {
-            await this.ComparePaymentFineinsAll(resp.CompareReceiptID);
+            await this.ComparePaymentFineinsAll(resp.CompareReceiptID, index);
           }
         } catch (err) {
           console.log(err);
@@ -377,9 +377,9 @@ export class ManageComponent implements OnInit, OnDestroy {
       return [];
     }
   }
-  async ComparePaymentFineinsAll(CompareReceiptID: number) {
+  async ComparePaymentFineinsAll(CompareReceiptID: number, index: any) {
     try {
-      for (const rec of this.receipt.list) {
+      const rec: any = this.receipt.list[index];
         const data: any = {
           FineType: 0,
           ReferenceID: CompareReceiptID,
@@ -399,7 +399,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             "IsRequestBribe": '0',
             "IsActive": '1'
           });
-        }
         const insPaymentFine: any = await this.fineService.postMethod('ComparePaymentFineinsAll', data);
         console.log(insPaymentFine);
       }
