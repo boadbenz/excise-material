@@ -506,20 +506,20 @@ export class ManageComponent implements OnInit {
           }
           index++;
         });
-      if (update.IsSuccess == "True") {
-        alert("บันทึกสำเร็จ")
-        let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
-        this.navService.setEditField(true);
-        this.navService.setEditButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
-        console.log(checkComplete)
-        checkComplete.length > 0 ? this.modal = this.ngbModel.open(this.indicmetModal, { size: 'lg', centered: true }) : console.log("none")
-      } else {
-        alert("บันทึกไม่สำเร็จ")
-      }
+        if (update.IsSuccess == "True") {
+          alert("บันทึกสำเร็จ")
+          let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
+          this.navService.setEditField(true);
+          this.navService.setEditButton(true);
+          this.navService.setPrintButton(true);
+          this.navService.setDeleteButton(true);
+          this.navService.setSaveButton(false);
+          this.navService.setCancelButton(false);
+          console.log(checkComplete)
+          checkComplete.length > 0 ? this.modal = this.ngbModel.open(this.indicmetModal, { size: 'lg', centered: true }) : console.log("none")
+        } else {
+          alert("บันทึกไม่สำเร็จ")
+        }
 
 
       } else {
@@ -670,7 +670,8 @@ export class ManageComponent implements OnInit {
                   console.log("not success")
                   this.preLoaderService.setShowPreloader(false);
                 }
-              })
+              }
+            })
           }
           this.preLoaderService.setShowPreloader(false);
         }
