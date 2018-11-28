@@ -44,8 +44,37 @@ export class ManageComponent implements OnInit {
   errorShow: any;
   modal: any;
   lawBraker: any[] = [];
-  lawsuitArrestForm: FormGroup;
-  lawsuitForm: FormGroup;
+  lawsuitArrestForm: FormGroup = new FormGroup({
+    ArrestCode: new FormControl(),
+    OccurrenceDate: new FormControl(),
+    OccurrenceTime: new FormControl(),
+    ArrestStation: new FormControl(),
+    FullName: new FormControl(),
+    PositionName: new FormControl(),
+    DepartmentName: new FormControl(),
+    SubSectionType: new FormControl(),
+    GuiltBaseName: new FormControl(),
+    SectionNo: new FormControl(),
+    PenaltyDesc: new FormControl(),
+    LawsuitArrestStaff: new FormControl()
+  });
+  lawsuitForm: FormGroup = new FormGroup({
+    IsLawsuitCheck: new FormControl(),
+    ReasonDontLawsuit: new FormControl(),
+    IsOutsideCheck: new FormControl(),
+    LawsuitNo: new FormControl(),
+    LawsuitNoSub: new FormControl(),
+    LawsuitDate: new FormControl(),
+    LawsuitTime: new FormControl(),
+    FullName: new FormControl(),
+    PositionName: new FormControl(),
+    DepartmentName: new FormControl(),
+    LawsuitStation: new FormControl(),
+    LawsuitType: new FormControl(),
+    LawsuitEnd: new FormControl(),
+    DocumentName: new FormControl(),
+    FilePath: new FormControl()
+  });
   showEditField: Boolean;
   disabled: Boolean;
   isRequired: boolean;
@@ -83,7 +112,12 @@ export class ManageComponent implements OnInit {
   private today = new Date();
   public LawsuitDateOptions: IMyDpOptions = {
     dateFormat: 'dd mmm yyyy',
-    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 },
+    disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() +1 },
+  };
+  public LawsuitYearOption: IMyDpOptions = {
+    dateFormat: 'yyyy',
+    yearSelector:true,
+    monthSelector:false
   };
   constructor(
     private activeRoute: ActivatedRoute,
@@ -904,7 +938,7 @@ export class ManageComponent implements OnInit {
             if (isout == 1) {
               IsOutsideCheck = true;
             }
-
+            let nowDate = new Date();
             const staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'].filter(item => item.IsActive == 1);
             await staff.map(item => { item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}` });
             const lawsuitNoArr = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitNo'].split('/');
@@ -923,7 +957,7 @@ export class ManageComponent implements OnInit {
                     year: _lawsuitDate.getFullYear(),
                   }
                 },
-                LawsuitTime: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitTime'],
+                LawsuitTime: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitTime'] ? res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitTime'] : this.addZero(nowDate.getHours())+":"+this.addZero(nowDate.getMinutes()),
                 LawsuitStation: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStation'],
                 LawsuitStationCode: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStation'],
                 AccuserTestimony: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['AccuserTestimony'],
@@ -1129,10 +1163,12 @@ export class ManageComponent implements OnInit {
     }
 
     ///set lawsuitForm
+    let nowDate = new Date();
     const staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'].filter(item => item.IsActive == 1);
     await staff.map(item => { item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}` });
     const lawsuitNoArr = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitNo'].split('/');
     const _lawsuitDate = new Date(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitDate']);
+    
     try {
       await this.lawsuitForm.reset({
         IsLawsuitCheck: IsLawsuitCheck,
@@ -1147,7 +1183,7 @@ export class ManageComponent implements OnInit {
             year: _lawsuitDate.getFullYear(),
           }
         },
-        LawsuitTime: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitTime'],
+        LawsuitTime: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitTime'] ? res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitTime'] : this.addZero(nowDate.getHours())+":"+this.addZero(nowDate.getMinutes()),
         LawsuitStation: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStation'],
         AccuserTestimony: res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['AccuserTestimony'],
         FullName: staff[0].FullName,
@@ -1155,6 +1191,7 @@ export class ManageComponent implements OnInit {
         DepartmentName: staff[0].OfficeShortName,
         officeCode: staff[0].officeCode,
       });
+      
     }
     catch (e) {
       console.log('error==>', e)
@@ -1185,6 +1222,14 @@ export class ManageComponent implements OnInit {
       this.lawsuitForm.controls['officeCode'].setValue('');
     }
   }
+
+  private addZero(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+  }
+
   onChangeFullnameReslut(text) {
     console.log(text)
     this.LawsuitStaffOnsave = text
@@ -1378,8 +1423,8 @@ export class ManageComponent implements OnInit {
     //   }
     // });
   }
-
-
+  public LawsuitArrest: any = [];
+  public lawsuitArrestFormDialog: any = {}
 }
 
 import { Inject } from '@angular/core';
