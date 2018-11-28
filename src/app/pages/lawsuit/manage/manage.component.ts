@@ -46,8 +46,37 @@ export class ManageComponent implements OnInit {
   errorShow: any;
   modal: any;
   lawBraker: any[] = [];
-  lawsuitArrestForm: FormGroup;
-  lawsuitForm: FormGroup;
+  lawsuitArrestForm: FormGroup = new FormGroup({
+    ArrestCode: new FormControl(),
+    OccurrenceDate: new FormControl(),
+    OccurrenceTime: new FormControl(),
+    ArrestStation: new FormControl(),
+    FullName: new FormControl(),
+    PositionName: new FormControl(),
+    DepartmentName: new FormControl(),
+    SubSectionType: new FormControl(),
+    GuiltBaseName: new FormControl(),
+    SectionNo: new FormControl(),
+    PenaltyDesc: new FormControl(),
+    LawsuitArrestStaff: new FormControl()
+  });
+  lawsuitForm: FormGroup = new FormGroup({
+    IsLawsuitCheck: new FormControl(),
+    ReasonDontLawsuit: new FormControl(),
+    IsOutsideCheck: new FormControl(),
+    LawsuitNo: new FormControl(),
+    LawsuitNoSub: new FormControl(),
+    LawsuitDate: new FormControl(),
+    LawsuitTime: new FormControl(),
+    FullName: new FormControl(),
+    PositionName: new FormControl(),
+    DepartmentName: new FormControl(),
+    LawsuitStation: new FormControl(),
+    LawsuitType: new FormControl(),
+    LawsuitEnd: new FormControl(),
+    DocumentName: new FormControl(),
+    FilePath: new FormControl()
+  });
   showEditField: Boolean;
   disabled: Boolean;
   isRequired: boolean;
@@ -1260,11 +1289,13 @@ export class ManageComponent implements OnInit {
   viewData(item) {
     ///###change path to lawsuit detail
     console.log('viewData===>', item);
-    const dialogRef = this.dialog.open(DialogJudgment, {
+    const dialogRef = this.dialog.open(DialogJudgment,{
       width: '90%',
-      maxWidth: 'none',
+      // maxWidth: 'none',
+      height: '90%',
+      // maxHeight: 'none',
     });
-
+    
     dialogRef.afterClosed().subscribe(result => {
       //console.log(`Dialog result: ${result}`);
     });
@@ -1283,8 +1314,9 @@ export class ManageComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
       // maxWidth: 'none',
-      // height: '100%',
+      height: '90%',
       // maxHeight: 'none',
+
       data: {
         lawsuitArrest: item,
         index: index,

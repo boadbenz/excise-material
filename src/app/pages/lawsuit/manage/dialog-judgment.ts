@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Component,ViewEncapsulation, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { LawsuitService } from "../lawsuit.service";
@@ -10,7 +10,8 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 @Component({
     selector: 'dialog-judgment',
     templateUrl: 'dialog-judgment.html',
-    styleUrls: ['./dialog-judgment.scss']
+    styleUrls: ['./dialog-judgment.scss'],
+    encapsulation: ViewEncapsulation.None 
 })
 export class DialogJudgment {
 
