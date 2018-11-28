@@ -1,3 +1,7 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+    <app-printdoc-modal [investCode]="" [investDetailId]="invesDetailId" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
+</ng-template>
+
 <form class="form-horizontal" [formGroup]="investigateFG">
 
     <div class="card card-outline-bluish unset-radius">
@@ -106,8 +110,8 @@
                                 </ng-template>
 
                                 <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff"
-                                    [resultTemplate]="rt" [readonly]="showEditField" [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
-                                    value="{{item.value.FullName}}" />
+                                    [resultTemplate]="rt" [readonly]="showEditField" [inputFormatter]="formatterStaff"
+                                    (selectItem)="selectItemStaff($event, i)" value="{{item.value.FullName}}" />
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'">
                                 <input type="text" formControlName="PositionName" class="form-control form-control-sm"
