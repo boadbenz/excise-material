@@ -74,7 +74,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       this.RequestBribeID$.next(param['RequestBribeID']);
       this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
     });
-    this.navService.setInnerTextNextPageButton('กลับ')
+    this.navService.setInnerTextNextPageButton('กลับ');
     this.navService.onSave.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
         this.navService.onSave.next(false);
@@ -112,9 +112,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       }
     });
   }
-
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.5');
+    this.sidebarService.setVersion('0.0.1.6');
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
     this.navService.onNextPage.takeUntil(this.destroy$).subscribe(res => {
@@ -151,6 +150,10 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.navService.setEditButton(false);
         this.navService.setDeleteButton(false);
         this.navService.setSearchBar(false);
+         this.navService.setNewButton(false);
+     this.navService.setEditField(false);
+     this.navService.setNextPageButton(false);
+     this.navService.setPrevPageButton(false);
 
         break;
       case 'R':
@@ -161,7 +164,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
             RequestBribeID: this.RequestBribeID$.getValue()
           })
           .toPromise();
-          this.RequestBribeRewardID$.next(RequestBribe[0].RequestBribeRewardID);
+        this.RequestBribeRewardID$.next(RequestBribe[0].RequestBribeRewardID);
         // 1.2.3
         this.RequestBribe$.next(RequestBribe);
         // 1.2.2
@@ -210,6 +213,10 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.navService.setDeleteButton(true); // 1.2.5(3)
         this.navService.setNextPageButton(true); // 1.2.5(4)
         this.navService.setSearchBar(false);
+        this.navService.setNewButton(false);
+        this.navService.setEditField(false);
+        this.navService.setNextPageButton(false);
+        this.navService.setPrevPageButton(false);
         break;
     }
     // 2 END

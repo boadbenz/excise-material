@@ -98,18 +98,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.4');
-    this.setShowButton();
+    this.sidebarService.setVersion('0.0.1.5');
     this.pageLoad();
   }
-  private setShowButton() {
-    this.navService.setSearchBar(false);
-    this.navService.setPrintButton(false);
-    this.navService.setDeleteButton(false);
-    this.navService.setCancelButton(false);
-    this.navService.setEditButton(false);
-    this.navService.setSaveButton(false);
-  }
+
   private initIsEditDefault() {
     this.ILG60_08_02_00_00E09_EDIT = false;
   }
@@ -189,7 +181,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setCancelButton(false);
           this.navService.setEditButton(true);
           this.navService.setSaveButton(false);
+          this.navService.setNewButton(false);
+          this.navService.setEditField(false);
           this.navService.setNextPageButton(false);
+          this.navService.setPrevPageButton(false);
 
           break;
 
@@ -272,7 +267,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               this.navService.setDeleteButton(true);
               this.navService.setCancelButton(false);
               this.navService.setSaveButton(false);
+              this.navService.setNewButton(false);
+              this.navService.setEditField(false);
               this.navService.setNextPageButton(false);
+              this.navService.setPrevPageButton(false);
             } else if (
               RequestCommand[0] &&
               RequestCommand[0].RequestCommandDetail.length > 1
@@ -307,7 +305,11 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               this.navService.setCancelButton(false);
               this.navService.setSearchBar(false);
               this.navService.setSaveButton(false);
+
+              this.navService.setNewButton(false);
+              this.navService.setEditField(false);
               this.navService.setNextPageButton(false);
+              this.navService.setPrevPageButton(false);
             }
           }
 
@@ -392,7 +394,11 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setEditButton(false);
           this.navService.setDeleteButton(false);
           this.navService.setSearchBar(false);
+
+          this.navService.setNewButton(false);
+          this.navService.setEditField(false);
           this.navService.setNextPageButton(false);
+          this.navService.setPrevPageButton(false);
         } else if (
           RequestCommand &&
           RequestCommand[0] &&
@@ -422,7 +428,11 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setEditButton(false);
           this.navService.setDeleteButton(false);
           this.navService.setSearchBar(false);
+
+          this.navService.setNewButton(false);
+          this.navService.setEditField(false);
           this.navService.setNextPageButton(false);
+          this.navService.setPrevPageButton(false);
         } else {
           // 4.2.2(2)
           // 4.2.2(2.1)
@@ -458,7 +468,11 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setEditButton(false);
           this.navService.setDeleteButton(false);
           this.navService.setSearchBar(false);
+
+          this.navService.setNewButton(false);
+          this.navService.setEditField(false);
           this.navService.setNextPageButton(false);
+          this.navService.setPrevPageButton(false);
         }
       } else {
         await this.requestBribeRewardService
@@ -537,8 +551,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.navService.setCancelButton(true);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(true);
+    this.navService.setNewButton(false);
+    this.navService.setEditField(false);
     this.navService.setNextPageButton(false);
-
+    this.navService.setPrevPageButton(false);
     // 3 END
   }
   public async buttonDelete() {
@@ -817,7 +833,6 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     param: IRequestBribegetByRequestBribeRewardID
   ) {}
   ngOnDestroy(): void {
-    this.setShowButton();
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
