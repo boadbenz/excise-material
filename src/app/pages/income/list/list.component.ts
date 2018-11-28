@@ -57,7 +57,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.13');
+        this.sidebarService.setVersion('Revenue 0.0.0.14');
 
         this.RevenueStatus = "";
 
@@ -174,7 +174,6 @@ export class ListComponent implements OnInit, OnDestroy {
             else{
                 item.RevenueStatus = "";
             }
-
         })
 
         if (Array.isArray(list)) {
