@@ -24,8 +24,8 @@
                         <th [ngSwitch]="sort" style="cursor: pointer;">
                             <div (click)="sortPrintDoc()">
                                 ประเภทเอกสาร
-                                <i *ngSwitchCase="'desc'" class="fa fa-sort-amount-desc"></i>
-                                <i *ngSwitchCase="'asc'" class="fa fa-sort-amount-asc"></i>
+                                <i *ngSwitchCase="sorting.DESC" class="fa fa-sort-amount-desc"></i>
+                                <i *ngSwitchCase="sorting.ASC" class="fa fa-sort-amount-asc"></i>
                             </div>
                         </th>
                     </tr>

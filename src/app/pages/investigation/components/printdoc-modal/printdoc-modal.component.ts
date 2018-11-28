@@ -5,6 +5,8 @@ import { InvestgateService, InvestgateDetailService } from '../../services';
 import { LoaderService } from 'app/core/loader/loader.service';
 import { Subject } from 'rxjs';
 
+enum SORTING { ASC, DESC }
+
 @Component({
     selector: 'app-printdoc-modal',
     templateUrl: './printdoc-modal.component.html'
@@ -12,7 +14,8 @@ import { Subject } from 'rxjs';
 export class PrintdocModalComponent implements OnInit, OnDestroy {
 
 
-    sort = 'asc';
+    sort = SORTING.ASC;
+    sorting = SORTING;
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
     @Input() investCode: string;
@@ -111,11 +114,19 @@ export class PrintdocModalComponent implements OnInit, OnDestroy {
         }
     }
 
+    private setItemFormArray(array: any[], formControl: string) {
+        if (array !== undefined && array.length) {
+            const itemFGs = array.map(item => this.fb.group(item));
+            const itemFormArray = this.fb.array(itemFGs);
+            this.FG.setControl(formControl, itemFormArray);
+        }
+    }
+    
     sortPrintDoc() {
-        this.sort = (this.sort == 'asc' ? 'desc' : 'asc');
-        this.PrintDoc.value.sort((a, b) => {
-            return -1; // asc
-        });
+        this.sort = (this.sort == SORTING.ASC ? SORTING.DESC : SORTING.ASC);
+        let sort = this.PrintDoc.value.sort(() =>  -1);
+        this.PrintDoc.value.map(() => this.PrintDoc.removeAt(0));
+        this.setItemFormArray(sort, 'PrintDoc');
     }
 
     onPrint() {

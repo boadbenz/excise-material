@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, Injectable } from '@ang
 import { MainMasterService } from 'app/services/main-master.service';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { ArrestService } from '../../services';
+enum SORTING { ASC, DESC }
 
 @Component({
   selector: 'app-print-doc-modal',
@@ -10,7 +11,8 @@ import { ArrestService } from '../../services';
 })
 export class PrintDocModalComponent implements OnInit {
 
-  sort = 'asc';
+  sort = SORTING.ASC;
+  sorting = SORTING;
 
   @Input() ArrestCode: string;
 
@@ -56,12 +58,20 @@ export class PrintDocModalComponent implements OnInit {
     })
   }
 
-  sortPrintDoc() {
-    this.sort = (this.sort == 'asc' ? 'desc' : 'asc');
-    this.PrintDoc.value.sort((a, b) => {
-      return -1; // asc
-    });
-  }
+  private setItemFormArray(array: any[], formControl: string) {
+    if (array !== undefined && array.length) {
+        const itemFGs = array.map(item => this.fb.group(item));
+        const itemFormArray = this.fb.array(itemFGs);
+        this.FG.setControl(formControl, itemFormArray);
+    }
+}
+
+sortPrintDoc() {
+    this.sort = (this.sort == SORTING.ASC ? SORTING.DESC : SORTING.ASC);
+    let sort = this.PrintDoc.value.sort(() =>  -1);
+    this.PrintDoc.value.map(() => this.PrintDoc.removeAt(0));
+    this.setItemFormArray(sort, 'PrintDoc');
+}
 
   onPrint() {
     let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)

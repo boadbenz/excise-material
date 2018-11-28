@@ -23,14 +23,14 @@
                         <th [ngSwitch]="sort" style="cursor: pointer;">
                             <div (click)="sortPrintDoc()">
                                 ประเภทเอกสาร
-                                <i *ngSwitchCase="'desc'" class="fa fa-sort-amount-desc"></i>
-                                <i *ngSwitchCase="'asc'" class="fa fa-sort-amount-asc"></i>
+                                <i *ngSwitchCase="sorting.DESC" class="fa fa-sort-amount-desc"></i>
+                                <i *ngSwitchCase="sorting.ASC" class="fa fa-sort-amount-asc"></i>
                             </div>
                         </th>
                     </tr>
                 </thead>
                 <tbody formArrayName="PrintDoc">
-                    <tr *ngFor="let item of PrintDoc.controls | sort: 'DocName'; let i=index;" [formGroupName]="i">
+                    <tr *ngFor="let item of PrintDoc.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
                             <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo">
                             <label [for]="'td'+i" class="m-0"></label>
