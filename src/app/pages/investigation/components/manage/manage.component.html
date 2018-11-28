@@ -1,6 +1,6 @@
-<!-- <ng-template #printDocModal let-c="close" let-d="dismiss">
-    <app-printdoc-modal [investCode]="investCode" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
-</ng-template> -->
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+    <app-printdoc-modal [investCode]="investCode" [investDetailId]="" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
+</ng-template>
 
 <form class="form-horizontal" [formGroup]="investigateForm">
     <div class="card card-outline-bluish unset-radius">
