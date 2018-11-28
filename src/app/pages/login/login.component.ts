@@ -9,7 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  private errMsg: string;
+  errMsg: string;
 
   returnUrl: string;
 

@@ -29,4 +29,3 @@ export const appConfig = {
     // apiReport:'http://techlogn.ddns.net:4100/Report_XCS',
     // mockapi: 'http://demo1735762.mockable.io/XCS60'
 }
-    

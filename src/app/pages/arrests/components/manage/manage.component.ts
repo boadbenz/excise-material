@@ -61,15 +61,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     card7: boolean = false;
     card8: boolean = false;
 
-    // ILG60_03_02_00_00_E08: any;
-    // ILG60_03_02_00_00_E10: any;
-    // ILG60_03_02_00_00_E13: any;
-    // ILG60_03_02_00_00_E18: any;
-    // ILG60_03_02_00_00_E20: any;
-    // ILG60_03_02_00_00_E21: any;
-    // ILG60_03_02_00_00_E25: any;
-    // ILG60_03_02_00_00_E28: any;
-
     myDatePickerOptions = MyDatePickerOptions;
     _isSuccess: boolean = false;
     mode: string;
@@ -377,6 +368,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             case 'R':
                 this.enableBthModeR();
+                this.expandCard();
                 this.pageRefresh(arrestCode);
                 break;
         }
@@ -402,6 +394,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setEditButton(true);
         this.navService.setDeleteButton(true);
         this.navService.setEditField(true);
+    }
+
+    private expandCard() {
+        this.ILG60_03_02_00_00_E08.next(true);
+        this.ILG60_03_02_00_00_E10.next(true);
+        this.ILG60_03_02_00_00_E13.next(true);
+        this.ILG60_03_02_00_00_E18.next(true);
+        this.ILG60_03_02_00_00_E20.next(true);
+        this.ILG60_03_02_00_00_E21.next(true);
+        this.ILG60_03_02_00_00_E25.next(true);
+        this.ILG60_03_02_00_00_E28.next(true);
     }
 
     private async pageRefresh(arrestCode: string) {
