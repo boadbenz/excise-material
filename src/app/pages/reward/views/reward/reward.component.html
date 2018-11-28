@@ -245,10 +245,10 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody formArrayName="RequestRewardStaff">
 
-                <ng-container formArrayName="RequestRewardStaff">
-                  <tr class="footable" *ngFor="let item of RequestRewardStaff.controls | sortFormArray: 'sort'; let i=index;"
+                <ng-container *ngFor="let item of RequestRewardStaff.controls | sortFormArray: 'sort'; let i=index;">
+                  <tr class="footable" 
                     [formGroupName]="i">
                     <td>
                       <input type="checkbox" [id]="'tdsec2'+i" name="ischeck" formControlName="check" class="filled-in chk-col-indigo"

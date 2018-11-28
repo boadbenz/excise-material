@@ -43,7 +43,7 @@ export class CONFIG extends ManageConfig {
 
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
-    actionUrl: '/reward/bribe/R',
+    actionUrl: '/reward/reward/R',
     actionFieldParams: ['RequestRewardID']
   };
 

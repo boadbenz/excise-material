@@ -31,7 +31,7 @@ import { RequestRewardStaffService } from '../../services/RequestRewardStaff.ser
 import { RequestRewardStaffModel } from '../../models/RequestRewardStaff.Model';
 import { RequestRewardinsAllModel } from '../../models/RequestRewardinsAll.Model';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
+import { distinctUntilChanged, debounceTime, map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { MasOfficeService } from '../../services/master/MasOffice.service';
@@ -151,6 +151,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               .map(m => m.text)
       )
     ); // ชื่อ-สกุล	Column	Key Press	ILG60-08-04-00-00-E16
+
   get RequestRewardDetail(): FormArray {
     return this.RewardFormGroup.get('RequestRewardDetail') as FormArray;
   }
@@ -769,9 +770,13 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               ContributorName: m.ContributorName
             })
           );
-          Object.keys(this.RewardFormGroup.value).forEach(f => {
-            this.RewardFormGroup.get(f).patchValue(dataRequestReward[f] || '');
-          });
+          const objRewardForm = this.RewardFormGroup.value;
+          for (const key in objRewardForm) {
+            if (objRewardForm.hasOwnProperty(key)) {
+              const element = objRewardForm[key];
+              this.RewardFormGroup.get(key).patchValue(dataRequestReward[key] || '');
+            }
+          }
           // const control_RequestReward: FormArray = <FormArray>(
           //   this.RequestRewardForm
           // );
