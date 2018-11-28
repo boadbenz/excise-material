@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, OnChanges, AfterContentInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
@@ -40,6 +40,7 @@ import { ManageConfig } from './manage.config';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
+
 
     // FormGroup ตรวจสอบสถานะในการบันทึก TN905016100058
     // C: ข้อมูลใหม่
@@ -157,6 +158,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
+    // @ViewChild('myArrestDate') myArrestDate: ElementRef;
+
+    // ngAfterViewChecked(): void {
+    //     console.log(this.myArrestDate);
+    // }
 
     // Redux based variables
     obArrest: Observable<fromModels.Arrest>;
@@ -217,6 +223,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.arrestFG = this.createForm();
         this.navigate_Service();
+        
     }
 
     ngOnDestroy(): void {
@@ -1109,7 +1116,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     .then(y => isCheck = this.checkResponse(y))
                     .catch((error) => this.catchError(error));
             })
-debugger
+
         Promise.all(indict).then(() => {
             if (isCheck) {
                 alert(Message.cannotModify);

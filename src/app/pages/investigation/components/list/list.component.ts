@@ -9,7 +9,7 @@ import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import * as fromServices from '../../services';
 import * as fromModels from '../../models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
-import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave } from 'app/config/dateFormat';
+import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave, MyDatePickerOptions } from 'app/config/dateFormat';
 import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -30,11 +30,7 @@ export class ListComponent implements OnInit, OnDestroy {
     investigate = new Array<fromModels.InvestigateList>();
     invesList = new Array<fromModels.InvestigateList>();
     paginage = pagination;
-    myDatePickerOptions: IMyOptions = {
-        dateFormat: 'dd mmm yyyy',
-        showClearDateBtn: false,
-        height: '30px'
-    };
+    myDatePickerOptions = MyDatePickerOptions;
 
     @ViewChild('invesTable') invesTable: ElementRef;
 

@@ -9,6 +9,7 @@ export class IncomeService {
 
   constructor(private http: HttpClient) { }
 
+  // tslint:disable-next-line:member-ordering
   private httpOptions = {
     headers: new HttpHeaders(
       {
@@ -38,6 +39,7 @@ export class IncomeService {
     const params = JSON.stringify(form);
     const url = `${appConfig.api8084}/RevenuegetByConAdv`;
 
+    // tslint:disable-next-line:no-debugger
     debugger
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -83,10 +85,10 @@ export class IncomeService {
     }
   }
 
-  async TransactionRunninggetByCon(RunningTable,RunningOfficeCode): Promise<any> {
-    let pValue = {
-      "RunningTable" : RunningTable,
-      "RunningOfficeCode" : RunningOfficeCode
+  async TransactionRunninggetByCon(RunningTable, RunningOfficeCode): Promise<any> {
+    const pValue = {
+      'RunningTable' : RunningTable,
+      'RunningOfficeCode' : RunningOfficeCode
     }
 
     const params = JSON.stringify(pValue);
@@ -100,11 +102,11 @@ export class IncomeService {
     }
   }
 
-  async TransactionRunninginsAll(RunningOfficeCode,RunningTable,RunningPrefix): Promise<any> {
-    let pValue = {
-      "RunningOfficeCode" : RunningOfficeCode,
-      "RunningTable" : RunningTable,
-      "RunningPrefix" : RunningPrefix
+  async TransactionRunninginsAll(RunningOfficeCode, RunningTable, RunningPrefix): Promise<any> {
+    const pValue = {
+      'RunningOfficeCode' : RunningOfficeCode,
+      'RunningTable' : RunningTable,
+      'RunningPrefix' : RunningPrefix
     }
 
     const params = JSON.stringify(pValue);
@@ -130,10 +132,10 @@ export class IncomeService {
     }
   }
 
-  async RevenueComparegetByCon(RevenueDate,OfficeCode): Promise<any> {
-    let pValue = {
-      "RevenueDate" : RevenueDate,
-      "OfficeCode" : OfficeCode
+  async RevenueComparegetByCon(RevenueDate, OfficeCode): Promise<any> {
+    const pValue = {
+      'RevenueDate' : RevenueDate,
+      'OfficeCode' : OfficeCode
     }
 
     const params = JSON.stringify(pValue);
