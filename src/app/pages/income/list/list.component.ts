@@ -115,7 +115,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.13');
+        this.sidebarService.setVersion('Revenue 0.0.0.14');
 
 
 
@@ -319,22 +319,15 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
 
-            if (item.RevenueStatus === '1') {
-
-                item.RevenueStatus = 'นำส่งเงินรายได้'
-
-            } else if (item.RevenueStatus === '2') {
-
-                item.RevenueStatus = 'รับรายการนำส่งเงิน'
-
-            } else {
-
-                item.RevenueStatus = '';
-
+            if (item.RevenueStatus == "1") {
+                item.RevenueStatus = "นำส่งเงินรายได้"
             }
-
-
-
+            else if (item.RevenueStatus == "2") {
+                item.RevenueStatus = "รับรายการนำส่งเงิน"
+            }
+            else{
+                item.RevenueStatus = "";
+            }
         })
 
 

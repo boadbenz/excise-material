@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { HelperService } from './HelperService';
 import {
   IRequestRewardStaffupdDelete,
-  IRequestRewardStaffupdByCon
+  IRequestRewardStaffupdByCon,
+  IRequestRewardStaffinsAll
 } from '../interfaces/RequestRewardStaff';
 import { Observable } from 'rxjs/Observable';
 
@@ -18,6 +19,14 @@ export class RequestRewardStaffService extends HelperService {
   ): Observable<any> {
     return this.http.post(
       `${this.ApiPrefixUrl}/RequestRewardStaffupdDelete`,
+      param
+    );
+  }
+  public RequestRewardStaffinsAll(
+    param
+  ): Observable<any> {
+    return this.http.post(
+      `${this.ApiPrefixUrl}/RequestRewardStaffinsAll`,
       param
     );
   }

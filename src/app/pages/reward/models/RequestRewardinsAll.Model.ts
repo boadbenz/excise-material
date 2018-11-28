@@ -17,7 +17,7 @@ export const RequestRewardinsAllModel = {
   SecondRemainder: '',
   RewardTotal: '',
   BribeTotal: '',
-  IsActive: '',
+  IsActive: '1',
   ReferenceNo: '',
   RequestRewardDetail: [],
   RequestRewardStaff: []

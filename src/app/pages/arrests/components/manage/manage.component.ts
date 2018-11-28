@@ -149,6 +149,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
+    // @ViewChild('myArrestDate') myArrestDate: ElementRef;
+
+    // ngAfterViewChecked(): void {
+    //     console.log(this.myArrestDate);
+    // }
 
     // Redux based variables
     obArrest: Observable<fromModels.Arrest>;

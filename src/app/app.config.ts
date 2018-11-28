@@ -1,5 +1,8 @@
 export const appConfig = {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> toey_dev
     apiUrl: 'http://192.168.3.158:8888/XCS60',
     api8888: 'http://192.168.3.158:8888/XCS60',
     api7788: 'http://192.168.3.158:7788/XCS60',
@@ -12,6 +15,7 @@ export const appConfig = {
     api8883: 'http://192.168.3.158:8883/XCS60',
     api8087: 'http://192.168.3.158:8087/XCS60',
     api8887: 'http://192.168.3.158:8887/XCS60',
+<<<<<<< HEAD
 =======
 //     apiUrl: 'http://103.233.193.62:8888/XCS60',
 //     api8888: 'http://103.233.193.62:8888/XCS60',
@@ -28,6 +32,10 @@ export const appConfig = {
 // >>>>>>> toey_dev
 //     apiReport:'http://techlogn.ddns.net:4100/Report_XCS',
 //     mockapi: 'http://demo1735762.mockable.io/XCS60'
+=======
+    apiReport:'http://techlogn.ddns.net:4100/Report_XCS',
+    mockapi: 'http://demo1735762.mockable.io/XCS60'
+>>>>>>> toey_dev
 
     // apiUrl: 'http://103.233.193.62:8888/XCS60',
     // api8888: 'http://103.233.193.62:8888/XCS60',
@@ -44,4 +52,3 @@ export const appConfig = {
     // apiReport:'http://techlogn.ddns.net:4100/Report_XCS',
     // mockapi: 'http://demo1735762.mockable.io/XCS60'
 }
-    
