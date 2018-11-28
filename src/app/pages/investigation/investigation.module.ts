@@ -13,6 +13,7 @@ import { PreloaderModule } from 'app/shared/preloader/preloader.module';
 import * as fromComponents from './components';
 import * as fromServices from './services';
 import { routes } from './investigation.routing';
+import * as fromPipe from './pipes';
 
 @NgModule({
   imports: [
@@ -28,7 +29,7 @@ import { routes } from './investigation.routing';
     PreloaderModule,
     CardActionsModule
   ],
-  declarations: [...fromComponents.components],
+  declarations: [...fromComponents.components, ...fromPipe.INVESTIGATION_PIPE],
   exports: [...fromComponents.components],
   providers: [...fromServices.services]
 })

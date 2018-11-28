@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
@@ -55,7 +55,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     investCode: string;
 
     showEditField: boolean;
-    printDocModel: any;
     investigateFG: FormGroup;
 
     readonly myDatePickerOptions = MyDatePickerOptions;
@@ -70,6 +69,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     readonly runningPrefix = 'AI';
     readonly officeName = '900012';
     readonly documentType = '3';
+
+    @ViewChild('printDocModal') printDocModal: ElementRef;
 
     typeheadOffice = new Array<fromGobalModels.MasOfficeModel>();
     typeheadStaff = new Array<fromGobalModels.MasStaffModel>();
@@ -203,7 +204,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnPrint(false);
-                    this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+                    this.modal = this.ngbModel.open(this.printDocModal, { size: 'lg', centered: true });
                 }
             })
 
