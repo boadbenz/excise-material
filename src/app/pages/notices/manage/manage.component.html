@@ -301,7 +301,9 @@
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemLocaleRegion($event)" 
                             (blur)="blurSelectItemLocaleRegion()" 
-                            [value]="item.get('Region').value"/>
+                            [value]="item.get('Region').value"
+                            [ngClass]="{'ng-touched':isRequired}"
+                            required/>
                     </div>
                 </div>
 

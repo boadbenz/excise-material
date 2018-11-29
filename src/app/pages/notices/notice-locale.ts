@@ -42,7 +42,7 @@ export const NoticeLocaleFormControl = {
     SubDistrict: new FormControl(null),
     DistrictCode: new FormControl(null),
     District: new FormControl(null),
-    ProvinceCode: new FormControl(null),
+    ProvinceCode: new FormControl(null, Validators.required),
     Province: new FormControl(null),
     ZipCode: new FormControl('N/A'),
     Policestation: new FormControl(null),
