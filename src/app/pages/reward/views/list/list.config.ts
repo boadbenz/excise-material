@@ -33,17 +33,17 @@ export class ListConfig extends RewardHelper {
       title: 'วันที่จับกุม',
       field: 'OccurrenceDate',
       inputType: 'date',
-      // default: this.setDateNow
+      default: this.setDateNow
     },
     {
       title: 'วันที่จับกุม',
       field: 'OccurrenceDateFrom',
       inputType: 'date',
-      // default: this.setDateNow,
+      default: this.setDateNow,
       title2: 'ถึง',
       field2: 'OccurrenceDateTo',
       inputType2: 'date',
-      // default2: this.setDateNow,
+      default2: this.setDateNow,
       class: 'col-md-6',
       isFilter: true,
       isHiddenTable: true
@@ -52,17 +52,17 @@ export class ListConfig extends RewardHelper {
       title: 'วันที่รับคดี',
       field: 'LawsuitDate',
       inputType: 'date',
-      // default: this.setDateNow
+      default: this.setDateNow
     },
     {
       title: 'วันที่รับคดี',
       field: 'LawsuitDateFrom',
       inputType: 'date',
-      // default: this.setDateNow,
+      default: this.setDateNow,
       title2: 'ถึง',
       field2: 'LawsuitDateTo',
       inputType2: 'date',
-      // default2: this.setDateNow,
+      default2: this.setDateNow,
       class: 'col-md-6',
       isFilter: true,
       isHiddenTable: true

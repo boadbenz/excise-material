@@ -31,7 +31,7 @@ import { RequestRewardStaffService } from '../../services/RequestRewardStaff.ser
 import { RequestRewardStaffModel } from '../../models/RequestRewardStaff.Model';
 import { RequestRewardinsAllModel } from '../../models/RequestRewardinsAll.Model';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { distinctUntilChanged, debounceTime, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { MasOfficeService } from '../../services/master/MasOffice.service';
@@ -40,9 +40,6 @@ import { MasStaffModel, MasTitleModel } from 'app/models';
 import { DropdownInterface } from '../../shared/interfaces/dropdown-interface';
 import { MasTitleService } from '../../services/master/MasTitle.service';
 import { RequestRewardupdByConModel } from '../../models/RequestRewardupdByCon.Model';
-import { replaceFakePath } from 'app/config/dataString';
-import { MasDocumentMaininsAllModel } from '../../models/MasDocumentMaininsAll.Model';
-import { Config } from '../../config/config';
 
 @Component({
   selector: 'app-reward',
@@ -151,15 +148,11 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               .map(m => m.text)
       )
     ); // ชื่อ-สกุล	Column	Key Press	ILG60-08-04-00-00-E16
-
   get RequestRewardDetail(): FormArray {
     return this.RewardFormGroup.get('RequestRewardDetail') as FormArray;
   }
   get RequestRewardStaff(): FormArray {
     return this.RewardFormGroup.get('RequestRewardStaff') as FormArray;
-  }
-  get Document(): FormArray {
-    return this.RewardFormGroup.get('Document') as FormArray;
   }
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -205,8 +198,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       BribeTotal: [''],
       IsActive: ['1'],
       RequestRewardDetail: this.fb.array([]),
-      RequestRewardStaff: this.fb.array([]),
-      Document: this.fb.array([])
+      RequestRewardStaff: this.fb.array([])
     });
 
     this.RequestRewardStaff.valueChanges
@@ -316,7 +308,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.8');
+    this.sidebarService.setVersion('0.0.1.7');
     this.pageLoad();
     this.masTitleService
       .MasTitleMaingetAll()
@@ -770,13 +762,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               ContributorName: m.ContributorName
             })
           );
-          const objRewardForm = this.RewardFormGroup.value;
-          for (const key in objRewardForm) {
-            if (objRewardForm.hasOwnProperty(key)) {
-              const element = objRewardForm[key];
-              this.RewardFormGroup.get(key).patchValue(dataRequestReward[key] || '');
-            }
-          }
+          Object.keys(this.RewardFormGroup.value).forEach(f => {
+            this.RewardFormGroup.get(f).patchValue(dataRequestReward[f] || '');
+          });
           // const control_RequestReward: FormArray = <FormArray>(
           //   this.RequestRewardForm
           // );
@@ -835,7 +823,6 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     // 1.3 'WAIT'
     // 1.4 'WAIT'
     // 1.5 'WAIT'
-
     if (this.RewardFormGroup.valid) {
       // 2
       try {
@@ -953,9 +940,12 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               );
               // 2.1.5
               // 2.1.5(1)
-              if (this.Document.value && this.Document.value.length > 0) {
-                this.Document.value.forEach(async element => {
-                  this.masDocumentMainService
+              if (
+                this.ILG60_08_04_00_00_E19_FORM_DATA &&
+                this.ILG60_08_04_00_00_E19_FORM_DATA.length > 0
+              ) {
+                this.ILG60_08_04_00_00_E19_FORM_DATA.forEach(async element => {
+                  const resMasDocumentMain = await this.masDocumentMainService
                     .MasDocumentMaininsAll({
                       DocumentType: `9`,
                       ReferenceCode: `${
@@ -967,11 +957,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                       DocumentName: '',
                       IsActive: `1`
                     })
-                    .subscribe(resMasDocumentMain => {
-                      if (resMasDocumentMain['DocumentID']) {
-                        // 2.1.5(2) 'WAIT'
-                      }
-                    });
+                    .toPromise();
+                  if (resMasDocumentMain['DocumentID']) {
+                    // 2.1.5(2) 'WAIT'
+                  }
                 });
               }
             }
@@ -1085,19 +1074,6 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                   .toPromise();
               });
 
-            this.Document.value
-              .filter(f => !f.DocumentID)
-              .forEach(Doc => {
-                const mapDoc = MasDocumentMaininsAllModel;
-                Object.keys(mapDoc).forEach(x => {
-                  mapDoc[x] = Doc[x] || '';
-                });
-                mapDoc['DocumentType'] = '9';
-                mapDoc['ReferenceCode'] = `${this.RequestRewardID$.getValue()}`;
-                this.masDocumentMainService
-                  .MasDocumentMaininsAll(mapDoc)
-                  .subscribe();
-              });
             // 2.2.6 'WAIT'
             // 2.2.7 'WAIT'
             // 2.2.8 'WAIT'
@@ -1134,12 +1110,15 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
     // 1.3.2
     let MasDocument: MasDocumentModel[];
-    MasDocument = await this.masDocumentMainService
+    await this.masDocumentMainService
       .MasDocumentMaininsAll({
         ReferenceCode: this.RequestRewardID$.getValue(),
         DocumentType: 9
       })
-      .toPromise();
+      .toPromise()
+      .then((res: MasDocumentModel[]) => {
+        MasDocument = res;
+      });
 
     const printDoc: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode}: คำร้องขอรับเงินรางวัล`,
@@ -1232,29 +1211,6 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         this.ILG60_08_04_00_00_E19_FORM_DATA = Documents;
         break;
     }
-  }
-  public addDocument() {
-    this.Document.push(
-      this.fb.group({
-        DocumentID: [null],
-        DataSource: ['', Validators.required],
-        FilePath: ['', Validators.required],
-        DocumentName: [''],
-        DocumentType: [9],
-        IsActive: [1],
-        ReferenceCode: ['']
-      })
-    );
-  }
-  public changeDocument(e: any, index: number) {
-    // let file = e.target.files[0];
-    this.Document.at(index).patchValue({
-      FilePath: replaceFakePath(e.target.value),
-      IsActive: 1
-    });
-  }
-  public deleteDocument(i: number) {
-    this.Document.removeAt(i);
   }
   public emitAggregate(aggregate) {
     this.aggregate = aggregate;
