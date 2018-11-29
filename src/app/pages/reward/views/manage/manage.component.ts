@@ -39,6 +39,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-manage',
@@ -57,7 +58,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     private requestBribeService: RequestBribeService,
     private sidebarService: SidebarService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: NgbModal
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -98,7 +99,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.5');
+    this.sidebarService.setVersion('0.0.1.6');
     this.pageLoad();
   }
 
@@ -760,16 +761,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
 
     const dialogRef = this.dialog.open(PrintDialogComponent, {
-      width: '1200px',
-      height: 'auto',
-      data: {
-        printDoc: printDoc
-      }
+      backdrop: 'static'
     });
-
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-    });
+    dialogRef.componentInstance.data = printDoc;
+    dialogRef.result.then(res => {});
     // 2 END
   }
   private RequestBribeRewardgetByIndictmentID(

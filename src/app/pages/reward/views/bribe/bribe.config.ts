@@ -62,4 +62,17 @@ export class BribeConfig extends RewardHelper {
   // Icon
   public ILG60_08_03_00_00_E18_DISABLED$ = new BehaviorSubject<boolean>(false); // Icon ค้นหาที่อยู่เอกสารแนบ […]
   public ILG60_08_03_00_00_E19_DISABLED$ = new BehaviorSubject<boolean>(false); // [ลบ]
+
+  public form_bribe_detai = {
+    check: [true],
+    LawbreakerName: [''],
+    FineTypeName: [''],
+    PaymentDate: [''],
+    ReceiptBookNo: [''],
+    Receipt: [''],
+    PaymentPeriodNo: [''],
+    PaymentFine: [''],
+    BribeMoney: [''],
+    NetBribeMoney: ['']
+  };
 }
