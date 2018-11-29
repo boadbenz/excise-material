@@ -1,11 +1,11 @@
 <div class="scollbar">
   <div class="modal-header bg-theme">
-    <h5 class="modal-title text-white">ข้อมูลการจับกุม</h5>
-    <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="closePopup()">
-      <span aria-hidden="true">
-        <i class=" ti-close"></i>
-      </span>
-    </a>
+    <h5 class="modal-title text-white">ข้อมูลการจับกุม
+        <a class="float-lg-right text-white font-14" aria-label="Close" (click)="closePopup()">
+            <i class=" ti-close"></i>
+        </a>
+    </h5>
+    
   </div>
   <div class="modal-body">
     <div class="row">
@@ -22,8 +22,8 @@
         <div class="form-group row">
           <label class="col-form-label text-right col-md-3">ชื่อศาล: </label>
           <div class="col-md-9">
-            <input class="form-control" [matAutocomplete]="auto4" (input)="onChangeCourt($event.target.value)"
-              [(ngModel)]="lawsuitArrestFormDialog.CourtName" type="text" name="CourtName" required>
+            <input class="form-control" [matAutocomplete]="auto4" [ngClass]="{'ng-touched':isRequired}" [(ngModel)]="lawsuitArrestFormDialog.CourtName" type="text"
+            (input)="onChangeCourt($event.target.value)" name="CourtName" required>
             <mat-autocomplete #auto4="matAutocomplete">
               <mat-option *ngFor="let value of SearchMasCourtList" [value]="value.CourtName" (onSelectionChange)="selectCourt(value)">
                 {{ value.CourtName }}
