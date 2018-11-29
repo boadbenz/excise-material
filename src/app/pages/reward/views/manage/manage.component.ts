@@ -436,17 +436,19 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         } else {
           // 4.2.2(2)
           // 4.2.2(2.1)
-          await this.requestBribeRewardService
+          const RequestBribeRewardReponse: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
             .RequestBribeRewardinsAll({
               // 4.2.2(2.1.1)
               IndictmentID: this.IndictmentID$.getValue(),
               // 4.2.2(2.1.2)
               HaveNotice: 0,
               IsActive: 1,
-              RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+              RequestBribeRewardID: ''
             })
             .toPromise();
-
+          this.RequestBribeRewardID$.next(
+            RequestBribeRewardReponse.RequestBribeRewardID
+          );
           // 4.2.2(2.2)
           this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.2.2(2.2.1)
@@ -475,12 +477,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setPrevPageButton(false);
         }
       } else {
-        await this.requestBribeRewardService
+        const RequestBribeReward: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
           .RequestBribeRewardinsAll({
             IndictmentID: this.IndictmentID$.getValue(),
-            HaveNotice: 0
+            HaveNotice: 0,
+            IsActive: 1,
+            RequestBribeRewardID: ''
           })
           .toPromise();
+        this.RequestBribeRewardID$.next(
+          RequestBribeReward.RequestBribeRewardID
+        );
       }
       this.RequestNoticegetByArrestCode$.next(RequestNotice);
     }
@@ -769,15 +776,13 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     param: IRequestBribeRewardgetByIndictmentID
   ) {}
   private RequestCommandinsAll(param: IRequestCommandinsAll) {}
-
-  private RequestBribeRewardinsAll(param: IRequestBribeRewardinsAll) {}
   private RequestCommandgetByArrestCode(
     param: IRequestCommandgetByArrestCode,
     event: string
   ) {
     this.requestCommandService
       .RequestCommandgetByArrestCode(param)
-      .subscribe((res: IRequestCommand[]) => {
+      .subscribe(async (res: IRequestCommand[]) => {
         switch (event) {
           case '4.1.1(2.5)':
             break;
@@ -807,13 +812,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               });
 
               // 4.2.2(1.2)
-              this.RequestBribeRewardinsAll({
-                // 4.2.2(1.2.1)
-                IndictmentID: this.IndictmentID$.getValue(),
-                // 4.2.2(1.2.2)
-                HaveNotice: 1
-              });
-
+              const RequestBribeReward: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
+                .RequestBribeRewardinsAll({
+                  IndictmentID: this.IndictmentID$.getValue(),
+                  HaveNotice: 1,
+                  IsActive: 1,
+                  RequestBribeRewardID: ''
+                })
+                .toPromise();
+              this.RequestBribeRewardID$.next(
+                RequestBribeReward.RequestBribeRewardID
+              );
               // 4.2.2(1.3)
               this.RequestCommandgetByArrestCode(
                 {
