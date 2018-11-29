@@ -150,7 +150,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.19');
+    this.sidebarService.setVersion('0.0.0.20');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -519,37 +519,39 @@ export class ManageComponent implements OnInit {
       // let pathfile = await this.lawsuitService.MasDocumentMaininsAll(4,this.LawsuitID)
       console.log(json)
       let update = await this.lawsuitService.LawsuitformupdByCon(json)
-      if (update.IsSuccess == "True") {
-        alert("บันทึกสำเร็จ")
-        let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
-        this.navService.setEditField(true);
-        this.navService.setEditButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
-        console.log(checkComplete)
-        checkComplete.length > 0 ? this.modal = this.ngbModel.open(this.indicmetModal, { size: 'lg', centered: true }) : console.log("none")
-      } else {
-        alert("บันทึกไม่สำเร็จ")
-      }
       let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
+      console.log(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
+
       if (LawsuitArrestIndicmentDetail.length != 0) {
         let index = 0;
         await LawsuitArrestIndicmentDetail.forEach(async element => {
           let ArrestIndicmentDetail = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID)
           await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(this.LawsuitTableList.value[index].LawsuitType), Number(this.LawsuitTableList.value[index].LawsuitEnd))
-          // if (ArrestIndicmentDetail.LawsuitType == 0) {
-          // } else {
-          //   //  ArrestIndicmentDetail.JudgementID ? await this.lawsuitService.LawsuitJudgementupdDelete(ArrestIndicmentDetail.JudgementID) : null
-          //   if (ArrestIndicmentDetail.IsFine == 0) {
-
-          //   } else {
-          //     await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(ArrestIndicmentDetail.PaymentFineID)
-          //   }
-          // }
+          if (ArrestIndicmentDetail.LawsuitType != 0) {
+            if (ArrestIndicmentDetail['LawsuitJudgement'].length > 0) {
+              await this.lawsuitService.LawsuitJudgementupdDelete(ArrestIndicmentDetail['LawsuitJudgement'][0]['JudgementID'])
+            }
+            if (ArrestIndicmentDetail.IsFine == 1) {
+              await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(ArrestIndicmentDetail.PaymentFineID)
+            }
+          }
           index++;
         });
+        if (update.IsSuccess == "True") {
+          alert("บันทึกสำเร็จ")
+          let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
+          this.navService.setEditField(true);
+          this.navService.setEditButton(true);
+          this.navService.setPrintButton(true);
+          this.navService.setDeleteButton(true);
+          this.navService.setSaveButton(false);
+          this.navService.setCancelButton(false);
+          console.log(checkComplete)
+          checkComplete.length > 0 ? this.modal = this.ngbModel.open(this.indicmetModal, { size: 'lg', centered: true }) : console.log("none")
+        } else {
+          alert("บันทึกไม่สำเร็จ")
+        }
+
 
       } else {
         if (update.IsSuccess == "True") {
@@ -644,44 +646,61 @@ export class ManageComponent implements OnInit {
             });
           } else {
             // await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
-            let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
-            let index = 0;
-            await LawsuitArrestIndicmentDetail.forEach(async element => {
-              await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(this.LawsuitTableList.value[index].LawsuitType), Number(this.LawsuitTableList.value[index].LawsuitEnd))
-              await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID).then(async response => {
-                if (response.LawsuitJudgement.length != 0) {
-                  console.log(response)
-                  return;
-                }
-              });
-              index++;
-            });
+            // let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
+            // let index = 0;
+            // await LawsuitArrestIndicmentDetail.forEach(async element => {
+            //   await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(this.LawsuitTableList.value[index].LawsuitType), Number(this.LawsuitTableList.value[index].LawsuitEnd))
+            //   await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID).then(async response => {
+            //     if (response.LawsuitJudgement.length != 0) {
+            //       console.log(response)
+            //       return;
+            //     }
+            //   });
+            //   index++;
+            // });
             await this.lawsuitService.LawsuitinsAll(json).then(async result => {
               if (result.IsSuccess == "True") {
                 alert("บันทึกสำเร็จ");
                 await this.lawsuitService.LawsuitArrestIndicmentupdByCon(this.IndictmentID)
-                await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
+                // await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
                 let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
                 console.log(checkComplete)
-                if (checkComplete.length != 0) {
-                  // ให้เด้งป๊อบอัพ
-                } else {
-                  await this.lawsuitService.LawsuitArrestupdByCon(this.lawsuitArrestForm.value.ArrestCode)
-                  this.showEditField = false;
-                  let lawsuitID = await this.lawsuitService.LawsuitArrestgetByCon(this.IndictmentID)
-                  if (lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID > 0) {
-                    this.router.navigate(['/lawsuit/manage', 'R'], {
-                      queryParams: { IndictmentID: this.IndictmentID, LawsuitID: lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID }
-                    });
-                  }
+                let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
+                if (LawsuitArrestIndicmentDetail.length != 0) {
+                  let index = 0;
+                  await LawsuitArrestIndicmentDetail.forEach(async element => {
+                    let ArrestIndicmentDetail = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID)
+                    await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(this.LawsuitTableList.value[index].LawsuitType), Number(this.LawsuitTableList.value[index].LawsuitEnd))
+                    if (ArrestIndicmentDetail.LawsuitType != 0) {
+                      if (ArrestIndicmentDetail['LawsuitJudgement'].length > 0) {
+                        await this.lawsuitService.LawsuitJudgementupdDelete(ArrestIndicmentDetail['LawsuitJudgement'][0]['JudgementID'])
+                      }
+                      if (ArrestIndicmentDetail.IsFine == 1) {
+                        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(ArrestIndicmentDetail.PaymentFineID)
+                      }
+                    }
+                    index++;
+                  });
+                  if (checkComplete.length != 0) {
+                    // ให้เด้งป๊อบอัพ
+                  } else {
+                    await this.lawsuitService.LawsuitArrestupdByCon(this.lawsuitArrestForm.value.ArrestCode)
+                    this.showEditField = false;
+                    let lawsuitID = await this.lawsuitService.LawsuitArrestgetByCon(this.IndictmentID)
+                    if (lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID > 0) {
+                      this.router.navigate(['/lawsuit/manage', 'R'], {
+                        queryParams: { IndictmentID: this.IndictmentID, LawsuitID: lawsuitID[0].LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID }
+                      });
+                    }
 
-                  location.reload();
+                    location.reload();
+                  }
+                  this.preLoaderService.setShowPreloader(false);
+                  // location.reload();
+                } else {
+                  console.log("not success")
+                  this.preLoaderService.setShowPreloader(false);
                 }
-                this.preLoaderService.setShowPreloader(false);
-                // location.reload();
-              } else {
-                console.log("not success")
-                this.preLoaderService.setShowPreloader(false);
               }
             })
           }
@@ -1289,11 +1308,10 @@ export class ManageComponent implements OnInit {
   viewData(item) {
     ///###change path to lawsuit detail
     console.log('viewData===>', item);
-    const dialogRef = this.dialog.open(DialogJudgment,{
-      width: '90%',
-      // maxWidth: 'none',
+    const dialogRef = this.dialog.open(DialogJudgment, {
+      width: '80%',
+      maxWidth: 'none',
       height: '90%',
-      // maxHeight: 'none',
     });
     
     dialogRef.afterClosed().subscribe(result => {

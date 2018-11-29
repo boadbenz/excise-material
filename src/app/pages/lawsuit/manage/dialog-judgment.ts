@@ -195,9 +195,11 @@ export class DialogJudgment {
                     }
                 ]
             }
+
             console.log("Case have JudgementID", this.arrestData['LawsuitJudgement'][0]['JudgementID'])
             let updateByCon = await this.lawsuitService.LawsuitJudgementupdByCon(submit)
-            await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
+            await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.PaymentFineID)
+            
             console.log(updateByCon)
             if (this.lawsuitArrestFormDialog.IsFine == true) {
                 for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
@@ -208,12 +210,13 @@ export class DialogJudgment {
                         IsRequestBribe: this.LawsuitArrest[0].LawsuitNotice[i].IsRequestBribe,
                         IsActive: this.LawsuitArrest[0].LawsuitNotice[i].IsActive || 1
                     }
+                    console.log(payment)
                     let status = await this.lawsuitService.LawsuitPaymentFineDetailinsAll(payment)
                     console.log(status)
                 }
             }
             if (updateByCon.IsSuccess) {
-                await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.PaymentFineID)
+               
                 alert("บันทึกสำเร็จ")
                 this.dialogRef.close();
             } else {
@@ -224,6 +227,12 @@ export class DialogJudgment {
 
         } else {
             let PaymentFine = await this.insert()
+            console.log(PaymentFine)
+            if (PaymentFine.IsSuccess) {
+                await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine.PaymentFineID)
+                alert("บันทึกสำเร็จ")
+                this.dialogRef.close();
+            }
             await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
             if (this.lawsuitArrestFormDialog.IsFine == true) {
                 console.log("Case first insert")
@@ -240,11 +249,7 @@ export class DialogJudgment {
             } else {
                 this.dialogRef.close();
             }
-            if (PaymentFine.IsSuccess) {
-                await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine.PaymentFineID)
-                alert("บันทึกสำเร็จ")
-                this.dialogRef.close();
-            }
+            
         }
 
     }

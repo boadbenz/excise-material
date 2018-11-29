@@ -1,13 +1,13 @@
-<div class="modal-header bg-theme">
-  <div class="card-actions text-white">
-    <a (click)="closePopup()" style="float:right">
-      <i class="ti-close"></i>
+<div class="scollbar">
+  <div class="modal-header bg-theme">
+    <h5 class="modal-title text-white">ข้อมูลการจับกุม</h5>
+    <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="closePopup()">
+      <span aria-hidden="true">
+        <i class=" ti-close"></i>
+      </span>
     </a>
   </div>
-  <h5 class="card-title text-white">ข้อมูลการจับกุม</h5>
-</div>
-<div class="modal-body font-14">
-  <form>
+  <div class="modal-body">
     <div class="row">
       <div class="col-md-6">
         <div class="form-group row">
@@ -101,8 +101,8 @@
             </div>
           </div>
           <div class="col-8">
-            <input class="form-control" type="text" [(ngModel)]="lawsuitArrestFormDialog.ImprisonTime" [attr.disabled]="!lawsuitArrestFormDialog.IsImprison ? '' : null" name="ImprisonTime"
-              class="form-check-input" id="prisonDay" required>
+            <input class="form-control" type="text" [(ngModel)]="lawsuitArrestFormDialog.ImprisonTime" [attr.disabled]="!lawsuitArrestFormDialog.IsImprison ? '' : null"
+              name="ImprisonTime" class="form-check-input" id="prisonDay" required>
           </div>
         </div>
       </div>
@@ -110,7 +110,8 @@
         <div class="form-group row">
           <label class="col-form-label text-right col-md-3">หน่วย: </label>
           <div class="col-md-9">
-            <select [(ngModel)]="lawsuitArrestFormDialog.ImprisonUnit" name="ImprisonUnit" [attr.disabled]="!lawsuitArrestFormDialog.IsImprison ? '' : null" class="form-control form-control-sm">
+            <select [(ngModel)]="lawsuitArrestFormDialog.ImprisonUnit" name="ImprisonUnit" [attr.disabled]="!lawsuitArrestFormDialog.IsImprison ? '' : null"
+              class="form-control form-control-sm">
               <option type="number" value="0">วัน</option>
               <option type="number" value="1">เดือน</option>
               <option type="number" value="2">ปี</option>
@@ -128,8 +129,8 @@
         <div class="row form-group">
           <div class="col">
             <div class="form-check">
-              <input [(ngModel)]="lawsuitArrestFormDialog.IsPayOnce"  class="col-form-label with-gap radio-col-indigo" type="radio" id="payRadio1"
-                name="IsPayOnce" value="1" (change)="paymentChange()">
+              <input [(ngModel)]="lawsuitArrestFormDialog.IsPayOnce" class="col-form-label with-gap radio-col-indigo"
+                type="radio" id="payRadio1" name="IsPayOnce" value="1" (change)="paymentChange()">
               <label class="form-check-label" for="payRadio1">ชำระครั้งเดียว</label>
             </div>
           </div>
@@ -152,8 +153,8 @@
         <div class="row form-group">
           <div class="col">
             <div class="form-check">
-              <input [(ngModel)]="lawsuitArrestFormDialog.IsPayOnce"  class="col-form-label with-gap radio-col-indigo" type="radio" id="payRadio2"
-                name="IsPayTwo" value="" value="0" (change)="paymentChange()">
+              <input [(ngModel)]="lawsuitArrestFormDialog.IsPayOnce" class="col-form-label with-gap radio-col-indigo"
+                type="radio" id="payRadio2" name="IsPayTwo" value="" value="0" (change)="paymentChange()">
               <label class="form-check-label" for="payRadio2">แบ่งชำระป็นงวด</label>
             </div>
           </div>
@@ -201,8 +202,15 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn waves-effect waves-light text-white btn-themecolor" (click)="Submit()">บันทึก</button>
-    </div>
-  </form>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn waves-effect waves-light text-white btn-themecolor" (click)="Submit()">บันทึก</button>
+  </div>
 </div>
+
+
+<!-- <h3 mat-dialog-title class="modal-header bg-theme text-white">ข้อมูลการจับกุม
+    <a (click)="closePopup()" style="float:right">
+      <i class="ti-close"></i>
+    </a>
+  </h3> -->

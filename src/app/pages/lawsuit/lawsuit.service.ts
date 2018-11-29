@@ -179,12 +179,12 @@ export class LawsuitService {
 
   async LawsuitPaymentFineDetailupdDelete(PaymentFineID) {
     const params = { PaymentFineID: PaymentFineID };
-    const url = `${appConfig.api7789}/LawsuitPaymentFineDetailupdDelete`;
+    const url = `${appConfig.api8083}/LawsuitPaymentFineDetailupdDelete`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitPaymentFineDetailinsAll(Payment) {
-    const url = `${appConfig.api7789}/LawsuitPaymentFineDetailinsAll`;
+    const url = `${appConfig.api8083}/LawsuitPaymentFineDetailinsAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(Payment), url);
   }
 
