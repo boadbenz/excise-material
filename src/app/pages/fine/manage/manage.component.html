@@ -743,7 +743,7 @@
                   <div class="col-md-7">
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.TotalFine"
-                           name="TotalFine" [disabled]="isEditMode">
+                           name="TotalFine" [disabled]="userCompareReceiptDetail.CompareReceiptID">
                   </div>
                 </div>
               </div>
@@ -757,7 +757,7 @@
                     <my-date-picker-th [(ngModel)]="userCompareReceiptDetail.PaymentDate" name="PaymentDate"
                                        placeholder="" locale="th"
                                        [options]="DateOption"
-                                       [disabled]="showEditField || isEditMode"
+                                       [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID"
                     aria-required="true" required></my-date-picker-th>
                     <!--<input class="form-control" type="date" [(ngModel)]="userCompareReceiptDetail.PaymentDate" name="PaymentDate"-->
                     <!--[disabled]="showEditField">-->
@@ -767,7 +767,7 @@
                     <input class="form-control" type="time"
                            [(ngModel)]="userCompareReceiptDetail.PaymentTime"
                            name="PaymentTime"
-                           [disabled]="showEditField || isEditMode">
+                           [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID">
                   </div>
                 </div>
               </div>
@@ -782,7 +782,7 @@
                            matInput [matAutocomplete]="auto"
                            (input)="onAutoChange($event.target.value)"
                            (focus)="onAutoFocus($event.target.value)"
-                           [disabled]="showEditField || isEditMode" required (keydown.Tab)="chooseFirstOption($event, 3)">
+                           [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID" required (keydown.Tab)="chooseFirstOption($event, 3)">
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options" [value]="option.OfficeShortName"
                                   (click)="onAutoSelecteWord(option, 3)">
@@ -806,7 +806,7 @@
                            matInput [matAutocomplete]="autoStaff"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField || isEditMode" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)">
+                           [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)">
                     <mat-autocomplete #autoStaff="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -846,11 +846,11 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group row">
-                  <label class="col-form-label col-md-5">ช่องทางชำระค่าปรับ : {{ isEditMode }}</label>
+                  <label class="col-form-label col-md-5">ช่องทางชำระค่าปรับ : </label>
                   <div class="col-md-7">
                     <select class="custom-select col-12"
                             [(ngModel)]="userCompareReceiptDetail.ReceiptChanel"
-                            name="ReceiptChanel" required [disabled]="isEditMode || showEditField">
+                            name="ReceiptChanel" required [disabled]="userCompareReceiptDetail.CompareReceiptID || showEditField">
                       <option value="1" selected>เงินสด</option>
                       <option value="2">EDC</option>
                       <option value="3">เครดิต</option>
@@ -869,7 +869,7 @@
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.ReceiptBookNo"
                            name="ReceiptBookNo"
-                           [disabled]="showEditField || isEditMode" [required]="!(userCompareReceiptDetail.ReceiptChanel > 1)">
+                           [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID" [required]="!(userCompareReceiptDetail.ReceiptChanel > 1)">
                   </div>
                 </div>
               </div>
@@ -880,7 +880,7 @@
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.ReceiptNo"
                            name="ReceiptNo"
-                           [disabled]="showEditField || isEditMode" [required]="!(userCompareReceiptDetail.ReceiptChanel > 1)">
+                           [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID" [required]="!(userCompareReceiptDetail.ReceiptChanel > 1)">
                   </div>
                 </div>
               </div>
@@ -894,7 +894,7 @@
                     <input class="form-control" type="text"
                            [(ngModel)]="userCompareReceiptDetail.ReferenceNo"
                            name="ReferenceNo"
-                           [disabled]="showEditField || !(userCompareReceiptDetail.ReceiptChanel > 1) || isEditMode" [required]="userCompareReceiptDetail.ReceiptChanel > 1">
+                           [disabled]="showEditField || !(userCompareReceiptDetail.ReceiptChanel > 1) || userCompareReceiptDetail.CompareReceiptID" [required]="userCompareReceiptDetail.ReceiptChanel > 1">
                   </div>
                 </div>
               </div>
@@ -906,7 +906,7 @@
                     data-toggle="modal"
                     data-target="#payPopup">ยกเลิกใบเสร็จ
             </button>
-            <button class="btn waves-effect waves-light btn-navy" [hidden]="isEditMode">บันทึก</button>
+            <button class="btn waves-effect waves-light btn-navy" [hidden]="userCompareReceiptDetail.CompareReceiptID">บันทึก</button>
             <button (click)="userReceiptSave()" type="button" class="btn waves-effect waves-light btn-navy"
                     data-toggle="modal" id="receiptSave" 
                     data-target="#payPopup" hidden>บันทึก
