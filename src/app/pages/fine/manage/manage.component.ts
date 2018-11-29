@@ -35,7 +35,7 @@ import { toLocalShort } from 'app/config/dateFormat';
   styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
-  isEditMode: boolean;
+  isEditMode: any = {};
   IsOutside: number;
   OnSubscribe: any = {};
   // Html
@@ -97,8 +97,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.isEditMode = false;
-    this.sidebarService.setVersion('0.0.0.19');
+    this.isEditMode.receipt = {};
+    this.sidebarService.setVersion('0.0.0.20');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -171,7 +171,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       const resp: any = await this.fineService.postMethod('/ComparegetByCon', data);
       this.compareDataUpdate = this.jsonCopy(resp);
       this.compareDataUpdateTmp = this.jsonCopy(resp);
-      this.isEditMode = true;
       console.log(JSON.stringify(this.compareDataUpdate) === JSON.stringify(resp));
     } catch (err) {
 
@@ -989,11 +988,23 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.userCompareReceiptDetail.PaymentTime = this.timeNow;
     this.userCompareReceiptDetail.index = index;
   }
-  userReceiptSave() {
+  async userReceiptSave() {
     this.receipt.list[this.userCompareReceiptDetail.index] = this.jsonCopy(this.userCompareReceiptDetail);
     console.log(this.userCompareReceiptDetail);
     this.receipt.list[this.userCompareReceiptDetail.index].PaymentDateShow = this.userCompareReceiptDetail.PaymentDate.formatted;
-    console.log(this.receipt);
+    if (this.receipt.list[this.userCompareReceiptDetail.index].CompareDetailID) {
+      try {
+        const resp: any = await this.checkReceiptData(this.receipt.list[this.userCompareReceiptDetail.index].CompareDetailID, this.userCompareReceiptDetail.index);
+        if (resp.IsSuccess == 'True') {
+          alert('เพิ่มข้อมูลใบเสร็จเรีบยบร้อย')
+        } else {
+          alert('เพิ่มข้อมูลใบเสร็จผิดพลาด')
+        }
+      } catch (err) {
+        console.log(err);
+        alert('เกิดข้อผิดพลาดในการเพิ่มใบเสร็จ');
+      }
+    }
     this.clearDataList(this.userCompareReceiptDetail);
   }
   async userReceiptDelete() {
