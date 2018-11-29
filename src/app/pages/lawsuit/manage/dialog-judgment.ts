@@ -38,7 +38,7 @@ export class DialogJudgment {
         this.arrestData = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(this.data.lawsuitArrest.IndictmentDetailID)
         this.MasCourtList = await this.lawsuitService.MasCourtMaingetAll()
         this.LawsuitArrest = await this.lawsuitService.LawsuitArrestGetByCon(this.data.indicmentID)
-        if (this.data.LawsuitID) {
+        if (this.data.mode == 'U') {
             this.editMode = true;
         }
 

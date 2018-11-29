@@ -1305,14 +1305,23 @@ export class ManageComponent implements OnInit {
     };
   }
 
-  viewData(item) {
+  viewData(item, index: number) {
     ///###change path to lawsuit detail
     console.log('viewData===>', item);
     const dialogRef = this.dialog.open(DialogJudgment, {
-      width: '80%',
-      maxWidth: 'none',
+      width: '90%',
+     
       height: '90%',
-    });
+     
+      data: {
+        lawsuitArrest: item,
+        index: index,
+        indicmentID: this.IndictmentID,
+        LawsuitID: this.LawsuitID,
+        mode:'V'
+      }
+    }
+    );
     
     dialogRef.afterClosed().subscribe(result => {
       //console.log(`Dialog result: ${result}`);
@@ -1331,15 +1340,16 @@ export class ManageComponent implements OnInit {
     // /item.controls['IndictmentDetailID'].value
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
-      // maxWidth: 'none',
+     
       height: '90%',
-      // maxHeight: 'none',
+     
 
       data: {
         lawsuitArrest: item,
         index: index,
         indicmentID: this.IndictmentID,
-        LawsuitID: this.LawsuitID
+        LawsuitID: this.LawsuitID,
+        mode:'U'
       },
 
     });
