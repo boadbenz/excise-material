@@ -21,6 +21,12 @@ export const RequestBribeinsAllModel = {
   RequestBribeDetail: [],
   RequestBribeStaff: []
 };
+export const RequestBribeDetailModel = {
+  RequestBribeDetailID: '',
+  PaymentFineDetailID: '',
+  RequestBribeID: '',
+  IsActive: '1'
+};
 export const RequestBribeStaffModel = {
   StaffID: '',
   ProgramCode: '',

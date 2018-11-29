@@ -29,7 +29,7 @@ import { MasDocumentModel } from 'app/models/mas-document.model';
 import { MasStaffModel } from 'app/models';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { RequestPaymentFineDetailService } from '../../services/RequestPaymentFineDetail.service';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { IFormChange } from '../../interfaces/FormChange';
 import { RequestBribeDetailService } from '../../services/RequestBribeDetail.service';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
@@ -38,9 +38,19 @@ import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { convertDateForSave, getDateMyDatepicker } from 'app/config/dateFormat';
 import {
   RequestBribeinsAllModel,
-  RequestBribeStaffModel
+  RequestBribeStaffModel,
+  RequestBribeDetailModel
 } from '../../models/RequestBribeinsAll.model';
 import { Location } from '@angular/common';
+import { DropdownInterface } from '../../shared/interfaces/dropdown-interface';
+import { Observable } from 'rxjs/Observable';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  switchMap
+} from 'rxjs/operators';
+import { IRequestPaymentFineDetail } from '../../interfaces/RequestPaymentFineDetail';
 @Component({
   selector: 'app-bribe',
   templateUrl: './bribe.component.html',
@@ -48,6 +58,61 @@ import { Location } from '@angular/common';
   providers: [BribeService]
 })
 export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
+  public BribeFormGroup: FormGroup;
+  public TotalPart: number;
+  public PartMoney: number;
+  public isEdit: false;
+  public RequestCommand_NoticeCode_list: DropdownInterface[];
+  public MasStaffMaingetAllList: any[];
+  public MasOfficeMainList: string[];
+  public StaffMainName: any[];
+  public PositionName: string;
+  public OfficeName: string;
+  get RequestBribeDetail() {
+    return this.BribeFormGroup.get('RequestBribeDetail') as FormArray;
+  }
+  get RequestBribeStaff() {
+    return this.BribeFormGroup.get('RequestBribeStaff') as FormArray;
+  }
+
+  searchStation = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 2
+          ? []
+          : this.MasOfficeMainList.filter(
+              v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
+            ).slice(0, 10)
+      )
+    );
+  searchStationOfPOA = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 2
+          ? []
+          : this.MasOfficeMainList.filter(
+              v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
+            ).slice(0, 10)
+      )
+    );
+  searchStaffMainName = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 2
+          ? []
+          : this.MasStaffMaingetAllList.filter(
+              v => v.FullName.toLowerCase().indexOf(term.toLowerCase()) > -1
+            )
+              .slice(0, 10)
+              .map(m => m.FullName)
+      )
+    );
   constructor(
     private activatedRoute: ActivatedRoute,
     private masStaffService: MasStaffService,
@@ -64,16 +129,39 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     private router: Router,
     private sidebarService: SidebarService,
     public dialog: MatDialog,
-    private _location: Location
+    private _location: Location,
+    private fb: FormBuilder
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
-      this.mode$.next(param['mode']);
+      this.mode = param['mode'];
       this.ArrestCode$.next(param['ArrestCode']);
       this.RequestBribeID$.next(param['RequestBribeID']);
       this.RequestBribeRewardID$.next(param['RequestBribeRewardID']);
     });
     this.navService.setInnerTextNextPageButton('กลับ');
+    this.BribeFormGroup = this.fb.group({
+      check: [true],
+      RequestBribeID: [null],
+      RequestBribeRewardID: [null],
+      RequestBribeCode: [null],
+      CommandDetailID: [null],
+      RequestDate: [this.setDateNow, Validators.required],
+      RequestTime: [this.setTimeNow],
+      StationCode: [''],
+      Station: ['', Validators.required],
+      BribeTotal: [0],
+      BribeRemainder: [0],
+      Informeracknowledge: ['', Validators.required],
+      StationOfPOA: [''],
+      POADate: [this.setDateNow],
+      POATime: [this.setTimeNow],
+      POANo: [''],
+      StationCodeOfPOA: [''],
+      IsActive: [1],
+      RequestBribeDetail: this.fb.array([]),
+      RequestBribeStaff: this.fb.array([])
+    });
     this.navService.onSave.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
         this.navService.onSave.next(false);
@@ -112,7 +200,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.6');
+    this.sidebarService.setVersion('0.0.1.7');
+
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
     this.navService.onNextPage.takeUntil(this.destroy$).subscribe(res => {
@@ -122,22 +211,55 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
     });
   }
+
   private async pageLoad() {
     // 1 START
-    switch (this.mode$.getValue()) {
+    switch (this.mode) {
       case 'C':
         // 1.1
-        // this.MasStaffMaingetAll(); // 1.1.1
-        // this.MasOfficeMaingetAll(); // 1.1.2
+        this.masStaffService
+          .MasStaffMaingetAll()
+          .subscribe((Staff: MasStaffModel[]) => {
+            this.MasStaffMaingetAllList = Staff.map(m => ({
+              ...m,
+              FullName: m.TitleName + m.FirstName + ' ' + m.LastName
+            }));
+          }); // 1.1.1
+        this.masOfficeService
+          .MasOfficeMaingetAll()
+          .subscribe((Office: MasOfficeModel[]) => {
+            this.MasOfficeMainList = Office.map(m => m.OfficeName);
+          }); // 1.1.2
 
         // 1.1.3
-        const RequestCommand: IRequestCommand[] = await this.requestCommandService
+        const RequestCommands: IRequestCommand[] = await this.requestCommandService
           .RequestCommandgetByArrestCode({
             ArrestCode: this.ArrestCode$.getValue()
           })
           .toPromise();
         // 1.1.4
-        this.RequestCommand$.next(RequestCommand);
+        if (RequestCommands.length > 0) {
+          const RequestCommand: IRequestCommand = RequestCommands[0];
+          this.TotalPart = RequestCommand.TotalPart;
+
+          this.PartMoney = RequestCommand.RequestCommandDetail.map(
+            m => m.PartMoney
+          ).reduce((a, b) => (a += b));
+
+          // this.checkList = RequestCommand.RequestCommandDetail.map(m => true);
+          this.RequestCommand_NoticeCode_list = RequestCommand.RequestCommandDetail.map(
+            m => ({
+              text: `${m.NoticeCode || ''}/${m.TitleName || ''} ${m.FirstName ||
+                ''} ${m.LastName || ''}`,
+              value: m.CommandDetailID,
+              value2: m.NoticeCode
+            })
+          );
+          this.BribeFormGroup.get('RequestBribeCode').patchValue(
+            'Auto Generate'
+          );
+        }
+        // this.RequestCommand$.next(RequestCommand);
 
         // 1.1.5
         this.controlEnableAll();
@@ -149,23 +271,63 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.navService.setEditButton(false);
         this.navService.setDeleteButton(false);
         this.navService.setSearchBar(false);
-         this.navService.setNewButton(false);
-     this.navService.setEditField(false);
-     this.navService.setNextPageButton(false);
-     this.navService.setPrevPageButton(false);
+        this.navService.setNewButton(false);
+        this.navService.setEditField(false);
+        this.navService.setNextPageButton(false);
+        this.navService.setPrevPageButton(false);
 
         break;
       case 'R':
         // 1.2
         // 1.2.1
-        const RequestBribe: IRequestBribe[] = await this.requestBribeService
+        const RequestBribes: IRequestBribe[] = await this.requestBribeService
           .RequestBribegetByCon({
             RequestBribeID: this.RequestBribeID$.getValue()
           })
           .toPromise();
-        this.RequestBribeRewardID$.next(RequestBribe[0].RequestBribeRewardID);
+        this.RequestBribeRewardID$.next(RequestBribes[0].RequestBribeRewardID);
         // 1.2.3
-        this.RequestBribe$.next(RequestBribe);
+
+        if (RequestBribes.length > 0) {
+          const RequestBribe: IRequestBribe = RequestBribes[0];
+          this.RequestCommand_NoticeCode_list = RequestBribes.map(m => ({
+            text: `${m.NoticeCode || ''}/${m.TitleName || ''} ${m.FirstName ||
+              ''} ${m.LastName || ''}`,
+            value: m.CommandDetailID
+          }));
+          Object.keys(this.BribeFormGroup.value).forEach(f => {
+            this.BribeFormGroup.get(f).patchValue(RequestBribe[f]);
+          });
+
+          RequestBribe.RequestBribeDetail.forEach(f => {
+            const newKey = f;
+            newKey['BribeMoney'] = Number(f.PaymentFine) * 0.2;
+            newKey['NetBribeMoney'] =
+              (Number(newKey['BribeMoney']) / Number(RequestBribe.TotalPart)) *
+              Number(RequestBribe.PartMoney);
+            this.RequestBribeDetail.push(this.fb.group(newKey));
+          });
+          RequestBribe.RequestBribeStaff.forEach(f => {
+            this.RequestBribeStaff.push(this.fb.group(f));
+          });
+
+          RequestBribe.RequestBribeDetail.forEach(f => {
+            const newMap = RequestBribeDetailModel;
+            for (const key in newMap) {
+              if (newMap.hasOwnProperty(key)) {
+                const element = newMap[key];
+                newMap[key] = f[key] || '';
+              }
+            }
+
+            newMap['check'] = true;
+            this.RequestBribeDetail.push(this.fb.group(newMap));
+          });
+
+          this.TotalPart = RequestBribe.TotalPart;
+          this.PartMoney = RequestBribe.PartMoney;
+        }
+        // this.RequestBribe$.next(RequestBribe);
         // 1.2.2
         const MasDocument: MasDocumentModel[] = await this.masDocumentMainService
           .MasDocumentMaingetAll({
@@ -230,7 +392,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     // 1.5
     if (this.ILG60_08_03_00_00_E08_FORM_VALID) {
       // 2
-      switch (this.mode$.getValue()) {
+      switch (this.mode) {
         case 'C':
           // 2.1
           // 2.1.1
@@ -379,7 +541,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
 
   private buttonCancel() {
     if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      switch (this.mode$.getValue()) {
+      switch (this.mode) {
         case 'C':
           break;
         case 'R':
@@ -477,30 +639,64 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.ILG60_08_03_00_00_E18_DISABLED$.next(false); // Icon ค้นหาที่อยู่เอกสารแนบ […]
     this.ILG60_08_03_00_00_E19_DISABLED$.next(false); // [ลบ]
   }
-  private MasStaffMaingetAll() {
-    this.masStaffService
-      .MasStaffMaingetAll()
-      .subscribe((res: MasStaffModel[]) => {
-        this.MasStaffMain$.next(res);
-      });
+  public StaffMainNameChange($event) {
+    console.log('$event', $event);
+    const mapStaff = this.MasStaffMaingetAllList.filter(
+      f => f.FullName === $event.target.value
+    ).shift();
+    this.PositionName = mapStaff.PositionName;
+    this.OfficeName = mapStaff.OfficeName;
   }
-  private MasOfficeMaingetAll() {
-    this.masOfficeService
-      .MasOfficeMaingetAll()
-      .subscribe((res: MasOfficeModel[]) => {
-        this.MasOfficeMain$.next(res);
-      });
-  }
-  private setShowButton() {
-    this.navService.setSearchBar(false);
-    this.navService.setPrintButton(false);
-    this.navService.setDeleteButton(false);
-    this.navService.setCancelButton(false);
-    this.navService.setEditButton(false);
-    this.navService.setSaveButton(false);
-    this.navService.setNextPageButton(true);
-  }
+  public async selectChange(CommandDetailID) {
+    const PaymentFineDetail: IRequestPaymentFineDetail[] = await this.requestPaymentFineDetailService
+      .RequestPaymentFineDetailgetByNoticeCode({
+        NoticeCode: this.RequestCommand_NoticeCode_list.filter(
+          f => Number(f.value) === Number(CommandDetailID)
+        )
+          .map(m => m.value2)
+          .shift()
+      })
+      .toPromise();
 
+    if (PaymentFineDetail.length > 0) {
+      PaymentFineDetail.forEach(f => {
+        const newMap = RequestBribeDetailModel;
+        for (const key in newMap) {
+          if (newMap.hasOwnProperty(key)) {
+            const element = newMap[key];
+            newMap[key] = f[key] || '';
+          }
+        }
+
+        newMap['check'] = true;
+        this.RequestBribeDetail.push(this.fb.group(newMap));
+      });
+    } else {
+      alert('ไม่พบข้อมูลที่สามารถขอรับเงินสินบน');
+    }
+  }
+  public total() {
+    return {
+      PaymentFine:
+        this.RequestBribeDetail.value.length > 0
+          ? this.RequestBribeDetail.value
+              .map(m => Number(m.PaymentFine))
+              .reduce((a, b) => (a += b))
+          : 0,
+      BribeMoney:
+        this.RequestBribeDetail.value.length > 0
+          ? this.RequestBribeDetail.value
+              .map(m => Number(m.BribeMoney))
+              .reduce((a, b) => (a += b))
+          : 0,
+      NetBribeMoney:
+        this.RequestBribeDetail.value.length > 0
+          ? this.RequestBribeDetail.value
+              .map(m => Number(m.NetBribeMoney))
+              .reduce((a, b) => (a += b))
+          : 0
+    };
+  }
   public changeForm(form: IFormChange) {
     const { FormName, FormData } = form;
 

@@ -12,7 +12,7 @@ export class BribeConfig extends RewardHelper {
   public OfficeCode = '102546';
   public RequestBribeRewardID: number;
 
-  public mode$ = new BehaviorSubject<string>('');
+  public mode: string;
   public ArrestCode$ = new BehaviorSubject<string>('');
   public RequestBribeID$ = new BehaviorSubject<number>(null);
   public RequestBribeRewardID$ = new BehaviorSubject<number>(null);
