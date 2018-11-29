@@ -34,13 +34,16 @@ export class DialogJudgment {
     public lawsuitArrestFormDialog: any = {}
     public LawsuitArrest: any = [];
     async ngOnInit() {
+        if (this.data.mode == 'U') {
+            this.editMode = true;
+        }else{
+            this.editMode = false;
+        }
         this.preLoaderService.setShowPreloader(true);
         this.arrestData = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(this.data.lawsuitArrest.IndictmentDetailID)
         this.MasCourtList = await this.lawsuitService.MasCourtMaingetAll()
         this.LawsuitArrest = await this.lawsuitService.LawsuitArrestGetByCon(this.data.indicmentID)
-        if (this.data.mode == 'U') {
-            this.editMode = true;
-        }
+        
 
         this.lawsuitArrestFormDialog = this.arrestData['LawsuitJudgement'].length > 0 ? await this.newForm() : await this.newFormNull();
         console.log(this.arrestData['LawsuitJudgement'])
