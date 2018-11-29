@@ -121,7 +121,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.19');
+    this.sidebarService.setVersion('0.0.0.20');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -491,6 +491,8 @@ export class ManageComponent implements OnInit {
       console.log(json)
       let update = await this.lawsuitService.LawsuitformupdByCon(json)
       let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
+      console.log(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
+
       if (LawsuitArrestIndicmentDetail.length != 0) {
         let index = 0;
         await LawsuitArrestIndicmentDetail.forEach(async element => {
