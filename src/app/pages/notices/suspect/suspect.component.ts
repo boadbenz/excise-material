@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { DropDown, VISATypes, BloodTypes, EntityTypes, GenderTypes, LawbreakerTypes, RegionModel, MaritalStatus } from '../../../models';
@@ -34,6 +34,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
         private noticeService: NoticeService,
         private mainMasterService: MainMasterService,
         private fb: FormBuilder,
+        private router: Router
     ) {
         this.navService.setPrintButton(false);
         this.navService.setDeleteButton(false);
@@ -46,6 +47,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
     private subActivedRoute: any;
     private onSaveSubscribe: any;
+    private onCancelSubscribe: any;
     private mode: any;
 
     myDatePickerOptions = MyDatePickerOptions;
@@ -64,6 +66,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
     races: any[];
     religions: any[] ;
     countries: any[];
+    suspectId:any;
 
     typeheadRegion: RegionModel[] = []
 
@@ -154,7 +157,9 @@ export class SuspectComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.onCancelSubscribe.unsubscribe();
         this.subActivedRoute.unsubscribe();
+        this.onSaveSubscribe.unsubscribe();
     }
 
     private active_route() {
@@ -180,6 +185,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
                 this.navService.setEditField(true);
 
                 if (p['code']) {
+                    this.suspectId = p["code"];
                     this.GetByCon(p['code']);
                 }
             }
@@ -191,13 +197,21 @@ export class SuspectComponent implements OnInit, OnDestroy {
             this.showEditField = p;
         });
 
+        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnCancel(false);
+                let url = sessionStorage.getItem("notice_current_page");
+                this.router.navigateByUrl(url);
+            }
+        });
+
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
             if (status) {
                 await this.navService.setOnSave(false);
 
                 if (!this.SuspectFG.valid) {
                     this.isRequired = true;
-                    alert(Message.checkData)
+                    alert(Message.checkData);
                     return false;
                 }
 
@@ -310,15 +324,22 @@ export class SuspectComponent implements OnInit, OnDestroy {
     async OnCreate() {
         this.preloader.setShowPreloader(true);
 
-        let IsSuccess: boolean = false;
-        await this.noticeService.noticeMasSuspectinsAll(this.SuspectFG.value).then(isSuccess => {
-            IsSuccess = isSuccess;
-        }, () => { IsSuccess = false; });
+        let success: boolean = false;
+        let suspectID = "";
+        await this.noticeService.noticeMasSuspectinsAll(this.SuspectFG.value).then(item => {
+            // let success = ""+item.IsSuccess;
+            success = item.IsSuccess=="False"?false:true;
+            suspectID = item.SuspectID;
+        }, () => { success = false; });
 
-        if (IsSuccess) {
-            alert(Message.saveComplete)
+        if (success) {
+            alert(Message.saveComplete);
+            this.router.routeReuseStrategy.shouldReuseRoute = function() {
+              return false;
+            };
+            this.router.navigateByUrl('/notice/suspect/R/'+suspectID);
         } else {
-            alert(Message.saveFail)
+            alert(Message.saveFail);
         }
 
         this.preloader.setShowPreloader(false);
@@ -337,15 +358,21 @@ export class SuspectComponent implements OnInit, OnDestroy {
             this.SuspectFG.value.PassportDateOut = "";
         }
 
+        let birthDate = this.SuspectFG.value.BirthDate;//convertDateForSave(passportDateOut);
+        if(!birthDate || birthDate.myDate==null){
+            this.SuspectFG.value.BirthDate = "";
+        }
+
         let IsSuccess: boolean = false;
         await this.noticeService.noticeMasSuspectupdByCon(this.SuspectFG.value).then(isSuccess => {
             IsSuccess = isSuccess;
         }, () => { IsSuccess = false; })
 
         if (IsSuccess) {
-            alert(Message.saveComplete)
+            alert(Message.saveComplete);
+            this.GetByCon(this.suspectId);
         } else {
-            alert(Message.saveFail)
+            alert(Message.saveFail);
         }
         // Set Preloader
         this.preloader.setShowPreloader(false);
