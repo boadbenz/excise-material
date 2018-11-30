@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Revenue, RevenueDetail } from './revenue';
 import { appConfig } from '../../app.config';
-
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class IncomeService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   // tslint:disable-next-line:member-ordering
   private httpOptions = {
@@ -63,7 +65,7 @@ export class IncomeService {
   }
 
   async getDepartment(): Promise<any> {
-    const params = { };
+    const params = {};
     const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
 
     try {
@@ -75,7 +77,7 @@ export class IncomeService {
   }
 
   async StaffgetByKeyword(): Promise<any> {
-    const params = { };
+    const params = {};
     const url = `${appConfig.api7789}/MasStaffMaingetAll`;
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -86,9 +88,9 @@ export class IncomeService {
   }
 
   async TransactionRunninggetByCon(RunningTable, RunningOfficeCode): Promise<any> {
-    const pValue = {
-      'RunningTable' : RunningTable,
-      'RunningOfficeCode' : RunningOfficeCode
+    let pValue = {
+      "RunningTable": RunningTable,
+      "RunningOfficeCode": RunningOfficeCode
     }
 
     const params = JSON.stringify(pValue);
@@ -103,10 +105,10 @@ export class IncomeService {
   }
 
   async TransactionRunninginsAll(RunningOfficeCode, RunningTable, RunningPrefix): Promise<any> {
-    const pValue = {
-      'RunningOfficeCode' : RunningOfficeCode,
-      'RunningTable' : RunningTable,
-      'RunningPrefix' : RunningPrefix
+    let pValue = {
+      "RunningOfficeCode": RunningOfficeCode,
+      "RunningTable": RunningTable,
+      "RunningPrefix": RunningPrefix
     }
 
     const params = JSON.stringify(pValue);
@@ -133,9 +135,9 @@ export class IncomeService {
   }
 
   async RevenueComparegetByCon(RevenueDate, OfficeCode): Promise<any> {
-    const pValue = {
-      'RevenueDate' : RevenueDate,
-      'OfficeCode' : OfficeCode
+    let pValue = {
+      "RevenueDate": RevenueDate,
+      "OfficeCode": OfficeCode
     }
 
     const params = JSON.stringify(pValue);
@@ -244,5 +246,29 @@ export class IncomeService {
     } catch (error) {
       return [];
     }
+  }
+
+  RevenueReportgetByCon(RevenueID: string) {
+    const params = { RevenueID };
+    const url = `${appConfig.apiReport}/RevenuegetByCon.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .catch(this.onCatch)
+      .do((res: Response) => {
+        this.onSuccess(res);
+      }, (error: any) => {
+        this.onError(error);
+      });
+  }
+
+  private onSuccess(res: Response): void {
+    console.log('Request successful');
+  }
+
+  private onError(res: Response): void {
+    console.log('Error, status code: ' + res.status);
+  }
+
+  private onCatch(error: any, caught: Observable<any>): Observable<any> {
+    return Observable.throw(error);
   }
 }

@@ -9,7 +9,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     RouterModule,
-    CardActionsModule
+    CardActionsModule,
+    FormsModule
   ],
   declarations: [PrintDocModalComponent],
   exports: [
