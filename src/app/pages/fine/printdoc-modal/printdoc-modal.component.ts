@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FineService } from '../fine.service';
 import { ICompareCon } from '../condition-model';
-import { Arrest } from '../arrest';
+import { Arrest } from '../../model/arrest';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 
@@ -45,9 +45,9 @@ export class PrintDocModalComponent implements OnInit {
         //   } 
         // });
 
-        this.fineService.getByCon(this.condtion).then(async res => {
-            this.getLawbreakerByArrest(res[0].ArrestCode);
-        });
+        // this.fineService.getByCon(this.condtion).then(async res => {
+        //     this.getLawbreakerByArrest(res[0].ArrestCode);
+        // });
       }
 
       getLawbreakerByArrest(ArrestCode: string) {

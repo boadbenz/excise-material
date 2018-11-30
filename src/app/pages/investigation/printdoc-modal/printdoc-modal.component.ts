@@ -26,7 +26,7 @@ export class PrintdocModalComponent implements OnInit {
     ngOnInit() {
         // this.createFrom();
 
-        this.investService.detailGetByCon(this.investCode).subscribe(result => {
+        this.investService.detailGetByCon(this.investCode).then(result => {
             this.investDetail = new Array<InvestigateDetail>();
             this.investDetail = result;
             // this.setInvestDetail(result);

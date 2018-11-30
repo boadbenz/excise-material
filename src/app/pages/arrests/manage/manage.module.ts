@@ -14,7 +14,10 @@ import { StoreModule } from '@ngrx/store';
 import { productReducer } from '../../../reducers/product.reducer';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalNoticeModule } from '../../component/modal-notice/modal-notice.module';
-import { ModalLawbreakerModal } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
+import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
+import { ProveService } from '../../prove/prove.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MainMasterService } from '../../../services/main-master.service';
 
 const routes: Routes = [
   {
@@ -26,6 +29,7 @@ const routes: Routes = [
               { title: 'ค้นหางานจับกุม', url: '/arrest/list' },
               { title: 'จัดการข้อมูลบันทึกจับกุม' }
           ],
+          codePage: 'XCS60-03-02-00',
           nextPage: { title: 'รับคำกล่าวโทษ', url: '/accusations/manage' }
       },
       component: ManageComponent
@@ -44,16 +48,17 @@ const routes: Routes = [
       productModule: productReducer
     }),
     RouterModule.forChild(routes),
-    ModalLawbreakerModal,
+    ModalLawbreakerModule,
     CardActionsModule,
     AllegationModalModule,
     ModalNoticeModule,
     StepWizardModule,
-    PrintDocModalModule
+    PrintDocModalModule,
+    MyDatePickerTHModule
   ],
   declarations: [
     ManageComponent
   ],
-  providers: [ArrestsService]
+  providers: [ArrestsService, ProveService, MainMasterService]
 })
 export class ManageModule { }

@@ -120,7 +120,7 @@
             <div *ngIf="nextPageButton | async" class="navbar-nav my-lg-0">
                 <div class="nav-link text-muted waves-effect waves-dark">
                     <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickNextPage()">
-                        {{nextPageTitle}} >>
+                        {{nextPageTitle | async}} >>
                     </a>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms";
+import { FormControl, Validators } from "@angular/forms";
 
 export class ArrestLocale {
     public LocaleID: string;
@@ -21,29 +21,30 @@ export class ArrestLocale {
     public Province: string;
     public ZipCode: string;
     public Policestation: string;
-    public IsActive: string;
+    public IsActive: number;
     public Region: string;
 }
 
 export const ArrestLocaleFormControl = {
     IsArrest: new FormControl(null),
-    ArrestCode: new FormControl(null),
+    ArrestCode: new FormControl(null, Validators.required),
     GPS: new FormControl(null),
     Location: new FormControl("N/A"),
-    Address: new FormControl(null),
-    Village: new FormControl(null),
-    Building: new FormControl(null),
-    Floor: new FormControl(null),
-    Room: new FormControl(null),
-    Alley: new FormControl(null),
-    Road: new FormControl(null),
-    SubDistrictCode: new FormControl(null),
-    SubDistrict: new FormControl(null),
-    DistrictCode: new FormControl(null),
-    District: new FormControl(null),
-    ProvinceCode: new FormControl(null),
-    Province: new FormControl(null),
-    ZipCode: new FormControl(null),
-    Policestation: new FormControl(null),
+    Address: new FormControl(null, Validators.required),
+    Village: new FormControl(null, Validators.required),
+    Building: new FormControl(null, Validators.required),
+    Floor: new FormControl(null, Validators.required),
+    Room: new FormControl(null, Validators.required),
+    Alley: new FormControl(null, Validators.required),
+    Road: new FormControl(null, Validators.required),
+    SubDistrictCode: new FormControl(null, Validators.required),
+    SubDistrict: new FormControl(null, Validators.required),
+    DistrictCode: new FormControl(null, Validators.required),
+    District: new FormControl(null, Validators.required),
+    ProvinceCode: new FormControl(null, Validators.required),
+    Province: new FormControl(null, Validators.required),
+    ZipCode: new FormControl(null, Validators.required),
+    Policestation: new FormControl(null, Validators.required),
+    IsActive: new FormControl(1, Validators.required),
     Region: new FormControl(null)
 }

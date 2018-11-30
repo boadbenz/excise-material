@@ -4,13 +4,11 @@ import { NavigationService } from '../../../shared/header-navigation/navigation.
 import { ArrestsService } from '../arrests.service';
 import { Arrest } from '../arrest';
 import { Message } from '../../../config/message';
-import { toLocalShort } from '../../../config/dateFormat';
+import { toLocalShort, toLocalNumeric, resetLocalNumeric, compareDate, setZeroHours, getDateMyDatepicker, convertDateForSave } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
-<<<<<<< HEAD
-=======
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
->>>>>>> FL_J
+import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -18,22 +16,32 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 export class ListComponent implements OnInit, OnDestroy {
 
     private subOnSearch: any;
+    private subSetNextPage: any;
     paginage = pagination;
     dataTable: any;
     advSearch: any;
+    private dateStartFrom: any;
+    private dateStartTo: any;
+    OccurrenceDateTo: any;
 
     arrestList = new Array<Arrest>();
     arrest = new Array<Arrest>();
 
     @ViewChild('arrestTable') arrestTable: ElementRef;
 
+    myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd mmm yyyy',
+        showClearDateBtn: false,
+        height: '30px'
+    };
 
     constructor(
         private navService: NavigationService,
         private arrestService: ArrestsService,
         private router: Router,
         private sidebarService: SidebarService,
-        private preLoader: PreloaderService
+        private preLoader: PreloaderService,
+        public chRef: ChangeDetectorRef
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -50,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('1.00');
+        this.sidebarService.setVersion('0.0.0.10');
 
         this.onSearch('');
 
@@ -58,6 +66,13 @@ export class ListComponent implements OnInit, OnDestroy {
             if (Textsearch) {
                 await this.navService.setOnSearch('');
                 this.onSearch(Textsearch);
+            }
+        })
+
+        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnNextPage(false);
+                this.router.navigate(['/arrest/manage', 'C', 'NEW']);
             }
         })
     }
@@ -69,25 +84,30 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preLoader.setShowPreloader(false);
     }
 
-<<<<<<< HEAD
-    onAdvSearch(form: any) {
-        debugger
-=======
     async onAdvSearch(form: any) {
-        this.paginage.TotalItems = 0;
->>>>>>> FL_J
-        const sDateCompare = new Date(form.value.OccurrenceDateFrom);
-        const eDateCompare = new Date(form.value.OccurrenceDateTo);
 
-        if (sDateCompare.getTime() > eDateCompare.getTime()) {
-            alert(Message.checkDate);
-        } else {
-            this.preLoader.setShowPreloader(true);
-            form.value.DateStartFrom = sDateCompare.getTime();
-            form.value.DateStartTo = eDateCompare.getTime();
-            await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
-            this.preLoader.setShowPreloader(false);
+        if (form.value.OccurrenceDateFrom && form.value.OccurrenceDateTo) {
+            const sdate = getDateMyDatepicker(form.value.OccurrenceDateFrom);
+            const edate = getDateMyDatepicker(form.value.OccurrenceDateTo);
+
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate);
+                return
+            }
+
+            form.value.OccurrenceDateFrom = convertDateForSave(sdate);
+            form.value.OccurrenceDateTo = convertDateForSave(edate);
         }
+
+        this.paginage.TotalItems = 0;        
+
+        this.preLoader.setShowPreloader(true);
+        console.log('===================');
+        console.log(JSON.stringify(form.value));
+        console.log('===================');
+        await this.arrestService.getByConAdv(form.value).then(res => this.onSearchComplete(res));
+        this.preLoader.setShowPreloader(false);
+
     }
 
     onSearchComplete(list: Arrest[]) {
@@ -111,6 +131,31 @@ export class ListComponent implements OnInit, OnDestroy {
 
     }
 
+    onSDateChange(event: IMyDateModel) {
+        this.dateStartFrom = event
+        this.checkDate();
+    }
+
+    onEDateChange(event: IMyDateModel) {
+        this.dateStartTo = event
+        this.checkDate()
+    }
+
+    checkDate() {
+        if (this.dateStartFrom && this.dateStartTo) {
+
+            const sdate = getDateMyDatepicker(this.dateStartFrom);
+            const edate = getDateMyDatepicker(this.dateStartTo);
+
+            if (!compareDate(sdate, edate)) {
+                alert(Message.checkDate)
+                setTimeout(() => {
+                    this.OccurrenceDateTo = { date: this.dateStartFrom.date };
+                }, 0);
+            }
+        }
+    }
+
     clickView(code: string) {
         this.router.navigate([`/arrest/manage/R/${code}`]);
     }
@@ -121,5 +166,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subOnSearch.unsubscribe();
+        this.subSetNextPage.unsubscribe();
     }
 }

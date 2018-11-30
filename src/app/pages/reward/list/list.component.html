@@ -1,140 +1,130 @@
 <div  class="card" *ngIf="advSearch | async">
-    <div  class="card-header card-navy">
-      ค้นหาขั้นสูง
-      <div  class="card-actions">
-        <a  class="btn-close">
-          <i  class="ti-close"></i>
-        </a>
-      </div>
+  <div class="card-header unset-radius">
+    ค้นหาขั้นสูง
+    <div class="card-actions">
+      <a (click)="closeAdvSearch()">
+        <i class="ti-close"></i>
+      </a>
     </div>
-    <div class="card-body">
-        <form class="form-horizontal">
-          <div>
-            <div class="row">
-              <label for="" class="col-md-2 control-label ">เลขที่ใบงาน :</label>
-              <div class="col-md-4 padding-input-adv-search">
-                <div class="form-group">
-                  <div class="form-line">
-                    <input type="text" id="" class="form-control " placeholder="">
-                  </div>
-                </div>
-              </div>
-              <label for="" class="col-md-2 control-label padding-adv-search">เลขที่คดีรับคำกล่าวโทษ :</label>
-              <div class="col-md-4 padding-input-adv-search">
-                <div class="form-group">
-                  <div class="form-line">
-                    <input type="text" id="" class="form-control " placeholder="">
-                  </div>
-                </div>
-              </div>
-            </div>
-    
-            <div class="row">
-              <label for="" class="col-md-2 control-label ">วันที่จับกุม :</label>
-              <div class="col-md-4 padding-input-adv-search">
-                <div class="form-group input-group form-line">
-                  <input type="date" id="" class="form-control " placeholder="วว/ดด/ปปปป">
-                  <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
-                  <input type="date" id="" class="form-control " placeholder="วว/ดด/ปปปป">
-                </div>
-              </div>
-              <label for="" class="col-md-2 control-label padding-adv-search">วันที่รับคดี :</label>
-              <div class="col-md-4 padding-input-adv-search">
-                  <div class="form-group input-group form-line">
-                    <input type="date" id="" class="form-control " placeholder="วว/ดด/ปปปป">
-                    <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
-                    <input type="date" id="" class="form-control " placeholder="วว/ดด/ปปปป">
-                  </div>
-                </div>
-            </div>
-    
-            <div class="row">
-              <label for="" class="col-md-2 control-label ">ผู้กล่าวหา :</label>
-              <div class="col-md-4 padding-input-adv-search">
-                <div class="form-group">
-                  <div class="form-line">
-                    <input type="text" id="" class="form-control " placeholder="">
-                  </div>
-                </div>
-              </div>
-              <label for="" class="col-md-2 control-label padding-adv-search">หน่วยงาน :</label>
-              <div class="col-md-4 padding-input-adv-search">
-                <div class="form-group">
-                  <div class="form-line">
-                    <input type="text" id="" class="form-control " placeholder="">
-                  </div>
-                </div>
-              </div>
-            </div>
-    
-            <div class=" text-right">
-              <button class="btn waves-effect waves-light btn-navy">ค้นข้อมูล</button>
-            </div>
-          </div>
-        </form>
-      </div>
   </div>
-
-  
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="dataTable table table-sm table-striped table-hover">
-                <thead>
-                  <tr>
-                    <th class="text-center">ลำดับ</th>
-                    <th>เลขที่ใบงาน</th>
-                    <th>เลขที่คดีรับคำกล่าวโทษ</th>
-                    <th>วันที่จับกุม</th>
-                    <th>วันที่รับคดี</th>
-                    <th>ชื่อผู้กล่าวหา</th>
-                    <th>หน่วยงาน</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of response">
-                    <td class="text-center">{{item.no}}</td>
-                    <td>{{item.work_no}}</td>
-                    <td>{{item.case_no}}</td>
-                    <td>{{item.arrest_day}}</td>
-                    <td>{{item.court_date}}</td>
-                    <td>{{item.lawyer}}</td>
-                    <td>{{item.department}}</td>
-                    <td>
-                      <!-- ... -->
-                      <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.no)">
-                        <i class="mdi mdi-eye fa-lg"></i>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+  <div class="card-body">
+    <form class="form-horizontal" #avdSearchForm="ngForm" (ngSubmit)="onAdvSearch(avdSearchForm)">
+      <div>
+        <div class="row">
+          <label for="" class="col-md-2 control-label ">เลขที่ใบงาน :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" id="" ngModel name="ArrestCode" class="form-control" placeholder="">
+              </div>
             </div>
           </div>
-  
-          <div class="row pages">
-            <div class="col-9 ">
-              <a href="#">|&lt;&lt;</a> หน้าที่
-              <select class="custom-select">
-                <option>1</option>
-              </select> จาก 2 หน้า
-              <a href="#">&gt;&gt;|</a> รายการที่ 1-5 จาก 13 รายการ
-            </div>
-            <div class="col-3 text-right">
-              แสดง
-              <select class="custom-select">
-                <option (click)="numPage = 5">5</option>
-                <option (click)="numPage = 10">10</option>
-                <option (click)="numPage = 15">15</option>
-              </select> รายการ
+          <label for="" class="col-md-2 control-label padding-adv-search">เลขที่คดีรับคำกล่าวโทษ :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" id="" ngModel name="LawsuitID" class="form-control " placeholder="">
+              </div>
             </div>
           </div>
         </div>
-  
+
+        <div class="row">
+          <label for="" class="col-md-2 control-label ">วันที่จับกุม :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group input-group form-line">
+              <input type="date" id="" ngModel name="sArrestDate" class="form-control " placeholder="วว/ดด/ปปปป">
+              <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
+              <input type="date" id="" ngModel name="eArrestDate" class="form-control " placeholder="วว/ดด/ปปปป">
+            </div>
+          </div>
+          <label for="" class="col-md-2 control-label padding-adv-search">วันที่รับคดี :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group input-group form-line">
+              <input type="date" id="" ngModel name="sLawsuitDate" class="form-control " placeholder="วว/ดด/ปปปป">
+              <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
+              <input type="date" id="" ngModel name="eLawsuitDate" class="form-control " placeholder="วว/ดด/ปปปป">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="" class="col-md-2 control-label ">ผู้กล่าวหา :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" id="" name="MasStaff" ngModel class="form-control " placeholder="" [ngbTypeahead]="onAutoCompleteStaff">
+              </div>
+            </div>
+          </div>
+          <label for="" class="col-md-2 control-label padding-adv-search">หน่วยงาน :</label>
+          <div class="col-md-4 padding-input-adv-search">
+            <div class="form-group">
+              <div class="form-line">
+                <input type="text" id="" ngModel name="DepartmentName" class="form-control " placeholder="" [ngbTypeahead]="onAutoCompleteDepartment">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class=" text-right">
+          <button class="btn waves-effect waves-light btn-navy">ค้นข้อมูล</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table #rewardTable class="dataTable table table-sm table-striped table-hover">
+              <thead>
+              <tr>
+                <th class="text-center">ลำดับ</th>
+                <th>เลขที่ใบงาน</th>
+                <th>เลขที่คดีรับคำกล่าวโทษ</th>
+                <th>วันที่จับกุม</th>
+                <th>วันที่รับคดี</th>
+                <th>ชื่อผู้กล่าวหา</th>
+                <th>หน่วยงาน</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of resultsPerPage; let i = index;">
+                <td class="text-center">{{ item.RowsId || '-' }}</td>
+                <td>{{ item.ArrestCode || '-' }}</td>
+                <td>{{ item.LawsuitID || '-' }}</td>
+                <td>{{ item.ArrestDate || '-' }}</td>
+                <td>{{ item.LawsuitDate || '-' }}</td>
+                <td>{{ item.Lawbreaker || '-' }}</td>
+                <td>{{ item.DepartmentName || '-' }}</td>
+                <td>
+                  <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.ArrestCode)">
+                    <i class="mdi mdi-eye fa-lg"></i>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+        <div class="card-footer card-footer-unset">
+          <app-pagination-table
+            [TotalItems]="paginage.TotalItems"
+            [CurrentPage]="paginage.CurrentPage"
+            [PageSize]="paginage.PageSize"
+            [RowsPerPageOptions]="paginage.RowsPerPageOptions"
+            (onPageChange)="pageChanges($event)">
+          </app-pagination-table>
+        </div>
       </div>
     </div>
   </div>
+</div>

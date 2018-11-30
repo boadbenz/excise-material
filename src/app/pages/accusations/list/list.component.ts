@@ -76,7 +76,7 @@ export class ListComponent implements OnInit {
   allPageCount: number = 0;
   numberPage: number = 5;
   numberSelectPage;
-  
+  errorShow:any;
 
   constructor(private navService: NavigationService, private router: Router) {
     this.advSearch = this.navService.showAdvSearch;

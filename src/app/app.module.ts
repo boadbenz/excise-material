@@ -1,10 +1,10 @@
 // import * as $ from 'jquery';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, LOCALE_ID} from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { LocationStrategy, HashLocationStrategy, CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NavigationComponent } from './shared/header-navigation/navigation.component';
@@ -16,6 +16,9 @@ import { routes } from './app.routing';
 import { NavigationService } from './shared/header-navigation/navigation.service';
 import { PreloaderModule } from './shared/preloader/preloader.module';
 
+import { MatAutocompleteModule } from '@angular/material';
+import { LayoutComponent } from './shared/layout/layout.component';
+import { AuthGuard } from './pages/login/auth.guard';
 
 @NgModule({
     declarations: [
@@ -23,30 +26,27 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
         NavigationComponent,
         BreadcrumbComponent,
         SidebarComponent,
-<<<<<<< HEAD
         RightSidebarComponent,
-        
-=======
-        RightSidebarComponent
->>>>>>> FL_J
+        LayoutComponent
     ],
     imports: [
+        CommonModule, 
+        ReactiveFormsModule,
         BrowserModule,
         NgbModule.forRoot(),
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
-<<<<<<< HEAD
-       
-=======
-        PreloaderModule
->>>>>>> FL_J
+        PreloaderModule,
+        MatAutocompleteModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
+        AuthGuard,
         NavigationService,
         SidebarService
     ],
+    exports: [MatAutocompleteModule],
     bootstrap: [AppComponent]
 })
 

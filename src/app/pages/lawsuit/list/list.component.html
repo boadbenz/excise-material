@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="card-body">
-        <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="advSearchForm(advForm)">
+        <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
           <div class="form-body">
             <div class="row">
               <div class="col-md-6">
@@ -37,7 +37,7 @@
                   <div class="col-md-4">
                     <input class="form-control" type="date" ngModel name="LawsuitDateFrom">
                   </div>
-                  <label class="col-form-label">ถึง</label>
+                  <label class="col-form-label text-right col-md-1 px-0">ถึง : </label>
                   <div class="col-md-4">
                     <input class="form-control" type="date" ngModel name="LawsuitDateTo">
                   </div>
@@ -77,7 +77,7 @@
               <tr>
                 <th class="footable-sortable text-center">ลำดับ</th>
                 <th class="footable-sortable">เลขที่ใบงาน</th>
-                <th class="footable-sortable ">เลขที่คดีรับคำกล่าวโทษ</th>
+                <th class="footable-sortable">เลขที่คดีรับคำกล่าวโทษ</th>
                 <th class="footable-sortable">วันที่รับคดี</th>
                 <th class="footable-sortable">ชื่อผู้รับคดี</th>
                 <th class="footable-sortable">หน่วยงาน</th>
@@ -85,16 +85,20 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="footable" *ngFor="let item of lawsuitList; let i = index;">
-                <td class="text-center">{{item.RowsId}}</td>
-                <td>{{item.ArrestCode}}</td>
-                <td>{{item.LawsuitNo}}</td>
-                <td>{{item.LawsuitDate}}</td>
+              <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
+                <td class="text-center">{{ item.RowsId || '' }}</td>
+                <td>{{ item.ArrestCode || '-' }}</td>
+                <td>{{ item.LawsuitNo || '-' }}</td>
+                <td>{{ item.LawsuitDate || '-' }}</td>
                 <td>
-                  <div *ngFor="let staff of item.LawsuiteStaff;">{{staff.FullName}}</div>
+                  <div *ngFor="let staff of item.LawsuiteStaff;">
+                    {{ (staff.TitleName || '') + (staff.FullName || '') + ' ' + (staff.LastName || '')}}
+                  </div>
                 </td>
                 <td>
-                  <div *ngFor="let staff of item.LawsuiteStaff;">{{staff.DepartmentName}}</div>
+                  <div *ngFor="let staff of item.LawsuiteStaff;">
+                    {{ (staff.DepartmentName || '-') }}
+                  </div>
                 </td>
                 <td>
                   <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item)">

@@ -8,16 +8,17 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
 
 const routes: Routes = [
   {
-      path: '',
-      data: {
-          // title: 'ค้นหาข้อมูล',
-          urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานจับกุม' }],
-          nextPage: { title: 'งานจับกุม', url: '/arrest/manage' }
-      },
-      component: ListComponent
+    path: '',
+    data: {
+      // title: 'ค้นหาข้อมูล',
+      urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานจับกุม' }],
+      codePage: 'XCS60-03-01-00'
+    },
+    component: ListComponent
   }
 ]
 
@@ -30,7 +31,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     CardActionsModule,
-    PaginationTableModule
+    PaginationTableModule,
+    MyDatePickerTHModule
+
   ],
   declarations: [
     ListComponent

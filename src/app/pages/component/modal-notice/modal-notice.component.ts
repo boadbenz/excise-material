@@ -6,7 +6,8 @@ import { Message } from '../../../config/message';
 import { Notice } from '../../notices/notice';
 import { toLocalShort } from '../../../config/dateFormat';
 import { ArrestsService } from '../../arrests/arrests.service';
-import { FormGroup, FormArray, FormBuilder } from '../../../../../node_modules/@angular/forms';
+import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { NoticeService } from '../../notices/notice.service';
 
 @Component({
     selector: 'app-modal-notice',
@@ -33,7 +34,7 @@ export class ModalNoticeComponent implements OnInit {
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
-    @Output() noticeCode = new EventEmitter<string>();
+    @Output() outputNotice = new EventEmitter<Notice>();
 
     @ViewChild('noticeTable') noticeTable: ElementRef
 
@@ -41,7 +42,8 @@ export class ModalNoticeComponent implements OnInit {
         private arrestService: ArrestsService,
         private _router: Router,
         private preLoaderService: PreloaderService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private noticeService: NoticeService
     ) { }
 
     ngOnInit() {
@@ -82,7 +84,7 @@ export class ModalNoticeComponent implements OnInit {
 
     async onSearchComplete(list: Notice[]) {
         this.notice = [];
-        await list.map((item, i) => {
+        await list.filter(item => item.IsActive == 1).map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;
             item.NoticeDate = toLocalShort(item.NoticeDate);
@@ -91,7 +93,7 @@ export class ModalNoticeComponent implements OnInit {
             });
             item.NoticeSuspect.map(s => {
                 s.SuspectFullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
-            })
+            });
         })
 
         this.notice = list;
@@ -123,10 +125,15 @@ export class ModalNoticeComponent implements OnInit {
     }
 
     async close(e: any) {
+        this.preLoaderService.setShowPreloader(true);
 
         const code = await this.NoticeList.value.find(item => item.IsChecked).NoticeCode;
-        this.noticeCode.emit(code);
+        const _notice = await this.noticeService.getByCon(code).then(res => {return res});
+  
+        this.outputNotice.emit(_notice);
         this.c.emit(e);
+
+        this.preLoaderService.setShowPreloader(false);
     }
 
     async pageChanges(event) {

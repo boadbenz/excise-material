@@ -156,6 +156,8 @@ export class ManageDetailComponent implements OnInit {
   viewMode: boolean = true;
   navServiceSub: any;
 
+  errorShow: any;
+
   private getDataFromListPage: any;
 
   constructor(private router: Router, private activeRoute: ActivatedRoute, private navService: NavigationService) { }

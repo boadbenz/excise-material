@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 export class ArrestProduct {
     public ProductID = '';
@@ -30,7 +30,9 @@ export class ArrestProduct {
     public QtyUnit = '';
     public NetVolume = '';
     public NetVolumeUnit = '';
-    public IsActive = '';
+    public NetWeight = "";
+    public NetWeightUnit = "";
+    public IsActive: number;
     public IsNewItem: boolean;
     ProductFullName = '';
 }
@@ -50,14 +52,14 @@ export class ArrestProductDetail {
 }
 
 export const ArrestProductFormControl = {
-    ProductID: new FormControl(null),
+    ProductID: new FormControl(null, Validators.required),
     ProductType: new FormControl(null),
-    ArrestCode: new FormControl(null),
+    ArrestCode: new FormControl(null, Validators.required),
     GroupCode: new FormControl(null),
     IsDomestic: new FormControl(null),
-    ProductCode: new FormControl(null),
-    BrandCode: new FormControl(null),
-    BrandNameTH: new FormControl(null),
+    ProductCode: new FormControl(null, Validators.required),
+    BrandCode: new FormControl(null, Validators.required),
+    BrandNameTH: new FormControl(null, Validators.required),
     BrandNameEN: new FormControl(null),
     SubBrandCode: new FormControl(null),
     SubBrandNameTH: new FormControl(null),
@@ -75,10 +77,13 @@ export const ArrestProductFormControl = {
     SequenceNo: new FormControl(null),
     ProductDesc: new FormControl(null),
     CarNo: new FormControl(null),
-    Qty: new FormControl(null),
-    QtyUnit: new FormControl(null),
+    Qty: new FormControl(null, Validators.required),
+    QtyUnit: new FormControl(null, Validators.required),
     NetVolume: new FormControl(null),
     NetVolumeUnit: new FormControl(null),
-    IsActive: new FormControl(false),
+    NetWeight: new FormControl(null),
+    NetWeightUnit: new FormControl(null),
+    IsActive: new FormControl(1, Validators.required),
+    IsNewItem: new FormControl(null, Validators.required),
     ProductFullName: new FormControl(null)
 }

@@ -30,6 +30,14 @@ export class ICompareMistreat
     public SectionNo?: string
 }
 
+export class IRateMistreat
+{
+    public SubSectionID?: string;
+    public GroupCode?: string;
+    public MistreatNo?: string;
+    public MistreatVolume?: string;
+}
+
 export class ICompareIns
 {
     public CompareID?: string;
