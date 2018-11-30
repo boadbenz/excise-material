@@ -39,7 +39,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-manage',
@@ -58,7 +57,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     private requestBribeService: RequestBribeService,
     private sidebarService: SidebarService,
     private router: Router,
-    public dialog: NgbModal
+    public dialog: MatDialog
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
@@ -99,7 +98,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.6');
+    this.sidebarService.setVersion('0.0.1.5');
     this.pageLoad();
   }
 
@@ -437,19 +436,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         } else {
           // 4.2.2(2)
           // 4.2.2(2.1)
-          const RequestBribeRewardReponse: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
+          await this.requestBribeRewardService
             .RequestBribeRewardinsAll({
               // 4.2.2(2.1.1)
               IndictmentID: this.IndictmentID$.getValue(),
               // 4.2.2(2.1.2)
               HaveNotice: 0,
               IsActive: 1,
-              RequestBribeRewardID: ''
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
             })
             .toPromise();
-          this.RequestBribeRewardID$.next(
-            RequestBribeRewardReponse.RequestBribeRewardID
-          );
+
           // 4.2.2(2.2)
           this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.2.2(2.2.1)
@@ -478,17 +475,12 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setPrevPageButton(false);
         }
       } else {
-        const RequestBribeReward: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
+        await this.requestBribeRewardService
           .RequestBribeRewardinsAll({
             IndictmentID: this.IndictmentID$.getValue(),
-            HaveNotice: 0,
-            IsActive: 1,
-            RequestBribeRewardID: ''
+            HaveNotice: 0
           })
           .toPromise();
-        this.RequestBribeRewardID$.next(
-          RequestBribeReward.RequestBribeRewardID
-        );
       }
       this.RequestNoticegetByArrestCode$.next(RequestNotice);
     }
@@ -761,23 +753,31 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
 
     const dialogRef = this.dialog.open(PrintDialogComponent, {
-      backdrop: 'static'
+      width: '1200px',
+      height: 'auto',
+      data: {
+        printDoc: printDoc
+      }
     });
-    dialogRef.componentInstance.data = printDoc;
-    dialogRef.result.then(res => {});
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('The dialog was closed');
+    });
     // 2 END
   }
   private RequestBribeRewardgetByIndictmentID(
     param: IRequestBribeRewardgetByIndictmentID
   ) {}
   private RequestCommandinsAll(param: IRequestCommandinsAll) {}
+
+  private RequestBribeRewardinsAll(param: IRequestBribeRewardinsAll) {}
   private RequestCommandgetByArrestCode(
     param: IRequestCommandgetByArrestCode,
     event: string
   ) {
     this.requestCommandService
       .RequestCommandgetByArrestCode(param)
-      .subscribe(async (res: IRequestCommand[]) => {
+      .subscribe((res: IRequestCommand[]) => {
         switch (event) {
           case '4.1.1(2.5)':
             break;
@@ -807,17 +807,13 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               });
 
               // 4.2.2(1.2)
-              const RequestBribeReward: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
-                .RequestBribeRewardinsAll({
-                  IndictmentID: this.IndictmentID$.getValue(),
-                  HaveNotice: 1,
-                  IsActive: 1,
-                  RequestBribeRewardID: ''
-                })
-                .toPromise();
-              this.RequestBribeRewardID$.next(
-                RequestBribeReward.RequestBribeRewardID
-              );
+              this.RequestBribeRewardinsAll({
+                // 4.2.2(1.2.1)
+                IndictmentID: this.IndictmentID$.getValue(),
+                // 4.2.2(1.2.2)
+                HaveNotice: 1
+              });
+
               // 4.2.2(1.3)
               this.RequestCommandgetByArrestCode(
                 {
