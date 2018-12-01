@@ -50,7 +50,7 @@ export class ListComponent extends ListConfig implements OnInit {
 
   public fetchData(Textsearch) {
     this.requestListService
-      .RequestListgetByKeyword({ Textsearch: Textsearch })
+      .RequestListgetByKeyword({ Textsearch: Textsearch }) 
       .subscribe((res: IRequestList[]) => {
         this.gridData = this.newData(res);
       });
