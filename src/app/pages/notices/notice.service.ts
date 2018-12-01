@@ -186,10 +186,16 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    async noticeMasSuspectinsAll(from: any): Promise<boolean> {
+    async noticeMasSuspectinsAll(from: any): Promise<any> {
         const params = from;
         const url = `${appConfig.api8082}/NoticeMasSuspectinsAll`;
-        return this.responsePromisModify(JSON.stringify(params), url);
+
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        // if (res) {
+        //     return false;
+        // }
+        return res;
+        // return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async noticeMasSuspectupdByCon(from: any): Promise<boolean> {
