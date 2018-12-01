@@ -11,6 +11,9 @@ import { ActivatedRoute } from '@angular/router';
 export class PrintLawsuitModalComponent implements OnInit {
   private indictmentID: number;
   private lawsuitID: number;
+  @Input() ArrestCode: string;
+  @Input() IndictmentID: string;
+  
   constructor(
     private lawsuitService: LawsuitService, 
     private activatedRoute: ActivatedRoute,
@@ -22,6 +25,7 @@ export class PrintLawsuitModalComponent implements OnInit {
       // console.log(indictmentID); // Print the parameter to the console.
     });
   }
+  sort = 'asc';
   isCheck = ''
   printDoc = [
     // {
@@ -33,8 +37,7 @@ export class PrintLawsuitModalComponent implements OnInit {
     // }
   ];
   printDocData = [];
-  @Input() IndictmentID: string;
-  @Input() ArrestCode: string;
+  
 
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
@@ -44,13 +47,20 @@ export class PrintLawsuitModalComponent implements OnInit {
 
   ngOnInit() {
     this.preLoaderService.setShowPreloader(true);
-    console.log(this.IndictmentID);
-    // console.log('malawwww', this.lawsuitService)
+    
+    console.log('malawwww', this.lawsuitService)
     this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(data => {
         this.printDocData = data || [];
         return true;
       }
     )
+    
+    // this.lawsuitService.LawsuitArrestCheckNotComplete(this.ArrestCode).then(data => {
+    //     this.printDocData = data || [];
+    //     console.log(this.printDocData);
+    //     return true;
+    //   }
+    // )
     // this.lawsuitService.LawsuitCompareDocumentgetByCon(this.lawsuitID).then(
     //   data => {
     //     this.printDoc = data || [];
@@ -60,6 +70,7 @@ export class PrintLawsuitModalComponent implements OnInit {
     this.lawsuitService.MasDocumentMaingetAll(4, this.lawsuitID).then(
       data => {
         this.printDoc = data || [];
+        console.log(this.printDoc);
         return true;
       },
     );
@@ -72,7 +83,18 @@ export class PrintLawsuitModalComponent implements OnInit {
     this.preLoaderService.setShowPreloader(false);
   }
 
+  sortPrintDoc() {
+    this.sort = (this.sort == 'asc' ? 'desc' : 'asc');
+    this.printDoc.sort((a, b) => {
+      return -1; // asc
+    });
+    this.printDocData.sort((a, b) => {
+      return -1; // asc
+    });
+  }
+
   onPrint(f: any) {
+    
     console.log(f.value)
   }
 

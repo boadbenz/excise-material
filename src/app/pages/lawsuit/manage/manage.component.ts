@@ -187,7 +187,9 @@ export class ManageComponent implements OnInit {
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
       if (status) {
         await this.navService.setOnPrint(false);
+        console.log(this.ArrestCode)
         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        
       }
     })
     this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
@@ -521,7 +523,7 @@ export class ManageComponent implements OnInit {
       let update = await this.lawsuitService.LawsuitformupdByCon(json)
       let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
       console.log(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
-
+      
       if (LawsuitArrestIndicmentDetail.length != 0) {
         let index = 0;
         await LawsuitArrestIndicmentDetail.forEach(async element => {
@@ -664,7 +666,7 @@ export class ManageComponent implements OnInit {
                 await this.lawsuitService.LawsuitArrestIndicmentupdByCon(this.IndictmentID)
                 // await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
                 let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
-                console.log(checkComplete)
+                console.log('checkComplete',checkComplete)
                 let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
                 if (LawsuitArrestIndicmentDetail.length != 0) {
                   let index = 0;
@@ -1340,10 +1342,7 @@ export class ManageComponent implements OnInit {
     // /item.controls['IndictmentDetailID'].value
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '90%',
-     
       height: '90%',
-     
-
       data: {
         lawsuitArrest: item,
         index: index,
