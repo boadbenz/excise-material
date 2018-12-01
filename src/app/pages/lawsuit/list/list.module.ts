@@ -9,22 +9,19 @@ import { PaginationTableModule } from '../../component/pagination-table/paginati
 import { HttpModule } from "@angular/http";
 import { HttpClientModule } from "@angular/common/http";
 import { CardActionsModule } from "../../component/card-actions/card-actions.module";
-import { NoticeService } from "../../notices/notice.service";
-import { MyDatePickerTHModule } from 'mydatepicker-th';
-import { MyDatePickerModule } from 'mydatepicker';
-
+import {NoticeService} from "../../notices/notice.service";
 
 const routes: Routes = [
-  {
-    path: '',
-    data: {
-      urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาบันทึกรับคำกล่าวโทษ' }],
-      codePage: 'XCS60-04-01-00-00',
-      pageType: 'list',
-      nextPage: { title: 'จัดการข้อมูลบันทึกรับคำกล่าวโทษ', url: '/lawsuit/manage' }
-    },
-    component: ListComponent
-  }
+    {
+        path: '',
+        data: {
+            urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาบันทึกรับคำกล่าวโทษ' }],
+            codePage: 'XCS60-04-01-00-00',
+            pageType: 'list',
+            nextPage: { title: 'จัดการข้อมูลบันทึกรับคำกล่าวโทษ', url: '/lawsuit/manage' }
+        },
+        component: ListComponent
+    }
 ];
 
 @NgModule({
@@ -33,8 +30,6 @@ const routes: Routes = [
     CommonModule,
     HttpModule,
     HttpClientModule,
-    MyDatePickerTHModule,
-    MyDatePickerModule,
     RouterModule.forChild(routes),
     CardActionsModule,
     PaginationTableModule

@@ -1,10 +1,10 @@
-import { NoticeProduct } from './notice-product';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from '../../app.config';
 import { Notice } from './notice';
 import { Http, } from '@angular/http';
 import { NoticeDocument } from './notice-document';
+import { Lawbreaker } from './lawbreaker/lawbreaker.interface';
 import { Suspect } from './suspect/suspect.interface';
 import { NoticeSuspect } from './notice-suspect';
 
@@ -43,39 +43,20 @@ export class NoticeService {
 
     async getByKeywordOnInt(): Promise<Notice[]> {
         const params = { 'Textsearch': '' };
-        const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        console.log(res)
-        if (res.IsSuccess === 'False') {
-            return new Array<Notice>();
-        }
-
-        return res[0];
+        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        return this.resposePromisGet(JSON.stringify(params), url);
     }
 
-    async getByKeyword(Textsearch: any): Promise<Notice[]> {
-        // debugger
+    getByKeyword(Textsearch: any): Promise<Notice[]> {
+        debugger
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
-        const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        console.log(res)
-        if (res.IsSuccess === 'False') {
-            return new Array<Notice>();
-        }
-
-        return res;
+        const url = `${appConfig.api8082}/NoticegetByKeyword`;
+        return this.resposePromisGet(JSON.stringify(params), url)
     }
 
-    async getByConAdv(form: any): Promise<Notice[]> {
-        const url = `${appConfig.api8082}/NoticeListgetByConAdv`;
-        // return this.resposePromisGet(JSON.stringify(form), url)
-        const res = await this.http.post<any>(url, JSON.stringify(form), this.httpOptions).toPromise();
-        console.log(res)
-        if (res.IsSuccess === 'False') {
-            return new Array<Notice>();
-        }
-
-        return res;
+    getByConAdv(form: any): Promise<Notice[]> {
+        const url = `${appConfig.api8082}/NoticegetByConAdv`;
+        return this.resposePromisGet(JSON.stringify(form), url)
     }
 
     async getByCon(NoticeCode: string): Promise<Notice> {
@@ -83,32 +64,32 @@ export class NoticeService {
         const url = `${appConfig.api8082}/NoticegetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         
-        if (!res) {
+        if (!res.ResponseData) {
             return new Notice();
         }
-        return res[0]; 
+        return res.ResponseData 
     }
 
-    // async getLawbreakerByCon(LawbreakerID: string): Promise<Lawbreaker> {
-    //     const params = { LawbreakerID };
-    //     const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
-    //     const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-    //     const IsSuccess = new Boolean(res.IsSuccess);
-    //     if (!IsSuccess || !res.ResponseData) {
-    //         return new Lawbreaker();
-    //     }
-    //     return res.ResponseData;
-    // }
+    async getLawbreakerByCon(LawbreakerID: string): Promise<Lawbreaker> {
+        const params = { LawbreakerID };
+        const url = `${appConfig.api7788}/ArrestLawbreakergetByCon`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        const IsSuccess = new Boolean(res.IsSuccess);
+        if (!IsSuccess || !res.ResponseData) {
+            return new Lawbreaker();
+        }
+        return res.ResponseData;
+    }
 
     async noticeSuspectgetByCon(SuspectID: string): Promise<Suspect> {
         const params = { SuspectID };
-        const url = `${appConfig.api8082}/NoticeMasSuspectgetByCon`;
+        const url = `${appConfig.api8082}/NoticeSuspectgetByCon`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
 
-        if (res.IsSuccess == 'False') {
+        if (res.IsSuccess == 'False' || !res.ResponseData) {
             return new Suspect();
         }
-        return res[0];
+        return res.ResponseData;
     }
 
     insAll(Notice: Notice): Promise<any> {
@@ -116,23 +97,13 @@ export class NoticeService {
         const url = `${appConfig.api8082}/NoticeinsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
-    insProductAll(NoticeProduct: NoticeProduct): Promise<any> {
-        const params = NoticeProduct;
-        const url = `${appConfig.api8082}/NoticeProductinsAll`;
+
+    updLawbreaker(lawbreaker: Lawbreaker): Promise<boolean> {
+        const params = lawbreaker;
+        const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    // updLawbreaker(lawbreaker: Lawbreaker): Promise<boolean> {
-    //     const params = lawbreaker;
-    //     const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
-    //     return this.responsePromisModify(JSON.stringify(params), url);
-    // }
-
-    insSuspect(suspect: NoticeSuspect): Promise<boolean> {
-        const params = suspect;
-        const url = `${appConfig.api8082}/NoticeSuspectinsAll`;
-        return this.responsePromisModify(JSON.stringify(params), url);
-    }
     updSuspect(suspect: Suspect): Promise<boolean> {
         const params = suspect;
         const url = `${appConfig.api8082}/SuspectupdByCon`;
@@ -151,14 +122,9 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    updProduct(NoticeProduct: NoticeProduct): Promise<any> {
-        const params = NoticeProduct;
-        const url = `${appConfig.api8082}/NoticeProductupdByCon`;
-        return this.responsePromisModify(JSON.stringify(params), url);
-    }
     async productupdDelete(ProductID: string): Promise<any> {
         const params = { ProductID };
-        const url = `${appConfig.api8082}/NoticeProductupdDelete`;
+        const url = `${appConfig.api8082}/NoticeproductupdDelete`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
@@ -186,20 +152,14 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    async noticeMasSuspectinsAll(from: any): Promise<any> {
-        const params = from;
+    async noticeMasSuspectinsAll(from: any): Promise<boolean> {
+        const params = JSON.stringify(from);
         const url = `${appConfig.api8082}/NoticeMasSuspectinsAll`;
-
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        // if (res) {
-        //     return false;
-        // }
-        return res;
-        // return this.responsePromisModify(JSON.stringify(params), url);
+        return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async noticeMasSuspectupdByCon(from: any): Promise<boolean> {
-        const params = from;
+        const params = JSON.stringify(from);
         const url = `${appConfig.api8082}/NoticeMasSuspectupdByCon`
         return this.responsePromisModify(JSON.stringify(params), url);
     }

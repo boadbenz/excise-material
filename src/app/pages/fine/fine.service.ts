@@ -8,7 +8,6 @@ import { Arrest } from '../model/arrest';
 import { Lawsuit } from '../model/lawsuit-model';
 import { GuiltBase } from '../model/guiltBase-model';
 import { ICompareIns, ICompareMistreat, IRateMistreat } from './condition-model';
-import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class FineService {
@@ -22,14 +21,10 @@ export class FineService {
             })
     };
 
-    postMethod(url: string, data: any, port: string = '8887') {
-        const params = data;
-        const full_url = `${appConfig[`api${port}`]}/${url}`;
-        return this.http.post<any>(full_url, params, this.httpOptions).toPromise();
-    }
+
     getByKeyword(Textsearch: string) {
         const params = Textsearch;
-        const url = `${appConfig.api8887}/CompareListgetByKeyword`;
+        const url = `${appConfig.api8881}/ComparegetByKeyword`;
         return this.http.post<Compare[]>(url, params, this.httpOptions);
     }
 
@@ -51,50 +46,18 @@ export class FineService {
         }
     }
 
-    getByConAdv(form: any) {
+
+    async getByConAdv(form: any): Promise<any> {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8887}/CompareListgetByConAdv`;
+        const url = `${appConfig.api8881}/ComparegetByConAdv`;
 
         try {
-            console.log(this.http.post<Compare[]>(url, params, this.httpOptions));
-            return this.http.post<Compare[]>(url, params, this.httpOptions);
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res as any;
         } catch (error) {
-            alert(error);
+            await alert(error);
         }
-
     }
-    async compareArrestGetByCon(ArrestCode: string) {
-      // http://192.168.3.158:8881/XCS60/CompareListgetByConAdv
-      const params = { 'ArrestCode' : ArrestCode };
-      const url = `${appConfig.api8887}/CompareListgetByConAdv`;
-
-      try {
-        return await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      } catch (error) {
-        await alert(error);
-      }
-    }
-    // async getByConAdv(form: any): Promise<any> {
-    //     const params = JSON.stringify(form);
-    //     const url = `${appConfig.api8881}/CompareListgetByConAdv`;
-
-    //     try {
-    //         // const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-    //         // return res as any;
-    //         return this.http.post<any>(url, params, this.httpOptions)
-    //             .map(res => res.json())
-    //             .catch(res => {
-    //                 // Handle it here, on status code code
-    //                 if (res.status === 404) {
-    //                     return Observable.throw('We cannot find that requested resource');
-    //                 } // etc
-
-    //                 return Observable.throw(res); // default
-    //             })
-    //     } catch (error) {
-    //         await alert(error);
-    //     }
-    // }
 
 
     async getByArrestCon(ArrestCode: string): Promise<Arrest> {
@@ -129,7 +92,7 @@ export class FineService {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             return res.ResponseData as Lawsuit;
         } catch (error) {
-            console.log(error);
+            await alert(error);
         }
     }
 
@@ -185,18 +148,6 @@ export class FineService {
     async CompareupdByCon(oCompare: Compare): Promise<any> {
         const params = JSON.stringify(oCompare);
         const url = `${appConfig.api8881}/CompareupdByCon`;
-
-        try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res;
-        } catch (error) {
-            await alert(error);
-        }
-    }
-
-    async CompareUpdDelete(oCompare: Compare): Promise<any> {
-        const params = JSON.stringify(oCompare);
-        const url = `${appConfig.api8881}/CompareUpdDelete`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

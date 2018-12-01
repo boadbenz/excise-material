@@ -2,24 +2,21 @@ import { CardActionsModule } from '../../component/card-actions/card-actions.mod
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 import { ManageComponent } from './manage.component';
-import { ReductionApiService } from '../reduction.api.service';
-import { ReductionModelListComponent } from './reduction-model-list/reduction-model-list.component';
 
 const routes: Routes = [
   {
     path: '',
     data: {
       urls: [
-        { title: 'หน้าหลัก', url: '' },
-        { title: 'ค้นหารายการปรับเพิ่ม-ปรับลด', url: '/reduction/list' },
-        { title: 'จัดการข้อมูลรายการปรับเพิ่ม-ปรับลด' }
+        { title: "หน้าหลัก", url: '' },
+        { title: "ค้นหารายการปรับเพิ่ม-ปรับลด", url: '/reduction/list' },
+        { title: "จัดการข้อมูลรายการปรับเพิ่ม-ปรับลด" }
       ],
       pageType: 'manage',
       codePage: 'ILG60-09-02-00-00',
-      nextPage: { title: 'จัดการข้อมูลรายละเอียดการปรับเพิ่ม-ปรับลด', url: '/reduction/manage-det, ReductionModelListComponentail/:code' }
+      nextPage: { title: 'จัดการข้อมูลรายละเอียดการปรับเพิ่ม-ปรับลด', url: '/reduction/manage-detail/:code' }
     },
     component: ManageComponent
   }
@@ -29,14 +26,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     FormsModule,
-    ReactiveFormsModule,
     CommonModule,
     CardActionsModule,
-    NgbModule.forRoot(),
     RouterModule.forChild(routes)
   ],
-  declarations: [ManageComponent, ReductionModelListComponent],
-  exports: [ ],
-  providers: [ReductionApiService]
+  declarations: [ManageComponent]
 })
 export class ManageModule { }

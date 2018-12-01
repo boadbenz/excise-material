@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ManageDetailComponent } from './manage-detail.component';
-import { ReductionApiService } from '../reduction.api.service';
 
 
 const routes: Routes = [
@@ -34,7 +33,6 @@ const routes: Routes = [
   ],
   declarations: [
     ManageDetailComponent
-  ],
-  providers: [ReductionApiService]
+  ]
 })
 export class ManageDetailModule { }

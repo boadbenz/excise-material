@@ -19,17 +19,7 @@ import { PreloaderModule } from './shared/preloader/preloader.module';
 import { MatAutocompleteModule } from '@angular/material';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { AuthGuard } from './pages/login/auth.guard';
-import { CoreModule } from './core/core.module';
-import { StoreModule } from '@ngrx/store';
-import { MainMasterService } from './services/main-master.service';
-import { HttpClientModule } from '@angular/common/http';
 
-import * as fromArrestReducers from './pages/arrests/store/reducers/';
-import * as fromInvestReducers from './pages/investigation/store/reducers';
-import { TransactionRunningService } from './services/transaction-running.service';
-import { MasDocumentMainService } from './services/mas-document-main.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ManageConfig } from './pages/arrests/components/manage/manage.config';
 @NgModule({
     declarations: [
         AppComponent,
@@ -40,37 +30,25 @@ import { ManageConfig } from './pages/arrests/components/manage/manage.config';
         LayoutComponent
     ],
     imports: [
-        CommonModule,
+        CommonModule, 
         ReactiveFormsModule,
         BrowserModule,
-        BrowserAnimationsModule,
         NgbModule.forRoot(),
         FormsModule,
         HttpModule,
-        HttpClientModule,
         RouterModule.forRoot(routes),
         PreloaderModule,
-        CoreModule,
-        MatAutocompleteModule,
-        StoreModule.forRoot(
-            {
-                arrest: fromArrestReducers.arrestReducer,
-                invest: fromInvestReducers.investReducer
-            })
+        MatAutocompleteModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AuthGuard,
         NavigationService,
-        ManageConfig,
-        SidebarService,
-        MainMasterService,
-        MasDocumentMainService,
-        TransactionRunningService
+        SidebarService
     ],
     exports: [MatAutocompleteModule],
     bootstrap: [AppComponent]
 })
 
-export class AppModule { }
+export class AppModule {}
 

@@ -8,8 +8,7 @@ import { NoticeService } from '../notice.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { NgbModule, NgbDatepickerI18n } from '@ng-bootstrap/ng-bootstrap';
-// import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
-import { NoticeSuspectModalModule } from '../../component/notice-suspect-modal/notice-suspect-modal.module';
+import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
 import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
@@ -44,11 +43,10 @@ const routes: Routes = [
         NgbModule.forRoot(),
         RouterModule.forChild(routes),
         CardActionsModule,
-        // SuspectModalModule,
+        SuspectModalModule,
         ModalLawbreakerModule,
         PrintDocModalModule,
-        MyDatePickerTHModule,
-        NoticeSuspectModalModule
+        MyDatePickerTHModule
     ],
     declarations: [
         ManageComponent

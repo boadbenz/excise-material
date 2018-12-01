@@ -48,12 +48,12 @@
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group input-group" style="z-index: 1;">
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" 
-                        [options]="myDatePickerOptions" [disabled]="true"
+                        [options]="myDatePickerOptions" [disabled]="showEditField"
                         (dateChanged)="onNoticeDueDateChange($event)" formControlName="NoticeDueDate"></my-date-picker-th>
     
                         <label for="" class="">&nbsp;เวลา :&nbsp;</label>
                         <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
-                        [readOnly]="true"
+                        [readOnly]="showEditField"
                         [value]="noticeTime.value">
                     </div>
                 </div>
@@ -77,7 +77,6 @@
                             [inputFormatter]="formatterOffice" 
                             (selectItem)="selectItemOffice($event)"
                             [value]="noticeForm.get('NoticeStation').value"
-                            (blur)="blurSelectItemOffice()"
                                 />
                     </div>
                 </div>
@@ -99,8 +98,7 @@
                             [readOnly]="showEditField"
                             [inputFormatter]="formatterStaff" 
                             (selectItem)="selectItemStaff($event, i)"
-                            [value]="item.value.StaffFullName"
-                            (blur)="blurSelectItemStaff(i)"
+                            value="{{item.value.StaffFullName}}"
                             [ngClass]="{'ng-touched':isRequired}"
                             required/>
                     </div>
@@ -109,14 +107,14 @@
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
                             <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" 
-                            [readonly]="showEditField || localEditField"[ngClass]="{'ng-touched':isRequired}" required>
+                            [readonly]="showEditField"[ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
                             <input type="text" formControlName="PositionName" class="form-control form-control-sm" 
-                            [readonly]="showEditField || localEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                            [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
 
@@ -216,17 +214,15 @@
                             [readOnly]="showEditField"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemInformmerRegion($event)"
-                            [value]="item.get('Region').value"
-                            [ngClass]="{'ng-touched':isRequired}"
-                            (blur)="blurSelectItemInformmerRegion()"
-                            required/>
+                            value="{{item.get('Region').value}}"
+                            />
                     </div>
                 </div>
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">รายละเอียดแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
                         <textarea name="" id="" cols="" rows="5" class="form-control form-control-sm" formControlName="InformerInfo" 
-                        [readOnly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></textarea>
+                        [readOnly]="showEditField"></textarea>
                     </div>
                 </div>
 
@@ -246,12 +242,12 @@
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">บ้านเลขที่ :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" formControlName="Address" [readonly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" formControlName="Address" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">หมู่ที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="Village" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
                 </div>
@@ -260,32 +256,32 @@
                     <label for="" class="col-lg-2 col-sm-4 control-label">อาคาร/สถานที่ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
-                            <input type="text" formControlName="Building" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input type="text" formControlName="Building" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ห้อง :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Room" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ชั้น :</label>
                     <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Floor" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตรอก/ซอย :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8 form-group ">
-                        <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField">
+                        <input type="text" formControlName="Road" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
 
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตำบล/อำเภอ/จังหวัด :</label>
@@ -300,10 +296,8 @@
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemLocaleRegion($event)" 
-                            (blur)="blurSelectItemLocaleRegion()" 
-                            [value]="item.get('Region').value"
-                            [ngClass]="{'ng-touched':isRequired}"
-                            required/>
+                            value="{{item.get('Region').value}}"
+                            [ngClass]="{'ng-touched':isRequired}" required/>
                     </div>
                 </div>
 
@@ -347,14 +341,14 @@
                                 [resultTemplate]="rt"
                                 [inputFormatter]="formatterProduct"
                                 (selectItem)="selectItemProductItem($event, i)"
-                                (blur)="blurSelectItemProductItem(i)"
-                                [value]="item.get('BrandFullName').value" [ngClass]="{'ng-touched':isRequired}" required/>
+                                value="{{item.get('BrandFullName').value}}"
+                                [ngClass]="{'ng-touched':isRequired}" required/>
                         </td>
                         <td>
                             <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
-                            <select formControlName="QtyUnit" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null" [ngClass]="{'ng-touched':isRequired}" required>
+                            <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required [attr.disabled]="showEditField ? '' : null">
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
                             </select>
@@ -383,9 +377,9 @@
                 </div>
 
                 <ng-template #suspect let-c="close" let-d="dismiss">
-                    <app-notice-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" 
+                    <app-suspect-modal (c)="modal.close()" (d)="modal.dismiss()" 
                     (exportSuspectData)="addSuspect($event)">
-                </app-notice-suspect-modal>
+                </app-suspect-modal>
                     <!-- <app-modal-lawbreaker (c)="modal.close()" (d)="modal.dismiss()" (lawbreakerEmit)="addSuspect($event)"></app-modal-lawbreaker> -->
                 </ng-template>
             </div>
@@ -409,13 +403,12 @@
                         <td>{{item.get('EntityTypeName').value}}</td>
                         <td>{{item.get('SuspectID').value}}</td>
                         <td>
-                            {{item.get('SuspectFullName').value}}
-                            <!-- <span *ngIf="item.get('EntityType').value == 0">
+                            <span *ngIf="item.get('EntityType').value == 0">
                                 {{item.get('SuspectFullName').value}}
                             </span>
                             <span *ngIf="item.get('EntityType').value == 1">
                                 {{item.get('CompanyFullName').value}}
-                            </span> -->
+                            </span>
                         </td>
                         <td>{{i+1}}</td>
                         <td class="text-center">
@@ -434,7 +427,7 @@
         </div>
     </div>
 
-    <!-- <div class="card card-outline-bluish unset-radius">
+    <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
             <h4 class="card-title m-b-0">หลักฐานการแจ้งความ</h4>
@@ -471,7 +464,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header  unset-radius">
