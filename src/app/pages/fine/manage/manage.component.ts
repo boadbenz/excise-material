@@ -45,7 +45,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   // Date
   DateOption: IMyDpOptions = {
     // other options...
-    dateFormat: 'dd/mmm/yyyy'
+    dateFormat: 'dd mmm yyyy'
   };
   compareDate: any = {year: 0, month: 0, day: 0};
   // Object for binding
@@ -94,7 +94,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preloader: PreloaderService,
     private sidebarService: SidebarService
   ) {
-    this.sidebarService.setVersion('0.0.0.18');
+    this.sidebarService.setVersion('0.0.0.19');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -154,7 +154,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
   toDatePickerFormat(d: any) {
-    return { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
+    return { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, ' ') };
   }
   async getCompareData() {
     if (+this.params.CompareID) {
@@ -569,7 +569,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.headerData.LawsuitID = resp[0].LawsuitID;
         this.headerData.OfficeShortName = resp[0].OfficeShortName;
         this.headerData.PositionName = resp[0].PositionName;
-        this.headerData.LawsuitDate = resp[0].LawsuitDate.toLocaleString('en-GB', { timeZone: 'UTC' });
+        this.headerData.LawsuitDate = this.toDatePickerFormat(new Date(resp[0].LawsuitDate)).formatted; 
         this.headerData.LawsuitTime = resp[0].LawsuitTime;
         this.headerData.SectionNo = resp[0].SectionNo;
         this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
@@ -1362,6 +1362,30 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log('here');
     }
   }
+  @HostListener('window:resize', ['$event'])
+  onResize(event){
+    for (const el of document.getElementsByTagName('p') as any) {
+      console.log(el);
+      if (el) {
+        el.style.maxWidth = (+(event.target.innerWidth)*0.08) + 'px';
+      }
+    }
+  }
+  formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+    try {
+      decimalCount = Math.abs(decimalCount);
+      decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+  
+      const negativeSign = amount < 0 ? "-" : "";
+  
+      let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+      let j = (i.length > 3) ? i.length % 3 : 0;
+  
+      return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+    } catch (e) {
+      console.log(e)
+    }
+  };
 }
 
 
