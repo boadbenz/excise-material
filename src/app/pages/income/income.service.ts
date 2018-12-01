@@ -11,6 +11,7 @@ export class IncomeService {
     private http: HttpClient
   ) { }
 
+  // tslint:disable-next-line:member-ordering
   private httpOptions = {
     headers: new HttpHeaders(
       {
@@ -40,6 +41,7 @@ export class IncomeService {
     const params = JSON.stringify(form);
     const url = `${appConfig.api8084}/RevenuegetByConAdv`;
 
+    // tslint:disable-next-line:no-debugger
     debugger
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

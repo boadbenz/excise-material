@@ -1,6 +1,10 @@
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { Component, OnInit } from '@angular/core';
+import { ReductionApiService } from '../reduction.api.service';
+import { Subject } from 'rxjs/Subject';
+
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
 @Component({
   selector: 'app-list',
@@ -8,65 +12,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
+  private destroy$: Subject<boolean> = new Subject<boolean>();
 
-
-  listData = [
-    {
-      arrestCode: "TN90806026000001",
-      lawsuitNo: "001/2561",
-      proofNo: "001/2561",
-      caseNumber: "001/2561",
-      titleName: "นาย",
-      firstName: "ธวัชชัย",
-      lastName: "บิงขุนทด",
-      lawsuitDate: "10-ม.ค.-2560",
-      departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี"
-    },
-    {
-      arrestCode: "TN90806026000002",
-      lawsuitNo: "น.001/2561",
-      proofNo: "น.001/2561",
-      caseNumber: "001/2561",
-      titleName: "นาย",
-      firstName: "ธวัชชัย",
-      lastName: "บิงขุนทด",
-      lawsuitDate: "19-มี.ค.-2560",
-      departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี"
-    },
-    {
-      arrestCode: "TN90806026000003",
-      lawsuitNo: "002/2561",
-      proofNo: "002/2561",
-      caseNumber: "002/2561",
-      titleName: "นาย",
-      firstName: "ธวัชชัย",
-      lastName: "บิงขุนทด",
-      lawsuitDate: "22-ต.ค.-2560",
-      departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี"
-    },
-    {
-      arrestCode: "TN90806026000004",
-      lawsuitNo: "003/2561",
-      proofNo: "003/2561",
-      caseNumber: "003/2561",
-      titleName: "นาย",
-      firstName: "ธวัชชัย",
-      lastName: "บิงขุนทด",
-      lawsuitDate: "11-ธ.ค.-2560",
-      departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี"
-    },
-    {
-      arrestCode: "TN90806026000005",
-      lawsuitNo: "004/2561",
-      proofNo: "004/2561",
-      caseNumber: "004/2561",
-      titleName: "นาย",
-      firstName: "ธวัชชัย",
-      lastName: "บิงขุนทด",
-      lawsuitDate: "03-มี.ค.-2561",
-      departmentlawName: "สสท.ระนอง สาขาเมืองกระบุรี",
-    }
-  ];
+  listData = [];
 
   arrestCode: string;
   lawsuitNo: string;
@@ -77,14 +25,18 @@ export class ListComponent implements OnInit {
   lawName: string;
   departmentlawName: string;
   advSearch: any;
-  allPageCount: number = 0;
-  numberPage: number = 5;
+  allPageCount = 0;
+  numberPage = 5;
   numberSelectPage;
 
 
-  constructor(private navService: NavigationService, private router: Router) {
+  constructor(
+    private navService: NavigationService,
+    private router: Router,
+    private apiServer: ReductionApiService,
+    private preloaderService: PreloaderService
+    ) {
     this.advSearch = this.navService.showAdvSearch;
-
   }
 
   ngOnInit() {
@@ -96,11 +48,20 @@ export class ListComponent implements OnInit {
     this.navService.setSaveButton(false);
 
     this.allPageCount = this.listData.length / this.numberPage;
-    this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i + 1);
+    this.numberSelectPage = Array(Math.ceil(this.allPageCount)).fill(0).map((x, i) => i + 1);
+
+    this.navService.searchByKeyword.subscribe(async text => {
+      if (text) {
+        this.onSearch(text.Textsearch);
+      }
+    });
   }
 
-  viewData(arrestCode: string) {
-    this.router.navigate(['/reduction/manage', 'R'], { queryParams: { code: arrestCode } });
+  public viewData(compareID: string = '', indictmentID: string = '') {
+    // this.router.navigate(['/reduction/manage', 'R'], { queryParams: { code: arrestCode } });
+    this.router.navigate(['/reduction/manage', 'R'],
+                         { queryParams: {CompareID: compareID, IndictmentID:  indictmentID} }
+                        );
   }
 
   closeAdvSearch() {
@@ -113,5 +74,67 @@ export class ListComponent implements OnInit {
     this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i + 1);
   }
 
+  public onSearch(text: string): void {
+    const param = {
+      Textsearch: text || ''
+    };
+    this.preloaderService.setShowPreloader(true);
+    this.apiServer.post('/XCS60/AdjustListgetByKeyword', param)
+        .subscribe(response => this.adjustListByKeywordDone(response), error => this.adjustListByKeywordError(error));
+  }
+
+  public adjustListByKeywordDone(lists: any[]): void {
+    this.listData = lists;
+
+    if (this.listData.length === 0) {
+      this.listData = [];
+      alert('ไม่พบข้อมูล')
+    }
+
+    this.preloaderService.setShowPreloader(false);
+  }
+
+  public adjustListByKeywordError(error: any): void {
+    console.log(error);
+    this.listData = [];
+    alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
+    this.preloaderService.setShowPreloader(false);
+  }
+
+  public onAdvSearch() {
+    const param = {
+      ArrestCode: this.arrestCode || '',
+      LawsuitNo: this.lawsuitNo || '',
+      CompareCode: this.caseNumber || '',
+      ProveReportNo: this.proofNo || '',
+      CompareDateFrom: this.lawsuitDateStart || '',
+      CompareDateTo: this.lawsuitDateEnd || '',
+      StaffName: this.lawName || '',
+      OfficeShortName: this.departmentlawName || ''
+    };
+
+    this.preloaderService.setShowPreloader(true);
+    this.apiServer.post('/XCS60/AdjustListgetByConAdv', param)
+        .subscribe(response => this.adjustListgetByConAdvDone(response), error => console.log(error));
+  }
+
+  public adjustListgetByConAdvDone(data: any): void {
+    console.log(data);
+    if (data) {
+      this.listData.push(data);
+    } else {
+      this.listData = [];
+      alert('ไม่พบข้อมูล');
+    }
+
+    this.preloaderService.setShowPreloader(false);
+  }
+
+  public adjustListgetByConAdvError(error: any): void {
+    console.log(error);
+    this.listData = [];
+    alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
+    this.preloaderService.setShowPreloader(false);
+  }
 
 }

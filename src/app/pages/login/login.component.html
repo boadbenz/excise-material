@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
   div {
       border: double;
       max-width:500px;
@@ -7,7 +7,7 @@
   </style>
 
 <form action="" #form="ngForm" (ngSubmit)="onSubmit(form.value)">
-<div class="text-center m-t-20" style="border-block-end-color: #000000" ><br><br>
+  <div class="text-center m-t-20" style="border-block-end-color: #000000"><br><br>
     <img _ngcontent-c2="" alt="homepage" class="light-logo" src="assets/images/logo-excise.png" style="height: 60px;"><br><br>
   <label for="userName">ชื่อผู้ใช้&nbsp;&nbsp;&nbsp;:</label>
   <input type="text" name="userName" id="userName" ngModel required><br>
@@ -15,4 +15,60 @@
   <input type="password" name="password" id="password" ngModel required><br><br>
   <button type="submit" [disabled]="!form.valid">เข้าสู่ระบบ</button><br><br><br>
 </div>
-</form>
+</form> -->
+<div class="top-page"></div>
+<div class="mid-page">
+  <div>
+    <img src="assets/images/pic.png">
+  </div>
+  <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+      <label class="label-1">กรมสรรพสามิต</label>
+    </div>
+  </div>
+  <div style="padding-bottom: 20px">
+    <label class="label-2">ระบบงานผู้กระทำผิดกฎหมายภาษีสรรพสามิต พระราชบัญญัติภาษีสรรพสามิต พ.ศ.2560</label>
+  </div>
+  <!-- http://103.233.193.62/process?action=Login&cmd=chkLogin  -->
+  <!-- 192.168.103.21 -->
+  <form action="" #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+    <div class="row" style="padding-bottom: 15px">
+      <div class="col-sm-4">
+        <i class="fa fa-user-o" style="margin-right: -80px" aria-hidden="true"></i>
+      </div>
+      <div class="col-sm-4">
+        <div class="row">
+          <input class="form-control" type="text" id="userName" ngModel required placeholder="ชื่อผู้ใช้งาน" name="userName"
+            style="margin-left: 90px" (keydown)='ClearErrMsg()'>
+        </div>
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+    <div class="row" style="padding-bottom: 15px">
+      <div class="col-sm-4">
+        <i class="fa fa-lock" style="margin-right: -80px" aria-hidden="true"></i>
+      </div>
+      <div class="col-sm-4">
+        <div class="row">
+          <input class="form-control " type="password" name="password" id="password" ngModel required placeholder="รหัสผ่าน"
+            style="margin-left: 90px" (keydown)='ClearErrMsg()'>
+        </div>
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+    <div>
+      <span class="center" style="color:red">{{errMsg}}</span>
+    </div>
+    <div class="row" style="padding-top: 20px">
+      <div class="col-sm-12">
+        <button class="btn" type="submit">เข้าสู่ระบบ</button>
+        <!-- [disabled]="!form.valid" -->
+      </div>
+    </div>
+    <div class="col-sm-12" style="padding-top: 10px">
+      <u>ลืมรหัสผ่าน?</u>
+    </div>
+  </form>
+</div>
+<div class="footter-page"></div>

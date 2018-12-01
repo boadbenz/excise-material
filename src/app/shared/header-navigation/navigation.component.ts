@@ -22,9 +22,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
     saveButton: any;
     searchBar: any;
     nextPageButton: any;
+    prevPageButton: any;
 
     nextPage: string = '';
     nextPageTitle: any;
+    prevPageTitle: any;
 
     constructor(
         private router: Router,
@@ -40,10 +42,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.searchBar = this.navService.showSearchBar;
         this.nextPageButton = this.navService.showNextPageButton;
         this.nextPageTitle = this.navService.innerTextNextPageButton;
+
+        this.prevPageButton = this.navService.showPrevPageButton;
+        this.prevPageTitle = this.navService.innerTextPrevPageButton;
     }
 
     ngOnInit() {
-
         this.router.events.subscribe((evt) => {
             if (!(evt instanceof NavigationEnd)) {
                 return;
@@ -80,12 +84,16 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.navService.setOnNextPage(true);
     }
 
+    clickPrevPage() {
+        this.navService.setOnPrevPage(true);
+    }
+
     clickPrint() {
         this.navService.setOnPrint(true);
     }
 
     clickEdit() {
-        // set false
+        // // set false
         this.navService.setEditField(false);
         this.navService.setEditButton(false);
         this.navService.setPrintButton(false);
@@ -99,13 +107,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     clickCancel() {
         // // set true
-        this.navService.setEditField(true);
-        this.navService.setEditButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        // set false
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
+        // this.navService.setEditField(true);
+        // this.navService.setEditButton(true);
+        // this.navService.setPrintButton(true);
+        // this.navService.setDeleteButton(true);
+        // // set false
+        // this.navService.setSaveButton(false);
+        // this.navService.setCancelButton(false);
         // set event click cancel
         this.navService.setOnCancel(true);
     }
