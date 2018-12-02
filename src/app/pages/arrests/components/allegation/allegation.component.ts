@@ -21,6 +21,7 @@ import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 import { Acceptability } from '../../models';
 import { LoaderService } from 'app/core/loader/loader.service';
 import { setViewLawbreaker } from '../allegation-detail-modal/allegation-detail-modal.component';
+import swal from 'sweetalert2'
 
 @Component({
   selector: 'app-allegation',
@@ -552,12 +553,12 @@ export class AllegationComponent implements OnInit, OnDestroy {
     let product = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
 
     if (this.arrestIndictmentFG.invalid) {
-      alert(Message.checkData);
+      swal('', Message.checkData, 'warning');
       return;
     }
 
     if (!lawbreaker.length && !product.length) {
-      alert(Message.checkData);
+      swal('', Message.checkData, 'warning');
       return;
     }
 
@@ -565,15 +566,15 @@ export class AllegationComponent implements OnInit, OnDestroy {
       let staff: fromModels.ArrestStaff[] = this.ArrestStore.ArrestStaff.filter(x => x.IsModify != 'd')
       if (staff.length) {
         if (staff.length <= 0) {
-          alert('ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ')
+          swal('', 'ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ', 'warning')
           return
         }
         if (staff.filter(x => x.ContributorID == '').length > 0) {
-          alert('กรุณาเลือกฐานะของผู้จับกุม');
+          swal('', 'กรุณาเลือกฐานะของผู้จับกุม', 'warning');
           return;
         }
         if (staff.filter(x => x.ContributorID == '6').length <= 0) {
-          alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ');
+          swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ', 'warning');
           return;
         }
       }
@@ -594,19 +595,30 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.s_lawsuit.ArrestLawsuitgetByIndictmentID(this.indictmentId)
       .then(x => {
         if (this.checkResponse(x)) {
-          alert(Message.cannotDeleteRec)
+          swal('', Message.cannotDeleteRec, 'warning')
           return;
         }
 
-        if (confirm(Message.confirmAction)) {
-          this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId)
-            .then(x => {
-              if (this.checkResponse(x)) {
-                alert(Message.delComplete);
-                this.router.navigate(['/arrest/manage', this.arrestMode, this.arrestCode]);
-              }
-            }).catch((error) => this.catchError(error));
-        }
+        swal({
+          title: '',
+          text: Message.confirmAction,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then((result) => {
+          if (result.value) {
+            this.s_indictment.ArrestIndictmentupdDelete(this.indictmentId)
+              .then(x => {
+                if (this.checkResponse(x)) {
+                  swal('', Message.delComplete, 'success');
+                  this.router.navigate(['/arrest/manage', this.arrestMode, this.arrestCode]);
+                }
+              }).catch((error) => this.catchError(error));
+          }
+        })
+
       }).catch((error) => this.catchError(error));
 
   }
@@ -659,7 +671,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         this.clearFormArray(this.ArrestLawbreaker);
       }, 300);
 
-      alert(Message.saveComplete)
+      swal('', Message.saveComplete, 'success')
       this.router.navigate(
         [`arrest/allegation`, 'R'],
         {
@@ -672,7 +684,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         });
 
     } else {
-      alert(Message.saveFail)
+      swal('', Message.saveFail, 'error')
     }
   }
 
@@ -922,33 +934,33 @@ export class AllegationComponent implements OnInit, OnDestroy {
   async insertArrestProductDetail(indictmentDetailID: number, productArr: fromModels.ArrestProduct[]) {
 
     let pd = await productArr
-    .filter(p => p.IsChecked)
-    .map(async p => {
-      let pd = new fromModels.ArrestProductDetail();
-      pd.ProductID = parseInt(p.ProductID);
-      pd.IsProdcutCo = '1';
-      pd.Qty = p.Qty || '0';
-      pd.QtyUnit = p.QtyUnit || '-';
-      pd.Size = p.Size || '0';
-      pd.SizeUnit = p.SizeUnitName || '-';
-      pd.Volume = p.NetVolume || '0';
-      pd.VolumeUnit = p.NetVolumeUnit || '-';
-      pd.MistreatRate = '';
-      pd.Fine = '';
-      pd.IndictmentDetailID = indictmentDetailID;
-      pd.ProductDesc = p.ProductDesc;
-      pd.IsActive = 1;
+      .filter(p => p.IsChecked)
+      .map(async p => {
+        let pd = new fromModels.ArrestProductDetail();
+        pd.ProductID = parseInt(p.ProductID);
+        pd.IsProdcutCo = '1';
+        pd.Qty = p.Qty || '0';
+        pd.QtyUnit = p.QtyUnit || '-';
+        pd.Size = p.Size || '0';
+        pd.SizeUnit = p.SizeUnitName || '-';
+        pd.Volume = p.NetVolume || '0';
+        pd.VolumeUnit = p.NetVolumeUnit || '-';
+        pd.MistreatRate = '';
+        pd.Fine = '';
+        pd.IndictmentDetailID = indictmentDetailID;
+        pd.ProductDesc = p.ProductDesc;
+        pd.IsActive = 1;
 
-      console.log('ProductDetail : ', JSON.stringify(pd));
+        console.log('ProductDetail : ', JSON.stringify(pd));
 
-      let _pd = await this.s_productDetail.ArrestProductDetailinsAll(pd)
-        .then(y => {
-          if (!this.checkIsSuccess(y)) return;
-        }, () => { this.saveFail(); return; })
-        .catch((error) => this.catchError(error));
+        let _pd = await this.s_productDetail.ArrestProductDetailinsAll(pd)
+          .then(y => {
+            if (!this.checkIsSuccess(y)) return;
+          }, () => { this.saveFail(); return; })
+          .catch((error) => this.catchError(error));
 
-      return Promise.all([_pd]);
-    })
+        return Promise.all([_pd]);
+      })
 
     return Promise.all([pd]);
   }

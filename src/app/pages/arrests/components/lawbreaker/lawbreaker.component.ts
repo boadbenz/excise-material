@@ -63,6 +63,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     // LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
+    disableForeign = false;
+    disableCompany = false;
     requiredPassport = false;
     requiredCompanyRegister = false;
 
@@ -261,6 +263,10 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     this.typeheadRaces
                         .find(x => x.RaceCode == _Lfg.RaceCode).RaceNameTH;
 
+                if (_Lfg.EntityType == '2') {
+                    _Lfg.LawbreakerFirstName = _Lfg.CompanyName;
+                }
+
                 console.log(JSON.stringify(_Lfg));
 
                 switch (this.mode) {
@@ -309,6 +315,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 this.latitude.nativeElement.value = law.GPS && law.GPS.split(',')[0];
                 this.longitude.nativeElement.value = law.GPS && law.GPS.split(',')[1];
 
+                law.ResultCount = this.s_masLawbreaker.ArrestLawsuitResultCountgetByLawbreakerID(LawbreakerID)
+
                 if (law.SubDistrictCode && law.DistrictCode && law.ProvinceCode) {
                     law.Region = `${law.SubDistrict} ${law.District} ${law.Province}`;
                 }
@@ -346,13 +354,25 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         const e = this.LawbreakerFG.value.EntityType;
         const l = this.LawbreakerFG.value.LawbreakerType;
 
+        this.disableForeign = false;
+        this.disableCompany = false;
         this.requiredCompanyRegister = false;
         this.requiredPassport = false;
 
         if (e == '1' && l == '0') {
+            // บุคคลธรรมดา, ต่างชาติ
+            this.disableCompany = true;
             this.requiredPassport = true;
             this.card3 = true;
+        } else if (e == '1' && l == '1') {
+            // บุคคลธรรมดา, ชาวไทย
+            this.disableCompany = true;
+            this.disableForeign = true;
+            this.card3 = false;
+            this.card4 = false;
         } else if (e == '2') {
+            // นิติบุคคล
+            this.disableForeign = true;
             this.requiredCompanyRegister = true;
             this.card4 = true;
         }
@@ -370,8 +390,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 : this.typeheadRegion
                     .filter(v =>
                         (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
-                        .toLowerCase()
-                        .indexOf(term.toLowerCase()) > -1
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchTitleName = (text$: Observable<string>) =>
