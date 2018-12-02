@@ -360,7 +360,7 @@
                             </select>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteProduct(item.get('ProductID').value, i)">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="beforeDeleteProduct(item.get('ProductID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
@@ -424,7 +424,7 @@
                             </a>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteSuspect(item.get('SuspectID').value, i)">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="beforeDeleteSuspect(item.get('SuspectID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
@@ -512,7 +512,7 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="onDeleteDocument(item.get('DocumentID').value, j)">
+                            <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="beforeDeleteDocument(item.get('DocumentID').value, j)">
                                 <i class="fa fa-trash-o fa-lg"></i>
                             </a>
                         </td>
@@ -523,3 +523,42 @@
     </div>
 
 </form>
+
+<swal
+  #alertSwal
+  text=""
+  type=""
+  [showConfirmButton]="false"
+  [showCancelButton]="true"
+  buttonsStyling="false"
+  cancelButtonText="OK"
+  cancelButtonClass="swal2-confirm"
+  [focusCancel]="true">
+</swal>
+
+<swal
+  #deleteProduct
+  text=""
+  type="question"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="onDeleteProduct()">
+</swal>
+
+<swal
+  #deleteSuspect
+  text=""
+  type="question"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="onDeleteSuspect()">
+</swal>
+
+<swal
+  #deleteDocument
+  text=""
+  type="question"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="onDeleteDocument()">
+</swal>
