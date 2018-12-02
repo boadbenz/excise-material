@@ -11,6 +11,7 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { MatAutocomplete } from '@angular/material';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
@@ -57,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.16');
+        this.sidebarService.setVersion('Revenue 0.0.0.17');
 
         this.RevenueStatus = "";
 
@@ -101,7 +102,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
+            //alert(Message.noRecord);
             this.RevenueList = [];
             this.preloader.setShowPreloader(false);
         });
@@ -137,7 +139,8 @@ export class ListComponent implements OnInit, OnDestroy {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            swal('', err.message, 'error');
+            //alert(err.message);
             this.preloader.setShowPreloader(false);
         });
     }
@@ -146,7 +149,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.revenue = [];
 
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
+            //alert(Message.noRecord);
             this.RevenueList = [];
 
             return false;
@@ -217,7 +221,8 @@ export class ListComponent implements OnInit, OnDestroy {
             const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
 
             if (!compareDate(new Date(sdate), new Date(edate))) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning');
+                //alert(Message.checkDate)
                 setTimeout(() => {
                     this.DateStartTo = { date: this._dateStartFrom };
                 }, 0);

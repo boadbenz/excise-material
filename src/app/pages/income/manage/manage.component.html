@@ -74,12 +74,20 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
                 </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <span style="margin-right: 5px">กค.</span>
+                    <input type="text" [(ngModel)]="RevenueNo" name="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
+                    <input type="text" [(ngModel)]="RevenueNoYear" name="RevenueNoYear" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+                <!-- <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
                             [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
-                </div>
+                </div> -->
 
                 <label for="" class="col-lg-2 col-md-4 control-label">เรียน :
                 </label>

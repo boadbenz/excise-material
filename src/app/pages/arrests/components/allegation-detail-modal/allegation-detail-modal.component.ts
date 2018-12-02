@@ -15,7 +15,7 @@ import { Acceptability } from '../../models/acceptability';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import swal from 'sweetalert2'
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-allegation-detail-modal',

@@ -18,7 +18,7 @@ import { ProveDocument } from '../proveDoc';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
-//import swal from 'sweetalert2';
+import swal from 'sweetalert2'
 
 declare var $: any;
 
@@ -163,7 +163,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     oProveDeliverProduct: ProveDeliverProduct;
     oProveDocument: ProveDocument;
 
-    //swal = require('sweetalert2');
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
@@ -273,7 +272,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSave(false);
 
                 if (this.IsDelivery == false) {
-                    alert(Message.checkDelivery);
+                    swal('', Message.checkDelivery, 'warning');
+                    //alert(Message.checkDelivery);
 
                     return false;
                 }
@@ -288,7 +288,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         || this.ProveStaffName == ""   // ผู้ตรวจรับ
                     ) {
                         this.isRequired = true;
-                        alert(Message.checkData);
+                        swal('', Message.checkData, 'warning');
+                        //alert(Message.checkData);
 
                         return false;
                     }
@@ -307,7 +308,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 // || this.Command == ""                // คำสั่ง
                             ) {
                                 this.isRequired = true;
-                                alert(Message.checkData);
+                                swal('', Message.checkData, 'warning');
+                                //alert(Message.checkData);
 
                                 return false;
                             }
@@ -319,7 +321,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 //|| this.Command == ""               // คำสั่ง
                             ) {
                                 this.isRequired = true;
-                                alert(Message.checkData);
+                                swal('', Message.checkData, 'warning');
+                                //alert(Message.checkData);
 
                                 return false;
                             }
@@ -338,7 +341,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                             || this.StaffSendName == ""   // ผู้นำส่ง
                         ) {
                             this.isRequired = true;
-                            alert(Message.checkData);
+                            swal('', Message.checkData, 'warning');
+                            //alert(Message.checkData);
 
                             return false;
                         }
@@ -424,14 +428,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
 
         this.oProve.DeliveryDate = cDateDelivery;
-
-        if (this.IsOutside == true) {
-            this.oProve.ProveReportNo = "น." + this.DeliveryDocNo + "/" + this.ProveYear;
-        }
-        else {
-            this.oProve.ProveReportNo = this.DeliveryDocNo + "/" + this.ProveYear;
-        }
-
+        this.oProve.ProveReportNo = this.DeliveryDocNo + "/" + this.ProveYear;
         this.oProve.ProveDate = cProveDate;
         this.oProve.IndictmentID = this.IndictmentID;
         this.oProve.Command = this.Command;
@@ -565,7 +562,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
                 if (isSuccess) {
-                    alert(Message.saveComplete);
+                    swal('', Message.saveComplete, 'success');
+                    //alert(Message.saveComplete);
                     this.onComplete();
                     this.getProveByID();
                     this.preloader.setShowPreloader(false);
@@ -573,7 +571,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
             }
             else {
-                alert(Message.saveFail);
+                swal('', Message.saveFail, 'error');
+                //alert(Message.saveFail);
             }
         }, (error) => { console.error(error); return false; });
     }
@@ -753,12 +752,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
         if (isSuccess) {
-            alert(Message.saveComplete);
+            swal('', Message.saveComplete, 'success');
+            //alert(Message.saveComplete);
             this.onComplete();
             this.getProveByID();
             this.preloader.setShowPreloader(false);
         } else {
-            alert(Message.saveFail);
+            swal('', Message.saveFail, 'error');
+            //alert(Message.saveFail);
             this.preloader.setShowPreloader(false);
         }
     }
@@ -767,10 +768,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (confirm(Message.confirmAction)) {
             this.proveService.ProveupdDelete(this.ProveID).then(async IsSuccess => {
                 if (IsSuccess) {
-                    alert(Message.saveComplete);
+                    swal('', Message.saveComplete, 'success');
+                    //alert(Message.saveComplete);
                     this.router.navigate(['/prove/list']);
                 } else {
-                    alert(Message.saveFail);
+                    swal('', Message.saveFail, 'error');
+                    //alert(Message.saveFail);
                 }
             }, (error) => { console.error(error); return false; });
         }
@@ -1000,13 +1003,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 var PRN = this.oProve.ProveReportNo.split('/');
 
                 if (PRN.length > 1) {
-                    if (this.oProve.IsOutside == 1) {
-                        this.DeliveryDocNo = PRN[0].replace("น.", "");
-                    }
-                    else {
-                        this.DeliveryDocNo = PRN[0];
-                    }
-
+                    this.DeliveryDocNo = PRN[0];
                     this.ProveYear = PRN[1];
                 }
 
@@ -1139,7 +1136,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         }
                     }
                 }, (err: HttpErrorResponse) => {
-                    alert(err.message);
+                    swal('', err.message, 'error');
+                    //alert(err.message);
                 });
 
                 this.checkNextPage();
@@ -1147,7 +1145,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.preloader.setShowPreloader(false);
             }
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            swal('', err.message, 'error');
+            //alert(err.message);
         });
 
     }
@@ -1909,7 +1908,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             || this.oProveProduct.ProveResult == "" || this.oProveProduct.ProveResult == undefined
         ) {
             this.isPopupRequired = true;
-            alert(Message.checkData);
+            swal('', Message.checkData, 'warning');
+            //alert(Message.checkData);
 
             return false;
         }
@@ -2218,14 +2218,16 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     varidateQtyBalance() {
         if (this.oProveProduct.QtyBalance > this.oProveProduct.Qty) {
-            alert("จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
+            swal('', "จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!", 'warning');
+            //alert("จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
             this.oProveProduct.QtyBalance = this.oProveProduct.Qty;
         }
     }
 
     varidateNetVolumeBalance() {
         if (this.oProveProduct.NetVolumeBalance > this.oProveProduct.NetVolume) {
-            alert("ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินปริมาณสุทธิของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
+            swal('', "ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินปริมาณสุทธิของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!", 'warning');
+            //alert("ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินปริมาณสุทธิของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
             this.oProveProduct.NetVolumeBalance = this.oProveProduct.NetVolume;
         }
     }
