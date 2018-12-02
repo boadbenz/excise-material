@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
@@ -17,14 +17,14 @@ import { Subject } from 'rxjs/Subject';
 import * as fromStore from '../../store';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-
+import swal from 'sweetalert2'
 
 
 @Component({
     selector: 'app-manage',
     templateUrl: './manage.component.html'
 })
-export class ManageComponent implements OnInit, OnDestroy {
+export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     card1 = true;
     card2 = true;
@@ -52,6 +52,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     myDatePickerOptions = MyDatePickerOptions;
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
+    @ViewChild('investigateNo0') investigateNo0: ElementRef;
+    @ViewChild('investigateNo1') investigateNo1: ElementRef;
 
     get InvestigateDetail(): FormArray {
         return this.investigateForm.get('InvestigateDetail') as FormArray;
@@ -86,6 +88,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.active_Route();
         this.navigate_Service();
         this.createForm();
+    }
+
+    ngAfterViewInit(): void {
+        switch (this.mode) {
+            case 'C':
+                this.investigateNo1.nativeElement.value = ((new Date).getFullYear() + 543);
+                break;
+        }
     }
 
     private createForm() {
@@ -159,7 +169,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.pageLoad();
                         break;
                 }
-                // 
             }
         })
 
@@ -167,7 +176,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnSave(false);
                 this.onSave();
-
             }
         });
 
@@ -190,12 +198,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         let f = this.investigateForm.value;
 
         if (this.investigateForm.invalid) {
-            alert(Message.checkData);
+            swal('', Message.checkData, 'warning')
             return;
         }
 
         if (!this.InvestigateDetail.length) {
-            alert('ส่วนรายงานการสืบสวน ต้องมีอย่างน้อย 1 รายการ');
+            swal('', 'ส่วนรายงานการสืบสวน ต้องมีอย่างน้อย 1 รายการ', 'warning');
             return;
         }
 
@@ -250,7 +258,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         investDetail.sort((a, b) => { if (a.InvestigateSeq < b.InvestigateSeq) return -1; })
         this.setItemFormArray(investDetail, 'InvestigateDetail')
         this.investigateForm.patchValue(x);
+        this.investigateNo0.nativeElement.value = x.InvestigateNo && x.InvestigateNo.split('/')[0];
+        this.investigateNo1.nativeElement.value = x.InvestigateNo && x.InvestigateNo.split('/')[1];
+    }
 
+    onChangeInvestigateNo() {
+        let i0 = this.investigateNo0.nativeElement.value;
+        let i1 = this.investigateNo1.nativeElement.value;
+        this.investigateForm.patchValue({
+            InvestigateNo: `${i0}/${i1}`
+        })
     }
 
     checkResponse(res: any) {
@@ -291,7 +308,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             let edate = getDateMyDatepicker(this._dateStartTo)
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.investigateForm.patchValue({
                         DateEnd: setDateMyDatepicker(this._dateStartFrom)
@@ -308,17 +325,23 @@ export class ManageComponent implements OnInit, OnDestroy {
         invest.DateEnd = getDateMyDatepicker(invest.DateEnd);
         this.store.dispatch(new fromStore.CreateInvestigate(invest));
 
+        let InvestigateSeq = 1;
+        if (this.InvestigateDetail.length) {
+            InvestigateSeq += parseInt(this.InvestigateDetail.value.sort((a, b) => b.InvestigateSeq - a.InvestigateSeq)[0].InvestigateSeq);
+        }
+
         this.router.navigate(
             [`investigation/detail-manage`, 'C'],
             {
                 queryParams: {
                     investMode: this.mode,
-                    investCode: this.investCode
+                    investCode: this.investCode,
+                    InvestigateSeq: InvestigateSeq
                 }
             });
     }
 
-    onViewInvesDetail(invesDetailId: string) {
+    onViewInvesDetail(invesDetailId: string, investigateSeq: string) {
 
         this.router.navigate(
             [`investigation/detail-manage`, 'R'],
@@ -326,7 +349,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 queryParams: {
                     investMode: this.mode,
                     investCode: this.investCode,
-                    invesDetailId: invesDetailId
+                    invesDetailId: invesDetailId,
+                    InvestigateSeq: investigateSeq
                 }
             });
     }
@@ -361,7 +385,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     catchError(error: any) {
         console.log(error);
-        alert(Message.saveFail);
+        swal('', Message.saveFail, 'error');
     }
 
     clearFormArray = (formArray: FormArray) => {
@@ -379,16 +403,29 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onDelete() {
-        this.s_invest.InvestigateupdDelete(this.investCode)
-            .takeUntil(this.destroy$)
-            .subscribe(x => {
-                if (this.checkIsSuccess(x)) {
-                    alert(Message.delComplete);
-                    this.router.navigate(['/investigation/list']);
-                } else {
-                    alert(Message.delFail);
-                }
-            })
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm!'
+        }).then((result) => {
+            if (result.value) {
+                this.s_invest.InvestigateupdDelete(this.investCode)
+                    .takeUntil(this.destroy$)
+                    .subscribe(x => {
+                        if (this.checkIsSuccess(x)) {
+                            swal('', Message.delComplete, 'success');
+                            this.router.navigate(['/investigation/list']);
+                        } else {
+                            swal('', Message.delFail, 'error');
+                        }
+                    })
+            }
+        })
+
     }
 
     private updateInvestigate(form: any) {
@@ -407,10 +444,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             .takeUntil(this.destroy$)
             .subscribe(x => {
                 if (!this.checkIsSuccess(x)) {
-                    alert(Message.saveFail);
+                    swal('', Message.saveFail, 'error');
                     return;
                 }
-                alert(Message.saveComplete);
+                swal('', Message.saveComplete, 'success');
 
                 this.router.navigate(['/investigation/manage', this.mode, this.investCode])
             }, (error) => this.catchError(error));

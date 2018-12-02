@@ -18,8 +18,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">ครั้งที่สืบสวน : </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="InvestigateSeq" class="form-control form-control-sm"
-                            [readOnly]="showEditField">
+                        <input type="text" formControlName="InvestigateSeq" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
@@ -40,7 +39,7 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">มาตราความเชื่อมั่น :
+                <label for="" class="col-lg-2 col-sm-4 control-label">มาตราความเชื่อมั่นของแหล่งข่าว :
                 </label>
                 <div class="col-lg-10 col-sm-8">
                     <div class="form-group ">
@@ -313,7 +312,7 @@
                             <input style="display: none" type="text" formControlName="ProductDesc">
                         </td>
                         <td *ngIf="item.get('IsModify').value != 'd'">
-                            <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input pattern="[0-9]" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                         </td>
                         <td *ngIf="item.get('IsModify').value != 'd'">
                             <ng-template #qtyUnit let-r="result" let-t="term">

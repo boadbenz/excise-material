@@ -10,6 +10,7 @@ import { Message } from 'app/config/message';
 import { ArrestService } from '../../services';
 import { Subscription, Subject } from 'rxjs';
 import 'rxjs/add/operator/takeUntil';
+import swal from 'sweetalert2'
 
 @Component({
     selector: 'app-list',
@@ -58,6 +59,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        this.advSearch.next(true);
+        
         this.sidebarService.setVersion(this.arrestService.version);
 
         this.navService.searchByKeyword
@@ -92,7 +95,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate);
+                swal('', Message.checkDate, 'warning');
                 return
             }
         }
@@ -108,7 +111,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     private onSearchComplete(list: Arrest[]) {
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
             return false;
         }
         this.arrest = [];
@@ -148,7 +151,7 @@ export class ListComponent implements OnInit, OnDestroy {
             const edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.OccurrenceDateTo = { date: this.dateStartFrom.date };
                 }, 0);
