@@ -55,6 +55,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.advSearch.next(true)
         this.sidebarService.setVersion(this.s_invest.version);
 
         this.navService.searchByKeyword.subscribe(async Textsearch => {

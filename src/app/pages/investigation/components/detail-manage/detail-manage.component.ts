@@ -25,6 +25,7 @@ import { TransactionRunning } from 'app/models/transaction-running.model';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { setViewSuspect } from '../suspect-modal/suspect-modal.component';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-investigate-detail-manage',
@@ -53,6 +54,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     invesDetailId: string;
     private investMode: string;
     investCode: string;
+    investigateSeq: string;
 
     showEditField: boolean;
     investigateFG: FormGroup;
@@ -139,10 +141,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 this.investMode = p.queryParams.investMode;
                 this.investCode = p.queryParams.investCode;
                 this.invesDetailId = p.queryParams.invesDetailId;
+                this.investigateSeq = p.queryParams.InvestigateSeq;
 
                 switch (this.mode) {
                     case 'C':
                         this.showEditField = true;
+                        this.investigateFG.patchValue({
+                            InvestigateSeq: this.investigateSeq
+                        })
                         this.enableBtnModeC();
                         this.loadMasterData();
                         break;
@@ -175,9 +181,19 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnCancel(false);
-                    if (confirm(Message.confirmAction)) {
-                        this.onCancel();
-                    }
+                    swal({
+                        title: '',
+                        text: Message.confirmAction,
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Confirm!'
+                    }).then((result) => {
+                        if (result.value) {
+                            this.onCancel();
+                        }
+                    })
                 }
             })
 
@@ -302,6 +318,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             let invest = this.investigateFG;
             x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
             x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
+            x.InvestigateSeq = this.investigateSeq;
 
             await this.pageRefreshStaff(x.InvestigateDetailStaff);
 
@@ -397,7 +414,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             let edate = getDateMyDatepicker(this._dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.investigateFG.patchValue({
                         InvestigateDateEnd: setDateMyDatepicker(this._dateStartFrom)
@@ -621,7 +638,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             StationCode: new FormControl(this.runningOfficeCode),
             StationName: new FormControl(this.officeName),
             InvestigateDateStart: new FormControl(null, Validators.required),
-            InvestigateDateEnd: new FormControl(null, Validators.required),
+            InvestigateDateEnd: new FormControl(null),
             ConfidenceOfNews: new FormControl(null, Validators.required),
             ValueOfNews: new FormControl(null, Validators.required),
             InvestigateDetail: new FormControl(null, Validators.required),
@@ -839,7 +856,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onComplete() {
         if (this._isSuccess) {
-            alert(Message.saveComplete);
+            swal('', Message.saveComplete, 'success');
             switch (this.mode) {
                 case 'C':
                     await this.store.dispatch(new fromStore.RemoveInvestigate);
@@ -851,10 +868,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                     location.reload();
                     break;
             }
-
-
         } else {
-            alert(Message.saveFail)
+            swal('', Message.saveFail, 'error')
         }
     }
 
@@ -886,66 +901,76 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async onDelete() {
-        if (confirm(Message.confirmAction)) {
-            this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId)
-                .takeUntil(this.destroy$)
-                .subscribe(x => {
-                    if (this.checkIsSuccess(x)) {
-                        alert(Message.delComplete);
-                        this.navigateToManage();
-                    } else {
-                        alert(Message.delFail);
-                    }
-                })
-        }
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm!'
+        }).then((result) => {
+            if (result.value) {
+                this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId)
+                    .takeUntil(this.destroy$)
+                    .subscribe(x => {
+                        if (this.checkIsSuccess(x)) {
+                            swal('', Message.delComplete, 'success');
+                            this.navigateToManage();
+                        } else {
+                            swal('', Message.delFail, 'error');
+                        }
+                    })
+            }
+        })
     }
 
     private async onSave() {
         if (this.investCode == 'NEW') {
             if (!this.stateInvest) {
-                alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
+                swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
                 return;
             }
 
-            if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart || !this.stateInvest.DateEnd) {
-                alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
+            if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart) {
+                swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
                 return;
             }
         }
 
         if (this.investigateFG.invalid) {
-            alert(Message.checkData);
+            swal('', Message.checkData, 'warning');
             return;
         }
 
         let staff: fromModels.InvestigateDetailStaff[] = this.InvestigateDetailStaff.value.filter(x => x.IsModify != 'd');
         if (staff.length) {
             if (staff.filter(x => x.ContributorID == '2').length <= 0) {
-                alert('ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ')
+                swal('', 'ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ', 'warning')
                 return;
             }
 
             if (staff.filter(x => x.ContributorID == '2').length > 1) {
-                alert('ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” ต้องมีได้แค่ 1 รายการเท่านั้น')
+                swal('', 'ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” ต้องมีได้แค่ 1 รายการเท่านั้น', 'warning')
                 return;
             }
 
             if (staff.filter(x => x.ContributorID == '3').length > 1) {
-                alert('ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้สั่งการ” ต้องมีได้แค่ 1 รายการเท่านั้น')
+                swal('', 'ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้สั่งการ” ต้องมีได้แค่ 1 รายการเท่านั้น', 'warning')
                 return;
             }
         } else {
-            alert('ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ')
+            swal('', 'ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ', 'warning')
             return;
         }
 
         let local: fromModels.InvestigateDetailLocal[] = this.InvestigateDetailLocal.value.filter(x => x.IsModify != 'd');
         if (local.length) {
             if (local.filter(x => x.Region == '').length > 1) {
-                alert('ส่วนสถานที่ทำการสืบสวน กรุณาระบุ “ตำบล/อำเภอ/จังหวัด”')
+                swal('', 'ส่วนสถานที่ทำการสืบสวน กรุณาระบุ “ตำบล/อำเภอ/จังหวัด”', 'warning')
             }
         } else {
-            alert('ส่วนสถานที่ทำการสืบสวน ต้องมีอย่างน้อย 1 รายการ');
+            swal('', 'ส่วนสถานที่ทำการสืบสวน ต้องมีอย่างน้อย 1 รายการ', 'warning');
         }
 
         switch (this.mode) {
@@ -1036,7 +1061,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         invest.InvestigateCode = investCode;
         await this.s_invest.InvestigateinsAll(invest).then(async x => {
             if (!this.checkIsSuccess(x)) return;
-
+            this.investCode = investCode;
             await this.insertInvestigateDetail(investCode);
 
         }, () => { this.saveFail(); return; })
@@ -1046,7 +1071,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private async insertInvestigateDetail(investCode: string) {
         this.loaderService.show();
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
-        this.investCode = investCode;
+
         form.InvestigateCode = investCode;
         form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
         form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);

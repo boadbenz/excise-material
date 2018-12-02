@@ -33,6 +33,7 @@ import { LoaderService } from 'app/core/loader/loader.service';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { IMyDateModel } from 'mydatepicker-th';
 import { ManageConfig } from './manage.config';
+import swal from 'sweetalert2'
 
 @Component({
     selector: 'app-manage',
@@ -122,6 +123,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         return form.controls.ArrestLawGuitbase.controls;
     }
 
+    getArrestIndicmentDetail(form: any) {
+        return form.controls.ArrestIndicmentDetail.controls;
+    }
+
+    getArrestLawbreaker(form: any) {
+        return form.controls.ArrestLawbreaker.controls;
+    }
+
+    getArrestProductDetail(form: any) {
+        return form.controls.ArrestProductDetail.controls;
+    }
+
     // --- 1
     getArrestLawSubSectionRule(form: any) {
         return form.controls.ArrestLawSubSectionRule.controls;
@@ -209,7 +222,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.arrestFG = this.createForm();
         this.navigate_Service();
-        
+
     }
 
     ngOnDestroy(): void {
@@ -281,7 +294,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSave(false);
                 if (!this.arrestFG.valid) {
                     this.isRequired = true;
-                    alert(Message.checkData)
+                    swal('', Message.checkData, 'warning')
                     return false;
                 }
                 const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
@@ -291,19 +304,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (this.arrestFG.invalid) return;
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
                 if (staff.length <= 0) {
-                    alert('ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ')
+                    swal('', 'ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ', 'warning')
                     return
                 }
                 if (staff.filter(x => x.ContributorID == '').length > 0) {
-                    alert('กรุณาเลือกฐานะของผู้จับกุม');
+                    swal('', 'กรุณาเลือกฐานะของผู้จับกุม', 'warning');
                     return;
                 }
                 if (staff.filter(x => x.ContributorID == '6').length <= 0) {
-                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ');
+                    swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ', 'warning');
                     return;
                 }
                 if (!this.ArrestIndictment.value.length) {
-                    alert('“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ')
+                    swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
                     return;
                 }
                 this.onSave();
@@ -327,9 +340,20 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                if (confirm(Message.confirmAction)) {
-                    this.onCancel();
-                }
+
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm!'
+                }).then((result) => {
+                    if (result.value) {
+                        this.onCancel();
+                    }
+                })
             }
         })
 
@@ -585,7 +609,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 : new Date(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.arrestFG.patchValue({
                         OccurrenceDate: this.isObject(this.dateStartFrom)
@@ -647,13 +671,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                     IsModify: x.IsModify || 'r',
                     IndictmentID: x.IndictmentID,
                     GuiltBaseID: x.GuiltBaseID,
-                    ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase)
+                    ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase),
+                    ArrestIndicmentDetail: this.setArrestIndicmentDetail(x.ArrestIndicmentDetail)
                 })
             )
         });
         this.arrestFG.setControl('ArrestIndictment', arr);
     }
-    // --- 1
+
+    // --- ArrestGuildBase 1
     private setArrestLawGuitbase = (o: fromModels.ArrestLawGuitbase[]) => {
         let arr = new FormArray([]);
         o.map((x, index) => {
@@ -728,6 +754,46 @@ export class ManageComponent implements OnInit, OnDestroy {
                 FineMax: x.FineMax,
                 IsFinePrison: x.IsFinePrison,
                 IsTaxPaid: x.IsTaxPaid
+            }))
+        })
+        return arr;
+    }
+
+    // --- ArrestIndictmentDetail 2
+    private setArrestIndicmentDetail = (o: fromModels.ArrestIndictmentDetail[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                IndictmentDetailID: x.IndictmentDetailID,
+                IndictmentID: x.IndictmentID,
+                ArrestLawbreaker: this.setArrestLawbreaker(x.ArrestLawbreaker),
+                ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail)
+            }))
+        })
+        return arr;
+    }
+
+    // --- 2.1 
+    private setArrestLawbreaker = (o: fromModels.ArrestLawbreaker[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                LawbreakerTitleName: x.LawbreakerTitleName,
+                LawbreakerFirstName: x.LawbreakerFirstName,
+                LawbreakerMiddleName: x.LawbreakerMiddleName,
+                LawbreakerLastName: x.LawbreakerLastName,
+                LawbreakerOtherName: x.LawbreakerOtherName
+            }))
+        })
+        return arr;
+    }
+
+    // --- 2.2
+    private setArrestProductDetail = (o: fromModels.ArrestProductDetail[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                ProductDesc: x.ProductDesc
             }))
         })
         return arr;
@@ -1043,7 +1109,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     isObject = (obj) => obj === Object(obj);
 
     saveFail() {
-        alert(Message.saveFail);
+        swal('', Message.saveFail, 'error');
         this._isSuccess = false;
         return false;
     }
@@ -1079,10 +1145,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.updateDocument();
 
         if (this._isSuccess) {
-            alert(Message.saveComplete)
+            swal('', Message.saveComplete, 'success')
             this.onComplete()
         } else {
-            alert(Message.saveFail)
+            swal('', Message.saveFail, 'warning')
         }
         this.loaderService.hide();
     }
@@ -1117,7 +1183,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         Promise.all(indict).then(() => {
             if (isCheck) {
-                alert(Message.cannotModify);
+                swal('', Message.cannotModify, 'warning');
                 this.enableBthModeR();
             } else {
                 this.loadMasterData();
@@ -1141,11 +1207,21 @@ export class ManageComponent implements OnInit, OnDestroy {
         Promise.all(indict).then(() => {
             this.loaderService.hide();
             if (isCheck) {
-                alert(Message.cannotDeleteRec);
+                swal('', Message.cannotDeleteRec, 'warning');
             } else {
-                if (confirm(Message.confirmAction)) {
-                    this.deleteArrest();
-                }
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm!'
+                }).then((result) => {
+                    if (result.value) {
+                        this.deleteArrest();
+                    }
+                })
             }
         }).catch((error) => this.catchError(error));
     }
@@ -1202,13 +1278,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.s_arrest.ArrestupdDelete(this.arrestCode)
             .then(x => {
                 if (this.checkResponse(x)) {
-                    alert(Message.delComplete);
+                    swal('', Message.delComplete, 'success');
                     this.arrestFG.reset();
                     this.router.navigate([`arrest/list`]);
                 } else {
-                    alert(Message.delFail);
+                    swal('', Message.delFail, 'error');
                 }
-            }, () => { alert(Message.delFail); return; })
+            }, () => { swal('', Message.delFail, 'error'); return; })
             .catch((error) => this.catchError(error));
         this.loaderService.hide();
     }
