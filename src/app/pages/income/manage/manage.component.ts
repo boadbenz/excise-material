@@ -614,7 +614,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
 
 
-        this.oRevenue.RevenueNo = this.RevenueNo;
+        this.oRevenue.RevenueNo = this.RevenueNo + "/" + this.RevenueNoYear;
         this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
         this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.RevenueCode = this.RevenueCode;
