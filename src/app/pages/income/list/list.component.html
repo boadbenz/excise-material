@@ -111,6 +111,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of RevenueList; let i=index;">
+<<<<<<< HEAD
                         <td style="text-align: center">{{i + 1}}</td>
                         <td>{{item.RevenueCode}}</td>
                         <td>{{item.RevenueDate}}</td>
@@ -119,6 +120,29 @@
                         <td style="text-align: center">{{item.ResultCount}}</td>
                         <td class="text-center">{{item.RevenueStatus}}</td>
                         <td class="text-center">
+=======
+                        <td *ngIf="item.RevenueStatus==2" style="text-align: center; color:red">{{i + 1}}</td>
+                        <td *ngIf="item.RevenueStatus==2" style="color:red">{{item.RevenueCode}}</td>
+                        <td *ngIf="item.RevenueStatus==2" style="color:red">{{item.RevenueDate}}</td>
+                        <td *ngIf="item.RevenueStatus==2" style="color:red">{{item.RevenueOneStaff}}</td>
+                        <td *ngIf="item.RevenueStatus==2" style="color:red">{{item.RevenueOneStaffDept}}</td>
+                        <td *ngIf="item.RevenueStatus==2" style="text-align: center;color:red">{{item.ResultCount}}</td>
+                        <td *ngIf="item.RevenueStatus==2" class="text-center;" style="color:red">{{item.RevenueStatus}}</td>
+                        <td *ngIf="item.RevenueStatus==2" class="text-center;">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueID)">
+                                <i class="mdi mdi-eye fa-lg"></i>
+                            </a>
+                        </td>
+
+                        <td *ngIf="item.RevenueStatus!=2" style="text-align: center;">{{i + 1}}</td>
+                        <td *ngIf="item.RevenueStatus!=2">{{item.RevenueCode}}</td>
+                        <td *ngIf="item.RevenueStatus!=2">{{item.RevenueDate}}</td>
+                        <td *ngIf="item.RevenueStatus!=2">{{item.RevenueOneStaff}}</td>
+                        <td *ngIf="item.RevenueStatus!=2">{{item.RevenueOneStaffDept}}</td>
+                        <td *ngIf="item.RevenueStatus!=2" style="text-align: center;">{{item.ResultCount}}</td>
+                        <td *ngIf="item.RevenueStatus!=2" class="text-center;">{{item.RevenueStatus}}</td>
+                        <td *ngIf="item.RevenueStatus!=2" class="text-center;">
+>>>>>>> Kat_Develop
                             <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueID)">
                                 <i class="mdi mdi-eye fa-lg"></i>
                             </a>

@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Revenue, RevenueDetail } from './revenue';
 import { appConfig } from '../../app.config';
-
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class IncomeService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   // tslint:disable-next-line:member-ordering
   private httpOptions = {
@@ -39,7 +41,10 @@ export class IncomeService {
     const params = JSON.stringify(form);
     const url = `${appConfig.api8084}/RevenuegetByConAdv`;
 
+<<<<<<< HEAD
     // tslint:disable-next-line:no-debugger
+=======
+>>>>>>> Kat_Develop
     debugger
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -60,6 +65,7 @@ export class IncomeService {
     } catch (error) {
       await alert(error);
     }
+<<<<<<< HEAD
   }
 
   async getDepartment(): Promise<any> {
@@ -149,6 +155,97 @@ export class IncomeService {
     }
   }
 
+=======
+  }
+
+  async getDepartment(): Promise<any> {
+    const params = {};
+    const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async StaffgetByKeyword(): Promise<any> {
+    const params = {};
+    const url = `${appConfig.api7789}/MasStaffMaingetAll`;
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async TransactionRunninggetByCon(RunningTable, RunningOfficeCode): Promise<any> {
+    let pValue = {
+      "RunningTable": RunningTable,
+      "RunningOfficeCode": RunningOfficeCode
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.api8087}/TransactionRunninggetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async TransactionRunninginsAll(RunningOfficeCode, RunningTable, RunningPrefix): Promise<any> {
+    let pValue = {
+      "RunningOfficeCode": RunningOfficeCode,
+      "RunningTable": RunningTable,
+      "RunningPrefix": RunningPrefix
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.api8087}/TransactionRunninginsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async TransactionRunningupdByCon(RunningID): Promise<any> {
+    const params = { RunningID };
+    const url = `${appConfig.api8087}/TransactionRunningupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async RevenueComparegetByCon(RevenueDate, OfficeCode): Promise<any> {
+    let pValue = {
+      "RevenueDate": RevenueDate,
+      "OfficeCode": OfficeCode
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.api8084}/RevenueComparegetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+>>>>>>> Kat_Develop
   async RevenueComparegetByCompareReceiptID(CompareReceiptID): Promise<any> {
     const params = { CompareReceiptID };
     const url = `${appConfig.api8084}/RevenueComparegetByCompareReceiptID`;
@@ -208,6 +305,13 @@ export class IncomeService {
     } catch (error) {
       return [];
     }
+<<<<<<< HEAD
+  }
+
+  async RevenueCompareDetailReceiptupdByCon(CompareReceiptID: string): Promise<any> {
+    const params = { CompareReceiptID };
+    const url = `${appConfig.api8084}/RevenueCompareDetailReceiptupdByCon`;
+=======
   }
 
   async RevenueCompareDetailReceiptupdByCon(CompareReceiptID: string): Promise<any> {
@@ -225,6 +329,7 @@ export class IncomeService {
   async RevenueCompareDetailReceiptupdDelete(CompareReceiptID: string): Promise<any> {
     const params = { CompareReceiptID };
     const url = `${appConfig.api8084}/RevenueCompareDetailReceiptupdDelete`;
+>>>>>>> Kat_Develop
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -232,6 +337,25 @@ export class IncomeService {
     } catch (error) {
       return [];
     }
+  }
+
+<<<<<<< HEAD
+  async RevenueCompareDetailReceiptupdDelete(CompareReceiptID: string): Promise<any> {
+    const params = { CompareReceiptID };
+    const url = `${appConfig.api8084}/RevenueCompareDetailReceiptupdDelete`;
+=======
+  async RevenueupdDelete(RevenueID: string): Promise<any> {
+    const params = { RevenueID };
+    const url = `${appConfig.api8084}/RevenueupdDelete`;
+>>>>>>> Kat_Develop
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+<<<<<<< HEAD
   }
 
   async RevenueupdDelete(RevenueID: string): Promise<any> {
@@ -244,5 +368,31 @@ export class IncomeService {
     } catch (error) {
       return [];
     }
+=======
+  }
+
+  RevenueReportgetByCon(RevenueID: string) {
+    const params = { RevenueID };
+    const url = `${appConfig.apiReport}/RevenuegetByCon.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .catch(this.onCatch)
+      .do((res: Response) => {
+        this.onSuccess(res);
+      }, (error: any) => {
+        this.onError(error);
+      });
+  }
+
+  private onSuccess(res: Response): void {
+    console.log('Request successful');
+  }
+
+  private onError(res: Response): void {
+    console.log('Error, status code: ' + res.status);
+  }
+
+  private onCatch(error: any, caught: Observable<any>): Observable<any> {
+    return Observable.throw(error);
+>>>>>>> Kat_Develop
   }
 }
