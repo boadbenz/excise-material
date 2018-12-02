@@ -369,7 +369,7 @@
                                 <input style="display: none" type="text" formControlName="ProductDesc">
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 30px;">
-                                <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm"
+                                <input type="text" pattern="[0-9]"  formControlName="Qty" class="form-control form-control-sm"
                                     [readonly]="showEditField">
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
@@ -381,7 +381,7 @@
                                     (selectItem)="selectItemQtyUnit($event, i)" [value]="item.value.QtyUnit" />
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 30px;">
-                                <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
+                                <input type="text" pattern="[0-9]" formControlName="NetVolume" class="form-control form-control-sm"
                                     [readonly]="showEditField">
                             </td>
                             <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">

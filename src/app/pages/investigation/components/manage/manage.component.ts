@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
@@ -24,7 +24,7 @@ import swal from 'sweetalert2'
     selector: 'app-manage',
     templateUrl: './manage.component.html'
 })
-export class ManageComponent implements OnInit, OnDestroy {
+export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     card1 = true;
     card2 = true;
@@ -88,6 +88,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.active_Route();
         this.navigate_Service();
         this.createForm();
+    }
+
+    ngAfterViewInit(): void {
+        switch (this.mode) {
+            case 'C':
+                this.investigateNo1.nativeElement.value = ((new Date).getFullYear() + 543);
+                break;
+        }
     }
 
     private createForm() {
