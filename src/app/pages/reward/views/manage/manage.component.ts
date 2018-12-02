@@ -40,7 +40,7 @@ import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.com
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -99,7 +99,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.6');
+    this.sidebarService.setVersion('0.0.1.7');
     this.pageLoad();
   }
 
@@ -528,17 +528,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       // 3.1
       if (!responseSave) {
         // 3.1.1
-        alert('บันทึกไม่สำเร็จ');
+        swal('บันทึกไม่สำเร็จ', 'error');
       } else {
         // 3.2
         // 3.2.1
-        alert('บันทึกสำเร็จ');
+        swal('บันทึกสำเร็จ', 'success');
 
         // 3.2.2
         this.pageLoad();
       }
     } else {
-      alert('1.	ทำการตรวจสอบข้อมูล Input ที่นำเข้า (Validate/Verify) : False');
+      swal('ตรวจสอบข้อมูล Input ที่นำเข้า (Validate/Verify)', 'warning');
     }
     // 4 END
   }
@@ -631,11 +631,11 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         )
       ) {
         // 1.1.2(1)
-        alert('ลบข้อมูลสำเร็จ'); // 1.1.2(1.1)
+        swal('ลบข้อมูลสำเร็จ', 'success'); // 1.1.2(1.1)
         this.router.navigate(['/reward/list']); // 1.1.2(1.1)
       } else {
         // 1.1.2(2)
-        alert('ลบข้อมูลไม่สำเร็จ'); // 1.1.2(2.1)
+        swal('ลบข้อมูลไม่สำเร็จ', 'error'); // 1.1.2(2.1)
       }
     } else {
       // 1.2

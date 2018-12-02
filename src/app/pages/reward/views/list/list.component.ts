@@ -17,6 +17,7 @@ import {
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { RequestListgetByConAdvModel } from '../../models/RequestListgetByConAdv.Model';
 
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -40,7 +41,7 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.4');
+    this.sidebarService.setVersion('0.0.1.5');
     this.setShowButton();
     // this.fetchData('');
   }
@@ -50,7 +51,7 @@ export class ListComponent extends ListConfig implements OnInit {
 
   public fetchData(Textsearch) {
     this.requestListService
-      .RequestListgetByKeyword({ Textsearch: Textsearch }) 
+      .RequestListgetByKeyword({ Textsearch: Textsearch })
       .subscribe((res: IRequestList[]) => {
         this.gridData = this.newData(res);
       });
@@ -67,7 +68,7 @@ export class ListComponent extends ListConfig implements OnInit {
     this.navService.setNextPageButton(false);
     this.navService.setPrevPageButton(false);
   }
-  private newData(data): IRequestList[] {
+  private newData(data: IRequestList[]) {
     return data.map((m: IRequestList) => ({
       ...m,
       view: true,
@@ -98,13 +99,13 @@ export class ListComponent extends ListConfig implements OnInit {
           new Date(data['OccurrenceDateTo'])
         )
       ) {
-        alert('[วันที่จับกุม] ต้องน้อยกว่าหรือเท่ากับ [ถึง]');
+        swal('[วันที่จับกุม] ต้องน้อยกว่าหรือเท่ากับ [ถึง]', 'warning');
         check *= 0;
       }
       if (
         new Date(data['OccurrenceDateTo']).valueOf() >= new Date().valueOf()
       ) {
-        alert('[วันที่จับกุม ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน');
+        swal('[วันที่จับกุม ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน', 'warning');
         check *= 0;
       }
       if (
@@ -113,11 +114,11 @@ export class ListComponent extends ListConfig implements OnInit {
           new Date(data['LawsuitDateTo'])
         )
       ) {
-        alert('[วันที่รับคดี] ต้องน้อยกว่าหรือเท่ากับ [ถึง]');
+        swal('[วันที่รับคดี] ต้องน้อยกว่าหรือเท่ากับ [ถึง]', 'warning');
         check *= 0;
       }
       if (new Date(data['LawsuitDateTo']).valueOf() >= new Date().valueOf()) {
-        alert('[วันที่รับคดี ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน');
+        swal('[วันที่รับคดี ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน', 'warning');
         check *= 0;
       }
 
@@ -158,7 +159,7 @@ export class ListComponent extends ListConfig implements OnInit {
             if (res.length > 0) {
               this.gridData = this.newData(res);
             } else {
-              alert('ไม่พบข้อมูล');
+              swal('ไม่พบข้อมูล', 'error');
             }
           });
       }

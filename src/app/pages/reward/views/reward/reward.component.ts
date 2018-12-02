@@ -50,7 +50,7 @@ import { MasDocumentMaininsAllModel } from '../../models/MasDocumentMaininsAll.M
 import { Config } from '../../config/config';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
-
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-reward',
   templateUrl: './reward.component.html',
@@ -323,7 +323,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.9');
+    this.sidebarService.setVersion('0.0.1.10');
     this.pageLoad();
   }
   public changeFullName(text, index) {
@@ -1149,7 +1149,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             // 2.2.8 'WAIT'
             break;
         }
-        alert('บันทึกสำเร็จ');
+        swal('บันทึกสำเร็จ', 'success');
         // location.reload();
         // this.pageLoad();
         this.isEdit = false;
@@ -1158,10 +1158,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           this.RequestRewardID$.getValue()
         ]);
       } catch (error) {
-        alert('บันทึกไม่สำเร็จ' + error);
+        swal('บันทึกไม่สำเร็จ', 'error');
       }
     } else {
-      alert('กรุณากรอกให้ครบถ้วน');
+      swal('กรุณากรอกให้ครบถ้วน', 'warning');
     }
   }
   public async buttonPrint() {
@@ -1232,9 +1232,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         .toPromise();
 
       if (delResp.IsSuccess) {
-        alert('ลบข้อมูลสำเร็จ');
+        swal('ลบข้อมูลสำเร็จ', 'success');
       } else {
-        alert('ลบข้อมูลไม่สำเร็จ');
+        swal('ลบข้อมูลไม่สำเร็จ', 'error');
       }
     }
   }

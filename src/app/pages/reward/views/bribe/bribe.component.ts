@@ -60,6 +60,7 @@ import { IRequestPaymentFineDetail } from '../../interfaces/RequestPaymentFineDe
 import { replaceFakePath } from 'app/config/dataString';
 import { RequestBribeupdByConModel } from '../../models/RequestBribeupdByCon.Model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-bribe',
   templateUrl: './bribe.component.html',
@@ -97,7 +98,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       debounceTime(200),
       distinctUntilChanged(),
       map(term =>
-        term.length < 2
+        term.length < 1
           ? []
           : this.MasOfficeMainAllList.filter(
               v => v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1
@@ -111,7 +112,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       debounceTime(200),
       distinctUntilChanged(),
       map(term =>
-        term.length < 2
+        term.length < 1
           ? []
           : this.MasOfficeMainAllList.filter(
               v => v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1
@@ -125,7 +126,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       debounceTime(200),
       distinctUntilChanged(),
       map(term =>
-        term.length < 2
+        term.length < 1
           ? []
           : this.MasStaffMaingetAllList.filter(
               v => v.FullName.toLowerCase().indexOf(term.toLowerCase()) > -1
@@ -318,7 +319,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
                 this.StaffFormGroup.get(key).patchValue(newMap[key]);
               }
             }
-            console.log('mapStaff', mapStaff);
+            // console.log('mapStaff', mapStaff);
 
             this.BribeFormGroup.get('PositionName').patchValue(
               mapStaff.OperationPosName
@@ -341,7 +342,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.8');
+    this.sidebarService.setVersion('0.0.1.9');
 
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
@@ -582,8 +583,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       const checkLengthDetail =
         this.RequestBribeDetail.value.filter(f => f.check === true).length || 0;
       if (!(checkLengthDetail > 0)) {
-        alert(
-          'ต้องมีรายการในส่วนรายละเอียดคำร้องขอรับเงินสินบนอย่างน้อย 1 รายการที่ CheckBox.Check =  True'
+        swal(
+          'ต้องมีรายการในส่วนรายละเอียดคำร้องขอรับเงินสินบนอย่างน้อย 1 รายการที่ CheckBox.Check =  True', 'warning'
         );
       } else {
         // 2
@@ -869,9 +870,9 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         }
         // tslint:disable-next-line:curly
         if (!this.RequestBribeID$.getValue()) {
-          alert('บันทึกไม่สำเร็จ');
+          swal('บันทึกไม่สำเร็จ', 'error');
         } else {
-          alert('บันทึกสำเร็จ');
+          swal('บันทึกสำเร็จ', 'success');
           this.isEdit = false;
           this.router.navigate([
             '/reward/bribe/R',
@@ -880,7 +881,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         }
       }
     } else {
-      alert('บันทึกไม่สำเร็จ');
+      swal('บันทึกไม่สำเร็จ', 'error');
     }
   }
 
@@ -969,12 +970,12 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       if (RequestBribeupdDeleteResponse.IsSuccess) {
         // 1.1.2(1)
         // 1.1.2(1.1)
-        alert('ลบข้อมูลสำเร็จ');
+        swal('ลบข้อมูลสำเร็จ' , 'success');
         // 1.1.2(1.2) 'WAIT'
       } else {
         // 1.1.2(2)
         // 1.1.2(2.1)
-        alert('ลบข้อมูลไม่สำเร็จ');
+        swal('ลบข้อมูลไม่สำเร็จ' , 'error');
       }
     } else {
       // 1.2.1
@@ -1096,7 +1097,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.RequestBribeDetail.push(this.fb.group(newMap));
       });
     } else {
-      alert('ไม่พบข้อมูลที่สามารถขอรับเงินสินบน');
+      swal('ไม่พบข้อมูลที่สามารถขอรับเงินสินบน', 'error');
     }
   }
 
