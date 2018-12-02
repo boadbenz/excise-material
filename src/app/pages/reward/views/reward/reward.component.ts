@@ -286,7 +286,19 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onCancel.next(false);
-        this.buttonCancel();
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonCancel();
+          }
+        });
       }
     });
     this.navService.onSave.takeUntil(this.destroy$).subscribe(command => {
@@ -305,7 +317,19 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     this.navService.onDelete.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onDelete.next(false);
-        this.buttonDelete();
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonDelete();
+          }
+        });
       }
     });
     this.navService.onPrint.takeUntil(this.destroy$).subscribe(command => {
@@ -1210,33 +1234,33 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
   private buttonCancel() {
     // 1 START
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      // 1.1
-      switch (this.mode) {
-        case 'C':
-          this._location.back();
-          break;
-        case 'R':
-          this.pageLoad();
-          break;
-      }
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    // 1.1
+    switch (this.mode) {
+      case 'C':
+        this._location.back();
+        break;
+      case 'R':
+        this.pageLoad();
+        break;
     }
+    // }
     // 2 END
   }
   private async buttonDelete() {
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      const delResp: IResponseCommon = await this.requestRewardService
-        .RequestRewardupdDelete({
-          RequestRewardID: this.RequestRewardID$.getValue()
-        })
-        .toPromise();
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    const delResp: IResponseCommon = await this.requestRewardService
+      .RequestRewardupdDelete({
+        RequestRewardID: this.RequestRewardID$.getValue()
+      })
+      .toPromise();
 
-      if (delResp.IsSuccess) {
-        swal('ลบข้อมูลสำเร็จ', 'success');
-      } else {
-        swal('ลบข้อมูลไม่สำเร็จ', 'error');
-      }
+    if (delResp.IsSuccess) {
+      swal('ลบข้อมูลสำเร็จ', 'success');
+    } else {
+      swal('ลบข้อมูลไม่สำเร็จ', 'error');
     }
+    // }
   }
   private async buttonEdit() {
     this.TitleList = await this.masTitleService

@@ -220,7 +220,19 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(cancel => {
       if (cancel === true) {
         this.navService.onCancel.next(false);
-        this.buttonCancel();
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonCancel();
+          }
+        });
       }
     });
     this.navService.onPrint.takeUntil(this.destroy$).subscribe(save => {
@@ -238,7 +250,19 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.navService.onDelete.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
         this.navService.onDelete.next(false);
-        this.buttonDelete();
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonDelete();
+          }
+        });
       }
     });
     this.navService.onNextPage.takeUntil(this.destroy$).subscribe(save => {
@@ -584,7 +608,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.RequestBribeDetail.value.filter(f => f.check === true).length || 0;
       if (!(checkLengthDetail > 0)) {
         swal(
-          'ต้องมีรายการในส่วนรายละเอียดคำร้องขอรับเงินสินบนอย่างน้อย 1 รายการที่ CheckBox.Check =  True', 'warning'
+          'ต้องมีรายการในส่วนรายละเอียดคำร้องขอรับเงินสินบนอย่างน้อย 1 รายการที่ CheckBox.Check =  True',
+          'warning'
         );
       } else {
         // 2
@@ -886,16 +911,16 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   }
 
   private buttonCancel() {
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      switch (this.mode) {
-        case 'C':
-          break;
-        case 'R':
-          this.pageLoad();
-          break;
-      }
-    } else {
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    switch (this.mode) {
+      case 'C':
+        break;
+      case 'R':
+        this.pageLoad();
+        break;
     }
+    // } else {
+    // }
   }
 
   private async buttonPrint() {
@@ -958,28 +983,28 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   private async buttonDelete() {
     // ILG60-08-03-00-00-E06 (ปุ่ม “ลบ”)
     // 1 START
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      // 1.1
-      // 1.1.1
-      const RequestBribeupdDeleteResponse: IRequestBribeupdDeleteResponse = await this.requestBribeService
-        .RequestBribeupdDelete({
-          RequestBribeID: this.RequestBribeID$.getValue()
-        })
-        .toPromise();
-      // 1.1.2
-      if (RequestBribeupdDeleteResponse.IsSuccess) {
-        // 1.1.2(1)
-        // 1.1.2(1.1)
-        swal('ลบข้อมูลสำเร็จ' , 'success');
-        // 1.1.2(1.2) 'WAIT'
-      } else {
-        // 1.1.2(2)
-        // 1.1.2(2.1)
-        swal('ลบข้อมูลไม่สำเร็จ' , 'error');
-      }
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    // 1.1
+    // 1.1.1
+    const RequestBribeupdDeleteResponse: IRequestBribeupdDeleteResponse = await this.requestBribeService
+      .RequestBribeupdDelete({
+        RequestBribeID: this.RequestBribeID$.getValue()
+      })
+      .toPromise();
+    // 1.1.2
+    if (RequestBribeupdDeleteResponse.IsSuccess) {
+      // 1.1.2(1)
+      // 1.1.2(1.1)
+      swal('ลบข้อมูลสำเร็จ', 'success');
+      // 1.1.2(1.2) 'WAIT'
     } else {
-      // 1.2.1
+      // 1.1.2(2)
+      // 1.1.2(2.1)
+      swal('ลบข้อมูลไม่สำเร็จ', 'error');
     }
+    // } else {
+    //   // 1.2.1
+    // }
     // 2 END
   }
   private buttonPrevPage() {
