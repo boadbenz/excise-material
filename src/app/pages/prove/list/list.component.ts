@@ -11,6 +11,7 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
@@ -66,7 +67,7 @@ export class ListComponent implements OnInit {
         this.DeliveryDateTo = null;
         this.ProveDateTo = null;
 
-        this.sidebarService.setVersion('Prove 0.0.0.13');
+        this.sidebarService.setVersion('Prove 0.0.0.15');
 
         //this.preLoaderService.setShowPreloader(true);
         //this.onSearch({ Textsearch: "" });
@@ -97,7 +98,8 @@ export class ListComponent implements OnInit {
 
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
+            //alert(Message.noRecord);
             this.ListProve = [];
             this.preLoaderService.setShowPreloader(false);
         });
@@ -158,7 +160,8 @@ export class ListComponent implements OnInit {
             this.onSearchComplete(list);
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord);
+            //alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
             this.preLoaderService.setShowPreloader(false);
         });
     }
@@ -167,7 +170,8 @@ export class ListComponent implements OnInit {
         this.Prove = [];
 
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
+            //alert(Message.noRecord);
             this.ListProve = [];
 
             return false;
@@ -252,7 +256,8 @@ export class ListComponent implements OnInit {
             const edate = `${this._dateDeliveryStartTo.year}-${this._dateDeliveryStartTo.month}-${this._dateDeliveryStartTo.day}`;
 
             if (!compareDate(new Date(sdate) , new Date(edate))) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning');
+                //alert(Message.checkDate)
                 setTimeout(() => {
                     this.DeliveryDateTo = { date: this._dateDeliveryStartFrom };
                 }, 0);
@@ -276,7 +281,8 @@ export class ListComponent implements OnInit {
             const ePdate = `${this._dateProveStartTo.year}-${this._dateProveStartTo.month}-${this._dateProveStartTo.day}`;
 
             if (!compareDate(new Date(sPdate), new Date(ePdate))) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning');
+                //alert(Message.checkDate)
                 setTimeout(() => {
                     this.ProveDateTo = { date: this._dateProveStartFrom };
                 }, 0);
