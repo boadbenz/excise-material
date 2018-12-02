@@ -41,19 +41,6 @@ import {
   RequestBribeStaffModel
 } from '../../models/RequestBribeinsAll.model';
 import { Location } from '@angular/common';
-import { DropdownInterface } from '../../shared/interfaces/dropdown-interface';
-import { Observable } from 'rxjs/Observable';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  switchMap
-} from 'rxjs/operators';
-import { IRequestPaymentFineDetail } from '../../interfaces/RequestPaymentFineDetail';
-import { replaceFakePath } from 'app/config/dataString';
-import { RequestBribeupdByConModel } from '../../models/RequestBribeupdByCon.Model';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import swal from 'sweetalert2';
 @Component({
   selector: 'app-bribe',
   templateUrl: './bribe.component.html',
@@ -61,73 +48,7 @@ import swal from 'sweetalert2';
   providers: [BribeService]
 })
 export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
-  public BribeFormGroup: FormGroup;
-  public StaffFormGroup: FormGroup;
-  public TotalPart: number;
-  public PartMoney: number;
-  public isEdit = false;
-  public RequestCommand_NoticeCode_list: DropdownInterface[];
-  public MasStaffMaingetAllList: any[];
-  public MasOfficeMainAllList: any[];
-  public StaffMainName: any[];
-  public PositionName: string;
-  public OfficeName: string;
-  public aggregate = {
-    PaymentFine: 0,
-    BribeMoney: 0,
-    NetBribeMoney: 0
-  };
-  get RequestBribeDetail() {
-    return this.BribeFormGroup.get('RequestBribeDetail') as FormArray;
-  }
-  get RequestBribeStaff() {
-    return this.BribeFormGroup.get('RequestBribeStaff') as FormArray;
-  }
-  get Document(): FormArray {
-    return this.BribeFormGroup.get('Document') as FormArray;
-  }
-  searchStation = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      map(term =>
-        term.length < 1
-          ? []
-          : this.MasOfficeMainAllList.filter(
-              v => v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1
-            )
-              .slice(0, 10)
-              .map(m => m.OfficeName)
-      )
-    );
-  searchStationOfPOA = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      map(term =>
-        term.length < 1
-          ? []
-          : this.MasOfficeMainAllList.filter(
-              v => v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1
-            )
-              .slice(0, 10)
-              .map(m => m.OfficeName)
-      )
-    );
-  searchStaffMainName = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      map(term =>
-        term.length < 1
-          ? []
-          : this.MasStaffMaingetAllList.filter(
-              v => v.FullName.toLowerCase().indexOf(term.toLowerCase()) > -1
-            )
-              .slice(0, 10)
-              .map(m => m.FullName)
-      )
-    );
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private masStaffService: MasStaffService,
@@ -163,19 +84,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(cancel => {
       if (cancel === true) {
         this.navService.onCancel.next(false);
-        swal({
-          title: '',
-          text: 'ยืนยันการทำรายการหรือไม่',
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Confirm!'
-        }).then(result => {
-          if (result.value) {
-            this.buttonCancel();
-          }
-        });
+        this.buttonCancel();
       }
     });
     this.navService.onPrint.takeUntil(this.destroy$).subscribe(save => {
@@ -193,19 +102,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.navService.onDelete.takeUntil(this.destroy$).subscribe(save => {
       if (save === true) {
         this.navService.onDelete.next(false);
-        swal({
-          title: '',
-          text: 'ยืนยันการทำรายการหรือไม่',
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Confirm!'
-        }).then(result => {
-          if (result.value) {
-            this.buttonDelete();
-          }
-        });
+        this.buttonDelete();
       }
     });
     this.navService.onNextPage.takeUntil(this.destroy$).subscribe(save => {
@@ -214,103 +111,9 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.buttonPrevPage();
       }
     });
-    this.RequestBribeDetail.valueChanges.subscribe(value => {
-      this.aggregate = {
-        BribeMoney: 0,
-        NetBribeMoney: 0,
-        PaymentFine: 0
-      };
-      const formValAll: any[] = this.RequestBribeDetail.value;
-      if (formValAll.length > 0) {
-        const formValChecked: any[] = formValAll.filter(f => f.check === true);
-        if (formValChecked.length > 0) {
-          this.aggregate = {
-            PaymentFine:
-              formValChecked
-                .map(m => Number(m.PaymentFine))
-                .reduce((a, b) => (a += b)) || 0,
-            BribeMoney:
-              formValChecked
-                .map(m => Number(m.BribeMoney))
-                .reduce((a, b) => (a += b)) || 0,
-            NetBribeMoney:
-              formValChecked
-                .map(m => Number(m.NetBribeMoney))
-                .reduce((a, b) => (a += b)) || 0
-          };
-        }
-      }
-      this.ref.detectChanges();
-    });
-    this.BribeFormGroup.get('StationOfPOA')
-      .valueChanges.pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
-      .subscribe(values => {
-        if (!(this.mode === 'R' && this.isEdit === false)) {
-          const mapStation = this.MasOfficeMainAllList.filter(
-            f => f.OfficeName === values
-          ).shift();
-          if (mapStation) {
-            this.StaffFormGroup.get('OfficeCode').patchValue(
-              mapStation.OfficeCode
-            );
-            this.StaffFormGroup.get('OfficeName').patchValue(
-              mapStation.OfficeName
-            );
-            this.StaffFormGroup.get('OfficeShortName').patchValue(
-              mapStation.OfficeShortName
-            );
-          }
-        }
-
-        this.ref.detectChanges();
-      });
-    this.BribeFormGroup.get('StaffName')
-      .valueChanges.pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
-      .subscribe(values => {
-        if (!(this.mode === 'R' && this.isEdit === false)) {
-          const mapStaff = this.MasStaffMaingetAllList.filter(
-            f => f.FullName === values
-          ).shift();
-          if (mapStaff) {
-            const newMap = this.StaffFormGroup.value;
-            for (const key in this.StaffFormGroup.value) {
-              if (this.StaffFormGroup.value.hasOwnProperty(key)) {
-                const element = this.StaffFormGroup.value[key];
-                newMap[key] = mapStaff[key] || '';
-                this.StaffFormGroup.get(key).patchValue(newMap[key]);
-              }
-            }
-            // console.log('mapStaff', mapStaff);
-
-            this.BribeFormGroup.get('PositionName').patchValue(
-              mapStaff.OperationPosName
-            );
-            this.StaffFormGroup.get('PositionName').patchValue(
-              mapStaff.OperationPosName
-            );
-            this.StaffFormGroup.get('PositionName').patchValue(
-              mapStaff.OperationPosName
-            );
-            this.BribeFormGroup.get('OfficeName').patchValue(
-              mapStaff.OfficeName
-            );
-          } else {
-            this.BribeFormGroup.get('PositionName').patchValue('');
-            this.BribeFormGroup.get('OfficeName').patchValue('');
-          }
-        }
-        this.ref.detectChanges();
-      });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.9');
-
+    this.sidebarService.setVersion('0.0.1.6');
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
     this.navService.onNextPage.takeUntil(this.destroy$).subscribe(res => {
@@ -325,18 +128,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     switch (this.mode$.getValue()) {
       case 'C':
         // 1.1
-        this.MasStaffMaingetAllList = await this.masStaffService
-          .MasStaffMaingetAll()
-          .pipe(
-            map(m => ({
-              ...m,
-              FullName: m.TitleName + m.FirstName + ' ' + m.LastName
-            }))
-          )
-          .toPromise(); // 1.1.1
-        this.MasOfficeMainAllList = await this.masOfficeService
-          .MasOfficeMaingetAll()
-          .toPromise(); // 1.1.2
+        // this.MasStaffMaingetAll(); // 1.1.1
+        // this.MasOfficeMaingetAll(); // 1.1.2
 
         // 1.1.3
         const RequestCommand: IRequestCommand[] = await this.requestCommandService
@@ -436,24 +229,28 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     // 1.3
     // 1.4
     // 1.5
-    if (this.BribeFormGroup.valid) {
-      const checkLengthDetail =
-        this.RequestBribeDetail.value.filter(f => f.check === true).length || 0;
-      if (!(checkLengthDetail > 0)) {
-        swal(
-          'ต้องมีรายการในส่วนรายละเอียดคำร้องขอรับเงินสินบนอย่างน้อย 1 รายการที่ CheckBox.Check =  True',
-          'warning'
-        );
-      } else {
-        // 2
-        switch (this.mode) {
-          case 'C':
-            // 2.1
-            // 2.1.1
-            const ITransactionRunning: ITransactionRunning[] = await this.transactionRunningService
-              .TransactionRunninggetByCon({
-                RunningTable: 'ops_requestbribe',
-                RunningOfficeCode: this.OfficeCode
+    if (this.ILG60_08_03_00_00_E08_FORM_VALID) {
+      // 2
+      switch (this.mode$.getValue()) {
+        case 'C':
+          // 2.1
+          // 2.1.1
+          const ITransactionRunning: ITransactionRunning[] = await this.transactionRunningService
+            .TransactionRunninggetByCon({
+              RunningTable: 'ops_requestbribe',
+              RunningOfficeCode: this.OfficeCode
+            })
+            .toPromise();
+          // 2.1.2
+          if (ITransactionRunning.length > 0) {
+            // 2.1.2(1)
+            const TransactionRunning: ITransactionRunning =
+              ITransactionRunning[0];
+
+            // 2.1.2(1.1)
+            await this.transactionRunningService
+              .TransactionRunningupdByCon({
+                RunningID: TransactionRunning.RunningID
               })
               .toPromise();
 
@@ -564,19 +361,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
           //   }).subscribe()
           // })
 
-            break;
-        }
-        // tslint:disable-next-line:curly
-        if (!this.RequestBribeID$.getValue()) {
-          swal('บันทึกไม่สำเร็จ', 'error');
-        } else {
-          swal('บันทึกสำเร็จ', 'success');
-          this.isEdit = false;
-          this.router.navigate([
-            '/reward/bribe/R',
-            this.RequestBribeID$.getValue()
-          ]);
-        }
+          break;
       }
       // tslint:disable-next-line:curly
       if (!this.RequestBribeID$.getValue()) {
@@ -589,21 +374,21 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         ]);
       }
     } else {
-      swal('บันทึกไม่สำเร็จ', 'error');
+      alert('บันทึกไม่สำเร็จ');
     }
   }
 
   private buttonCancel() {
-    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
-    switch (this.mode) {
-      case 'C':
-        break;
-      case 'R':
-        this.pageLoad();
-        break;
+    if (confirm('ยืนยันการทำรายการหรือไม่')) {
+      switch (this.mode$.getValue()) {
+        case 'C':
+          break;
+        case 'R':
+          this.pageLoad();
+          break;
+      }
+    } else {
     }
-    // } else {
-    // }
   }
 
   private buttonPrint() {
@@ -629,28 +414,28 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   private async buttonDelete() {
     // ILG60-08-03-00-00-E06 (ปุ่ม “ลบ”)
     // 1 START
-    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
-    // 1.1
-    // 1.1.1
-    const RequestBribeupdDeleteResponse: IRequestBribeupdDeleteResponse = await this.requestBribeService
-      .RequestBribeupdDelete({
-        RequestBribeID: this.RequestBribeID$.getValue()
-      })
-      .toPromise();
-    // 1.1.2
-    if (RequestBribeupdDeleteResponse.IsSuccess) {
-      // 1.1.2(1)
-      // 1.1.2(1.1)
-      swal('ลบข้อมูลสำเร็จ', 'success');
-      // 1.1.2(1.2) 'WAIT'
+    if (confirm('ยืนยันการทำรายการหรือไม่')) {
+      // 1.1
+      // 1.1.1
+      const RequestBribeupdDeleteResponse: IRequestBribeupdDeleteResponse = await this.requestBribeService
+        .RequestBribeupdDelete({
+          RequestBribeID: this.RequestBribeID$.getValue()
+        })
+        .toPromise();
+      // 1.1.2
+      if (RequestBribeupdDeleteResponse.IsSuccess) {
+        // 1.1.2(1)
+        // 1.1.2(1.1)
+        alert('ลบข้อมูลสำเร็จ');
+        // 1.1.2(1.2) 'WAIT'
+      } else {
+        // 1.1.2(2)
+        // 1.1.2(2.1)
+        alert('ลบข้อมูลไม่สำเร็จ');
+      }
     } else {
-      // 1.1.2(2)
-      // 1.1.2(2.1)
-      swal('ลบข้อมูลไม่สำเร็จ', 'error');
+      // 1.2.1
     }
-    // } else {
-    //   // 1.2.1
-    // }
     // 2 END
   }
   private buttonPrevPage() {
@@ -706,9 +491,6 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       .subscribe((res: MasOfficeModel[]) => {
         this.MasOfficeMain$.next(res);
       });
-    } else {
-      swal('ไม่พบข้อมูลที่สามารถขอรับเงินสินบน', 'error');
-    }
   }
   private setShowButton() {
     this.navService.setSearchBar(false);

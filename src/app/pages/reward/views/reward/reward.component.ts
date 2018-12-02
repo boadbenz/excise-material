@@ -40,12 +40,7 @@ import { MasStaffModel, MasTitleModel } from 'app/models';
 import { DropdownInterface } from '../../shared/interfaces/dropdown-interface';
 import { MasTitleService } from '../../services/master/MasTitle.service';
 import { RequestRewardupdByConModel } from '../../models/RequestRewardupdByCon.Model';
-import { replaceFakePath } from 'app/config/dataString';
-import { MasDocumentMaininsAllModel } from '../../models/MasDocumentMaininsAll.Model';
-import { Config } from '../../config/config';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
-import swal from 'sweetalert2';
+
 @Component({
   selector: 'app-reward',
   templateUrl: './reward.component.html',
@@ -276,19 +271,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onCancel.next(false);
-        swal({
-          title: '',
-          text: 'ยืนยันการทำรายการหรือไม่',
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Confirm!'
-        }).then(result => {
-          if (result.value) {
-            this.buttonCancel();
-          }
-        });
+        this.buttonCancel();
       }
     });
     this.navService.onSave.takeUntil(this.destroy$).subscribe(command => {
@@ -307,19 +290,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     this.navService.onDelete.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onDelete.next(false);
-        swal({
-          title: '',
-          text: 'ยืนยันการทำรายการหรือไม่',
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Confirm!'
-        }).then(result => {
-          if (result.value) {
-            this.buttonDelete();
-          }
-        });
+        this.buttonDelete();
       }
     });
     this.navService.onPrint.takeUntil(this.destroy$).subscribe(command => {
@@ -337,7 +308,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.10');
+    this.sidebarService.setVersion('0.0.1.7');
     this.pageLoad();
     this.masTitleService
       .MasTitleMaingetAll()
@@ -1108,18 +1079,18 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             // 2.2.8 'WAIT'
             break;
         }
-        swal('บันทึกสำเร็จ', 'success');
-        // location.reload();
+        alert('บันทึกสำเร็จ');
+        location.reload();
         // this.pageLoad();
         // this.router.navigate([
         //   '/reward/reward/R',
         //   this.RequestRewardID$.getValue()
         // ]);
       } catch (error) {
-        swal('บันทึกไม่สำเร็จ', 'error');
+        alert('บันทึกไม่สำเร็จ' + error);
       }
     } else {
-      swal('กรุณากรอกให้ครบถ้วน', 'warning');
+      alert('กรุณากรอกให้ครบถ้วน');
     }
   }
   public async buttonPrint() {
@@ -1177,49 +1148,21 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
   private buttonCancel() {
     // 1 START
-    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
-    // 1.1
-    switch (this.mode) {
-      case 'C':
-        this._location.back();
-        break;
-      case 'R':
-        this.pageLoad();
-        break;
+    if (confirm('ยืนยันการทำรายการหรือไม่')) {
+      // 1.1
+      switch (this.mode) {
+        case 'C':
+          this._location.back();
+          break;
+        case 'R':
+          this.pageLoad();
+          break;
+      }
     }
-    // }
     // 2 END
   }
-  private async buttonDelete() {
-    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
-    const delResp: IResponseCommon = await this.requestRewardService
-      .RequestRewardupdDelete({
-        RequestRewardID: this.RequestRewardID$.getValue()
-      })
-      .toPromise();
-
-    if (delResp.IsSuccess) {
-      swal('ลบข้อมูลสำเร็จ', 'success');
-    } else {
-      swal('ลบข้อมูลไม่สำเร็จ', 'error');
-    }
-    // }
-  }
-  private async buttonEdit() {
-    this.TitleList = await this.masTitleService
-      .MasTitleMaingetAll()
-      .toPromise();
-    this.staffAll = await this.masStaffService.MasStaffMaingetAll().toPromise();
-    this.Staff_StaffCode_List = this.staffAll.map(m => ({
-      text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
-      value: m.StaffCode
-    }));
-    this.StaffList = this.staffAll.map(
-      m => `${m.TitleName}${m.FirstName} ${m.LastName}`
-    );
-    this.MasOfficeMainList = await this.masOfficeService
-      .MasOfficeMaingetAll()
-      .toPromise();
+  private buttonDelete() {}
+  private buttonEdit() {
     this.isEdit = true;
   }
   ngOnDestroy(): void {
