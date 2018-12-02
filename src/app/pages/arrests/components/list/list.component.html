@@ -1,0 +1,123 @@
+<!-- <app-horizontal-timeline></app-horizontal-timeline> -->
+
+<div *ngIf="advSearch | async" class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-close></app-card-actions-close>
+        <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal" autocomplete="off" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm.value)">
+            <div>
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3">เลขที่ใบงาน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" name="ArrestCode" ngModel class="form-control form-control-sm"
+                                placeholder="">
+                        </div>
+                    </div>
+
+                    <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group input-group">
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom"
+                                [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
+
+                            <label for="OccurrenceDateTo">&nbsp;ถึง&nbsp;</label>
+
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" id="OccurrenceDateTo"
+                                name="OccurrenceDateTo" [options]="myDatePickerOptions" (dateChanged)="onEDateChange($event)"
+                                [(ngModel)]="OccurrenceDateTo"></my-date-picker-th>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3">ชื่อผู้กล่าวหา :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" name="StaffName" ngModel class="form-control form-control-sm"
+                                placeholder="">
+                        </div>
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-3">หน่วยงาน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" name="OfficeName" ngModel class="form-control form-control-sm"
+                                placeholder="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3">เขียนที่ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" name="ArrestStation" ngModel class="form-control form-control-sm"
+                                placeholder="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-10"></div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="card unset-radius">
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+            <table #arrestTable class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th>เลขที่ใบงาน</th>
+                        <th>วันที่จับกุม</th>
+                        <th>ชื่อผู้กล่าวหา</th>
+                        <th>หน่วยงาน</th>
+                        <th>เขียนที่</th>
+                        <th>สถานะการรับคดี</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="cursor: pointer;" *ngFor="let item of arrestList; let i=index" (click)="clickView(item.ArrestCode)">
+                        <td class="text-center">{{item.RowsId}}</td>
+                        <td>{{item.ArrestCode}}</td>
+                        <td class="text-center">{{item.OccurrenceDate}}</td>
+                        <td>
+                            <div *ngFor="let staff of item.ArrestStaff;">{{staff.FullName}}</div>
+                        </td>
+                        <td>
+                            <div *ngFor="let staff of item.ArrestStaff;">{{staff.OfficeShortName}}</div>
+                        </td>
+                        <td>{{item.ArrestStation}}</td>
+                        <td [ngSwitch]="item.IsLawsuitComplete">
+                            <span *ngSwitchCase="0">ยังไม่รับคดี</span>
+                            <span *ngSwitchCase="1">รับคดี</span>
+                        </td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.ArrestCode)">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer card-footer-unset">
+        <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+            [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+        </app-pagination-table>
+    </div>
+</div>

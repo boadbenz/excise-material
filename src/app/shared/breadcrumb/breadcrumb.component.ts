@@ -19,7 +19,6 @@ export class BreadcrumbComponent implements OnInit {
         private titleService: Title
     ) { }
     ngOnInit() {
-
         this.activatedRoute.firstChild.snapshot.children
             .filter(route => route.outlet === 'primary')
             .map(route => route.data)
@@ -41,6 +40,10 @@ export class BreadcrumbComponent implements OnInit {
                 this.pageInfo = event;
                 this.titleService.setTitle(event['title'])
             });
+
+        if (!this.pageInfo) {
+            this.pageInfo = this.activatedRoute.firstChild.snapshot.data;
+        }
     }
 
 }

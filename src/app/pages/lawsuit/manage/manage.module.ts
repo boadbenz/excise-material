@@ -11,11 +11,19 @@ import { HttpModule } from "@angular/http";
 import { NgbDatepickerI18n, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { SuspectModalModule } from "../../component/suspect-modal/suspect-modal.module";
 import { ModalLawbreakerModule } from "../../component/modal-lawbreaker/modal-lawbreaker.module";
-import { PrintDocModalModule } from "../../notices/print-doc-modal/print-doc-modal.module";
+import { PrintLawsuitModalModule } from '../print-doc-modal/print-doc-modal.module';
 import { DatepickerI18nService } from "../../../services/datepicker-i18n.service";
-import { NoticeService } from "../../notices/notice.service";
+import { MatDialogModule } from '@angular/material/dialog';
 import { ArrestsService } from "../../arrests/arrests.service";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProveService } from "../../prove/prove.service";
+import { BrowserModule } from "@angular/platform-browser";
+import { DetailModule } from "../detail/detail.module";
+import { MyDatePickerTHModule } from "mydatepicker-th";
+import { MyDatePickerModule } from "mydatepicker";
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { IndicmentModalComponent } from '../indictment/indicment-modal.component';
+import { DialogJudgment } from './dialog-judgment'
 
 const routes: Routes = [
   {
@@ -49,10 +57,18 @@ const routes: Routes = [
     CardActionsModule,
     SuspectModalModule,
     ModalLawbreakerModule,
-    PrintDocModalModule
+    PrintLawsuitModalModule,
+    MatDialogModule,
+    MyDatePickerTHModule,
+    MyDatePickerModule,
+    MatAutocompleteModule
+    // DetailModule,
   ],
+  entryComponents: [DialogJudgment],
   declarations: [
-    ManageComponent
+    ManageComponent,
+    DialogJudgment,
+    IndicmentModalComponent
   ], providers: [
     { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },
     LawsuitService,
@@ -60,4 +76,4 @@ const routes: Routes = [
     ProveService
   ]
 })
-export class ManageModule {}
+export class ManageModule { }
