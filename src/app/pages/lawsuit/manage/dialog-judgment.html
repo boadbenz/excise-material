@@ -22,7 +22,7 @@
         <div class="form-group row">
           <label class="col-form-label text-right col-md-3">ชื่อศาล: </label>
           <div class="col-md-9">
-            <input class="form-control" [matAutocomplete]="auto4" [ngClass]="{'ng-touched':isRequired}" [(ngModel)]="lawsuitArrestFormDialog.CourtName" type="text"
+            <input class="form-control" [matAutocomplete]="auto4" [disabled]="!editMode" [ngClass]="{'ng-touched':isRequired}" [(ngModel)]="lawsuitArrestFormDialog.CourtName" type="text"
             (input)="onChangeCourt($event.target.value)" name="CourtName" required>
             <mat-autocomplete #auto4="matAutocomplete">
               <mat-option *ngFor="let value of SearchMasCourtList" [value]="value.CourtName" (onSelectionChange)="selectCourt(value)">

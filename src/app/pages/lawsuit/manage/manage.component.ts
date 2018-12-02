@@ -462,11 +462,7 @@ export class ManageComponent implements OnInit {
     this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
     /// save IsLawsuitComplete = 1
-    // if (this.lawsuitForm.controls['LawsuitDocument'].value.length > 0) {
-    //   this.lawsuitForm.controls['LawsuitDocument'].value.map(async result => {
-    //     let document = await this.lawsuitService.MasDocumentMaingetinsAll(result)
-    //   })
-    // }
+    
     if (IsLawsuitComplete == 1) {
       let lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
       let dateNow = (this.lawsuitForm.controls['LawsuitDate'].value).date
@@ -518,8 +514,8 @@ export class ManageComponent implements OnInit {
         "LawsuitEnd": Number(this.LawsuitTableList.value[0].LawsuitEnd),
         "LawsuitStaff": tempLawsuitStaff
       }
-      // let pathfile = await this.lawsuitService.MasDocumentMaininsAll(4,this.LawsuitID)
-      console.log(json)
+      let pathfile = await this.lawsuitService.MasDocumentMaininsAll(4,this.LawsuitID)
+      console.log('pathfile',pathfile)
       let update = await this.lawsuitService.LawsuitformupdByCon(json)
       let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
       console.log(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
@@ -540,6 +536,11 @@ export class ManageComponent implements OnInit {
           index++;
         });
         if (update.IsSuccess == "True") {
+          if (this.lawsuitForm.controls['LawsuitDocument'].value.length > 0) {
+            this.lawsuitForm.controls['LawsuitDocument'].value.map(async result => {
+              let document = await this.lawsuitService.MasDocumentMaingetinsAll(result)
+            })
+          }
           alert("บันทึกสำเร็จ")
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           this.navService.setEditField(true);
@@ -557,6 +558,11 @@ export class ManageComponent implements OnInit {
 
       } else {
         if (update.IsSuccess == "True") {
+          if (this.lawsuitForm.controls['LawsuitDocument'].value.length > 0) {
+            this.lawsuitForm.controls['LawsuitDocument'].value.map(async result => {
+              let document = await this.lawsuitService.MasDocumentMaingetinsAll(result)
+            })
+          }
           alert("บันทึกสำเร็จ")
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           this.navService.setEditField(true);
