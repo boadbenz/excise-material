@@ -39,7 +39,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
-
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -67,7 +68,19 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onCancel.next(false);
-        this.buttonCancel();
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonCancel();
+          }
+        });
       }
     });
     this.navService.onSave.takeUntil(this.destroy$).subscribe(command => {
@@ -86,7 +99,19 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.navService.onDelete.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onDelete.next(false);
-        this.buttonDelete();
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonDelete();
+          }
+        });
       }
     });
     this.navService.onPrint.takeUntil(this.destroy$).subscribe(command => {
@@ -98,7 +123,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.5');
+    this.sidebarService.setVersion('0.0.1.7');
     this.pageLoad();
   }
 
@@ -520,17 +545,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       // 3.1
       if (!responseSave) {
         // 3.1.1
-        alert('บันทึกไม่สำเร็จ');
+        swal('บันทึกไม่สำเร็จ', 'error');
       } else {
         // 3.2
         // 3.2.1
-        alert('บันทึกสำเร็จ');
+        swal('บันทึกสำเร็จ', 'success');
 
         // 3.2.2
         this.pageLoad();
       }
     } else {
-      alert('1.	ทำการตรวจสอบข้อมูล Input ที่นำเข้า (Validate/Verify) : False');
+      swal('ตรวจสอบข้อมูล Input ที่นำเข้า (Validate/Verify)', 'warning');
     }
     // 4 END
   }
@@ -564,163 +589,163 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     let RequestCommandupdDelete = false;
 
     // 1
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      // 1.1
-      let ResponseCommonRequestBribeRewardupdDeleteStatus: IResponseCommon;
-      // 1.1.1
-      switch (this.PageLoadHaveNotice$.getValue()) {
-        // 1.1.1(1)
-        case 0:
-          // 1.1.1(1.1)
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    // 1.1
+    let ResponseCommonRequestBribeRewardupdDeleteStatus: IResponseCommon;
+    // 1.1.1
+    switch (this.PageLoadHaveNotice$.getValue()) {
+      // 1.1.1(1)
+      case 0:
+        // 1.1.1(1.1)
+        ResponseCommonRequestBribeRewardupdDeleteStatus = await this.requestBribeRewardService
+          .RequestBribeRewardupdDelete({
+            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+          })
+          .toPromise();
+        RequestBribeRewardupdDeleteStatus =
+          ResponseCommonRequestBribeRewardupdDeleteStatus.IsSuccess;
+        RequestCommandupdDelete = true;
+        break;
+
+      // 1.1.1(2)
+      case 1:
+        // 1.1.1(2.1)
+        const RequestBribe: IRequestBribe[] = await this.requestBribeService
+          .RequestBribegetByCommandID({
+            CommandID: this.CommandID$.getValue()
+          })
+          .toPromise();
+
+        // 1.1.1(2.2)
+
+        if (RequestBribe.length > 0) {
+          // 1.1.1(2.2.2)
+
+          // 1.1.1(2.2.2(1))
           ResponseCommonRequestBribeRewardupdDeleteStatus = await this.requestBribeRewardService
             .RequestBribeRewardupdDelete({
               RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
             })
             .toPromise();
-          RequestBribeRewardupdDeleteStatus =
-            ResponseCommonRequestBribeRewardupdDeleteStatus.IsSuccess;
-          RequestCommandupdDelete = true;
-          break;
+          RequestBribeRewardupdDeleteStatus = await ResponseCommonRequestBribeRewardupdDeleteStatus.IsSuccess;
 
-        // 1.1.1(2)
-        case 1:
-          // 1.1.1(2.1)
-          const RequestBribe: IRequestBribe[] = await this.requestBribeService
-            .RequestBribegetByCommandID({
+          // 1.1.1(2.2.2(2))
+          const ResponseCommon: IResponseCommon = await this.requestCommandService
+            .RequestCommandupdDelete({
               CommandID: this.CommandID$.getValue()
             })
             .toPromise();
-
-          // 1.1.1(2.2)
-
-          if (RequestBribe.length > 0) {
-            // 1.1.1(2.2.2)
-
-            // 1.1.1(2.2.2(1))
-            ResponseCommonRequestBribeRewardupdDeleteStatus = await this.requestBribeRewardService
-              .RequestBribeRewardupdDelete({
-                RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-              })
-              .toPromise();
-            RequestBribeRewardupdDeleteStatus = await ResponseCommonRequestBribeRewardupdDeleteStatus.IsSuccess;
-
-            // 1.1.1(2.2.2(2))
-            const ResponseCommon: IResponseCommon = await this.requestCommandService
-              .RequestCommandupdDelete({
-                CommandID: this.CommandID$.getValue()
-              })
-              .toPromise();
-            RequestCommandupdDelete = ResponseCommon.IsSuccess;
-          }
-          break;
-      }
-
-      // 1.1.2
-      if (
-        !(
-          RequestBribeRewardupdDeleteStatus === false ||
-          RequestCommandupdDelete === false
-        )
-      ) {
-        // 1.1.2(1)
-        alert('ลบข้อมูลสำเร็จ'); // 1.1.2(1.1)
-        this.router.navigate(['/reward/list']); // 1.1.2(1.1)
-      } else {
-        // 1.1.2(2)
-        alert('ลบข้อมูลไม่สำเร็จ'); // 1.1.2(2.1)
-      }
-    } else {
-      // 1.2
-      // 1.2.1 Close
+          RequestCommandupdDelete = ResponseCommon.IsSuccess;
+        }
+        break;
     }
+
+    // 1.1.2
+    if (
+      !(
+        RequestBribeRewardupdDeleteStatus === false ||
+        RequestCommandupdDelete === false
+      )
+    ) {
+      // 1.1.2(1)
+      swal('ลบข้อมูลสำเร็จ', 'success'); // 1.1.2(1.1)
+      this.router.navigate(['/reward/list']); // 1.1.2(1.1)
+    } else {
+      // 1.1.2(2)
+      swal('ลบข้อมูลไม่สำเร็จ', 'error'); // 1.1.2(2.1)
+    }
+    // } else {
+    // 1.2
+    // 1.2.1 Close
+    // }
     // 2 END
   }
   public buttonCancel() {
     // ILG60-03-02-00-00-E04
     // 1 START
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      // 1.1
-      if (this.ILG60_08_02_00_00E11_EXPANDED === true) {
-        // 1.1.1
-        // 1.1.1(1)
-        const requestBribe: IRequestBribe[] =
-          this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
-        if (requestBribe.length === 0) {
-          // 1.1.1(1.1)
-          // 1.1.1(1.1.1) => // 1.1.1(1.2)
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    // 1.1
+    if (this.ILG60_08_02_00_00E11_EXPANDED === true) {
+      // 1.1.1
+      // 1.1.1(1)
+      const requestBribe: IRequestBribe[] =
+        this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
+      if (requestBribe.length === 0) {
+        // 1.1.1(1.1)
+        // 1.1.1(1.1.1) => // 1.1.1(1.2)
+      }
+      // 1.1.1(1.2)
+      // 1.1.1(1.2.1)
+      this.pageLoad();
+    }
+
+    if (this.ILG60_08_02_00_00E14_EXPANDED === true) {
+      // 1.1.2
+      // 1.1.2(1)
+      const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
+      if (requestReward && requestReward.length === 0) {
+        // 1.1.2(1.1)
+        // 1.1.2(1.1.2)
+        switch (this.PageLoadHaveNotice$.getValue()) {
+          // 1.1.2(1.1.2(1))
+          case 0:
+            // 1.1.2(1.1.2(1.1))
+            this.requestBribeRewardService.RequestBribeRewardupdDelete({
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+            });
+            // 1.1.2(1.1.2(1.2))
+            this.router.navigate(['/reward/list']);
+            break;
+
+          // 1.1.2(1.1.2(2))
+          case 1:
+            // 1.1.2(1.1.2(2.1))
+            this.requestBribeService
+              .RequestBribegetByCommandID({
+                CommandID: this.CommandID$.getValue()
+              })
+              .subscribe((res: IRequestBribe[]) => {
+                // 1.1.2(1.1.2(2.2))
+                if (res.length > 0) {
+                  // 1.1.2(1.1.2(2.2.1))
+                  // 1.1.2(1.1.2(2.2.1.1))
+                  this.requestBribeRewardService
+                    .RequestBribeRewardupdDelete({
+                      RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+                    })
+                    .subscribe();
+                } else {
+                  // 1.1.2(1.1.2(2.2.2))
+                  // 1.1.2(1.1.2(2.2.2.1))
+                  this.requestBribeRewardService
+                    .RequestBribeRewardupdDelete({
+                      RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+                    })
+                    .subscribe();
+
+                  // 1.1.2(1.1.2(2.2.2.2))
+                  this.requestCommandService
+                    .RequestCommandupdDelete({
+                      CommandID: this.CommandID$.getValue()
+                    })
+                    .subscribe();
+                }
+              });
+
+            // 1.1.2(1.1.2(2.3))
+            this.router.navigate(['/reward/list']);
+            break;
         }
-        // 1.1.1(1.2)
-        // 1.1.1(1.2.1)
+      } else {
+        // 1.1.2(1.2)
+        // 1.1.2(1.2.1)
         this.pageLoad();
       }
-
-      if (this.ILG60_08_02_00_00E14_EXPANDED === true) {
-        // 1.1.2
-        // 1.1.2(1)
-        const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
-        if (requestReward && requestReward.length === 0) {
-          // 1.1.2(1.1)
-          // 1.1.2(1.1.2)
-          switch (this.PageLoadHaveNotice$.getValue()) {
-            // 1.1.2(1.1.2(1))
-            case 0:
-              // 1.1.2(1.1.2(1.1))
-              this.requestBribeRewardService.RequestBribeRewardupdDelete({
-                RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-              });
-              // 1.1.2(1.1.2(1.2))
-              this.router.navigate(['/reward/list']);
-              break;
-
-            // 1.1.2(1.1.2(2))
-            case 1:
-              // 1.1.2(1.1.2(2.1))
-              this.requestBribeService
-                .RequestBribegetByCommandID({
-                  CommandID: this.CommandID$.getValue()
-                })
-                .subscribe((res: IRequestBribe[]) => {
-                  // 1.1.2(1.1.2(2.2))
-                  if (res.length > 0) {
-                    // 1.1.2(1.1.2(2.2.1))
-                    // 1.1.2(1.1.2(2.2.1.1))
-                    this.requestBribeRewardService
-                      .RequestBribeRewardupdDelete({
-                        RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-                      })
-                      .subscribe();
-                  } else {
-                    // 1.1.2(1.1.2(2.2.2))
-                    // 1.1.2(1.1.2(2.2.2.1))
-                    this.requestBribeRewardService
-                      .RequestBribeRewardupdDelete({
-                        RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-                      })
-                      .subscribe();
-
-                    // 1.1.2(1.1.2(2.2.2.2))
-                    this.requestCommandService
-                      .RequestCommandupdDelete({
-                        CommandID: this.CommandID$.getValue()
-                      })
-                      .subscribe();
-                  }
-                });
-
-              // 1.1.2(1.1.2(2.3))
-              this.router.navigate(['/reward/list']);
-              break;
-          }
-        } else {
-          // 1.1.2(1.2)
-          // 1.1.2(1.2.1)
-          this.pageLoad();
-        }
-      }
-    } else {
-      // 1.2
-      // 1.2.1 'WAIT'
     }
+    // } else {
+    //   // 1.2
+    //   // 1.2.1 'WAIT'
+    // }
     // 2 END
   }
   public async buttonPrint() {
