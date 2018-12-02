@@ -22,10 +22,17 @@
                             readonly>
                     </div>
                 </div>
+
                 <label for="" class="col-lg-2 col-sm-4 control-label">คดีสืบสวนที่ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="InvestigateNo" class="form-control form-control-sm" [readOnly]="showEditField"
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <div class="input-group">
+                        <input type="text" #investigateNo0 class="form-control form-control-sm" [readOnly]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required (change)="onChangeInvestigateNo()">
+                        <strong>&nbsp;&nbsp;/&nbsp;&nbsp;</strong>
+                        <input type="text" #investigateNo1 class="form-control form-control-sm" [readOnly]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required (change)="onChangeInvestigateNo()">
+                    </div>
+
                 </div>
             </div>
 
@@ -69,7 +76,6 @@
             <h4 class="card-title m-b-0">รายงานการสืบสวน</h4>
         </div>
         <div class="card-body" *ngIf="card2">
-
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
@@ -90,7 +96,8 @@
                     </tr>
                 </thead>
                 <tbody formArrayName='InvestigateDetail'>
-                    <tr *ngFor="let item of InvestigateDetail.controls; let i=index;" [formGroupName]='i'>
+                    <tr style="cursor: pointer;" *ngFor="let item of InvestigateDetail.controls; let i=index;"
+                        [formGroupName]='i' (click)="onViewInvesDetail(item.get('InvestigateDetailID').value, item.get('InvestigateSeq').value)">
                         <td class="text-center">{{i+1}}</td>
                         <td class="text-center">{{item.get('InvestigateSeq').value}}</td>
                         <td>
@@ -110,8 +117,7 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="onViewInvesDetail(item.get('InvestigateDetailID').value)"
-                                *ngIf="!showEditField">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="onViewInvesDetail(item.get('InvestigateDetailID').value, item.get('InvestigateSeq').value)">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
                         </td>

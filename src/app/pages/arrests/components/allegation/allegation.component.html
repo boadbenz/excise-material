@@ -22,20 +22,22 @@
           </ng-template>
         </div>
 
-        <label for="" class="col-lg-2 col-sm-4 control-label">ฐานความผิด :</label>
-        <div class="form-group col-lg-4 col-md-7 col-sm-8">
-          <input formControlName="GuiltBaseName" type="text" class="form-control form-control-sm" required readonly>
-        </div>
-      </div>
-      <div class="row">
         <label for="" class="col-lg-2 col-sm-4 control-label">บทกำหนดโทษ :</label>
         <div class="form-group col-lg-4 col-md-7 col-sm-8">
           <input formControlName="SectionNo" type="text" class="form-control form-control-sm" required readonly>
         </div>
+      </div>
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-4 control-label">ฐานความผิด :</label>
+        <div class="form-group col-lg-4 col-md-7 col-sm-8">
+          <textarea formControlName="GuiltBaseName" name="" id="" rows="4" class="form-control form-control-sm" required readonly></textarea>
+          <!-- <input type="text"> -->
+        </div>
 
         <label for="" class="col-lg-2 col-sm-4 control-label">อัตราโทษ :</label>
         <div class="form-group col-lg-4 col-md-7 col-sm-8">
-          <input formControlName="PenaltyDesc" type="text" class="form-control form-control-sm" required readonly>
+            <textarea formControlName="PenaltyDesc" rows="4" class="form-control form-control-sm" required readonly></textarea>
+          <!-- <input  type="text"> -->
         </div>
       </div>
     </div>

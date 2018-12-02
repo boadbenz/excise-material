@@ -30,6 +30,7 @@ import { TransactionRunningService } from './services/transaction-running.servic
 import { MasDocumentMainService } from './services/mas-document-main.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManageConfig } from './pages/arrests/components/manage/manage.config';
+
 @NgModule({
     declarations: [
         AppComponent,

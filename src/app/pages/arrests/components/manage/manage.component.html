@@ -39,7 +39,7 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่ใบงาน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" formControlName="ArrestCode" class="form-control form-control-sm" readonly
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                        [ngClass]="{'ng-touched':isRequired}" required style="color: black !important; font-size: .9rem !important">
                 </div>
 
                 <label for="" class="col-lg-2 col-sm-4 control-label">เขียนที่ :</label>
@@ -349,7 +349,7 @@
                             <th class="text-center">ลำดับ</th>
                             <th>ของกลาง</th>
                             <th>จำนวน</th>
-                            <th>หน่วย</th>
+                            <th>หน่วยภาชนะ</th>
                             <th>ปริมาณสุทธิ</th>
                             <th>หน่วย</th>
                             <th></th>
@@ -426,10 +426,10 @@
                     <thead>
                         <tr>
                             <th class="text-center">ลำดับ</th>
-                            <th class="text-center">ฐานความผิดมาตรา</th>
+                            <th>ฐานความผิดมาตรา</th>
                             <th>ฐานความผิด</th>
-                            <th class="text-center">บทกำหนดโทษ</th>
-                            <th>อัตราโทษ</th>
+                            <th>ชื่อผู้กระทำผิด</th>
+                            <th>รายละเอียดของกลาง</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -444,21 +444,30 @@
                                         </span>
                                     </div>
                                 </td>
-                                <td style="max-width: 200px;">{{item.get('GuiltBaseName').value}}</td>
-                                <td class="text-center">
-                                    <div *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
-                                        {{subSectionRule.get('SectionNo').value}}
-                                    </div>
-                                </td>
                                 <td style="max-width: 200px;">
-                                    <div *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
-                                        <span *ngFor="let section of getArrestLawSection(subSectionRule)">
-                                            <span *ngFor="let penalty of getArrestLawPenalty(section)">
-                                                {{penalty.get('PenaltyDesc').value}}
-                                            </span>
-                                        </span>
-                                    </div>
+                                    {{item.get('GuiltBaseName').value}}
                                 </td>
+                            </ng-template>
+
+                            <td>
+                                <ng-template ngFor let-item [ngForOf]="getArrestIndicmentDetail(indict)" let-i="index">
+                                    <div *ngFor="let lawb of getArrestLawbreaker(item);">
+                                        {{ lawb.get('LawbreakerTitleName')?.value }}
+                                        {{ lawb.get('LawbreakerFirstName')?.value }}
+                                        {{ lawb.get('LawbreakerMiddleName')?.value }}
+                                        {{ lawb.get('LawbreakerLastName')?.value }}
+                                        {{ lawb.get('LawbreakerOtherName')?.value }}
+                                    </div>
+                                </ng-template>
+                            </td>
+                            <td style="max-width: 200px;">
+                                <ng-template ngFor let-item [ngForOf]="getArrestIndicmentDetail(indict)" let-i="index">
+                                    <div *ngFor="let prod of getArrestProductDetail(item);">
+                                        {{prod.get('ProductDesc').value}}
+                                    </div>
+                                </ng-template>
+                            </td>
+                            <ng-template ngFor let-item [ngForOf]="getArrestLawGuitbase(indict)" let-i="index">
                                 <td class="text-center">
                                     <a href="javaScript:void(0);" class="text-secondary" (click)="viewAllegation(indict.get('IndictmentID').value, item.get('GuiltBaseID').value)">
                                         <i class="fa fa-eye fa-lg"></i>
