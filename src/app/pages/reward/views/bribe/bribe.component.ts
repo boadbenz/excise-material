@@ -383,15 +383,12 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     switch (this.mode) {
       case 'C':
         // 1.1
-        this.MasStaffMaingetAllList = await this.masStaffService
+        this.MasStaffMaingetAllList = (await this.masStaffService
           .MasStaffMaingetAll()
-          .pipe(
-            map(m => ({
-              ...m,
-              FullName: m.TitleName + m.FirstName + ' ' + m.LastName
-            }))
-          )
-          .toPromise(); // 1.1.1
+          .toPromise()).map(m => ({
+            ...m,
+            FullName: m.TitleName + m.FirstName + ' ' + m.LastName
+          })); // 1.1.1
         this.MasOfficeMainAllList = await this.masOfficeService
           .MasOfficeMaingetAll()
           .toPromise(); // 1.1.2
