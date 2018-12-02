@@ -13,14 +13,6 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 export class PrintDocModalComponent implements OnInit {
     printDoc = [
         {
-<<<<<<< HEAD
-            DocName: 'รายงานนำส่งรายได้',
-            DocType: 'แบบฟอร์ม'
-        }
-    ]
-
-    @Input() ArrestCode: string;
-=======
             IsChecked: false,
             DocName: 'รายงานนำส่งรายได้',
             DocType: 0,
@@ -29,20 +21,10 @@ export class PrintDocModalComponent implements OnInit {
     ]
 
     @Input() RevenueID: string;
->>>>>>> Kat_Develop
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
 
-<<<<<<< HEAD
-    constructor() { }
-
-    ngOnInit() {
-    }
-
-    onPrint(f: any) {
-
-=======
     constructor(
         private revenueService: IncomeService,
         private preloader: PreloaderService
@@ -68,7 +50,6 @@ export class PrintDocModalComponent implements OnInit {
         else{
             alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
         }
->>>>>>> Kat_Develop
     }
 
     dismiss(e: any) {

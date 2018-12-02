@@ -49,7 +49,7 @@
         </div>
         <div class="card-body">
 
-            
+
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่นำส่งเงิน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
@@ -62,47 +62,36 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <div style="width:45%">
-<<<<<<< HEAD
-                        <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" 
-                        [ngClass]="{'ng-touched':isRequired}" [disabled]="mode=='R'" 
-                        required ></my-date-picker-th>
-                    </div>
-                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 35px;" class="form-control form-control-sm" [disabled]="mode=='R'">
-=======
                         <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="mode=='R'"
                             required></my-date-picker-th>
                     </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                     <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 35px;" class="form-control form-control-sm"
                         [disabled]="mode=='R'">
->>>>>>> Kat_Develop
                 </div>
             </div>
 
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
                 </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <span style="margin-right: 5px">กค.</span>
+                    <input type="text" [(ngModel)]="RevenueNo" name="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
+                    <input type="text" [(ngModel)]="RevenueNoYear" name="RevenueNoYear" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+                <!-- <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
                             [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
-                </div>
+                </div> -->
 
                 <label for="" class="col-lg-2 col-md-4 control-label">เรียน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-<<<<<<< HEAD
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="InformTo" name="InformTo" placeholder="พิมพ์ข้อความ" aria-label="Number"
-                    matInput [matAutocomplete]="auto4" (input)="InformToonAutoChange($event.target.value)"
-                    [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
-                    <mat-option *ngFor="let infOption of InformTooptions" [value]="infOption.TitleName + infOption.FirstName + ' ' + infOption.LastName">
-                        {{ infOption.TitleName }}{{ infOption.FirstName }} {{ infOption.LastName }}
-                    </mat-option>
-                </mat-autocomplete>
-=======
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="InformTo" name="InformTo" placeholder="พิมพ์ข้อความ"
                         aria-label="Number" matInput [matAutocomplete]="auto4" (input)="InformToonAutoChange($event.target.value)"
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
@@ -111,7 +100,6 @@
                             {{ infOption.TitleName }}{{ infOption.FirstName }} {{ infOption.LastName }}
                         </mat-option>
                     </mat-autocomplete>
->>>>>>> Kat_Develop
                 </div>
             </div>
 
@@ -120,21 +108,12 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-<<<<<<< HEAD
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="RevenueStation" name="RevenueStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
-                            matInput [matAutocomplete]="auto3" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
-                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                        <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete">
-                            <mat-option *ngFor="let option of options" [value]="option.OfficeName" 
-                                (click)="onAutoSelecteWord(option)" (onSelectionChange)="onAutoSelecteWord(option)">
-=======
                         <input type="text" class="form-control form-control-sm" [(ngModel)]="RevenueStation" name="RevenueStation" placeholder="พิมพ์ข้อความ"
                             aria-label="Number" matInput [matAutocomplete]="auto3" (input)="onAutoChange($event.target.value)"
                             (focus)="onAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                             required>
                         <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete">
                             <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)" (onSelectionChange)="onAutoSelecteWord(option)">
->>>>>>> Kat_Develop
                                 {{ option.OfficeName }}
                             </mat-option>
                         </mat-autocomplete>
@@ -144,16 +123,10 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-<<<<<<< HEAD
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ" aria-label="Number"
-                        matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-=======
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ"
                         aria-label="Number" matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)"
                         (focus)="StaffSendonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                         required>
->>>>>>> Kat_Develop
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                         <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
                             (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
@@ -175,22 +148,10 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-<<<<<<< HEAD
-                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required readonly>
-                    </div>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required readonly>
-                </div>
-=======
                         <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
                             required readonly>
                     </div>
                 </div>
->>>>>>> Kat_Develop
             </div>
 
             <div class="row">
@@ -198,15 +159,9 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-<<<<<<< HEAD
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffName" name="StaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
-                            matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
-                            [ngClass]="{'ng-touched':isRequired}" required [disabled]="mode=='R'">
-=======
                         <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffName" name="StaffName" placeholder="พิมพ์ข้อความ"
                             aria-label="Number" matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)"
                             (focus)="StaffonAutoFocus($event.target.value)" [ngClass]="{'ng-touched':isRequired}" required [disabled]="mode=='R'">
->>>>>>> Kat_Develop
                         <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
                             <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                                 (click)="StaffonAutoSelecteWord(sOption)" (onSelectionChange)="StaffonAutoSelecteWord(sOption)">
@@ -216,26 +171,12 @@
                     </div>
                 </div>
 
-<<<<<<< HEAD
-                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="PosStaff" name="PosStaff" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required readonly>
-                </div>
-            </div>
-            <div class="row">
-=======
->>>>>>> Kat_Develop
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-<<<<<<< HEAD
-                        <input type="text" [(ngModel)]="DeptStaff" name="DeptStaff" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required readonly>
-=======
                         <input type="text" [(ngModel)]="DeptStaff" name="DeptStaff" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
                             required readonly>
->>>>>>> Kat_Develop
                     </div>
                 </div>
             </div>
@@ -250,11 +191,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">สถานะนำส่งเงิน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-<<<<<<< HEAD
-                        <!-- [(ngModel)]="RevenueStatus" name="RevenueStatus" -->
-=======
                     <!-- [(ngModel)]="RevenueStatus" name="RevenueStatus" -->
->>>>>>> Kat_Develop
                     <select class="form-control form-control-sm" disabled [(ngModel)]="RevenueStatus" name="RevenueStatus">
                         <option value="0"></option>
                         <option value="1">นำส่งเงินรายได้</option>
@@ -267,11 +204,7 @@
                 </div>
 
                 <div class="form-group col-lg-2 col-md-7 col-sm-8">
-<<<<<<< HEAD
-                    <button type="button" (click)="ShowRevenueCompare()" class="btn btn-block btn-themecolor" [disabled]="showEditField" >อัพเดตรายการนำส่ง</button>
-=======
                     <button type="button" (click)="ShowRevenueCompare()" class="btn btn-block btn-themecolor" [disabled]="showEditField">รายงานที่ยังไม่นำส่งเงิน</button>
->>>>>>> Kat_Develop
                 </div>
             </div>
         </div>
@@ -294,12 +227,8 @@
                                 <thead>
                                     <tr>
                                         <th>
-<<<<<<< HEAD
-                                            <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();" [disabled]="showEditField">
-=======
                                             <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();"
                                                 [disabled]="showEditField">
->>>>>>> Kat_Develop
                                             <label for="H_0" class="m-0"></label>
                                         </th>
                                         <th style="text-align: center">ลำดับ</th>
@@ -315,13 +244,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-<<<<<<< HEAD
-                                    <tr *ngIf="!ListRevenueDetailPaging"><td colspan="11">ไม่พบข้อมูล</td></tr>
-                                    <tr *ngFor="let item of ListRevenueDetailPaging; let i=index;">
-                                        <td style="text-align: center">
-                                            <input type="checkbox" class="filled-in chk-col-indigo" id="ListChK{{i}}" name="ListChK{{i}}" [(ngModel)]="item.IsCheck"
-                                                (change)="checkIfAllChbSelected();" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField" >
-=======
                                     <tr *ngIf="!ListRevenueDetailPaging">
                                         <td colspan="11">ไม่พบข้อมูล</td>
                                     </tr>
@@ -329,7 +251,6 @@
                                         <td style="text-align: center">
                                             <input type="checkbox" class="filled-in chk-col-indigo" id="ListChK{{i}}" name="ListChK{{i}}" [(ngModel)]="item.IsCheck"
                                                 (change)="checkIfAllChbSelected();" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField">
->>>>>>> Kat_Develop
                                             <label [for]="'ListChK'+i" class="m-0"></label>
                                         </td>
                                         <th style="text-align: center">{{i + 1}}</th>
@@ -367,11 +288,6 @@
                     </div>
                 </div>
 
-<<<<<<< HEAD
-                    <label for="" class="col-lg-2 col-md-4 control-label">จำนวนคดี :</label>
-                    <div class="col-lg-4 col-md-7 form-group ">
-                        <input type="text" [(ngModel)]="MistreatNo" name="MistreatNo" class="form-control form-control-sm" readonly>
-=======
                 <div class="row">
                     <label for="" class="col-lg-2 col-md-2 control-label">เงินสินบน :</label>
                     <div class="form-group col-lg-2 col-md-7">
@@ -386,7 +302,6 @@
                     <label for="" class="col-lg-2 col-md-2 control-label">เงินส่งคลัง :</label>
                     <div class="form-group col-lg-2 col-md-7">
                         <input type="text" [(ngModel)]="RewardMoney" name="RewardMoney" class="form-control form-control-sm" readonly>
->>>>>>> Kat_Develop
                     </div>
                 </div>
 

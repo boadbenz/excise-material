@@ -58,8 +58,4 @@ export class RevenueDetail {
     public IsCheck?: boolean;
     public IsNewItem?: boolean;
     public IsDelItem?: boolean;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> Kat_Develop

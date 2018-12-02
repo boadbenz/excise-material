@@ -1,80 +1,28 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-
 import { Router } from '@angular/router';
-
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-
 import { IncomeService } from '../income.service';
-
 import { HttpErrorResponse } from '@angular/common/http';
-<<<<<<< HEAD
-
-import { Revenue } from '../revenue';
-
-=======
 import { Revenue } from '../Revenue';
->>>>>>> Kat_Develop
 import { pagination } from '../../../config/pagination';
-
 import { Message } from '../../../config/message';
 import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { MatAutocomplete } from '@angular/material';
-
-import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
-
-import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
-
-import { SidebarService } from '../../../shared/sidebar/sidebar.component';
-
-import { PreloaderService } from '../../../shared/preloader/preloader.component';
-
-import { MatAutocomplete } from '@angular/material';
-
-
+import swal from 'sweetalert2';
 
 @Component({
-
     selector: 'app-list',
-
     templateUrl: './list.component.html'
-
 })
-
 export class ListComponent implements OnInit, OnDestroy {
 
-
-
     advSearch: any;
-
     revenue = new Array<Revenue>();
-
     RevenueList = new Array<Revenue>();
-
     paginage = pagination;
-<<<<<<< HEAD
-
-    DateStartTo: any;
-
-    _dateStartFrom: any;
-
-    _dateStartTo: any;
-
-
-
-    StatusOption = [];
-
-    options = [];
-
-    rawOptions = [];
-
-    RevenueStatus: string;
-
-
-
-=======
     DateStartTo: any;
     _dateStartFrom: any;
     _dateStartTo: any;
@@ -84,105 +32,33 @@ export class ListComponent implements OnInit, OnDestroy {
     rawOptions = [];
     RevenueStatus: string;
 
->>>>>>> Kat_Develop
     private subOnSearch: any;
     private subSetNextPage: any;
 
-    private subSetNextPage: any;
-
-
-
     @ViewChild('revenueTable') revenueTable: ElementRef;
 
-
-
     constructor(
-
         private _router: Router,
-
         private navService: NavigationService,
-<<<<<<< HEAD
-
-        private sidebarService: SidebarService,
-
-        private incomeService: IncomeService,
-
-        private preloader: PreloaderService
-
-=======
         private sidebarService: SidebarService,
         private incomeService: IncomeService,
         private preloader: PreloaderService
->>>>>>> Kat_Develop
     ) {
-
         // set false
-
         this.navService.setEditButton(false);
-
         this.navService.setDeleteButton(false);
-
         this.navService.setPrintButton(false);
-
         this.navService.setSaveButton(false);
-
         this.navService.setCancelButton(false);
-
         this.navService.setNextPageButton(false);
-
         // set true
-
         this.navService.setSearchBar(true);
-
         this.navService.setNewButton(true);
-
         this.advSearch = this.navService.showAdvSearch;
-
     }
 
-<<<<<<< HEAD
-
-
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.14');
-
-
-
-        this.RevenueStatus = '';
-
-
-
-        // this.preloader.setShowPreloader(true);
-        // this.getDepartmentRevenue();
-
-        // this.onSearch({ Textsearch: "" });
-
-
-
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {
-                await this.navService.setOnSearch('');
-
-
-
-                let ts;
-
-                ts = { Textsearch: '' }
-
-                ts = Textsearch;
-
-
-
-                if (ts.Textsearch == null) { this.onSearch({ Textsearch: '' }); }
-
-                // tslint:disable-next-line:one-line
-                else { this.onSearch(Textsearch); }
-
-
-
-=======
-    async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.16');
+        this.sidebarService.setVersion('Revenue 0.0.0.17');
 
         this.RevenueStatus = "";
 
@@ -209,152 +85,30 @@ export class ListComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnNextPage(false);
                 this._router.navigate(['/income/manage', 'C', 'NEW']);
->>>>>>> Kat_Develop
             }
-
         })
-
-
-
-        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
-
-            if (status) {
-
-                await this.navService.setOnNextPage(false);
-
-                this._router.navigate(['/income/manage', 'C', 'NEW']);
-
-            }
-
-        })
-
     }
-
-
 
     ngOnDestroy(): void {
-
         this.subOnSearch.unsubscribe();
-<<<<<<< HEAD
-
         this.subSetNextPage.unsubscribe();
-
-=======
-        this.subSetNextPage.unsubscribe();
->>>>>>> Kat_Develop
     }
-
-
 
     onSearch(Textsearch: any) {
         this.preloader.setShowPreloader(true);
-<<<<<<< HEAD
-
-        this.incomeService.getByKeyword(Textsearch).subscribe(list => {
-=======
->>>>>>> Kat_Develop
 
         this.incomeService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
 
-<<<<<<< HEAD
-
-
-            this.preloader.setShowPreloader(false);
-
-        }, (err: HttpErrorResponse) => {
-
-            alert(Message.noRecord);
-
-=======
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord);
->>>>>>> Kat_Develop
+            swal('', Message.noRecord, 'warning');
+            //alert(Message.noRecord);
             this.RevenueList = [];
             this.preloader.setShowPreloader(false);
         });
-
     }
 
-<<<<<<< HEAD
-
-
-    async onAdvSearch(form: any) {
-
-        this.preloader.setShowPreloader(true);
-
-        let sDate, eDate, sDateRevenue, eDateRevenue;
-
-
-
-        if (form.value.DateStartFrom) {
-
-            sDate = form.value.DateStartFrom.date;
-
-
-
-            if (sDate !== undefined) {
-
-                sDateRevenue = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
-
-                form.value.DateStartFrom = setZeroHours(sDateRevenue);
-
-            }
-
-        }
-
-
-
-        if (form.value.DateStartTo) {
-
-            eDate = form.value.DateStartTo.date;
-
-
-
-            if (sDate !== undefined) {
-
-                eDateRevenue = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
-
-                form.value.DateStartTo = setZeroHours(eDateRevenue);
-
-            }
-
-        }
-
-
-
-        if (form.value.RevenueStatus === '') {
-
-            form.value.RevenueStatus = null;
-
-        }
-
-        await this.incomeService.getByConAdv(form.value).then(async list => {
-
-            this.onSearchComplete(list);
-
-            this.preloader.setShowPreloader(false);
-
-        }, (err: HttpErrorResponse) => {
-
-            alert(err.message);
-
-            this.preloader.setShowPreloader(false);
-
-        });
-
-    }
-
-
-
-    async onSearchComplete(list: any) {
-
-        this.revenue = [];
-
-
-
-=======
     async onAdvSearch(form: any) {
         this.preloader.setShowPreloader(true);
         let sDate, eDate, sDateRevenue, eDateRevenue;
@@ -385,7 +139,8 @@ export class ListComponent implements OnInit, OnDestroy {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            swal('', err.message, 'error');
+            //alert(err.message);
             this.preloader.setShowPreloader(false);
         });
     }
@@ -393,53 +148,14 @@ export class ListComponent implements OnInit, OnDestroy {
     async onSearchComplete(list: any) {
         this.revenue = [];
 
->>>>>>> Kat_Develop
         if (!list.length) {
-
-            alert(Message.noRecord);
-<<<<<<< HEAD
-
+            swal('', Message.noRecord, 'warning');
+            //alert(Message.noRecord);
             this.RevenueList = [];
 
-
-
-=======
-            this.RevenueList = [];
-
->>>>>>> Kat_Develop
             return false;
-
         }
 
-<<<<<<< HEAD
-
-
-        await list.map((item) => {
-
-            let StaffSendMoney;
-
-            item.RevenueDate = toLocalShort(item.RevenueDate);
-
-            // tslint:disable-next-line:no-shadowed-variable
-            StaffSendMoney = item.RevenueStaff.filter(item => item.ContributorID === 20);
-
-
-
-            item.RevenueOneStaff = '';
-
-            item.RevenueOneStaffDept = '';
-
-
-
-            if (StaffSendMoney.length > 0) {
-
-                item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + ' ' + StaffSendMoney[0].LastName;
-                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeShortName;
-            }
-
-
-
-=======
         await list.map((item) => {
             var StaffSendMoney;
             item.RevenueDate = toLocalShort(item.RevenueDate);
@@ -453,7 +169,6 @@ export class ListComponent implements OnInit, OnDestroy {
                 item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeShortName;
             }
 
->>>>>>> Kat_Develop
             if (item.RevenueStatus == "1") {
                 item.RevenueStatus = "นำส่งเงินรายได้"
             }
@@ -465,83 +180,26 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         })
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> Kat_Develop
         if (Array.isArray(list)) {
-
             this.revenue = list;
-
         } else {
-
             this.revenue.push(list);
-
         }
 
-
-
         // set total record
-
         this.paginage.TotalItems = this.revenue.length;
-<<<<<<< HEAD
-
-        this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
-
-    }
-
-
-
-    clickView(RevenueID: string) {
-
-        this._router.navigate([`/income/manage/R/${RevenueID}`]);
-
-=======
         this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
     clickView(RevenueID: string) {
         this._router.navigate([`/income/manage/R/${RevenueID}`]);
->>>>>>> Kat_Develop
     }
-
-
 
     async pageChanges(event) {
-
         this.RevenueList = await this.revenue.slice(event.startIndex - 1, event.endIndex);
-
     }
 
 
-
-
-
-    getCurrentDate() {
-
-        const date = new Date();
-
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
-
-    }
-
-
-<<<<<<< HEAD
-
-    onSDateChange(event: IMyDateModel) {
-
-        this._dateStartFrom = event.date;
-
-        this.checkDateDelivery();
-
-    }
-
-
-
-    onEDateChange(event: IMyDateModel) {
-
-=======
     getCurrentDate() {
         let date = new Date();
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
@@ -553,116 +211,18 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onEDateChange(event: IMyDateModel) {
->>>>>>> Kat_Develop
         this._dateStartTo = event.date;
         this.checkDateDelivery();
     }
 
-<<<<<<< HEAD
-
-
-    checkDateDelivery() {
-
-        if (this._dateStartFrom && this._dateStartTo) {
-
-            const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
-
-            const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
-
-
-
-            if (!compareDate(new Date(sdate), new Date(edate))) {
-
-                alert(Message.checkDate)
-
-                setTimeout(() => {
-
-                    this.DateStartTo = { date: this._dateStartFrom };
-
-                }, 0);
-
-            }
-
-        }
-
-    }
-
-
-
-    // --- หน่วยงาน ---
-
-    async getDepartmentRevenue() {
-
-        await this.incomeService.getDepartment().then(async res => {
-
-            if (res) {
-
-                this.rawOptions = res;
-
-            }
-
-        }, (err: HttpErrorResponse) => {
-
-            this.preloader.setShowPreloader(false);
-
-        });
-
-    }
-
-
-
-    onAutoChange(value: string) {
-
-        // if (value == '') {
-
-        //     this.options = [];
-
-
-
-        //     // this.oProve.ProveStationCode = "";
-
-        //     // this.oProve.ProveStation = "";
-
-        // } else {
-
-        //     this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
-
-        // }
-
-    }
-
-
-
-    onAutoFocus(value: string) {
-
-        // if (value == '') {
-
-        //     this.options = [];
-
-        // }
-
-    }
-
-
-
-    // onAutoSelecteWord(event) {
-
-    //     // this.oProve.ProveStationCode = event.OfficeCode;
-
-    //     // this.oProve.ProveStation = event.OfficeName;
-
-    // }
-
-    // ----- End หน่วยงาน ---
-
-=======
     checkDateDelivery() {
         if (this._dateStartFrom && this._dateStartTo) {
             const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
             const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
 
             if (!compareDate(new Date(sdate), new Date(edate))) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning');
+                //alert(Message.checkDate)
                 setTimeout(() => {
                     this.DateStartTo = { date: this._dateStartFrom };
                 }, 0);
@@ -703,5 +263,4 @@ export class ListComponent implements OnInit, OnDestroy {
     //     // this.oProve.ProveStation = event.OfficeName;
     // }
     // ----- End หน่วยงาน ---
->>>>>>> Kat_Develop
 }

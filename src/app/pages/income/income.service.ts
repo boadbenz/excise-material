@@ -11,7 +11,6 @@ export class IncomeService {
     private http: HttpClient
   ) { }
 
-  // tslint:disable-next-line:member-ordering
   private httpOptions = {
     headers: new HttpHeaders(
       {
@@ -41,10 +40,6 @@ export class IncomeService {
     const params = JSON.stringify(form);
     const url = `${appConfig.api8084}/RevenuegetByConAdv`;
 
-<<<<<<< HEAD
-    // tslint:disable-next-line:no-debugger
-=======
->>>>>>> Kat_Develop
     debugger
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -65,97 +60,6 @@ export class IncomeService {
     } catch (error) {
       await alert(error);
     }
-<<<<<<< HEAD
-  }
-
-  async getDepartment(): Promise<any> {
-    const params = { };
-    const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      await alert(error);
-    }
-  }
-
-  async StaffgetByKeyword(): Promise<any> {
-    const params = { };
-    const url = `${appConfig.api7789}/MasStaffMaingetAll`;
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      await alert(error);
-    }
-  }
-
-  async TransactionRunninggetByCon(RunningTable,RunningOfficeCode): Promise<any> {
-    let pValue = {
-      "RunningTable" : RunningTable,
-      "RunningOfficeCode" : RunningOfficeCode
-    }
-
-    const params = JSON.stringify(pValue);
-    const url = `${appConfig.api8087}/TransactionRunninggetByCon`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async TransactionRunninginsAll(RunningOfficeCode,RunningTable,RunningPrefix): Promise<any> {
-    let pValue = {
-      "RunningOfficeCode" : RunningOfficeCode,
-      "RunningTable" : RunningTable,
-      "RunningPrefix" : RunningPrefix
-    }
-
-    const params = JSON.stringify(pValue);
-    const url = `${appConfig.api8087}/TransactionRunninginsAll`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async TransactionRunningupdByCon(RunningID): Promise<any> {
-    const params = { RunningID };
-    const url = `${appConfig.api8087}/TransactionRunningupdByCon`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async RevenueComparegetByCon(RevenueDate,OfficeCode): Promise<any> {
-    let pValue = {
-      "RevenueDate" : RevenueDate,
-      "OfficeCode" : OfficeCode
-    }
-
-    const params = JSON.stringify(pValue);
-    const url = `${appConfig.api8084}/RevenueComparegetByCon`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
-=======
   }
 
   async getDepartment(): Promise<any> {
@@ -245,7 +149,6 @@ export class IncomeService {
     }
   }
 
->>>>>>> Kat_Develop
   async RevenueComparegetByCompareReceiptID(CompareReceiptID): Promise<any> {
     const params = { CompareReceiptID };
     const url = `${appConfig.api8084}/RevenueComparegetByCompareReceiptID`;
@@ -305,13 +208,6 @@ export class IncomeService {
     } catch (error) {
       return [];
     }
-<<<<<<< HEAD
-  }
-
-  async RevenueCompareDetailReceiptupdByCon(CompareReceiptID: string): Promise<any> {
-    const params = { CompareReceiptID };
-    const url = `${appConfig.api8084}/RevenueCompareDetailReceiptupdByCon`;
-=======
   }
 
   async RevenueCompareDetailReceiptupdByCon(CompareReceiptID: string): Promise<any> {
@@ -329,7 +225,6 @@ export class IncomeService {
   async RevenueCompareDetailReceiptupdDelete(CompareReceiptID: string): Promise<any> {
     const params = { CompareReceiptID };
     const url = `${appConfig.api8084}/RevenueCompareDetailReceiptupdDelete`;
->>>>>>> Kat_Develop
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -337,25 +232,6 @@ export class IncomeService {
     } catch (error) {
       return [];
     }
-  }
-
-<<<<<<< HEAD
-  async RevenueCompareDetailReceiptupdDelete(CompareReceiptID: string): Promise<any> {
-    const params = { CompareReceiptID };
-    const url = `${appConfig.api8084}/RevenueCompareDetailReceiptupdDelete`;
-=======
-  async RevenueupdDelete(RevenueID: string): Promise<any> {
-    const params = { RevenueID };
-    const url = `${appConfig.api8084}/RevenueupdDelete`;
->>>>>>> Kat_Develop
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-<<<<<<< HEAD
   }
 
   async RevenueupdDelete(RevenueID: string): Promise<any> {
@@ -368,7 +244,6 @@ export class IncomeService {
     } catch (error) {
       return [];
     }
-=======
   }
 
   RevenueReportgetByCon(RevenueID: string) {
@@ -393,6 +268,5 @@ export class IncomeService {
 
   private onCatch(error: any, caught: Observable<any>): Observable<any> {
     return Observable.throw(error);
->>>>>>> Kat_Develop
   }
 }
