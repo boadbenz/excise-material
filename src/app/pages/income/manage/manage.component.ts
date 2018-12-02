@@ -104,7 +104,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
-        this.sidebarService.setVersion('Revenue 0.0.0.11 (M)');
+        this.sidebarService.setVersion('Revenue 0.0.0.18');
 
         this.active_Route();
         this.navigate_Service();
@@ -613,8 +613,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
         }
 
-
-        this.oRevenue.RevenueNo = this.RevenueNo;
+        this.oRevenue.RevenueNo = this.RevenueNo + "/" + this.RevenueNoYear;
         this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
         this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.RevenueCode = this.RevenueCode;

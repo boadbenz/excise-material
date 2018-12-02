@@ -109,6 +109,7 @@
                         <th></th>
                     </tr>
                 </thead>
+                
                 <tbody>
                     <tr *ngFor="let item of RevenueList; let i=index;">
                         <td *ngIf="item.RevenueStatus==2" style="color:red">{{item.RevenueCode}}</td>
