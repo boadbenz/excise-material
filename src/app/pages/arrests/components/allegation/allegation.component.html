@@ -84,7 +84,7 @@
                 {{item.get('ProductDesc').value}}
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
-                <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" required
+                <input  pattern="[0-9]" formControlName="Qty" class="form-control form-control-sm" required
                   [attr.disabled]="showEditField ? '' : null">
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
@@ -96,7 +96,7 @@
                   [value]="item.value.QtyUnit" />
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
-                <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
+                <input pattern="[0-9]" formControlName="NetVolume" class="form-control form-control-sm"
                   [attr.disabled]="showEditField ? '' : null">
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
