@@ -43,12 +43,18 @@ import { MainMasterService } from '../../../services/main-master.service';
 import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
 import { async } from 'q';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
+import { SwalComponent, BeforeOpenEvent } from '@toverux/ngx-sweetalert2';
 
 @Component({
     selector: 'app-manage',
     templateUrl: './manage.component.html'
 })
 export class ManageComponent implements OnInit, OnDestroy {
+
+  @ViewChild('alertSwal') private alertSwal: SwalComponent;
+  @ViewChild('deleteProduct') private deleteProduct: SwalComponent;
+  @ViewChild('deleteSuspect') private deleteSuspect: SwalComponent;
+  @ViewChild('deleteDocument') private deleteDocument: SwalComponent;
 
     private onSaveSubscribe: any;
     private onDeleSubscribe: any;
@@ -139,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.21');
+        this.sidebarService.setVersion('0.0.2.22');
 
         this.navigate_service();
 
@@ -247,7 +253,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 if (!this.noticeForm.valid) {
                     this.isRequired = true;
-                    alert(Message.checkData)
+                    this.showSwal(Message.checkData, "warning");
                     return false;
                 }
 
@@ -255,7 +261,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
 
                 if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-                    alert(Message.checkDate);
+                    this.showSwal(Message.checkData, "warning");
                     return;
                 }
 
@@ -299,7 +305,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/arrest/list']);
+                if(this.arrestCode){
+                    this.router.navigateByUrl('/arrest/manage/R/'+this.arrestCode);
+                }else{
+                    this.router.navigateByUrl('/arrest/list');
+                }
             }
         })
     }
@@ -649,7 +659,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             l.NetVolume = l.NetVolume?l.NetVolume:0;
             if(!l.ProductCode){
                 this.isRequired = true;
-                alert(Message.checkData)
+                this.showSwal(Message.checkData, "warning");
                 return false;
             }
             noticeProduct.push(l);
@@ -689,7 +699,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // }
 
         if (IsSuccess) {
-            alert(Message.saveComplete);
+            this.showSwal(Message.saveComplete, "success");
             this.router.routeReuseStrategy.shouldReuseRoute = function() {
               return false;
             };
@@ -697,7 +707,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             sessionStorage.removeItem("notice_form_data");
         } else {
-            alert(Message.saveFail)
+            this.showSwal(Message.saveFail, "error");
         }
 
         this.preloader.setShowPreloader(false);
@@ -708,7 +718,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         for(let l of noticeForm.NoticeProduct){
             if(!l.ProductCode){
                 this.isRequired = true;
-                alert(Message.checkData)
+                this.showSwal(Message.checkData, "warning");
                 return false;
             }
         }
@@ -765,10 +775,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
 
         if (IsSuccess) {
-            alert(Message.saveComplete);
+            this.showSwal(Message.saveComplete, "success");
             this.onComplete();
         } else {
-            alert(Message.saveFail);
+            this.showSwal(Message.saveFail, "error");
         }
 
         this.preloader.setShowPreloader(false);
@@ -781,11 +791,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
                 this.preloader.setShowPreloader(false);
                 if (IsSuccess) {
-                    alert(Message.delComplete)
+                    this.showSwal(Message.delComplete, "success");
                     this.router.navigate(['/notice/list']);
-                } else (
-                    alert(Message.delFail)
-                )
+                } else {
+                    this.showSwal(Message.delFail, "error");
+                }
             });
         } else {
             this.router.navigate(['/notice/list']);
@@ -850,7 +860,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             const edate = getDateMyDatepicker(_edate);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                this.showSwal(Message.checkDate, "warning");
                 setTimeout(() => {
                     this.noticeForm.patchValue({
                         NoticeDueDate: { date: _sdate.date }
@@ -1020,12 +1030,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         text3$
             .debounceTime(200)
             .distinctUntilChanged()
-            .map(term => term === '' ? []
-                : this.typeheadStaff
-                    .filter(v =>
-                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+            .map(term => this.typeheadStaff
+                    .filter(v => 
+                        (`${v.TitleName || ''} ${v.FirstName || ''} ${v.LastName || ''}`
+                            .toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        // (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (' '.indexOf(term) > -1)
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>
@@ -1034,9 +1046,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             .distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadOffice
-                    .filter(v =>
-                        (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .filter(v => 
+                        (`${v.OfficeName || ''} ${v.OfficeShortName || ''}`.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        // (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
@@ -1158,34 +1171,54 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    async onDeleteProduct(id: string, index: number) {
+    productId:any = "";
+    productIndex:any = "";
+    beforeDeleteProduct(id: string, index: number){
+        this.productId = id;
+        this.productIndex = index;
         if (this.mode === 'C') {
-            this.NoticeProduct.removeAt(index);
-
+            this.NoticeProduct.removeAt(this.productIndex);
         } else if (this.mode === 'R') {
-            if (this.NoticeProduct.at(index).value.IsNewItem) {
-                this.NoticeProduct.removeAt(index);
+            if (this.NoticeProduct.at(this.productIndex).value.IsNewItem) {
+                this.NoticeProduct.removeAt(this.productIndex);
                 return;
             }
+            this.deleteProduct.text = Message.confirmAction;
+            this.deleteProduct.show();
+        }
+    }
+    async onDeleteProduct() {
+        if (this.mode === 'C') {
+            // this.NoticeProduct.removeAt(this.productIndex);
 
-            if (confirm(Message.confirmAction)) {
+        } else if (this.mode === 'R') {
+            // if (this.NoticeProduct.at(this.productIndex).value.IsNewItem) {
+            //     this.NoticeProduct.removeAt(this.productIndex);
+            //     return;
+            // }
+
+            // if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
 
-                await this.noticeService.productupdDelete(id).then(isSuccess => {
+                await this.noticeService.productupdDelete(this.productId).then(isSuccess => {
                     if (isSuccess === true) {
-                        this.NoticeProduct.removeAt(index);
-                        alert(Message.delProductComplete)
+                        this.NoticeProduct.removeAt(this.productIndex);
+                        this.showSwal(Message.delProductComplete, "success");
                     } else {
-                        alert(Message.delProductFail)
+                        this.showSwal(Message.delProductFail, "error");
                     }
                 })
 
                 this.preloader.setShowPreloader(false);
-            }
+            // }
         }
     }
 
-    async onDeleteSuspect(id: string, index: number) {
+    suspectId:any="";
+    suspectIndex:any="";
+    beforeDeleteSuspect(id: string, index: number){
+        this.suspectId = id;
+        this.suspectIndex = index;
         if (this.mode === 'C') {
             this.NoticeSuspect.removeAt(index);
 
@@ -1195,45 +1228,63 @@ export class ManageComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
+            this.deleteSuspect.text = Message.confirmAction;
+            this.deleteSuspect.show();
+        }
+    }
+    async onDeleteSuspect() {
+        if (this.mode === 'C') {
+            // this.NoticeSuspect.removeAt(this.suspectIndex);
 
-                await this.noticeService.suspectupdDelete(id).then(isSuccess => {
-                    if (isSuccess === true) {
-                        this.NoticeSuspect.removeAt(index);
-                        alert(Message.delSuspcetComplete)
-                    } else {
-                        alert(Message.delSuspectFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
+        } else if (this.mode === 'R') {
+
+            this.preloader.setShowPreloader(true);
+
+            await this.noticeService.suspectupdDelete(this.suspectId).then(isSuccess => {
+                if (isSuccess === true) {
+                    this.NoticeSuspect.removeAt(this.suspectIndex);
+                    this.showSwal(Message.delSuspcetComplete, "success");
+                } else {
+                    this.showSwal(Message.delSuspectFail, "error");
+                }
+            })
+            this.preloader.setShowPreloader(false);
         }
     }
 
-    async onDeleteDocument(id: string, index: number) {
+    documentId:any = "";
+    documentIndex:any = "";
+    beforeDeleteDocument(id: string, index: number) {
+        this.documentId = id;
+        this.documentIndex = index;
         if (this.mode === 'C') {
             this.NoticeDocument.removeAt(index);
-
         } else if (this.mode === 'R') {
             if (this.NoticeDocument.at(index).value.IsNewItem) {
                 this.NoticeDocument.removeAt(index);
                 return;
             }
 
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
+            this.deleteDocument.text = Message.confirmAction;
+            this.deleteDocument.show();
+        }
+    }
+    async onDeleteDocument() {
+        if (this.mode === 'C') {
+            // this.NoticeDocument.removeAt(index);
 
-                await this.noticeService.noticeDocumentupdDelete(id).then(isSuccess => {
-                    if (isSuccess === true) {
-                        this.NoticeDocument.removeAt(index);
-                        alert(Message.delDocumentComplete)
-                    } else {
-                        alert(Message.delDocumentFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
+        } else if (this.mode === 'R') {
+            this.preloader.setShowPreloader(true);
+
+            await this.noticeService.noticeDocumentupdDelete(this.documentId).then(isSuccess => {
+                if (isSuccess === true) {
+                    this.NoticeDocument.removeAt(this.documentIndex);
+                    this.showSwal(Message.delDocumentComplete, "success");
+                } else {
+                    this.showSwal(Message.delDocumentFail, "error");
+                }
+            })
+            this.preloader.setShowPreloader(false);
         }
     }
 
@@ -1296,5 +1347,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             }
         };
+    }
+
+    private showSwal(msg:string, iconType:any){
+        this.alertSwal.text = msg;
+        this.alertSwal.type = iconType;
+        this.alertSwal.show();
     }
 }
