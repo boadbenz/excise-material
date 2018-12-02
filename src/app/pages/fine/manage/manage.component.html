@@ -189,40 +189,44 @@
           <th class="footable-sortable" style="width:7%">มูลค่าภาษี</th>
           <th class="footable-sortable" style="width:7%">ค่าปรับสุทธิ</th>
           <th class="footable-sortable" style="width:7%">ยอดชำระ</th>
-          <th class="footable-sortable" style="width:7%">สินบน</th>
-          <th class="footable-sortable" style="width:7%">รางวัล</th>
-          <th class="footable-sortable" style="width:7%">ส่งคลัง</th>
+          <th class="footable-sortable" style="width:7%">สินบน(20)</th>
+          <th class="footable-sortable" style="width:7%">รางวัล(20)</th>
+          <th class="footable-sortable" style="width:7%">ส่งคลัง(40)</th>
           <!--<th class="footable-sortable" style="width:7%">รวม</th>-->
         </tr>
         </thead>
         <tbody *ngIf="ListCompareDetail?.length > 0 && ListCompareDetail[0].all">
         <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable"
             [style]="item.sum ? 'font-weight: bold' : '' ">
-          <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.LawbreakerName }}</td>
+          <td *ngIf="!item.isSum && item.isFirstLoop"><p>{{ item.LawbreakerName }}</p></td>
           <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.Mistreat }}</td>
 
           <td *ngIf="!item.isSum && !item.isFirstLoop" colspan="2"></td>
           <td *ngIf="item.isSum" colspan="6"></td>
 
-          <td *ngIf="!item.isSum && item.product">{{ item.product.BrandNameTH }}</td>
+          <td *ngIf="!item.isSum && item.product"><p>{{ item.product.BrandNameTH }}</p></td>
           <td *ngIf="!item.isSum">{{ item.multi }}</td>
-          <td *ngIf="!item.isSum && item.product">{{ roundDigit(item.FineAmount) }}</td>
-          <td *ngIf="!item.isSum && item.product">{{ roundDigit(item.all) }}</td>
+          <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.FineAmount)) }}</td>
+          <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.all)) }}</td>
 
           <td *ngIf="!item.isSum"><input class="form-control" [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum()" [disabled]="showEditField"></td>
-          <td *ngIf="item.isSum">{{ roundDigit(item.all) }}</td>
+          <td *ngIf="item.isSum"><b>{{ formatMoney(roundDigit(item.all)) }}</b></td>
 
-          <td *ngIf="item.product">{{ roundDigit(item.BribeMoney) }}</td>
-          <td *ngIf="item.product">{{ roundDigit(item.RewardMoney) }}</td>
-          <td *ngIf="item.product">{{ roundDigit(item.TreasuryMoney) }}</td>
+          <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.BribeMoney)) }}</td>
+          <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.RewardMoney)) }}</td>
+          <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.TreasuryMoney)) }}</td>
+
+          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.BribeMoney)) }}</b></td>
+          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.RewardMoney)) }}</b></td>
+          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.TreasuryMoney)) }}</b></td>
         </tr>
         <tr>
           <td colspan="5"></td>
-          <td>รวม</td>
-          <td>{{ roundDigit(sumAllCompare.sum) }}</td>
-          <td>{{ roundDigit(sumAllCompare.sum1) }}</td>
-          <td>{{ roundDigit(sumAllCompare.sum2) }}</td>
-          <td>{{ roundDigit(sumAllCompare.sum3) }}</td>
+          <td><b>รวม</b></td>
+          <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum)) }}</b></td>
+          <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum1)) }}</b></td>
+          <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum2)) }}</b></td>
+          <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum3)) }}</b></td>
         </tr>
         </tbody>
       </table>
@@ -393,13 +397,21 @@
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label col-md-3">คดีเปรียบเทียบที่ : </label>
-            <div class="col-md-4">
-              <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
-                     [disabled]="showEditField">
+            <div class="row col-md-4">
+                <div class="row col-md-2">
+                    <span *ngIf="receipt.IsOutside">น</span>
+                  </div>
+                  <div class="row col-md-10">
+                      <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
+                      [disabled]="showEditField">
+                  </div>
             </div> /
             <div class="col-md-4">
-              <input class="form-control" type="text" [(ngModel)]="receipt.CompareYear" name="CompareNo"
-                     [disabled]="showEditField">
+                <div class="row col-md-10">
+                    <input class="form-control" type="text" [(ngModel)]="receipt.CompareYear" name="CompareNo"
+                    [disabled]="showEditField">
+                </div>
+              
             </div>
           </div>
         </div>
