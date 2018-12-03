@@ -159,17 +159,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.setRegionStore();
         await this.setProductUnitStore();
         await this.setOfficeStore();
-        // await this.setCommunicateStore();
-
-        // this.activatedRoute.params.subscribe(params => {
-        //     let reload = params['reload'];
-        //     if(reload){
-        //         console.log(reload);
-        //     }
-        // });
 
         if (this.mode == 'R') {
             await this.getByCon(this.noticeCode);
+        }else if(this.mode=="C"){
+            this.onChangeConceal();
+            let e = {value:1};
+            this.addNoticeDueDate(e);
         }
 
         if(this.actionFrom=="edit"){
@@ -308,7 +304,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if(this.arrestCode){
                     this.router.navigateByUrl('/arrest/manage/R/'+this.arrestCode);
                 }else{
-                    this.router.navigateByUrl('/arrest/list');
+                    this.router.navigateByUrl('/arrest/manage/C/NEW');
                 }
             }
         })
@@ -324,7 +320,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStation: new FormControl(null, Validators.required),
             NoticeDate: new FormControl(noticeDate, Validators.required),
             NoticeTime: new FormControl(noticeTime, Validators.required),
-            NoticeDue: new FormControl(null, Validators.required),
+            NoticeDue: new FormControl(1, Validators.required),
             NoticeDueDate: new FormControl(noticeDueDate, Validators.required),
             NoticeDueTime: new FormControl(null),
             GroupNameDesc: new FormControl('N/A'),
@@ -393,7 +389,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeInformerFormControl.SubDistrict = new FormControl(null);
             NoticeInformerFormControl.DistrictCode = new FormControl(null);
             NoticeInformerFormControl.District = new FormControl(null);
-            NoticeInformerFormControl.ProvinceCode = new FormControl(null, Validators.required);
+            NoticeInformerFormControl.ProvinceCode = new FormControl(null);
             NoticeInformerFormControl.Province = new FormControl(null);
             NoticeInformerFormControl.ZipCode = new FormControl('N/A');
             NoticeInformerFormControl.TelephoneNo = new FormControl('N/A');

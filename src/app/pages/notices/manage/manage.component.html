@@ -109,14 +109,14 @@
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
                             <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" 
-                            [readonly]="showEditField || localEditField"[ngClass]="{'ng-touched':isRequired}" required>
+                            readonly="true" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
                         <div class="form-group ">
                             <input type="text" formControlName="PositionName" class="form-control form-control-sm" 
-                            [readonly]="showEditField || localEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                            readonly="true" [ngClass]="{'ng-touched':isRequired}" required>
                         </div>
                     </div>
 
@@ -138,7 +138,7 @@
                     <div class="col">
                         <input [attr.disabled]="showEditField ? '' : null" 
                         type="checkbox" id="md_checkbox_25" formControlName="InformerType" class="filled-in chk-col-indigo"
-                            (change)="onChangeConceal()">
+                            (change)="onChangeConceal()" [checked]="isConceal">
                         <label for="md_checkbox_25">สายลับขอปิดนาม</label>
                     </div>
                 </div>
@@ -217,9 +217,7 @@
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemInformmerRegion($event)"
                             [value]="item.get('Region').value"
-                            [ngClass]="{'ng-touched':isRequired}"
-                            (blur)="blurSelectItemInformmerRegion()"
-                            required/>
+                            (blur)="blurSelectItemInformmerRegion()"/>
                     </div>
                 </div>
                 <div class="row">
