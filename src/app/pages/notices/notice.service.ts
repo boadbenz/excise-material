@@ -238,12 +238,12 @@ export class NoticeService {
     async print(noticeCode: any): Promise<any> {
         // debugger
         const params = { 'NoticeCode': noticeCode };
-        const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
+        const url = `${appConfig.apiXCSReport}/NoticegetByCon.aspx`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         console.log(res)
-        if (res.IsSuccess === 'False') {
-            return new Array<Notice>();
-        }
+        // if (res.IsSuccess === 'False') {
+        //     return new Array<any>();
+        // }
 
         return res;
     }

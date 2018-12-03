@@ -145,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.22');
+        this.sidebarService.setVersion('0.0.2.23');
 
         this.navigate_service();
 
@@ -293,8 +293,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
             if (status) {
-                // await this.navService.setOnPrint(false);
-                // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+                this.noticeService.print(this.noticeCode).then(x=>{
+                    console.log(x);
+                    // const file = new Blob([x], {type: 'application/pdf'});
+                    // const fileURL = URL.createObjectURL(file);
+                    // window.open(fileURL);
+
+                });
             }
         })
 
