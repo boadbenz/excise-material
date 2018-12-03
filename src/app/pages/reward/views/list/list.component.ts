@@ -11,11 +11,9 @@ import { FormGroup } from '@angular/forms';
 import {
   convertDateForSave,
   toLocalNumeric,
-  getDateMyDatepicker,
-  compareDate
+  getDateMyDatepicker
 } from 'app/config/dateFormat';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
-import { RequestListgetByConAdvModel } from '../../models/RequestListgetByConAdv.Model';
 
 import swal from 'sweetalert2';
 @Component({
@@ -30,9 +28,7 @@ export class ListComponent extends ListConfig implements OnInit {
     private sidebarService: SidebarService
   ) {
     super();
-    this.navService.showAdvSearch.subscribe(show => {
-      this.advSearch = show;
-    });
+    this.advSearch = this.navService.showAdvSearch;
     this.navService.searchByKeyword.subscribe(res => {
       if (res) {
         this.fetchData(res['Textsearch'] || '');
@@ -41,6 +37,7 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
+
     this.sidebarService.setVersion('0.0.1.5');
     this.setShowButton();
     // this.fetchData('');

@@ -1,3 +1,4 @@
+@import '../../../../styles';
   .btn-navy {
     background: rgb(0, 94, 141);
     color: white;
@@ -11,22 +12,22 @@
   .top-navbar {
     background: linear-gradient(45deg, rgb(0, 94, 141), rgb(53, 57, 147));
   }
-  
+
   .btn-action {
     color: red;
     font-size: 20px;
     margin-left: 5px;
     cursor: pointer;
   }
-  
+
   #btn-browse {
     opacity: 0;
   }
-  
+
   .form-popup {
     margin-bottom: 0;
   }
-  
+
   .col-form-label {
     color: black;
     font-weight: 400;

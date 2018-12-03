@@ -67,7 +67,6 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
             ).slice(0, 10)
       )
     );
-  
   get RequestBribeDetail() {
     return this.formGroup.get('RequestBribeDetail') as FormArray;
   }
@@ -83,18 +82,18 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
     private navService: NavigationService
   ) {
     super();
-    // this.mode$.takeUntil(this.destroy$).subscribe(mode => {
-    //   if (mode !== null) {
-    //     switch (mode) {
-    //       case 'R':
-    //         this.isEdit = false;
-    //         break;
+    this.mode$.takeUntil(this.destroy$).subscribe(mode => {
+      if (mode !== null) {
+        switch (mode) {
+          case 'R':
+            this.isEdit = false;
+            break;
 
-    //       default:
-    //         break;
-    //     }
-    //   }
-    // });
+          default:
+            break;
+        }
+      }
+    });
     this.navService.onEdit.takeUntil(this.destroy$).subscribe(onEdit => {
       if (onEdit === true) {
         this.isEdit = true;

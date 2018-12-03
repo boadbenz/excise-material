@@ -9,28 +9,31 @@ import {
 import { CONFIG } from './CONFIG';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MasDocumentMainService } from '../../services/master/MasDocumentMain.service';
-import { NgbModalRef, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-print-dialog',
   templateUrl: './print-dialog.component.html',
-  styleUrls: ['./print-dialog.component.scss'],
+  styleUrls: ['./print-dialog.component.scss']
 })
 export class PrintDialogComponent extends CONFIG implements OnInit {
   printDoc: any[];
 
   sort = 'asc';
 
-  public data: any;
- 
+  @Input() ArrestCode: string;
+
+  @Output() d = new EventEmitter();
+  @Output() c = new EventEmitter();
   constructor(
-    private ActiveModal: NgbActiveModal
+    public dialogRef: MatDialogRef<PrintDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private masDocumentMainService: MasDocumentMainService
   ) {
     super();
   }
 
   ngOnInit() {
-    this.printDoc = this.data;
+    this.printDoc = this.data['printDoc'];
   }
 
   sortPrintDoc() {
@@ -45,7 +48,16 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
     console.log(f);
     window.open();
   }
+
+  dismiss(e: any) {
+    this.d.emit(e);
+  }
+
+  close(e: any) {
+    this.c.emit(e);
+  }
+
   closeDialog() {
-    this.ActiveModal.close();
+    this.dialogRef.close('close PrintDialogComponent');
   }
 }

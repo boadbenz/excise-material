@@ -1,7 +1,7 @@
 import { Acceptability } from "./acceptability";
 
 export class ArrestProduct {
-    public ProductID: '';
+    public ProductID = '';
     public ProductType = '';
     public ArrestCode = '';
     public GroupCode = '';
@@ -30,8 +30,6 @@ export class ArrestProduct {
     public QtyUnit = '';
     public NetVolume = '';
     public NetVolumeUnit = '';
-    public NetWeight = '';
-    public NetWeightUnit = '';
     
     public IsActive: number;
     public IsChecked: boolean;
@@ -39,6 +37,7 @@ export class ArrestProduct {
     public ProductFullName = '';
     public IsModify: string;
     public RowId: number;
+    ProductFrom: string;
 }
 
 

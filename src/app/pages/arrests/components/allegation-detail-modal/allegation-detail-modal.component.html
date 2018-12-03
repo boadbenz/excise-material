@@ -3,7 +3,7 @@
     <div class="col-lg-5">
       <!-- <h4 class="modal-title text-white">รายละเอียดข้อกล่าวหา</h4> -->
       <h4 class="modal-title text-white">เพิ่มผู้ต้องหา
-        <a href="javaScript:void(0);" class="btn btn-ghost" (click)="dismiss('Cross click')" [routerLink]="['/arrest/lawbreaker/C/NEW']">
+        <a class="btn btn-ghost" [routerLink]="['/arrest/lawbreaker', 'C', 'NEW']" target="_blank">
           <i class="ti-plus"></i>
           สร้างข้อมูล
         </a>
@@ -126,7 +126,8 @@
                 <td>{{item.get('LawbreakerFullName').value}}</td>
                 <td class="text-center">{{item.get('ResultCount').value | async}}</td>
                 <td class="text-center">
-                  <a href="javaScript:void(0);" class="text-center text-secondary" (click)="view(item.value.LawbreakerID)">
+                  <a class="text-center text-secondary" 
+                    [routerLink]="['/arrest/lawbreaker', 'R', item.value.LawbreakerID]" target="_blank">
                     <i class="fa fa-eye fa-lg"></i>
                   </a>
                 </td>
@@ -141,92 +142,11 @@
         </app-pagination-table>
       </div>
     </div>
-    <!-- 
-    <div class="card card-outline-bluish unset-radius m-b-0">
-      <div class="card-header unset-radius">
-        <div class="card-actions">
-          <a class="" (click)="card1 = !card1">
-            <i class="fa" [ngClass]="{'fa-chevron-down': card1, 'fa-chevron-up': !card1}"></i>
-          </a>
-        </div>
-        <h4 class="card-title m-b-0">รายละเอียดการจับกุม</h4>
-      </div>
-      <div *ngIf="card1" class="card-body p-2">
-
-        <div *ngIf="showLawbreakerDetail" class="row m-b-10">
-          <div class="col-sm-12">
-            <div class="lawbreaker-detail">
-              <div class="lawbreaker-detail-head">
-                <div class="action">
-                  <a class="" (click)="closeLawbreakerDetail();"><i class="fa fa-times"></i></a>
-                </div>
-                <h5 class="title">{{LawbreakerDetail.get('LawbreakerFullName').value}}</h5>
-              </div>
-              <span>
-                {{LawbreakerDetail.get('LawbreakerDetail').value}}
-                จำนวนครั้งการกระทำผิด ({{Lawbreaker.at(lawbreakerIndex).get('ResultCount').value | async}}) ครั้ง
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="table-responsive" style="border:1px solid #d4dfe3;">
-              <table class="table table-sm table-striped">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th class="text-center">ลำดับ</th>
-                    <th>ของกลาง</th>
-                    <th>จำนวน</th>
-                    <th>หน่วย</th>
-                    <th>ปริมาณสุทธิ</th>
-                    <th>หน่วย</th>
-                  </tr>
-                </thead>
-                <tbody formArrayName="Product">
-                  <tr *ngFor="let item of Product.controls; let i=index;" [formGroupName]="i">
-                    <td class="text-center">
-                      <input formControlName="IsChecked" type="checkbox" [id]="'pd'+i" class="filled-in chk-col-indigo">
-                      <label [for]="'pd'+i" class="m-0"></label>
-                    </td>
-                    <td class="text-center">{{i+1}}</td>
-                    <td>{{item.get('ProductDesc').value}}</td>
-                    <td>
-                      <input formControlName="Qty" type="number" min="0" class="form-control form-control-sm" required>
-                    </td>
-                    <td>
-                      <select formControlName="QtyUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required>
-                        <option value="" disabled selected></option>
-                        <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
-                      </select>
-                    </td>
-                    <td>
-                      <input formControlName="NetVolume" type="number" min="0" class="form-control form-control-sm">
-                    </td>
-                    <td>
-                      <select formControlName="NetVolumeUnit" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}">
-                        <option value="" selected disabled></option>
-                        <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
-                      </select>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 
 </div>
 <div class="modal-footer">
-  <!-- <div class="col-lg-2 col-4">
-    <button type="button" class="btn btn-block text-white" style="background-color: #f47023" (click)="close('Save click')">ลบ</button>
-  </div> -->
   <div class="col-lg-2 col-4">
-    <button type="button" class="btn btn-block btn-themecolor" (click)="close('Save click')">บันทึก</button>
+    <button type="button" class="btn btn-block btn-themecolor" (click)="close('Save click')">เลือก</button>
   </div>
 </div>

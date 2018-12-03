@@ -37,11 +37,8 @@ export class ProveProduct {
     public IsProveScience?: string;
     public ProveScienceID?: string;
     public ProveScienceResult?: string;
-    public IsActive?: string;
     public ReferenceRetailPrice?: string;
     public ReferenceRetailUnit?: string;
-    public ReferenceRetailRate?: string;
-    public ReferenceRetailQty?: string;
     public ReferenceVatRate?: string;
     public ReferenceVatQty?: string;
     public ReferenceVatValue?: string;
@@ -52,9 +49,14 @@ export class ProveProduct {
     public VatValue?: string;
     public VatUnit?: string;
     public VatProve?: string;
-    public IsStatusExhibit?: string;
-    public Remarks?: string;
     public ProveResult?: string;
+    public Remarks?: string;
+    public IsStatusExhibit?: string;
+    public IsActive?: string;
+    public DeliverID?: string;
+    public IsReferenceVatRate?: boolean;
+    public IsReferenceVatQty?: boolean;
+    public IsProdScience?: boolean;
     public IsNewItem?: boolean;
     public IsDelItem?: boolean;
 }

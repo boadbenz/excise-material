@@ -24,7 +24,7 @@ export class RequestBribeRewardService extends HelperService {
   }
 
   public RequestBribeRewardinsAll(
-    param
+    param: IRequestBribeRewardinsAll
   ): Observable<any> {
     return this.http.post(
       `${this.ApiPrefixUrl}/RequestBribeRewardinsAll`,

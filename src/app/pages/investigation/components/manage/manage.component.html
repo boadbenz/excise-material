@@ -1,0 +1,129 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+    <app-printdoc-modal [investCode]="investCode" [investDetailId]="" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
+</ng-template>
+
+<form class="form-horizontal" [formGroup]="investigateForm">
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card1 = !card1">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card1, 'fa-chevron-up': !card1}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">คดีสืบสวน</h4>
+        </div>
+        <div class="card-body" *ngIf="card1">
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่สืบสวน :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" formControlName="InvestigateCode" class="form-control form-control-sm"
+                            readonly>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">คดีสืบสวนที่ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <div class="input-group">
+                        <input type="text" #investigateNo0 class="form-control form-control-sm" [readOnly]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required (change)="onChangeInvestigateNo()">
+                        <strong>&nbsp;&nbsp;/&nbsp;&nbsp;</strong>
+                        <input type="text" #investigateNo1 class="form-control form-control-sm" [readOnly]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required (change)="onChangeInvestigateNo()">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">วันที่เริ่มสืบสวน :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" formControlName="DateStart"
+                            [disabled]="showEditField" [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)"
+                            ngModel></my-date-picker-th>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">วันที่สิ้นสุดสืบสวน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <my-date-picker-th class="form-control form-control-sm unset-form-control" id="DateEnd" [disabled]="showEditField"
+                        formControlName="DateEnd" [options]="myDatePickerOptions" (dateChanged)="onEDateChange($event)"></my-date-picker-th>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-sm-4 control-label">หัวข้อการสืบสวน :
+                </label>
+                <div class="col-lg-10 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" formControlName="Subject" class="form-control form-control-sm" [readOnly]="showEditField">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-outline-bluish unset-radius">
+        <div class="card-header  unset-radius">
+            <div class="card-actions">
+                <a class="" (click)="card2 = !card2">
+                    <i class="fa" [ngClass]="{'fa-chevron-down': card2, 'fa-chevron-up': !card2}"></i>
+                </a>
+            </div>
+            <h4 class="card-title m-b-0">รายงานการสืบสวน</h4>
+        </div>
+        <div class="card-body" *ngIf="card2">
+            <div class="row form-group">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="onCreateInvestDetail()">เพิ่มรายงาน</button>
+                </div>
+            </div>
+
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th class="text-center">ครั้งที่สืบสวน</th>
+                        <th>วันที่เริ่มสืบสวน</th>
+                        <th>วันที่สิ้นสุดการสืบสวน</th>
+                        <th>ผู้ดูแลการสืบสวน</th>
+                        <th>ผู้สั่งการ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName='InvestigateDetail'>
+                    <tr style="cursor: pointer;" *ngFor="let item of InvestigateDetail.controls; let i=index;"
+                        [formGroupName]='i' (click)="onViewInvesDetail(item.get('InvestigateDetailID').value, item.get('InvestigateSeq').value)">
+                        <td class="text-center">{{i+1}}</td>
+                        <td class="text-center">{{item.get('InvestigateSeq').value}}</td>
+                        <td>
+                            {{toLocalShort(item.get('InvestigateDateStart').value)}}
+                        </td>
+                        <td>
+                            {{toLocalShort(item.get('InvestigateDateEnd').value)}}
+                        </td>
+                        <td>
+                            <div *ngFor="let staff of getInvestigateDetailStaff(item)">
+                                {{staff.Investigator}}
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngFor="let staff of getInvestigateDetailStaff(item)">
+                                {{staff.Commander}}
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="onViewInvesDetail(item.get('InvestigateDetailID').value, item.get('InvestigateSeq').value)">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>

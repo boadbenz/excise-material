@@ -5,11 +5,12 @@ import { pagination } from 'app/config/pagination';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { Arrest } from '../../models/arrest';
-import { getDateMyDatepicker, compareDate, toLocalShort, convertDateForSave } from 'app/config/dateFormat';
+import { getDateMyDatepicker, compareDate, toLocalShort, convertDateForSave, MyDatePickerOptions } from 'app/config/dateFormat';
 import { Message } from 'app/config/message';
 import { ArrestService } from '../../services';
 import { Subscription, Subject } from 'rxjs';
 import 'rxjs/add/operator/takeUntil';
+import swal from 'sweetalert2'
 
 @Component({
     selector: 'app-list',
@@ -33,11 +34,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     @ViewChild('arrestTable') arrestTable: ElementRef;
 
-    myDatePickerOptions: IMyOptions = {
-        dateFormat: 'dd mmm yyyy',
-        showClearDateBtn: false,
-        height: '30px'
-    };
+    myDatePickerOptions = MyDatePickerOptions;
 
     constructor(
         private navService: NavigationService,
@@ -62,7 +59,9 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.24');
+        this.advSearch.next(true);
+        
+        this.sidebarService.setVersion(this.arrestService.version);
 
         this.navService.searchByKeyword
             .takeUntil(this.destroy$)
@@ -96,7 +95,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate);
+                swal('', Message.checkDate, 'warning');
                 return
             }
         }
@@ -112,20 +111,24 @@ export class ListComponent implements OnInit, OnDestroy {
 
     private onSearchComplete(list: Arrest[]) {
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
             return false;
         }
         this.arrest = [];
-        list.map((p, i) => {
+        let rows = list.map((p, i) => {
             p.RowsId = i + 1;
             p.OccurrenceDate = toLocalShort(p.OccurrenceDate);
-            p.ArrestStaff
-                .filter(staff => staff.ContributorID == '6')
+            let staff = p.ArrestStaff
+                .filter(staff => staff.ContributorID == '6' || staff.ContributorCode == '6')
                 .map(staff => {
                     staff.FullName = `${staff.TitleName} ${staff.FirstName} ${staff.LastName}`;
+                    return staff;
                 });
+            p.ArrestStaff = staff;
+            return p;
         })
-        this.arrest = list;
+
+        this.arrest = rows;
         // set total record     
         this.paginage.TotalItems = this.arrest.length;
 
@@ -148,7 +151,7 @@ export class ListComponent implements OnInit, OnDestroy {
             const edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.OccurrenceDateTo = { date: this.dateStartFrom.date };
                 }, 0);
