@@ -31,7 +31,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ผู้กล่าวหา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="fullName" name="" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareName" name="" disabled>
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.PositionlawName" name="PositionlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ComparePositionName" name="PositionlawName" disabled>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.DepartmentlawName" name="DepartmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareOfficeShortName" name="DepartmentlawName" disabled>
             </div>
           </div>
         </div>
@@ -77,9 +77,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่รับคดี : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitDate" name="LawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceDate" name="LawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitTime" name="LawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceTime" name="LawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ฐานความผิดมาตรา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.FaultNo" name="FaultNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.Behaviour" name="FaultNo" disabled>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ฐานความผิด : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.FaultSubject" name="FaultSubject" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.Testimony" name="FaultSubject" disabled>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">บทกำหนดโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.FaultNo" name="FaultNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.Prompt" name="FaultNo" disabled>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">อัตราโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.Penalty" name="Penalty" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.IsMatchNotice" name="Penalty" disabled>
             </div>
           </div>
         </div>
@@ -128,7 +128,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">เลขที่คดีเปรียบเทียบ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitNo" name="LawsuitNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareCode" name="LawsuitNo" disabled>
             </div>
           </div>
         </div>
@@ -136,9 +136,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่เปรียบเทียบ : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitDate" name="LawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareDate" name="LawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitTime" name="LawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareTime" name="LawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.DepartmentlawName" name="DepartmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitOfficeShortName" name="DepartmentlawName" disabled>
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@
       </button>
     </div>
     <ng-template #reductionList let-c="close" let-d="dismiss">
-      <app-reduction-model-list [id]="1" (d)="dialog.dismiss()" (result)="result($event)"></app-reduction-model-list>
+      <app-reduction-model-list [listData]="adjustDetailData" [id]="compareID" (d)="dialog.dismiss()" (result)="result($event)"></app-reduction-model-list>
     </ng-template>
     <div class="table-responsive table-striped no-wrap">
       <table class="table">

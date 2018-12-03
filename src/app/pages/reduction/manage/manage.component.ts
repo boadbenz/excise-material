@@ -29,19 +29,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
       statusCase: 'รับรายการนำส่ง',
       typeCase: 'เปรียบเทียบคดี',
       period: '1/1'
-    },
-    {
-      fullName: 'นายสุชาติ ปัญโญใหญ่',
-      oldFine: '1,400,000.00',
-      newFine: '',
-      dateFine: '10-ม.ค.-2560',
-      payment: 'เงินสด',
-      receiptNo: '33',
-      receiptRef: '001/2561',
-      statusCase: 'รับรายการนำส่ง',
-      typeCase: 'เปรียบเทียบคดี',
-      period: '1/1'
-    },
+    }
   ];
 
   listData = {
@@ -73,6 +61,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   showField: any;
   navServiceSub: any;
   selectAll: any;
+  adjustDetailData: any[] = [];
 
 
   private getDataFromListPage: any;
@@ -124,6 +113,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this._adjustArrestgetByCon(this.compareID);
     this._adjustReceiptgetByCon(this.compareID);
+    this._adjustDetailgetByCon(this.compareID);
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
@@ -158,6 +148,11 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
         .subscribe(response => console.log(response), error => console.log(error));
   }
 
+  private  _adjustDetailgetByCon(compareID) {
+    this.apiServer.post('/XCS60/AdjustDetailgetByCon', {CompareID: compareID})
+        .subscribe(response => this.adjustDetailData =  response, error => console.log(error));
+  }
+
   viewData(id: string) {
     this.router.navigate(['/reduction/manage', 'V', this.detailData.arrestCode], { queryParams: { id: id } });
   }
@@ -174,11 +169,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   showReductionPopup(e) {
-    // jQuery(this.modalReduction.nativeElement).modal('show');
-    // console.log(this.reductionModelList.listTest);
-
     this.dialog = this.ngbModel.open(e, { size: 'lg', centered: true });
-    // this.reductionModelList.activeModel();
   }
 
   ngAfterViewInit() {
