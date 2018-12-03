@@ -1,10 +1,10 @@
 import { ProveProduct } from "./proveProduct";
 import { ProveStaff } from "./proveStaff";
-import { ProveScience, ProveDeliverProduct } from "./proveScience";
+import { ProveScience } from "./proveScience";
 
 export class Prove {
     public ProveID?: string;
-    public Delivery?: number;
+    public IsDelivery?: number;
     public DeliveryDocNo?: string;
     public DeliveryDate?: string;
     public DeliveryStationCode?: string;
@@ -21,11 +21,9 @@ export class Prove {
     public LawsuitID?: number;
     public LawsuitNo?: string;
     public IsActive?: number;
-    public ProveOneStaff?: string;
-    public ProveOneStaffScience?: string;
-    public ProveOneDeptScience?: string;
+    public ProveOneStaff?: Array<ProveStaff>;
+    public ProveOneStaffScience?: Array<ProveStaff>;
     public ProveProduct?: Array<ProveProduct>;
     public ProveStaff?: Array<ProveStaff>;
     public ProveScience?: Array<ProveScience>;
-    public ProveDeliverProduct?: Array<ProveDeliverProduct>;
 }

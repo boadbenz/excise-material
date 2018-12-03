@@ -31,5 +31,5 @@ export * from "./allegation-modal/allegation-modal.component";
 export * from "./lawbreaker/lawbreaker.component";
 export * from "./modal-notice/modal-notice.component";
 export * from "./offense-modal/offense-modal.component";
-export * from "./print-doc-modal/print-doc-modal.component";
+export * from "app/pages/investigation/printdoc-modal/printdoc-modal.component";
 export * from './lawbreaker-model/lawbreaker-model.component';

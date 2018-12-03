@@ -22,9 +22,7 @@
                                 <th style="text-align: center;width: 5%"></th>
                                 <th style="text-align: center;width: 7%">ลำดับ</th>
                                 <th>ชื่อเอกสาร</th>
-                                <th>ประเภทเอกสาร
-                                    <i class="mdi mdi-filter-variant fa-lg" style="margin-left: 5px;"></i>
-                                </th>
+                                <th>ประเภทเอกสาร</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,19 +40,9 @@
                                     <input type="checkbox" id="td_3" class="filled-in chk-col-indigo" [checked]="isCheckAll">
                                     <label for="td_3" class="m-0"></label>
                                 </td>
-                                <td style="text-align: center">2</td>
+                                <td style="text-align: center">3</td>
                                 <td>บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4</td>
                                 <td>แบบฟอร์ม</td>
-                            </tr>
-
-                            <tr *ngFor="let lsPD of document; let i=index;">
-                                <td style="text-align: center">
-                                    <input type="checkbox" id="td_3" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                    <label for="td_3" class="m-0"></label>
-                                </td>
-                                <td style="text-align: center">{{3 + i}}</td>
-                                <td>{{lsPD.DocumentName }}</td>
-                                <td>เอกสารภายใน</td>
                             </tr>
                         </tbody>
                     </table>
@@ -65,6 +53,6 @@
 </div>
 <div class="modal-footer">
     <div class="col-lg-2 col-sm-4">
-        <button type="button"  class="btn btn-block btn-themecolor" (click)="close('Save click')">พิมพ์</button>
+        <button type="button" class="btn btn-block btn-themecolor" (click)="close('Save click')">พิมพ์</button>
     </div>
 </div>

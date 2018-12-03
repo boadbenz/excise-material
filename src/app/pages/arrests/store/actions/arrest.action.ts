@@ -23,7 +23,7 @@ export class UpdateArrest implements Action {
 
 export class RemoveArrest implements Action {
     readonly type = REMOVE_ARREST
-    constructor() { }
+    constructor(public payload: number) { }
 }
 
 export type ArrestActions = CreateArrest | AddArrest | RemoveArrest | UpdateArrest

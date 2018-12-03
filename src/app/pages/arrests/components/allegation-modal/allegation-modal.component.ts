@@ -6,9 +6,6 @@ import { Message } from 'app/config/message';
 import * as fromServices from '../../services'
 import * as fromModels from '../../models';
 import { Subject } from 'rxjs/Subject';
-import swal from 'sweetalert2'
-
-enum SORTING { ASC, DESC }
 
 @Component({
     selector: 'app-allegation-modal',
@@ -83,7 +80,7 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
 
     async onSearchComplete(list: fromModels.ArrestLawGuitbase[]) {
         if (!list.length) {
-            swal('', Message.noRecord, 'warning');
+            alert(Message.noRecord);
             return
         }
 
@@ -184,21 +181,11 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
     async close(e: any) {
         let lawGuitbase = this.LawGuiltbase.value.filter(x => x.IsChecked);
         if (!lawGuitbase.length) {
-            swal('', Message.alertSelectGuiltbase, 'warning');
+            alert(Message.alertSelectGuiltbase);
             return
         }
         this.outputArrestLawGuiltbase.emit(...lawGuitbase);
         this.c.emit(e);
-    }
-
-    sort: SORTING;
-    sortGuiltBaseName(arg) {
-        debugger
-        this.sort = (this.sort == SORTING.ASC ? SORTING.DESC : SORTING.ASC);
-        let sort = this.arrestLawGuitbase.sort((a, b) => b[arg] - a[arg]);
-        this.LawGuiltbase.value.map(() => this.LawGuiltbase.removeAt(0));
-        this.arrestLawGuitbase = sort;
-        this.paginage.TotalItems = sort.length;
     }
 
     async pageChanges(event: any) {

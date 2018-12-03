@@ -48,6 +48,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
         this.router.events.subscribe((evt) => {
             if (!(evt instanceof NavigationEnd)) {
                 return;

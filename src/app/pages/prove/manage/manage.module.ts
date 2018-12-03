@@ -25,7 +25,7 @@ const routes: Routes = [
                 { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง', url: '/prove/list' },  
                 { title: 'จัดการข้อมูลงานตรวจรับและพิสูจน์ของกลาง' }
             ],
-            codePage: 'ILG60-05-01-00-00'
+            nextPage: { title: 'งานตรวจรับและพิสูจน์ของกลาง', url: '/prove/manage' }
         },
         component: ManageComponent
     }

@@ -9,14 +9,3 @@ export class ProveScience {
     public DeliveryDocNo?: string;
     public IsActive?: number;
 }
-
-export class ProveDeliverProduct {
-    public DeliverID?: string;
-    public ProveID?: string;
-    public DeliverNo?: string;
-    public DeliverDate?: string;
-    public DeliverTime?: string;
-    public DeliverTo?: string;
-    public IsReceive?: string;
-    public IsActive?: number;
-}

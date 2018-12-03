@@ -17,7 +17,6 @@ export class LayoutComponent implements OnInit {
   ngOnInit() {
     custom.detectChange();
     this.isPreloader = this.preloader.showPreloader;
-    
   }
 
 }

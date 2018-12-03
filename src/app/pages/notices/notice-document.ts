@@ -9,7 +9,6 @@ export class NoticeDocument {
     // DocumentName = '';
     // public IsActive: number;
     public DocumentID: string;
-    public DocumentName: string;
     public ReferenceCode: string;
     public FilePath: string;
     public DataSource: string;
@@ -29,10 +28,9 @@ export const NoticeDocumentFormControl = {
     // IsActive: new FormControl(null),
     // IsNewItem: new FormControl(null)
     DocumentID: new FormControl(null),
-    DocumentName: new FormControl(null),
     ReferenceCode: new FormControl(null),
     FilePath: new FormControl(null),
     DataSource: new FormControl(null),
-    IsActive: new FormControl(1),
+    IsActive: new FormControl(null),
     IsNewItem: new FormControl(null)
 }

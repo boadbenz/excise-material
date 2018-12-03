@@ -48,28 +48,7 @@ export class ArrestLawbreaker {
     public LinkPhoto: string;
     public PhotoDesc: string;
     public IsActive: number;
-
-    public GPS: string;
-    public Location: string;
-    public Address: string;
-    public Village: string;
-    public Building: string;
-    public Floor: string;
-    public Room: string;
-    public Alley: string;
-    public Road: string;
-    public SubDistrictCode: string;
-    public SubDistrict: string;
-    public DistrictCode: string;
-    public District: string;
-    public ProvinceCode: string;
-    public Province: string;
-    public ZipCode: string;
-    public TelephoneNo: string;
-    public Email: string;
-    // public LawbreakerAddress: ArrestLawbreakerAddress[]
-
-    public Region: string;
+    public LawbreakerAddress: ArrestLawbreakerAddress[]
 
     ArrestCode: string;
     LawbreakerRefID: number;
@@ -109,78 +88,76 @@ export class ArrestLawbreakerAllegation {
 }
 
 export const ArrestLawbreakerFormControl = {
-    LawbreakerID: new FormControl(''),
-    ArrestCode: new FormControl(''),
-    LawbreakerRefID: new FormControl(''),
-    EntityType: new FormControl(''),
-    CompanyTitleCode: new FormControl(''),
-    CompanyTitle: new FormControl(''),
-    CompanyName: new FormControl(''),
-    CompanyOtherName: new FormControl(''),
-    CompanyRegistrationNo: new FormControl(''),
-    CompanyLicenseNo: new FormControl(''),
-    CompanyFullName: new FormControl(''),
-    FoundedDate: new FormControl(''),
-    LicenseDateForm: new FormControl(''),
-    LicenseDateTo: new FormControl(''),
-    TaxID: new FormControl(''),
-    ExciseRegNo: new FormControl(''),
-    LawbreakerType: new FormControl(''),
-    LawbreakerTitleCode: new FormControl(''),
-    LawbreakerTitleName: new FormControl(''),
-    LawbreakerFirstName: new FormControl(''),
-    LawbreakerMiddleName: new FormControl(''),
-    LawbreakerLastName: new FormControl(''),
-    LawbreakerOtherName: new FormControl(''),
-    LawbreakerDesc: new FormControl(''),
-    LawbreakerFullName: new FormControl(''),
-    IDCard: new FormControl(''),
-    PassportNo: new FormControl(''),
-    VISAType: new FormControl(''),
-    PassportCountryCode: new FormControl(''),
-    PassportCountryName: new FormControl(''),
-    PassportDateIn: new FormControl(''),
-    PassportDateOut: new FormControl(''),
-    BirthDate: new FormControl(''),
-    GenderType: new FormControl(''),
-    BloodType: new FormControl(''),
-    NationalityCode: new FormControl(''),
-    NationalityNameTH: new FormControl(''),
-    RaceCode: new FormControl(''),
-    RaceName: new FormControl(''),
-    ReligionCode: new FormControl(''),
-    ReligionName: new FormControl(''),
-    MaritalStatus: new FormControl(''),
-    Career: new FormControl(''),
-    GPS: new FormControl(''),
-    Location: new FormControl(''),
-    Address: new FormControl(''),
-    Village: new FormControl(''),
-    Building: new FormControl(''),
-    Floor: new FormControl(''),
-    Room: new FormControl(''),
-    Alley: new FormControl(''),
-    Road: new FormControl(''),
-    SubDistrictCode: new FormControl(''),
-    SubDistrict: new FormControl(''),
-    DistrictCode: new FormControl(''),
-    District: new FormControl(''),
-    ProvinceCode: new FormControl(''),
-    Province: new FormControl(''),
-    ZipCode: new FormControl(''),
-    TelephoneNo: new FormControl(''),
-    Email: new FormControl(''),
-    FatherName: new FormControl(''),
-    MotherName: new FormControl(''),
-    Remarks: new FormControl(''),
-    LinkPhoto: new FormControl(''),
-    PhotoDesc: new FormControl(''),
+    LawbreakerID: new FormControl(null),
+    ArrestCode: new FormControl(null),
+    LawbreakerRefID: new FormControl(null),
+    EntityType: new FormControl(null),
+    CompanyTitleCode: new FormControl(null),
+    CompanyTitle: new FormControl(null),
+    CompanyName: new FormControl(null),
+    CompanyOtherName: new FormControl(null),
+    CompanyRegistrationNo: new FormControl(null),
+    CompanyLicenseNo: new FormControl(null),
+    CompanyFullName: new FormControl(null),
+    FoundedDate: new FormControl(null),
+    LicenseDateForm: new FormControl(null),
+    LicenseDateTo: new FormControl(null),
+    TaxID: new FormControl(null),
+    ExciseRegNo: new FormControl(null),
+    LawbreakerType: new FormControl(null),
+    LawbreakerTitleCode: new FormControl(null),
+    LawbreakerTitleName: new FormControl(null),
+    LawbreakerFirstName: new FormControl(null),
+    LawbreakerMiddleName: new FormControl(null),
+    LawbreakerLastName: new FormControl(null),
+    LawbreakerOtherName: new FormControl(null),
+    LawbreakerDesc: new FormControl(null),
+    LawbreakerFullName: new FormControl(null),
+    IDCard: new FormControl(null),
+    PassportNo: new FormControl(null),
+    VISAType: new FormControl(null),
+    PassportCountryCode: new FormControl(null),
+    PassportCountryName: new FormControl(null),
+    PassportDateIn: new FormControl(null),
+    PassportDateOut: new FormControl(null),
+    BirthDate: new FormControl(null),
+    GenderType: new FormControl(null),
+    BloodType: new FormControl(null),
+    NationalityCode: new FormControl(null),
+    NationalityNameTH: new FormControl(null),
+    RaceCode: new FormControl(null),
+    RaceName: new FormControl(null),
+    ReligionCode: new FormControl(null),
+    ReligionName: new FormControl(null),
+    MaritalStatus: new FormControl(null),
+    Career: new FormControl(null),
+    GPS: new FormControl(null),
+    Location: new FormControl(null),
+    Address: new FormControl(null),
+    Village: new FormControl(null),
+    Building: new FormControl(null),
+    Floor: new FormControl(null),
+    Room: new FormControl(null),
+    Alley: new FormControl(null),
+    Road: new FormControl(null),
+    SubDistrictCode: new FormControl(null),
+    SubDistrict: new FormControl(null),
+    DistrictCode: new FormControl(null),
+    ProvinceCode: new FormControl(null),
+    Province: new FormControl(null),
+    ZipCode: new FormControl(null),
+    TelephoneNo: new FormControl(null),
+    Email: new FormControl(null),
+    FatherName: new FormControl(null),
+    MotherName: new FormControl(null),
+    Remarks: new FormControl(null),
+    LinkPhoto: new FormControl(null),
+    PhotoDesc: new FormControl(null),
     IsActive: new FormControl(null),
-    ResultCount: new FormControl(null),
+
 
     EntityTypeName: new FormControl(null),
     LawbreakerTypeName: new FormControl(null),
-    Region: new FormControl(null),
     ProductID: new FormControl(null),
     ProductName: new FormControl(null),
     IsChecked: new FormControl(null),

@@ -21,7 +21,7 @@ export class MasDocumentMainService {
     return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
-  MasDocumentMaingetAll(DocumentType: any, ReferenceCode: string) {
+  MasDocumentMaingetAll(DocumentType: string, ReferenceCode: string) {
     const params = {DocumentType, ReferenceCode};
     const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
     return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();

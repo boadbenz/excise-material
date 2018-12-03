@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ReductionApiService } from '../reduction.api.service';
 
 const routes: Routes = [
     {
@@ -25,7 +24,7 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes)
     ],
-    providers: [NavigationComponent, ReductionApiService],
+    providers: [NavigationComponent],
     declarations: [ListComponent]
 })
 export class ListModule { }

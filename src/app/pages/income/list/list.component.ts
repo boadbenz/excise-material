@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { IncomeService } from '../income.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Revenue } from '../Revenue';
+import { Revenue } from '../revenue';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
@@ -11,7 +11,6 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { MatAutocomplete } from '@angular/material';
-import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
@@ -58,7 +57,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.18');
+        this.sidebarService.setVersion('Revenue 0.0.0.11 (L)');
 
         this.RevenueStatus = "";
 
@@ -68,7 +67,7 @@ export class ListComponent implements OnInit, OnDestroy {
         //this.onSearch({ Textsearch: "" });
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {               
+            if (Textsearch) {
                 await this.navService.setOnSearch('');
 
                 let ts;
@@ -95,17 +94,14 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearch(Textsearch: any) {
-        this.preloader.setShowPreloader(true);
-
         this.incomeService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
 
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            swal('', Message.noRecord, 'warning');
-            //alert(Message.noRecord);
+            alert(Message.noRecord);
             this.RevenueList = [];
-            this.preloader.setShowPreloader(false);
+            this.preloader.setShowPreloader(true);
         });
     }
 
@@ -135,12 +131,12 @@ export class ListComponent implements OnInit, OnDestroy {
             form.value.RevenueStatus = null;
         }
 
+        debugger
         await this.incomeService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            swal('', err.message, 'error');
-            //alert(err.message);
+            alert(err.message);
             this.preloader.setShowPreloader(false);
         });
     }
@@ -149,8 +145,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.revenue = [];
 
         if (!list.length) {
-            swal('', Message.noRecord, 'warning');
-            //alert(Message.noRecord);
+            alert(Message.noRecord);
             this.RevenueList = [];
 
             return false;
@@ -166,7 +161,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
             if(StaffSendMoney.length > 0){
                 item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
-                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeShortName;
+                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeName;
             }
 
             if (item.RevenueStatus == "1") {
@@ -178,6 +173,7 @@ export class ListComponent implements OnInit, OnDestroy {
             else{
                 item.RevenueStatus = "";
             }
+
         })
 
         if (Array.isArray(list)) {
@@ -212,7 +208,9 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onEDateChange(event: IMyDateModel) {
         this._dateStartTo = event.date;
-        this.checkDateDelivery();
+        if (this.checkDateDelivery()) {
+
+        }
     }
 
     checkDateDelivery() {
@@ -221,8 +219,7 @@ export class ListComponent implements OnInit, OnDestroy {
             const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
 
             if (!compareDate(new Date(sdate), new Date(edate))) {
-                swal('', Message.checkDate, 'warning');
-                //alert(Message.checkDate)
+                alert(Message.checkDate)
                 setTimeout(() => {
                     this.DateStartTo = { date: this._dateStartFrom };
                 }, 0);
