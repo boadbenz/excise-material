@@ -22,7 +22,8 @@ export class FormGroupComponent extends FormGroupConfig implements OnInit {
           // console.log('key', key);
           if (key.default && key.field) {
             if (key.inputType == 'date') {
-              setDateMyDatepicker(new Date(key.default));
+              // tslint:disable-next-line:no-unused-expression
+              (new Date(key.default));
             } else {
               this.formGroup.controls[key.field].setValue(
                 key.default || '',

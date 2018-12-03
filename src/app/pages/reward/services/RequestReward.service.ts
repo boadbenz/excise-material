@@ -33,4 +33,7 @@ export class RequestRewardService extends HelperService {
   public RequestRewardupdByCon(param): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/RequestRewardupdByCon`, param);
   }
+  public RequestRewardupdDelete(param): Observable<any> {
+    return this.http.post(`${this.ApiPrefixUrl}/RequestRewardupdDelete`, param);
+  }
 }
