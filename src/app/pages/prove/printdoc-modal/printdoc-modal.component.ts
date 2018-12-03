@@ -1,4 +1,4 @@
-import { Component, OnInit,Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ProveService } from '../prove.service';
 
 @Component({
@@ -13,8 +13,6 @@ export class PrintDocModalComponent implements OnInit {
     isCheckAll = false;
     document = new Array<Document>();
 
-    @Input() ProveID: string;
-
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
 
@@ -24,8 +22,7 @@ export class PrintDocModalComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        debugger
-        this.proveService.MasDocumentMaingetAll(this.ProveID).then(result => {
+        this.proveService.DocumentgetByCon("").then(result => {
             this.document = new Array<Document>();
             this.document = result;
         })

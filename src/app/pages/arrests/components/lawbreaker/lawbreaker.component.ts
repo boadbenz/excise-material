@@ -13,7 +13,7 @@ import 'rxjs/add/operator/switchMap';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Message } from 'app/config/message';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
-import { MyDatePickerOptions, getDateMyDatepicker, convertDateForSave, setDateMyDatepicker } from 'app/config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 import { ImageType } from 'app/config/imageType';
 import { ArrestLawbreakerFormControl } from '../../models/arrest-lawbreaker';
 import { MainMasterService } from 'app/services/main-master.service';
@@ -23,8 +23,6 @@ import * as fromModels from '../../models';
 import * as fromMasterModel from 'app/models'
 import { Subject } from 'rxjs/Subject';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
-import 'rxjs/add/operator/takeUntil';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 
 
 @Component({
@@ -39,7 +37,6 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private s_mainMaster: MainMasterService,
         private s_lawbreaker: fromServices.ArrestLawbreakerService,
         private s_masLawbreaker: fromServices.ArrestMasLawbreakerService,
-        private s_arrest: fromServices.ArrestService,
         private activatedRoute: ActivatedRoute,
         private navService: NavigationService,
         private fb: FormBuilder,
@@ -58,26 +55,15 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     card4 = false;
 
     @ViewChild('imgNobody') imgNobody: ElementRef;
-    @ViewChild('latitude') latitude: ElementRef;
-    @ViewChild('longitude') longitude: ElementRef;
 
     // LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
-    disableForeign = false;
-    disableCompany = false;
     requiredPassport = false;
     requiredCompanyRegister = false;
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
-    // param: Params
     private mode: string;
-    private arrestMode: string;
-    private arrestCode: string;
-    private indictmentDetailId: string;
-    private indictmentId: string;
-    private guiltbaseId: string;
-    private allegationMode: string;
-    private lawbreakerId: string;
+    private lawbreakerId: number;
 
     myDatePickerOptions = MyDatePickerOptions;
     modal: any;
@@ -99,11 +85,11 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.LawbreakerFG = this.createForm();
-        this.sidebarService.setVersion(this.s_arrest.version);
+        this.sidebarService.setVersion('0.0.0.24');
 
         await this.active_route();
         await this.navigate_service();
-        // await this.setRegionStore();
+        await this.setRegionStore();
     }
 
     ngOnDestroy(): void {
@@ -114,54 +100,35 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     private createForm(): FormGroup {
         ArrestLawbreakerFormControl.LinkPhoto = new FormControl("C:\\Image");
-        ArrestLawbreakerFormControl.IsActive = new FormControl(1);
         return new FormGroup(ArrestLawbreakerFormControl);
     }
 
     private active_route() {
+        this.activatedRoute.params.takeUntil(this.destroy$).subscribe(p => {
+            this.mode = p['mode'];
+            this.lawbreakerId = p['code'];
 
-        combineLatest(this.activatedRoute.params, this.activatedRoute.queryParams)
-            .map(results => ({ params: results[0], queryParams: results[1] }))
-            .takeUntil(this.destroy$)
-            .subscribe(async results => {
-                this.mode = results.params.mode;
-                this.lawbreakerId = results.params.code;
-                this.arrestMode = results.queryParams.arrestMode;
-                this.arrestCode = results.queryParams.arrestCode;
-                this.indictmentId = results.queryParams.indictmentId;
-                this.guiltbaseId = results.queryParams.guiltbaseId;
-                this.allegationMode = results.queryParams.allegationMode;
+            if (p['mode'] === 'C') {
+                // set false
+                this.navService.setEditButton(false);
+                this.navService.setEditField(false);
+                this.navService.setNextPageButton(false);
+                // set true
+                this.navService.setSaveButton(true);
+                this.navService.setCancelButton(true);
 
-                switch (this.mode) {
-                    case 'C':
-                        this.enableBtnModeC();
-                        break;
-                    case 'R':
-                        this.enableBtnModeR();
-                        break;
-                }
-                this.pageLoad();
-            });
-    }
+            } else if (p['mode'] === 'R') {
+                // set false
+                this.navService.setSaveButton(false);
+                this.navService.setCancelButton(false);
+                // set true
+                this.navService.setEditButton(true);
+                this.navService.setEditField(true);
+                this.navService.setNextPageButton(true);
+            }
 
-    private enableBtnModeC() {
-        // set false
-        this.navService.setEditButton(false);
-        this.navService.setEditField(false);
-        this.navService.setNextPageButton(false);
-        // set true
-        this.navService.setSaveButton(true);
-        this.navService.setCancelButton(true);
-    }
-
-    private enableBtnModeR() {
-        // set false
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
-        this.navService.setNextPageButton(false);
-        // set true
-        this.navService.setEditButton(true);
-        this.navService.setEditField(true);
+            this.pageLoad();
+        });
     }
 
     private async pageLoad() {
@@ -206,7 +173,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
             case 'R':
                 this.loaderService.show();
-                this.ArrestLawbreakerGetByCon(this.lawbreakerId);
+                this.ArrestLawbreakerGetByCon(this.lawbreakerId.toString());
                 this.loaderService.hide();
                 break;
         }
@@ -235,13 +202,13 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
                 let _Lfg = this.LawbreakerFG.value;
                 const birthDay = this.isObject(_Lfg.BirthDate)
-                    && getDateMyDatepicker(_Lfg.BirthDate);
+                    && getDateMyDatepicker(_Lfg.BirthDate)
 
                 const passportDateIn = this.isObject(_Lfg.PassportDateIn)
-                    && getDateMyDatepicker(_Lfg.PassportDateIn);
+                    && getDateMyDatepicker(_Lfg.PassportDateIn)
 
                 const passportDateOut = this.isObject(_Lfg.PassportDateOut)
-                    && getDateMyDatepicker(_Lfg.PassportDateOut);
+                    && getDateMyDatepicker(_Lfg.PassportDateOut)
 
                 _Lfg.BirthDate = convertDateForSave(birthDay) || '';
                 _Lfg.PassportDateIn = convertDateForSave(passportDateIn) || '';
@@ -263,19 +230,13 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     this.typeheadRaces
                         .find(x => x.RaceCode == _Lfg.RaceCode).RaceNameTH;
 
-                if (_Lfg.EntityType == '2') {
-                    _Lfg.LawbreakerFirstName = _Lfg.CompanyName;
-                }
+                this.LawbreakerFG.patchValue(_Lfg);
 
-                console.log(JSON.stringify(_Lfg));
+                if (this.mode === 'C') {
+                    this.OnCreate();
 
-                switch (this.mode) {
-                    case 'C':
-                        this.OnCreate(_Lfg);
-                        break;
-                    case 'R':
-                        this.OnRevice(_Lfg);
-                        break;
+                } else if (this.mode === 'R') {
+                    this.OnRevice();
                 }
             }
         })
@@ -291,12 +252,12 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnNextPage(false);
                 this.router.navigate(
-                    [`arrest/allegation`, this.allegationMode],
+                    [`arrest/allegation`, 'C'],
                     {
                         queryParams: {
-                            arrestCode: this.arrestCode,
-                            indictmentId: this.indictmentId,
-                            guiltbaseId: this.guiltbaseId
+                            arrestCode: '',
+                            indictmentId: '',
+                            guiltbaseId: ''
                         }
                     });
             }
@@ -304,78 +265,59 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     async ArrestLawbreakerGetByCon(LawbreakerID: string) {
-
         await this.s_lawbreaker.ArrestMasLawbreakergetByCon(LawbreakerID)
             .then((x: fromModels.ArrestLawbreaker[]) => {
                 let law = x[0];
-
-                law.BirthDate = law.BirthDate && setDateMyDatepicker(law.BirthDate);
-                law.PassportDateIn = law.PassportDateIn && setDateMyDatepicker(law.PassportDateIn);
-                law.PassportDateOut = law.PassportDateOut && setDateMyDatepicker(law.PassportDateOut);
-                this.latitude.nativeElement.value = law.GPS && law.GPS.split(',')[0];
-                this.longitude.nativeElement.value = law.GPS && law.GPS.split(',')[1];
-
-                law.ResultCount = this.s_masLawbreaker.ArrestLawsuitResultCountgetByLawbreakerID(LawbreakerID)
-
-                if (law.SubDistrictCode && law.DistrictCode && law.ProvinceCode) {
-                    law.Region = `${law.SubDistrict} ${law.District} ${law.Province}`;
-                }
-
                 this.LawbreakerFG.patchValue(law);
                 if (law.LinkPhoto) {
-                    // this.imgNobody.nativeElement.src = law.LinkPhoto;
+                    this.imgNobody.nativeElement.src = law.LinkPhoto;
                 }
-
                 if (law.EntityType == 1 && law.LawbreakerType == 1) {
-                    // บุคคลธรรมดา
                     this.card3 = false;
                     this.card4 = false;
-
                 } else if (law.EntityType == 1 && law.LawbreakerType == 0) {
-                    // ชาวต่างชาติ
-                    this.card3 = true;
-
+                    this.card4 = false;
                 } else if (law.EntityType == 0) {
-                    // นิติบุคคล
-                    this.card4 = true;
+                    this.card3 = false;
                 }
             })
-    }
-
-    onChangeGps() {
-        let t = this.latitude.nativeElement.value;
-        let g = this.longitude.nativeElement.value;
-        this.LawbreakerFG.patchValue({
-            GPS: `${t},${g}`
-        })
     }
 
     toggleCard() {
         const e = this.LawbreakerFG.value.EntityType;
         const l = this.LawbreakerFG.value.LawbreakerType;
 
-        this.disableForeign = false;
-        this.disableCompany = false;
         this.requiredCompanyRegister = false;
         this.requiredPassport = false;
 
         if (e == '1' && l == '0') {
-            // บุคคลธรรมดา, ต่างชาติ
-            this.disableCompany = true;
             this.requiredPassport = true;
             this.card3 = true;
-        } else if (e == '1' && l == '1') {
-            // บุคคลธรรมดา, ชาวไทย
-            this.disableCompany = true;
-            this.disableForeign = true;
-            this.card3 = false;
-            this.card4 = false;
         } else if (e == '2') {
-            // นิติบุคคล
-            this.disableForeign = true;
             this.requiredCompanyRegister = true;
             this.card4 = true;
         }
+    }
+
+    private async setRegionStore() {
+        // await this.mainMasterService.masDistrictMaingetAll().then(res => {
+        //     res.map(prov =>
+        //         prov.MasDistrict.map(dis =>
+        //             dis.MasSubDistrict.map(subdis => {
+        //                 this.typeheadRegion.push({
+        //                     SubdistrictCode: subdis.SubdistrictCode,
+        //                     SubdistrictNameTH: subdis.SubdistrictNameTH,
+        //                     DistrictCode: dis.DistrictCode,
+        //                     DistrictNameTH: dis.DistrictNameTH,
+        //                     ProvinceCode: prov.ProvinceCode,
+        //                     ProvinceNameTH: prov.ProvinceNameTH,
+        //                     ZipCode: null
+        //                 })
+        //             })
+        //         )
+        //     )
+
+        // })
     }
 
     openOffenseDetailModal(e: any) {
@@ -389,9 +331,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
-                            .toLowerCase()
-                            .indexOf(term.toLowerCase()) > -1
+                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                        v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchTitleName = (text$: Observable<string>) =>
@@ -517,16 +459,18 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     checkResponse(res: any) {
         switch (res.IsSuccess) {
-            case 'False':
-            case false:
-                return false;
-            default:
+            case 'True':
+            case true:
                 return true;
+            default:
+                return false;
         }
     }
 
-    OnCreate(lawbreaker: fromModels.ArrestLawbreaker) {
-        this.s_masLawbreaker.ArrestMasLawbreakerinsAll(lawbreaker)
+    OnCreate() {
+        console.log(JSON.stringify(this.LawbreakerFG.value));
+
+        this.s_masLawbreaker.ArrestMasLawbreakerinsAll(this.LawbreakerFG.value)
             .takeUntil(this.destroy$)
             .subscribe(res => {
                 if (!this.checkResponse(res)) {
@@ -534,12 +478,12 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     return;
                 }
                 alert(Message.saveComplete);
-                this.router.navigate([`/arrest/lawbreaker/R/${res.LawbreakerID}`]);
+                this.router.navigate([`/arrest/lawbreaker/R/${res.LawbreakerID}`])
             });
     }
 
-    OnRevice(lawbreaker: fromModels.ArrestLawbreaker) {
-        this.s_masLawbreaker.ArrestMasLawbreakerupdByCon(lawbreaker)
+    async OnRevice() {
+        this.s_masLawbreaker.ArrestMasLawbreakerupdByCon(this.LawbreakerFG.value)
             .takeUntil(this.destroy$)
             .subscribe(res => {
                 if (!this.checkResponse(res)) {
@@ -547,7 +491,6 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     return;
                 }
                 alert(Message.saveComplete);
-                this.enableBtnModeR();
             })
     }
 
@@ -561,16 +504,15 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     [`arrest/allegation`, 'C'],
                     {
                         queryParams: {
-                            arrestMode: this.arrestMode,
-                            arrestCode: this.arrestCode,
-                            indictmentId: this.indictmentId,
-                            guiltbaseId: this.guiltbaseId
+                            arrestCode: '',
+                            indictmentId: '',
+                            guiltbaseId: ''
                         }
                     });
                 break;
 
             case 'R':
-                this.enableBtnModeR();
+                this.pageLoad();
                 break;
         }
     }

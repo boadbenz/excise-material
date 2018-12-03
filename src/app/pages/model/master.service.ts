@@ -18,7 +18,7 @@ export class MasterService {
   
   async getStation(): Promise<any> {
     const params = {};
-    const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
+    const url = `${appConfig.api8881}/CompareMasOfficegetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -30,19 +30,7 @@ export class MasterService {
 
   async getStaff(): Promise<any> {
     const params = {};
-    const url = `${appConfig.api7789}/MasStaffMaingetAll`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      //await alert(error);
-    }
-  }
-
-  async getProduct(): Promise<any> {
-    const params = {};
-    const url = `${appConfig.api7789}/MasProductMaingetAll`;
+    const url = `${appConfig.api8881}/CompareMasStaffgetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

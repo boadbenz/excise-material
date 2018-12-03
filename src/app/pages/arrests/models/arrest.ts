@@ -25,7 +25,6 @@ export class Arrest {
     InvestigationSurveyDocument: string;
     InvestigationCode: string;
     IsActive: number;
-    IsLawsuitComplete: number;
     ArrestNotice: Array<ArrestNotice>;
     ArrestStaff: Array<ArrestStaff>;
     ArrestLocale: Array<ArrestLocale>;

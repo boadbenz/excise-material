@@ -1,5 +1,7 @@
 import { ArrestProductDetail } from './arrest-product';
-import { ArrestLawGuitbase, ArrestLawbreaker } from '.';
+import { FormControl, Validators, FormArray } from '@angular/forms';
+import { ArrestLawGuitbase } from "./arrest-law-guiltbase";
+import { ArrestLawbreaker } from './arrest-lawbreaker';
 
 // class OpsArrestIndicmentDetailCollection {
 //     IndictmentDetailID: number;
@@ -33,7 +35,7 @@ export class ArrestIndictment {
     IsProve: number;
     IsActive: number;
     IsLawsuitComplete: number;
-    ArrestIndicmentDetail: ArrestIndictmentDetail[];
+    ArrestIndictmentDetail: ArrestIndictmentDetail[];
     ArrestLawGuitbase: ArrestLawGuitbase[];
 
     IsModify: string;
@@ -52,50 +54,4 @@ export class ArrestIndictmentDetail {
     LawbreakerID: number;
     ArrestLawbreaker: ArrestLawbreaker[]
     ArrestProductDetail: ArrestProductDetail[];
-}
-
-export class ArrestIndictmentProduct {
-    IndictmentProductID: number;
-    IndictmentID: number;
-    ProductID: number;
-    IsProdcutCo: string;
-    IndictmentProductQty: string;
-    IndictmentProductQtyUnit: string;
-    IndictmentProductSize: string;
-    IndictmentProductSizeUnit: string;
-    IndictmentProductVolume: string;
-    IndictmentProductVolumeUnit: string;
-    IndictmentProductMistreatRate: string;
-    IndictmentProductFine: string;
-    // ProductDetailIsActive: number;
-    IndictmentProductIsActive: number;
-    ProductType: number;
-    ArrestCode: string;
-    ProductGroupCode: string;
-    ProductIsDomestic: number;
-    ProductCode: string;
-    ProductBrandCode: string;
-    ProductBrandNameTH: string;
-    ProductBrandNameEN: string;
-    ProductSubBrandCode: string;
-    ProductSubBrandNameTH: string;
-    ProductSubBrandNameEN: string;
-    ProductModelCode: string;
-    ProductModelName: string;
-    ProductFixNo1: string;
-    ProductDegreeCode: string;
-    ProductDegree: number;
-    ProductSizeCode: string;
-    ProductSize: string;
-    ProductSizeUnitCode: string;
-    ProductSizeUnitName: string;
-    ProductFixNo2: number;
-    ProductSequenceNo: string;
-    ProductDesc: string;
-    ProductCarNo: string;
-    ProductQty: number;
-    ProductQtyUnit: string;
-    ProductNetVolume: number;
-    ProductNetVolumeUnit: string;
-    ProductIsActive: number
 }

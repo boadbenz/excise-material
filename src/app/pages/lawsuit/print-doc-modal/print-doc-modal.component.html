@@ -28,10 +28,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr >
+          <tr>
             <td class="text-center">
-              <input type="checkbox" [id]="'td'" name="ischeck" ngModel class="filled-in chk-col-indigo">
-              <label [for]="'td'" class="m-0"></label>
+              <input type="checkbox" [id]="0" name="ischeck" ngModel class="filled-in chk-col-indigo">
+              <label class="m-0"></label>
             </td>
             <td class="text-center">1</td>
             <td>บันทึกคำให้กำรของผู้กล่ำวโทษ ส.ส.1/55
@@ -42,8 +42,8 @@
           </tr>
           <tr>
             <td class="text-center">
-              <input type="checkbox" [id]="'td'+1" name="ischeck" ngModel class="filled-in chk-col-indigo">
-              <label [for]="'td'+1" class="m-0"></label>
+              <input type="checkbox" [id]="1" name="ischeck" ngModel class="filled-in chk-col-indigo">
+              <label class="m-0"></label>
             </td>
             <td class="text-center">2</td>
             <td>บันทึกคำให้กำรของผู้กล่ำวโทษ ส.ส.2/54
@@ -57,7 +57,7 @@
               <input type="checkbox" [id]="'td'+i+2" name="ischeck" ngModel class="filled-in chk-col-indigo">
               <label [for]="'td'+i+2" class="m-0"></label>
             </td>
-            <td class="text-center">{{i+3}}</td>
+            <td class="text-center">{{i+1}}</td>
             <div *ngFor="let lawBreaker of item.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitArrestLawbreaker">
               คำร้องขอให้เปรียบเทียบคดี คด.1 ของ {{lawBreaker.LawbreakerTitleName}}
               {{lawBreaker.LawbreakerFirstName}}
@@ -72,7 +72,7 @@
               <input type="checkbox" [id]="'td'+i" name="ischeck" ngModel class="filled-in chk-col-indigo">
               <label [for]="'td'+i" class="m-0"></label>
             </td>
-            <td class="text-center">{{printDocData.length + 4}}</td>
+            <td class="text-center">{{i+1}}</td>
             <td>บันทึกคำให้กำรของผู้กล่ำวโทษ ส.ส.1/55<br>
               บันทึกคำให้กำรของผู้กล่ำวโทษ ส.ส.2/54<br>
               <div *ngFor="let lawBreaker of item.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitArrestLawbreaker">

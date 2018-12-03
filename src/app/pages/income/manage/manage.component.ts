@@ -17,7 +17,6 @@ import { async } from '../../../../../node_modules/@angular/core/testing';
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
-import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-manage',
@@ -41,7 +40,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     RevenueID: string;
     RevenueCode: string;    // เลขที่นำส่งเงิน
     RevenueNo: string;  // เลขที่หนังสือนำส่ง
-    RevenueNoYear: string;  // ปีเลขที่หนังสือนำส่ง
     InformTo: string;       // เรียน
     StaffSendID: string;    // รหัสผู้นำส่ง
     StaffSendName: string;  // ชื่อผู้นำส่ง
@@ -104,7 +102,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
-        this.sidebarService.setVersion('Revenue 0.0.0.18');
+        this.sidebarService.setVersion('Revenue 0.0.0.11 (M)');
 
         this.active_Route();
         this.navigate_Service();
@@ -178,8 +176,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
             if (this.RevenueStatus == 2) {
-                //alert("ไม่สามารถแก้ไขรายการได้");
-                swal('', "ไม่สามารถแก้ไขรายการได้", 'warning');
+                alert("ไม่สามารถแก้ไขรายการได้");
+
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
                 // set true
@@ -206,15 +204,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                     || this.DeptStaff == "" || this.DeptStaff == undefined
                     || this.RevenueDate == null) {
                     this.isRequired = true;
-                    swal('', Message.checkData, 'warning');
-                    //alert(Message.checkData);
+                    alert(Message.checkData);
 
                     return false;
                 }
 
                 if (+this.MistreatNo < 1) {
-                    swal('', "กรุณำเลือกรายการที่ต้องการนำส่งเงิน", 'warning');
-                   // alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
+                    alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
 
                     return false;
                 }
@@ -302,21 +298,17 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                         if (isSuccess) {
                             this.oRevenue = {};
-
-                            swal('', Message.saveComplete, 'success');
-                           // alert(Message.saveComplete);
+                            alert(Message.saveComplete);
                             this.router.navigate(['/income/list']);
                         }
                     } else {
-                        swal('', Message.saveFail, 'error');
-                        //alert(Message.saveFail);
+                        alert(Message.saveFail);
                     }
                 }, (error) => { console.error(error); return false; });
             }
         }
         else if (this.RevenueStatus == 2) {
-            swal('', Message.cannotDelete, 'warning');
-            //alert(Message.cannotDelete);
+            alert(Message.cannotDelete);
         }
 
     }
@@ -338,15 +330,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 this.RevenueCode = res[0].RevenueCode;
                 this.RevenueStation = res[0].StationName;
-
-                var RN = res[0].RevenueNo.split('/');
-
-                if (RN.length > 1) {
-                    this.RevenueNo = RN[0];
-                    this.RevenueNoYear = RN[1];
-                }
-
-                //this.RevenueNo = res[0].RevenueNo;
+                this.RevenueNo = res[0].RevenueNo;
                 this.InformTo = res[0].InformTo;
                 this.RevenueStatus = res[0].RevenueStatus;
 
@@ -397,7 +381,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                             CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
                                                             CompareID: item[j].CompareID,
                                                             CompareCode: item[j].CompareCode,
-                                                            LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + item[j].RevenueCompareDetail[i].LawbreakerLastName,
+                                                            LawBreaker: item[j].RevenueCompareDetail[i].LawbreakerTitleName + item[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + item[j].RevenueCompareDetail[i].LawbreakerLastName,
                                                             StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
                                                             PaymentDate: toLocalShort(item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
                                                             TotalFine: +`${item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
@@ -424,8 +408,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                             this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
                             this.preloader.setShowPreloader(false);
                         }, (err: HttpErrorResponse) => {
-                            swal('', err.message, 'warning');
-                            //alert(err.message);
+                            alert(err.message);
                         });
                     }
 
@@ -436,14 +419,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.checkIfAllChbSelected();
                 }
             } else {
-                swal('', "พบปัญหาในการติดต่อ Server", 'error');
-                //alert("พบปัญหาในการติดต่อ Server");
+                alert("พบปัญหาในการติดต่อ Server");
                 this.preloader.setShowPreloader(false);
                 this.router.navigate(['/income/list']);
             }
         }, (err: HttpErrorResponse) => {
-            swal('', err.message, 'error');
-            //alert(err.message);
+            alert(err.message);
         });
     }
 
@@ -510,13 +491,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
             }, (err: HttpErrorResponse) => {
-                swal('', err.message, 'error');
-                //alert(err.message);
+                alert(err.message);
             });
         }
         else {
-            swal('', "กรุณาระบุวันที่นำส่ง", 'warning');
-            //alert("กรุณาระบุวันที่นำส่ง");
+            alert("กรุณาระบุวันที่นำส่ง");
             this.ListRevenueDetailPaging = [];
         }
     }
@@ -550,7 +529,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         debugger
         this.oRevenue.RevenueID = "";
-        this.oRevenue.RevenueNo = this.RevenueNo + "/" + this.RevenueNoYear;
+        this.oRevenue.RevenueNo = this.RevenueNo;
         this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
         this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.InformTo = this.InformTo;
@@ -613,7 +592,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
         }
 
-        this.oRevenue.RevenueNo = this.RevenueNo + "/" + this.RevenueNoYear;
+
+        this.oRevenue.RevenueNo = this.RevenueNo;
         this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
         this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.RevenueCode = this.RevenueCode;
@@ -701,14 +681,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (isSuccess) {
             //alert("Update");
-            swal('', Message.saveComplete, 'success');
-            //alert(Message.saveComplete);
+            alert(Message.saveComplete);
             this.onComplete();
             this.preloader.setShowPreloader(false);
         } else {
-            swal('', Message.saveFail, 'error');
-            //alert(Message.saveFail);
-            this.preloader.setShowPreloader(false);
+            alert(Message.saveFail);
         }
     }
 
@@ -730,8 +707,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 if (isSuccess) {
                     //alert("Insert");
-                    swal('', Message.saveComplete, 'success');
-                    //alert(Message.saveComplete);
+                    alert(Message.saveComplete);
                     this.oRevenue = {};
                     this.onComplete();
                     debugger
@@ -739,8 +715,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.router.navigate([`/income/manage/R/${this.RevenueID}`]);
                 }
             } else {
-                swal('', Message.saveFail, 'error');
-                //alert(Message.saveFail);
+                alert(Message.saveFail);
             }
         }, (error) => { console.error(error); return false; });
     }
@@ -752,8 +727,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.rawStaffSendOptions = res;
             }
         }, (err: HttpErrorResponse) => {
-            swal('', "พบปัญหาในการติดต่อ Server", 'error');
-            //alert("พบปัญหาในการติดต่อ Server");
+            alert("พบปัญหาในการติดต่อ Server");
         });
     }
 
@@ -767,7 +741,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.getReveneueStaff();
             }
 
-            this.StaffSendoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.StaffSendoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -847,7 +821,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
             }
-            this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -927,7 +901,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
             }
-            this.InformTooptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.InformTooptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -949,8 +923,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
         }, (err: HttpErrorResponse) => {
-            swal('', "พบปัญหาในการติดต่อ Server", 'error');
-            //alert("พบปัญหาในการติดต่อ Server");
+            alert("พบปัญหาในการติดต่อ Server");
         });
         // this.preloader.setShowPreloader(false);
     }

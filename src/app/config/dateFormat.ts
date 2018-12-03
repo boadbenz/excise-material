@@ -55,35 +55,23 @@ export function toTimeShort(date: string): string {
 export const MyDatePickerOptions: IMyOptions = {
     dateFormat: 'dd mmm yyyy',
     showClearDateBtn: false,
-    height: '30px',
-    alignSelectorRight: true,
-    openSelectorOnInputClick: true,
-    editableDateField: false
+    height: '30px'
 };
 
-export function setDateMyDatepicker(date: any) {
+export function setDateMyDatepicker(date: Date) {
     if (!date)
         return { myDate: null };
 
-    if (date.jsdate) {
-        return date;
-    } else {
-        const d = new Date(date)
-        return { date: { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() } };
-    }
+    date = new Date(date);
+    return { date: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } }
 }
 
 export function getDateMyDatepicker(date: any) {
     if (!date)
         return null;
-        
-    if (date.date) {
-        const d = date.date;
-        return new Date(`${d.year}-${d.month}-${d.day}`);
-    } else {
-        return date;
-    }
-    
+
+    date = date.date
+    return new Date(`${date.year}-${date.month}-${date.day}`);
 }
 
 export function convertDateForSave(date: Date) {

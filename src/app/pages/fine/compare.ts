@@ -4,7 +4,7 @@ import { CompareStaff } from "./compareStaff";
 export class Compare {
     public CompareID?: string;
     public CompareCode?: string;
-    public CompareDate?: Date;
+    public CompareDate?: string;
     public CompareStationCode?: string;
     public CompareStation?: string;
     public CompareSubdistrictCode?: string;
@@ -19,17 +19,8 @@ export class Compare {
     public AccuserDistrict?: string;
     public AccuserProvinceCode?: string;
     public AccuserProvince?: string;
-    public IsOutside?: number;
+    public IsOutside?: string;
     public LawsuitID?: string;
     public CompareDetail?: CompareDetail[] ;
     public CompareStaff?: CompareStaff[];
-    public ArrestCode?: string;
-    public LawsuitNo?: number;
-    public ProveReportNo?: number;
-    public TitleName?: string;
-    public FirstName?: string;
-    public LastName?: string;
-    public DepartmentName?: string;
-    public DepartmentNameTH?: string;
-    public DepartmentCode?: string;
 }

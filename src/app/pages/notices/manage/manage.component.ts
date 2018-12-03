@@ -37,12 +37,9 @@ import {
 } from '../../../models';
 import { IMyDateModel } from 'mydatepicker-th';
 import { replaceFakePath } from 'app/config/dataString';
-// import { NoticeMasSuspect } from '../../component/suspect-modal/notice-mas-suspect';
-import { NoticeMasSuspect } from '../../component/notice-suspect-modal/notice-mas-suspect';
+import { NoticeMasSuspect } from '../../component/suspect-modal/notice-mas-suspect';
 import { MainMasterService } from '../../../services/main-master.service';
 import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
-import { async } from 'q';
-import { TransactionRunningService } from 'app/services/transaction-running.service';
 
 @Component({
     selector: 'app-manage',
@@ -56,12 +53,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
 
-    actionFrom:string;
-    months:any[];
     programSpect: string = 'ILG60-02-02-00';
     mode: string;
     showEditField: Boolean;
-    localEditField: Boolean;
     modal: any;
     noticeCode: string;
     arrestCode: string;
@@ -123,23 +117,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ngbModel: NgbModal,
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
-        private mainMasterService: MainMasterService,
-        private transactionRunningService: TransactionRunningService, private activatedRoute:ActivatedRoute
+        private mainMasterService: MainMasterService
     ) {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
-        this.navService.setInnerTextNextPageButton('งานจับกุม');
+        this.navService.setInnerTextNextPageButton('งานจับกุม')
     }
 
     async ngOnInit() {
-        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-        this.activatedRoute.queryParams.subscribe(params => {
-          this.actionFrom = params['from'];
-        });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.21');
+        this.sidebarService.setVersion('0.0.2.12');
 
         this.navigate_service();
 
@@ -153,41 +142,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.setRegionStore();
         await this.setProductUnitStore();
         await this.setOfficeStore();
-        // await this.setCommunicateStore();
-
-        // this.activatedRoute.params.subscribe(params => {
-        //     let reload = params['reload'];
-        //     if(reload){
-        //         console.log(reload);
-        //     }
-        // });
+        await this.setCommunicateStore();
 
         if (this.mode == 'R') {
-            await this.getByCon(this.noticeCode);
-        }
-
-        if(this.actionFrom=="edit"){
-            let res = JSON.parse(sessionStorage.getItem("notice_form_data"));
-            if(res){
-                let noticeDate = res.NoticeDate;
-                if(noticeDate){
-                    let date = noticeDate.date;
-                    res.NoticeDate = date.year+"-"+this.months[date.month-1]+"-"+date.day;
-                }
-                let noticeDueDate = res.NoticeDueDate;
-                if(noticeDueDate){
-                    let date = noticeDueDate.date;
-                    res.NoticeDueDate = date.year+"-"+this.months[date.month-1]+"-"+date.day;
-                }
-                this.setDataInit(res);
-            }
+            this.getByCon(this.noticeCode);
         }
 
         this.preloader.setShowPreloader(false);
-
-        let url = this.router.url;
-        let tmps = url.split("?");
-        sessionStorage.setItem("notice_current_page", tmps[0]+"?from=edit");
     }
 
     private active_route() {
@@ -202,10 +163,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.noticeCode = "NEW";//`LS${(new Date).getTime()}`;
+                this.noticeCode = `LS-${(new Date).getTime()}`;
                 this.arrestCode = `TN-${(new Date).getTime()}`;
-
-                this.localEditField = false;
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -219,8 +178,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setNextPageButton(true);
 
                 this.noticeCode = p['code'];
-
-                this.localEditField = true;
             }
         });
     }
@@ -234,10 +191,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnCancel(false);
                 this.router.navigate(['/notice/list']);
-
-                sessionStorage.removeItem("notice_form_data");
             }
-        });
+        })
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
 
@@ -259,16 +214,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                // if (!this.NoticeSuspect.value.length) {
-                //     alert(Message.checkData);
-                //     return;
-                // }
+                if (!this.NoticeSuspect.value.length) {
+                    alert(Message.checkData);
+                    return;
+                }
 
-                const noticeDate = this.noticeForm.value.NoticeDate;
-                const noticeDueDate = this.noticeForm.value.NoticeDueDate;
-
-                this.noticeForm.value.NoticeDate = noticeDate.date.day+"-"+this.months[noticeDate.date.month-1]+"-"+noticeDate.date.year;//convertDateForSave(sDateCompare);
-                this.noticeForm.value.NoticeDueDate = noticeDueDate.date.day+"-"+this.months[noticeDueDate.date.month-1]+"-"+noticeDueDate.date.year;//convertDateForSave(eDateCompare);
+                this.noticeForm.value.NoticeDate = convertDateForSave(sDateCompare);
+                this.noticeForm.value.NoticeDueDate = convertDateForSave(eDateCompare);
                 this.noticeForm.value.NoticeInformer.map(item => {
                     item.InformerType = item.InformerType == true ? 1 : 0;
                 });
@@ -318,145 +270,38 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeDueDate: new FormControl(noticeDueDate, Validators.required),
             NoticeDueTime: new FormControl(null),
             GroupNameDesc: new FormControl('N/A'),
-            CommunicationChanelID: new FormControl(null),
+            CommunicationChanelID: new FormControl(null, Validators.required),
             DataSource: new FormControl(null),
             FilePath: new FormControl(null),
             ArrestCode: new FormControl(null),
-            IsArrest: new FormControl(0),
+            IsArrest: new FormControl(1),
             IsActive: new FormControl(1),
             NoticeStaff: this.fb.array([this.createStaffForm()]),
             NoticeInformer: this.fb.array([this.createInformerForm()]),
             NoticeLocale: this.fb.array([this.createLocaleForm()]),
-            NoticeProduct: this.fb.array([]),
+            NoticeProduct: this.fb.array([this.createProductForm()]),
             NoticeSuspect: this.fb.array([]),
             NoticeDocument: this.fb.array([])
-        });
+        })
     }
 
     private createStaffForm(): FormGroup {
         NoticeStaffFormControl.NoticeCode = new FormControl(this.noticeCode);
-        if(this.actionFrom=="new"){
-            NoticeStaffFormControl.StaffFullName = new FormControl(null, Validators.required);
-            NoticeStaffFormControl.StaffID = new FormControl(null);
-            NoticeStaffFormControl.NoticeCode = new FormControl(null, Validators.required);
-            NoticeStaffFormControl.StaffCode = new FormControl(null, Validators.required);
-            NoticeStaffFormControl.TitleName = new FormControl(null);
-            NoticeStaffFormControl.FirstName = new FormControl(null, Validators.required);
-            NoticeStaffFormControl.LastName = new FormControl(null);
-            NoticeStaffFormControl.PositionCode = new FormControl(null);
-            NoticeStaffFormControl.PositionName = new FormControl(null);
-            NoticeStaffFormControl.PosLevel = new FormControl(null);
-            NoticeStaffFormControl.PosLevelName = new FormControl(null);
-            NoticeStaffFormControl.DepartmentCode = new FormControl(null);
-            NoticeStaffFormControl.DepartmentName = new FormControl(null);
-            NoticeStaffFormControl.DepartmentLevel = new FormControl(null);
-            NoticeStaffFormControl.OfficeCode = new FormControl(null);
-            NoticeStaffFormControl.OfficeName = new FormControl(null);
-            NoticeStaffFormControl.OfficeShortName = new FormControl(null);
-            NoticeStaffFormControl.ContributorCode = new FormControl(null);
-            NoticeStaffFormControl.IsActive = new FormControl(1);
-        }
         return this.fb.group(NoticeStaffFormControl)
     }
 
     private createInformerForm(): FormGroup {
         NoticeInformerFormControl.NoticeCode = new FormControl(this.noticeCode);
-        if(this.actionFrom=="new"){
-            NoticeInformerFormControl.InformerID = new FormControl('22');
-            NoticeInformerFormControl.InformerType = new FormControl(null);
-            NoticeInformerFormControl.TitleCode = new FormControl(null);
-            NoticeInformerFormControl.TitleName = new FormControl(null);
-            NoticeInformerFormControl.FirstName = new FormControl(null, Validators.required);
-            NoticeInformerFormControl.LastName = new FormControl(null);
-            NoticeInformerFormControl.IDCard = new FormControl('N/A');
-            NoticeInformerFormControl.Age = new FormControl(null);
-            NoticeInformerFormControl.GenderType = new FormControl('-');
-            NoticeInformerFormControl.Location = new FormControl('N/A');
-            NoticeInformerFormControl.Address = new FormControl(null);
-            NoticeInformerFormControl.Village = new FormControl(null);
-            NoticeInformerFormControl.Building = new FormControl(null);
-            NoticeInformerFormControl.Floor = new FormControl(null);
-            NoticeInformerFormControl.Room = new FormControl(null);
-            NoticeInformerFormControl.Alley = new FormControl(null);
-            NoticeInformerFormControl.Road = new FormControl(null);
-            NoticeInformerFormControl.SubDistrictCode = new FormControl(null);
-            NoticeInformerFormControl.SubDistrict = new FormControl(null);
-            NoticeInformerFormControl.DistrictCode = new FormControl(null);
-            NoticeInformerFormControl.District = new FormControl(null);
-            NoticeInformerFormControl.ProvinceCode = new FormControl(null, Validators.required);
-            NoticeInformerFormControl.Province = new FormControl(null);
-            NoticeInformerFormControl.ZipCode = new FormControl('N/A');
-            NoticeInformerFormControl.TelephoneNo = new FormControl('N/A');
-            NoticeInformerFormControl.InformerInfo = new FormControl(null);
-            NoticeInformerFormControl.IsActive = new FormControl(1);
-            NoticeInformerFormControl.FullName = new FormControl(null);
-            NoticeInformerFormControl.Region = new FormControl(null);
-        }
         return this.fb.group(NoticeInformerFormControl)
     }
 
     private createLocaleForm(): FormGroup {
         NoticeLocaleFormControl.NoticeCode = new FormControl(this.noticeCode);
-        if(this.actionFrom=="new"){
-            NoticeLocaleFormControl.LocaleID = new FormControl(null);
-            NoticeLocaleFormControl.Location = new FormControl(null);
-            NoticeLocaleFormControl.Address = new FormControl(null);
-            NoticeLocaleFormControl.Village = new FormControl(null);
-            NoticeLocaleFormControl.Building = new FormControl(null);
-            NoticeLocaleFormControl.Floor = new FormControl(null);
-            NoticeLocaleFormControl.Room = new FormControl(null);
-            NoticeLocaleFormControl.Alley = new FormControl(null);
-            NoticeLocaleFormControl.Road = new FormControl(null);
-            NoticeLocaleFormControl.SubDistrictCode = new FormControl(null);
-            NoticeLocaleFormControl.SubDistrict = new FormControl(null);
-            NoticeLocaleFormControl.DistrictCode = new FormControl(null);
-            NoticeLocaleFormControl.District = new FormControl(null);
-            NoticeLocaleFormControl.ProvinceCode = new FormControl(null, Validators.required);
-            NoticeLocaleFormControl.Province = new FormControl(null);
-            NoticeLocaleFormControl.ZipCode = new FormControl('N/A');
-            NoticeLocaleFormControl.Policestation = new FormControl(null);
-            NoticeLocaleFormControl.IsActive = new FormControl(1);
-            NoticeLocaleFormControl.Region = new FormControl(null);
-        }
         return this.fb.group(NoticeLocaleFormControl)
     }
 
     private createProductForm(): FormGroup {
         NoticeProductFormControl.NoticeCode = new FormControl(this.noticeCode);
-        if(this.actionFrom=="new"){
-            NoticeProductFormControl.ProductID = new FormControl(null);
-            NoticeProductFormControl.GroupCode = new FormControl(null);
-            NoticeProductFormControl.IsDomestic = new FormControl(null);
-            NoticeProductFormControl.ProductCode = new FormControl(null);
-            NoticeProductFormControl.BrandCode = new FormControl(null);
-            NoticeProductFormControl.BrandNameTH = new FormControl(null);
-            NoticeProductFormControl.BrandNameEN = new FormControl(null);
-            NoticeProductFormControl.SubBrandCode = new FormControl(null);
-            NoticeProductFormControl.SubBrandNameTH = new FormControl(null);
-            NoticeProductFormControl.SubBrandNameEN = new FormControl(null);
-            NoticeProductFormControl.ModelCode = new FormControl(null);
-            NoticeProductFormControl.ModelName = new FormControl(null);
-            NoticeProductFormControl.FixNo1 = new FormControl(null);
-            NoticeProductFormControl.DegreeCode = new FormControl(null);
-            NoticeProductFormControl.Degree = new FormControl(null);
-            NoticeProductFormControl.SizeCode = new FormControl(null);
-            NoticeProductFormControl.Size = new FormControl(null);
-            NoticeProductFormControl.SizeUnitCode = new FormControl(null);
-            NoticeProductFormControl.SizeUnitName = new FormControl(null);
-            NoticeProductFormControl.FixNo2 = new FormControl(null);
-            NoticeProductFormControl.SequenceNo = new FormControl(null);
-            NoticeProductFormControl.ProductDesc = new FormControl(null);
-            NoticeProductFormControl.CarNo = new FormControl(null);
-            NoticeProductFormControl.Qty = new FormControl(null);
-            NoticeProductFormControl.QtyUnit = new FormControl(null);
-            NoticeProductFormControl.NetVolume = new FormControl(0);
-            NoticeProductFormControl.NetVolumeUnit = new FormControl(null);
-            NoticeProductFormControl.Remarks = new FormControl(null);
-            NoticeProductFormControl.IsActive = new FormControl(1);
-        
-            NoticeProductFormControl.BrandFullName = new FormControl(null);
-            NoticeProductFormControl.IsNewItem = new FormControl(false);
-        }
         return this.fb.group(NoticeProductFormControl)
     }
 
@@ -468,144 +313,74 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private async setDataInit(res:any){
-        this.noticeCode = res.NoticeCode;
-        this.arrestCode = res.ArrestCode;
-        await this.noticeForm.reset({
-            NoticeCode: res.NoticeCode,
-            NoticeStationCode: res.NoticeStationCode,
-            NoticeStation: res.NoticeStation,
-            NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
-            NoticeTime: res.NoticeTime,
-            NoticeDue: res.NoticeDue,
-            NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
-            GroupNameDesc: res.GroupNameDesc || 'N/A',
-            CommunicationChanelID: res.CommunicationChanelID,
-            ArrestCode: res.ArrestCode,
-            IsActive: res.IsActive,
-            IsArrest: res.IsArrest || 1
-        });
-
-        const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
-        staff.map(item => {
-            item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-        });
-
-        await res.NoticeLocale.map(item =>
-            item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
-        )
-
-        const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
-        informer.map(item => {
-            this.isConceal = item.InformerType == 1 ? true : false;
-            item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
-            item.Region += item.District == null ? '' : ` ${item.District}`;
-            item.Region += item.Province == null ? '' : ` ${item.Province}`;
-        });
-
-        const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
-        suspect.map(item => {
-            item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
-            item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
-            item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
-
-            item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
-            item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
-
-            item.SuspectType = item.SuspectType || 0;
-            item.EntityType = item.EntityType || 0;
-            item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
-            item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
-        }
-        )
-
-        const product = res.NoticeProduct.filter(item => item.IsActive == 1);
-        product.map(item => {
-            item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
-            item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
-            item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
-            item.NetWeight = item.NetWeight || '0';
-            item.NetWeightUnit = item.NetWeightUnit || '0';
-        }
-        )
-
-        await this.setItemFormArray(staff, 'NoticeStaff');
-        await this.setItemFormArray(informer, 'NoticeInformer');
-        await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-        await this.setItemFormArray(product, 'NoticeProduct');
-        await this.setItemFormArray(suspect, 'NoticeSuspect');
-    }
-
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
-            
-            // this.noticeCode = res.NoticeCode;
-            // this.arrestCode = res.ArrestCode;
-            // await this.noticeForm.reset({
-            //     NoticeCode: res.NoticeCode,
-            //     NoticeStationCode: res.NoticeStationCode,
-            //     NoticeStation: res.NoticeStation,
-            //     NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
-            //     NoticeTime: res.NoticeTime,
-            //     NoticeDue: res.NoticeDue,
-            //     NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
-            //     GroupNameDesc: res.GroupNameDesc || 'N/A',
-            //     CommunicationChanelID: res.CommunicationChanelID,
-            //     ArrestCode: res.ArrestCode,
-            //     IsActive: res.IsActive,
-            //     IsArrest: res.IsArrest || 1
-            // });
+            this.noticeCode = res.NoticeCode;
+            this.arrestCode = res.ArrestCode;
+            await this.noticeForm.reset({
+                NoticeCode: res.NoticeCode,
+                NoticeStationCode: res.NoticeStationCode,
+                NoticeStation: res.NoticeStation,
+                NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
+                NoticeTime: res.NoticeTime,
+                NoticeDue: res.NoticeDue,
+                NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
+                GroupNameDesc: res.GroupNameDesc || 'N/A',
+                CommunicationChanelID: res.CommunicationChanelID,
+                ArrestCode: res.ArrestCode,
+                IsActive: res.IsActive,
+                IsArrest: res.IsArrest || 1
+            });
 
-            // const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
-            // staff.map(item => {
-            //     item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-            // });
+            const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
+            staff.map(item => {
+                item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+            });
 
-            // await res.NoticeLocale.map(item =>
-            //     item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
-            // )
+            await res.NoticeLocale.map(item =>
+                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
+            )
 
-            // const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
-            // informer.map(item => {
-            //     this.isConceal = item.InformerType == 1 ? true : false;
-            //     item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
-            //     item.Region += item.District == null ? '' : ` ${item.District}`;
-            //     item.Region += item.Province == null ? '' : ` ${item.Province}`;
-            // });
+            const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
+            informer.map(item => {
+                this.isConceal = item.InformerType == 1 ? true : false;
+                item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
+                item.Region += item.District == null ? '' : ` ${item.District}`;
+                item.Region += item.Province == null ? '' : ` ${item.Province}`;
+            });
 
-            // const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
-            // suspect.map(item => {
-            //     item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
-            //     item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
-            //     item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+            const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
+            suspect.map(item => {
+                item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
+                item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+                item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
 
-            //     item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
-            //     item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
+                item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
+                item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
 
-            //     item.SuspectType = item.SuspectType || 0;
-            //     item.EntityType = item.EntityType || 0;
-            //     item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
-            //     item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
-            // }
-            // )
+                item.SuspectType = item.SuspectType || 0;
+                item.EntityType = item.EntityType || 0;
+                item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
+                item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
+            }
+            )
 
-            // const product = res.NoticeProduct.filter(item => item.IsActive == 1);
-            // product.map(item => {
-            //     item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
-            //     item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
-            //     item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
-            //     item.NetWeight = item.NetWeight || '0';
-            //     item.NetWeightUnit = item.NetWeightUnit || '0';
-            // }
-            // )
+            const product = res.NoticeProduct.filter(item => item.IsActive == 1);
+            product.map(item => {
+                item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
+                item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
+                item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
+                item.NetWeight = item.NetWeight || '0';
+                item.NetWeightUnit = item.NetWeightUnit || '0';
+            }
+            )
 
-            // await this.setItemFormArray(staff, 'NoticeStaff');
-            // await this.setItemFormArray(informer, 'NoticeInformer');
-            // await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-            // await this.setItemFormArray(product, 'NoticeProduct');
-            // await this.setItemFormArray(suspect, 'NoticeSuspect');
-            this.setDataInit(res);
-        });
+            await this.setItemFormArray(staff, 'NoticeStaff');
+            await this.setItemFormArray(informer, 'NoticeInformer');
+            await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+            await this.setItemFormArray(product, 'NoticeProduct');
+            await this.setItemFormArray(suspect, 'NoticeSuspect');
+        })
 
         // await this.noticeService.getDocument(code).then(async res => {
         //     res.map(item => item.IsNewItem = false)
@@ -615,87 +390,31 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onCreate() {
 
+        // Set Preloader
+        this.preloader.setShowPreloader(true);
+
         console.log('===================');
         console.log('Create Notice : ', JSON.stringify(this.noticeForm.value));
         console.log('===================');
 
-        let noticeForm = this.noticeForm.value;
-
-        let noticeStaff = [];
-        let noticeInformer = [];
-        let noticeLocale = [];
-        let noticeProduct = [];
-        let noticeSuspect = [];
-        let noticeDocument = [];
-        for(let l of noticeForm.NoticeStaff){
-            l.NoticeCode = this.noticeCode;
-            l.ContributorID = 4;
-            l.IsActive = 1;
-            noticeStaff.push(l);
-        }
-        for(let l of noticeForm.NoticeInformer){
-            l.NoticeCode = this.noticeCode;
-            l.IsActive = 1;
-            noticeInformer.push(l);
-        }
-        for(let l of noticeForm.NoticeLocale){
-            l.NoticeCode = this.noticeCode;
-            l.IsActive = 1;
-            noticeLocale.push(l);
-        }
-        for(let l of noticeForm.NoticeProduct){
-            l.NoticeCode = this.noticeCode;
-            l.IsActive = 1;
-            l.NetVolume = l.NetVolume?l.NetVolume:0;
-            if(!l.ProductCode){
-                this.isRequired = true;
-                alert(Message.checkData)
-                return false;
-            }
-            noticeProduct.push(l);
-        }
-        for(let l of noticeForm.NoticeSuspect){
-            l.NoticeCode = this.noticeCode;
-            l.IsActive = 1;
-            noticeSuspect.push(l);
-        }
-        for(let l of noticeForm.NoticeDocument){
-            l.NoticeCode = this.noticeCode;
-            l.IsActive = 1;
-            noticeDocument.push(l);
-        }
-        this.noticeForm.value.NoticeStaff = noticeStaff;
-        this.noticeForm.value.NoticeInformer = noticeInformer;
-        this.noticeForm.value.NoticeLocale = noticeLocale;
-        this.noticeForm.value.NoticeProduct = noticeProduct;
-        this.noticeForm.value.NoticeSuspect = noticeSuspect;
-        this.noticeForm.value.NoticeDocument = noticeDocument;
-
-        // Set Preloader
-        this.preloader.setShowPreloader(true);
         let IsSuccess: boolean = true;
         await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
             if (!isSuccess) { IsSuccess = false; return false; };
         }, () => { IsSuccess = false; return; });
 
-        // if (IsSuccess) {
-        //     await this.NoticeDocument.value.map(async doc => {
-        //         // insert Document
-        //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
-        //             if (!docIsSuccess) { IsSuccess = false; return false; };
+        if (IsSuccess) {
+            await this.NoticeDocument.value.map(async doc => {
+                // insert Document
+                await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
+                    if (!docIsSuccess) { IsSuccess = false; return false; };
 
-        //         }, () => { IsSuccess = false; return false; });
-        //     });
-        // }
+                }, () => { IsSuccess = false; return false; });
+            });
+        }
 
         if (IsSuccess) {
-            alert(Message.saveComplete);
-            this.router.routeReuseStrategy.shouldReuseRoute = function() {
-              return false;
-            };
-            this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
-
-            sessionStorage.removeItem("notice_form_data");
+            alert(Message.saveComplete)
+            this.router.navigate(['/notice/manage', 'R', this.noticeCode]);
         } else {
             alert(Message.saveFail)
         }
@@ -704,14 +423,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onReviced() {
-        let noticeForm = this.noticeForm.value;
-        for(let l of noticeForm.NoticeProduct){
-            if(!l.ProductCode){
-                this.isRequired = true;
-                alert(Message.checkData)
-                return false;
-            }
-        }
 
         // Set Preloader
         this.preloader.setShowPreloader(true);
@@ -722,53 +433,31 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         let IsSuccess: boolean = true;
         await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
+            debugger
             if (!isSuccess) { IsSuccess = false; return; };
         }, () => { IsSuccess = false; return; });
 
         if (IsSuccess) {
-            const products = this.NoticeProduct.value;
-            if(products && products.length>0){
-                for(let i in products){
-                    let l = products[i];
-                    if(l.IsNewItem){
-                        l.IsActive = 1;
-                        l.NetVolume = l.NetVolume?l.NetVolume:0;
-                        await this.noticeService.insProductAll(l).then(async isSuccess => {});
-                    }else{
-                        await this.noticeService.updProduct(l).then(async isSuccess=>{});
-                    }
-                }
-            }
+            const document = this.NoticeDocument.value;
+            await document.map(async (item: NoticeDocument) => {
+                if (item.IsNewItem) {
+                    await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
+                        if (!docIsSuccess) { IsSuccess = false; return; };
+                    }, () => { IsSuccess = false; return; });
 
-            const suspects = this.NoticeSuspect.value;
-            if(suspects && suspects.length>0){
-                for(let i in suspects){
-                    let l = suspects[i];
-                    if(l.IsNewItem){
-                        await this.noticeService.insSuspect(l).then(async isSuccess => {});
-                    }
+                } else {
+                    this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
+                        if (!docIsSuccess) { IsSuccess = false; return };
+                    }, () => { IsSuccess = false; return; })
                 }
-            }
-        //     const document = this.NoticeDocument.value;
-        //     await document.map(async (item: NoticeDocument) => {
-        //         if (item.IsNewItem) {
-        //             await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
-        //                 if (!docIsSuccess) { IsSuccess = false; return; };
-        //             }, () => { IsSuccess = false; return; });
-
-        //         } else {
-        //             this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
-        //                 if (!docIsSuccess) { IsSuccess = false; return };
-        //             }, () => { IsSuccess = false; return; })
-        //         }
-        //     })
+            })
         }
 
         if (IsSuccess) {
-            alert(Message.saveComplete);
-            this.onComplete();
+            alert(Message.saveComplete)
+            this.onComplete()
         } else {
-            alert(Message.saveFail);
+            alert(Message.saveFail)
         }
 
         this.preloader.setShowPreloader(false);
@@ -779,14 +468,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             // Set Preloader
             this.preloader.setShowPreloader(true);
             this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
-                this.preloader.setShowPreloader(false);
                 if (IsSuccess) {
                     alert(Message.delComplete)
                     this.router.navigate(['/notice/list']);
                 } else (
                     alert(Message.delFail)
                 )
-            });
+            })
         } else {
             this.router.navigate(['/notice/list']);
         }
@@ -803,30 +491,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
 
-        this.getByCon(this.noticeCode);
-
-    }
-
-    getTransactionRunning(officeCode:any):void{
-        this.transactionRunningService.TransactionRunninggetByCon("ops_notice", officeCode).then(res=>{
-            if(res.length>0){
-                const data = res[0];
-                this.transactionRunningService.TransactionRunningupdByCon(data.RunningID).then(res=>{
-                    let str = ""+data.RunningNo;
-                    var pad = "00000"
-                    var ans = pad.substring(0, pad.length - str.length) + str
-                    this.noticeCode = "LS"+officeCode+""+data.RunningYear+ans;
-
-                    this.noticeForm.patchValue({
-                        NoticeCode: this.noticeCode
-                    });
-                });
-            }else{
-                this.transactionRunningService.TransactionRunninginsAll(officeCode, "ops_notice", "LS").then(res=>{
-                    this.getTransactionRunning(officeCode);
-                });
-            }
-        });
     }
 
     _noticeDate: any;
@@ -898,7 +562,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     RowId: item.RowId,
                     IsChecked: true,
                     IsNewItem: true,
-                    MistreatNo: item.MistreatNo
                 }
                 this.NoticeSuspect.push(this.fb.group(noticeSuspect))
             });
@@ -908,9 +571,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     addDocument() {
         const lastIndex = this.NoticeDocument.length - 1;
         let document = new NoticeDocument();
-        document.DocumentID = ""+(lastIndex + 1);
-        document.DocumentName = "";
-        document.FilePath = "";
         document.IsNewItem = true;
         if (lastIndex < 0) {
             this.NoticeDocument.push(this.fb.group(document));
@@ -929,9 +589,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async setStaffStore() {
-        await this.mainMasterService.masStaffMaingetAll().then(res =>
-            this.typeheadStaff = res
-        )
+        // await this.mainMasterService.masStaffMaingetAll().then(res =>
+        //     this.typeheadStaff = res
+        // )
     }
 
     private async setProductStore() {
@@ -1061,14 +721,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: ele.item.ZipCode
         });
     }
-    blurSelectItemInformmerRegion() {
-        let obj = this.NoticeInformer.at(0).value;
-        if(!obj.ProvinceCode){
-            this.NoticeInformer.at(0).patchValue({
-                Region: ""
-            });
-        }
-    }
 
     selectItemLocaleRegion(ele: any) {
         this.NoticeLocale.at(0).patchValue({
@@ -1081,39 +733,18 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: 'N/A'
         });
     }
-    blurSelectItemLocaleRegion() {
-        let obj = this.NoticeLocale.at(0).value;
-        console.log(obj);
-        if(!obj.ProvinceCode){
-            this.NoticeLocale.at(0).patchValue({
-                Region: ""
-            });
-        }
-    }
 
     selectItemProductItem(ele: any, index: number) {
-        const productId = this.NoticeProduct.at(index).value.ProductID;
-        if(productId){
-            ele.item.ProductID = productId;
-        }
-        this.NoticeProduct.at(index).reset(ele.item);
+        this.NoticeProduct.at(index).reset(ele.item)
         this.NoticeProduct.at(index).patchValue({
             IsActive: 1,
             IsNewItem: true,
             NoticeCode: this.noticeCode,
             GroupCode: ele.item.GroupCode || '1',
             IsDomestic: ele.item.IsDomestic || '1',
-            NetVolume: ele.item.NetVolume || 0,
-            NetVolumeUnit: ele.item.NetVolumeUnit || 0,
-        });
-    }
-    blurSelectItemProductItem(index: number) {
-        const productID = this.NoticeProduct.at(index).value.ProductID;
-        if(!productID){
-            this.NoticeProduct.at(index).patchValue({
-                BrandFullName: ""
-            });
-        }
+            NetWeight: ele.item.NetWeight || 0,
+            NetWeightUnit: ele.item.NetWeightUnit || 0,
+        })
     }
 
     selectItemStaff(e, i) {
@@ -1124,38 +755,21 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeCode: this.noticeCode,
             IsActive: 1,
             StaffFullName: `${e.item.TitleName || ''} ${e.item.FirstName || ''} ${e.item.LastName || ''}`,
-            PositionCode: e.item.OperationPosCode || e.item.OperationPosCode,
-            PositionName: e.item.OperationPosName || e.item.OperationPosName,
+            PositionCode: e.item.PositionCode || e.item.ManagementPosCode,
+            PositionName: e.item.PositionName || e.item.ManagementPosName,
             DepartmentLevel: e.item.DepartmentLevel || e.item.DeptLevel,
             DepartmentCode: e.item.DepartmentCode || e.item.OfficeCode,
             DepartmentName: `${e.item.DepartmentName || e.item.OfficeName}`,
             ContributorCode: e.item.ContributorCode || 2,
             ContributorID: e.item.ContributorID || 1
-        });
-
-        if(this.mode=="C"){
-            this.getTransactionRunning(e.item.DepartmentCode||e.item.OfficeCode);
-        }
-    }
-    blurSelectItemStaff(i){
-        let noticeStaff = this.NoticeStaff.at(i).value;
-        if(!noticeStaff.StaffCode){
-            this.NoticeStaff.at(i).patchValue({
-                StaffFullName: ""
-            });
-        }
+        })
     }
 
     selectItemOffice(e) {
         this.noticeForm.patchValue({
             NoticeStationCode: e.item.OfficeCode || '-',
             NoticeStation: e.item.OfficeName
-        });
-    }
-    blurSelectItemOffice(){
-        if(!this.noticeForm.value.NoticeStationCode){
-            this.noticeForm.patchValue({NoticeStation:""});
-        }
+        })
     }
 
     async onDeleteProduct(id: string, index: number) {
@@ -1250,7 +864,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     openSuspect(e) {
-        sessionStorage.setItem("notice_form_data", JSON.stringify(this.noticeForm.value));
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 

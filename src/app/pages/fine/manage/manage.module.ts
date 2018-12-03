@@ -13,8 +13,6 @@ import { MasterService }  from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
-import { MyDatePickerTHModule } from 'mydatepicker-th';
-import { MyDatePickerModule } from 'mydatepicker';
 
 const routes: Routes = [
   {
@@ -25,12 +23,12 @@ const routes: Routes = [
         { title: 'ค้นหางานเปรียบแทียบและชำระค่าปรับ', url: '/fine/list' },
         { title: 'จัดการข้อมูลงานเปรียบแทียบและชำระค่าปรับ' }
       ],
-      nextPage: { title: 'ส่งเงินรายได้', url: '/income/manage' },
-      codePage: "ILG60-06-02-00",
+      nextPage: { title: 'ส่งเงินรายได้', url: '/income/manage' }
     },
     component: ManageComponent
   }
 ];
+
 @NgModule({
   imports: [
       FormsModule,
@@ -40,9 +38,7 @@ const routes: Routes = [
       HttpClientModule,
       CardActionsModule,
       MatAutocompleteModule,
-      PrintDocModalModule,
-      MyDatePickerTHModule,
-      MyDatePickerModule
+      PrintDocModalModule
   ],
   providers: [FineService,
       ArrestService,
