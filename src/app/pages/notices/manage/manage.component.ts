@@ -133,12 +133,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
           this.actionFrom = params['from'];
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.20');
+        this.sidebarService.setVersion('0.0.2.21');
 
         this.navigate_service();
 
@@ -154,8 +155,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.setOfficeStore();
         // await this.setCommunicateStore();
 
-        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-
         // this.activatedRoute.params.subscribe(params => {
         //     let reload = params['reload'];
         //     if(reload){
@@ -164,10 +163,31 @@ export class ManageComponent implements OnInit, OnDestroy {
         // });
 
         if (this.mode == 'R') {
-            this.getByCon(this.noticeCode);
+            await this.getByCon(this.noticeCode);
+        }
+
+        if(this.actionFrom=="edit"){
+            let res = JSON.parse(sessionStorage.getItem("notice_form_data"));
+            if(res){
+                let noticeDate = res.NoticeDate;
+                if(noticeDate){
+                    let date = noticeDate.date;
+                    res.NoticeDate = date.year+"-"+this.months[date.month-1]+"-"+date.day;
+                }
+                let noticeDueDate = res.NoticeDueDate;
+                if(noticeDueDate){
+                    let date = noticeDueDate.date;
+                    res.NoticeDueDate = date.year+"-"+this.months[date.month-1]+"-"+date.day;
+                }
+                this.setDataInit(res);
+            }
         }
 
         this.preloader.setShowPreloader(false);
+
+        let url = this.router.url;
+        let tmps = url.split("?");
+        sessionStorage.setItem("notice_current_page", tmps[0]+"?from=edit");
     }
 
     private active_route() {
@@ -214,8 +234,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnCancel(false);
                 this.router.navigate(['/notice/list']);
+
+                sessionStorage.removeItem("notice_form_data");
             }
-        })
+        });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
 
@@ -361,7 +383,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeInformerFormControl.SubDistrict = new FormControl(null);
             NoticeInformerFormControl.DistrictCode = new FormControl(null);
             NoticeInformerFormControl.District = new FormControl(null);
-            NoticeInformerFormControl.ProvinceCode = new FormControl(null);
+            NoticeInformerFormControl.ProvinceCode = new FormControl(null, Validators.required);
             NoticeInformerFormControl.Province = new FormControl(null);
             NoticeInformerFormControl.ZipCode = new FormControl('N/A');
             NoticeInformerFormControl.TelephoneNo = new FormControl('N/A');
@@ -389,7 +411,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeLocaleFormControl.SubDistrict = new FormControl(null);
             NoticeLocaleFormControl.DistrictCode = new FormControl(null);
             NoticeLocaleFormControl.District = new FormControl(null);
-            NoticeLocaleFormControl.ProvinceCode = new FormControl(null);
+            NoticeLocaleFormControl.ProvinceCode = new FormControl(null, Validators.required);
             NoticeLocaleFormControl.Province = new FormControl(null);
             NoticeLocaleFormControl.ZipCode = new FormControl('N/A');
             NoticeLocaleFormControl.Policestation = new FormControl(null);
@@ -446,75 +468,144 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    private async setDataInit(res:any){
+        this.noticeCode = res.NoticeCode;
+        this.arrestCode = res.ArrestCode;
+        await this.noticeForm.reset({
+            NoticeCode: res.NoticeCode,
+            NoticeStationCode: res.NoticeStationCode,
+            NoticeStation: res.NoticeStation,
+            NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
+            NoticeTime: res.NoticeTime,
+            NoticeDue: res.NoticeDue,
+            NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
+            GroupNameDesc: res.GroupNameDesc || 'N/A',
+            CommunicationChanelID: res.CommunicationChanelID,
+            ArrestCode: res.ArrestCode,
+            IsActive: res.IsActive,
+            IsArrest: res.IsArrest || 1
+        });
+
+        const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
+        staff.map(item => {
+            item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+        });
+
+        await res.NoticeLocale.map(item =>
+            item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
+        )
+
+        const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
+        informer.map(item => {
+            this.isConceal = item.InformerType == 1 ? true : false;
+            item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
+            item.Region += item.District == null ? '' : ` ${item.District}`;
+            item.Region += item.Province == null ? '' : ` ${item.Province}`;
+        });
+
+        const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
+        suspect.map(item => {
+            item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
+            item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+            item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+
+            item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
+            item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
+
+            item.SuspectType = item.SuspectType || 0;
+            item.EntityType = item.EntityType || 0;
+            item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
+            item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
+        }
+        )
+
+        const product = res.NoticeProduct.filter(item => item.IsActive == 1);
+        product.map(item => {
+            item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
+            item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
+            item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
+            item.NetWeight = item.NetWeight || '0';
+            item.NetWeightUnit = item.NetWeightUnit || '0';
+        }
+        )
+
+        await this.setItemFormArray(staff, 'NoticeStaff');
+        await this.setItemFormArray(informer, 'NoticeInformer');
+        await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+        await this.setItemFormArray(product, 'NoticeProduct');
+        await this.setItemFormArray(suspect, 'NoticeSuspect');
+    }
+
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
             
-            this.noticeCode = res.NoticeCode;
-            this.arrestCode = res.ArrestCode;
-            await this.noticeForm.reset({
-                NoticeCode: res.NoticeCode,
-                NoticeStationCode: res.NoticeStationCode,
-                NoticeStation: res.NoticeStation,
-                NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
-                NoticeTime: res.NoticeTime,
-                NoticeDue: res.NoticeDue,
-                NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
-                GroupNameDesc: res.GroupNameDesc || 'N/A',
-                CommunicationChanelID: res.CommunicationChanelID,
-                ArrestCode: res.ArrestCode,
-                IsActive: res.IsActive,
-                IsArrest: res.IsArrest || 1
-            });
+            // this.noticeCode = res.NoticeCode;
+            // this.arrestCode = res.ArrestCode;
+            // await this.noticeForm.reset({
+            //     NoticeCode: res.NoticeCode,
+            //     NoticeStationCode: res.NoticeStationCode,
+            //     NoticeStation: res.NoticeStation,
+            //     NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
+            //     NoticeTime: res.NoticeTime,
+            //     NoticeDue: res.NoticeDue,
+            //     NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
+            //     GroupNameDesc: res.GroupNameDesc || 'N/A',
+            //     CommunicationChanelID: res.CommunicationChanelID,
+            //     ArrestCode: res.ArrestCode,
+            //     IsActive: res.IsActive,
+            //     IsArrest: res.IsArrest || 1
+            // });
 
-            const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
-            staff.map(item => {
-                item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-            });
+            // const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
+            // staff.map(item => {
+            //     item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+            // });
 
-            await res.NoticeLocale.map(item =>
-                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
-            )
+            // await res.NoticeLocale.map(item =>
+            //     item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
+            // )
 
-            const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
-            informer.map(item => {
-                this.isConceal = item.InformerType == 1 ? true : false;
-                item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
-                item.Region += item.District == null ? '' : ` ${item.District}`;
-                item.Region += item.Province == null ? '' : ` ${item.Province}`;
-            });
+            // const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
+            // informer.map(item => {
+            //     this.isConceal = item.InformerType == 1 ? true : false;
+            //     item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
+            //     item.Region += item.District == null ? '' : ` ${item.District}`;
+            //     item.Region += item.Province == null ? '' : ` ${item.Province}`;
+            // });
 
-            const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
-            suspect.map(item => {
-                item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
-                item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
-                item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+            // const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
+            // suspect.map(item => {
+            //     item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
+            //     item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+            //     item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
 
-                item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
-                item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
+            //     item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
+            //     item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
 
-                item.SuspectType = item.SuspectType || 0;
-                item.EntityType = item.EntityType || 0;
-                item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
-                item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
-            }
-            )
+            //     item.SuspectType = item.SuspectType || 0;
+            //     item.EntityType = item.EntityType || 0;
+            //     item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
+            //     item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
+            // }
+            // )
 
-            const product = res.NoticeProduct.filter(item => item.IsActive == 1);
-            product.map(item => {
-                item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
-                item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
-                item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
-                item.NetWeight = item.NetWeight || '0';
-                item.NetWeightUnit = item.NetWeightUnit || '0';
-            }
-            )
+            // const product = res.NoticeProduct.filter(item => item.IsActive == 1);
+            // product.map(item => {
+            //     item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
+            //     item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
+            //     item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
+            //     item.NetWeight = item.NetWeight || '0';
+            //     item.NetWeightUnit = item.NetWeightUnit || '0';
+            // }
+            // )
 
-            await this.setItemFormArray(staff, 'NoticeStaff');
-            await this.setItemFormArray(informer, 'NoticeInformer');
-            await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-            await this.setItemFormArray(product, 'NoticeProduct');
-            await this.setItemFormArray(suspect, 'NoticeSuspect');
-        })
+            // await this.setItemFormArray(staff, 'NoticeStaff');
+            // await this.setItemFormArray(informer, 'NoticeInformer');
+            // await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+            // await this.setItemFormArray(product, 'NoticeProduct');
+            // await this.setItemFormArray(suspect, 'NoticeSuspect');
+            this.setDataInit(res);
+        });
 
         // await this.noticeService.getDocument(code).then(async res => {
         //     res.map(item => item.IsNewItem = false)
@@ -603,6 +694,8 @@ export class ManageComponent implements OnInit, OnDestroy {
               return false;
             };
             this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
+
+            sessionStorage.removeItem("notice_form_data");
         } else {
             alert(Message.saveFail)
         }
@@ -1157,6 +1250,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     openSuspect(e) {
+        sessionStorage.setItem("notice_form_data", JSON.stringify(this.noticeForm.value));
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 

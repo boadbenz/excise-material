@@ -3,8 +3,10 @@ import { LayoutComponent } from './shared/layout/layout.component';
 import { AuthGuard } from './pages/login/auth.guard';
 
 export const routes: Routes = [
+
+   
     {
-        path: '', redirectTo: 'home', pathMatch: 'full'
+        path: '',canActivate: [AuthGuard], redirectTo: 'home', pathMatch: 'full'
     }, {
         path: 'login', loadChildren: './pages/login/login.module#LoginModule'
     }, {
@@ -23,14 +25,14 @@ export const routes: Routes = [
         path: 'investigation', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/investigation/investigation.module#InvestigationModule'
     }, {
-        path: 'prove', component: LayoutComponent,
+        path: 'prove', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/prove/list/list.module#ListModule' },
             { path: 'manage/:mode/:code1/:code2', loadChildren: './pages/prove/manage/manage.module#ManageModule' }
         ]
     },
     {
-        path: 'income', component: LayoutComponent,
+        path: 'income', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/income/list/list.module#ListModule' },
             { path: 'manage/:mode/:code', loadChildren: './pages/income/manage/manage.module#ManageModule' }
@@ -43,7 +45,7 @@ export const routes: Routes = [
             { path: 'detail/:mode', loadChildren: './pages/lawsuit/detail/detail.module#DetailModule' }
         ]
     }, {
-        path: 'fine', component: LayoutComponent,
+        path: 'fine', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/fine/list/list.module#ListModule' },
             { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
@@ -60,7 +62,7 @@ export const routes: Routes = [
     //     ]
     // },
     {
-        path: 'reward',
+        path: 'reward', canActivate: [AuthGuard],
         component: LayoutComponent,
         loadChildren: './pages/reward/reward.module#RewardModule'
     },
@@ -68,7 +70,7 @@ export const routes: Routes = [
         path: 'logout', loadChildren: './pages/login/login.module#LoginModule'
     },
      {
-        path: 'reduction', component: LayoutComponent,
+        path: 'reduction', component: LayoutComponent, 
         children: [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },

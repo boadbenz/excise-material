@@ -9,6 +9,7 @@ import { pagination } from 'app/config/pagination';
 import { Message } from 'app/config/message';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { LoaderService } from 'app/core/loader/loader.service';
+import swal from 'sweetalert2'
 
 const SEARCHWITH = {
     ADVANCE: 'adv',
@@ -105,7 +106,7 @@ export class SuspectModalComponent implements OnInit {
 
     private async onSearchComplete(list: fromModels.InvestigateDetailSuspect[]) {
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
             return;
         }
 

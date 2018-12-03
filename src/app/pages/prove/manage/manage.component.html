@@ -1,5 +1,5 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
-    <app-printdoc-modal  [ProveID]="ProveID"  (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
+    <app-printdoc-modal [ProveID]="ProveID" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
 </ng-template>
 
 <div class="wizard-content">
@@ -74,14 +74,6 @@
                     </div>
                 </div>
 
-                <label for="" class="col-lg-2 col-md-4 control-label">ฐานความผิด :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="GuiltBaseName" name="GuiltBaseName" class="form-control form-control-sm" readonly>
-                </div>
-            </div>
-
-            <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">บทกำหนดโทษ :
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
@@ -90,10 +82,19 @@
                     </div>
                 </div>
 
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ฐานความผิด :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <textarea rows="5" [(ngModel)]="GuiltBaseName" name="GuiltBaseName" class="form-control form-control-sm" readonly></textarea>
+                </div>
+
                 <label for="" class="col-lg-2 col-md-4 control-label">อัตราโทษ :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="PenaltyDesc" name="PenaltyDesc" class="form-control form-control-sm" readonly>
+                    <textarea rows="5" [(ngModel)]="PenaltyDesc" name="PenaltyDesc" class="form-control form-control-sm" readonly></textarea>
                 </div>
             </div>
 
@@ -140,17 +141,18 @@
     <div class="card-body">
 
         <form class="form-horizontal">
-            <div class="row form-group">
+            <!-- <div class="row form-group">
                 <div class="col">
                     <input type="checkbox" id="md_checkbox_2" [(ngModel)]="IsDelivery" name="IsDelivery" class="filled-in chk-col-indigo" [disabled]="showEditField"
                         [checked]="oProve.Delivery=='1'" (click)="changeDelivery()">
                     <label for="md_checkbox_2">ตรวจรับของกลาง</label>
                 </div>
-            </div>
+            </div> -->
+            <!--  || ShowDeliveryField -->
 
             <div class="row form-group">
                 <div class="col">
-                    <input type="checkbox" id="md_checkbox_3" [(ngModel)]="IsOutside" name="IsOutside" class="filled-in chk-col-indigo" [disabled]="showEditField || ShowDeliveryField"
+                    <input type="checkbox" id="md_checkbox_3" [(ngModel)]="IsOutside" name="IsOutside" class="filled-in chk-col-indigo" [disabled]="showEditField "
                         [checked]="oProve.IsOutside=='1'">
                     <label for="md_checkbox_3">ตรวจพิสูจน์นอกสถานที่ทำการ</label>
                 </div>
@@ -159,23 +161,20 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">ทะเบียนตรวจพิสูจน์ :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="DeliveryDocNo" name="DeliveryDocNo" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField"
+                    <span style="margin-right: 5px" *ngIf="IsOutside==true">น.</span>
+                    <input type="text" [(ngModel)]="DeliveryDocNo" name="DeliveryDocNo" class="form-control form-control-sm" [disabled]="showEditField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
-                    <input type="text" [(ngModel)]="ProveYear" name="ProveYear" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField"
+                    <input type="text" [(ngModel)]="ProveYear" name="ProveYear" class="form-control form-control-sm" [disabled]="showEditField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
                 <label for="" class="col-lg-2 col-md-4 control-label">เขียนที่ :</label>
                 <div class="col-lg-4 col-md-7">
                     <input type="text" class="form-control" [(ngModel)]="ProveStation" name="ProveStation" placeholder="" aria-label="Number"
-                        matInput [matAutocomplete]="auto" 
-                        (input)="onAutoChange($event.target.value)" 
-                        (focus)="onAutoFocus($event.target.value)"
-                        [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}" required
-                        (keydown.Tab)="chooseFirstProveStation()" >
+                        matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstProveStation()">
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)" 
-                            (onSelectionChange)="onAutoSelecteWord(option)">
+                        <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)" (onSelectionChange)="onAutoSelecteWord(option)">
                             {{ option.OfficeName }}
                         </mat-option>
                     </mat-autocomplete>
@@ -187,8 +186,7 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <my-date-picker-th name="DeliveryDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
-                        [(ngModel)]="DeliveryDate" [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}"
-                        required></my-date-picker-th>
+                        [(ngModel)]="DeliveryDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
                     <!-- <div style="width:45%">
 
                     </div> -->
@@ -202,8 +200,7 @@
                 <div class="form-group col-lg-4 col-md-7">
                     <input type="text" class="form-control" [(ngModel)]="DeliveryStation" name="DeliveryStation" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto4" (input)="DeliveryOnAutoChange($event.target.value)" (focus)="DeliveryOnAutoFocus($event.target.value)"
-                        [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}" required
-                        (keydown.Tab)="chooseFirstDelivery()" >
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstDelivery()">
                     <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
                         <mat-option *ngFor="let optionD of Deliveryoptions" [value]="optionD.OfficeName" (click)="DeliveryOnAutoSelecteWord(optionD)"
                             (onSelectionChange)="DeliveryOnAutoSelecteWord(optionD)">
@@ -219,8 +216,7 @@
                     <div class="form-group ">
                         <input type="text" matInput class="form-control" [(ngModel)]="ProveStaffName" name="ProveStaffName" placeholder="" aria-label="Number"
                             matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
-                            [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}" required
-                            (keydown.Tab)="chooseFirstStaff()">
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstStaff()">
                         <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
                             <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                                 (click)="StaffonAutoSelecteWord(sOption)" (onSelectionChange)="StaffonAutoSelecteWord(sOption)">
@@ -260,7 +256,7 @@
             <div class="row form-group">
                 <div class="col">
                     <input type="checkbox" id="md_checkbox_4" [(ngModel)]="IsProveScience" name="IsProveScience" class="filled-in chk-col-indigo"
-                        [disabled]="showEditField || ShowDeliveryField" (click)="changeProveScience()">
+                        [disabled]="showEditField" (click)="changeProveScience()">
                     <label for="md_checkbox_4">ส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์</label>
                 </div>
             </div>
@@ -269,8 +265,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :</label>
                 <div class="col-lg-4 col-md-7">
                     <div class="form-group ">
-                        <input type="text" [(ngModel)]="ScienceDeliveryDocNo" name="ScienceDeliveryDocNo" 
-                            class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField || showScienceField"
+                        <input type="text" [(ngModel)]="ScienceDeliveryDocNo" name="ScienceDeliveryDocNo" class="form-control form-control-sm" [disabled]="showEditField || showScienceField"
                             [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
@@ -278,7 +273,7 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <my-date-picker-th name="ProveScienceDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
-                        [(ngModel)]="ProveScienceDate" [disabled]="showEditField || ShowDeliveryField || showScienceField" [ngClass]="{'ng-touched':isRequired}"
+                        [(ngModel)]="ProveScienceDate" [disabled]="showEditField || showScienceField" [ngClass]="{'ng-touched':isRequired}"
                         required></my-date-picker-th>
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="DeliveryDate" name="DeliveryDate" [disabled]="showEditField"> -->
 
@@ -291,12 +286,12 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">เลขที่คำขอ :</label>
                 <div class="col-lg-4 col-md-7">
                     <div class="form-group ">
-                        <input type="text" [(ngModel)]="RequestNo" name="RequestNo" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField || showScienceField">
+                        <input type="text" [(ngModel)]="RequestNo" name="RequestNo" class="form-control form-control-sm" [disabled]="showEditField || showScienceField">
                     </div>
                 </div>
                 <label for="" class="col-lg-2 col-md-4 control-label">เลขที่รายงานผล :</label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField ||  showScienceField">
+                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField ||  showScienceField">
                 </div>
             </div>
 
@@ -305,8 +300,7 @@
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
-                        [(ngModel)]="ProveDate" [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}"
-                        required></my-date-picker-th>
+                        [(ngModel)]="ProveDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
 
                     <!-- <label for="" class="">&nbsp; เวลา : &nbsp;</label>
@@ -316,11 +310,9 @@
 
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้ตรวจพิสูจน์ :</label>
                 <div class="form-group col-lg-4 col-md-7">
-                    <input type="text" class="form-control" [(ngModel)]="ScienceStaffName" name="ScienceStaffName" placeholder=""
-                        aria-label="Number" matInput [matAutocomplete]="auto3" (input)="ScienceStaffonAutoChange($event.target.value)"
-                        (focus)="ScienceStaffonAutoFocus($event.target.value)" [disabled]="showEditField || ShowDeliveryField"
-                        [ngClass]="{'ng-touched':isRequired}" required
-                        (keydown.Tab)="chooseFirstScienceStaff()">
+                    <input type="text" class="form-control" [(ngModel)]="ScienceStaffName" name="ScienceStaffName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto3" (input)="ScienceStaffonAutoChange($event.target.value)" (focus)="ScienceStaffonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstScienceStaff()">
                     <!--  -->
                     <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete">
                         <mat-option *ngFor="let ScOption of Scienceoptions" [value]="ScOption.TitleName + ScOption.FirstName + ' ' + ScOption.LastName"
@@ -346,7 +338,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">คำสั่ง :</label>
                 <div class="col-lg-10 col-md-12 form-group ">
-                    <input type="text" [(ngModel)]="Command" name="Command" class="form-control form-control-sm" [disabled]="showEditField || ShowDeliveryField">
+                    <input type="text" [(ngModel)]="Command" name="Command" class="form-control form-control-sm" [disabled]="showEditField">
                 </div>
             </div>
 
@@ -387,8 +379,8 @@
                                         <a *ngIf="showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" data-toggle="modal" data-target="#SciencePopup">
                                             <i class="mdi mdi-eye fa-lg"></i>
                                         </a>
-                                        <a *ngIf="!showEditField" (click)="OpenPopupProduct(i)" class="text-warning" [hidden]="showEditField || ShowDeliveryField"
-                                            data-toggle="modal" data-target="#SciencePopup">
+                                        <a *ngIf="!showEditField" (click)="OpenPopupProduct(i)" class="text-warning" [hidden]="showEditField" data-toggle="modal"
+                                            data-target="#SciencePopup">
                                             <i class="ti-pencil-alt btn-action"></i>
                                         </a>
                                         <!-- &nbsp;
@@ -417,25 +409,28 @@
         <form class="form-horizontal">
             <div class="row form-group">
                 <div class="col">
-                    <input type="checkbox" id="md_checkbox_5" [(ngModel)]="IsReceive" name="IsReceive" class="filled-in chk-col-indigo" 
-                        (click)="changeReceive()" [disabled]="showEditField || ShowDeliveryField">
+                    <input type="checkbox" id="md_checkbox_5" [(ngModel)]="IsReceive" name="IsReceive" class="filled-in chk-col-indigo" (click)="changeReceive()"
+                        [disabled]="showEditField">
                     <label for="md_checkbox_5">จัดเก็บของกลาง</label>
                 </div>
             </div>
 
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">หนังสือนำส่งเลขที่ :</label>
-                <div class="col-lg-4 col-md-7">
-                    <div class="form-group ">
-                        <input type="text" [(ngModel)]="DeliverNo" name="DeliverNo" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField || ShowDeliveryField"
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <span style="margin-right: 5px">กค.</span>
+                    <input type="text" [(ngModel)]="DeliverNo" name="DeliverNo" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
                             [ngClass]="{'ng-touched':isRequired}" required>
-                    </div>
+                    <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
+                    <input type="text" [(ngModel)]="DeliverNoYear" name="DeliverNoYear" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
+
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <my-date-picker-th name="DeliverDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
-                        [(ngModel)]="DeliverDate" [disabled]="showEditField || ShowReceiveField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}"
+                        [(ngModel)]="DeliverDate" [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}"
                         required></my-date-picker-th>
                     <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="DeliveryDate" name="DeliveryDate" [disabled]="showEditField"> -->
 
@@ -450,8 +445,7 @@
                 <div class="form-group col-lg-4 col-md-7">
                     <input type="text" class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto6" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
-                        [disabled]="showEditField || ShowReceiveField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}" required
-                        (keydown.Tab)="chooseFirstStaffSend()">
+                        [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstStaffSend()">
                     <!--  -->
                     <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
                         <mat-option *ngFor="let SSOption of StaffSendoptions" [value]="SSOption.TitleName + SSOption.FirstName + ' ' + SSOption.LastName"
@@ -474,12 +468,9 @@
 
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานปลายทาง :</label>
                 <div class="form-group col-lg-4 col-md-7">
-                    <input type="text" class="form-control" [(ngModel)]="DeliverTo" name="DeliverTo" placeholder="" aria-label="Number"
-                        matInput [matAutocomplete]="auto5" 
-                        (input)="DestinationOnAutoChange($event.target.value)" 
-                        (focus)="DestinationOnAutoFocus($event.target.value)"
-                        [disabled]="showEditField || ShowReceiveField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}" required
-                        (keydown.Tab)="chooseFirstDestination()" >
+                    <input type="text" class="form-control" [(ngModel)]="DeliverTo" name="DeliverTo" placeholder="" aria-label="Number" matInput
+                        [matAutocomplete]="auto5" (input)="DestinationOnAutoChange($event.target.value)" (focus)="DestinationOnAutoFocus($event.target.value)"
+                        [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstDestination()">
                     <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
                         <mat-option *ngFor="let optionDest of Destinationoptions" [value]="optionDest.OfficeName" (click)="DestinationOnAutoSelecteWord(optionDest)"
                             (onSelectionChange)="DestinationOnAutoSelecteWord(optionDest)">
@@ -504,7 +495,7 @@
         <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-themecolor" (click)="AddDocument()" [disabled]="showEditField || ShowDeliveryField">เพิ่มเอกสารแนบ</button>
+                <button class="btn btn-block btn-themecolor" (click)="AddDocument()" [disabled]="showEditField">เพิ่มเอกสารแนบ</button>
             </div>
         </div>
         <div class="card">
@@ -565,8 +556,7 @@
                         </h4>
                     </div>
 
-                    <a href="javaScript:void(0);" class="close text-white font-14" data-dismiss="modal" 
-                        data-target="testimonyPopup" (click)="CancelPopupProduct()">
+                    <a href="javaScript:void(0);" class="close text-white font-14" data-dismiss="modal" data-target="testimonyPopup" (click)="CancelPopupProduct()">
                         <span aria-hidden="true">
                             <i class=" ti-close"></i>
                         </span>
@@ -594,16 +584,17 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label">ของกลาง :</label>
                                 <div class="col-lg-10 col-md-7">
                                     <div class="form-group ">
-                                            <!-- <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" 
+                                        <!-- <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" 
                                             name="oProveProduct.ProductDesc"
-                                            [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isPopupRequired}"
+                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}"
                                             required> -->
-                                        <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" name="oProveProduct.ProductDesc" placeholder="" aria-label="Number"
-                                            matInput [matAutocomplete]="auto7" (input)="onAutoProductChange($event.target.value)" (focus)="onAutoProductFocus($event.target.value)"
-                                            [disabled]="showEditField || ShowDeliveryField" [ngClass]="{'ng-touched':isRequired}"
+                                        <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" name="oProveProduct.ProductDesc" placeholder=""
+                                            aria-label="Number" matInput [matAutocomplete]="auto7" (input)="onAutoProductChange($event.target.value)"
+                                            (focus)="onAutoProductFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                                             required (keydown.Tab)="chooseFirstProduct()">
-                                         <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
-                                            <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.ProductDesc" (click)="onAutoProductSelecteWord(pOption)" (onSelectionChange)="onAutoProductSelecteWord(pOption)">
+                                        <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
+                                            <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.ProductDesc" (click)="onAutoProductSelecteWord(pOption)"
+                                                (onSelectionChange)="onAutoProductSelecteWord(pOption)">
                                                 {{ pOption.ProductDesc }}
                                             </mat-option>
                                         </mat-autocomplete>
@@ -614,16 +605,14 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label">จำนวน :</label>
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
-                                            <!-- (input)="CalVatProve()" -->
-                                        <input type="text" [(ngModel)]="oProveProduct.Qty" name="oProveProduct.Qty" 
-                                            class="form-control form-control-sm" [disabled]="showEditField"
-                                             [ngClass]="{'ng-touched':isPopupRequired}" required>
+                                        <!-- (input)="CalVatProve()" -->
+                                        <input type="text" [(ngModel)]="oProveProduct.Qty" name="oProveProduct.Qty" class="form-control form-control-sm" [disabled]="showEditField"
+                                            [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
-                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
+                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยภาชนะ :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" 
-                                        class="form-control form-control-sm" [disabled]="showEditField">
+                                    <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -634,17 +623,15 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label">ปริมาณสุทธิ :</label>
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
-                                            <!-- (input)="CalVatProve()" -->
-                                        <input type="number" [(ngModel)]="oProveProduct.NetVolume" name="oProveProduct.NetVolume" 
-                                            class="form-control form-control-sm"
-                                            [disabled]="showEditField"
-                                            [ngClass]="{'ng-touched':isPopupRequired}" required>
+                                        <!-- (input)="CalVatProve()" -->
+                                        <input type="number" [(ngModel)]="oProveProduct.NetVolume" name="oProveProduct.NetVolume" class="form-control form-control-sm"
+                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <select [(ngModel)]="oProveProduct.NetVolumeUnit" name="oProveProduct.NetVolumeUnit" 
-                                        class="form-control form-control-sm" [disabled]="showEditField">
+                                    <select [(ngModel)]="oProveProduct.NetVolumeUnit" name="oProveProduct.NetVolumeUnit" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -756,8 +743,7 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <input type="number" [(ngModel)]="oProveProduct.VatProve" name="oProveProduct.VatProve" class="form-control form-control-sm"
-                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required
-                                            (change)="VatProveFormat()">
+                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="VatProveFormat()">
                                     </div>
                                 </div>
                             </div>
@@ -779,13 +765,13 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <input type="number" [(ngModel)]="oProveProduct.QtyBalance" name="oProveProduct.QtyBalance" class="form-control form-control-sm"
-                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required>
+                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="varidateQtyBalance()">
                                     </div>
                                 </div>
-                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
+                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยภาชนะ :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <select [(ngModel)]="oProveProduct.QtyBalanceUnit" name="oProveProduct.QtyBalanceUnit" 
-                                        class="form-control form-control-sm" [disabled]="showEditField">
+                                    <select [(ngModel)]="oProveProduct.QtyBalanceUnit" name="oProveProduct.QtyBalanceUnit" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -797,13 +783,13 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <input type="number" [(ngModel)]="oProveProduct.NetVolumeBalance" name="oProveProduct.NetVolumeBalance" class="form-control form-control-sm"
-                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required>
+                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="varidateNetVolumeBalance()">
                                     </div>
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
-                                    <select [(ngModel)]="oProveProduct.NetVolumeBalanceUnit" name="oProveProduct.NetVolumeBalanceUnit" 
-                                        class="form-control form-control-sm" [disabled]="showEditField">
+                                    <select [(ngModel)]="oProveProduct.NetVolumeBalanceUnit" name="oProveProduct.NetVolumeBalanceUnit" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -812,7 +798,7 @@
 
                             <div class="row">
                                 <label for="" class="col-lg-2 col-md-4 control-label">หมายเหตุ :</label>
-                                <div class="form-group col-lg-4 col-md-12">
+                                <div class="form-group col-lg-10 col-md-12">
                                     <input type="text" [(ngModel)]="oProveProduct.Remarks" name="oProveProduct.Remarks" class="form-control form-control-sm"
                                         [disabled]="showEditField">
                                 </div>
@@ -855,8 +841,7 @@
             </div>
             <div class="modal-footer">
                 <div class="col-lg-2 col-sm-4">
-                    <button type="button" class="btn btn-block btn-themecolor" (click)="ClosePopupProduct()"
-                        [disabled]="showEditField">บันทึก</button>
+                    <button type="button" class="btn btn-block btn-themecolor" (click)="ClosePopupProduct()" [disabled]="showEditField">บันทึก</button>
                 </div>
             </div>
         </div>

@@ -14,6 +14,7 @@ import { MyDatePickerOptions, getDateMyDatepicker, convertDateForSave, setDateMy
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Message } from 'app/config/message';
 import { ImageType } from 'app/config/imageType';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-lawbreaker',
@@ -51,6 +52,8 @@ export class LawbreakerComponent implements OnInit {
 
   // LawbreakerItem: Lawbreaker;
   LawbreakerFG: FormGroup;
+  disableForeign = false;
+  disableCompany = false;
   requiredPassport = false;
   requiredCompanyRegister = false;
 
@@ -218,11 +221,11 @@ export class LawbreakerComponent implements OnInit {
         if (this.LawbreakerFG.invalid) {
           this.isRequired = true;
           if (this.LawbreakerFG.controls.PassportNo.invalid) {
-            alert('กรุณาระบุ เลขหนังสือเดินทาง');
+            swal('', 'กรุณาระบุ เลขหนังสือเดินทาง', 'warning');
           } else if (this.LawbreakerFG.controls.CompanyRegistrationNo.invalid) {
-            alert('กรุณาระบุ เลขทะเบียนนิติบุคคล')
+            swal('', 'กรุณาระบุ เลขทะเบียนนิติบุคคล', 'warning')
           } else {
-            alert(Message.checkData)
+            swal('', Message.checkData, 'warning')
           }
           return;
         }
@@ -257,6 +260,10 @@ export class LawbreakerComponent implements OnInit {
           this.typeheadRaces
             .find(x => x.RaceCode == _Lfg.RaceCode).RaceNameTH;
 
+        if (_Lfg.EntityType == '2') {
+          _Lfg.LawbreakerFirstName = _Lfg.CompanyName;
+        }
+
         console.log(JSON.stringify(_Lfg));
 
         this.OnRevice(_Lfg);
@@ -282,7 +289,7 @@ export class LawbreakerComponent implements OnInit {
   async ArrestLawbreakerGetByCon(LawbreakerID: string) {
 
     await this.s_masLawbreaker.InvestigateMasLawbreakergetByCon(LawbreakerID)
-      .then((x: fromModels.InvestigateMasLawbreakerModel[]) => {
+      .then(async (x: fromModels.InvestigateMasLawbreakerModel[]) => {
         let law = x[0];
 
         law.BirthDate = law.BirthDate && setDateMyDatepicker(law.BirthDate);
@@ -290,6 +297,12 @@ export class LawbreakerComponent implements OnInit {
         law.PassportDateOut = law.PassportDateOut && setDateMyDatepicker(law.PassportDateOut);
         this.latitude.nativeElement.value = law.GPS && law.GPS.split(',')[0];
         this.longitude.nativeElement.value = law.GPS && law.GPS.split(',')[1];
+
+        await this.s_invest.InvestigateLawsuitResultCountgetByLawbreakerID(LawbreakerID).then(x => {
+          if (this.checkResponse(x)) {
+            law.ResultCount = x.ResultCount;
+          }
+        })
 
         if (law.SubDistrictCode && law.DistrictCode && law.ProvinceCode) {
           law.Region = `${law.SubDistrict} ${law.District} ${law.Province}`;
@@ -328,17 +341,30 @@ export class LawbreakerComponent implements OnInit {
     const e = this.LawbreakerFG.value.EntityType;
     const l = this.LawbreakerFG.value.LawbreakerType;
 
+    this.disableForeign = false;
+    this.disableCompany = false;
     this.requiredCompanyRegister = false;
     this.requiredPassport = false;
 
     if (e == '1' && l == '0') {
+      // บุคคลธรรมดา, ต่างชาติ
+      this.disableCompany = true;
       this.requiredPassport = true;
       this.card3 = true;
+    } else if (e == '1' && l == '1') {
+      // บุคคลธรรมดา, ชาวไทย
+      this.disableCompany = true;
+      this.disableForeign = true;
+      this.card3 = false;
+      this.card4 = false;
     } else if (e == '2') {
+      // นิติบุคคล
+      this.disableForeign = true;
       this.requiredCompanyRegister = true;
       this.card4 = true;
     }
   }
+
 
   openOffenseDetailModal(e: any) {
     this.modal = this.ngModalService.open(e, { size: 'lg', centered: true });
@@ -452,7 +478,7 @@ export class LawbreakerComponent implements OnInit {
     ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
 
     if (!isMatch) {
-      alert(Message.checkImageType)
+      swal('', Message.checkImageType, 'warning')
       return
     }
 
@@ -492,19 +518,29 @@ export class LawbreakerComponent implements OnInit {
       .takeUntil(this.destroy$)
       .subscribe(res => {
         if (!this.checkResponse(res)) {
-          alert(Message.saveFail);
+          swal('', Message.saveFail, 'warning');
           return;
         }
-        alert(Message.saveComplete);
+        swal('', Message.saveComplete, 'success');
         this.enableBtnModeR();
       })
   }
 
   onCancel() {
-    if (!confirm(Message.confirmAction))
-      return
+    swal({
+      title: '',
+      text: Message.confirmAction,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirm!'
+    }).then((result) => {
+      if (result.value) {
+        this.router.navigate([`investigation/lawbreaker`, this.mode, this.lawbreakerId]);
+      }
+    })
 
-    this.router.navigate([`investigation/lawbreaker`, this.mode, this.lawbreakerId]);
   }
 
 }

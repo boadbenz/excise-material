@@ -36,7 +36,7 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.2');
+    this.sidebarService.setVersion('0.0.1.3');
     this.setShowButton();
     // this.fetchData('');
   }
@@ -58,6 +58,10 @@ export class ListComponent extends ListConfig implements OnInit {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
+    this.navService.setNewButton(false);
+    this.navService.setEditField(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setPrevPageButton(false);
   }
   private newData(data): IRequestList[] {
     return data.map((m: IRequestList) => ({

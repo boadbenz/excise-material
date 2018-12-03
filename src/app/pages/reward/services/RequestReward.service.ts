@@ -27,10 +27,10 @@ export class RequestRewardService extends HelperService {
   public RequestRewardgetByCon(param: IRequestRewardgetByCon): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/RequestRewardgetByCon`, param);
   }
-  public RequestRewardinsAll(param: IRequestRewardinsAll): Observable<any> {
+  public RequestRewardinsAll(param): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/RequestRewardinsAll`, param);
   }
-  public RequestRewardupdByCon(param: IRequestRewardupdByCon): Observable<any> {
+  public RequestRewardupdByCon(param): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/RequestRewardupdByCon`, param);
   }
 }
