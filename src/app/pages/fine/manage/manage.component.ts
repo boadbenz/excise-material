@@ -28,6 +28,7 @@ import { FormGroup, FormControl, NgForm } from '@angular/forms';
 import { IMyDpOptions, IMyDate } from 'mydatepicker';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { toLocalShort } from 'app/config/dateFormat';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-manage',
@@ -98,7 +99,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private sidebarService: SidebarService
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.20');
+    this.sidebarService.setVersion('0.0.0.21');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -211,9 +212,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       for (const list of this.approveReportList) {
         let j: any = 0;
         for (const st of staff) {
-          console.log(st.ProcessCode);
-          console.log(j);
-          console.log((+st.ProcessCode) === (+j));
           const name: string = (st? st.TitleName: '') + ' ' + st.FirstName + ' ' + st.LastName;
           if ((+st.ProcessCode) == parseFloat(j + '.1')) {
             this.approveReportList[i].staff = name;
@@ -503,16 +501,28 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSaveButton(false);
         this.showEditField = status;
         console.log(this.params.CompareID);
-        alert('บันทึกสำเร็จ');
+        Swal(
+          'สำเร็จ!',
+          'บันทึกข้อมูลสำเร็จ.',
+          'success'
+        );
       } else if (resp && resp.IsSuccess == 'True') {
-        alert('แก้ไขสำเร็จ');
+        Swal(
+          'สำเร็จ!',
+          'แก้ไขสำเร็จ.',
+          'success'
+        );
         this.dataForCompare.accused = this.jsonCopy(this.accused);
         this.dataForCompare.approveReportList = this.jsonCopy(this.approveReportList);
       } else {
         console.log('pass2');
       }
     } else if ((+this.params.CompareID) > 0) {
-      alert('ไม่พบการเปลี่ยนแปลงข้อมูล');
+      Swal(
+        'ข้อผิดพลาด!',
+        'ไม่พบการเปลี่ยนแปลงข้อมูล.',
+        'error'
+      );
     }
     
     this.preloader.setShowPreloader(false);
@@ -538,10 +548,18 @@ export class ManageComponent implements OnInit, OnDestroy {
       const case4: any = this.isNotValidTxtField(this.accused.OperationDeptName);
       if (case1 || case2) {
         readyToSave = false;
-        alert('กรุณากรอกเลขที่คดีเปรียบเทียบ');
+        Swal(
+          'แจ้งเตือน!',
+          'กรุณากรอกเลขที่คดีเปรียบเทียบ.',
+          'warning'
+        );
         return false;
       } else if (case3 || case4) {
-        alert('กรุณาเลือกรายชื่อผู้เปรียบเทียบ');
+        Swal(
+          'แจ้งเตือน!',
+          'กรุณาเลือกรายชื่อผู้เปรียบเทียบ.',
+          'warning'
+        );
         return false;
       }
       const res: any = await this.CompareVerifyCompareCode();
@@ -560,12 +578,20 @@ export class ManageComponent implements OnInit, OnDestroy {
               if (this.isDatachange) {
                 return await this.fineService.postMethod('CompareupdByCon', data);
               } else {
-                alert('ข้อมูลไม่มีการเปลี่ยนแปลง');
+                Swal(
+                  'ข้อผิดพลาด!',
+                  'ข้อมูลไม่มีการเปลี่ยนแปลง.',
+                  'error'
+                );
               }
             }
           }
       } else {
-        alert('คดีเปรียบเทียบซ้ำ กรุณาใส่ใหม่');
+        Swal(
+          'ข้อผิดพลาด!',
+          'คดีเปรียบเทียบซ้ำ กรุณาใส่ใหม่.',
+          'error'
+        );
       }
     } catch (err) { console.log(err) }
     return null;
@@ -627,7 +653,11 @@ export class ManageComponent implements OnInit, OnDestroy {
           const CompareDetail: any = {};
           const LawBreaker: any = lawbreaker.CompareArrestLawbreaker[0];
           if (!LawBreaker) {
-            alert('ไม่พบข้อมูลผู้ต้องหา');
+            Swal(
+              'ข้อผิดพลาด!',
+              'ไม่พบข้อมูลผู้ต้องหา.',
+              'error'
+            );
             this.router.navigate([`/fine/list`]);
           } else {
             CompareDetail.LawbreakerName = LawBreaker ? `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}` : '';
@@ -637,10 +667,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             // ชื่อผู้ต้องหาคำให้การ
             const accuse: any = {};
             accuse.LawbreakerName = CompareDetail.LawbreakerName;
+            accuse.PaymentFineAppointDate = this.DateToday;
             this.accused.list.push(accuse);
             // บันทึกการเปรียบเทียบและชำระค่าปรับ
             const receiptData: any = {};
             receiptData.LawBrakerName = CompareDetail.LawbreakerName;
+            receiptData.PaymentDate = this.DateToday;
             this.receipt.list.push(receiptData);
             // รายงานการขออนุมัติ
             const approve: any = {};
@@ -658,7 +690,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.getProductToCompareDetail(resp[0]);
         console.log(resp);
       } else {
-        alert('ไม่สามารถแสดงข้อมูลได้');
+        Swal(
+          'ข้อผิดพลาด!',
+          'ไม่สามารถแสดงข้อมูลได้.',
+          'error'
+        );
         this.router.navigate([`/fine/list`]);
       }
       
@@ -865,7 +901,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   ClearStaffData() {
   }
-  StaffonAutoSelecteWord(event, type: any = 0) {
+  StaffonAutoSelecteWord(event, type: any = 0, index: any = null) {
     type = (+type);
     console.log(type);
     console.log(event);
@@ -888,11 +924,19 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.accused['staff'] = event;
         console.log('type' + type);
       } else if (type == 1) {
-        this.userCompareReceiptDetail.ReceiptStaff = name;
-        this.userCompareReceiptDetail.staff = event;
-        this.userCompareReceiptDetail.ReceipPosition = event.OperationPosName;
-        this.userCompareReceiptDetail.ReceipDepartment = event.OfficeShortName;
-        this.userCompareReceiptDetail.ProgramCode = 'ILG60-06-02-03-00';
+        if (index || (+index) === 0) {
+          this.receipt.list[index].ReceiptStaff = name;
+          this.receipt.list[index].staff = event;
+          this.receipt.list[index].ReceipPosition = event.OperationPosName;
+          this.receipt.list[index].ReceipDepartment = event.OfficeShortName;
+          this.receipt.list[index].ProgramCode = 'ILG60-06-02-03-00';
+        } else {
+          this.userCompareReceiptDetail.ReceiptStaff = name;
+          this.userCompareReceiptDetail.staff = event;
+          this.userCompareReceiptDetail.ReceipPosition = event.OperationPosName;
+          this.userCompareReceiptDetail.ReceipDepartment = event.OfficeShortName;
+          this.userCompareReceiptDetail.ProgramCode = 'ILG60-06-02-03-00';
+        }
         console.log('type' + type);
       } else if (type == 3) {
         this.compareUserDetailPopup.staff = name;
@@ -935,19 +979,35 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     console.log(this.editUser);
   }
-  canCheck(event) {
-    const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
-    const d: any = event;
-    const PaymentFineAppointDate: any = new Date(d.date.year, d.date.month, d.date.day);
-    if (accuseDate <= PaymentFineAppointDate) {
-      this.editUser.cancheck = true;
-      if (this.accused.CompareDate.date.day == d.date.day) {
-        this.editUser.cancheck = false;
+  canCheck(event, index: any = null) {
+    console.log(index);
+    if ((index || (+index) === 0) && this.accused.list[index]) {
+      const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
+      const d: any = event;
+      const PaymentFineAppointDate: any = new Date(this.accused.list[index].PaymentFineAppointDate.date.year,this.accused.list[index].PaymentFineAppointDate.date.month, this.accused.list[index].PaymentFineAppointDate.date.day);
+      if (accuseDate <= PaymentFineAppointDate) {
+        this.accused.list[index].cancheck = true;
+        if (this.accused.CompareDate.date.day == d.date.day) {
+          this.accused.list[index].cancheck = false;
+        }
+      } else {
+        this.accused.list[index].cancheck = false;
       }
     } else {
-      this.editUser.cancheck = false;
+      const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
+      const d: any = event;
+      const PaymentFineAppointDate: any = new Date(d.date.year, d.date.month, d.date.day);
+      if (accuseDate <= PaymentFineAppointDate) {
+        this.editUser.cancheck = true;
+        if (this.accused.CompareDate.date.day == d.date.day) {
+          this.editUser.cancheck = false;
+        }
+      } else {
+        this.editUser.cancheck = false;
+      }
+      console.log(this.editUser.cancheck);
     }
-    console.log(this.editUser.cancheck);
+    
   }
   saveAccused() {
     console.log(this.editUser);
@@ -996,13 +1056,25 @@ export class ManageComponent implements OnInit, OnDestroy {
       try {
         const resp: any = await this.checkReceiptData(this.receipt.list[this.userCompareReceiptDetail.index].CompareDetailID, this.userCompareReceiptDetail.index);
         if (resp.IsSuccess == 'True') {
-          alert('เพิ่มข้อมูลใบเสร็จเรีบยบร้อย')
+          Swal(
+            'สำเร็จ!',
+            'เพิ่มข้อมูลใบเสร็จเรีบยบร้อย.',
+            'success'
+          );
         } else {
-          alert('เพิ่มข้อมูลใบเสร็จผิดพลาด')
+          Swal(
+            'สำเร็จ!',
+            'เพิ่มข้อมูลใบเสร็จผิดพลาด.',
+            'success'
+          );
         }
       } catch (err) {
         console.log(err);
-        alert('เกิดข้อผิดพลาดในการเพิ่มใบเสร็จ');
+        Swal(
+          'ผิดพลาด!',
+          'เกิดข้อผิดพลาดในการเพิ่มใบเสร็จ.',
+          'error'
+        );
       }
     }
     this.clearDataList(this.userCompareReceiptDetail);
@@ -1017,18 +1089,30 @@ export class ManageComponent implements OnInit, OnDestroy {
             const resp: any = await this.CompareDetailReceipupdDelete();
             console.log(resp);
             if (resp.error) {
-              alert(resp.error.error);
+              Swal(
+                'ข้อผิดพลาด!',
+                resp.error.error,
+                'error'
+              );
             } else {
               const name: any = this.userCompareReceiptDetail.LawBrakerName;
               this.clearDataList(this.receipt.list[index]);
               this.receipt.list[index].LawBrakerName = name;
-              alert('ลบสำเร็จ');
+              Swal(
+                'สำเร็จ!',
+                'ลบสำเร็จ.',
+                'success'
+              );
             }
           } else {
             const name: any = this.userCompareReceiptDetail.LawBrakerName;
             this.clearDataList(this.receipt.list[index]);
             this.receipt.list[index].LawBrakerName = name;
-            alert('ลบสำเร็จ');
+            Swal(
+              'สำเร็จ!',
+              'ลบสำเร็จ.',
+              'success'
+            );
           }
         } catch (err) {
           console.log(err);
@@ -1062,7 +1146,11 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (id) {
         try {
           const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
-          alert('ลบไฟล์สำเร็จ');
+          Swal(
+            'สำเร็จ!',
+            'ลบไฟล์สำเร็จ.',
+            'success'
+          );
         } catch (err) {
         }
       }
@@ -1164,7 +1252,11 @@ export class ManageComponent implements OnInit, OnDestroy {
           console.log(err);
         }
       } else {
-        alert('กรุณากรอกข้อมูลคำให้การของผู้ต้องหา');
+        Swal(
+          'แจ้งเตือน!',
+          'กรุณากรอกข้อมูลคำให้การของผู้ต้องหา.',
+          'warning'
+        );
         return false;
       }
       
@@ -1422,11 +1514,23 @@ export class ManageComponent implements OnInit, OnDestroy {
     const case2: any = this.isNotValidTxtField(this.compareUserDetailPopup.rank);
     const case3: any = this.isNotValidTxtField(this.compareUserDetailPopup.rank2);
     if (case1) {
-      alert('กรุณาเลือกผู้เสนอพิจารณาเห็นชอบจากรายการ');
+      Swal(
+        'แจ้งเตือน!',
+        'กรุณาเลือกผู้เสนอพิจารณาเห็นชอบจากรายการ.',
+        'warning'
+      );
     } else if (case2) {
-      alert('กรุณาเลือกผู้พิจารณาเห็นชอบจากรายการ');
+      Swal(
+        'แจ้งเตือน!',
+        'กรุณาเลือกผู้พิจารณาเห็นชอบจากรายการ.',
+        'warning'
+      );
     } else if (case3) {
-      alert('กรุณาเลือกผู้มีอำนาจอนุมัติจากรายการ');
+      Swal(
+        'แจ้งเตือน!',
+        'กรุณาเลือกผู้มีอำนาจอนุมัติจากรายการ.',
+        'warning'
+      );
     } else {
       this.btnApprove.click();
     }
@@ -1437,7 +1541,11 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   submitReceipt() {
     if (this.isNotValidTxtField(this.userCompareReceiptDetail.ReceipPosition)) {
-      alert('กรุณาเลือกผู้รับชำระค่าปรับจากรายการ');
+      Swal(
+        'แจ้งเตือน!',
+        'กรุณาเลือกผู้รับชำระค่าปรับจากรายการ.',
+        'warning'
+      );
     } else {
       this.receiptSave.click();
     }
@@ -1488,4 +1596,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(e)
     }
   };
+  isFilledReceipt(index) {
+    const item: any = this.receipt.list[index];
+    if (item.ReceiptStaff && (item.ReceiptChanel || (+item.ReceiptChanel) === 0 ) && item.ReceiptBookNo && item.ReceiptNo) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
