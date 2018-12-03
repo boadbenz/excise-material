@@ -15,6 +15,7 @@ import {
 } from 'app/config/dateFormat';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -36,7 +37,8 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.3');
+
+    this.sidebarService.setVersion('0.0.1.5');
     this.setShowButton();
     // this.fetchData('');
   }
@@ -63,7 +65,7 @@ export class ListComponent extends ListConfig implements OnInit {
     this.navService.setNextPageButton(false);
     this.navService.setPrevPageButton(false);
   }
-  private newData(data): IRequestList[] {
+  private newData(data: IRequestList[]) {
     return data.map((m: IRequestList) => ({
       ...m,
       view: true,
@@ -73,21 +75,91 @@ export class ListComponent extends ListConfig implements OnInit {
   public submitAdvSearch($event: FormGroup) {
     console.log(' $event.value', $event.value);
 
-    const formData: IRequestListgetByConAdv = $event.value;
-    formData.LawsuitDateFrom = convertDateForSave(
-      getDateMyDatepicker(formData.LawsuitDateFrom)
-    );
-    formData.LawsuitDateTo = convertDateForSave(
-      getDateMyDatepicker(formData.LawsuitDateTo)
-    );
-    formData.OccurrenceDateFrom = convertDateForSave(
-      getDateMyDatepicker(formData.OccurrenceDateFrom)
-    );
-    formData.OccurrenceDateTo = convertDateForSave(
-      getDateMyDatepicker(formData.OccurrenceDateTo)
-    );
-    this.requestListService.RequestListgetByConAdv(formData).subscribe(res => {
-      this.gridData = this.newData(res);
-    });
+    if ($event.value) {
+      const data: any = $event.value;
+      data.LawsuitDateFrom = $event.value.LawsuitDateFrom
+        ? getDateMyDatepicker($event.value.LawsuitDateFrom)
+        : null;
+      data.LawsuitDateTo = $event.value.LawsuitDateTo
+        ? getDateMyDatepicker($event.value.LawsuitDateTo)
+        : null;
+      data.OccurrenceDateFrom = $event.value.OccurrenceDateFrom
+        ? getDateMyDatepicker($event.value.OccurrenceDateFrom)
+        : null;
+      data.OccurrenceDateTo = $event.value.OccurrenceDateTo
+        ? getDateMyDatepicker($event.value.OccurrenceDateTo)
+        : null;
+      let check = 1;
+      if (
+        !compareDate(
+          new Date(data['OccurrenceDateFrom']),
+          new Date(data['OccurrenceDateTo'])
+        )
+      ) {
+        swal('[วันที่จับกุม] ต้องน้อยกว่าหรือเท่ากับ [ถึง]', 'warning');
+        check *= 0;
+      }
+      if (
+        new Date(data['OccurrenceDateTo']).valueOf() >= new Date().valueOf()
+      ) {
+        swal('[วันที่จับกุม ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน', 'warning');
+        check *= 0;
+      }
+      if (
+        !compareDate(
+          new Date(data['LawsuitDateFrom']),
+          new Date(data['LawsuitDateTo'])
+        )
+      ) {
+        swal('[วันที่รับคดี] ต้องน้อยกว่าหรือเท่ากับ [ถึง]', 'warning');
+        check *= 0;
+      }
+      if (new Date(data['LawsuitDateTo']).valueOf() >= new Date().valueOf()) {
+        swal('[วันที่รับคดี ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน', 'warning');
+        check *= 0;
+      }
+
+      if (check === 1) {
+        const formData: IRequestListgetByConAdv = $event.value;
+        const newMap = RequestListgetByConAdvModel;
+        for (const key in newMap) {
+          if (newMap.hasOwnProperty(key)) {
+            const element = newMap[key];
+            newMap[key] = formData[key];
+          }
+        }
+
+        newMap.LawsuitDateFrom = newMap.LawsuitDateFrom
+          ? this.ConvDateTimeToDate(
+              convertDateForSave(getDateMyDatepicker(newMap.LawsuitDateFrom))
+            )
+          : '';
+        newMap.LawsuitDateTo = newMap.LawsuitDateTo
+          ? this.ConvDateTimeToDate(
+              convertDateForSave(getDateMyDatepicker(newMap.LawsuitDateTo))
+            )
+          : '';
+        newMap.OccurrenceDateFrom = newMap.OccurrenceDateFrom
+          ? this.ConvDateTimeToDate(
+              convertDateForSave(getDateMyDatepicker(newMap.OccurrenceDateFrom))
+            )
+          : '';
+        newMap.OccurrenceDateTo = newMap.OccurrenceDateTo
+          ? this.ConvDateTimeToDate(
+              convertDateForSave(getDateMyDatepicker(newMap.OccurrenceDateTo))
+            )
+          : '';
+        console.log('newMap', newMap);
+        this.requestListService
+          .RequestListgetByConAdv(newMap)
+          .subscribe((res: any[]) => {
+            if (res.length > 0) {
+              this.gridData = this.newData(res);
+            } else {
+              swal('ไม่พบข้อมูล', 'error');
+            }
+          });
+      }
+    }
   }
 }
