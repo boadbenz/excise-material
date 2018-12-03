@@ -209,7 +209,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.arrestFG = this.createForm();
         this.navigate_Service();
-        
+
     }
 
     ngOnDestroy(): void {
@@ -885,11 +885,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         text$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadProduct
-                    .filter(v =>
-                        (`${v.SubBrandNameTH} ${v.BrandNameTH} ${v.ModelName}`)
-                            .toLowerCase()
-                            .indexOf(term.toLowerCase()) > -1
-                    ).slice(0, 10));
+                    .filter(v =>  v.ProductDesc.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
         text3$.debounceTime(200).distinctUntilChanged()
