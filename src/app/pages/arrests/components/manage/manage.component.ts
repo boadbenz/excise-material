@@ -206,7 +206,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     ILG60_03_02_00_00_E18 = this.manageConfig.ILG60_03_02_00_00_E18;
     ILG60_03_02_00_00_E20 = this.manageConfig.ILG60_03_02_00_00_E20;
     ILG60_03_02_00_00_E21 = this.manageConfig.ILG60_03_02_00_00_E21;
-    ILG60_03_03_00_00_E15 = this.manageConfig.ILG60_03_03_00_00_E15;
     ILG60_03_02_00_00_E25 = this.manageConfig.ILG60_03_02_00_00_E25;
     ILG60_03_02_00_00_E28 = this.manageConfig.ILG60_03_02_00_00_E28;
 
@@ -421,7 +420,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ILG60_03_02_00_00_E18.next(true);
         this.ILG60_03_02_00_00_E20.next(true);
         this.ILG60_03_02_00_00_E21.next(true);
-        this.ILG60_03_03_00_00_E15.next(true);
         this.ILG60_03_02_00_00_E25.next(true);
         this.ILG60_03_02_00_00_E28.next(true);
     }
