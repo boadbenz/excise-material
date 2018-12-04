@@ -29,6 +29,7 @@ import { IMyDpOptions } from "mydatepicker";
 import { MatAutocomplete } from '@angular/material';
 
 import { DialogJudgment } from './dialog-judgment'
+import Swal from 'sweetalert2'
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html"
@@ -303,7 +304,9 @@ export class ManageComponent implements OnInit {
                     this.showEditField = false;
                     return;
                   } else {
-                    alert('ไม่สามารถทำรายการได้');
+                    Swal(
+                      'ไม่สามารถทำรายการได้!'
+                    )
                     this.navService.setEditField(true);
                     this.navService.setEditButton(true);
                     this.navService.setPrintButton(true);
@@ -338,7 +341,10 @@ export class ManageComponent implements OnInit {
           this.showEditField = false;
           return;
         } else {
-          alert('ไม่สามารถทำรายการได้');
+          Swal(
+            'ไม่สามารถทำรายการได้!'
+          )
+          
           this.navService.setEditField(true);
           this.navService.setEditButton(true);
           this.navService.setPrintButton(true);
@@ -394,67 +400,97 @@ export class ManageComponent implements OnInit {
     let IsLawsuitComplete = await this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
       return res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
     });
-    if (!confirm("ยืนยันการทำรายการหรือไม่")) {
-      return;
-    } else {
-      console.log(IsLawsuitComplete)
-      if (IsLawsuitComplete == 1) {
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
-        this.navService.setEditField(true);
-        // this.showEditField = false;
-      } else {
-        let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
-        console.log(IndictmentDetailID)
-        this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(IndictmentDetailID).then(result => {
-          console.log('result====>', result);
-          if (result.LawsuitJudgement > 0) {
-            if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {
-              this.router.navigate(['/lawsuit/list']);
-            } else {
-              console.log(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
-              this.lawsuitService.LawsuitJudgementupdDelete(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
-              // this.lawsuitForm
-              this.router.navigate(['/lawsuit/list']);
-            }
-            // case 2.1.1
+    Swal({
+      title: 'ยืนยันการทำรายการหรือไม่',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ใช่',
+      cancelButtonText: 'ไม่'
+    }).then((result) => {
+      if (result.value) {
+          console.log(IsLawsuitComplete)
+          if (IsLawsuitComplete == 1) {
+            this.navService.setCancelButton(false);
+            this.navService.setSaveButton(false);
+            this.navService.setEditField(true);
+            // this.showEditField = false;
           } else {
-            this.router.navigate(['/lawsuit/list']);
-            // this.ngOnInit();
-            // this.navService.setEditField(true);
-            // this.navService.showFieldEdit.subscribe(async p => {
-            //   this.showEditField = true;
-            //   this.ngOnInit();
-            // });
+            let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
+            console.log(IndictmentDetailID)
+            this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(IndictmentDetailID).then(result => {
+              console.log('result====>', result);
+              if (result.LawsuitJudgement > 0) {
+                if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {
+                  this.router.navigate(['/lawsuit/list']);
+                } else {
+                  console.log(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
+                  this.lawsuitService.LawsuitJudgementupdDelete(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
+                  // this.lawsuitForm
+                  this.router.navigate(['/lawsuit/list']);
+                }
+                // case 2.1.1
+              } else {
+                this.router.navigate(['/lawsuit/list']);
+                // this.ngOnInit();
+                // this.navService.setEditField(true);
+                // this.navService.showFieldEdit.subscribe(async p => {
+                //   this.showEditField = true;
+                //   this.ngOnInit();
+                // });
+              }
+            });
+            this.navService.setEditField(true);
+            this.navService.setCancelButton(false);
+            this.navService.setSaveButton(false);
           }
-        });
-        this.navService.setEditField(true);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
+          this.navService.setPrintButton(true);
+          this.navService.setDeleteButton(true);
+          this.navService.setEditButton(true);
+        
+      // For more information about handling dismissals please visit
+      // https://sweetalert2.github.io/#handling-dismissals
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        return
       }
-      this.navService.setPrintButton(true);
-      this.navService.setDeleteButton(true);
-      this.navService.setEditButton(true);
-    }
+    })
+    
   }
   private async onDelete() {
     this.preLoaderService.setShowPreloader(true);
-    if (!confirm("ยืนยันการทำรายการหรือไม่")) {
-      return;
-    } else {
-      let IndictmentID = Number(this.IndictmentID)
-      let updDel = await this.lawsuitService.LawsuitArrestupdDeleteLawsuit(this.lawsuitArrestForm.value.ArrestCode, IndictmentID)
-      console.log(updDel.IsSuccess == "True")
-      if (updDel.IsSuccess == "True") {
-        alert("ลบข้อมูลสำเร็จ")
-        this.preLoaderService.setShowPreloader(false);
-        this.router.navigate(['/lawsuit/list']);
-      } else {
-        alert("ลบข้อมูลไม่สำเร็จ")
-        this.preLoaderService.setShowPreloader(false);
-        return;
+    Swal({
+      title: 'ยืนยันการทำรายการหรือไม่',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ใช่',
+      cancelButtonText: 'ไม่'
+    }).then(async (result) => {
+      if (result.value) {
+        let IndictmentID = Number(this.IndictmentID)
+        let updDel = await this.lawsuitService.LawsuitArrestupdDeleteLawsuit(this.lawsuitArrestForm.value.ArrestCode, IndictmentID)
+        console.log(updDel.IsSuccess == "True")
+        if (updDel.IsSuccess == "True") {
+          Swal(
+            'ลบข้อมูลสำเร็จ!',
+            'success'
+          )
+          this.preLoaderService.setShowPreloader(false);
+          this.router.navigate(['/lawsuit/list']);
+        } else {
+          Swal(
+            'ลบข้อมูลไม่สำเร็จ!',
+            'error'
+          )
+          this.preLoaderService.setShowPreloader(false);
+          return;
+        }
+        
+      // For more information about handling dismissals please visit
+      // https://sweetalert2.github.io/#handling-dismissals
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        
       }
-    }
+    })
+    
 
   }
 
@@ -541,7 +577,7 @@ export class ManageComponent implements OnInit {
               let document = await this.lawsuitService.MasDocumentMaingetinsAll(result)
             })
           }
-          alert("บันทึกสำเร็จ")
+          Swal('บันทึกสำเร็จ!','','success')
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           this.navService.setEditField(true);
           this.navService.setEditButton(true);
@@ -552,7 +588,7 @@ export class ManageComponent implements OnInit {
           console.log(checkComplete)
           checkComplete.length > 0 ? this.modal = this.ngbModel.open(this.indicmetModal, { size: 'lg', centered: true }) : console.log("none")
         } else {
-          alert("บันทึกไม่สำเร็จ")
+          Swal('บันทึกไม่สำเร็จ!','','error')
         }
 
 
@@ -563,7 +599,7 @@ export class ManageComponent implements OnInit {
               let document = await this.lawsuitService.MasDocumentMaingetinsAll(result)
             })
           }
-          alert("บันทึกสำเร็จ")
+          Swal('บันทึกสำเร็จ!','','success')
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           this.navService.setEditField(true);
           this.navService.setEditButton(true);
@@ -574,7 +610,7 @@ export class ManageComponent implements OnInit {
           console.log(checkComplete)
           checkComplete.length > 0 ? this.modal = this.ngbModel.open(this.indicmetModal, { size: 'lg', centered: true }) : console.log("none")
         } else {
-          alert("บันทึกไม่สำเร็จ")
+          Swal('บันทึกไม่สำเร็จ!','','error')
         }
       }
     }
@@ -584,14 +620,16 @@ export class ManageComponent implements OnInit {
       if (Number(this.lawsuitForm.controls['LawsuitNo'].value) > 0 && this.lawsuitForm.controls['LawsuitNoSub'].value > 0) {
         lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
       } else {
-        alert("กรุณากรอกเลขที่คดีรับคำกล่าวโทษเป็นตัวเลข")
+        Swal('กรุณากรอกเลขที่คดีรับคำกล่าวโทษเป็นตัวเลข')
+        // alert("กรุณากรอกเลขที่คดีรับคำกล่าวโทษเป็นตัวเลข")
         return;
       }
       let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
       let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
       return await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut).then(async res => {
         if (res.length != 0) {
-          alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
+          Swal('เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่')
+          // alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
           this.preLoaderService.setShowPreloader(false);
           return;
         } else {
@@ -648,7 +686,7 @@ export class ManageComponent implements OnInit {
             json.LawsuitEnd = 2
             await this.lawsuitService.LawsuitinsAll(json).then(async response => {
               if (response.IsSuccess == "True") {
-                alert("บันทึกสำเร็จ");
+                Swal('บันทึกสำเร็จ!','','success')
                 console.log('response', response);
               }
             });
@@ -668,7 +706,7 @@ export class ManageComponent implements OnInit {
             // });
             await this.lawsuitService.LawsuitinsAll(json).then(async result => {
               if (result.IsSuccess == "True") {
-                alert("บันทึกสำเร็จ");
+                Swal('บันทึกสำเร็จ!','','success')
                 await this.lawsuitService.LawsuitArrestIndicmentupdByCon(this.IndictmentID)
                 // await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
                 let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
