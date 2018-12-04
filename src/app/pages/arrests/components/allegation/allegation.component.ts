@@ -20,7 +20,7 @@ import { TransactionRunning } from 'app/models/transaction-running.model';
 import { getDateMyDatepicker, convertDateForSave } from 'app/config/dateFormat';
 import { Acceptability } from '../../models';
 import { LoaderService } from 'app/core/loader/loader.service';
-import { setViewLawbreaker } from '../allegation-detail-modal/allegation-detail-modal.component';
+// import { setViewLawbreaker } from '../allegation-detail-modal/allegation-detail-modal.component';
 import swal from 'sweetalert2'
 
 @Component({
@@ -273,7 +273,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
           indict.ArrestIndicmentDetail.map(d => {
             let law = d.ArrestLawbreaker.find(l => l.LawbreakerID == d.LawbreakerID);
-            this.addArrestLawbreaker(setViewLawbreaker(law));
+            // this.addArrestLawbreaker(setViewLawbreaker(law));
           });
           // indictDetail.ArrestLawbreaker.map(law => {
           //   this.addArrestLawbreaker(setViewLawbreaker(law));

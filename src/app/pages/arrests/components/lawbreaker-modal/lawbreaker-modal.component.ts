@@ -1,42 +1,29 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { pagination } from 'app/config/pagination';
-import { Router, ActivatedRoute } from '@angular/router';
 import { LawbreakerTypes, EntityTypes } from 'app/models/drop-downs.model';
 import { Message } from 'app/config/message';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
 import { ArrestLawbreakerAllegation, ArrestLawbreaker } from '../../models/arrest-lawbreaker';
-import * as fromStore from '../../store';
 import * as fromService from '../../services'
 import * as fromModel from '../../models';
 import { Acceptability } from '../../models/acceptability';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import swal from 'sweetalert2'
 
 @Component({
-  selector: 'app-allegation-detail-modal',
-  templateUrl: './allegation-detail-modal.component.html',
-  styleUrls: ['./allegation-detail-modal.component.scss']
+  selector: 'app-lawbreaker-modal',
+  templateUrl: './lawbreaker-modal.component.html',
+  styleUrls: ['./lawbreaker-modal.component.scss']
 })
-export class AllegationDetailModalComponent implements OnInit, OnDestroy {
+export class LawbreakerModalComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
-  navigationSubscription;
+  
   ACCEPTABILITY = Acceptability;
-
-  runningTable = 'ops_arrest';
-  runningOfficeCode = '90501';
-  runningPrefix = 'TN';
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private store: Store<fromStore.AppState>,
-    private activeRoute: ActivatedRoute,
     private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
   ) {
   }
@@ -53,14 +40,14 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
   @Output() c = new EventEmitter();
   @Output() OutputLawbreaker = new EventEmitter<fromModel.ArrestLawbreaker>();
 
-  allegationFG: FormGroup;
+  formGroup: FormGroup;
 
   get Lawbreaker(): FormArray {
-    return this.allegationFG.get('Lawbreaker') as FormArray
+    return this.formGroup.get('Lawbreaker') as FormArray
   }
 
   async ngOnInit() {
-    this.allegationFG = this.fb.group({
+    this.formGroup = this.fb.group({
       Lawbreaker: this.fb.array([])
     });
   }
@@ -122,7 +109,7 @@ export class AllegationDetailModalComponent implements OnInit, OnDestroy {
     if (array !== undefined && array.length) {
       const itemFGs = array.map(item => this.fb.group(item));
       const itemFormArray = this.fb.array(itemFGs);
-      this.allegationFG.setControl(formControl, itemFormArray);
+      this.formGroup.setControl(formControl, itemFormArray);
     }
   }
 
@@ -171,6 +158,7 @@ export function setViewLawbreaker(item: fromModel.ArrestLawbreaker) {
           break;
       }
       break;
+      
     case 2: // นิติบุคคล
       item.ReferenceID = item.CompanyRegistrationNo;
       break;

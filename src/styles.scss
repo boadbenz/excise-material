@@ -12,3 +12,10 @@
 mat-dialog-container.mat-dialog-container {
     padding: unset;
 }
+
+input:read-only,
+textarea:read-only,
+select:disabled {
+    color: black !important; 
+    font-size: .9rem !important
+}

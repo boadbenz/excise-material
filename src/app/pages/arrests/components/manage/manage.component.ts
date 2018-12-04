@@ -847,6 +847,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
+        lawbreaker.RowId = 1;
+        lawbreaker.IsModify = 'c';
+
+        this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
+        let sort = this.sortFormArray(this.ArrestLawbreaker.value);
+        sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
+            .catch((error) => this.catchError(error));
+    }
+
     addAllegation() {
         let arrest = this.arrestFG.value as fromModels.Arrest;
         this.store.dispatch(new fromStore.CreateArrest(arrest));
@@ -926,6 +936,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.deleteFormArray(this.ArrestProduct, i, 'ArrestProduct');
     }
 
+    deleteLawbreaker(i: number) {
+        this.deleteFormArray(this.ArrestLawbreaker, i, 'ArrestLawbreaker');
+    }
+
     deleteDocument(i: number) {
         this.deleteFormArray(this.ArrestDocument, i, 'ArrestDocument');
     }
@@ -949,7 +963,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         text$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadProduct
-                    .filter(v =>  v.ProductDesc.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .filter(v => v.ProductDesc.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     .slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
