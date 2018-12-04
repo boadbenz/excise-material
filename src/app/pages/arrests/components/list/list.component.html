@@ -101,8 +101,9 @@
                         </td>
                         <td>{{item.ArrestStation}}</td>
                         <td [ngSwitch]="item.IsLawsuitComplete">
-                            <span *ngSwitchCase="0">ยังไม่รับคดี</span>
+                            <span *ngSwitchCase="0">ไม่รับเป็นคดี</span>
                             <span *ngSwitchCase="1">รับคดี</span>
+                            <span *ngSwitchDefault>ยังไม่รับคดี</span>
                         </td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.ArrestCode)">
