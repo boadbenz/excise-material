@@ -189,40 +189,44 @@
           <th class="footable-sortable" style="width:7%">มูลค่าภาษี</th>
           <th class="footable-sortable" style="width:7%">ค่าปรับสุทธิ</th>
           <th class="footable-sortable" style="width:7%">ยอดชำระ</th>
-          <th class="footable-sortable" style="width:7%">สินบน</th>
-          <th class="footable-sortable" style="width:7%">รางวัล</th>
-          <th class="footable-sortable" style="width:7%">ส่งคลัง</th>
+          <th class="footable-sortable" style="width:7%">สินบน(20)</th>
+          <th class="footable-sortable" style="width:7%">รางวัล(20)</th>
+          <th class="footable-sortable" style="width:7%">ส่งคลัง(40)</th>
           <!--<th class="footable-sortable" style="width:7%">รวม</th>-->
         </tr>
         </thead>
         <tbody *ngIf="ListCompareDetail?.length > 0 && ListCompareDetail[0].all">
         <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable"
             [style]="item.sum ? 'font-weight: bold' : '' ">
-          <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.LawbreakerName }}</td>
+          <td *ngIf="!item.isSum && item.isFirstLoop"><p>{{ item.LawbreakerName }}</p></td>
           <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.Mistreat }}</td>
 
           <td *ngIf="!item.isSum && !item.isFirstLoop" colspan="2"></td>
           <td *ngIf="item.isSum" colspan="6"></td>
 
-          <td *ngIf="!item.isSum && item.product">{{ item.product.BrandNameTH }}</td>
+          <td *ngIf="!item.isSum && item.product"><p>{{ item.product.BrandNameTH }}</p></td>
           <td *ngIf="!item.isSum">{{ item.multi }}</td>
-          <td *ngIf="!item.isSum && item.product">{{ roundDigit(item.FineAmount) }}</td>
-          <td *ngIf="!item.isSum && item.product">{{ roundDigit(item.all) }}</td>
+          <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.FineAmount)) }}</td>
+          <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.all)) }}</td>
 
           <td *ngIf="!item.isSum"><input class="form-control" [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum()" [disabled]="showEditField"></td>
-          <td *ngIf="item.isSum">{{ roundDigit(item.all) }}</td>
+          <td *ngIf="item.isSum"><b>{{ formatMoney(roundDigit(item.all)) }}</b></td>
 
-          <td *ngIf="item.product">{{ roundDigit(item.BribeMoney) }}</td>
-          <td *ngIf="item.product">{{ roundDigit(item.RewardMoney) }}</td>
-          <td *ngIf="item.product">{{ roundDigit(item.TreasuryMoney) }}</td>
+          <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.BribeMoney)) }}</td>
+          <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.RewardMoney)) }}</td>
+          <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.TreasuryMoney)) }}</td>
+
+          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.BribeMoney)) }}</b></td>
+          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.RewardMoney)) }}</b></td>
+          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.TreasuryMoney)) }}</b></td>
         </tr>
         <tr>
           <td colspan="5"></td>
-          <td>รวม</td>
-          <td>{{ roundDigit(sumAllCompare.sum) }}</td>
-          <td>{{ roundDigit(sumAllCompare.sum1) }}</td>
-          <td>{{ roundDigit(sumAllCompare.sum2) }}</td>
-          <td>{{ roundDigit(sumAllCompare.sum3) }}</td>
+          <td><b>รวม</b></td>
+          <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum)) }}</b></td>
+          <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum1)) }}</b></td>
+          <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum2)) }}</b></td>
+          <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum3)) }}</b></td>
         </tr>
         </tbody>
       </table>
@@ -334,6 +338,7 @@
             <th class="footable-sortable" style="width:20%">ชื่อผู้ต้องหา</th>
             <th class="footable-sortable text-center" style="width:10%">วันที่กำหนดชำระค่าปรับ</th>
             <th class="footable-sortable text-center" style="width:10%">วันที่กำหนดชำระภาษี</th>
+            <th class="footable-sortable text-center" style="width:10%">การแจ้งสิทธิ์</th>
             <th class="footable-sortable text-center" style="width:10%">ปล่อยตัวชั่วคราว</th>
             <th class="footable-sortable text-center" style="width:5%"></th>
           </tr>
@@ -342,18 +347,40 @@
           <tr *ngFor="let item of accused.list; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
             <td>{{item.LawbreakerName }}</td>
-            <td class="text-center">{{item.PaymentFineAppointShow ? (item.PaymentFineAppointShow) : '-'}}
-            </td>
-            <td class="text-center">{{item.PaymentVatDateShow ? (item.PaymentVatDateShow) : '-'}}</td>
             <td class="text-center">
-              <span *ngIf="item.IsProvisionalAcquittal > 0">/</span>
+              <my-date-picker-th [(ngModel)]="item.PaymentFineAppointDate" name="CompareDate" placeholder=""
+              (dateChanged)="canCheck($event, i)"
+              locale="th"
+              [options]="DateOption"
+              [disabled]="showEditField"
+              ></my-date-picker-th>
+            </td>
+            <td class="text-center">
+                <my-date-picker-th [(ngModel)]="item.PaymentVatDate" name="PaymentVatDate" placeholder="" locale="th"
+                [options]="DateOption"
+                [disabled]="showEditField"
+                ></my-date-picker-th>
+            </td>
+            <td>
+              <select [(ngModel)]="item.request" class="form-control" name="request">
+                <option [ngValue]="1">
+                  ร้องขอ
+                </option>
+                <option [ngValue]="0">
+                  ไม่ร้องขอ
+                </option>
+              </select>
+            </td>
+            <td class="text-center">
+              <span *ngIf="item.checkBox1 && !item.checkBox2">ประกัน</span>
+              <span *ngIf="item.checkBox1 && item.checkBox2">ประกันและหลักประกัน</span>
             </td>
             <td class=" text-center">
-              <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
+              <!-- <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
                  data-target="#testimonyPopup">
                 <i class="mdi mdi-eye fa-lg"></i>
-              </a>
-              <a *ngIf="item.PaymentFineAppointShow" (click)="editAccused(item, i, 1)" class="text-warning" [hidden]="showEditField"
+              </a> -->
+              <a *ngIf="item.cancheck" (click)="editAccused(item, i, 1)" class="text-warning" [hidden]="showEditField"
                  data-toggle="modal"
                  data-target="#testimonyPopup">
                 <i class="ti-pencil-alt btn-action"></i>
@@ -393,13 +420,21 @@
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-form-label col-md-3">คดีเปรียบเทียบที่ : </label>
-            <div class="col-md-4">
-              <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
-                     [disabled]="showEditField">
+            <div class="row col-md-4">
+                <div class="row col-md-2">
+                    <span *ngIf="receipt.IsOutside">น</span>
+                  </div>
+                  <div class="row col-md-10">
+                      <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
+                      [disabled]="showEditField">
+                  </div>
             </div> /
             <div class="col-md-4">
-              <input class="form-control" type="text" [(ngModel)]="receipt.CompareYear" name="CompareNo"
-                     [disabled]="showEditField">
+                <div class="row col-md-10">
+                    <input class="form-control" type="text" [(ngModel)]="receipt.CompareYear" name="CompareNo"
+                    [disabled]="showEditField">
+                </div>
+              
             </div>
           </div>
         </div>
@@ -415,7 +450,8 @@
           <th class="footable-sortable">ผู้รับชำระค่าปรับ</th>
           <th class="footable-sortable text-center">ช่องทางชำระ</th>
           <th class="footable-sortable text-center">ใบเสร็จเล่มที่</th>
-          <th class="footable-sortable text-center">ใบเสร็จเลขที่/เลขอ้างอิง</th>
+          <th class="footable-sortable text-center">ใบเสร็จเลขที่</th>
+          <th class="footable-sortable text-center">เลขอ้างอิง</th>
           <th class="footable-sortable text-center">สถานะคดี</th>
           <th class="footable-sortable"></th>
         </tr>
@@ -424,23 +460,73 @@
         <tr *ngFor="let item of receipt.list; let i=index;" class="footable">
           <td class="text-center">{{i + 1}}</td>
           <td>{{item.LawBrakerName}}</td>
-          <td class="text-center">{{item.PaymentDateShow}}</td>
-          <td>{{item.ReceiptStaff}}</td>
-          <td class="text-center">{{ paymentChanel[(+item.ReceiptChanel) - 1] }}</td>
-          <td class="text-center">{{item.ReceiptBookNo}}</td>
-          <td class="text-center">{{ (item.ReceiptNo ? item.ReceiptNo : '' ) + (item.ReceiptNo && item.ReferenceNo ? ' / ' : '') + (item.ReferenceNo ? item.ReferenceNo : '') }}
+          <td class="text-center">
+              <my-date-picker-th [(ngModel)]="item.PaymentDate" name="PaymentDate"
+              placeholder="" locale="th"
+              [options]="DateOption"
+              [disabled]="showEditField || item.CompareReceiptID"
+              aria-required="true" required></my-date-picker-th>
           </td>
-          <td class="text-center">{{item.RevernueStatus}}</td>
           <td>
-            <a (click)="editReceipt(item, i, 0)" class="text-secondary" data-toggle="modal"
+              <div class="input-group col-md-8">
+                  <input type="text" class="form-control"
+                         [(ngModel)]="item.ReceiptStaff"
+                         name="ReceipStaff"
+                         placeholder="พิมพ์ข้อความ" aria-label="Number"
+                         matInput [matAutocomplete]="autoStaff"
+                         (input)="StaffonAutoChange($event.target.value)"
+                         (focus)="StaffonAutoFocus($event.target.value)"
+                         [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, index)">
+                  <mat-autocomplete #autoStaff="matAutocomplete">
+                    <mat-option *ngFor="let sOption of Staffoptions"
+                                [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffonAutoSelecteWord(sOption, '1')" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 1, index)">
+                      {{ sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <!--<input class="form-control" type="text" [(ngModel)]="userCompareReceiptDetail.ReceipStaff"-->
+                  <!--name="ReceipStaff"-->
+                  <!--[disabled]="showEditField">-->
+                </div>
+          </td>
+          <td class="text-center">
+              <select class="custom-select col-12"
+              [(ngModel)]="item.ReceiptChanel"
+              name="ReceiptChanel" required [disabled]="item.CompareReceiptID || showEditField">
+                <option value="1" [selected]="true">เงินสด</option>
+                <option value="2">EDC</option>
+                <option value="3">เครดิต</option>
+                <option value="4">เดบิต</option>
+              </select>
+          </td>
+          <td class="text-center">
+              <input class="form-control" type="text"
+              [(ngModel)]="item.ReceiptBookNo"
+              name="ReceiptBookNo"
+              [disabled]="showEditField || item.CompareReceiptID" [required]="!(item.ReceiptChanel > 1)">
+          </td>
+          <td class="text-center">
+              <input class="form-control" type="text"
+              [(ngModel)]="item.ReceiptNo"
+              name="ReceiptNo"
+              [disabled]="showEditField || item.CompareReceiptID" [required]="!(item.ReceiptChanel > 1)">
+          </td>
+          <td class="text-center">
+              <input class="form-control" type="text"
+              [(ngModel)]="item.ReferenceNo"
+              name="ReferenceNo"
+              [disabled]="showEditField || !(item.ReceiptChanel > 1) || item.CompareReceiptID" [required]="item.ReceiptChanel > 1">
+          </td>
+          <td>
+            <a *ngIf="isFilledReceipt(i)" (click)="editReceipt(item, i, 0)" class="text-secondary" data-toggle="modal"
                data-target="#payPopup">
               <i class="mdi mdi-eye fa-lg"></i>
             </a>
-            <a (click)="editReceipt(item, i, 1)" class="text-warning" [hidden]="showEditField"
+            <!-- <a (click)="editReceipt(item, i, 1)" class="text-warning" [hidden]="showEditField"
                data-toggle="modal"
                data-target="#payPopup" *ngIf="item.PaymentDateShow">
               <i class="ti-pencil-alt btn-action"></i>
-            </a>
+            </a> -->
           </td>
         </tr>
         </tbody>
@@ -619,13 +705,13 @@
                 <div class="form-group row">
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" name="checkBox1" [(ngModel)]="editUser.checkBox1" id="insurance"
-                           type="checkbox"
-                           [disabled]="!editUser.cancheck || showEditField" [required]="!editUser.checkBox2">
+                           type="checkbox" [checked]="editUser.checkBox2"
+                           [disabled]="!editUser.cancheck || showEditField || editUser.checkBox2" [required]="!editUser.checkBox2">
                     <label for="insurance">ประกัน :</label>
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Bail" name="Bail"
-                           [disabled]="!editUser.checkBox1 || showEditField" [required]="editUser.checkBox1">
+                           [disabled]="(!editUser.checkBox1 || showEditField) && !editUser.checkBox2" [required]="editUser.checkBox1">
                   </div>
                 </div>
               </div>
@@ -637,7 +723,7 @@
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" id="collateral"
                            type="checkbox" name="checkBox2" [(ngModel)]="editUser.checkBox2" [disabled]="showEditField || !editUser.cancheck" [required]="!editUser.cancheck && !editUser.checkBox1">
-                    <label for="collateral">ประกันและหลักประกัน :</label>
+                    <label for="collateral">หลักประกัน :</label>
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Guaruntee"
@@ -648,23 +734,23 @@
               </div>
             </div>
 
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-md-12">
                 <div class="form-group row">
                   <label class="col-form-label col-md-12">การแจ้งสิทธิให้แจ้งญาติหรือผู้ซึ่งไว้วางใจทราบถึงการถูกจับและสถานที่ถูกควบคุม</label>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-md-12">
                 <div class="form-popup form-group row">
                   <div class="custom-control custom-radio col-form-label col-md-10">
                     <input name="RequestRadio" id="yRequest" [(ngModel)]="editUser.request" [value]="1"
                            class="col-form-label with-gap radio-col-indigo" type="radio"
-                           [disabled]="showEditField" required>
+                           [disabled]="showEditField" required> -->
                     <!-- [checked]="oCompareDetail.IsRequest=='1'" -->
-                    <label for="yRequest">ร้องขอ</label>
+                    <!-- <label for="yRequest">ร้องขอ</label>
 
                   </div>
                 </div>
@@ -676,16 +762,16 @@
                   <div class="custom-control custom-radio col-form-label col-md-10">
                     <input name="RequestRadio" id="nRequest" [(ngModel)]="editUser.request" [value]="0"
                            class="col-form-label with-gap radio-col-indigo"
-                           type="radio" [attr.disabled]="showEditField">
+                           type="radio" [attr.disabled]="showEditField"> -->
                     <!-- [checked]="oCompareDetail.IsRequest=='0'" -->
-                    <label for="nRequest">ไม่ร้องขอ</label>
+                    <!-- <label for="nRequest">ไม่ร้องขอ</label>
 
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-md-12">
                 <div class="form-group row">
                   <label class="col-form-label col-md-3">คำให้การของผู้ต้องหา : </label>
@@ -695,7 +781,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="text-right">
             <button type="submit" class="btn waves-effect waves-light btn-navy">บันทึก</button>

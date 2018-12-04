@@ -48,3 +48,12 @@
   // top:-2200px;
   // left:600px;
 }
+td p {
+  white-space: nowrap; 
+  max-width: 140px; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+body {
+  font-size: 0.9rem !important;
+}

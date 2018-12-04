@@ -36,16 +36,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr formArrayName="listTest" *ngFor="let item of checkBoxForm.controls.listTest.controls; let i = index;">
+                  <tr formArrayName="listData" *ngFor="let item of checkBoxForm.controls.listData.controls; let i = index;">
                     <td>
                       <input class="form-check-input" id="td{{i}}" type="checkbox" [formControlName]="i" (change)="chicking($event)" />
                     </td>
                     <td class="text-center">{{i + 1}}</td>
-                    <td>{{listTest[i].fullName}}</td>
-                    <td>{{listTest[i].typeCase}}</td>
-                    <td>{{listTest[i].receiptRef}}</td>
-                    <td>{{listTest[i].dateFine}}</td>
-                    <td>{{listTest[i].period}}</td>
+                    <td>{{listData[i].LawbreakerName  }}</td>
+                    <td>{{listData[i].IsLawsuitComplete}}</td>
+                    <td>{{listData[i].UndecidedCaseNo}}</td>
+                    <td>{{listData[i].PaymentFineDate}}</td>
+                    <td>{{listData[i].PaymentPeriodNo}}</td>
                     <td class="text-center">
                       <a class="text-center text-secondary" 
                         [routerLink]="['/investigation/suspect', 'R', i]" target="_blank">
