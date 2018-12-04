@@ -45,7 +45,6 @@ export class NoticeService {
         const params = { 'Textsearch': '' };
         const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        console.log(res)
         if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
@@ -58,7 +57,6 @@ export class NoticeService {
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
         const url = `${appConfig.api8082}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        console.log(res)
         if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
@@ -70,7 +68,6 @@ export class NoticeService {
         const url = `${appConfig.api8082}/NoticeListgetByConAdv`;
         // return this.resposePromisGet(JSON.stringify(form), url)
         const res = await this.http.post<any>(url, JSON.stringify(form), this.httpOptions).toPromise();
-        console.log(res)
         if (res.IsSuccess === 'False') {
             return new Array<Notice>();
         }
@@ -236,6 +233,19 @@ export class NoticeService {
         const params = { DocumentID };
         const url = `${appConfig.api8882}/NoticeDocumentupdDelete`;
         return this.responsePromisModify(JSON.stringify(params), url);
+    }
+
+    async print(noticeCode: any): Promise<any> {
+        // debugger
+        const params = { 'NoticeCode': noticeCode };
+        const url = `${appConfig.apiXCSReport}/NoticegetByCon.aspx`;
+        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        console.log(res)
+        // if (res.IsSuccess === 'False') {
+        //     return new Array<any>();
+        // }
+
+        return res;
     }
 
     
