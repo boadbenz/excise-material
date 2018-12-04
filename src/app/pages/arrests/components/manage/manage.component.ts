@@ -152,7 +152,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         return form.controls.ArrestLawPenalty.controls;
     }
 
-
     getArrestNoticeSuspect(form: any) {
         return form.controls.ArrestNoticeSuspect.controls;
     }
@@ -162,11 +161,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
-    // @ViewChild('myArrestDate') myArrestDate: ElementRef;
-
-    // ngAfterViewChecked(): void {
-    //     console.log(this.myArrestDate);
-    // }
 
     // Redux based variables
     obArrest: Observable<fromModels.Arrest>;
@@ -183,7 +177,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         private mainMasterService: MainMasterService,
         private s_document: MasDocumentMainService,
         private store: Store<fromStore.AppState>,
-        private arrestService: ArrestsService,
         private s_arrest: fromServices.ArrestService,
         private s_product: fromServices.ArrestProductService,
         private s_indictment: fromServices.ArrestIndictmentService,
