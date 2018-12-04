@@ -312,7 +312,7 @@
                             <input style="display: none" type="text" formControlName="ProductDesc">
                         </td>
                         <td *ngIf="item.get('IsModify').value != 'd'">
-                            <input pattern="[0-9]" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
+                            <input pattern="\d*" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField">
                         </td>
                         <td *ngIf="item.get('IsModify').value != 'd'">
                             <ng-template #qtyUnit let-r="result" let-t="term">
