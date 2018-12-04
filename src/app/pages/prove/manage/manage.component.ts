@@ -120,7 +120,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     PosScience: string;             // ตำแหน่งผู้พิสูจน์
     DeptScience: string;            // หน่วยงานผู้พิสูจน์
     Command: string                 // คำสั่ง
-
+    SummaryProveResult: string;     // สรุปผลการตรวจพิสูจน์
 
 
     // **************************************
@@ -1042,7 +1042,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorID == "15");
                 if (PScienceStaff.length) {
-                    this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
+                    this.ScienceStaffName = `${PScienceStaff[0].TitleName == 'null' || PScienceStaff[0].TitleName == null ? '' : PScienceStaff[0].TitleName}` 
+                              + `${PScienceStaff[0].FirstName == 'null' || PScienceStaff[0].FirstName == null ? '' : PScienceStaff[0].FirstName}` + ' ' 
+                              + `${PScienceStaff[0].LastName == 'null' || PScienceStaff[0].LastName == null ? '' : PScienceStaff[0].LastName}`;
+
                     this.PosScience = PScienceStaff[0].PositionName;
                     this.DeptScience = PScienceStaff[0].OfficeName;
                     this.StaffScienceID = PScienceStaff[0].StaffID;
@@ -1062,14 +1065,20 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.oProve.ProveStaff = [];
 
                 this.lsProveProduct = res.ProveProduct;
+                this.SummaryProveResult = "";
+
                 this.lsProveProduct.map(item => {
                     // item.IsNewItem = false;
                     // item.IsDelItem = false;
 
                     item.Remarks = `${item.Remarks == null || item.Remarks == "null" ? '' : item.Remarks}`;
                     item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
-                    item.ProveResult = `${item.ProveResult == null ? '' : item.ProveResult}`;
+                    item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? '' : item.ProveResult}`;
                     item.VatProve = (+item.VatProve).toFixed(4);
+
+                    if(item.ProveResult != ""){
+                        this.SummaryProveResult += item.ProveResult + "\n";
+                    }
                 });
 
                 // for (var i = 0; i < this.lsProveProduct.length; i += 1) {
@@ -1550,7 +1559,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             ContributorID: "15"
         }
 
-        this.ScienceStaffName = this.Scienceoptions[0].TitleName + this.Scienceoptions[0].FirstName + ' ' + this.Scienceoptions[0].LastName;
+        this.ScienceStaffName = `${this.Scienceoptions[0].TitleName == 'null' || this.Scienceoptions[0].TitleName == null ? '' : this.Scienceoptions[0].TitleName}` 
+                              + `${this.Scienceoptions[0].FirstName == 'null' || this.Scienceoptions[0].FirstName == null ? '' : this.Scienceoptions[0].FirstName}` + ' ' 
+                              + `${this.Scienceoptions[0].LastName == 'null' || this.Scienceoptions[0].LastName == null ? '' : this.Scienceoptions[0].LastName}`;
         this.PosScience = this.Scienceoptions[0].OperationPosName;
         this.DeptScience = this.Scienceoptions[0].OfficeName;
     }
@@ -1922,6 +1933,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.showScienceField = false;
         }
 
+        this.SummaryProveResult = "";
+
+        this.lsProveProduct.map(item => {
+            item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? '' : item.ProveResult}`;
+
+            if(item.ProveResult != ""){
+                 this.SummaryProveResult += item.ProveResult + "\n";
+            }
+        });
+
         $("#SciencePopup .close").click();
     }
 
@@ -2218,7 +2239,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     varidateQtyBalance() {
         if (this.oProveProduct.QtyBalance > this.oProveProduct.Qty) {
-            swal('', "จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!", 'warning');
+            swal('', "จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของกลางที่ตรวจพิสูจน์ !", 'warning');
             //alert("จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
             this.oProveProduct.QtyBalance = this.oProveProduct.Qty;
         }
@@ -2226,7 +2247,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     varidateNetVolumeBalance() {
         if (this.oProveProduct.NetVolumeBalance > this.oProveProduct.NetVolume) {
-            swal('', "ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินปริมาณสุทธิของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!", 'warning');
+            swal('', "ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ ต้องไม่เกินปริมาณสุทธิของของกลางที่ตรวจพิสูจน์", 'warning');
             //alert("ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินปริมาณสุทธิของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
             this.oProveProduct.NetVolumeBalance = this.oProveProduct.NetVolume;
         }

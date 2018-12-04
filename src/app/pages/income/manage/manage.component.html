@@ -232,12 +232,12 @@
                                             <label for="H_0" class="m-0"></label>
                                         </th>
                                         <th style="text-align: center">ลำดับ</th>
-                                        <th>เลขคดีเปรียบเทียบ</th>
+                                        <th>คดีเปรียบเทียบ</th>
                                         <th style="text-align: center;">เลขที่ใบเสร็จ</th>
                                         <th>ผู้ต้องหา</th>
-                                        <th>ผู้รับชำระค่าปรับ</th>
+                                        <!-- <th>ผู้รับชำระค่าปรับ</th> -->
                                         <th>วันที่ชำระ</th>
-                                        <th>ยอดชำระ</th>
+                                        <th>ค่าปรับ</th>
                                         <th>เงินสินบน</th>
                                         <th>เงินรางวัล</th>
                                         <th>เงินส่งคลัง</th>
@@ -253,16 +253,28 @@
                                                 (change)="checkIfAllChbSelected();" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField">
                                             <label [for]="'ListChK'+i" class="m-0"></label>
                                         </td>
-                                        <th style="text-align: center">{{i + 1}}</th>
+                                        <th style="text-align: center">{{item.RevenueIndex}}</th>
                                         <th>{{ item.CompareCode }}</th>
                                         <th style="text-align: center;">{{ item.ReceiptNo }}</th>
-                                        <th>{{ item.LawBreaker }}</th>
-                                        <th>{{ item.StaffReceip }}</th>
+                                        <th>{{ item.LawBreaker }} <br> {{ item.SurnameLawBreaker}}</th>
+                                        <!-- <th>{{ item.StaffReceip }}</th> -->
                                         <th>{{ item.PaymentDate }}</th>
-                                        <th>{{ item.TotalFine | number:0 }}</th>
-                                        <th>{{ item.BribeMoney | number:0 }}</th>
-                                        <th>{{ item.TreasuryMoney | number:0 }}</th>
-                                        <th>{{ item.RewardMoney | number:0 }}</th>
+                                        <th>{{ item.TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</th>
+                                        <th>{{ item.BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</th>
+                                        <th>{{ item.TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</th>
+                                        <th>{{ item.RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <th>รวม</th>
+                                        <th>{{MistreatNo}} คดี</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>{{CompareFine}}</th>
+                                        <th>{{BribeMoney}}</th>
+                                        <th>{{TreasuryMoney}}</th>
+                                        <th>{{RewardMoney}}</th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -276,7 +288,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <!-- <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">จำนวนคดี :</label>
                     <div class="col-lg-4 col-md-7 form-group ">
                         <input type="text" [(ngModel)]="MistreatNo" name="MistreatNo" class="form-control form-control-sm" readonly>
@@ -289,23 +301,6 @@
                 </div>
 
                 <div class="row">
-                    <label for="" class="col-lg-2 col-md-2 control-label">เงินสินบน :</label>
-                    <div class="form-group col-lg-2 col-md-7">
-                        <input type="text" [(ngModel)]="BribeMoney" name="BribeMoney" class="form-control form-control-sm" readonly>
-                    </div>
-
-                    <label for="" class="col-lg-2 col-md-2 control-label">เงินรางวัล :</label>
-                    <div class="form-group col-lg-2 col-md-7">
-                        <input type="text" [(ngModel)]="TreasuryMoney" name="TreasuryMoney" class="form-control form-control-sm" readonly>
-                    </div>
-
-                    <label for="" class="col-lg-2 col-md-2 control-label">เงินส่งคลัง :</label>
-                    <div class="form-group col-lg-2 col-md-7">
-                        <input type="text" [(ngModel)]="RewardMoney" name="RewardMoney" class="form-control form-control-sm" readonly>
-                    </div>
-                </div>
-
-                <!-- <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินสินบน :</label>
                     <div class="form-group col-lg-4 col-md-7">
                         <input type="text" [(ngModel)]="BribeMoney" name="BribeMoney" class="form-control form-control-sm" readonly>

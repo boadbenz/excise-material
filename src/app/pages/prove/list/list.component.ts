@@ -67,7 +67,7 @@ export class ListComponent implements OnInit {
         this.DeliveryDateTo = null;
         this.ProveDateTo = null;
 
-        this.sidebarService.setVersion('Prove 0.0.0.15');
+        this.sidebarService.setVersion('Prove 0.0.0.16');
 
         //this.preLoaderService.setShowPreloader(true);
         //this.onSearch({ Textsearch: "" });
@@ -197,11 +197,15 @@ export class ListComponent implements OnInit {
             item.ProveOneDeptScience = "";
 
             if(vProveStaff.length > 0){
-                item.ProveOneStaff = vProveStaff[0].TitleName + vProveStaff[0].FirstName + " " + vProveStaff[0].LastName;
+                item.ProveOneStaff = `${vProveStaff[0].TitleName == 'null' || vProveStaff[0].TitleName == null ? '' : vProveStaff[0].TitleName}` 
+                                   + `${vProveStaff[0].FirstName == 'null' || vProveStaff[0].FirstName == null ? '' : vProveStaff[0].FirstName}` + " " 
+                                   + `${vProveStaff[0].LastName == 'null' || vProveStaff[0].LastName == null ? '' : vProveStaff[0].LastName}`;
             }
 
             if(vProveStaffScience.length > 0){
-                item.ProveOneStaffScience = vProveStaffScience[0].TitleName + vProveStaffScience[0].FirstName + " " + vProveStaffScience[0].LastName;
+                item.ProveOneStaffScience = `${vProveStaffScience[0].TitleName == 'null' || vProveStaffScience[0].TitleName == null ? '' : vProveStaffScience[0].TitleName}` 
+                                          + `${vProveStaffScience[0].FirstName == 'null' || vProveStaffScience[0].FirstName == null? '' : vProveStaffScience[0].FirstName}` + " " 
+                                          + `${vProveStaffScience[0].LastName == 'null' || vProveStaffScience[0].LastName == null ? '' : vProveStaffScience[0].LastName}`;
                 item.ProveOneDeptScience =  vProveStaffScience[0].OfficeShortName;
             }
         })
