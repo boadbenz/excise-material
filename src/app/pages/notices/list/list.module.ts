@@ -9,6 +9,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 
 const routes: Routes = [
     {
@@ -33,7 +34,8 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         CardActionsModule,
         PaginationTableModule,
-        MyDatePickerTHModule
+        MyDatePickerTHModule,
+        SweetAlert2Module.forRoot()
     ],
     declarations: [
         ListComponent,
