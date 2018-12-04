@@ -31,7 +31,12 @@ import { RequestRewardStaffService } from '../../services/RequestRewardStaff.ser
 import { RequestRewardStaffModel } from '../../models/RequestRewardStaff.Model';
 import { RequestRewardinsAllModel } from '../../models/RequestRewardinsAll.Model';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  debounceTime,
+  map,
+  switchMap
+} from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { MasOfficeService } from '../../services/master/MasOffice.service';
@@ -40,7 +45,12 @@ import { MasStaffModel, MasTitleModel } from 'app/models';
 import { DropdownInterface } from '../../shared/interfaces/dropdown-interface';
 import { MasTitleService } from '../../services/master/MasTitle.service';
 import { RequestRewardupdByConModel } from '../../models/RequestRewardupdByCon.Model';
-
+import { replaceFakePath } from 'app/config/dataString';
+import { MasDocumentMaininsAllModel } from '../../models/MasDocumentMaininsAll.Model';
+import { Config } from '../../config/config';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-reward',
   templateUrl: './reward.component.html',
@@ -148,11 +158,15 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               .map(m => m.text)
       )
     ); // ชื่อ-สกุล	Column	Key Press	ILG60-08-04-00-00-E16
+
   get RequestRewardDetail(): FormArray {
     return this.RewardFormGroup.get('RequestRewardDetail') as FormArray;
   }
   get RequestRewardStaff(): FormArray {
     return this.RewardFormGroup.get('RequestRewardStaff') as FormArray;
+  }
+  get Document(): FormArray {
+    return this.RewardFormGroup.get('Document') as FormArray;
   }
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -165,7 +179,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     private masDocumentMainService: MasDocumentMainService,
     private transactionRunningService: TransactionRunningService,
     private sidebarService: SidebarService,
-    public dialog: MatDialog,
+    public dialog: NgbModal,
     private _location: Location,
     private requestPaymentFineService: RequestPaymentFineService,
     private requestRewardDetailService: RequestRewardDetailService,
@@ -198,7 +212,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       BribeTotal: [''],
       IsActive: ['1'],
       RequestRewardDetail: this.fb.array([]),
-      RequestRewardStaff: this.fb.array([])
+      RequestRewardStaff: this.fb.array([]),
+      Document: this.fb.array([])
     });
 
     this.RequestRewardStaff.valueChanges
@@ -271,7 +286,19 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onCancel.next(false);
-        this.buttonCancel();
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonCancel();
+          }
+        });
       }
     });
     this.navService.onSave.takeUntil(this.destroy$).subscribe(command => {
@@ -290,7 +317,19 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     this.navService.onDelete.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
         this.navService.onDelete.next(false);
-        this.buttonDelete();
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonDelete();
+          }
+        });
       }
     });
     this.navService.onPrint.takeUntil(this.destroy$).subscribe(command => {
@@ -308,31 +347,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.7');
+    this.sidebarService.setVersion('0.0.1.10');
     this.pageLoad();
-    this.masTitleService
-      .MasTitleMaingetAll()
-      .subscribe((title: MasTitleModel[]) => {
-        this.TitleList = title.map(m => m.TitleNameTH);
-      }); // 1.1.1
-    this.masStaffService
-      .MasStaffMaingetAll()
-      .subscribe((staff: MasStaffModel[]) => {
-        this.staffAll = staff;
-        this.Staff_StaffCode_List = staff.map(m => ({
-          text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
-          value: m.StaffCode
-        }));
-        this.StaffList = staff.map(
-          m => `${m.TitleName}${m.FirstName} ${m.LastName}`
-        );
-      }); // 1.1.2
-
-    this.masOfficeService
-      .MasOfficeMaingetAll()
-      .subscribe((Office: MasOfficeModel[]) => {
-        this.MasOfficeMainList = Office.map(m => m.OfficeName);
-      }); // 1.1.3
   }
   public changeFullName(text, index) {
     const StaffCodeMap = this.Staff_StaffCode_List.filter(f => f.text === text)
@@ -544,6 +560,30 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       case 'C':
         // 1.1
 
+        this.masTitleService
+          .MasTitleMaingetAll()
+          .subscribe((title: MasTitleModel[]) => {
+            this.TitleList = title.map(m => m.TitleNameTH);
+          }); // 1.1.1
+        this.masStaffService
+          .MasStaffMaingetAll()
+          .subscribe((staff: MasStaffModel[]) => {
+            this.staffAll = staff;
+            this.Staff_StaffCode_List = staff.map(m => ({
+              text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
+              value: m.StaffCode
+            }));
+            this.StaffList = staff.map(
+              m => `${m.TitleName}${m.FirstName} ${m.LastName}`
+            );
+          }); // 1.1.2
+
+        this.masOfficeService
+          .MasOfficeMaingetAll()
+          .subscribe((Office: MasOfficeModel[]) => {
+            this.MasOfficeMainList = Office.map(m => m.OfficeName);
+          }); // 1.1.3
+
         const RequestCompare: IRequestCompare[] = await this.requestCompareService
           .RequestComparegetByIndictmentID({
             IndictmentID: this.IndictmentID$.getValue()
@@ -740,18 +780,35 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
           switch (dataRequestReward.FineType) {
             case 0:
-              newMapName = `เลขคดีเปรียบเทียบที่ / ${
-                dataRequestReward.ReferenceNo
-              }`;
+              newMapName = `${dataRequestReward.ReferenceNo}`;
               break;
             case 1:
-              newMapName = `คำพิพากษาฎีกาที่ / ${
-                dataRequestReward.ReferenceNo
-              }`;
+              newMapName = `${dataRequestReward.ReferenceNo}`;
               break;
           }
           this.ReferenceNoList.push(newMapName);
-
+          const mapData = dataRequestReward.RequestRewardDetail.map(m => ({
+            ...m,
+            // tslint:disable-next-line:max-line-length
+            LawbreakerName: `${m.LawbreakerTitleName ||
+              ' '}${m.LawbreakerFirstName || ' '}${m.LawbreakerMiddleName ||
+              ' '}${m.LawbreakerLastName || ' '}${m.LawbreakerOtherName ||
+              ' '}`,
+            PaymentDueDate: `${m.PaymentActualDate}`,
+            BribeMoney: `${m.PaymentFine * 0.2 || 0}`,
+            RewardMoney: `${m.PaymentFine * 0.2 || 0}`
+          }));
+          this.listData = mapData;
+          this.checkList = mapData.map(m => true);
+          this.aggregate.BribeMoney.sum = Number(
+            mapData.map(m => m.BribeMoney).reduce((a, b) => (a += b))
+          );
+          this.aggregate.PaymentFine.sum = Number(
+            mapData.map(m => m.PaymentFine).reduce((a, b) => (a += b))
+          );
+          this.aggregate.RewardMoney.sum = Number(
+            mapData.map(m => m.RewardMoney).reduce((a, b) => (a += b))
+          );
           const datatable_RequestReward = dataRequestReward.RequestRewardStaff.map(
             m => ({
               ...m,
@@ -762,9 +819,22 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               ContributorName: m.ContributorName
             })
           );
-          Object.keys(this.RewardFormGroup.value).forEach(f => {
-            this.RewardFormGroup.get(f).patchValue(dataRequestReward[f] || '');
-          });
+          const objRewardForm = this.RewardFormGroup.value;
+          for (const key in objRewardForm) {
+            if (objRewardForm.hasOwnProperty(key)) {
+              const element = objRewardForm[key];
+              if (
+                key !== 'RequestRewardDetail' &&
+                key !== 'RequestRewardStaff' &&
+                key !== 'Document'
+              ) {
+                this.RewardFormGroup.get(key).patchValue(
+                  dataRequestReward[key] || ''
+                );
+              }
+            }
+          }
+
           // const control_RequestReward: FormArray = <FormArray>(
           //   this.RequestRewardForm
           // );
@@ -797,7 +867,20 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             ReferenceCode: this.RequestRewardID$.getValue()
           })
           .toPromise();
-        this.MasDocument$.next(masDocumentMain);
+        masDocumentMain.forEach(f => {
+          this.Document.push(
+            this.fb.group({
+              DocumentID: [f.DocumentID || ''],
+              DataSource: [f.DataSource || '', Validators.required],
+              FilePath: [f.FilePath || '', Validators.required],
+              DocumentName: [f.DocumentName || ''],
+              DocumentType: [f.DocumentType || ''],
+              IsActive: [f.IsActive || ''],
+              ReferenceCode: [f.ReferenceCode || ''],
+              isDelete: [false]
+            })
+          );
+        });
 
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
@@ -823,6 +906,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     // 1.3 'WAIT'
     // 1.4 'WAIT'
     // 1.5 'WAIT'
+
     if (this.RewardFormGroup.valid) {
       // 2
       try {
@@ -932,7 +1016,6 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             const RequestRewardinsAllRespone: IRequestRewardinsAllRespone = await this.requestRewardService
               .RequestRewardinsAll(dataForSave)
               .toPromise();
-            console.log('dataForSave', dataForSave);
 
             if (RequestRewardinsAllRespone.RequestRewardID) {
               this.RequestRewardID$.next(
@@ -940,12 +1023,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               );
               // 2.1.5
               // 2.1.5(1)
-              if (
-                this.ILG60_08_04_00_00_E19_FORM_DATA &&
-                this.ILG60_08_04_00_00_E19_FORM_DATA.length > 0
-              ) {
-                this.ILG60_08_04_00_00_E19_FORM_DATA.forEach(async element => {
-                  const resMasDocumentMain = await this.masDocumentMainService
+              if (this.Document.value && this.Document.value.length > 0) {
+                this.Document.value.forEach(async element => {
+                  this.masDocumentMainService
                     .MasDocumentMaininsAll({
                       DocumentType: `9`,
                       ReferenceCode: `${
@@ -957,10 +1037,11 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                       DocumentName: '',
                       IsActive: `1`
                     })
-                    .toPromise();
-                  if (resMasDocumentMain['DocumentID']) {
-                    // 2.1.5(2) 'WAIT'
-                  }
+                    .subscribe(resMasDocumentMain => {
+                      if (resMasDocumentMain['DocumentID']) {
+                        // 2.1.5(2) 'WAIT'
+                      }
+                    });
                 });
               }
             }
@@ -1074,23 +1155,37 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                   .toPromise();
               });
 
+            this.Document.value
+              .filter(f => !f.DocumentID)
+              .forEach(Doc => {
+                const mapDoc = MasDocumentMaininsAllModel;
+                Object.keys(mapDoc).forEach(x => {
+                  mapDoc[x] = Doc[x] || '';
+                });
+                mapDoc['DocumentType'] = '9';
+                mapDoc['ReferenceCode'] = `${this.RequestRewardID$.getValue()}`;
+                this.masDocumentMainService
+                  .MasDocumentMaininsAll(mapDoc)
+                  .subscribe();
+              });
             // 2.2.6 'WAIT'
             // 2.2.7 'WAIT'
             // 2.2.8 'WAIT'
             break;
         }
-        alert('บันทึกสำเร็จ');
-        location.reload();
+        swal('บันทึกสำเร็จ', 'success');
+        // location.reload();
         // this.pageLoad();
-        // this.router.navigate([
-        //   '/reward/reward/R',
-        //   this.RequestRewardID$.getValue()
-        // ]);
+        this.isEdit = false;
+        this.router.navigate([
+          '/reward/reward/R',
+          this.RequestRewardID$.getValue()
+        ]);
       } catch (error) {
-        alert('บันทึกไม่สำเร็จ' + error);
+        swal('บันทึกไม่สำเร็จ', 'error');
       }
     } else {
-      alert('กรุณากรอกให้ครบถ้วน');
+      swal('กรุณากรอกให้ครบถ้วน', 'warning');
     }
   }
   public async buttonPrint() {
@@ -1110,15 +1205,12 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
     // 1.3.2
     let MasDocument: MasDocumentModel[];
-    await this.masDocumentMainService
-      .MasDocumentMaininsAll({
+    MasDocument = await this.masDocumentMainService
+      .MasDocumentMaingetAll({
         ReferenceCode: this.RequestRewardID$.getValue(),
         DocumentType: 9
       })
-      .toPromise()
-      .then((res: MasDocumentModel[]) => {
-        MasDocument = res;
-      });
+      .toPromise();
 
     const printDoc: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode}: คำร้องขอรับเงินรางวัล`,
@@ -1133,36 +1225,58 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     );
 
     const dialogRef = this.dialog.open(PrintDialogComponent, {
-      width: '1200px',
-      height: 'auto',
-      data: {
-        printDoc: printDoc
-      }
+      backdrop: 'static'
     });
-
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-    });
+    dialogRef.componentInstance.data = printDoc;
+    dialogRef.result.then(r => {});
     // 2 END
   }
 
   private buttonCancel() {
     // 1 START
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      // 1.1
-      switch (this.mode) {
-        case 'C':
-          this._location.back();
-          break;
-        case 'R':
-          this.pageLoad();
-          break;
-      }
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    // 1.1
+    switch (this.mode) {
+      case 'C':
+        this._location.back();
+        break;
+      case 'R':
+        this.pageLoad();
+        break;
     }
+    // }
     // 2 END
   }
-  private buttonDelete() {}
-  private buttonEdit() {
+  private async buttonDelete() {
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    const delResp: IResponseCommon = await this.requestRewardService
+      .RequestRewardupdDelete({
+        RequestRewardID: this.RequestRewardID$.getValue()
+      })
+      .toPromise();
+
+    if (delResp.IsSuccess) {
+      swal('ลบข้อมูลสำเร็จ', 'success');
+    } else {
+      swal('ลบข้อมูลไม่สำเร็จ', 'error');
+    }
+    // }
+  }
+  private async buttonEdit() {
+    this.TitleList = await this.masTitleService
+      .MasTitleMaingetAll()
+      .toPromise();
+    this.staffAll = await this.masStaffService.MasStaffMaingetAll().toPromise();
+    this.Staff_StaffCode_List = this.staffAll.map(m => ({
+      text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
+      value: m.StaffCode
+    }));
+    this.StaffList = this.staffAll.map(
+      m => `${m.TitleName}${m.FirstName} ${m.LastName}`
+    );
+    this.MasOfficeMainList = await this.masOfficeService
+      .MasOfficeMaingetAll()
+      .toPromise();
     this.isEdit = true;
   }
   ngOnDestroy(): void {
@@ -1211,6 +1325,33 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         this.ILG60_08_04_00_00_E19_FORM_DATA = Documents;
         break;
     }
+  }
+  public addDocument() {
+    this.Document.push(
+      this.fb.group({
+        DocumentID: [null],
+        DataSource: ['', Validators.required],
+        FilePath: ['', Validators.required],
+        DocumentName: [''],
+        DocumentType: [9],
+        IsActive: [1],
+        ReferenceCode: [''],
+        isDelete: [false]
+      })
+    );
+  }
+  public changeDocument(e: any, index: number) {
+    // let file = e.target.files[0];
+    this.Document.at(index).patchValue({
+      FilePath: replaceFakePath(e.target.value),
+      IsActive: 1
+    });
+  }
+  public deleteDocument(i: number) {
+    //
+    this.Document.at(i)
+      .get('isDelete')
+      .patchValue(true);
   }
   public emitAggregate(aggregate) {
     this.aggregate = aggregate;
