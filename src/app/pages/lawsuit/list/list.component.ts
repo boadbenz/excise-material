@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.20');
+    this.sidebarService.setVersion('0.0.0.21');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
     // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
@@ -53,6 +53,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.onSearch(Textsearch);
       }
     });
+    this.navService.showAdvSearch.next(true);
     this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
       if (status) {
         await this.navService.setOnNextPage(false);
