@@ -261,11 +261,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                // if (!this.NoticeSuspect.value.length) {
-                //     alert(Message.checkData);
-                //     return;
-                // }
-
                 const noticeDate = this.noticeForm.value.NoticeDate;
                 const noticeDueDate = this.noticeForm.value.NoticeDueDate;
 
