@@ -78,7 +78,7 @@ export class ManageComponent implements OnInit {
 
   MasStaff = new Array<MasStaff>();
   lstype = [{ id: '0', name: 'ส่งฟ้องศาล' }, { id: '1', name: 'เปรียบเทียบปรับ', }, { id: '2', name: 'ไม่มีตัวตน', }];
-  lsend = [{ id: '0', name: 'กรมสรรพสามิต', }, { id: '1', name: 'ศาล', }, { id: '2', name: 'พนักงานฝ่ายปกครอง/พนักงายอัยการ', }];
+  lsend = [{ id: '0', name: 'กรมสรรพสามิต', }, { id: '1', name: 'ศาล', }, { id: '2', name: 'พนักงานสอบสวน/พนักงายอัยการ', }];
   staffState: any[] = []
   lawsuitTypeSelected: number;
   suggestions: any[] = [];
@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.20');
+    this.sidebarService.setVersion('0.0.0.21');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -603,10 +603,10 @@ export class ManageComponent implements OnInit {
     /// save IsLawsuitComplete = 0
     else {
       let lawsuitNo = "";
-      if (Number(this.lawsuitForm.controls['LawsuitNo'].value) > 0 && this.lawsuitForm.controls['LawsuitNoSub'].value > 0) {
+      if (this.lawsuitForm.controls['LawsuitNo'].value && this.lawsuitForm.controls['LawsuitNoSub'].value > 0) {
         lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
       } else {
-        alert("กรุณากรอกเลขที่คดีรับคำกล่าวโทษเป็นตัวเลข")
+        alert("กรุณากรอกเลขที่คดีรับคำกล่าวโทษไม่ถูกต้อง")
         return;
       }
       let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
@@ -811,7 +811,7 @@ export class ManageComponent implements OnInit {
       LawsuitStation: new FormControl(null, Validators.required),
       AccuserTestimony: new FormControl(null, Validators.required),
       LawsuitNo: new FormControl(null, Validators.required),
-      LawsuitNoSub: new FormControl(null, Validators.required),
+      LawsuitNoSub: new FormControl(this.getNowDate().date.year + 543, Validators.required),
       LawsuitStaff: this.fb.array([this.createStaffForm()]),
       LawsuitTableList: this.fb.array([this.createTableListForm()]),
       LawsuitDocument: this.fb.array([]),
@@ -830,7 +830,6 @@ export class ManageComponent implements OnInit {
       this.IsLawsuitComplete = res[0]['IsLawsuitComplete'];
       this.lawsuitList = res ? res : [];
       this.lawsuitFormNoData = true;
-      console.log('LawsuitArrestGetByCon page reload step 2 in line 983 ', res);
       if (res.length != 0) {
         await this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
           const _masstaff = masstaff;
@@ -1032,7 +1031,6 @@ export class ManageComponent implements OnInit {
           let isProve = res[0]['LawsuitArrestIndicment'][0]['IsProve'];
           let lawsuitType = res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'];
           console.log('+++IsLawsuitComplete', IsLawsuitComplete);
-          console.log(arrList)
 
           /// LawsuitComplete status = 0
         } else {
@@ -1116,7 +1114,6 @@ export class ManageComponent implements OnInit {
   }
   async setlawsuitForm(res) {
     /// get IsLawsuit check box (IsLawsuitCheck)
-    console.log(res)
 
     let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
     let IsLawsuitCheck = true;
@@ -1196,7 +1193,6 @@ export class ManageComponent implements OnInit {
     }
   }
   onChangeFullnameReslut(text) {
-    console.log(text)
     this.LawsuitStaffOnsave = text
     this.staff.FirstName = text.FirstName
     this.staff.LastName = text.LastName
@@ -1240,7 +1236,7 @@ export class ManageComponent implements OnInit {
     if (value == 0) {
       this.lsend = [
         { id: '1', name: 'ศาล', },
-        { id: '2', name: 'พนักงานฝ่ายปกครอง/พนักงายอัยการ', }
+        { id: '2', name: 'พนักงานสอบสวน/พนักงายอัยการ', }
       ];
     } else if (value == 1) {
       this.lsend = [
@@ -1248,7 +1244,7 @@ export class ManageComponent implements OnInit {
       ];
     } else if (value == 2) {
       this.lsend = [
-        { id: '2', name: 'พนักงานฝ่ายปกครอง/พนักงายอัยการ', }
+        { id: '2', name: 'พนักงานสอบสวน/พนักงายอัยการ', }
       ];
     }
     value == 0 ? array.controls[index].get('LawsuitEnd').setValue(1) : array.controls[index].get('LawsuitEnd').setValue(0);
@@ -1256,6 +1252,7 @@ export class ManageComponent implements OnInit {
   IsOutsideCheckReq() {
     if (this.lawsuitForm.controls['IsOutsideCheck'].value === true) {
       this.IsLawsuitType = " น. ";
+      this.lawsuitForm.controls['LawsuitNo'].setValue("น.");
       this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
       this.lawsuitForm.controls['IsLawsuitCheck'].setValue(false);
     } else {
