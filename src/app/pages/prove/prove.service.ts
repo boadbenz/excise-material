@@ -5,6 +5,7 @@ import { Prove } from './prove';
 import { ProveDocument } from './proveDoc';
 import { ProveProduct } from './proveProduct';
 import { ProveScience, ProveDeliverProduct } from './proveScience';
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class ProveService {
@@ -354,5 +355,35 @@ export class ProveService {
     } catch (error) {
       await alert(error);
     }
+  }
+
+  ProveReport2getByCon(ArrestCode:string, ProveID: string, IndictmentID: string) {
+    let pValue = {
+      "ArrestCode" : ArrestCode,
+      "ProveID" : ProveID,
+      "IndictmentID": IndictmentID
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.apiReport}/ILL_P038.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .catch(this.onCatch)
+      .do((res: Response) => {
+        this.onSuccess(res);
+      }, (error: any) => {
+        this.onError(error);
+      });
+  }
+
+  private onSuccess(res: Response): void {
+    console.log('Request successful');
+  }
+
+  private onError(res: Response): void {
+    console.log('Error, status code: ' + res.status);
+  }
+
+  private onCatch(error: any, caught: Observable<any>): Observable<any> {
+    return Observable.throw(error);
   }
 }
