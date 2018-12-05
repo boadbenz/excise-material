@@ -272,7 +272,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSave(false);
 
                 if (this.IsDelivery == false) {
-                    swal('', Message.checkDelivery, 'warning');
+                    this.ShowAlertWarning(Message.checkDelivery);
+
                     //alert(Message.checkDelivery);
 
                     return false;
@@ -288,7 +289,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         || this.ProveStaffName == ""   // ผู้ตรวจรับ
                     ) {
                         this.isRequired = true;
-                        swal('', Message.checkData, 'warning');
+                        this.ShowAlertWarning(Message.checkData);
                         //alert(Message.checkData);
 
                         return false;
@@ -308,7 +309,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 // || this.Command == ""                // คำสั่ง
                             ) {
                                 this.isRequired = true;
-                                swal('', Message.checkData, 'warning');
+                                this.ShowAlertWarning(Message.checkData);
                                 //alert(Message.checkData);
 
                                 return false;
@@ -321,7 +322,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 //|| this.Command == ""               // คำสั่ง
                             ) {
                                 this.isRequired = true;
-                                swal('', Message.checkData, 'warning');
+                                this.ShowAlertWarning(Message.checkData);
                                 //alert(Message.checkData);
 
                                 return false;
@@ -341,7 +342,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                             || this.StaffSendName == ""   // ผู้นำส่ง
                         ) {
                             this.isRequired = true;
-                            swal('', Message.checkData, 'warning');
+                            this.ShowAlertWarning(Message.checkData);
                             //alert(Message.checkData);
 
                             return false;
@@ -378,31 +379,42 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 this.navService.setOnCancel(false);
 
-                if (confirm(Message.confirmAction)) {
-                    if (this.mode === 'C') {
-                        this.router.navigate(['/prove/list']);
-                    } else if (this.mode === 'R') {
-                        // set false
-                        this.navService.setSaveButton(false);
-                        this.navService.setCancelButton(false);
-                        // set true
-                        this.navService.setPrintButton(true);
-                        this.navService.setEditButton(true);
-                        this.navService.setDeleteButton(true);
-                        this.navService.setEditField(true);
-
-                        await this.ProveArrestgetByCon();
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'ยืนยัน',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.value) {
+                        if (this.mode === 'C') {
+                            this.router.navigate(['/prove/list']);
+                        } else if (this.mode === 'R') {
+                            // set false
+                            this.navService.setSaveButton(false);
+                            this.navService.setCancelButton(false);
+                            // set true
+                            this.navService.setPrintButton(true);
+                            this.navService.setEditButton(true);
+                            this.navService.setDeleteButton(true);
+                            this.navService.setEditField(true);
+    
+                            this.ProveArrestgetByCon();
+                        }
                     }
-                }
-                else {
-                    this.navService.setSaveButton(true);
-                    this.navService.setCancelButton(true);
-
-                    this.navService.setPrintButton(false);
-                    this.navService.setEditButton(false);
-                    this.navService.setDeleteButton(false);
-                    this.navService.setEditField(false);
-                }
+                    else{
+                        this.navService.setSaveButton(true);
+                        this.navService.setCancelButton(true);
+    
+                        this.navService.setPrintButton(false);
+                        this.navService.setEditButton(false);
+                        this.navService.setDeleteButton(false);
+                        this.navService.setEditField(false);
+                    }
+                })
             }
         });
 
@@ -565,7 +577,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
                 if (isSuccess) {
-                    swal('', Message.saveComplete, 'success');
+                    this.ShowAlertSuccess(Message.saveComplete);
                     //alert(Message.saveComplete);
                     this.onComplete();
                     this.getProveByID();
@@ -574,7 +586,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
             }
             else {
-                swal('', Message.saveFail, 'error');
+                this.ShowAlertError(Message.saveFail);
                 //alert(Message.saveFail);
             }
         }, (error) => { console.error(error); return false; });
@@ -758,31 +770,42 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
         if (isSuccess) {
-            swal('', Message.saveComplete, 'success');
+            this.ShowAlertSuccess(Message.saveComplete);
             //alert(Message.saveComplete);
             this.onComplete();
             this.getProveByID();
             this.preloader.setShowPreloader(false);
         } else {
-            swal('', Message.saveFail, 'error');
+            this.ShowAlertError(Message.saveFail);
             //alert(Message.saveFail);
             this.preloader.setShowPreloader(false);
         }
     }
 
     onDelete() {
-        if (confirm(Message.confirmAction)) {
-            this.proveService.ProveupdDelete(this.ProveID).then(async IsSuccess => {
-                if (IsSuccess) {
-                    swal('', Message.saveComplete, 'success');
-                    //alert(Message.saveComplete);
-                    this.router.navigate(['/prove/list']);
-                } else {
-                    swal('', Message.saveFail, 'error');
-                    //alert(Message.saveFail);
-                }
-            }, (error) => { console.error(error); return false; });
-        }
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                this.proveService.ProveupdDelete(this.ProveID).then(async IsSuccess => {
+                    if (IsSuccess) {
+                        this.ShowAlertSuccess(Message.saveComplete);
+                        //alert(Message.saveComplete);
+                        this.router.navigate(['/prove/list']);
+                    } else {
+                        this.ShowAlertError(Message.saveFail);
+                        //alert(Message.saveFail);
+                    }
+                }, (error) => { console.error(error); return false; });
+            }
+        })
     }
 
     ngOnDestroy(): void {
@@ -1151,7 +1174,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         }
                     }
                 }, (err: HttpErrorResponse) => {
-                    swal('', err.message, 'error');
+                    this.ShowAlertError(err.message);
                     //alert(err.message);
                 });
 
@@ -1160,7 +1183,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.preloader.setShowPreloader(false);
             }
         }, (err: HttpErrorResponse) => {
-            swal('', err.message, 'error');
+            this.ShowAlertError(err.message);
             //alert(err.message);
         });
 
@@ -1187,6 +1210,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         }
                     }
                 }
+
+                this.ArrestProduct = [];
 
                 await this.proveService.ArrestIndictmentProductgetByIndictmentID(this.IndictmentID).then(async res => {
                     if (res.length > 0) {
@@ -1925,7 +1950,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             || this.oProveProduct.ProveResult == "" || this.oProveProduct.ProveResult == undefined
         ) {
             this.isPopupRequired = true;
-            swal('', Message.checkData, 'warning');
+            this.ShowAlertWarning(Message.checkData);
             //alert(Message.checkData);
 
             return false;
@@ -2246,7 +2271,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     varidateQtyBalance() {
         if (this.oProveProduct.QtyBalance > this.oProveProduct.Qty) {
-            swal('', "จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของกลางที่ตรวจพิสูจน์ !", 'warning');
+            this.ShowAlertWarning("จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของกลางที่ตรวจพิสูจน์ !");
             //alert("จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
             this.oProveProduct.QtyBalance = this.oProveProduct.Qty;
         }
@@ -2254,9 +2279,44 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     varidateNetVolumeBalance() {
         if (this.oProveProduct.NetVolumeBalance > this.oProveProduct.NetVolume) {
-            swal('', "ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ ต้องไม่เกินปริมาณสุทธิของของกลางที่ตรวจพิสูจน์", 'warning');
+            this.ShowAlertWarning("ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ ต้องไม่เกินปริมาณสุทธิของของกลางที่ตรวจพิสูจน์");
             //alert("ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินปริมาณสุทธิของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
             this.oProveProduct.NetVolumeBalance = this.oProveProduct.NetVolume;
         }
     }
+
+    ShowAlertWarning(alertText: string)
+    {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'warning',
+            confirmButtonText : 'ตกลง'
+        });
+    }
+
+    ShowAlertSuccess(alertText: string)
+    {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'success',
+            confirmButtonText : 'ตกลง'
+        });
+    }
+
+    ShowAlertError(alertText: string)
+    {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'error',
+            confirmButtonText : 'ตกลง'
+        });
+    }
+
+    // VaridateNumber(event)
+    // {
+    //     alert(event);
+    // }
 }
