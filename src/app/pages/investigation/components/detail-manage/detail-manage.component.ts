@@ -1059,6 +1059,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         await this.s_invest.InvestigateinsAll(invest).then(async x => {
             if (!this.checkIsSuccess(x)) return;
             this.investCode = investCode;
+            this.investMode = 'R';
             await this.insertInvestigateDetail(investCode);
 
         }, () => { this.saveFail(); return; })
