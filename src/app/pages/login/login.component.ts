@@ -12,10 +12,12 @@ import { ThaiDatePipe } from '../reward/pipes/thaiDate.pipe';
 })
 export class LoginComponent implements OnInit {
 
-  
+
   errMsg: string;
 
   returnUrl: string;
+  fullName: string;
+  officeName: string;
 
   constructor(private authService: AuthService,
     private router: Router,
@@ -28,8 +30,7 @@ export class LoginComponent implements OnInit {
   }
   private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
-  ngOnInit() {
-  }
+
 
   async onSubmit(form: any) {
     var User = form.userName
@@ -41,24 +42,31 @@ export class LoginComponent implements OnInit {
       this.errMsg = "กรุณาระบุรหัสผ่าน";
     }
     if (User && Pass) {
-      if (this.authService.signin(form)) {
-        this.router.navigate([this.returnUrl]);
+      const params = {
+        UserName: User,
+        Password: Pass
       };
-
-        // await this.authService.userAuth(User,Pass).then(async res => {
-
-        //   console.log("res : ",res);
-          // if (res) {
-              
-          // }else this.errMsg = "";
-      // });
+      await this.authService.userAuth(params).subscribe(async res => {
+        if (res.StaffCode != null) {
+          this.fullName = res.TitleName + res.FirstName + " " + res.LastName;
+          this.officeName = res.OfficeName;
+          console.log("fullName : ", this.fullName)
+          console.log("officeName : ", this.officeName)
+          if (this.authService.signin(form)) {
+            this.router.navigate([this.returnUrl]);
+          };
+        } else this.errMsg = "ไม่สามารถเข้าสู่ระบบได้ กรุณาตรวจสอบ";
+      });
     }
   }
   ClearErrMsg() {
     this.errMsg = '';
   }
 
-
+  ngOnInit() {
+    this.fullName;
+    this.officeName;
+  }
 
   // onSubmit(form: any) {
   //   if (this.authService.signin(form)) {
