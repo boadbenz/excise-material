@@ -1,5 +1,5 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
-    <app-printdoc-modal [ProveID]="ProveID" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
+    <app-printdoc-modal [ProveID]="ProveID" [ArrestCode]="ArrestCode" [IndictmentID]="IndictmentID" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
 </ng-template>
 
 <div class="wizard-content">
@@ -442,7 +442,7 @@
                     <input type="text" [(ngModel)]="DeliverNo" name="DeliverNo" class="form-control" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
-                    <input type="text" [(ngModel)]="DeliverNoYear" name="DeliverNoYear" class="form-control" [disabled]="showEditField"
+                    <input type="text" [(ngModel)]="DeliverNoYear" name="DeliverNoYear" class="form-control" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
 
