@@ -49,11 +49,11 @@ export class PrintDocModalComponent implements OnInit {
 
         this.proveService.MasDocumentMaingetAll(this.ProveID).then(result => {
             let pValue = {
-                "IsChecked" : false,
-                "DocName" : result[0].DocumentName,
-                "DocType" : result[0].DocumentType,
-                "DocTypeName" : "เอกสารแนบภายใน"
-              };
+                "IsChecked": false,
+                "DocName": result[0].DocumentName,
+                "DocType": result[0].DocumentType,
+                "DocTypeName": "เอกสารแนบภายใน"
+            };
 
             this.printDoc.push(pValue);
         })
@@ -66,26 +66,38 @@ export class PrintDocModalComponent implements OnInit {
     onPrint(f: any) {
         let _print = this.printDoc.filter(x => x.IsChecked == true && x.DocType == 0)
         if (_print.length) {
-          _print.filter(x => x.DocName == "บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4").map(item => {
-            this.preloader.setShowPreloader(true);
-            this.proveService.ProveReport2getByCon(this.ArrestCode ,this.ProveID, this.IndictmentID)
-              .subscribe(x => {
-                const blob = new Blob([x], { type: "application/pdf" });
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = `${this.ProveID}.pdf`;
-                link.click();
-                this.preloader.setShowPreloader(false);
-              }, (error) => { 
-                  console.error(error); 
-                  swal('', "พบปัญหาในการพิมพ์รายงาน", 'error');
-                  this.preloader.setShowPreloader(false); 
-                  return false; 
-              });
-          });
+            _print.filter(x => x.DocName == "บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4").map(item => {
+                this.preloader.setShowPreloader(true);
+                this.proveService.ProveReport2getByCon(this.ArrestCode, this.ProveID, this.IndictmentID)
+                    .subscribe(x => {
+                        const blob = new Blob([x], { type: "application/pdf" });
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = `${this.ProveID}.pdf`;
+                        link.click();
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            });
         }
-        else{
-            swal('', "กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!", 'warning');
+        else {
+            swal({
+                title: '',
+                text: "กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!",
+                type: 'warning',
+                confirmButtonText: 'ตกลง'
+            });
             //alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
         }
     }
