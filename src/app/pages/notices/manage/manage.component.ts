@@ -145,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.24');
+        this.sidebarService.setVersion('0.0.2.25');
 
         this.navigate_service();
 
@@ -163,6 +163,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (this.mode == 'R') {
             await this.getByCon(this.noticeCode);
         }else if(this.mode=="C"){
+            this.NoticeInformer.at(0).patchValue({
+                InformerType: true
+            });
             this.onChangeConceal();
             let e = {value:1};
             this.addNoticeDueDate(e);
@@ -696,10 +699,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (IsSuccess) {
             this.showSwal(Message.saveComplete, "success");
-            this.router.routeReuseStrategy.shouldReuseRoute = function() {
-              return false;
-            };
+            // this.router.routeReuseStrategy.shouldReuseRoute = function() {
+            //   return false;
+            // };
             this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
+            this.getByCon(this.noticeCode);
 
             sessionStorage.removeItem("notice_form_data");
         } else {
