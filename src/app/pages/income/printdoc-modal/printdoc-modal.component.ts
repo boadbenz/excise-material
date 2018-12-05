@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { IncomeService } from '../income.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-printdoc-modal',
@@ -37,6 +38,7 @@ export class PrintDocModalComponent implements OnInit {
         let _print = this.printDoc.filter(x => x.IsChecked == true && x.DocType == 0)
         if (_print.length) {
             this.preloader.setShowPreloader(true);
+            debugger
           this.revenueService.RevenueReportgetByCon(this.RevenueID)
             .subscribe(x => {
               const blob = new Blob([x], { type: "application/pdf" });
@@ -45,10 +47,16 @@ export class PrintDocModalComponent implements OnInit {
               link.download = `${this.RevenueID}.pdf`;
               link.click();
               this.preloader.setShowPreloader(false);
-            })
+            }, (error) => { 
+                console.error(error); 
+                swal('', "พบปัญหาในการพิมพ์รายงาน", 'error');
+                this.preloader.setShowPreloader(false); 
+                return false; 
+            });
         }
         else{
-            alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
+            swal('', "กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!", 'warning');
+            //alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
         }
     }
 
