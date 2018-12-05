@@ -64,10 +64,11 @@ export class ListComponent implements OnInit {
     }
 
     async ngOnInit() {
+        this.sidebarService.setVersion('Prove 0.0.0.20');
+
+        //this.advSearch.next(true);
         this.DeliveryDateTo = null;
         this.ProveDateTo = null;
-
-        this.sidebarService.setVersion('Prove 0.0.0.19');
 
         //this.preLoaderService.setShowPreloader(true);
         //this.onSearch({ Textsearch: "" });
@@ -90,6 +91,16 @@ export class ListComponent implements OnInit {
         this.subOnSearch.unsubscribe();
     }
 
+    ShowAlertNoRecord()
+    {
+        swal({
+            title: '',
+            text: Message.noRecord,
+            type: 'warning',
+            confirmButtonText : 'ตกลง'
+        });
+    }
+
     async onSearch(Textsearch: any) {
         this.preLoaderService.setShowPreloader(true);
 
@@ -98,7 +109,7 @@ export class ListComponent implements OnInit {
 
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            swal('', Message.noRecord, 'warning');
+            this.ShowAlertNoRecord();
             //alert(Message.noRecord);
             this.ListProve = [];
             this.preLoaderService.setShowPreloader(false);
@@ -161,7 +172,7 @@ export class ListComponent implements OnInit {
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             //alert(Message.noRecord);
-            swal('', Message.noRecord, 'warning');
+            this.ShowAlertNoRecord();
             this.preLoaderService.setShowPreloader(false);
         });
     }
@@ -170,7 +181,7 @@ export class ListComponent implements OnInit {
         this.Prove = [];
 
         if (!list.length) {
-            swal('', Message.noRecord, 'warning');
+            this.ShowAlertNoRecord();
             //alert(Message.noRecord);
             this.ListProve = [];
 
