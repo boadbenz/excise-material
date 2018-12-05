@@ -442,7 +442,7 @@
                     <input type="text" [(ngModel)]="DeliverNo" name="DeliverNo" class="form-control" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
-                    <input type="text" [(ngModel)]="DeliverNoYear" name="DeliverNoYear" class="form-control" [disabled]="showEditField"
+                    <input type="text" [(ngModel)]="DeliverNoYear" name="DeliverNoYear" class="form-control" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
 

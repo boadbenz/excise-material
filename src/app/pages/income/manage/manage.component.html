@@ -79,7 +79,7 @@
                     <input type="text" [(ngModel)]="RevenueNo" name="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
                             [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
-                    <input type="text" [(ngModel)]="RevenueNoYear" name="RevenueNoYear" class="form-control form-control-sm" [disabled]="showEditField"
+                    <input type="text" [(ngModel)]="RevenueNoYear" name="RevenueNoYear" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
                 <!-- <div class="col-lg-4 col-md-7 col-sm-8">

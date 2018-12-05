@@ -2241,7 +2241,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     VatProveFormat() {
         debugger
-        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve).toLocaleString(undefined, {minimumFractionDigits: 4,maximumFractionDigits: 4});
+        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve.replace(',','')).toLocaleString(undefined, {minimumFractionDigits: 4,maximumFractionDigits: 4});
     }
 
     varidateQtyBalance() {
