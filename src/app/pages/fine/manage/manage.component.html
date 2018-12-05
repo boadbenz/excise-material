@@ -257,7 +257,7 @@
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
               <div class="col-md-3">
-                <input class="form-control" type="time" [(ngModel)]="accused.CompareTime" name="CompareTime"
+                <input class="form-control without_ampm" type="time" [(ngModel)]="accused.CompareTime" name="CompareTime"
                        [disabled]="showEditField">
               </div>
             </div>
@@ -362,7 +362,7 @@
                 ></my-date-picker-th>
             </td>
             <td>
-              <select [(ngModel)]="item.request" class="form-control" name="request">
+              <select [(ngModel)]="item.request" class="form-control" name="request" [disabled]="showEditField">
                 <option [ngValue]="1">
                   ร้องขอ
                 </option>
@@ -558,7 +558,7 @@
           <td class="text-center">{{i + 1}}</td>
           <td>{{ item.LawBrakerName }}</td>
           <td class="text-center">{{item.ApproveReportDateShow }}</td>
-          <td>{{ item.ApproveType }}</td>
+          <td class="text-center">{{ item.ApproveType ? 'แบบอนุมัติ ' + item.ApproveType : '' }}</td>
           <td>
             <a (click)="editApproveReport(item, i, 0)" class="text-secondary" data-toggle="modal"
                data-target="#approvePopup" *ngIf="receipt.list[i].PaymentDate">
@@ -661,37 +661,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label col-md-5">วันที่กำหนดชำระค่าปรับ : </label>
-                  <div class="col-md-7">
-                    <my-date-picker-th [(ngModel)]="editUser.PaymentFineAppointDate" name="PaymentFineAppointDate" placeholder=""
-                                       locale="th" (dateChanged)="canCheck($event)"
-                                       [options]="DateOption"
-                                       [disabled]="showEditField" required
-                    ></my-date-picker-th>
-                  </div>
-                  <!-- <div class="col-md-7">
-                  <input class="form-control" type="date" [(ngModel)]="PaymentFineAppointDate" name="PaymentFineAppointDate" [disabled]="showEditField">
-                      </div> -->
-                </div>
-              </div>
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label col-md-5">วันที่กำหนดชำระภาษี : </label>
-                  <div class="col-md-7">
-                    <my-date-picker-th [(ngModel)]="editUser.PaymentVatDate" name="PaymentVatDate" placeholder="" locale="th"
-                                       [options]="DateOption"
-                                       [disabled]="showEditField"
-                    ></my-date-picker-th>
-                    <!-- <input class="form-control" type="date" [(ngModel)]="PaymentVatDate" name="PaymentVatDate" [disabled]="showEditField"> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
@@ -711,7 +681,7 @@
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Bail" name="Bail"
-                           [disabled]="(!editUser.checkBox1 || showEditField) && !editUser.checkBox2" [required]="editUser.checkBox1">
+                           [disabled]="(!editUser.checkBox1 || showEditField)" [required]="editUser.checkBox1">
                   </div>
                 </div>
               </div>
@@ -1315,7 +1285,7 @@
 
           </div>
           <div class="text-right">
-            <button type="submit" class="btn waves-effect waves-light btn-navy">บันทึก</button>
+            <button type="submit" class="btn waves-effect waves-light btn-navy" [disabled]="showEditField">บันทึก</button>
             <button type="button" (click)="saveApprove()" class="btn waves-effect waves-light btn-navy"
                     data-toggle="modal"
                     data-target="#approvePopup" id="btnApprove" hidden>บันทึก
