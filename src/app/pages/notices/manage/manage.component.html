@@ -337,8 +337,7 @@
                         <td class="text-center">{{i+1}}</td>
                         <td>
                             <ng-template #rt let-r="result" let-t="term">
-                                <!-- {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}} -->
-                                {{r.ProductDesc}}
+                                {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}}
                             </ng-template>
                             <input type="text" class="form-control form-control-sm"
                                 [readonly]="showEditField"
