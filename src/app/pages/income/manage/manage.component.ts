@@ -460,7 +460,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.router.navigate(['/income/list']);
             }
         }, (err: HttpErrorResponse) => {
-            swal('', err.message, 'error');
+            swal('', "API RevenuegetByCon :: " + err.message, 'error');
             //alert(err.message);
         });
     }
@@ -528,7 +528,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
             }, (err: HttpErrorResponse) => {
-                swal('', err.message, 'error');
+                swal('', "API RevenueComparegetByCon :: " + err.message, 'error');
                 //alert(err.message);
             });
         }
