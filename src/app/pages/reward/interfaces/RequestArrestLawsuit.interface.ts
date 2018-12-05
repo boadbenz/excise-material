@@ -2,7 +2,7 @@
 export interface IRequestArrestLawsuit {
   ArrestCode: string;
   IndictmentID: number;
-  OccurrenceDate: Date;
+  OccurrenceDate: string;
   OccurrenceTime: string;
   TitleName: string;
   FirstName: string;
@@ -13,7 +13,7 @@ export interface IRequestArrestLawsuit {
   District: number;
   Province: number;
   LawsuitNo: string;
-  LawsuitDate: Date;
+  LawsuitDate: string;
   LawsuitTime: string;
   SubSectionType: string;
   GuiltBaseName: string;

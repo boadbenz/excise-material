@@ -14,7 +14,8 @@ export class SidebarService {
 
 @Component({
   selector: 'ma-sidebar',
-  templateUrl: './sidebar.component.html'
+  templateUrl: './sidebar.component.html',
+  styleUrls:['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
   textVersion: any;

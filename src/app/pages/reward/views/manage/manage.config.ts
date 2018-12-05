@@ -1,21 +1,47 @@
 import { RewardHelper } from '../../reward.helper';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { IRequestBribe } from '../../interfaces/RequestBribe.interface';
+import { IRequestCommand } from '../../interfaces/RequestCommand';
+import { IRequestReward } from '../../interfaces/RequestReward';
+import { IRequestArrestLawsuit } from '../../interfaces/RequestArrestLawsuit.interface';
 
 export class ManageConfig extends RewardHelper {
-  public ILG60_08_02_00_00E08_EXPANDED$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E09_EXPANDED$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E11_EXPANDED$ = new BehaviorSubject<any>(true);
-  public ILG60_08_02_00_00E14_EXPANDED$ = new BehaviorSubject<any>(true);
 
-  public ILG60_08_02_00_00E08_DISABLED$ = new BehaviorSubject<any>(false);
-  public ILG60_08_02_00_00E09_DISABLED$ = new BehaviorSubject<any>(false);
-  public ILG60_08_02_00_00E11_DISABLED$ = new BehaviorSubject<any>(false);
-  public ILG60_08_02_00_00E14_DISABLED$ = new BehaviorSubject<any>(false);
+  public ILG60_08_02_00_00E08_EXPANDED = true;
+  public ILG60_08_02_00_00E09_EXPANDED = true;
+  public ILG60_08_02_00_00E11_EXPANDED = true;
+  public ILG60_08_02_00_00E14_EXPANDED = true;
 
-  public ILG60_08_02_00_00E08_DATA$ = new BehaviorSubject<any>(null);
-  public ILG60_08_02_00_00E09_DATA$ = new BehaviorSubject<any>(null);
-  public ILG60_08_02_00_00E11_DATA$ = new BehaviorSubject<any>(null);
-  public ILG60_08_02_00_00E14_DATA$ = new BehaviorSubject<any>(null);
+  public ILG60_08_02_00_00E08_DISABLED = false;
+  public ILG60_08_02_00_00E09_DISABLED = false;
+  public ILG60_08_02_00_00E11_DISABLED = false;
+  public ILG60_08_02_00_00E14_DISABLED = false;
+
+  public ILG60_08_02_00_00E09_EDIT = false;
+
+  public ILG60_08_02_00_00E08_DATA$ = new BehaviorSubject<
+    IRequestArrestLawsuit[]
+  >(null);
+  public ILG60_08_02_00_00E09_DATA$ = new BehaviorSubject<IRequestCommand[]>(
+    null
+  );
+  public ILG60_08_02_00_00E11_DATA$ = new BehaviorSubject<IRequestBribe[]>(
+    null
+  );
+  public ILG60_08_02_00_00E14_DATA$ = new BehaviorSubject<IRequestReward[]>(
+    null
+  );
+
+  public ILG60_08_02_00_00E09_SAVE: IRequestCommand = {
+    ArrestCode: '',
+    CommandDate: '',
+    CommandID: null,
+    CommandNo: '',
+    CommandTime: '',
+    IsActive: 1,
+    RequestCommandDetail: [],
+    TotalPart: 0
+  };
 
   public IndictmentID$ = new BehaviorSubject<number | null>(null);
   public ArrestCode$ = new BehaviorSubject<string | null>(null);

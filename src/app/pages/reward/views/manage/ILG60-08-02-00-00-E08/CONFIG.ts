@@ -5,7 +5,6 @@ import { Input } from '@angular/core';
 import { IRequestArrestLawsuit } from 'app/pages/reward/interfaces/RequestArrestLawsuit.interface';
 
 export class CONFIG extends ManageConfig {
-
   @Input()
   set inputData(val) {
     this.inputData$.next(val);
@@ -15,6 +14,24 @@ export class CONFIG extends ManageConfig {
   }
   public inputData$ = new BehaviorSubject<any>(null);
 
+  public columns: any = {};
+
+  // = {
+  //   ArrestCode: '',
+  //   OccurrenceDate: '',
+  //   OccurrenceTime: '',
+  //   staffName: '',
+  //   PositionName: '',
+  //   OfficeName: '',
+  //   location: '',
+  //   LawsuitNo: '',
+  //   LawsuitDate: '',
+  //   LawsuitTime: '',
+  //   SubSectionType: '',
+  //   GuiltBaseName: '',
+  //   SectionNo: '',
+  //   PenaltyDesc: ''
+  // }
   public columnsDefault: ColumnsInterface[] = [
     {
       field: 'TitleName',

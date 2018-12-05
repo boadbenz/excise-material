@@ -22,9 +22,14 @@ export class FineService {
             })
     };
 
+    postMethod(url: string, data: any, port: string = '8887') {
+        const params = data;
+        const full_url = `${appConfig[`api${port}`]}/${url}`;
+        return this.http.post<any>(full_url, params, this.httpOptions).toPromise();
+    }
     getByKeyword(Textsearch: string) {
         const params = Textsearch;
-        const url = `${appConfig.api8881}/CompareListgetByKeyword`;
+        const url = `${appConfig.api8887}/CompareListgetByKeyword`;
         return this.http.post<Compare[]>(url, params, this.httpOptions);
     }
 
@@ -48,7 +53,7 @@ export class FineService {
 
     getByConAdv(form: any) {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8881}/CompareListgetByConAdv`;
+        const url = `${appConfig.api8887}/CompareListgetByConAdv`;
 
         try {
             console.log(this.http.post<Compare[]>(url, params, this.httpOptions));
@@ -56,9 +61,19 @@ export class FineService {
         } catch (error) {
             alert(error);
         }
-        
-    }
 
+    }
+    async compareArrestGetByCon(ArrestCode: string) {
+      // http://192.168.3.158:8881/XCS60/CompareListgetByConAdv
+      const params = { 'ArrestCode' : ArrestCode };
+      const url = `${appConfig.api8887}/CompareListgetByConAdv`;
+
+      try {
+        return await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      } catch (error) {
+        await alert(error);
+      }
+    }
     // async getByConAdv(form: any): Promise<any> {
     //     const params = JSON.stringify(form);
     //     const url = `${appConfig.api8881}/CompareListgetByConAdv`;
@@ -114,7 +129,7 @@ export class FineService {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             return res.ResponseData as Lawsuit;
         } catch (error) {
-            await alert(error);
+            console.log(error);
         }
     }
 

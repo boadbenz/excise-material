@@ -8,6 +8,14 @@ import { RequestBribeService } from './RequestBribe.service';
 import { REWARD_MASTER_SERVICES } from './master';
 import { RewardService } from '../reward.service';
 import { TransactionRunningService } from './TransactionRunning.service';
+import { RequestPaymentFineDetailService } from './RequestPaymentFineDetail.service';
+import { RequestCompareService } from './RequestCompare.service';
+import { NonRequestRewardStaffService } from './NonRequestRewardStaff.service';
+import { RequstLawsuitJudgementService } from './RequstLawsuitJudgement.service';
+import { RequestPaymentFineService } from './RequestPaymentFine.service';
+import { RequestBribeDetailService } from './RequestBribeDetail.service';
+import { RequestRewardDetailService } from './RequestRewardDetail.service';
+import { RequestRewardStaffService } from './RequestRewardStaff.service';
 
 export const REWARD_SERVICES = [
   ...REWARD_MASTER_SERVICES,
@@ -19,5 +27,13 @@ export const REWARD_SERVICES = [
   RequestCommandService,
   RequestNoticeService,
   RequestBribeService,
-  TransactionRunningService
+  RequestPaymentFineDetailService,
+  TransactionRunningService,
+  RequestCompareService,
+  NonRequestRewardStaffService,
+  RequstLawsuitJudgementService,
+  RequestPaymentFineService,
+  RequestBribeDetailService,
+  RequestRewardDetailService,
+  RequestRewardStaffService
 ];

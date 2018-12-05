@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from 'app/app.config';
+import { HttpService } from 'app/core/http.service';
 
 @Injectable()
 export class InvestgateDetailService {
 
   constructor(
+    private http: HttpService,
     private httpClient: HttpClient
   ) { }
 
@@ -34,10 +36,10 @@ export class InvestgateDetailService {
     return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
-  async InvestigateDetailupdDelete(InvestigateDetailID: string) {
+   InvestigateDetailupdDelete(InvestigateDetailID: string) {
     const params = { InvestigateDetailID };
     const url = `${appConfig.api8888}/InvestigateDetailupdDelete`;
-    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    return this.http.post(url, params).map(x => x.json());
   }
 
 
@@ -105,6 +107,12 @@ export class InvestgateDetailService {
   async InvestigateDetailSuspectinsAll(suspect: any) {
     const params = suspect;
     const url = `${appConfig.api8888}/InvestigateDetailSuspectinsAll`;
+    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+  }
+
+  async InvestigateDetailSuspectupdByCon(suspect: any) {
+    const params = suspect;
+    const url = `${appConfig.api8888}/InvestigateDetailSuspectupdByCon`;
     return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 

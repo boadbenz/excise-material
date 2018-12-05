@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { HelperService } from './HelperService';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { IRequestPaymentFineDetailupdByCon } from '../interfaces/RequestPaymentFineDetail';
+import {
+  IRequestPaymentFineDetailupdByCon,
+  IRequestPaymentFineDetailgetByNoticeCode
+} from '../interfaces/RequestPaymentFineDetail';
 
 @Injectable()
 export class RequestPaymentFineDetailService extends HelperService {
@@ -15,6 +18,15 @@ export class RequestPaymentFineDetailService extends HelperService {
   ): Observable<any> {
     return this.http.post(
       `${this.ApiPrefixUrl}/RequestPaymentFineDetailupdByCon`,
+      param
+    );
+  }
+
+  public RequestPaymentFineDetailgetByNoticeCode(
+    param: IRequestPaymentFineDetailgetByNoticeCode
+  ): Observable<any> {
+    return this.http.post(
+      `${this.ApiPrefixUrl}/RequestPaymentFineDetailgetByNoticeCode`,
       param
     );
   }

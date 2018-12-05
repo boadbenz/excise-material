@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
@@ -21,7 +20,12 @@ import { MainMasterService } from 'app/services/main-master.service';
 import { replaceFakePath } from 'app/config/dataString';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../store';
-
+import { TransactionRunningService } from 'app/services/transaction-running.service';
+import { TransactionRunning } from 'app/models/transaction-running.model';
+import { MasDocumentMainService } from 'app/services/mas-document-main.service';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { setViewSuspect } from '../suspect-modal/suspect-modal.component';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-investigate-detail-manage',
@@ -45,13 +49,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     card6 = true;
     card7 = true;
 
+    _isSuccess: boolean;
     private mode: string;
     invesDetailId: string;
     private investMode: string;
     investCode: string;
+    investigateSeq: string;
 
     showEditField: boolean;
-    printDocModel: any;
     investigateFG: FormGroup;
 
     readonly myDatePickerOptions = MyDatePickerOptions;
@@ -60,6 +65,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     readonly contributorInvestType = fromGobalModels.ContributorInvestType;
     readonly valueofNews = fromGobalModels.ValueofNews;
     readonly costofNews = fromGobalModels.CostofNews;
+
+    readonly runningTable = 'ops_investigate';
+    readonly runningOfficeCode = '900012';
+    readonly runningPrefix = 'AI';
+    readonly officeName = '900012';
+    readonly documentType = '3';
+
+    @ViewChild('printDocModal') printDocModal: ElementRef;
 
     typeheadOffice = new Array<fromGobalModels.MasOfficeModel>();
     typeheadStaff = new Array<fromGobalModels.MasStaffModel>();
@@ -99,7 +112,12 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         private navService: NavigationService,
         private mainMasterService: MainMasterService,
         private loaderService: LoaderService,
+        private s_transactionRunning: TransactionRunningService,
+        private s_invest: fromServices.InvestgateService,
+        private s_investDetail: fromServices.InvestgateDetailService,
+        private s_document: MasDocumentMainService,
         private router: Router,
+        private sidebarService: SidebarService,
         private store: Store<fromStore.AppState>
     ) {
         this.obInvest = store.select(s => s.invest);
@@ -111,6 +129,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.sidebarService.setVersion(this.s_invest.version);
+
         this.createForm();
 
         combineLatest(this.activeRoute.params, this.activeRoute.queryParams)
@@ -121,18 +141,25 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 this.investMode = p.queryParams.investMode;
                 this.investCode = p.queryParams.investCode;
                 this.invesDetailId = p.queryParams.invesDetailId;
+                this.investigateSeq = p.queryParams.InvestigateSeq;
 
                 switch (this.mode) {
                     case 'C':
                         this.showEditField = true;
+                        this.investigateFG.patchValue({
+                            InvestigateSeq: this.investigateSeq
+                        })
                         this.enableBtnModeC();
                         this.loadMasterData();
                         break;
                     case 'R':
                         this.enableBtnModeR();
+                        this.onPageLoad();
                         break;
                 }
             });
+
+        this.resetConfig();
 
         this.navService.showFieldEdit
             .takeUntil(this.destroy$)
@@ -140,11 +167,33 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 this.showEditField = status.valueOf();
             });
 
+        this.navService.onEdit
+            .takeUntil(this.destroy$)
+            .subscribe(async status => {
+                if (status) {
+                    await this.navService.setOnEdit(false);
+                    this.onEdit();
+                }
+            })
+
         this.navService.onCancel
             .takeUntil(this.destroy$)
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnCancel(false);
+                    swal({
+                        title: '',
+                        text: Message.confirmAction,
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Confirm!'
+                    }).then((result) => {
+                        if (result.value) {
+                            this.onCancel();
+                        }
+                    })
                 }
             })
 
@@ -153,52 +202,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnSave(false);
-
-                    if (!this.stateInvest) {
-                        alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
-                        return;
-                    }
-
-                    if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart || !this.stateInvest.DateEnd) {
-                        alert('กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน');
-                        return;
-                    }
-
-                    if (this.investigateFG.invalid) {
-                        alert(Message.checkData);
-                        return;
-                    }
-
-                    let staff: fromModels.InvestigateDetailStaff[] = this.InvestigateDetailStaff.value.filter(x => x.IsModify != 'd');
-                    if (staff.length) {
-                        if (staff.filter(x => x.ContributorID == '2').length <= 0) {
-                            alert('ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ')
-                            return;
-                        }
-
-                        if (staff.filter(x => x.ContributorID == '2').length > 1) {
-                            alert('ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” ต้องมีได้แค่ 1 รายการเท่านั้น')
-                            return;
-                        }
-
-                        if (staff.filter(x => x.ContributorID == '3').length > 1) {
-                            alert('ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้สั่งการ” ต้องมีได้แค่ 1 รายการเท่านั้น')
-                            return;
-                        }
-                    } else {
-                        alert('ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ')
-                        return;
-                    }
-
-                    let local: fromModels.InvestigateDetailLocal[] = this.InvestigateDetailLocal.value.filter(x => x.IsModify != 'd');
-                    if (local.length) {
-                       if (local.filter(x => x.Region == '').length > 1) {
-                           alert('ส่วนสถานที่ทำการสืบสวน กรุณาระบุ “ตำบล/อำเภอ/จังหวัด”')
-                       }
-                    } else {
-                        alert('ส่วนสถานที่ทำการสืบสวน ต้องมีอย่างน้อย 1 รายการ');
-                    }
-
+                    this.onSave();
                 }
             });
 
@@ -207,6 +211,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnDelete(false);
+                    this.onDelete();
                 }
             });
 
@@ -215,7 +220,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnPrint(false);
-                    this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+                    this.modal = this.ngbModel.open(this.printDocModal, { size: 'lg', centered: true });
                 }
             })
 
@@ -224,9 +229,23 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .subscribe(async status => {
                 if (status) {
                     await this.navService.setOnNextPage(false);
-                    this.router.navigate(['investigation/manage', this.investMode, this.investCode])
+                    this.navigateToManage();
                 }
             })
+    }
+
+    private resetConfig() {
+        let routerConfig = this.router['config'];
+        routerConfig
+            .find(x => x.path == 'investigation')['_loadedConfig'].routes // core investigation path
+            .filter(x => x.path.indexOf('detail-manage') >= 0) // curent path
+            .map(x => {
+                x.data.urls
+                    .find(y => y.url.indexOf('/investigation/manage') >= 0)
+                    .url = `/investigation/manage/R/${this.investCode}`; // previous path
+                return x;
+            })
+        this.router.resetConfig(routerConfig);
     }
 
     private enableBtnModeC() {
@@ -247,12 +266,12 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
         this.navService.setPrevPageButton(false);
-        this.navService.setNextPageButton(false);
         // set true
         this.navService.setPrintButton(true);
         this.navService.setEditButton(true);
         this.navService.setDeleteButton(true);
         this.navService.setEditField(true);
+        this.navService.setNextPageButton(true);
     }
 
     private async loadMasterData() {
@@ -291,6 +310,91 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.loaderService.hide();
     }
 
+    async onPageLoad() {
+        this.loaderService.show();
+        let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
+            if (!this.checkResponse(x)) return;
+
+            let invest = this.investigateFG;
+            x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
+            x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
+            x.InvestigateSeq = this.investigateSeq;
+
+            await this.pageRefreshStaff(x.InvestigateDetailStaff);
+
+            await this.pageRefreshSuspect(x.InvestigateDetailSuspect);
+
+            await this.pageRefreshLocal(x.InvestigateDetailLocal);
+
+            await this.pageRefreshProduct(x.InvestigateDetailProduct);
+
+            await this.pageRefreshDocument(this.invesDetailId);
+
+            invest.patchValue(x);
+        })
+        Promise.all([invest]);
+        this.loaderService.hide();
+    }
+
+    private async pageRefreshStaff(staff: fromModels.InvestigateDetailStaff[]) {
+        await staff.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+            y.FullName = `${y.TitleName} ${y.FirstName} ${y.LastName}`;
+        });
+        this.setItemFormArray(staff, 'InvestigateDetailStaff');
+    }
+
+    private async pageRefreshSuspect(suspect: fromModels.InvestigateDetailSuspect[]) {
+
+        await suspect.map((y, index) => {
+            y = setViewSuspect(y);
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+            y.FullName = `${y.SuspectTitleName} ${y.SuspectFirstName} ${y.SuspectLastName}`;
+            return y;
+        });
+        this.setItemFormArray(suspect, 'InvestigateDetailSuspect');
+    }
+
+    private async pageRefreshLocal(local: fromModels.InvestigateDetailLocal[]) {
+        await local.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+            y.Floor = y.Floor || null;
+            if (y.SubDistrictCode && y.DistrictCode && y.ProvinceCode) {
+                y.Region = `${y.SubDistrict} ${y.District} ${y.Province}`
+            }
+        });
+        this.setItemFormArray(local, 'InvestigateDetailLocal');
+    }
+
+    private async pageRefreshProduct(product: fromModels.InvestigateDetailProduct[]) {
+        await product.map((y, index) => {
+            y.RowId = index + 1;
+            y.IsModify = 'r';
+        });
+        this.setItemFormArray(product, 'InvestigateDetailProduct');
+    }
+
+    private async pageRefreshDocument(investDetailId: string) {
+        let _doc = new Array<fromModels.InvestigateDocumentModel>();
+
+        await this.s_document.MasDocumentMaingetAll(this.documentType, investDetailId)
+            .then((x) => {
+                if (!this.checkResponse(x)) return;
+                _doc = x.map(y => {
+                    y.IsModify = 'r';
+                    return y;
+                });
+            }).catch((error) => this.catchError(error));
+
+        if (!_doc.length) return;
+
+        _doc.map((y, index) => y.RowId = index + 1);
+        this.setItemFormArray(_doc, 'InvestigateDocument');
+    }
+
     onSDateChange(event: IMyDateModel) {
         this._dateStartFrom = event
         this._dateStartTo = this._dateStartTo || this.investigateFG.value.DateEnd
@@ -306,27 +410,21 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private checkDate() {
         if (this._dateStartFrom && this._dateStartTo) {
 
-            let sdate = this.isObject(this._dateStartFrom)
-                ? getDateMyDatepicker(this._dateStartFrom)
-                : new Date(this._dateStartFrom);
-            let edate = this.isObject(this._dateStartTo)
-                ? getDateMyDatepicker(this._dateStartTo)
-                : new Date(this._dateStartTo);
+            let sdate = getDateMyDatepicker(this._dateStartFrom);
+            let edate = getDateMyDatepicker(this._dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.investigateFG.patchValue({
-                        InvestigateDateEnd: this.isObject(this._dateStartFrom)
-                            ? { date: this._dateStartFrom.date }
-                            : setDateMyDatepicker(this._dateStartFrom)
+                        InvestigateDateEnd: setDateMyDatepicker(this._dateStartFrom)
                     })
                 }, 0);
             }
         }
     }
 
-    isObject = (obj) => obj === Object(obj);
+    // isObject = (obj) => obj === Object(obj);
 
     private async sortFormArray(arr: any[]) {
         let a = await arr.sort((a, b) => {
@@ -355,20 +453,31 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    catchError(error: any) {
-        console.log(error);
-        this.endLoader();
-    }
-
     endLoader = () => this.loaderService.hide();
 
     addStaff() {
         const lastIndex = this.InvestigateDetailStaff.length - 1;
         let item = new fromModels.InvestigateDetailStaff();
-        item.PositionName = '';
-        item.OfficeName = '';
-        item.OfficeShortName = '';
-        item.ContributorID = '';
+        item.StaffID = null;
+        item.ProgramCode = null;
+        item.ProcessCode = null;
+        item.InvestigateDetailID = null;
+        item.StaffCode = null;
+        item.TitleName = null;
+        item.FirstName = null;
+        item.LastName = null;
+        item.PositionCode = null;
+        item.PositionName = null;
+        item.PosLevel = null;
+        item.PosLevelName = null;
+        item.DepartmentCode = null;
+        item.DepartmentName = null;
+        item.DepartmentLevel = null;
+        item.OfficeCode = null;
+        item.OfficeName = null;
+        item.OfficeShortName = null;
+        item.ContributorID = null;
+        item.IsActive = null;
         item.IsModify = 'c'
         if (lastIndex < 0) {
             item.RowId = 1;
@@ -395,14 +504,26 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addLocal() {
         const lastIndex = this.InvestigateDetailLocal.length - 1;
         let item = new fromModels.InvestigateDetailLocal();
-        item.Address = '';
-        item.Village = '';
-        item.Building = '';
-        item.Room = '';
-        item.Floor = '';
-        item.Alley = '';
-        item.Road = '';
-        item.Region = '';
+        item.LocalID = null;
+        item.InvestigateDetailID = null;
+        item.GPS = null;
+        item.Location = null;
+        item.Address = null;
+        item.Village = null;
+        item.Building = null;
+        item.Room = null;
+        item.Alley = null;
+        item.Road = null;
+        item.Floor = null;
+        item.SubDistrictCode = null;
+        item.SubDistrict = null;
+        item.DistrictCode = null;
+        item.District = null;
+        item.ProvinceCode = null;
+        item.Province = null;
+        item.ZipCode = null;
+        item.IsActive = 1;
+        item.Region = null;
         item.IsModify = 'c';
         if (lastIndex < 0) {
             item.RowId = 1;
@@ -419,12 +540,38 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addProduct() {
         const lastIndex = this.InvestigateDetailProduct.length - 1;
         let item = new fromModels.InvestigateDetailProduct();
-        item.ProductID = 0;
+        item.ProductID = null;
+        item.InvestigateDetailID = null;
+        item.GroupCode = '1';
+        item.GroupName = null;
+        item.IsDomestic = null;
+        item.ProductCode = null;
+        item.BrandCode = null;
+        item.BrandNameTH = null;
+        item.BrandNameEN = null;
+        item.SubBrandCode = null;
+        item.SubBrandNameTH = null;
+        item.SubBrandNameEN = null;
+        item.ModelCode = null;
+        item.ModelName = null;
+        item.FixNo1 = null;
+        item.DegreeCode = null;
+        item.Degree = null;
+        item.SizeCode = null;
+        item.Size = null;
+        item.SizeUnitCode = null;
+        item.SizeUnitName = null;
+        item.FixNo2 = null;
+        item.SequenceNo = null;
+        item.ProductDesc = null;
+        item.CarNo = null;
+        item.Qty = null;
+        item.QtyUnit = null;
+        item.NetVolume = null;
+        item.NetVolumeUnit = null;
+        item.IsActive = null;
         item.IsModify = 'c';
         item.GroupCode = '1';
-        item.ProductDesc = '';
-        item.Qty = null;
-        item.QtyUnit = '';
         if (lastIndex < 0) {
             item.RowId = 1;
             this.InvestigateDetailProduct.push(this.fb.group(item));
@@ -440,7 +587,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     addDocument() {
         const lastIndex = this.InvestigateDocument.length - 1;
         let item = new fromModels.InvestigateDocumentModel();
-        item.DocumentType = '3';
+        item.DocumentType = this.documentType;
         item.DataSource = null;
         item.FilePath = null;
         item.IsModify = 'c';
@@ -458,7 +605,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     changeArrestDoc(e: any, index: number) {
         this.InvestigateDocument.at(index).patchValue({
-            ReferenceCode: this.investCode,
             FilePath: replaceFakePath(e.target.value),
             IsActive: 1
         })
@@ -473,11 +619,11 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     deleteLocal(i: number) {
-        this.deleteFormArray(this.InvestigateDetailLocal, i , 'InvestigateDetailLocal');
+        this.deleteFormArray(this.InvestigateDetailLocal, i, 'InvestigateDetailLocal');
     }
 
     deleteProduct(i: number) {
-        this.deleteFormArray(this.InvestigateDetailProduct, i , 'InvestigateDetailProduct');
+        this.deleteFormArray(this.InvestigateDetailProduct, i, 'InvestigateDetailProduct');
     }
 
     deleteDocument(i: number) {
@@ -486,15 +632,17 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         this.investigateFG = this.fb.group({
+            InvestigateDetailID: new FormControl(null),
             InvestigateCode: new FormControl(null),
             InvestigateSeq: new FormControl(null, Validators.required),
-            StationCode: new FormControl(null),
-            StationName: new FormControl(null),
+            StationCode: new FormControl(this.runningOfficeCode),
+            StationName: new FormControl(this.officeName),
             InvestigateDateStart: new FormControl(null, Validators.required),
-            InvestigateDateEnd: new FormControl(null, Validators.required),
+            InvestigateDateEnd: new FormControl(null),
             ConfidenceOfNews: new FormControl(null, Validators.required),
             ValueOfNews: new FormControl(null, Validators.required),
             InvestigateDetail: new FormControl(null, Validators.required),
+            IsActive: new FormControl(1, Validators.required),
             InvestigateDetailStaff: this.fb.array([]),
             InvestigateDetailProduct: this.fb.array([]),
             InvestigateDetailLocal: this.fb.array([]),
@@ -507,20 +655,17 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         text$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadProduct
-                    .filter(v =>
-                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
-                    ).slice(0, 10));
+                    .filter(v => v.ProductDesc.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
         text3$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        (v.SubdistrictNameTH && v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -528,9 +673,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadStaff
                     .filter(v =>
-                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.TitleName} ${v.FirstName} ${v.LastName}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>
@@ -561,14 +706,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     formatterUnit = (DutyCode: string) => DutyCode;
 
-    selectItemLocaleRegion(e) {
-        this.InvestigateDetailLocal.at(0).patchValue({
+    selectItemLocaleRegion(e, i) {
+        this.InvestigateDetailLocal.at(i).patchValue({
             SubDistrictCode: e.item.SubdistrictCode,
             SubDistrict: e.item.SubdistrictNameTH,
             DistrictCode: e.item.DistrictCode,
             District: e.item.DistrictNameTH,
             ProvinceCode: e.item.ProvinceCode,
-            Province: e.item.ProvinceNameTH,
+            Province: e.item.ProvinceNameTH
         })
     }
 
@@ -581,6 +726,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             IsModify: product.IsModify == 'r' ? 'u' : product.IsModify,
             RowId: product.RowId,
             GroupCode: e.item.GroupCode || product.GroupCode,
+            GroupName: e.item.GroupName || e.item.GroupCode || product.GroupCode,
             IsDomestic: e.item.IsDomestic || product.IsDomestic,
             // ProductFrom: product.IsModify == 'c' ? 'mas-product' : product.ProductFrom
         })
@@ -599,8 +745,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             IsModify: staff.IsModify == 'r' ? 'u' : staff.IsModify,
             RowId: staff.RowId,
             FullName: `${e.item.TitleName} ${e.item.FirstName} ${e.item.LastName}`,
-            ProgramCode: 'ILG60-01-03-00-00',
-            ProcessCode: '03',
+            ProgramCode: 2,
+            ProcessCode: '02',
             PositionCode: e.item.OperationPosCode,
             PositionName: e.item.OperationPosName,
             DepartmentCode: e.item.OfficeCode,
@@ -644,20 +790,483 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         })
     }
 
-    ngOnDestroy(): void {
+    async clearForm() {
+        let reset = [
+            await this.investigateFG.reset(),
+            await this.clearFormArray(this.InvestigateDetailStaff),
+            await this.clearFormArray(this.InvestigateDetailSuspect),
+            await this.clearFormArray(this.InvestigateDetailLocal),
+            await this.clearFormArray(this.InvestigateDetailProduct),
+            await this.clearFormArray(this.InvestigateDocument)
+        ];
+        Promise.all(reset);
+    }
+
+    async ngOnDestroy(): Promise<void> {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
-        this.investigateFG.reset();
+        await this.clearForm();
     }
 
     openModal(e) {
         this.modal = this.ngbModel.open(e, { size: 'lg', centered: true });
     }
 
-    private onSave() {
+    saveFail() {
+        this._isSuccess = false;
+        return false;
     }
 
-    private onRevice() {
+    checkResponse(res: any) {
+        switch (res.IsSuccess) {
+            case 'False':
+            case false:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    checkIsSuccess(res: any) {
+        switch (res.IsSuccess) {
+            case 'True':
+            case true:
+                this._isSuccess = true;
+                return true;
+            default:
+                this._isSuccess = false;
+                return false;
+        }
+    }
+
+    catchError(error: any) {
+        console.log(error);
+        this._isSuccess = false;
+        this.endLoader();
+    }
+
+    clearFormArray = (formArray: FormArray) => {
+        while (formArray.length !== 0) {
+            formArray.removeAt(0)
+        }
+    }
+
+    async onComplete() {
+        if (this._isSuccess) {
+            swal('', Message.saveComplete, 'success');
+            switch (this.mode) {
+                case 'C':
+                    await this.store.dispatch(new fromStore.RemoveInvestigate);
+                    await this.clearForm();
+
+                    this.onRefreshPage();
+                    break;
+                case 'R':
+                    location.reload();
+                    break;
+            }
+        } else {
+            swal('', Message.saveFail, 'error')
+        }
+    }
+
+    private navigateToManage = () => this.router.navigate([`/investigation/manage`, this.investMode, this.investCode]);
+
+    private onRefreshPage = () => this.router.navigate(
+        [`/investigation/detail-manage`, 'R'],
+        {
+            queryParams: {
+                investMode: this.investMode,
+                investCode: this.investCode,
+                invesDetailId: this.invesDetailId
+            }
+        });
+
+    private async onEdit() {
+        await this.loadMasterData();
+    }
+
+    private onCancel() {
+        switch (this.mode) {
+            case 'C':
+                this.navigateToManage();
+                break;
+            case 'R':
+                this.onRefreshPage();
+                break;
+        }
+    }
+
+    private async onDelete() {
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm!'
+        }).then((result) => {
+            if (result.value) {
+                this.s_investDetail.InvestigateDetailupdDelete(this.invesDetailId)
+                    .takeUntil(this.destroy$)
+                    .subscribe(x => {
+                        if (this.checkIsSuccess(x)) {
+                            swal('', Message.delComplete, 'success');
+                            this.navigateToManage();
+                        } else {
+                            swal('', Message.delFail, 'error');
+                        }
+                    })
+            }
+        })
+    }
+
+    private async onSave() {
+        if (this.investCode == 'NEW') {
+            if (!this.stateInvest) {
+                swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
+                return;
+            }
+
+            if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart) {
+                swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
+                return;
+            }
+        }
+
+        if (this.investigateFG.invalid) {
+            swal('', Message.checkData, 'warning');
+            return;
+        }
+
+        let staff: fromModels.InvestigateDetailStaff[] = this.InvestigateDetailStaff.value.filter(x => x.IsModify != 'd');
+        if (staff.length) {
+            if (staff.filter(x => x.ContributorID == '2').length <= 0) {
+                swal('', 'ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ', 'warning')
+                return;
+            }
+
+            if (staff.filter(x => x.ContributorID == '2').length > 1) {
+                swal('', 'ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” ต้องมีได้แค่ 1 รายการเท่านั้น', 'warning')
+                return;
+            }
+
+            if (staff.filter(x => x.ContributorID == '3').length > 1) {
+                swal('', 'ส่วนผู้ร่วมทำการสืบสวน รายการที่ฐานะเป็น “ผู้สั่งการ” ต้องมีได้แค่ 1 รายการเท่านั้น', 'warning')
+                return;
+            }
+        } else {
+            swal('', 'ส่วนผู้ร่วมทำการสืบสวน ต้องมีรายการที่ฐานะเป็น “ผู้ดูแลการสืบสวน” อย่างน้อย 1 รายการ', 'warning')
+            return;
+        }
+
+        let local: fromModels.InvestigateDetailLocal[] = this.InvestigateDetailLocal.value.filter(x => x.IsModify != 'd');
+        if (local.length) {
+            if (local.filter(x => x.Region == '').length > 1) {
+                swal('', 'ส่วนสถานที่ทำการสืบสวน กรุณาระบุ “ตำบล/อำเภอ/จังหวัด”', 'warning')
+            }
+        } else {
+            swal('', 'ส่วนสถานที่ทำการสืบสวน ต้องมีอย่างน้อย 1 รายการ', 'warning');
+        }
+
+        switch (this.mode) {
+            case 'C':
+                if (this.investCode == 'NEW') {
+                    await this.createWithOutInvestCode();
+                } else {
+                    await this.createWithInvestCode();
+                }
+                break;
+            case 'R':
+                await this.onRevice();
+                break;
+        }
+    }
+
+    private async createWithInvestCode() {
+        this.loaderService.show();
+        await this.insertInvestigateDetail(this.investCode);
+
+        this.onComplete();
+
+        this.loaderService.hide();
+    }
+
+    private async createWithOutInvestCode() {
+        this.loaderService.show();
+        await this.getTransactionRunning();
+
+        this.onComplete();
+
+        this.loaderService.hide();
+    }
+
+    private async onRevice() {
+        this.loaderService.show();
+        await this.updateInvestigateDetail();
+        this.onComplete();
+
+        this.loaderService.hide();
+    }
+
+    private async getTransactionRunning() {
+
+        let resRunning: any[] = await this.s_transactionRunning
+            .TransactionRunninggetByCon(this.runningTable, this.runningOfficeCode)
+            .then((x: TransactionRunning[]) => {
+                if (!this.checkResponse(x)) return;
+                return x;
+            })
+        let investCode: string;
+        if (resRunning.length) {
+            let tr = resRunning.sort((a, b) => b.RunningNo - a.RunningNo)[0] // sort desc
+            let str = '' + (tr.RunningNo + 1)
+            let pad = '00000';
+            let ans = pad.substring(0, pad.length - str.length) + str
+            investCode = `${tr.RunningPrefix}${tr.RunningOfficeCode}${tr.RunningYear}${ans}`;
+
+            await this.s_transactionRunning.
+                TransactionRunningupdByCon(tr.RunningID.toString())
+                .then(async y => {
+                    if (!this.checkIsSuccess(y)) return;
+                    return true;
+                }, () => { this.saveFail(); return; })
+                .catch((error) => this.catchError(error));
+
+        } else {
+            await this.s_transactionRunning
+                .TransactionRunninginsAll(this.runningOfficeCode, this.runningTable, this.runningPrefix)
+                .then(async y => {
+                    if (!this.checkIsSuccess(y)) return;
+
+                    let ans = '00001'
+                    let year = ((new Date).getFullYear() + 543).toString()
+                    year = year.substring(2, 4);
+                    investCode = `${this.runningPrefix}${this.runningOfficeCode}${year}${ans}`;
+                    return true;
+                }, () => { this.saveFail(); return; })
+                .catch((error) => this.catchError(error));
+        }
+
+        if (investCode)
+            await this.insertInvestigate(investCode);
+    }
+
+    private async insertInvestigate(investCode: string) {
+        let invest = this.stateInvest;
+        invest.InvestigateCode = investCode;
+        await this.s_invest.InvestigateinsAll(invest).then(async x => {
+            if (!this.checkIsSuccess(x)) return;
+            this.investCode = investCode;
+            await this.insertInvestigateDetail(investCode);
+
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
+    }
+
+    private async insertInvestigateDetail(investCode: string) {
+        this.loaderService.show();
+        let form: fromModels.InvestigateDetail = this.investigateFG.value;
+
+        form.InvestigateCode = investCode;
+        form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
+        form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
+
+        console.log("InvestigateDetailinsAll : ", JSON.stringify(form));
+
+        await this.s_investDetail.InvestigateDetailinsAll(form).then(async x => {
+            if (!this.checkIsSuccess(x)) return;
+            this.invesDetailId = x.InvestigateDetailID;
+            let staff = await this.modifyInvestigateDetailStaff(x.InvestigateDetailID);
+            let suspect = await this.modifyInvestigateDetailSuspect(x.InvestigateDetailID);
+            let local = await this.modifyInvestigateDetailLocal(x.InvestigateDetailID);
+            let product = await this.modifyInvestigateDetailProduct(x.InvestigateDetailID);
+            let ducument = await this.modifyMasDocument(x.InvestigateDetailID);
+            return Promise.all([staff, suspect, local, product, ducument]);
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
+        this.loaderService.hide();
+    }
+
+    private async updateInvestigateDetail() {
+        this.loaderService.show();
+        let form: fromModels.InvestigateDetail = this.investigateFG.value;
+        form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
+        form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
+
+        console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));
+
+        await this.s_investDetail.InvestigateDetailupdByCon(form).then(async x => {
+            if (!this.checkIsSuccess(x)) return;
+            let staff = await this.modifyInvestigateDetailStaff(parseInt(this.invesDetailId));
+            let suspect = await this.modifyInvestigateDetailSuspect(parseInt(this.invesDetailId));
+            let local = await this.modifyInvestigateDetailLocal(parseInt(this.invesDetailId));
+            let product = await this.modifyInvestigateDetailProduct(parseInt(this.invesDetailId));
+            let ducument = await this.modifyMasDocument(parseInt(this.invesDetailId));
+            return Promise.all([staff, suspect, local, product, ducument]);
+        }, () => { this.saveFail(); return; })
+            .catch((error) => this.catchError(error));
+
+        this.loaderService.hide();
+    }
+
+    private async modifyInvestigateDetailStaff(investDetailId: number) {
+        const staff = await this.InvestigateDetailStaff.value
+            .map(async (x: fromModels.InvestigateDetailStaff, index) => {
+                x.InvestigateDetailID = investDetailId;
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailStaffupdDelete(x.StaffID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        console.log(`InvestigateDetailStaffinsAll : ${index + 1}`, JSON.stringify(x));
+                        await this.s_investDetail.InvestigateDetailStaffinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                    case 'r':
+                        await this.s_investDetail.InvestigateDetailStaffupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            })
+        return Promise.all(staff);
+    }
+
+    private async modifyInvestigateDetailSuspect(investDetailId: number) {
+        const suspect = await this.InvestigateDetailSuspect.value
+            .map(async (x: fromModels.InvestigateDetailSuspect) => {
+                x.InvestigateDetailID = investDetailId;
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailSuspectupdDelete(x.SuspectID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        await this.s_investDetail.InvestigateDetailSuspectinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            });
+        return Promise.all(suspect);
+    }
+
+    private async modifyInvestigateDetailLocal(investDetailId: number) {
+        const product = await this.InvestigateDetailLocal.value
+            .map(async (x: fromModels.InvestigateDetailLocal, index) => {
+                x.InvestigateDetailID = investDetailId;
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailLocalupdDelete(x.LocalID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        console.log(`InvestigateDetailLocalinsAll : ${index + 1}`, JSON.stringify(x))
+                        await this.s_investDetail.InvestigateDetailLocalinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                    case 'r':
+                        await this.s_investDetail.InvestigateDetailLocalupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            });
+        return Promise.all(product);
+    }
+
+    private async modifyInvestigateDetailProduct(investDetailId: number) {
+        const product = await this.InvestigateDetailProduct.value
+            .map(async (x: fromModels.InvestigateDetailProduct) => {
+                x.InvestigateDetailID = investDetailId;
+                switch (x.IsModify) {
+                    case 'd':
+                        if (this.mode == 'C') return;
+                        await this.s_investDetail.InvestigateDetailProductupdDelete(x.ProductID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        await this.s_investDetail.InvestigateDetailProductinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                    case 'r':
+                        await this.s_investDetail.InvestigateDetailProductupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            });
+        return Promise.all(product);
+    }
+
+    private async modifyMasDocument(investDetailId: number) {
+        const document = await this.InvestigateDocument.value
+            .map(async (x: fromModels.InvestigateDocumentModel) => {
+                x.ReferenceCode = investDetailId.toString();
+                switch (x.IsModify) {
+                    case 'd':
+                        this.s_document.MasDocumentMainupdDelete(x.DocumentID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'c':
+                        this.s_document.MasDocumentMaininsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                    case 'u':
+                    case 'r':
+                        this.s_document.MasDocumentMainupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }, () => { this.saveFail(); return; })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            })
+        return Promise.all(document);
     }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ManageConfig } from './manage.config';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
@@ -15,7 +15,8 @@ import {
 import {
   IRequestBribeRewardgetByIndictmentID,
   IRequestBribeReward,
-  IRequestBribeRewardinsAll
+  IRequestBribeRewardinsAll,
+  IRequestBribeRewardinsAllResponse
 } from '../../interfaces/RequestBribeReward.interface';
 import { RequestBribeRewardService } from '../../services/RequestBribeReward.service';
 import {
@@ -37,14 +38,15 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
-import { async } from 'q';
-
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.scss']
 })
-export class ManageComponent extends ManageConfig implements OnInit {
+export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   constructor(
     private navService: NavigationService,
     private activatedRoute: ActivatedRoute,
@@ -54,578 +56,231 @@ export class ManageComponent extends ManageConfig implements OnInit {
     private requestNoticeService: RequestNoticeService,
     private requestCommandService: RequestCommandService,
     private requestBribeService: RequestBribeService,
+    private sidebarService: SidebarService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: NgbModal
   ) {
     super();
     this.activatedRoute.params.subscribe(param => {
       this.IndictmentID$.next(param['IndictmentID']);
       this.ArrestCode$.next(param['ArrestCode']);
     });
-    this.navService.onCancel.subscribe(command => {
+    this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
-        this.cancelButton();
+        this.navService.onCancel.next(false);
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonCancel();
+          }
+        });
       }
     });
-    this.navService.onSave.subscribe(command => {
+    this.navService.onSave.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
-        this.saveButton();
+        this.navService.onSave.next(false);
+        this.buttonSave();
       }
     });
-    this.navService.onEdit.subscribe(command => {
+    this.navService.onEdit.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
-        this.editButton();
+        this.navService.onEdit.next(false);
+        this.buttonEdit();
       }
     });
 
-    this.navService.onDelete.subscribe(command => {
+    this.navService.onDelete.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
-        this.deleteButton();
+        this.navService.onDelete.next(false);
+        swal({
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then(result => {
+          if (result.value) {
+            this.buttonDelete();
+          }
+        });
       }
     });
-    this.navService.onPrint.subscribe(command => {
+    this.navService.onPrint.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
-        this.printButton();
+        this.navService.onPrint.next(false);
+        this.buttonPrint();
       }
     });
   }
 
   ngOnInit() {
-    this.setShowButton();
+    this.sidebarService.setVersion('0.0.1.7');
     this.pageLoad();
   }
-  private setShowButton() {
-    this.navService.setSearchBar(false);
-    this.navService.setPrintButton(false);
-    this.navService.setDeleteButton(false);
-    this.navService.setCancelButton(false);
-    this.navService.setEditButton(false);
-    this.navService.setSaveButton(false);
+
+  private initIsEditDefault() {
+    this.ILG60_08_02_00_00E09_EDIT = false;
   }
-  private pageLoad() {
+  private async pageLoad() {
     // ILG60-08-02-00-00-E01
-
+    this.initIsEditDefault();
     // 1 START
-    this.RequestArrestLawsuitgetByIndictmentID({
-      IndictmentID: this.IndictmentID$.getValue()
-    });
-
-    // 3
-    this.RequestBribeRewardgetByIndictmentID({
-      IndictmentID: this.IndictmentID$.getValue()
-    });
-
-    // 5 END
-  }
-  private RequestArrestLawsuitgetByIndictmentID(
-    param: IRequestArrestLawsuitGetByIndictmentId
-  ) {
-    this.requestArrestLawsuitService
-      .RequestArrestLawsuitgetByIndictmentID(param)
-      .subscribe((res: IRequestArrestLawsuit[]) => {
-        // 2
-        this.ILG60_08_02_00_00E08_DATA$.next(res);
-      });
-  }
-
-  private pageRefresh(param) {
-    // ILG60-08-02-00-00-E02
-
-    // 1 START
-    switch (param) {
-      // 1.1
-      case 'B':
-        // 1.1.1
-        this.requestBribeService
-          .RequestBribegetByRequestBribeRewardID({
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-          })
-          .subscribe((res: IRequestBribe[]) => {
-            // 1.1.2
-            // 1.1.2(1)
-            if (res.length > 0) {
-              // 1.1.2(1.1)
-              this.ILG60_08_02_00_00E11_DATA$.next(res);
-            } else {
-              // 1.1.2(2)
-              // 1.1.2(2.1) => 2
-            }
-          });
-
-        break;
-      // 1.2
-      case 'R':
-        // 1.2.1
-        this.requestRewardService
-          .RequestRewardgetByRequestBribeRewardID({
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-          })
-          .subscribe((res: IRequestReward[]) => {
-            // 1.2.2
-            // 1.2.2(1)
-            if (res.length > 0) {
-              // 1.2.2(1.1)
-              this.ILG60_08_02_00_00E14_DATA$.next(res);
-            } else {
-              // 1.2.2(2)
-              // 1.2.2(2.1) => 2
-            }
-          });
-        break;
-    }
-    // 2 END
-  }
-
-  public saveButton() {
-    // ILG60-08-02-00-00-E03
-    // 1 START
-    const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
-    const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
-    let ValidateVerify = false;
-    if (requestBribe.length === 0 && requestReward.length > 0) {
-      // 1.1
-      ValidateVerify = true;
-    } else if (requestReward.length === 0 && requestBribe.length > 0) {
-      // 1.2
-      ValidateVerify = true;
-    }
-    // 2 'WAIT'
-    // 2.1 'WAIT'
-    if (ValidateVerify === true) {
-      // 3
-      const responseSave = false;
-      // 3.1
-      if (responseSave) {
-        // 3.1.1
-        alert('บันทึกไม่สำเร็จ');
-      } else {
-        // 3.2
-        // 3.2.1
-        alert('บันทึกสำเร็จ');
-
-        // 3.2.2
-        this.pageLoad();
-      }
-    }
-    // 4 END
-  }
-  public editButton() {
-    // ILG60-08-02-00-00
-    // 1
-
-    // 1.1 'WAIT'
-    if (this.ILG60_08_02_00_00E09_EXPANDED$.getValue() === true) {
-      // 1.2 'WAIT'
-    }
+    const RequestArrestLawsuit: IRequestArrestLawsuit[] = await this.requestArrestLawsuitService
+      .RequestArrestLawsuitgetByIndictmentID({
+        IndictmentID: this.IndictmentID$.getValue()
+      })
+      .toPromise();
 
     // 2
-    this.navService.setSearchBar(false);
-    this.navService.setPrintButton(false);
-    this.navService.setDeleteButton(false);
-    this.navService.setCancelButton(true);
-    this.navService.setEditButton(true);
-    this.navService.setSaveButton(true);
+    this.ILG60_08_02_00_00E08_DATA$.next(RequestArrestLawsuit);
 
-    // 3 END
-  }
-  public deleteButton() {
-    // ILG60-08-02-00-00-E07
+    // 3
 
-    let RequestBribeRewardupdDeleteStatus = false;
-    let RequestCommandupdDelete = false;
+    // 4
+    const RequestBribeRewards: IRequestBribeReward[] = await this.requestBribeRewardService
+      .RequestBribeRewardgetByIndictmentID({
+        IndictmentID: this.IndictmentID$.getValue()
+      })
+      .toPromise();
+    // console.log('IRequestBribeReward', res);
+    // 4.1
+    if (RequestBribeRewards.length > 0) {
+      const RequestBribeReward: IRequestBribeReward = RequestBribeRewards[0];
 
-    // 1
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      // 1.1
+      this.PageLoadHaveNotice$.next(RequestBribeReward.HaveNotice); // นำไปใช้ใน รหัสเหตุการณ์  ILG60-03-02-00-00-E04
 
-      // 1.1.1
-      switch (this.PageLoadHaveNotice$.getValue()) {
-        // 1.1.1(1)
+      // ILG60-08-02-00-00
+      this.RequestBribeRewardID$.next(RequestBribeReward.RequestBribeRewardID);
+
+      let RequestReward: IRequestReward[];
+      // 4.1.1
+      switch (RequestBribeReward.HaveNotice) {
+        // 4.1.1(1)
         case 0:
-          // 1.1.1(1.1)
-          this.requestBribeRewardService
-            .RequestBribeRewardupdDelete({
+          // 4.1.1(1.1)
+          RequestReward = await this.requestRewardService
+            .RequestRewardgetByRequestBribeRewardID({
               RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
             })
-            .subscribe(async (res: IResponseCommon) => {
-              RequestBribeRewardupdDeleteStatus = await res.IsSuccess;
-              RequestCommandupdDelete = await true;
-            });
-          break;
+            .toPromise();
+          // 4.1.1(1.2)
+          // 4.1.1(1.2.1)
+          if (RequestReward.length > 0) {
+            // 4.1.1(1.2.1(1))
+            this.ILG60_08_02_00_00E14_DATA$.next(RequestReward);
 
-        // 1.1.1(2)
-        case 1:
-          // 1.1.1(2.1)
-          this.requestBribeService
-            .RequestBribegetByCommandID({
-              CommandID: this.CommandID$.getValue()
-            })
-            .subscribe(async (res: IRequestBribe[]) => {
-              // 1.1.1(2.2)
-
-              if (res.length > 0) {
-                // 1.1.1(2.2.2)
-
-                // 1.1.1(2.2.2(1))
-                await this.requestBribeRewardService
-                  .RequestBribeRewardupdDelete({
-                    RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-                  })
-                  .subscribe(async (resBribeR: IResponseCommon) => {
-                    RequestBribeRewardupdDeleteStatus = await resBribeR.IsSuccess;
-                  });
-
-                // 1.1.1(2.2.2(2))
-                await this.requestCommandService
-                  .RequestCommandupdDelete({
-                    CommandID: this.CommandID$.getValue()
-                  })
-                  .subscribe(async (resCom: IResponseCommon) => {
-                    RequestCommandupdDelete = await resCom.IsSuccess;
-                  });
-              }
-            });
-          break;
-      }
-
-      // 1.1.2
-      if (
-        !(
-          RequestBribeRewardupdDeleteStatus === false ||
-          RequestCommandupdDelete === false
-        )
-      ) {
-        // 1.1.2(1)
-        alert('ลบข้อมูลสำเร็จ'); // 1.1.2(1.1)
-        this.router.navigate(['/reward/list']); // 1.1.2(1.1)
-      } else {
-        // 1.1.2(2)
-        alert('ลบข้อมูลไม่สำเร็จ'); // 1.1.2(2.1)
-      }
-    } else {
-      // 1.2
-      // 1.2.1 Close
-    }
-    // 2 END
-  }
-  public cancelButton() {
-    // ILG60-03-02-00-00-E04
-    // 1 START
-    if (confirm('ยืนยันการทำรายการหรือไม่')) {
-      // 1.1
-      if (this.ILG60_08_02_00_00E11_EXPANDED$.getValue() === true) {
-        // 1.1.1
-        // 1.1.1(1)
-        const requestBribe: IRequestBribe[] = this.ILG60_08_02_00_00E11_DATA$.getValue();
-        if (requestBribe.length === 0) {
-          // 1.1.1(1.1)
-          // 1.1.1(1.1.1) => // 1.1.1(1.2)
-        } else {
-          // 1.1.1(1.2)
-          // 1.1.1(1.2.1)
-          this.pageLoad();
-        }
-      }
-
-      if (this.ILG60_08_02_00_00E14_EXPANDED$.getValue() === true) {
-        // 1.1.2
-        // 1.1.2(1)
-        const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
-        if (requestReward.length === 0) {
-          // 1.1.2(1.1)
-          // 1.1.2(1.1.2)
-          switch (this.PageLoadHaveNotice$.getValue()) {
-            // 1.1.2(1.1.2(1))
-            case 0:
-              // 1.1.2(1.1.2(1.1))
-              this.requestBribeRewardService.RequestBribeRewardupdDelete({
-                RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-              });
-              // 1.1.2(1.1.2(1.2))
-              this.router.navigate(['/reward/list']);
-              break;
-
-            // 1.1.2(1.1.2(2))
-            case 1:
-              // 1.1.2(1.1.2(2.1))
-              this.requestBribeService
-                .RequestBribegetByCommandID({
-                  CommandID: this.CommandID$.getValue()
-                })
-                .subscribe((res: IRequestBribe[]) => {
-                  // 1.1.2(1.1.2(2.2))
-                  if (res.length > 0) {
-                    // 1.1.2(1.1.2(2.2.1))
-                    // 1.1.2(1.1.2(2.2.1.1))
-                    this.requestBribeRewardService
-                      .RequestBribeRewardupdDelete({
-                        RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-                      })
-                      .subscribe();
-                  } else {
-                    // 1.1.2(1.1.2(2.2.2))
-                    // 1.1.2(1.1.2(2.2.2.1))
-                    this.requestBribeRewardService
-                      .RequestBribeRewardupdDelete({
-                        RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-                      })
-                      .subscribe();
-
-                    // 1.1.2(1.1.2(2.2.2.2))
-                    this.requestCommandService
-                      .RequestCommandupdDelete({
-                        CommandID: this.CommandID$.getValue()
-                      })
-                      .subscribe();
-                  }
-                });
-
-              // 1.1.2(1.1.2(2.3))
-              this.router.navigate(['/reward/list']);
-              break;
+            // 4.1.1(1.2.1(2))
+          } else {
+            // 4.1.1(1.2.2)
+            // 4.1.1(1.2.2(1)) => 4.1.1(1.3)
           }
-        } else {
-          // 1.1.2(1.2)
-          // 1.1.2(1.2.1)
-          this.pageLoad();
-        }
-      }
-    } else {
-      // 1.2
-      // 1.2.1 'WAIT'
-    }
-    // 2 END
-  }
-  public printButton() {
-    // ILG60-08-02-00-00-E05
-    // 1 START
-    const dialogRef = this.dialog.open(PrintDialogComponent, {
-      width: '1200px',
-      height: 'auto',
-      data: {}
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-    // 2 END
-  }
-  private RequestBribeRewardgetByIndictmentID(
-    param: IRequestBribeRewardgetByIndictmentID
-  ) {
-    // 4
-    this.requestBribeRewardService
-      .RequestBribeRewardgetByIndictmentID(param)
-      .subscribe((res: IRequestBribeReward[]) => {
-        console.log('IRequestBribeReward', res);
-        // 4.1
-        if (res.length > 0) {
-          const RequestBribeReward: IRequestBribeReward = res[0];
+          // 4.1.1(1.3)
+          this.ILG60_08_02_00_00E08_EXPANDED = true;
+          // 4.1.1(1.3.1)
+          this.ILG60_08_02_00_00E09_EXPANDED = false;
+          // 4.1.1(1.3.2)
+          this.ILG60_08_02_00_00E11_EXPANDED = false;
+          this.ILG60_08_02_00_00E14_EXPANDED = true;
 
-          this.PageLoadHaveNotice$.next(RequestBribeReward.HaveNotice); // นำไปใช้ใน รหัสเหตุการณ์  ILG60-03-02-00-00-E04
+          // 4.1.1(1.4)
+          // 4.1.1(1.4.1)
+          this.ILG60_08_02_00_00E08_DISABLED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = true;
+          this.ILG60_08_02_00_00E11_DISABLED = true;
+          // 4.1.1(1.4.1)
+          this.ILG60_08_02_00_00E14_DISABLED = false;
 
-          // this.RequestBribeRewardID$.next(
-          //   RequestBribeReward.RequestBribeRewardID
-          // );
+          this.navService.setSearchBar(false);
+          this.navService.setPrintButton(true);
+          this.navService.setDeleteButton(true);
+          this.navService.setCancelButton(false);
+          this.navService.setEditButton(true);
+          this.navService.setSaveButton(false);
+          this.navService.setNewButton(false);
+          this.navService.setEditField(false);
+          this.navService.setNextPageButton(false);
+          this.navService.setPrevPageButton(false);
 
-          // 4.1.1
-          this.HaveNoticeSwitch(RequestBribeReward.HaveNotice);
-        } else {
-          // 4.2
-          // 4.2.1
-          this.RequestNoticegetByArrestCode({
-            ArrestCode: this.ArrestCode$.getValue()
-          });
-        }
-        this.RequestBribeRewardgetByIndictmentID$.next(res);
-      });
-  }
-  private HaveNoticeSwitch(HaveNotice: number) {
-    switch (HaveNotice) {
-      // 4.1.1(1)
-      case 0:
-        // 4.1.1(1.1)
-        this.RequestRewardgetByRequestBribeRewardID(
-          {
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-          },
-          HaveNotice
-        );
-        break;
+          break;
 
-      // 4.1.1(2)
-      case 1:
-        // 4.1.1(2.1)
-        this.RequestBribegetByRequestBribeRewardID({
-          RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-        });
+        // 4.1.1(2)
+        case 1:
+          // 4.1.1(2.1)
+          // 4.1.1(2.2)
+          const RequestBribe: IRequestBribe[] = await this.requestBribeService
+            .RequestBribegetByRequestBribeRewardID({
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+            })
+            .toPromise();
+          // 4.1.1(2.2.1)
+          if (RequestBribe.length > 0) {
+            // 4.1.1(2.2.1(1))
+            this.ILG60_08_02_00_00E11_DATA$.next(RequestBribe);
 
-        // 4.1.1(2.3)
-        this.RequestRewardgetByRequestBribeRewardID(
-          {
-            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-          },
-          HaveNotice
-        );
+            // 4.1.1(2.2.1(2))
+          } else {
+            // 4.1.1(2.2.2))
+            // 4.1.1(2.2.2(1))) => 4.1.1(2.5)
+          }
 
-        // 4.1.1(2.5)
-        this.RequestCommandgetByArrestCode(
-          {
-            ArrestCode: this.ArrestCode$.getValue()
-          },
-          '4.1.1(2.5)'
-        );
-        break;
-    }
-  }
+          // 4.1.1(2.3)
+          RequestReward = await this.requestRewardService
+            .RequestRewardgetByRequestBribeRewardID({
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+            })
+            .toPromise();
+          // 4.1.1(2.4)
+          // 4.1.1(2.4.1)
+          if (RequestReward.length > 0) {
+            // 4.1.1(2.4.1(1))
+            this.ILG60_08_02_00_00E14_DATA$.next(RequestReward);
+            // 4.1.1(2.4.1(2)) ==> 4.1.1(2.5)
+          } else {
+            // 4.1.1(2.4.2)
+            // 4.1.1(2.4.2(1)) ==> 4.1.1(2.5)
+          }
 
-  private RequestNoticegetByArrestCode(param: IRequestNoticegetByArrestCode) {
-    this.requestNoticeService
-      .RequestNoticegetByArrestCode(param)
-      .subscribe((res: IRequestNotice[]) => {
-        // 4.2.2
-        // 4.2.2(1)
-        if (res.length > 0) {
-          // 4.2.2(1.1)
-          this.RequestCommandinsAll({
-            // 4.2.2(1.1.1)
-            TotalPart: res.length || 0,
-            // 4.2.2(1.1.2)
-            ArrestCode: this.ArrestCode$.getValue(),
-            // 4.2.2(1.1.3)
-            RequestCommandDetail: res.map(m => ({
-              ...m,
-              // 4.2.2(1.1.4)
-              PartMoney: 1
-            }))
-          });
+          // 4.1.1(2.5)
 
-          // 4.2.2(1.2)
-          this.RequestBribeRewardinsAll({
-            // 4.2.2(1.2.1)
-            IndictmentID: this.IndictmentID$.getValue(),
-            // 4.2.2(1.2.2)
-            HaveNotice: 1
-          });
-
-          // 4.2.2(1.3)
-          this.RequestCommandgetByArrestCode(
-            {
+          const RequestCommand: IRequestCommand[] = await this.requestCommandService
+            .RequestCommandgetByArrestCode({
               ArrestCode: this.ArrestCode$.getValue()
-            },
-            '4.2.2(1.3)'
-          );
-        } else {
-          this.RequestBribeRewardinsAll({
-            IndictmentID: this.IndictmentID$.getValue(),
-            HaveNotice: 0
-          });
-        }
-        this.RequestNoticegetByArrestCode$.next(res);
-      });
-  }
-  private RequestRewardgetByRequestBribeRewardID(
-    param: IRequestRewardgetByRequestBribeRewardID,
-    HaveNotice: number
-  ) {
-    this.requestRewardService
-      .RequestRewardgetByRequestBribeRewardID(param)
-      .subscribe((res: IRequestRewardgetByRequestBribeRewardID[]) => {
-        switch (HaveNotice) {
-          case 0:
-            // 4.1.1(1.2)
-            // 4.1.1(1.2.1)
-            if (res.length > 0) {
-              // 4.1.1(1.2.1(1))
-              this.ILG60_08_02_00_00E14_DATA$.next(res);
+            })
+            .toPromise();
 
-              // 4.1.1(1.2.1(2))
-            } else {
-              // 4.1.1(1.2.2)
-              // 4.1.1(1.2.2(1)) => 4.1.1(1.3)
-            }
-
-            // 4.1.1(1.3)
-            this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-            // 4.1.1(1.3.1)
-            this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-            // 4.1.1(1.3.2)
-            this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
-            this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-            // 4.1.1(1.4)
-            // 4.1.1(1.4.1)
-            this.ILG60_08_02_00_00E08_DISABLED$.next(false);
-            this.ILG60_08_02_00_00E09_DISABLED$.next(true);
-            this.ILG60_08_02_00_00E11_DISABLED$.next(true);
-            // 4.1.1(1.4.1)
-            this.ILG60_08_02_00_00E14_DISABLED$.next(false);
-
-            this.navService.setSearchBar(false);
-            this.navService.setPrintButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setCancelButton(false);
-            this.navService.setEditButton(true);
-            this.navService.setSaveButton(false);
-            break;
-
-          case 1:
-            // 4.1.1(2.4)
-            // 4.1.1(2.4.1)
-            if (res.length > 0) {
-              // 4.1.1(2.4.1(1))
-              this.ILG60_08_02_00_00E14_DATA$.next(res);
-              // 4.1.1(2.4.1(2)) ==> 4.1.1(2.5)
-            } else {
-              // 4.1.1(2.4.2)
-              // 4.1.1(2.4.2(1)) ==> 4.1.1(2.5)
-            }
-            break;
-        }
-      });
-  }
-  private RequestCommandinsAll(param: IRequestCommandinsAll) {
-    this.requestCommandService.RequestCommandinsAll(param).subscribe(res => {
-      this.RequestCommandinsAll$.next(res);
-    });
-  }
-
-  private RequestBribeRewardinsAll(param: IRequestBribeRewardinsAll) {
-    this.requestBribeRewardService
-      .RequestBribeRewardinsAll(param)
-      .subscribe(res => {
-        this.RequestBribeRewardinsAll$.next(res);
-      });
-  }
-  private RequestCommandgetByArrestCode(
-    param: IRequestCommandgetByArrestCode,
-    event: string
-  ) {
-    this.requestCommandService
-      .RequestCommandgetByArrestCode(param)
-      .subscribe((res: IRequestCommand[]) => {
-        const RequestCommand: IRequestCommand = res[0];
-        switch (event) {
-          case '4.1.1(2.5)':
+          if (RequestCommand.length > 0) {
             // 4.1.1(2.6)
-
+            this.ILG60_08_02_00_00E09_DATA$.next(RequestCommand);
             // 4.1.1(2.6.1)
-            if (RequestCommand.RequestCommandDetail.length === 1) {
+            if (
+              RequestCommand[0] &&
+              RequestCommand[0].RequestCommandDetail.length === 1
+            ) {
               // 4.1.1(2.6.1(1))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
+              this.ILG60_08_02_00_00E08_EXPANDED = true;
               // 4.1.1(2.6.1(1.1))
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+              this.ILG60_08_02_00_00E09_EXPANDED = false;
+              this.ILG60_08_02_00_00E11_EXPANDED = true;
+              this.ILG60_08_02_00_00E14_EXPANDED = true;
 
               // 4.1.1(2.6.1(2))
               // 4.1.1(2.6.1(2.1))
-              this.ILG60_08_02_00_00E08_DISABLED$.next(false);
-              this.ILG60_08_02_00_00E09_DISABLED$.next(true);
+              this.ILG60_08_02_00_00E08_DISABLED = false;
+              this.ILG60_08_02_00_00E09_DISABLED = true;
               // 4.1.1(2.6.1(2.2)) || 4.1.1(2.6.1(2.4))
-              this.ILG60_08_02_00_00E11_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E11_DISABLED = false;
               // 4.1.1(2.6.1(2.3)) || 4.1.1(2.6.1(2.5))
-              this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E14_DISABLED = false;
 
               // 4.1.1(2.6.1(3))
               this.navService.setSearchBar(false);
@@ -637,26 +292,33 @@ export class ManageComponent extends ManageConfig implements OnInit {
               this.navService.setDeleteButton(true);
               this.navService.setCancelButton(false);
               this.navService.setSaveButton(false);
-            } else if (RequestCommand.RequestCommandDetail.length > 1) {
+              this.navService.setNewButton(false);
+              this.navService.setEditField(false);
+              this.navService.setNextPageButton(false);
+              this.navService.setPrevPageButton(false);
+            } else if (
+              RequestCommand[0] &&
+              RequestCommand[0].RequestCommandDetail.length > 1
+            ) {
               // 4.1.1(2.6.2)
               // 4.1.1(2.6.2(1))
-              this.ILG60_08_02_00_00E09_DATA$.next(res);
+              this.ILG60_08_02_00_00E09_DATA$.next(RequestCommand);
 
               // 4.1.1(2.6.2(2))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
+              this.ILG60_08_02_00_00E08_EXPANDED = true;
+              this.ILG60_08_02_00_00E09_EXPANDED = true;
+              this.ILG60_08_02_00_00E11_EXPANDED = true;
+              this.ILG60_08_02_00_00E14_EXPANDED = true;
 
               // 4.1.1(2.6.2(3))
               // 4.1.1(2.6.2(3.1))
-              this.ILG60_08_02_00_00E08_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E08_DISABLED = false;
               // 4.1.1(2.6.2(3.2))
-              this.ILG60_08_02_00_00E09_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E09_DISABLED = false;
               // 4.1.1(2.6.2(3.3)) || 4.1.1(2.6.2(3.5))
-              this.ILG60_08_02_00_00E11_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E11_DISABLED = false;
               // 4.1.1(2.6.2(3.4)) || 4.1.1(2.6.2(3.6))
-              this.ILG60_08_02_00_00E14_DISABLED$.next(false);
+              this.ILG60_08_02_00_00E14_DISABLED = false;
 
               // 4.1.1(2.6.2(4))
               // 4.1.1(2.6.2(4.1))
@@ -668,7 +330,480 @@ export class ManageComponent extends ManageConfig implements OnInit {
               this.navService.setCancelButton(false);
               this.navService.setSearchBar(false);
               this.navService.setSaveButton(false);
+
+              this.navService.setNewButton(false);
+              this.navService.setEditField(false);
+              this.navService.setNextPageButton(false);
+              this.navService.setPrevPageButton(false);
             }
+          }
+
+          break;
+      }
+    } else {
+      // 4.2
+      // 4.2.1
+      const RequestNotice: IRequestNotice[] = await this.requestNoticeService
+        .RequestNoticegetByArrestCode({
+          ArrestCode: this.ArrestCode$.getValue()
+        })
+        .toPromise();
+      // 4.2.2
+      // 4.2.2(1)
+      if (RequestNotice.length > 0) {
+        // 4.2.2(1.1)
+        const RequestCommandinsAll: IRequestCommandinsAll = await this.requestCommandService
+          .RequestCommandinsAll({
+            // 4.2.2(1.1.1)
+            TotalPart: RequestNotice.length || 0,
+            // 4.2.2(1.1.2)
+            ArrestCode: this.ArrestCode$.getValue(),
+            // 4.2.2(1.1.3)
+            RequestCommandDetail: RequestNotice.map(m => ({
+              ...m,
+              // 4.2.2(1.1.4)
+              PartMoney: 1
+            })),
+            CommandDate: this.ILG60_08_02_00_00E09_SAVE.CommandDate,
+            CommandID: this.ILG60_08_02_00_00E09_SAVE.CommandID,
+            CommandNo: this.ILG60_08_02_00_00E09_SAVE.CommandNo,
+            CommandTime: this.ILG60_08_02_00_00E09_SAVE.CommandTime,
+            IsActive: this.ILG60_08_02_00_00E09_SAVE.IsActive
+          })
+          .toPromise();
+        this.RequestCommandinsAll$.next(RequestCommandinsAll);
+        // 4.2.2(1.2)
+        const RequestBribeRewardinsAll: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
+          .RequestBribeRewardinsAll({
+            // 4.2.2(1.2.1)
+            IndictmentID: this.IndictmentID$.getValue(),
+            // 4.2.2(1.2.2)
+            HaveNotice: 1,
+            IsActive: 1,
+            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+          })
+          .toPromise();
+        this.RequestBribeRewardinsAll$.next(RequestBribeRewardinsAll);
+
+        // 4.2.2(1.3)
+        const RequestCommand: IRequestCommand[] = await this.requestCommandService
+          .RequestCommandgetByArrestCode({
+            ArrestCode: this.ArrestCode$.getValue()
+          })
+          .toPromise();
+        // 4.2.2(1.4)
+        // 4.2.2(1.4.1)
+        if (
+          RequestCommand &&
+          RequestCommand[0] &&
+          RequestCommand[0].RequestCommandDetail.length === 1
+        ) {
+          // 4.2.2(1.4.1(1))
+          this.ILG60_08_02_00_00E08_EXPANDED = true;
+          // 4.2.2(1.4.1(1.1))
+          this.ILG60_08_02_00_00E09_EXPANDED = false;
+          this.ILG60_08_02_00_00E11_EXPANDED = true;
+          this.ILG60_08_02_00_00E14_EXPANDED = true;
+
+          // 4.2.2(1.4.1(2))
+          // 4.2.2(1.4.1(2.1)) 'WAIT'
+          // 4.2.2(1.4.1(2.2)) 'WAIT'
+          // 4.2.2(1.4.1(2.3)) 'WAIT'
+
+          // 4.2.2(1.4.1(3))
+          // 4.2.2(1.4.1(3.1))
+          this.navService.setSaveButton(true);
+          // 4.2.2(1.4.1(3.2))
+          this.navService.setCancelButton(true);
+          this.navService.setPrintButton(false);
+          this.navService.setEditButton(false);
+          this.navService.setDeleteButton(false);
+          this.navService.setSearchBar(false);
+
+          this.navService.setNewButton(false);
+          this.navService.setEditField(false);
+          this.navService.setNextPageButton(false);
+          this.navService.setPrevPageButton(false);
+        } else if (
+          RequestCommand &&
+          RequestCommand[0] &&
+          RequestCommand[0].RequestCommandDetail.length > 1
+        ) {
+          // 4.2.2(1.4.2)
+          // 4.2.2(1.4.2(1))
+          this.ILG60_08_02_00_00E09_DATA$.next(RequestCommand);
+
+          // 4.2.2(1.4.2(2))
+          this.ILG60_08_02_00_00E08_EXPANDED = true;
+          this.ILG60_08_02_00_00E09_EXPANDED = true;
+          this.ILG60_08_02_00_00E11_EXPANDED = true;
+          this.ILG60_08_02_00_00E14_EXPANDED = true;
+
+          // 4.2.2(1.4.2(3))
+          // 4.2.2(1.4.2(3.1)) 'WAIT'
+          // 4.2.2(1.4.2(3.2)) 'WAIT'
+          // 4.2.2(1.4.2(3.3)) 'WAIT'
+
+          // 4.2.2(1.4.2(4))
+          // 4.2.2(1.4.2(4.1))
+          this.navService.setSaveButton(true);
+          // 4.2.2(1.4.2(4.2))
+          this.navService.setCancelButton(true);
+          this.navService.setPrintButton(false);
+          this.navService.setEditButton(false);
+          this.navService.setDeleteButton(false);
+          this.navService.setSearchBar(false);
+
+          this.navService.setNewButton(false);
+          this.navService.setEditField(false);
+          this.navService.setNextPageButton(false);
+          this.navService.setPrevPageButton(false);
+        } else {
+          // 4.2.2(2)
+          // 4.2.2(2.1)
+          const RequestBribeRewardReponse: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
+            .RequestBribeRewardinsAll({
+              // 4.2.2(2.1.1)
+              IndictmentID: this.IndictmentID$.getValue(),
+              // 4.2.2(2.1.2)
+              HaveNotice: 0,
+              IsActive: 1,
+              RequestBribeRewardID: ''
+            })
+            .toPromise();
+          this.RequestBribeRewardID$.next(
+            RequestBribeRewardReponse.RequestBribeRewardID
+          );
+          // 4.2.2(2.2)
+          this.ILG60_08_02_00_00E08_EXPANDED = true;
+          // 4.2.2(2.2.1)
+          this.ILG60_08_02_00_00E09_EXPANDED = false;
+          // 4.2.2(2.2.2)
+          this.ILG60_08_02_00_00E11_EXPANDED = false;
+          this.ILG60_08_02_00_00E14_EXPANDED = true;
+
+          // 4.2.2(2.3)
+          // 4.2.2(2.3.1) 'WAIT'
+          // 4.2.2(2.3.2) 'WAIT'
+
+          // 4.2.2(2.4)
+          // 4.2.2(2.4.1)
+          this.navService.setSaveButton(true);
+          // 4.2.2(2.4.2)
+          this.navService.setCancelButton(true);
+          this.navService.setPrintButton(false);
+          this.navService.setEditButton(false);
+          this.navService.setDeleteButton(false);
+          this.navService.setSearchBar(false);
+
+          this.navService.setNewButton(false);
+          this.navService.setEditField(false);
+          this.navService.setNextPageButton(false);
+          this.navService.setPrevPageButton(false);
+        }
+      } else {
+        const RequestBribeReward: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
+          .RequestBribeRewardinsAll({
+            IndictmentID: this.IndictmentID$.getValue(),
+            HaveNotice: 0,
+            IsActive: 1,
+            RequestBribeRewardID: ''
+          })
+          .toPromise();
+        this.RequestBribeRewardID$.next(
+          RequestBribeReward.RequestBribeRewardID
+        );
+      }
+      this.RequestNoticegetByArrestCode$.next(RequestNotice);
+    }
+    this.RequestBribeRewardgetByIndictmentID$.next(RequestBribeRewards);
+
+    // 5 END
+  }
+
+  public async buttonSave() {
+    // ILG60-08-02-00-00-E03
+    // 1 START
+    this.ILG60_08_02_00_00E09_SAVE.ArrestCode = this.ArrestCode$.getValue();
+    this.ILG60_08_02_00_00E09_SAVE.IsActive = 1;
+    // console.log('ILG60_08_02_00_00E09_SAVE', this.ILG60_08_02_00_00E09_SAVE);
+
+    const requestBribe: IRequestBribe[] =
+      this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
+    const requestReward: IRequestReward[] =
+      this.ILG60_08_02_00_00E14_DATA$.getValue() || [];
+    let ValidateVerify = false;
+    if (requestBribe.length === 0 || requestReward.length > 0) {
+      // 1.1
+      ValidateVerify = true;
+    } else if (requestReward.length === 0 || requestBribe.length > 0) {
+      // 1.2
+      ValidateVerify = true;
+    }
+
+    if (ValidateVerify === true) {
+      // 2
+      // 2.1
+      const ResponseCommon: IResponseCommon = await this.requestCommandService
+        .RequestCommandupdByCon(this.ILG60_08_02_00_00E09_SAVE)
+        .toPromise();
+      // 3
+      const responseSave = ResponseCommon.IsSuccess;
+      // 3.1
+      if (!responseSave) {
+        // 3.1.1
+        swal('บันทึกไม่สำเร็จ', 'error');
+      } else {
+        // 3.2
+        // 3.2.1
+        swal('บันทึกสำเร็จ', 'success');
+
+        // 3.2.2
+        this.pageLoad();
+      }
+    } else {
+      swal('ตรวจสอบข้อมูล Input ที่นำเข้า (Validate/Verify)', 'warning');
+    }
+    // 4 END
+  }
+  public buttonEdit() {
+    // ILG60-08-02-00-00
+    // 1
+    this.ILG60_08_02_00_00E09_EDIT = true;
+    // 1.1
+
+    if (this.ILG60_08_02_00_00E09_EXPANDED === true) {
+      // 1.2 'WAIT'
+    }
+
+    // 2
+    this.navService.setSearchBar(false);
+    this.navService.setPrintButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setCancelButton(true);
+    this.navService.setEditButton(false);
+    this.navService.setSaveButton(true);
+    this.navService.setNewButton(false);
+    this.navService.setEditField(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setPrevPageButton(false);
+    // 3 END
+  }
+  public async buttonDelete() {
+    // ILG60-08-02-00-00-E07
+
+    let RequestBribeRewardupdDeleteStatus = false;
+    let RequestCommandupdDelete = false;
+
+    // 1
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    // 1.1
+    let ResponseCommonRequestBribeRewardupdDeleteStatus: IResponseCommon;
+    // 1.1.1
+    switch (this.PageLoadHaveNotice$.getValue()) {
+      // 1.1.1(1)
+      case 0:
+        // 1.1.1(1.1)
+        ResponseCommonRequestBribeRewardupdDeleteStatus = await this.requestBribeRewardService
+          .RequestBribeRewardupdDelete({
+            RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+          })
+          .toPromise();
+        RequestBribeRewardupdDeleteStatus =
+          ResponseCommonRequestBribeRewardupdDeleteStatus.IsSuccess;
+        RequestCommandupdDelete = true;
+        break;
+
+      // 1.1.1(2)
+      case 1:
+        // 1.1.1(2.1)
+        const RequestBribe: IRequestBribe[] = await this.requestBribeService
+          .RequestBribegetByCommandID({
+            CommandID: this.CommandID$.getValue()
+          })
+          .toPromise();
+
+        // 1.1.1(2.2)
+
+        if (RequestBribe.length > 0) {
+          // 1.1.1(2.2.2)
+
+          // 1.1.1(2.2.2(1))
+          ResponseCommonRequestBribeRewardupdDeleteStatus = await this.requestBribeRewardService
+            .RequestBribeRewardupdDelete({
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+            })
+            .toPromise();
+          RequestBribeRewardupdDeleteStatus = await ResponseCommonRequestBribeRewardupdDeleteStatus.IsSuccess;
+
+          // 1.1.1(2.2.2(2))
+          const ResponseCommon: IResponseCommon = await this.requestCommandService
+            .RequestCommandupdDelete({
+              CommandID: this.CommandID$.getValue()
+            })
+            .toPromise();
+          RequestCommandupdDelete = ResponseCommon.IsSuccess;
+        }
+        break;
+    }
+
+    // 1.1.2
+    if (
+      !(
+        RequestBribeRewardupdDeleteStatus === false ||
+        RequestCommandupdDelete === false
+      )
+    ) {
+      // 1.1.2(1)
+      swal('ลบข้อมูลสำเร็จ', 'success'); // 1.1.2(1.1)
+      this.router.navigate(['/reward/list']); // 1.1.2(1.1)
+    } else {
+      // 1.1.2(2)
+      swal('ลบข้อมูลไม่สำเร็จ', 'error'); // 1.1.2(2.1)
+    }
+    // } else {
+    // 1.2
+    // 1.2.1 Close
+    // }
+    // 2 END
+  }
+  public buttonCancel() {
+    // ILG60-03-02-00-00-E04
+    // 1 START
+    // if (confirm('ยืนยันการทำรายการหรือไม่')) {
+    // 1.1
+    if (this.ILG60_08_02_00_00E11_EXPANDED === true) {
+      // 1.1.1
+      // 1.1.1(1)
+      const requestBribe: IRequestBribe[] =
+        this.ILG60_08_02_00_00E11_DATA$.getValue() || [];
+      if (requestBribe.length === 0) {
+        // 1.1.1(1.1)
+        // 1.1.1(1.1.1) => // 1.1.1(1.2)
+      }
+      // 1.1.1(1.2)
+      // 1.1.1(1.2.1)
+      this.pageLoad();
+    }
+
+    if (this.ILG60_08_02_00_00E14_EXPANDED === true) {
+      // 1.1.2
+      // 1.1.2(1)
+      const requestReward: IRequestReward[] = this.ILG60_08_02_00_00E14_DATA$.getValue();
+      if (requestReward && requestReward.length === 0) {
+        // 1.1.2(1.1)
+        // 1.1.2(1.1.2)
+        switch (this.PageLoadHaveNotice$.getValue()) {
+          // 1.1.2(1.1.2(1))
+          case 0:
+            // 1.1.2(1.1.2(1.1))
+            this.requestBribeRewardService.RequestBribeRewardupdDelete({
+              RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+            });
+            // 1.1.2(1.1.2(1.2))
+            this.router.navigate(['/reward/list']);
+            break;
+
+          // 1.1.2(1.1.2(2))
+          case 1:
+            // 1.1.2(1.1.2(2.1))
+            this.requestBribeService
+              .RequestBribegetByCommandID({
+                CommandID: this.CommandID$.getValue()
+              })
+              .subscribe((res: IRequestBribe[]) => {
+                // 1.1.2(1.1.2(2.2))
+                if (res.length > 0) {
+                  // 1.1.2(1.1.2(2.2.1))
+                  // 1.1.2(1.1.2(2.2.1.1))
+                  this.requestBribeRewardService
+                    .RequestBribeRewardupdDelete({
+                      RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+                    })
+                    .subscribe();
+                } else {
+                  // 1.1.2(1.1.2(2.2.2))
+                  // 1.1.2(1.1.2(2.2.2.1))
+                  this.requestBribeRewardService
+                    .RequestBribeRewardupdDelete({
+                      RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+                    })
+                    .subscribe();
+
+                  // 1.1.2(1.1.2(2.2.2.2))
+                  this.requestCommandService
+                    .RequestCommandupdDelete({
+                      CommandID: this.CommandID$.getValue()
+                    })
+                    .subscribe();
+                }
+              });
+
+            // 1.1.2(1.1.2(2.3))
+            this.router.navigate(['/reward/list']);
+            break;
+        }
+      } else {
+        // 1.1.2(1.2)
+        // 1.1.2(1.2.1)
+        this.pageLoad();
+      }
+    }
+    // } else {
+    //   // 1.2
+    //   // 1.2.1 'WAIT'
+    // }
+    // 2 END
+  }
+  public async buttonPrint() {
+    // ILG60-08-02-00-00-E05
+    // 1 START
+
+    // 1.1
+    const RequestBribe: IRequestBribe[] = await this.requestBribeService
+      .RequestBribegetByRequestBribeRewardID({
+        RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+      })
+      .toPromise();
+
+    // 1.2
+    const RequestReward: IRequestReward[] = await this.requestRewardService
+      .RequestRewardgetByRequestBribeRewardID({
+        RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+      })
+      .toPromise();
+
+    const printDocRequestBribe: any[] = RequestBribe.map(m => ({
+      DocName: `${m.RequestBribeCode || ''}: คำร้องขอรับเงินสินบน`,
+      DocType: 'แบบฟอร์ม'
+    }));
+
+    const printDocRequestReward: any[] = RequestReward.map(m => ({
+      DocName: `${m.RequestRewardCode || ''}: คำร้องขอรับเงินรางวัล`,
+      DocType: 'แบบฟอร์ม'
+    }));
+    const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
+
+    const dialogRef = this.dialog.open(PrintDialogComponent, {
+      backdrop: 'static'
+    });
+    dialogRef.componentInstance.data = printDoc;
+    dialogRef.result.then(res => {});
+    // 2 END
+  }
+  private RequestBribeRewardgetByIndictmentID(
+    param: IRequestBribeRewardgetByIndictmentID
+  ) {}
+  private RequestCommandinsAll(param: IRequestCommandinsAll) {}
+  private RequestCommandgetByArrestCode(
+    param: IRequestCommandgetByArrestCode,
+    event: string
+  ) {
+    this.requestCommandService
+      .RequestCommandgetByArrestCode(param)
+      .subscribe(async (res: IRequestCommand[]) => {
+        switch (event) {
+          case '4.1.1(2.5)':
             break;
 
           case '4.2.2':
@@ -687,17 +822,26 @@ export class ManageComponent extends ManageConfig implements OnInit {
                     // 4.2.2(1.1.4)
                     PartMoney: 1
                   })
-                )
+                ),
+                CommandDate: this.ILG60_08_02_00_00E09_SAVE.CommandDate,
+                CommandID: this.ILG60_08_02_00_00E09_SAVE.CommandID,
+                CommandNo: this.ILG60_08_02_00_00E09_SAVE.CommandNo,
+                CommandTime: this.ILG60_08_02_00_00E09_SAVE.CommandTime,
+                IsActive: this.ILG60_08_02_00_00E09_SAVE.IsActive
               });
 
               // 4.2.2(1.2)
-              this.RequestBribeRewardinsAll({
-                // 4.2.2(1.2.1)
-                IndictmentID: this.IndictmentID$.getValue(),
-                // 4.2.2(1.2.2)
-                HaveNotice: 1
-              });
-
+              const RequestBribeReward: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
+                .RequestBribeRewardinsAll({
+                  IndictmentID: this.IndictmentID$.getValue(),
+                  HaveNotice: 1,
+                  IsActive: 1,
+                  RequestBribeRewardID: ''
+                })
+                .toPromise();
+              this.RequestBribeRewardID$.next(
+                RequestBribeReward.RequestBribeRewardID
+              );
               // 4.2.2(1.3)
               this.RequestCommandgetByArrestCode(
                 {
@@ -708,87 +852,6 @@ export class ManageComponent extends ManageConfig implements OnInit {
             }
             break;
           case '4.2.2(1.3)':
-            // 4.2.2(1.4)
-            // 4.2.2(1.4.1)
-            if (RequestCommand.RequestCommandDetail.length === 1) {
-              // 4.2.2(1.4.1(1))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              // 4.2.2(1.4.1(1.1))
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-              // 4.2.2(1.4.1(2))
-              // 4.2.2(1.4.1(2.1)) 'WAIT'
-              // 4.2.2(1.4.1(2.2)) 'WAIT'
-              // 4.2.2(1.4.1(2.3)) 'WAIT'
-
-              // 4.2.2(1.4.1(3))
-              // 4.2.2(1.4.1(3.1))
-              this.navService.setSaveButton(true);
-              // 4.2.2(1.4.1(3.2))
-              this.navService.setCancelButton(true);
-              this.navService.setPrintButton(false);
-              this.navService.setEditButton(false);
-              this.navService.setDeleteButton(false);
-              this.navService.setSearchBar(false);
-            } else if (RequestCommand.RequestCommandDetail.length > 1) {
-              // 4.2.2(1.4.2)
-              // 4.2.2(1.4.2(1))
-              this.ILG60_08_02_00_00E09_DATA$.next(res);
-
-              // 4.2.2(1.4.2(2))
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(true);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-              // 4.2.2(1.4.2(3))
-              // 4.2.2(1.4.2(3.1)) 'WAIT'
-              // 4.2.2(1.4.2(3.2)) 'WAIT'
-              // 4.2.2(1.4.2(3.3)) 'WAIT'
-
-              // 4.2.2(1.4.2(4))
-              // 4.2.2(1.4.2(4.1))
-              this.navService.setSaveButton(true);
-              // 4.2.2(1.4.2(4.2))
-              this.navService.setCancelButton(true);
-              this.navService.setPrintButton(false);
-              this.navService.setEditButton(false);
-              this.navService.setDeleteButton(false);
-              this.navService.setSearchBar(false);
-            } else {
-              // 4.2.2(2)
-              // 4.2.2(2.1)
-              this.RequestBribeRewardinsAll({
-                // 4.2.2(2.1.1)
-                IndictmentID: this.IndictmentID$.getValue(),
-                // 4.2.2(2.1.2)
-                HaveNotice: 0
-              });
-
-              // 4.2.2(2.2)
-              this.ILG60_08_02_00_00E08_EXPANDED$.next(true);
-              // 4.2.2(2.2.1)
-              this.ILG60_08_02_00_00E09_EXPANDED$.next(false);
-              // 4.2.2(2.2.2)
-              this.ILG60_08_02_00_00E11_EXPANDED$.next(false);
-              this.ILG60_08_02_00_00E14_EXPANDED$.next(true);
-
-              // 4.2.2(2.3)
-              // 4.2.2(2.3.1) 'WAIT'
-              // 4.2.2(2.3.2) 'WAIT'
-
-              // 4.2.2(2.4)
-              // 4.2.2(2.4.1)
-              this.navService.setSaveButton(true);
-              // 4.2.2(2.4.2)
-              this.navService.setCancelButton(true);
-              this.navService.setPrintButton(false);
-              this.navService.setEditButton(false);
-              this.navService.setDeleteButton(false);
-              this.navService.setSearchBar(false);
-            }
             break;
         }
       });
@@ -796,21 +859,13 @@ export class ManageComponent extends ManageConfig implements OnInit {
 
   private RequestBribegetByRequestBribeRewardID(
     param: IRequestBribegetByRequestBribeRewardID
-  ) {
-    // 4.1.1(2.2)
-    this.requestBribeService
-      .RequestBribegetByRequestBribeRewardID(param)
-      .subscribe((res: IRequestBribegetByRequestBribeRewardID[]) => {
-        // 4.1.1(2.2.1)
-        if (res.length > 0) {
-          // 4.1.1(2.2.1(1))
-          this.RequestBribegetByRequestBribeRewardID$.next(res);
-
-          // 4.1.1(2.2.1(2))
-        } else {
-          // 4.1.1(2.2.2))
-          // 4.1.1(2.2.2(1))) => 4.1.1(2.5)
-        }
-      });
+  ) {}
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
+  public ILG60_08_02_00_00E09_RETURN($event: IRequestCommand) {
+    // console.log('IRequestCommand', $event);
+    this.ILG60_08_02_00_00E09_SAVE = $event;
   }
 }

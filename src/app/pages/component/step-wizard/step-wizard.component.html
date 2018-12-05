@@ -3,42 +3,13 @@
         <div class="steps tab-wizard">
             <ul role="tablist" class="font-14">
                 <li *ngFor="let item of section; let i=index;" role="tab" 
-                [ngClass]="{'current': sectionId == item.id}" aria-disabled="true">
+                [ngClass]="{'current': sectionId == item.id, 'disabled-line': disabledLine}" aria-disabled="true">
                     <a>
                         <span class="current-info audible">current step: </span>
                         <span class="step"></span> 
                        {{i+1}}. {{item.name}}
                     </a>
                 </li>
-                <!-- <li role="tab" class="current" aria-disabled="false" aria-selected="true">
-                    <a>
-                        <span class="current-info audible">current step: </span>
-                        <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
-                </li>
-                <li role="tab" class="current" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 2. งานจับกุม </a>
-                </li>
-                <li role="tab" class="disabled last" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 3. รับคำกล่าวโทษ </a>
-                </li>
-                <li role="tab" class="disabled last" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
-                </li>
-                <li role="tab" class="disabled last" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
-                </li>
-                <li role="tab" class="disabled last" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 6. นำส่งเงินรายได้ </a>
-                </li>
-                <li role="tab" class="disabled last" aria-disabled="true">
-                    <a>
-                        <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
-                </li> -->
             </ul>
         </div>
     </div>

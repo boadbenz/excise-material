@@ -17,16 +17,16 @@ export class InvestgateMasSuspectService {
       })
   };
 
-  InvestigateMasSuspectgetByKeyword(TextSearch: any) {
+  async InvestigateMasSuspectgetByKeyword(TextSearch: any) {
     const params = TextSearch === '' ? { 'TextSearch': '' } : TextSearch;
     const url = `${appConfig.api8888}/InvestigateMasSuspectgetByKeyword`;
-    return this.http.post(url, params).map(x => x.json());
+    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
-  InvestigateMasSuspectgetByConAdv(form: any) {
+  async InvestigateMasSuspectgetByConAdv(form: any) {
     const params = form;
     const url = `${appConfig.api8888}/InvestigateMasSuspectgetByConAdv`;
-    return this.http.post(url, params).map(x => x.json());
+    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
   async InvestigateMasSuspectgetByCon(SuspectID: string) {

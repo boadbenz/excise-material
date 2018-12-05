@@ -12,6 +12,7 @@ export interface ColumnsInterface {
   primaryKey?: boolean;
   class?: string;
   mergeField?: string[];
+  isSum?: boolean;
   inputType?:
     | 'date'
     | 'datetime-local'
@@ -27,7 +28,7 @@ export interface ColumnsInterface {
     | 'week'
     | 'hidden'
     | 'Datepicker';
-    inputType2?:
+  inputType2?:
     | 'date'
     | 'datetime-local'
     | 'email'
