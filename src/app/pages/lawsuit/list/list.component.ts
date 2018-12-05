@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.7');
+    this.sidebarService.setVersion('0.0.0.21');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
     // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
@@ -53,6 +53,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.onSearch(Textsearch);
       }
     });
+    this.navService.showAdvSearch.next(true);
     this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
       if (status) {
         await this.navService.setOnNextPage(false);
@@ -185,14 +186,24 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private viewData(item) {
     // console.log('item==>', item)
+
     if (item.LawsuitArrestIndicment[0].Lawsuit[0]) {
       item.LawsuitID = item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID;
     } else {
       item.LawsuitID = '';
     }
-    this.router.navigate(['/lawsuit/manage', 'R'], {
-      queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
-    });
+    if(item.LawsuitID != "") {
+      this.router.navigate(['/lawsuit/manage', 'R'], {
+        queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+      });
+    } else {
+      this.router.navigate(['/lawsuit/manage', 'C'], {
+        queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+      });
+    }
+      
+    
+
   }
 
   private closeAdvSearch() {

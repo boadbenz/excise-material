@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
-import { MyDatePickerOptions, getDateMyDatepicker, convertDateForSave, setDateMyDatepicker } from 'app/config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, setDateMyDatepicker } from 'app/config/dateFormat';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MainMasterService } from 'app/services/main-master.service';
@@ -15,6 +15,7 @@ import { NavigationService } from 'app/shared/header-navigation/navigation.servi
 import { Message } from 'app/config/message';
 import { Observable } from 'rxjs/Observable';
 import { ImageType } from 'app/config/imageType';
+import swal from 'sweetalert2'
 
 @Component({
   selector: 'app-suspect',
@@ -32,7 +33,8 @@ export class SuspectComponent implements OnInit {
     private navService: NavigationService,
     private fb: FormBuilder,
     private sidebarService: SidebarService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private s_invest: fromServices.InvestgateService
   ) {
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);
@@ -50,6 +52,8 @@ export class SuspectComponent implements OnInit {
   @ViewChild('longitude') longitude: ElementRef;
 
   SuspectFG: FormGroup;
+  disableForeign = false;
+  disableCompany = false;
   requiredPassport = false;
   requiredCompanyRegister = false;
 
@@ -78,7 +82,7 @@ export class SuspectComponent implements OnInit {
 
   async ngOnInit() {
     this.SuspectFG = this.createForm();
-    this.sidebarService.setVersion('0.0.0.32');
+    this.sidebarService.setVersion(this.s_invest.version);
 
     await this.active_route();
     await this.navigate_service();
@@ -88,6 +92,25 @@ export class SuspectComponent implements OnInit {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
     this.SuspectFG.reset();
+    this.navService.setOnEdit(false);
+    this.navService.setOnSave(false);
+    this.navService.setOnDelete(false);
+    this.navService.setOnCancel(false);
+    this.navService.setOnSearch(false);
+    this.navService.setOnPrint(false);
+    this.navService.setOnNextPage(false);
+    this.navService.setOnPrevPage(false);
+
+    this.navService.setEditField(false);
+    this.navService.setSearchBar(false);
+    this.navService.setPrintButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setNewButton(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setPrevPageButton(false);
   }
 
   private createForm(): FormGroup {
@@ -197,11 +220,11 @@ export class SuspectComponent implements OnInit {
         if (this.SuspectFG.invalid) {
           this.isRequired = true;
           if (this.SuspectFG.controls.PassportNo.invalid) {
-            alert('กรุณาระบุ เลขหนังสือเดินทาง');
+            swal('', 'กรุณาระบุ เลขหนังสือเดินทาง', 'warning');
           } else if (this.SuspectFG.controls.CompanyRegistrationNo.invalid) {
-            alert('กรุณาระบุ เลขทะเบียนนิติบุคคล')
+            swal('', 'กรุณาระบุ เลขทะเบียนนิติบุคคล', 'warning')
           } else {
-            alert(Message.checkData)
+            swal('', Message.checkData, 'warning')
           }
           return;
         }
@@ -236,6 +259,10 @@ export class SuspectComponent implements OnInit {
           this.typeheadRaces
             .find(x => x.RaceCode == _Lfg.RaceCode).RaceNameTH;
 
+        if (_Lfg.EntityType == '2') {
+          _Lfg.SuspectFirstName = _Lfg.CompanyName;
+        }
+
         console.log(JSON.stringify(_Lfg));
 
         switch (this.mode) {
@@ -255,21 +282,6 @@ export class SuspectComponent implements OnInit {
         this.onCancel();
       }
     })
-
-    // this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
-    //     if (status) {
-    //         await this.navService.setOnNextPage(false);
-    //         this.router.navigate(
-    //             [`arrest/allegation`, this.allegationMode],
-    //             {
-    //                 queryParams: {
-    //                     arrestCode: this.arrestCode,
-    //                     indictmentId: this.indictmentId,
-    //                     guiltbaseId: this.guiltbaseId
-    //                 }
-    //             });
-    //     }
-    // })
   }
 
   async ArrestSuspectGetByCon(SuspectID: string) {
@@ -321,17 +333,30 @@ export class SuspectComponent implements OnInit {
     const e = this.SuspectFG.value.EntityType;
     const l = this.SuspectFG.value.SuspectType;
 
+    this.disableForeign = false;
+    this.disableCompany = false;
     this.requiredCompanyRegister = false;
     this.requiredPassport = false;
 
     if (e == '1' && l == '0') {
+      // บุคคลธรรมดา, ต่างชาติ
+      this.disableCompany = true;
       this.requiredPassport = true;
       this.card3 = true;
+    } else if (e == '1' && l == '1') {
+      // บุคคลธรรมดา, ชาวไทย
+      this.disableCompany = true;
+      this.disableForeign = true;
+      this.card3 = false;
+      this.card4 = false;
     } else if (e == '2') {
+      // นิติบุคคล
+      this.disableForeign = true;
       this.requiredCompanyRegister = true;
       this.card4 = true;
     }
   }
+
 
   openOffenseDetailModal(e: any) {
     this.modal = this.ngModalService.open(e, { size: 'lg', centered: true });
@@ -344,9 +369,9 @@ export class SuspectComponent implements OnInit {
       .map(term => term === '' ? []
         : this.typeheadRegion
           .filter(v =>
-            v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-            v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-            v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+            (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+              .toLowerCase()
+              .indexOf(term.toLowerCase()) > -1
           ).slice(0, 10));
 
   searchTitleName = (text$: Observable<string>) =>
@@ -445,7 +470,7 @@ export class SuspectComponent implements OnInit {
     ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
 
     if (!isMatch) {
-      alert(Message.checkImageType)
+      swal('', Message.checkImageType, 'warning')
       return
     }
 
@@ -485,14 +510,14 @@ export class SuspectComponent implements OnInit {
       .takeUntil(this.destroy$)
       .subscribe(res => {
         if (!this.checkResponse(res)) {
-          alert(Message.saveFail);
+          swal('', Message.saveFail, 'warning');
           return;
         }
-        alert(Message.saveComplete);
+        swal('', Message.saveComplete, 'success');
         this.router.navigate([`/investigation/suspect/R/${res.SuspectID}`]);
       }, (error) => {
         console.log(error);
-        alert(Message.saveFail);
+        swal('', Message.saveFail, 'warning');
       });
   }
 
@@ -501,40 +526,30 @@ export class SuspectComponent implements OnInit {
       .takeUntil(this.destroy$)
       .subscribe(res => {
         if (!this.checkResponse(res)) {
-          alert(Message.saveFail);
+          swal('', Message.saveFail, 'warning');
           return;
         }
-        alert(Message.saveComplete);
+        swal('', Message.saveComplete, 'success');
         this.enableBtnModeR();
       }, (error) => {
         console.log(error);
-        alert(Message.saveFail);
+        swal('', Message.saveFail, 'warning');
       })
   }
 
   onCancel() {
-    if (!confirm(Message.confirmAction))
-      return
-
-    switch (this.mode) {
-      case 'C':
-        window.close();
-      // this.router.navigate(
-      //   [`arrest/allegation`, 'C'],
-      //   {
-      //     queryParams: {
-      //       arrestMode: this.arrestMode,
-      //       arrestCode: this.arrestCode,
-      //       indictmentId: this.indictmentId,
-      //       guiltbaseId: this.guiltbaseId
-      //     }
-      //   });
-      // break;
-
-      case 'R':
-        this.enableBtnModeR();
-        break;
-    }
+    swal({
+      title: '',
+      text: Message.confirmAction,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirm!'
+    }).then((result) => {
+      if (result.value) {
+        this.router.navigate([`investigation/lawbreaker`, this.mode, this.suspectId]);
+      }
+    })
   }
-
 }

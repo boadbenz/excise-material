@@ -1,3 +1,4 @@
+
 export * from './investigate-list.model'
 export * from './investigate-mas-lawbreaker.model'
 export * from './investigate-mas-suspect.model'

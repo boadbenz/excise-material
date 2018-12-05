@@ -145,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.25');
+        this.sidebarService.setVersion('0.0.2.24');
 
         this.navigate_service();
 

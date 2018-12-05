@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, OnChanges, AfterContentInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { Subject, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -32,6 +32,8 @@ import { ArrestsService } from '../../arrests.service';
 import { LoaderService } from 'app/core/loader/loader.service';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { IMyDateModel } from 'mydatepicker-th';
+import { ManageConfig } from './manage.config';
+import swal from 'sweetalert2'
 
 @Component({
     selector: 'app-manage',
@@ -39,6 +41,8 @@ import { IMyDateModel } from 'mydatepicker-th';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, OnDestroy {
+
+
     // FormGroup ตรวจสอบสถานะในการบันทึก TN905016100058
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
@@ -48,7 +52,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // r: รายการแสดง
     // u: รายการอัพเดท
     // d: รายการที่ถูกลบ
-    card1: boolean = true;
+    // card1: boolean = true;
     noticeCard: boolean = false;
     card2: boolean = false;
     card3: boolean = false;
@@ -119,6 +123,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         return form.controls.ArrestLawGuitbase.controls;
     }
 
+    getArrestIndicmentDetail(form: any) {
+        return form.controls.ArrestIndicmentDetail.controls;
+    }
+
+    getArrestLawbreaker(form: any) {
+        return form.controls.ArrestLawbreaker.controls;
+    }
+
+    getArrestProductDetail(form: any) {
+        return form.controls.ArrestProductDetail.controls;
+    }
+
     // --- 1
     getArrestLawSubSectionRule(form: any) {
         return form.controls.ArrestLawSubSectionRule.controls;
@@ -135,7 +151,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     getArrestLawPenalty(form: any) {
         return form.controls.ArrestLawPenalty.controls;
     }
-
 
     getArrestNoticeSuspect(form: any) {
         return form.controls.ArrestNoticeSuspect.controls;
@@ -162,14 +177,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         private mainMasterService: MainMasterService,
         private s_document: MasDocumentMainService,
         private store: Store<fromStore.AppState>,
-        private arrestService: ArrestsService,
         private s_arrest: fromServices.ArrestService,
         private s_product: fromServices.ArrestProductService,
         private s_indictment: fromServices.ArrestIndictmentService,
         private s_notice: fromServices.ArrestNoticeService,
         private s_staff: fromServices.ArrestStaffService,
         private s_lawsuit: fromServices.ArrestLawSuitService,
-        private loaderService: LoaderService
+        private loaderService: LoaderService,
+        private manageConfig: ManageConfig
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -183,14 +198,26 @@ export class ManageComponent implements OnInit, OnDestroy {
             .subscribe((x: fromModels.Arrest) => this.stateArrest = x)
     }
 
+    onCollapse = this.manageConfig.onCollapse;
+
+    ILG60_03_02_00_00_E08 = this.manageConfig.ILG60_03_02_00_00_E08;
+    ILG60_03_02_00_00_E10 = this.manageConfig.ILG60_03_02_00_00_E10;
+    ILG60_03_02_00_00_E13 = this.manageConfig.ILG60_03_02_00_00_E13;
+    ILG60_03_02_00_00_E18 = this.manageConfig.ILG60_03_02_00_00_E18;
+    ILG60_03_02_00_00_E20 = this.manageConfig.ILG60_03_02_00_00_E20;
+    ILG60_03_02_00_00_E21 = this.manageConfig.ILG60_03_02_00_00_E21;
+    ILG60_03_02_00_00_E25 = this.manageConfig.ILG60_03_02_00_00_E25;
+    ILG60_03_02_00_00_E28 = this.manageConfig.ILG60_03_02_00_00_E28;
+
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.32');
+        this.sidebarService.setVersion(this.s_arrest.version);
         this.active_route();
         if (this.arrestFG) {
             setTimeout(() => {
                 this.arrestFG.reset();
             }, 300);
         }
+
         this.arrestFG = this.createForm();
         this.navigate_Service();
 
@@ -214,11 +241,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             ArrestStationCode: new FormControl(null),
             ArrestStation: new FormControl(null, Validators.required),
             HaveCulprit: new FormControl(0),
-            Behaviour: new FormControl(null),
-            Testimony: new FormControl(null),
-            Prompt: new FormControl(null),
+            Behaviour: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
+            Testimony: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
+            Prompt: new FormControl('แจ้งให้ญาติทราบ'),
             IsMatchNotice: new FormControl(null),
-            ArrestDesc: new FormControl('N/A'),
+            ArrestDesc: new FormControl(''),
             NoticeCode: new FormControl(null),
             InvestigationSurveyDocument: new FormControl(null),
             InvestigationCode: new FormControl(null),
@@ -265,7 +292,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSave(false);
                 if (!this.arrestFG.valid) {
                     this.isRequired = true;
-                    alert(Message.checkData)
+                    swal('', Message.checkData, 'warning')
                     return false;
                 }
                 const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
@@ -275,19 +302,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (this.arrestFG.invalid) return;
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
                 if (staff.length <= 0) {
-                    alert('ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ')
+                    swal('', 'ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ', 'warning')
                     return
                 }
                 if (staff.filter(x => x.ContributorID == '').length > 0) {
-                    alert('กรุณาเลือกฐานะของผู้จับกุม');
+                    swal('', 'กรุณาเลือกฐานะของผู้จับกุม', 'warning');
                     return;
                 }
-                if (staff.filter(x => x.ContributorID == '7').length <= 0) {
-                    alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้ร่วมจับกุม” อย่างน้อย 1 รายการ');
+                if (staff.filter(x => x.ContributorID == '6').length <= 0) {
+                    swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ', 'warning');
                     return;
                 }
                 if (!this.ArrestIndictment.value.length) {
-                    alert('“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ')
+                    swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
                     return;
                 }
                 this.onSave();
@@ -311,9 +338,20 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnCancel(false);
-                if (confirm(Message.confirmAction)) {
-                    this.onCancel();
-                }
+
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm!'
+                }).then((result) => {
+                    if (result.value) {
+                        this.onCancel();
+                    }
+                })
             }
         })
 
@@ -335,15 +373,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async pageLoad(arrestCode: string) {
         switch (this.mode) {
             case 'C':
-                // set false
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                this.navService.setEditField(false);
-                // set true 
-                this.navService.setSaveButton(true);
-                this.navService.setCancelButton(true);
-
+                this.enableBtnModeC()
                 await this.loadMasterData();
                 this.showEditField = false;
                 if (this.stateArrest) {
@@ -354,18 +384,44 @@ export class ManageComponent implements OnInit, OnDestroy {
                 break;
 
             case 'R':
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                // set true
-                this.navService.setPrintButton(true);
-                this.navService.setEditButton(true);
-                this.navService.setDeleteButton(true);
-                this.navService.setEditField(true);
-
+                this.enableBthModeR();
+                this.expandCard();
                 this.pageRefresh(arrestCode);
                 break;
         }
+    }
+
+    private enableBtnModeC() {
+        // set false
+        this.navService.setPrintButton(false);
+        this.navService.setEditButton(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setEditField(false);
+        // set true 
+        this.navService.setSaveButton(true);
+        this.navService.setCancelButton(true);
+    }
+
+    private enableBthModeR() {
+        // set false
+        this.navService.setSaveButton(false);
+        this.navService.setCancelButton(false);
+        // set true
+        this.navService.setPrintButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditField(true);
+    }
+
+    private expandCard() {
+        this.ILG60_03_02_00_00_E08.next(true);
+        this.ILG60_03_02_00_00_E10.next(true);
+        this.ILG60_03_02_00_00_E13.next(true);
+        this.ILG60_03_02_00_00_E18.next(true);
+        this.ILG60_03_02_00_00_E20.next(true);
+        this.ILG60_03_02_00_00_E21.next(true);
+        this.ILG60_03_02_00_00_E25.next(true);
+        this.ILG60_03_02_00_00_E28.next(true);
     }
 
     private async pageRefresh(arrestCode: string) {
@@ -551,7 +607,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 : new Date(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.arrestFG.patchValue({
                         OccurrenceDate: this.isObject(this.dateStartFrom)
@@ -567,12 +623,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     // 1
     setNoticeForm(n: fromModels.ArrestNotice[]) {
         let arrestNotice = this.ArrestNotice;
-        let arr = new FormArray([]);
         let i = 0;
         n.map(x => {
-            const modify = arrestNotice.value.filter(x => x.IsModify != 'd');
+            let modify = arrestNotice.value.filter(x => x.IsModify != 'd');
             i = (modify.length) && modify[modify.length - 1].RowId;
-            arr.push(
+            arrestNotice.push(
                 this.fb.group({
                     ArrestCode: this.arrestCode,
                     NoticeCode: x.NoticeCode,
@@ -585,7 +640,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             );
         })
-        this.arrestFG.setControl('ArrestNotice', arr);
+
+        this.arrestFG.setControl('ArrestNotice', arrestNotice);
     }
     // 2
     private setArrestNoticeStaff(o: fromModels.ArrestNoticeStaff[]) {
@@ -613,13 +669,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                     IsModify: x.IsModify || 'r',
                     IndictmentID: x.IndictmentID,
                     GuiltBaseID: x.GuiltBaseID,
-                    ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase)
+                    ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase),
+                    ArrestIndicmentDetail: this.setArrestIndicmentDetail(x.ArrestIndicmentDetail)
                 })
             )
         });
         this.arrestFG.setControl('ArrestIndictment', arr);
     }
-    // --- 1
+
+    // --- ArrestGuildBase 1
     private setArrestLawGuitbase = (o: fromModels.ArrestLawGuitbase[]) => {
         let arr = new FormArray([]);
         o.map((x, index) => {
@@ -699,6 +757,46 @@ export class ManageComponent implements OnInit, OnDestroy {
         return arr;
     }
 
+    // --- ArrestIndictmentDetail 2
+    private setArrestIndicmentDetail = (o: fromModels.ArrestIndictmentDetail[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                IndictmentDetailID: x.IndictmentDetailID,
+                IndictmentID: x.IndictmentID,
+                ArrestLawbreaker: this.setArrestLawbreaker(x.ArrestLawbreaker),
+                ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail)
+            }))
+        })
+        return arr;
+    }
+
+    // --- 2.1 
+    private setArrestLawbreaker = (o: fromModels.ArrestLawbreaker[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                LawbreakerTitleName: x.LawbreakerTitleName,
+                LawbreakerFirstName: x.LawbreakerFirstName,
+                LawbreakerMiddleName: x.LawbreakerMiddleName,
+                LawbreakerLastName: x.LawbreakerLastName,
+                LawbreakerOtherName: x.LawbreakerOtherName
+            }))
+        })
+        return arr;
+    }
+
+    // --- 2.2
+    private setArrestProductDetail = (o: fromModels.ArrestProductDetail[]) => {
+        let arr = new FormArray([]);
+        o.map(x => {
+            arr.push(this.fb.group({
+                ProductDesc: x.ProductDesc
+            }))
+        })
+        return arr;
+    }
+
     openModal(e) {
         this.modal = this.modelService.open(e, { size: 'lg', centered: true });
     }
@@ -749,19 +847,30 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
+        lawbreaker.RowId = 1;
+        lawbreaker.IsModify = 'c';
+
+        this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
+        let sort = this.sortFormArray(this.ArrestLawbreaker.value);
+        sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
+            .catch((error) => this.catchError(error));
+    }
+
     addAllegation() {
-        let arrest = this.arrestFG.value as fromModels.Arrest;
-        this.store.dispatch(new fromStore.CreateArrest(arrest));
-        this.router.navigate(
-            [`arrest/allegation`, 'C'],
-            {
-                queryParams: {
-                    arrestMode: this.mode,
-                    arrestCode: this.arrestCode,
-                    indictmentId: '',
-                    guiltbaseId: ''
-                }
-            });
+        
+        // let arrest = this.arrestFG.value as fromModels.Arrest;
+        // this.store.dispatch(new fromStore.CreateArrest(arrest));
+        // this.router.navigate(
+        //     [`arrest/allegation`, 'C'],
+        //     {
+        //         queryParams: {
+        //             arrestMode: this.mode,
+        //             arrestCode: this.arrestCode,
+        //             indictmentId: '',
+        //             guiltbaseId: ''
+        //         }
+        //     });
     }
 
     viewAllegation(indictmentId: number, guiltbaseId: number) {
@@ -828,6 +937,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.deleteFormArray(this.ArrestProduct, i, 'ArrestProduct');
     }
 
+    deleteLawbreaker(i: number) {
+        this.deleteFormArray(this.ArrestLawbreaker, i, 'ArrestLawbreaker');
+    }
+
     deleteDocument(i: number) {
         this.deleteFormArray(this.ArrestDocument, i, 'ArrestDocument');
     }
@@ -851,20 +964,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         text$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadProduct
-                    .filter(v =>
-                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
-                    ).slice(0, 10));
+                    .filter(v => v.ProductDesc.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .slice(0, 10));
 
     searchRegion = (text3$: Observable<string>) =>
         text3$.debounceTime(200).distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        (v.SubdistrictNameTH && v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.DistrictNameTH && v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ProvinceNameTH && v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -872,9 +982,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadStaff
                     .filter(v =>
-                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.TitleName} ${v.FirstName} ${v.LastName}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>
@@ -1009,7 +1119,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     isObject = (obj) => obj === Object(obj);
 
     saveFail() {
-        alert(Message.saveFail);
+        swal('', Message.saveFail, 'error');
         this._isSuccess = false;
         return false;
     }
@@ -1045,10 +1155,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.updateDocument();
 
         if (this._isSuccess) {
-            alert(Message.saveComplete)
+            swal('', Message.saveComplete, 'success')
             this.onComplete()
         } else {
-            alert(Message.saveFail)
+            swal('', Message.saveFail, 'warning')
         }
         this.loaderService.hide();
     }
@@ -1081,14 +1191,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                     .catch((error) => this.catchError(error));
             })
 
-        this.loaderService.hide();
         Promise.all(indict).then(() => {
             if (isCheck) {
-                alert(Message.cannotModify);
+                swal('', Message.cannotModify, 'warning');
+                this.enableBthModeR();
             } else {
                 this.loadMasterData();
             }
         }).catch((error) => this.catchError(error));
+
+        this.loaderService.hide();
     }
 
     private async onDelete() {
@@ -1105,11 +1217,21 @@ export class ManageComponent implements OnInit, OnDestroy {
         Promise.all(indict).then(() => {
             this.loaderService.hide();
             if (isCheck) {
-                alert(Message.cannotDeleteRec);
+                swal('', Message.cannotDeleteRec, 'warning');
             } else {
-                if (confirm(Message.confirmAction)) {
-                    this.deleteArrest();
-                }
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm!'
+                }).then((result) => {
+                    if (result.value) {
+                        this.deleteArrest();
+                    }
+                })
             }
         }).catch((error) => this.catchError(error));
     }
@@ -1166,13 +1288,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.s_arrest.ArrestupdDelete(this.arrestCode)
             .then(x => {
                 if (this.checkResponse(x)) {
-                    alert(Message.delComplete);
+                    swal('', Message.delComplete, 'success');
                     this.arrestFG.reset();
                     this.router.navigate([`arrest/list`]);
                 } else {
-                    alert(Message.delFail);
+                    swal('', Message.delFail, 'error');
                 }
-            }, () => { alert(Message.delFail); return; })
+            }, () => { swal('', Message.delFail, 'error'); return; })
             .catch((error) => this.catchError(error));
         this.loaderService.hide();
     }

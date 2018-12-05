@@ -238,7 +238,7 @@ export class NoticeService {
     async print(noticeCode: any): Promise<any> {
         // debugger
         const params = { 'NoticeCode': noticeCode };
-        const url = `${appConfig.apiXCSReport}/NoticegetByCon.aspx`;
+        const url = `${appConfig.apiReport}/NoticegetByCon.aspx`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         console.log(res)
         // if (res.IsSuccess === 'False') {

@@ -49,15 +49,20 @@ export class CONFIG extends ManageConfig {
   public FormInputDefault: ColumnsInterface[] = [
     {
       title: 'เงินสินบนที่ขอรับแล้ว',
-      field: 'SumBribeTotal'
+      field: 'SumBribeTotal',
+      isDisabled: true
     }
   ];
   public FormInput$ = new BehaviorSubject<any>(this.FormInputDefault);
   public columnsTableDefault: ColumnsInterface[] = [
     {
-      field: 'RequestBribeRewardID',
+      field: 'RequestBribeID',
       inputType: 'hidden',
       primaryKey: true
+    },
+    {
+      title: 'ลำดับ',
+      field: 'rowIndex'
     },
     {
       title: 'เลขที่คำร้องขอ',
@@ -65,7 +70,8 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'วันที่จัดทำคำร้องขอ',
-      field: 'RequestDate'
+      field: 'RequestDate',
+      inputType: 'date'
     },
     {
       title: 'ชื่อผู้ต้องหา',
@@ -77,7 +83,8 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'วันที่ชำระเงิน',
-      field: 'PaymentDueDate'
+      field: 'PaymentDueDate',
+      inputType: 'date'
     },
     {
       title: 'งวดชำระ',

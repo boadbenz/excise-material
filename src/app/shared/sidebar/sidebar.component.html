@@ -10,8 +10,11 @@
             <div class="profile-img">
                 <img src="assets/images/users/1.jpg" alt="user" /> </div>
             <!-- User profile text-->
-            <div class="profile-text">
-                <a href="#" class="dropdown-toggle link u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">นายเดชา บุญอินทร์
+            <div class="profile-text" style="margin-top: -32px;padding-bottom: 0px;">
+                <a href="#" class="dropdown-toggle link u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true"
+                    aria-expanded="true" style="padding: 10px;">
+                    <span>นายเดชา บุญอินทร์</span><br>
+                    <!-- <span>สังกัด : เทคโนโลยีสารสนเทศ</span> -->
                     <span class="caret"></span>
                 </a>
                 <div class="dropdown-menu animated flipInY">
@@ -25,8 +28,8 @@
                     <a href="javascript:void(0)" class="dropdown-item">
                         <i class="ti-settings"></i> Account Setting</a>
                     <div class="dropdown-divider"></div>
-                    <a href="javascript:void(0)" class="dropdown-item">
-                        <i class="fa fa-power-off"></i> Logout</a>
+                    <a href="javascript:void(0)" class="dropdown-item" [routerLink]="['/logout']">
+                        <i class="fa fa-power-off"></i> Logout </a>
                 </div>
             </div>
         </div>
@@ -34,51 +37,113 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
-                <!-- <li class="nav-small-cap">PERSONAL</li> -->
                 <li>
-                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/investigation/list">
-                        <i class="mdi mdi-account-alert"></i>
-                        <span class="hide-menu">1. รายงานการสืบสวน</span>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <strong>1</strong>
+                        <span class="hide-menu">งานปราบปราม</span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/investigation/list">
+                                <span>1.1 รายงานการสืบสวน</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                                <!-- <i class="mdi mdi-account-alert"></i> -->
+                                <span>1.2 ใบแจ้งความนำจับ</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/arrest/list">
+                        <strong>2</strong>
+                        <span class="hide-menu">บันทึกการจับกุม(ส.ส. 2/39)</span>
+                    </a>
+
+                </li>
+                <li>
+                <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/lawsuit/list">
+                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                        <strong>3</strong>
+                        <span class="hide-menu">รับคำกล่าวโทษ </span>
                     </a>
                 </li>
                 <li>
-                    <li>
-                        <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
-                            <i class="mdi mdi-account-alert"></i>
-                            <span class="hide-menu">2. ใบแจ้งความนำจับ</span>
-                        </a>
-                    </li>
-                    <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/prove/list">
+                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                        <strong>4</strong>
+                        <span class="hide-menu">งานตรวจรับและพิสูจน์ของกลาง</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/fine/list">
+                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                        <strong>5</strong>
+                        <span class="hide-menu">งานเปรียบเทียบและชำระค่าปรับ</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/income/list">
+                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                        <strong>6</strong>
+                        <span class="hide-menu">นำส่งเงินรายได้</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/reward/list">
+                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                        <strong>7</strong>
+                        <span class="hide-menu">คำร้องขอรับเงินสินบนรางวัล</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/reduction/list">
+                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                        <strong>8</strong>
+                        <span class="hide-menu">รายการปรับเพิ่ม-ปรับลด </span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/master">
+                        <i class="mdi mdi-gauge"></i>
+                        <span class="hide-menu">ผู้ดูแลระบบ</span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse">
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/arrest/list">
-                                <i class="mdi mdi-account-alert"></i>
-                                <span class="hide-menu">3. บันทึกการจับกุม(ส.ส. 2/39)</span>
-                            </a>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="religion/list">1.
+                                ข้อมูลศาสนา</a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/lawsuit/list">
-                                <i class="mdi mdi-account-alert"></i>
-                                <span class="hide-menu">4. รับคำกล่าวโทษ </span>
-                            </a>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="relation/list">2.
+                                ข้อมูลความสัมพันธ์</a>
+                        </li>
+                        <!-- <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="arrest/list">3. ข้อมูลหมวดภาพถ่าย</a>
+                        </li> -->
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="nationality/list">3.
+                                ข้อมูลสัญชาติ</a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/prove/list">
-                                <i class="mdi mdi-account-alert"></i>
-                                <span class="hide-menu">5. งานตรวจรับและพิสูจน์ของกลาง</span>
-                            </a>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="race/list">4.
+                                ข้อมูลเชื่อชาติ</a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/fine/list">
-                                <i class="mdi mdi-account-alert"></i>
-                                <span class="hide-menu">6. งานเปรียบเทียบและชำระค่าปรับ</span>
-                            </a>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="dutygroup/list">5.
+                                ข้อมูลหมวดสินค้า</a>
                         </li>
-                        <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/income/list">
-                                <i class="mdi mdi-account-alert"></i>
-                                <span class="hide-menu">7. นำส่งเงินรายได้</span>
-                            </a>
-                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <i class="mdi mdi-bullseye"></i>
+                        <span class="hide-menu">Component</span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse">
                         <li>
                             <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/reward']">
                                 <i class="mdi mdi-account-alert"></i>
@@ -86,85 +151,46 @@
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/reduction/list">
-                                <i class="mdi mdi-account-alert"></i>
-                                <span class="hide-menu">9. รายการปรับเพิ่ม-ปรับลด </span>
-                            </a>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/alert">Alert</a>
                         </li>
-                        <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/master">
-                                <i class="mdi mdi-gauge"></i>
-                                <span class="hide-menu">ผู้ดูแลระบบ</span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="religion/list">1. ข้อมูลศาสนา</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="relation/list">2. ข้อมูลความสัมพันธ์</a>
-                                </li>
-                                <!-- <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="arrest/list">3. ข้อมูลหมวดภาพถ่าย</a>
-                        </li> -->
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="nationality/list">3. ข้อมูลสัญชาติ</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="race/list">4. ข้อมูลเชื่อชาติ</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="dutygroup/list">5. ข้อมูลหมวดสินค้า</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
-                                <i class="mdi mdi-bullseye"></i>
-                                <span class="hide-menu">Component</span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/accordion">Accordion</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/alert">Alert</a>
-                                </li>
 
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/carousel">Carousel</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/datepicker">Datepicker</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/dropdown">Dropdown - Collapse</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/modal">Modal</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/pagination">Pagination</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/Popovertooltip">Popover & Tooltip</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/progressbar">Progressbar</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/rating">Ratings</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/tabs">Tabs</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/timepicker">Timepicker</a>
-                                </li>
-                                <li>
-                                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/typehead">Typehead</a>
-                                </li>
-                            </ul>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/carousel">Carousel</a>
                         </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/datepicker">Datepicker</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/dropdown">Dropdown
+                                - Collapse</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/modal">Modal</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/pagination">Pagination</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/Popovertooltip">Popover
+                                & Tooltip</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/progressbar">Progressbar</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/rating">Ratings</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/tabs">Tabs</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/timepicker">Timepicker</a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/typehead">Typehead</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { IncomeService } from '../income.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Revenue, RevenueDetail } from '../Revenue';
+import { Revenue, RevenueDetail } from '../revenue';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
@@ -17,6 +17,7 @@ import { async } from '../../../../../node_modules/@angular/core/testing';
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { pagination } from '../../../config/pagination';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-manage',
@@ -40,6 +41,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     RevenueID: string;
     RevenueCode: string;    // เลขที่นำส่งเงิน
     RevenueNo: string;  // เลขที่หนังสือนำส่ง
+    RevenueNoYear: string;  // ปีเลขที่หนังสือนำส่ง
     InformTo: string;       // เรียน
     StaffSendID: string;    // รหัสผู้นำส่ง
     StaffSendName: string;  // ชื่อผู้นำส่ง
@@ -102,7 +104,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
-        this.sidebarService.setVersion('Revenue 0.0.0.11 (M)');
+        this.sidebarService.setVersion('Revenue 0.0.0.19');
 
         this.active_Route();
         this.navigate_Service();
@@ -176,8 +178,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
             if (this.RevenueStatus == 2) {
-                alert("ไม่สามารถแก้ไขรายการได้");
-
+                //alert("ไม่สามารถแก้ไขรายการได้");
+                swal('', "ไม่สามารถแก้ไขรายการได้", 'warning');
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
                 // set true
@@ -204,13 +206,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                     || this.DeptStaff == "" || this.DeptStaff == undefined
                     || this.RevenueDate == null) {
                     this.isRequired = true;
-                    alert(Message.checkData);
+                    swal('', Message.checkData, 'warning');
+                    //alert(Message.checkData);
 
                     return false;
                 }
 
                 if (+this.MistreatNo < 1) {
-                    alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
+                    swal('', "กรุณำเลือกรายการที่ต้องการนำส่งเงิน", 'warning');
+                   // alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
 
                     return false;
                 }
@@ -298,17 +302,21 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                         if (isSuccess) {
                             this.oRevenue = {};
-                            alert(Message.saveComplete);
+
+                            swal('', Message.saveComplete, 'success');
+                           // alert(Message.saveComplete);
                             this.router.navigate(['/income/list']);
                         }
                     } else {
-                        alert(Message.saveFail);
+                        swal('', Message.saveFail, 'error');
+                        //alert(Message.saveFail);
                     }
                 }, (error) => { console.error(error); return false; });
             }
         }
         else if (this.RevenueStatus == 2) {
-            alert(Message.cannotDelete);
+            swal('', Message.cannotDelete, 'warning');
+            //alert(Message.cannotDelete);
         }
 
     }
@@ -330,7 +338,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 this.RevenueCode = res[0].RevenueCode;
                 this.RevenueStation = res[0].StationName;
-                this.RevenueNo = res[0].RevenueNo;
+
+                var RN = res[0].RevenueNo.split('/');
+
+                if (RN.length > 1) {
+                    this.RevenueNo = RN[0];
+                    this.RevenueNoYear = RN[1];
+                }
+
+                //this.RevenueNo = res[0].RevenueNo;
                 this.InformTo = res[0].InformTo;
                 this.RevenueStatus = res[0].RevenueStatus;
 
@@ -373,6 +389,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                 if (item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
                                                     for (var k = 0; k < item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
                                                         this.oRevenueDetail = {
+                                                            RevenueIndex: "0",
                                                             RevenueDetailID: res[0].RevenueDetail[a].RevenueDetailID,
                                                             ReceiptBookNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
                                                             ReceiptNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
@@ -381,7 +398,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                             CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
                                                             CompareID: item[j].CompareID,
                                                             CompareCode: item[j].CompareCode,
-                                                            LawBreaker: item[j].RevenueCompareDetail[i].LawbreakerTitleName + item[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + item[j].RevenueCompareDetail[i].LawbreakerLastName,
+                                                            LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName,
+                                                            SurnameLawBreaker:  item[j].RevenueCompareDetail[i].LawbreakerLastName,
                                                             StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
                                                             PaymentDate: toLocalShort(item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
                                                             TotalFine: +`${item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
@@ -403,12 +421,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 }
                             }
 
-                            // set total record
-                            this.paginage.TotalItems = this.ListRevenueDetail.length;
-                            this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
                             this.preloader.setShowPreloader(false);
                         }, (err: HttpErrorResponse) => {
-                            alert(err.message);
+                            swal('', err.message, 'warning');
+                            //alert(err.message);
                         });
                     }
 
@@ -416,15 +432,36 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.paginage.TotalItems = this.ListRevenueDetail.length;
                     this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
 
+                    var rIndex = this.ListRevenueDetailPaging.length;
+                    for (var a = this.ListRevenueDetailPaging.length - 1; a >= 0; a -= 1) {
+                       rIndex -= 1;
+                       this.ListRevenueDetailPaging[a].RevenueIndex = rIndex;
+
+                       if(a != 0) {
+                           if(this.ListRevenueDetailPaging[a-1].CompareCode == this.ListRevenueDetailPaging[a].CompareCode){
+                                this.ListRevenueDetailPaging[a].CompareCode = "";
+                                this.ListRevenueDetailPaging[a].RevenueIndex = "";
+                                rIndex +=1;
+                           }
+                       }
+
+                    //    this.ListRevenueDetailPaging[a].TotalFine = this.ListRevenueDetailPaging[a].TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+                    //    this.ListRevenueDetailPaging[a].BribeMoney = this.ListRevenueDetailPaging[a].BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                    //    this.ListRevenueDetailPaging[a].TreasuryMoney = this.ListRevenueDetailPaging[a].TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                    //    this.ListRevenueDetailPaging[a].RewardMoney = this.ListRevenueDetailPaging[a].RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                    }
+
                     this.checkIfAllChbSelected();
                 }
             } else {
-                alert("พบปัญหาในการติดต่อ Server");
+                swal('', "พบปัญหาในการติดต่อ Server", 'error');
+                //alert("พบปัญหาในการติดต่อ Server");
                 this.preloader.setShowPreloader(false);
                 this.router.navigate(['/income/list']);
             }
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            swal('', "API RevenuegetByCon :: " + err.message, 'error');
+            //alert(err.message);
         });
     }
 
@@ -491,11 +528,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
             }, (err: HttpErrorResponse) => {
-                alert(err.message);
+                swal('', "API RevenueComparegetByCon :: " + err.message, 'error');
+                //alert(err.message);
             });
         }
         else {
-            alert("กรุณาระบุวันที่นำส่ง");
+            swal('', "กรุณาระบุวันที่นำส่ง", 'warning');
+            //alert("กรุณาระบุวันที่นำส่ง");
             this.ListRevenueDetailPaging = [];
         }
     }
@@ -529,7 +568,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         debugger
         this.oRevenue.RevenueID = "";
-        this.oRevenue.RevenueNo = this.RevenueNo;
+        this.oRevenue.RevenueNo = this.RevenueNo + "/" + this.RevenueNoYear;
         this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
         this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.InformTo = this.InformTo;
@@ -592,8 +631,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
         }
 
-
-        this.oRevenue.RevenueNo = this.RevenueNo;
+        this.oRevenue.RevenueNo = this.RevenueNo + "/" + this.RevenueNoYear;
         this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
         this.oRevenue.RevenueTime = this.RevenueTime;
         this.oRevenue.RevenueCode = this.RevenueCode;
@@ -681,11 +719,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (isSuccess) {
             //alert("Update");
-            alert(Message.saveComplete);
+            swal('', Message.saveComplete, 'success');
+            //alert(Message.saveComplete);
             this.onComplete();
             this.preloader.setShowPreloader(false);
         } else {
-            alert(Message.saveFail);
+            swal('', Message.saveFail, 'error');
+            //alert(Message.saveFail);
+            this.preloader.setShowPreloader(false);
         }
     }
 
@@ -707,7 +748,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 if (isSuccess) {
                     //alert("Insert");
-                    alert(Message.saveComplete);
+                    swal('', Message.saveComplete, 'success');
+                    //alert(Message.saveComplete);
                     this.oRevenue = {};
                     this.onComplete();
                     debugger
@@ -715,7 +757,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.router.navigate([`/income/manage/R/${this.RevenueID}`]);
                 }
             } else {
-                alert(Message.saveFail);
+                swal('', Message.saveFail, 'error');
+                //alert(Message.saveFail);
             }
         }, (error) => { console.error(error); return false; });
     }
@@ -727,7 +770,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.rawStaffSendOptions = res;
             }
         }, (err: HttpErrorResponse) => {
-            alert("พบปัญหาในการติดต่อ Server");
+            swal('', "พบปัญหาในการติดต่อ Server", 'error');
+            //alert("พบปัญหาในการติดต่อ Server");
         });
     }
 
@@ -741,7 +785,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.getReveneueStaff();
             }
 
-            this.StaffSendoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.StaffSendoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -821,7 +865,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
             }
-            this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -901,7 +945,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (this.rawStaffSendOptions.length == 0) {
                 this.getReveneueStaff();
             }
-            this.InformTooptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+            this.InformTooptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
@@ -923,7 +967,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
         }, (err: HttpErrorResponse) => {
-            alert("พบปัญหาในการติดต่อ Server");
+            swal('', "พบปัญหาในการติดต่อ Server", 'error');
+            //alert("พบปัญหาในการติดต่อ Server");
         });
         // this.preloader.setShowPreloader(false);
     }
@@ -985,22 +1030,22 @@ export class ManageComponent implements OnInit, OnDestroy {
         let MistreatNoList = [];
         this.ListRevenueDetail.filter(item => item.IsCheck === true)
             .map(async item => {
-                CompareFine += +item.TotalFine;
-                BribeMoney += +item.BribeMoney;
-                RewardMoney += +item.RewardMoney;
-                TreasuryMoney += +item.TreasuryMoney;
+                CompareFine += item.TotalFine;
+                BribeMoney += item.BribeMoney;
+                RewardMoney += item.RewardMoney;
+                TreasuryMoney += item.TreasuryMoney;
 
-                MistreatNoList.push(item.CompareCode)
+                MistreatNoList.push(item.CompareCode);
             });
 
         var MistreatNoUnique = Array.from(new Set(MistreatNoList));
 
         this.MistreatNo = MistreatNoUnique.length;
         // this.CompareFine = (BribeMoney + RewardMoney + TreasuryMoney).toLocaleString("en");
-        this.CompareFine = CompareFine.toLocaleString("en");
-        this.BribeMoney = BribeMoney.toLocaleString("en");
-        this.RewardMoney = RewardMoney.toLocaleString("en");
-        this.TreasuryMoney = TreasuryMoney.toLocaleString("en");
+        this.CompareFine = CompareFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+        this.BribeMoney = BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+        this.RewardMoney = RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+        this.TreasuryMoney = TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
     }
 
     onComplete() {

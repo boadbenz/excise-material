@@ -1,0 +1,64 @@
+<form #form="ngForm" (ngSubmit)="onPrint(form)">
+  <div class="modal-header bg-theme">
+    <div class="row">
+      <div class="col-lg-5">
+        <h4 class="modal-title text-white">เลือกรายการข้อกล่าวหาที่ต้องการจัดทำบันทึกรับคำกล่าว!</h4>
+      </div>
+      <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
+        <span aria-hidden="true">
+          <i class=" ti-close"></i>
+        </span>
+      </a>
+    </div>
+  </div>
+  <div class="modal-body font-14">
+    <div class="table-responsive">
+      <table class="table table-sm table-striped table-set-border">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="text-center">ลำดับ</th>
+            <th>ฐานความผิดมาตรา</th>
+            <th>ฐานความผิด
+              <a href="javascript:void(0)">
+                <i class="ti-menu"></i>
+              </a>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="indicmentList.length == 0 || indicmentList;">
+            <td class="text-center">
+             
+            </td>
+            <td class="text-center"></td>
+            <div *ngFor="let data of indicmentList">
+              ไม่พบข้อมูล
+            </div>
+            <td>
+
+            </td>
+          </tr>
+          <tr *ngFor="let item of indicmentList; let i=index;">
+            <td class="text-center">
+              <input type="radio" [id]="i" name="ischeck" ngModel class="filled-in chk-col-indigo">
+              <label [for]="i" class="m-0"></label>
+            </td>
+            <td class="text-center">{{i+3}}</td>
+            <div *ngFor="let data of indicmentList">
+              {{data}}
+            </div>
+            <td>
+              แบบฟอร์ม
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="col-lg-2 col-4">
+      <button type="submit" class="btn btn-block btn-themecolor">พิมพ์</button>
+    </div>
+  </div>
+</form>

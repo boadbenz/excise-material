@@ -53,6 +53,10 @@ export class TableDataComponent extends TableDataConfig implements OnInit {
         this.pager.startIndex,
         this.pager.endIndex + 1
       );
+
+      this.pagedItems.forEach((f, index) => {
+        this.ShowInputModel[index] = 1;
+      });
     }
   }
   public pageChanges($event) {

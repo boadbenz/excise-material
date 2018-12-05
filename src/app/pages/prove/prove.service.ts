@@ -5,6 +5,7 @@ import { Prove } from './prove';
 import { ProveDocument } from './proveDoc';
 import { ProveProduct } from './proveProduct';
 import { ProveScience, ProveDeliverProduct } from './proveScience';
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class ProveService {
@@ -103,10 +104,49 @@ export class ProveService {
     }
   }
 
+  async ProveScienceupdByCon(oProductScience: ProveScience): Promise<any> {
+    debugger
+    const params = JSON.stringify(oProductScience);
+    const url = `${appConfig.api8882}/ProveScienceupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async ProveScienceupdDelete(ProveScienceID: string): Promise<any> {
+    debugger
+    const params = { ProveScienceID };
+    const url = `${appConfig.api8882}/ProveScienceupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
   async ProveDeliverProductinsAll(oProveDeliver: ProveDeliverProduct): Promise<any> {
     debugger
     const params = JSON.stringify(oProveDeliver);
     const url = `${appConfig.api8882}/ProveDeliverProductinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async ProveDeliverProductupdByCon(oProveDeliver: ProveDeliverProduct): Promise<any> {
+    debugger
+    const params = JSON.stringify(oProveDeliver);
+    const url = `${appConfig.api8882}/ProveDeliverProductupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -177,6 +217,42 @@ export class ProveService {
     }
   }
 
+  async MasDocumentMaininsAll(oProveDocument: ProveDocument): Promise<any> {
+    const params = JSON.stringify(oProveDocument);
+    const url = `${appConfig.api7789}/MasDocumentMaininsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async MasDocumentMainupdByCon(oProveDocument: ProveDocument): Promise<any> {
+    const params = JSON.stringify(oProveDocument);
+    const url = `${appConfig.api7789}/MasDocumentMainupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async MasDocumentMainupdDelete(DocumentID: string): Promise<any> {
+    const params = {DocumentID};
+    const url = `${appConfig.api7789}/MasDocumentMainupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
   async DocumentinsAll(oPD: ProveDocument): Promise<any> {
     debugger
     const params = JSON.stringify(oPD);
@@ -216,9 +292,14 @@ export class ProveService {
     }
   }
 
-  async DocumentgetByCon(ReferenceCode: string): Promise<any> {
-    const params = { ReferenceCode };
-    const url = `${appConfig.api8882}/DocumentgetByCon`;
+  async MasDocumentMaingetAll(ReferenceCode: string): Promise<any> {
+    let pValue = {
+      "ReferenceCode" : ReferenceCode,
+      "DocumentType" : 5
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -274,5 +355,35 @@ export class ProveService {
     } catch (error) {
       await alert(error);
     }
+  }
+
+  ProveReport2getByCon(ArrestCode:string, ProveID: string, IndictmentID: string) {
+    let pValue = {
+      "ArrestCode" : ArrestCode,
+      "ProveID" : ProveID,
+      "IndictmentID": IndictmentID
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.apiReport}/ILL_P038.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .catch(this.onCatch)
+      .do((res: Response) => {
+        this.onSuccess(res);
+      }, (error: any) => {
+        this.onError(error);
+      });
+  }
+
+  private onSuccess(res: Response): void {
+    console.log('Request successful');
+  }
+
+  private onError(res: Response): void {
+    console.log('Error, status code: ' + res.status);
+  }
+
+  private onCatch(error: any, caught: Observable<any>): Observable<any> {
+    return Observable.throw(error);
   }
 }
