@@ -18,7 +18,7 @@ export class InvestgateService {
       })
   };
 
-  version = '0.0.0.10'
+  version = '0.0.0.11'
 
   InvestigateListgetByKeyword(TextSearch: string, StaffCode: string) {
     const params = { TextSearch, StaffCode };

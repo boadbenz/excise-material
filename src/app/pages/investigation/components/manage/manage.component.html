@@ -79,7 +79,7 @@
             <div class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="onCreateInvestDetail()">เพิ่มรายงาน</button>
+                    <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField || investigateForm.invalid" (click)="onCreateInvestDetail()">เพิ่มรายงาน</button>
                 </div>
             </div>
 
