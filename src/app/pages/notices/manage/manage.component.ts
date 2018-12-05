@@ -145,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.23');
+        this.sidebarService.setVersion('0.0.2.24');
 
         this.navigate_service();
 
@@ -1016,10 +1016,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             .distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadProduct
-                    .filter(v =>
-                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .filter(v => (v.ProductDesc.toLowerCase().indexOf(term.toLowerCase()) > - 1)
+                        // (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -1048,11 +1048,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                         // (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
-    formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
-        `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;
+    // formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
+    //     `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;
+    formatterProduct = (x: { ProductDesc: String }) =>
+        `${x.ProductDesc || ''}`;
 
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubdistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
+        `${x.SubdistrictNameTH || ''}/${x.DistrictNameTH || ''}/${x.ProvinceNameTH || ''}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
@@ -1092,7 +1094,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     blurSelectItemLocaleRegion() {
         let obj = this.NoticeLocale.at(0).value;
-        console.log(obj);
         if(!obj.ProvinceCode){
             this.NoticeLocale.at(0).patchValue({
                 Region: ""
@@ -1114,6 +1115,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsDomestic: ele.item.IsDomestic || '1',
             NetVolume: ele.item.NetVolume || 0,
             NetVolumeUnit: ele.item.NetVolumeUnit || 0,
+            BrandFullName: ele.item.ProductDesc
         });
     }
     blurSelectItemProductItem(index: number) {
