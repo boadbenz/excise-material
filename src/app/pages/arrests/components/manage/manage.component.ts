@@ -858,18 +858,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     addAllegation() {
-        let arrest = this.arrestFG.value as fromModels.Arrest;
-        this.store.dispatch(new fromStore.CreateArrest(arrest));
-        this.router.navigate(
-            [`arrest/allegation`, 'C'],
-            {
-                queryParams: {
-                    arrestMode: this.mode,
-                    arrestCode: this.arrestCode,
-                    indictmentId: '',
-                    guiltbaseId: ''
-                }
-            });
+        
+        // let arrest = this.arrestFG.value as fromModels.Arrest;
+        // this.store.dispatch(new fromStore.CreateArrest(arrest));
+        // this.router.navigate(
+        //     [`arrest/allegation`, 'C'],
+        //     {
+        //         queryParams: {
+        //             arrestMode: this.mode,
+        //             arrestCode: this.arrestCode,
+        //             indictmentId: '',
+        //             guiltbaseId: ''
+        //         }
+        //     });
     }
 
     viewAllegation(indictmentId: number, guiltbaseId: number) {
