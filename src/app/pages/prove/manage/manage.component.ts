@@ -525,6 +525,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                             item.ProveScienceID = ProveScienceID;
                         }
 
+                        item.ReferenceDate = "";
+                        item.VatProve = item.VatProve.replace(',','');
+
                         await this.proveService.ProveProductinsAll(item).then(async pRes => {
 
                             if (!pRes.IsSuccess) {
@@ -641,6 +644,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 else {
                     item.ProveScienceID = "";
                 }
+
+                item.ReferenceDate = "";
+                item.VatProve = item.VatProve.replace(',','');
 
                 await this.proveService.ProveProductupdByCon(item).then(async pRes => {
                     if (!pRes.IsSuccess) {
@@ -1074,7 +1080,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     item.Remarks = `${item.Remarks == null || item.Remarks == "null" ? '' : item.Remarks}`;
                     item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
                     item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? '' : item.ProveResult}`;
-                    item.VatProve = (+item.VatProve).toFixed(4);
+                    item.VatProve = (+item.VatProve).toLocaleString(undefined, {minimumFractionDigits: 4,maximumFractionDigits: 4});;
 
                     if(item.ProveResult != ""){
                         this.SummaryProveResult += item.ProveResult + "\n";
@@ -2234,7 +2240,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     VatProveFormat() {
-        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve).toFixed(4);
+        debugger
+        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve).toLocaleString(undefined, {minimumFractionDigits: 4,maximumFractionDigits: 4});
     }
 
     varidateQtyBalance() {
