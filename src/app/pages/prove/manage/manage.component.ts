@@ -401,14 +401,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                             this.navService.setEditButton(true);
                             this.navService.setDeleteButton(true);
                             this.navService.setEditField(true);
-    
+
                             this.ProveArrestgetByCon();
                         }
                     }
-                    else{
+                    else {
                         this.navService.setSaveButton(true);
                         this.navService.setCancelButton(true);
-    
+
                         this.navService.setPrintButton(false);
                         this.navService.setEditButton(false);
                         this.navService.setDeleteButton(false);
@@ -538,7 +538,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         }
 
                         item.ReferenceDate = "";
-                        item.VatProve = item.VatProve.replace(',','');
+                        item.VatProve = item.VatProve.replace(',', '');
 
                         await this.proveService.ProveProductinsAll(item).then(async pRes => {
 
@@ -658,7 +658,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
 
                 item.ReferenceDate = "";
-                item.VatProve = item.VatProve.replace(',','');
+                item.VatProve = item.VatProve.replace(',', '');
 
                 await this.proveService.ProveProductupdByCon(item).then(async pRes => {
                     if (!pRes.IsSuccess) {
@@ -1071,9 +1071,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorID == "15");
                 if (PScienceStaff.length) {
-                    this.ScienceStaffName = `${PScienceStaff[0].TitleName == 'null' || PScienceStaff[0].TitleName == null ? '' : PScienceStaff[0].TitleName}` 
-                              + `${PScienceStaff[0].FirstName == 'null' || PScienceStaff[0].FirstName == null ? '' : PScienceStaff[0].FirstName}` + ' ' 
-                              + `${PScienceStaff[0].LastName == 'null' || PScienceStaff[0].LastName == null ? '' : PScienceStaff[0].LastName}`;
+                    this.ScienceStaffName = `${PScienceStaff[0].TitleName == 'null' || PScienceStaff[0].TitleName == null ? '' : PScienceStaff[0].TitleName}`
+                        + `${PScienceStaff[0].FirstName == 'null' || PScienceStaff[0].FirstName == null ? '' : PScienceStaff[0].FirstName}` + ' '
+                        + `${PScienceStaff[0].LastName == 'null' || PScienceStaff[0].LastName == null ? '' : PScienceStaff[0].LastName}`;
 
                     this.PosScience = PScienceStaff[0].PositionName;
                     this.DeptScience = PScienceStaff[0].OfficeName;
@@ -1096,16 +1096,25 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.lsProveProduct = res.ProveProduct;
                 this.SummaryProveResult = "";
 
+                let pIndex = 0;
                 this.lsProveProduct.map(item => {
                     // item.IsNewItem = false;
                     // item.IsDelItem = false;
-
+                    pIndex += 1;
+                    debugger
                     item.Remarks = `${item.Remarks == null || item.Remarks == "null" ? '' : item.Remarks}`;
                     item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
-                    item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? '' : item.ProveResult}`;
-                    item.VatProve = (+item.VatProve).toLocaleString(undefined, {minimumFractionDigits: 4,maximumFractionDigits: 4});;
+                    item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? 'ของกลางลำดับที่ ' + pIndex : item.ProveResult}`;
+                    item.VatProve = (+item.VatProve).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });;
 
-                    if(item.ProveResult != ""){
+                    if(item.ProveScienceID == '0'){
+                        item.IsProdScience = false;
+                    }
+                    else{
+                        item.IsProdScience = true;
+                    }
+
+                    if (item.ProveResult != "") {
                         this.SummaryProveResult += item.ProveResult + "\n";
                     }
                 });
@@ -1590,9 +1599,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             ContributorID: "15"
         }
 
-        this.ScienceStaffName = `${this.Scienceoptions[0].TitleName == 'null' || this.Scienceoptions[0].TitleName == null ? '' : this.Scienceoptions[0].TitleName}` 
-                              + `${this.Scienceoptions[0].FirstName == 'null' || this.Scienceoptions[0].FirstName == null ? '' : this.Scienceoptions[0].FirstName}` + ' ' 
-                              + `${this.Scienceoptions[0].LastName == 'null' || this.Scienceoptions[0].LastName == null ? '' : this.Scienceoptions[0].LastName}`;
+        this.ScienceStaffName = `${this.Scienceoptions[0].TitleName == 'null' || this.Scienceoptions[0].TitleName == null ? '' : this.Scienceoptions[0].TitleName}`
+            + `${this.Scienceoptions[0].FirstName == 'null' || this.Scienceoptions[0].FirstName == null ? '' : this.Scienceoptions[0].FirstName}` + ' '
+            + `${this.Scienceoptions[0].LastName == 'null' || this.Scienceoptions[0].LastName == null ? '' : this.Scienceoptions[0].LastName}`;
         this.PosScience = this.Scienceoptions[0].OperationPosName;
         this.DeptScience = this.Scienceoptions[0].OfficeName;
     }
@@ -1969,8 +1978,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.lsProveProduct.map(item => {
             item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? '' : item.ProveResult}`;
 
-            if(item.ProveResult != ""){
-                 this.SummaryProveResult += item.ProveResult + "\n";
+            if (item.ProveResult != "") {
+                this.SummaryProveResult += item.ProveResult + "\n";
             }
         });
 
@@ -2266,7 +2275,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     VatProveFormat() {
         debugger
-        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve.replace(',','')).toLocaleString(undefined, {minimumFractionDigits: 4,maximumFractionDigits: 4});
+        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve.replace(',', '')).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
     }
 
     varidateQtyBalance() {
@@ -2285,38 +2294,38 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    ShowAlertWarning(alertText: string)
-    {
+    ShowAlertWarning(alertText: string) {
         swal({
             title: '',
             text: alertText,
             type: 'warning',
-            confirmButtonText : 'ตกลง'
+            confirmButtonText: 'ตกลง'
         });
     }
 
-    ShowAlertSuccess(alertText: string)
-    {
+    ShowAlertSuccess(alertText: string) {
         swal({
             title: '',
             text: alertText,
             type: 'success',
-            confirmButtonText : 'ตกลง'
+            confirmButtonText: 'ตกลง'
         });
     }
 
-    ShowAlertError(alertText: string)
-    {
+    ShowAlertError(alertText: string) {
         swal({
             title: '',
             text: alertText,
             type: 'error',
-            confirmButtonText : 'ตกลง'
+            confirmButtonText: 'ตกลง'
         });
     }
 
-    // VaridateNumber(event)
-    // {
-    //     alert(event);
-    // }
+    VaridateNumber(event) {
+        let e = <KeyboardEvent>event;
+        if (e.keyCode > 31 && ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode != 44)) {
+            return false;
+        }
+        return true;
+    }
 }
