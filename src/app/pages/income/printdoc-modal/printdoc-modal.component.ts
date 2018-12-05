@@ -39,23 +39,34 @@ export class PrintDocModalComponent implements OnInit {
         if (_print.length) {
             this.preloader.setShowPreloader(true);
             debugger
-          this.revenueService.RevenueReportgetByCon(this.RevenueID)
-            .subscribe(x => {
-              const blob = new Blob([x], { type: "application/pdf" });
-              const link = document.createElement('a');
-              link.href = window.URL.createObjectURL(blob);
-              link.download = `${this.RevenueID}.pdf`;
-              link.click();
-              this.preloader.setShowPreloader(false);
-            }, (error) => { 
-                console.error(error); 
-                swal('', "พบปัญหาในการพิมพ์รายงาน", 'error');
-                this.preloader.setShowPreloader(false); 
-                return false; 
-            });
+            this.revenueService.RevenueReportgetByCon(this.RevenueID)
+                .subscribe(x => {
+                    const blob = new Blob([x], { type: "application/pdf" });
+                    const link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = `${this.RevenueID}.pdf`;
+                    link.click();
+                    this.preloader.setShowPreloader(false);
+                }, (error) => {
+                    console.error(error);
+                    swal({
+                        title: '',
+                        text: "พบปัญหาในการพิมพ์รายงาน",
+                        type: 'error',
+                        confirmButtonText: 'ตกลง'
+                    });
+
+                    this.preloader.setShowPreloader(false);
+                    return false;
+                });
         }
-        else{
-            swal('', "กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!", 'warning');
+        else {
+            swal({
+                title: '',
+                text: "กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!",
+                type: 'warning',
+                confirmButtonText: 'ตกลง'
+            });
             //alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
         }
     }

@@ -1,6 +1,5 @@
 <!-- <app-horizontal-timeline></app-horizontal-timeline> -->
-<!-- *ngIf="advSearch | async"  -->
-<div class="card card-outline-bluish unset-radius">
+<div *ngIf="advSearch | async" class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
         <app-card-actions-close></app-card-actions-close>
         <h4 class="card-title m-b-0">ค้นหา</h4>

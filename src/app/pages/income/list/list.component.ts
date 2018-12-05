@@ -58,10 +58,9 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.20');
-
+        this.sidebarService.setVersion('Revenue 0.0.0.21');
         this.RevenueStatus = "";
-
+        //this.advSearch.next(true);
         //this.preloader.setShowPreloader(true);
 
         //this.getDepartmentRevenue();
@@ -94,6 +93,16 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subSetNextPage.unsubscribe();
     }
 
+    ShowAlertNoRecord()
+    {
+        swal({
+            title: '',
+            text: Message.noRecord,
+            type: 'warning',
+            confirmButtonText : 'ตกลง'
+        });
+    }
+
     onSearch(Textsearch: any) {
         this.preloader.setShowPreloader(true);
 
@@ -102,7 +111,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            swal('', Message.noRecord, 'warning');
+
+            this.ShowAlertNoRecord();
             //alert(Message.noRecord);
             this.RevenueList = [];
             this.preloader.setShowPreloader(false);
@@ -149,7 +159,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.revenue = [];
 
         if (!list.length) {
-            swal('', Message.noRecord, 'warning');
+            this.ShowAlertNoRecord();
             //alert(Message.noRecord);
             this.RevenueList = [];
 

@@ -179,7 +179,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
             if (this.RevenueStatus == 2) {
                 //alert("ไม่สามารถแก้ไขรายการได้");
-                swal('', "ไม่สามารถแก้ไขรายการได้", 'warning');
+                this.ShowAlertWarning("ไม่สามารถแก้ไขรายการได้");
                 this.navService.setSaveButton(false);
                 this.navService.setCancelButton(false);
                 // set true
@@ -206,14 +206,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                     || this.DeptStaff == "" || this.DeptStaff == undefined
                     || this.RevenueDate == null) {
                     this.isRequired = true;
-                    swal('', Message.checkData, 'warning');
+                    this.ShowAlertWarning(Message.checkData);
                     //alert(Message.checkData);
 
                     return false;
                 }
 
                 if (+this.MistreatNo < 1) {
-                    swal('', "กรุณำเลือกรายการที่ต้องการนำส่งเงิน", 'warning');
+                    this.ShowAlertWarning("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
                    // alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
 
                     return false;
@@ -247,31 +247,42 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 this.navService.setOnCancel(false);
 
-                if (confirm(Message.confirmAction)) {
-                    if (this.mode === 'C') {
-                        this.router.navigate(['/income/list']);
-                    } else if (this.mode === 'R') {
-                        // set false
-                        this.navService.setSaveButton(false);
-                        this.navService.setCancelButton(false);
-                        // set true
-                        this.navService.setPrintButton(true);
-                        this.navService.setEditButton(true);
-                        this.navService.setDeleteButton(true);
-                        this.navService.setEditField(true);
-
-                        await this.ShowRevenue();
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'ยืนยัน',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.value) {
+                        if (this.mode === 'C') {
+                            this.router.navigate(['/income/list']);
+                        } else if (this.mode === 'R') {
+                            // set false
+                            this.navService.setSaveButton(false);
+                            this.navService.setCancelButton(false);
+                            // set true
+                            this.navService.setPrintButton(true);
+                            this.navService.setEditButton(true);
+                            this.navService.setDeleteButton(true);
+                            this.navService.setEditField(true);
+    
+                            this.ShowRevenue();
+                        }
                     }
-                }
-                else {
-                    this.navService.setSaveButton(true);
-                    this.navService.setCancelButton(true);
-
-                    this.navService.setPrintButton(false);
-                    this.navService.setEditButton(false);
-                    this.navService.setDeleteButton(false);
-                    this.navService.setEditField(false);
-                }
+                    else{
+                        this.navService.setSaveButton(true);
+                        this.navService.setCancelButton(true);
+    
+                        this.navService.setPrintButton(false);
+                        this.navService.setEditButton(false);
+                        this.navService.setDeleteButton(false);
+                        this.navService.setEditField(false);
+                    }
+                })
             }
         })
     }
@@ -285,40 +296,51 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onDelete() {
-        if (this.RevenueStatus == 1) {
-            if (confirm(Message.confirmAction)) {
-                this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
-                    if (IsSuccess) {
-                        var isSuccess = true;
-                        this.ListRevenueDetail.filter(item => (item.IsCheck === true))
-                            .map(async item => {
-                                await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
-                                    if (!item.IsSuccess) {
-                                        isSuccess = item.IsSuccess;
-                                        return false;
-                                    }
-                                }, (error) => { console.error(error); return false; });
-                            });
-
-                        if (isSuccess) {
-                            this.oRevenue = {};
-
-                            swal('', Message.saveComplete, 'success');
-                           // alert(Message.saveComplete);
-                            this.router.navigate(['/income/list']);
-                        }
-                    } else {
-                        swal('', Message.saveFail, 'error');
-                        //alert(Message.saveFail);
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                if (this.RevenueStatus == 1) {
+                    if (confirm(Message.confirmAction)) {
+                        this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
+                            if (IsSuccess) {
+                                var isSuccess = true;
+                                this.ListRevenueDetail.filter(item => (item.IsCheck === true))
+                                    .map(async item => {
+                                        await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
+                                            if (!item.IsSuccess) {
+                                                isSuccess = item.IsSuccess;
+                                                return false;
+                                            }
+                                        }, (error) => { console.error(error); return false; });
+                                    });
+        
+                                if (isSuccess) {
+                                    this.oRevenue = {};
+                                    this.ShowAlertSuccess(Message.saveComplete);
+                                   // alert(Message.saveComplete);
+                                    this.router.navigate(['/income/list']);
+                                }
+                            } else {
+                                this.ShowAlertError(Message.saveFail);
+                                //alert(Message.saveFail);
+                            }
+                        }, (error) => { console.error(error); return false; });
                     }
-                }, (error) => { console.error(error); return false; });
+                }
+                else if (this.RevenueStatus == 2) {
+                    this.ShowAlertWarning(Message.cannotDelete);
+                    //alert(Message.cannotDelete);
+                }
             }
-        }
-        else if (this.RevenueStatus == 2) {
-            swal('', Message.cannotDelete, 'warning');
-            //alert(Message.cannotDelete);
-        }
-
+        })
     }
 
     ShowRevenue() {
@@ -330,7 +352,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // else {
                 //     this.ReceiptBookNo = "";
                 // }
-
+                this.ListRevenueDetail = [];
                 this.oRevenue.RevenueID = res[0].RevenueID;
                 this.oRevenue.RevenueCode = res[0].RevenueCode;
                 this.oRevenue.StationCode = res[0].StationCode;
@@ -423,7 +445,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                             this.preloader.setShowPreloader(false);
                         }, (err: HttpErrorResponse) => {
-                            swal('', err.message, 'warning');
+                            this.ShowAlertError(err.message);
                             //alert(err.message);
                         });
                     }
@@ -454,13 +476,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.checkIfAllChbSelected();
                 }
             } else {
-                swal('', "พบปัญหาในการติดต่อ Server", 'error');
+                this.ShowAlertError("พบปัญหาในการติดต่อ Server");
                 //alert("พบปัญหาในการติดต่อ Server");
                 this.preloader.setShowPreloader(false);
                 this.router.navigate(['/income/list']);
             }
         }, (err: HttpErrorResponse) => {
-            swal('', "API RevenuegetByCon :: " + err.message, 'error');
+            this.ShowAlertError("API RevenuegetByCon :: " + err.message);
             //alert(err.message);
         });
     }
@@ -528,12 +550,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
             }, (err: HttpErrorResponse) => {
-                swal('', "API RevenueComparegetByCon :: " + err.message, 'error');
+                this.ShowAlertError("API RevenueComparegetByCon :: " + err.message);
                 //alert(err.message);
             });
         }
         else {
-            swal('', "กรุณาระบุวันที่นำส่ง", 'warning');
+            this.ShowAlertWarning("กรุณาระบุวันที่นำส่ง");
             //alert("กรุณาระบุวันที่นำส่ง");
             this.ListRevenueDetailPaging = [];
         }
@@ -719,12 +741,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (isSuccess) {
             //alert("Update");
-            swal('', Message.saveComplete, 'success');
+            this.ShowAlertSuccess(Message.saveComplete);
             //alert(Message.saveComplete);
             this.onComplete();
             this.preloader.setShowPreloader(false);
         } else {
-            swal('', Message.saveFail, 'error');
+            this.ShowAlertError(Message.saveFail);
             //alert(Message.saveFail);
             this.preloader.setShowPreloader(false);
         }
@@ -748,7 +770,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 if (isSuccess) {
                     //alert("Insert");
-                    swal('', Message.saveComplete, 'success');
+                    this.ShowAlertSuccess(Message.saveComplete);
                     //alert(Message.saveComplete);
                     this.oRevenue = {};
                     this.onComplete();
@@ -757,7 +779,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.router.navigate([`/income/manage/R/${this.RevenueID}`]);
                 }
             } else {
-                swal('', Message.saveFail, 'error');
+                this.ShowAlertError(Message.saveFail);
                 //alert(Message.saveFail);
             }
         }, (error) => { console.error(error); return false; });
@@ -770,7 +792,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.rawStaffSendOptions = res;
             }
         }, (err: HttpErrorResponse) => {
-            swal('', "พบปัญหาในการติดต่อ Server", 'error');
+            this.ShowAlertError("พบปัญหาในการติดต่อ Server");
             //alert("พบปัญหาในการติดต่อ Server");
         });
     }
@@ -967,7 +989,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
         }, (err: HttpErrorResponse) => {
-            swal('', "พบปัญหาในการติดต่อ Server", 'error');
+            this.ShowAlertError("พบปัญหาในการติดต่อ Server");
             //alert("พบปัญหาในการติดต่อ Server");
         });
         // this.preloader.setShowPreloader(false);
@@ -1077,4 +1099,33 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    ShowAlertWarning(alertText: string)
+    {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'warning',
+            confirmButtonText : 'ตกลง'
+        });
+    }
+
+    ShowAlertSuccess(alertText: string)
+    {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'success',
+            confirmButtonText : 'ตกลง'
+        });
+    }
+
+    ShowAlertError(alertText: string)
+    {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'error',
+            confirmButtonText : 'ตกลง'
+        });
+    }
 }
