@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   errMsg: string;
   fullName: string = "";
   operationPosName: string = "";
+  officeName: string = "";
   constructor(private authService: AuthService,
     private router: Router,
     private http: HttpClient,
@@ -49,8 +50,10 @@ export class LoginComponent implements OnInit {
           if (res.StaffCode != null) {
             this.fullName = res.TitleName + " " + res.FirstName + " " + res.LastName;
             this.operationPosName = res.OperationPosName;
+            this.officeName = res.OfficeName;
             localStorage.setItem('fullName', this.fullName);
             localStorage.setItem('operationPosName', this.operationPosName);
+            localStorage.setItem('officeName', this.officeName);
             this.router.navigate([this.returnUrl]);
           } else this.errMsg = res.Msg;
         });
