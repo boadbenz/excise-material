@@ -99,7 +99,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private sidebarService: SidebarService
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.21');
+    this.sidebarService.setVersion('0.0.0.22');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -1081,19 +1081,38 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   async userReceiptDelete() {
     const index = this.userCompareReceiptDetail.index;
-    const r = confirm('ต้องการลบใบเสร็จจริงหรือไม่!');
-    if (r) {
-      if (index || index == 0) {
-        try {
-          if (this.userCompareReceiptDetail.CompareReceiptID) {
-            const resp: any = await this.CompareDetailReceipupdDelete();
-            console.log(resp);
-            if (resp.error) {
-              Swal(
-                'ข้อผิดพลาด!',
-                resp.error.error,
-                'error'
-              );
+    Swal({
+      title: 'ยืนยันการทำรายการ?',
+      text: "ต้องการลบใบเสร็จจริงหรือไม่!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ลบ',
+      cancelButtonText: 'ยกเลิก'
+    }).then( async (result) => {
+      if (result.value) {
+        if (index || index == 0) {
+          try {
+            if (this.userCompareReceiptDetail.CompareReceiptID) {
+              const resp: any = await this.CompareDetailReceipupdDelete();
+              console.log(resp);
+              if (resp.error) {
+                Swal(
+                  'ข้อผิดพลาด!',
+                  resp.error.error,
+                  'error'
+                );
+              } else {
+                const name: any = this.userCompareReceiptDetail.LawBrakerName;
+                this.clearDataList(this.receipt.list[index]);
+                this.receipt.list[index].LawBrakerName = name;
+                Swal(
+                  'สำเร็จ!',
+                  'ลบสำเร็จ.',
+                  'success'
+                );
+              }
             } else {
               const name: any = this.userCompareReceiptDetail.LawBrakerName;
               this.clearDataList(this.receipt.list[index]);
@@ -1104,26 +1123,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                 'success'
               );
             }
-          } else {
-            const name: any = this.userCompareReceiptDetail.LawBrakerName;
-            this.clearDataList(this.receipt.list[index]);
-            this.receipt.list[index].LawBrakerName = name;
-            Swal(
-              'สำเร็จ!',
-              'ลบสำเร็จ.',
-              'success'
-            );
+          } catch (err) {
+            console.log(err);
           }
-        } catch (err) {
-          console.log(err);
+        }
+        if (index || index === 0) {
+          if (index > -1) {
+            this.filePath.splice(index, 1);
+          }
         }
       }
-      if (index || index === 0) {
-        if (index > -1) {
-          this.filePath.splice(index, 1);
-        }
-      }
-    }
+    });
   }
   async CompareDetailReceipupdDelete() {
     try {
@@ -1141,25 +1151,35 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.filePath.push({path: files.target.value, name: files.target.files.item(0).name });
   }
   async deleteFile(id: any, index: any) {
-    const r = confirm('ต้องการลบไฟล์จริงหรือไม่!');
-    if (r) {
-      if (id) {
-        try {
-          const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
-          Swal(
-            'สำเร็จ!',
-            'ลบไฟล์สำเร็จ.',
-            'success'
-          );
-        } catch (err) {
+    Swal({
+      title: 'ยืนยันการทำรายการ?',
+      text: "ต้องการลบไฟล์จริงหรือไม่!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ลบ',
+      cancelButtonText: 'ยกเลิก'
+    }).then( async (result) => {
+      if (result.value) {
+        if (id) {
+          try {
+            const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
+            Swal(
+              'สำเร็จ!',
+              'ลบไฟล์สำเร็จ.',
+              'success'
+            );
+          } catch (err) {
+          }
+        }
+        if (index || index === 0) {
+          if (index > -1) {
+            this.filePath.splice(index, 1);
+          }
         }
       }
-      if (index || index === 0) {
-        if (index > -1) {
-          this.filePath.splice(index, 1);
-        }
-      }
-    }
+    });
   }
   editApproveReport(item: any, index: any, type: any) {
     console.log(item);

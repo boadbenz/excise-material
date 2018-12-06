@@ -12,6 +12,8 @@ import { stringify } from 'querystring';
 import { IMyDpOptions } from 'mydatepicker';
 import { toLocalShort } from 'app/config/dateFormat';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import Swal from 'sweetalert2'
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
@@ -113,7 +115,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.21');
+        this.sidebarService.setVersion('0.0.0.22');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
@@ -201,7 +203,11 @@ export class ListComponent implements OnInit, OnDestroy {
         var CompareCode = '';
         this.CompareList = [];
         if (list.length < 1) {
-            alert(Message.noRecord);
+            swal(
+                'ข้อผิดพลาด',
+                Message.noRecord,
+                'error'
+            );
             return false;
         }
 
