@@ -235,17 +235,22 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    async print(noticeCode: any): Promise<any> {
-        // debugger
+    // async print(noticeCode: any): Promise<any> {
+    //     // debugger
+        // const params = { 'NoticeCode': noticeCode };
+        // const url = `${appConfig.apiXCSReport}/NoticegetByCon.aspx`;
+    //     const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+    //     // if (res.IsSuccess === 'False') {
+    //     //     return new Array<any>();
+    //     // }
+
+    //     return res;
+    // }
+
+    public print(noticeCode: any){
         const params = { 'NoticeCode': noticeCode };
         const url = `${appConfig.apiXCSReport}/NoticegetByCon.aspx`;
-        const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-        console.log(res)
-        // if (res.IsSuccess === 'False') {
-        //     return new Array<any>();
-        // }
-
-        return res;
+        return this.http.post(url, params, this.httpOptions).map(res=>res);
     }
 
     
