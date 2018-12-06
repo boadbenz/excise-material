@@ -63,7 +63,7 @@ export class InvestgateService {
       .map(x => x)
       .finally(() => this.onEnd());
   }
->>>>>>> toey_dev
+>>>>>>> FL_J
 
   InvestigateListgetByKeyword(TextSearch: string, StaffCode: string) {
     const params = { TextSearch, StaffCode };

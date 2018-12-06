@@ -246,7 +246,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.pageRefreshInvestigate(x[0]);
                     });
                 break;
->>>>>>> toey_dev
+>>>>>>> FL_J
         }
     }
 
