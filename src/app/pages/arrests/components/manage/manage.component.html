@@ -404,7 +404,7 @@
         </div>
     </div>
 
-    <div class="card card-outline-bluish unset-radius">
+    <!-- <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <div class="card-actions">
                 <a class="" (click)="onCollapse(ILG60_03_03_00_00_E15)">
@@ -456,7 +456,7 @@
             </div>
 
         </div>
-    </div>
+    </div> -->
 
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
@@ -506,11 +506,11 @@
                             <td>
                                 <ng-template ngFor let-item [ngForOf]="getArrestIndicmentDetail(indict)" let-i="index">
                                     <div *ngFor="let lawb of getArrestLawbreaker(item);">
-                                        {{ lawb.get('LawbreakerTitleName')?.value }}
-                                        {{ lawb.get('LawbreakerFirstName')?.value }}
-                                        {{ lawb.get('LawbreakerMiddleName')?.value }}
-                                        {{ lawb.get('LawbreakerLastName')?.value }}
-                                        {{ lawb.get('LawbreakerOtherName')?.value }}
+                                        {{ lawb.get('LawbreakerTitleName').value }}
+                                        {{ lawb.get('LawbreakerFirstName').value }}
+                                        {{ lawb.get('LawbreakerMiddleName').value }}
+                                        {{ lawb.get('LawbreakerLastName').value }}
+                                        {{ lawb.get('LawbreakerOtherName').value }}
                                     </div>
                                 </ng-template>
                             </td>
