@@ -78,12 +78,6 @@ sortPrintDoc() {
     if (_print.length) {
       this.s_arrest.ArrestReportgetByCon(this.ArrestCode)
         .subscribe(x => {
-          // const blob = new Blob([x], { type: "application/pdf" });
-          // const link = document.createElement('a');
-          // link.href = window.URL.createObjectURL(blob);
-          // link.download = `${this.ArrestCode}.pdf`;
-          // link.click();
-
           const file = new Blob([x], {type: 'application/pdf'});
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL);

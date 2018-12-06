@@ -5,7 +5,7 @@ import { LawsuitService } from "../lawsuit.service";
 import { ActivatedRoute } from "@angular/router";
 import { PreloaderService } from "../../../shared/preloader/preloader.component";
 import { MatDialog, MatDialogRef } from '@angular/material';
-
+import Swal from 'sweetalert2'
 
 @Component({
     selector: 'dialog-judgment',
@@ -198,7 +198,7 @@ export class DialogJudgment {
             console.log("Case have JudgementID", this.arrestData['LawsuitJudgement'][0]['JudgementID'])
             let updateByCon = await this.lawsuitService.LawsuitJudgementupdByCon(submit)
             await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.PaymentFineID)
-            
+
             console.log(updateByCon)
             if (this.lawsuitArrestFormDialog.IsFine == true) {
                 for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
@@ -215,21 +215,28 @@ export class DialogJudgment {
                 }
             }
             if (updateByCon.IsSuccess) {
-               
-                alert("บันทึกสำเร็จ")
+                Swal({
+                    text: "บันทึกสำเร็จ",
+                    type: 'success',
+                })
                 this.dialogRef.close();
             } else {
-                alert("บันทึกไม่สำเร็จ")
+                Swal({
+                    text: "บันทึกไม่สำเร็จ",
+                    type: 'warning',
+                })
                 this.dialogRef.close();
             }
 
 
         } else {
             let PaymentFine = await this.insert()
-            console.log(PaymentFine)
             if (PaymentFine.IsSuccess) {
                 await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine.PaymentFineID)
-                alert("บันทึกสำเร็จ")
+                Swal({
+                    text: "บันทึกสำเร็จ",
+                    type: 'success',
+                })
                 this.dialogRef.close();
             }
             await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
@@ -248,7 +255,7 @@ export class DialogJudgment {
             } else {
                 this.dialogRef.close();
             }
-            
+
         }
 
     }

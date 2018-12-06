@@ -52,6 +52,7 @@ export class PrintdocModalComponent implements OnInit, OnDestroy {
                         this.PrintDoc.push(
                             this.fb.group({
                                 IsChecked: false,
+                                InvestigateDetailID: y.InvestigateDetailID,
                                 DocName: `รายงานการสืบสวนครั้งที่ ${y.InvestigateSeq}`,
                                 DocType: 0,
                                 DocTypeName: 'แบบฟอร์ม'
@@ -69,6 +70,7 @@ export class PrintdocModalComponent implements OnInit, OnDestroy {
                 this.PrintDoc.push(
                     this.fb.group({
                         IsChecked: false,
+                        InvestigateDetailID: this.investDetailId,
                         DocName: `รายงานการสืบสวนครั้งที่ ${x.InvestigateSeq}`,
                         DocType: 0,
                         DocTypeName: 'แบบฟอร์ม'
@@ -85,6 +87,7 @@ export class PrintdocModalComponent implements OnInit, OnDestroy {
                         this.PrintDoc.push(
                             this.fb.group({
                                 IsChecked: false,
+                                InvestigateDetailID: this.investDetailId,
                                 DocName: y.DataSource,
                                 DocType: 3,
                                 DocTypeName: 'เอกสารแนบภายใน'
@@ -121,26 +124,26 @@ export class PrintdocModalComponent implements OnInit, OnDestroy {
             this.FG.setControl(formControl, itemFormArray);
         }
     }
-    
+
     sortPrintDoc() {
         this.sort = (this.sort == SORTING.ASC ? SORTING.DESC : SORTING.ASC);
-        let sort = this.PrintDoc.value.sort(() =>  -1);
+        let sort = this.PrintDoc.value.sort(() => -1);
         this.PrintDoc.value.map(() => this.PrintDoc.removeAt(0));
         this.setItemFormArray(sort, 'PrintDoc');
     }
 
     onPrint() {
         let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
-        // if (_print.length) {
-        //     this.s_arrest.ArrestReportgetByCon(this.ArrestCode)
-        //         .subscribe(x => {
-        //             const blob = new Blob([x], { type: "application/pdf" });
-        //             const link = document.createElement('a');
-        //             link.href = window.URL.createObjectURL(blob);
-        //             link.download = `${this.ArrestCode}.pdf`;
-        //             link.click();
-        //         })
-        // }
+        if (_print.length) {
+            _print.map(x => {
+                this.s_invest.InvestigateDetailgetByCon(x.InvestigateDetailID)
+                    .subscribe(x => {
+                        const file = new Blob([x], { type: 'application/pdf' });
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                    })
+            })
+        }
     }
 
     dismiss(e: any) {

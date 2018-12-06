@@ -847,30 +847,29 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
-        lawbreaker.RowId = 1;
-        lawbreaker.IsModify = 'c';
+    // addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
+    //     lawbreaker.RowId = 1;
+    //     lawbreaker.IsModify = 'c';
 
-        this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
-        let sort = this.sortFormArray(this.ArrestLawbreaker.value);
-        sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
-            .catch((error) => this.catchError(error));
-    }
+    //     this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
+    //     let sort = this.sortFormArray(this.ArrestLawbreaker.value);
+    //     sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
+    //         .catch((error) => this.catchError(error));
+    // }
 
     addAllegation() {
-        
-        // let arrest = this.arrestFG.value as fromModels.Arrest;
-        // this.store.dispatch(new fromStore.CreateArrest(arrest));
-        // this.router.navigate(
-        //     [`arrest/allegation`, 'C'],
-        //     {
-        //         queryParams: {
-        //             arrestMode: this.mode,
-        //             arrestCode: this.arrestCode,
-        //             indictmentId: '',
-        //             guiltbaseId: ''
-        //         }
-        //     });
+        let arrest = this.arrestFG.value as fromModels.Arrest;
+        this.store.dispatch(new fromStore.CreateArrest(arrest));
+        this.router.navigate(
+            [`arrest/allegation`, 'C'],
+            {
+                queryParams: {
+                    arrestMode: this.mode,
+                    arrestCode: this.arrestCode,
+                    indictmentId: '',
+                    guiltbaseId: ''
+                }
+            });
     }
 
     viewAllegation(indictmentId: number, guiltbaseId: number) {
