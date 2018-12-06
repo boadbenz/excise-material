@@ -160,7 +160,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.resetConfig();
+        // this.resetConfig();
 
         this.navService.showFieldEdit
             .takeUntil(this.destroy$)
@@ -962,17 +962,17 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async onSave() {
-        if (this.investCode == 'NEW') {
-            if (!this.stateInvest) {
-                swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
-                return;
-            }
+        // if (this.investCode == 'NEW') {
+        //     if (!this.stateInvest) {
+        //         swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
+        //         return;
+        //     }
 
-            if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart) {
-                swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
-                return;
-            }
-        }
+        //     if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart) {
+        //         swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
+        //         return;
+        //     }
+        // }
 
         if (this.investigateFG.invalid) {
             swal('', Message.checkData, 'warning');
@@ -1099,6 +1099,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             if (!this.checkIsSuccess(x)) return;
             this.investCode = investCode;
             this.investMode = 'R';
+            this.resetConfig();
             await this.insertInvestigateDetail(investCode);
 
         }, () => { this.saveFail(); return; })

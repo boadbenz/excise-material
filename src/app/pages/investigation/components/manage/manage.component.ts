@@ -103,8 +103,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
             InvestigateCode: new FormControl(this.investCode, Validators.required),
             InvestigateNo: new FormControl(null, Validators.required),
             DateStart: new FormControl(null, Validators.required),
-            DateEnd: new FormControl(null, Validators.required),
-            Subject: new FormControl(null),
+            DateEnd: new FormControl(null),
+            Subject: new FormControl(null, Validators.required),
             IsActive: new FormControl(1),
             InvestigateDetail: this.fb.array([])
         });
@@ -221,15 +221,21 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private pageLoad() {
-        if (this.investCode == 'NEW' && this.stateInvest) {
-            this.pageRefreshInvestigate(this.stateInvest);
-        } else {
-            this.s_invest.InvestigategetByCon(this.investCode)
-                .takeUntil(this.destroy$)
-                .subscribe((x: fromModels.InvestigateModel) => {
-                    if (!this.checkResponse(x)) return;
-                    this.pageRefreshInvestigate(x[0]);
-                });
+        switch (this.mode) {
+            case 'C':
+                if (this.stateInvest) {
+                    this.pageRefreshInvestigate(this.stateInvest);
+                }
+                break;
+
+            case 'R':
+                this.s_invest.InvestigategetByCon(this.investCode)
+                    .takeUntil(this.destroy$)
+                    .subscribe((x: fromModels.InvestigateModel) => {
+                        if (!this.checkResponse(x)) return;
+                        this.pageRefreshInvestigate(x[0]);
+                    });
+                break;
         }
     }
 
