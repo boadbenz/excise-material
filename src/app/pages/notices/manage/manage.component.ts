@@ -145,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.26');
+        this.sidebarService.setVersion('0.0.2.27');
 
         this.navigate_service();
 
@@ -292,6 +292,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
             if (status) {
                 this.preloader.setShowPreloader(true);
+                await this.navService.setOnPrint(false);
                 this.noticeService.print(this.noticeCode).subscribe((res)=>{
                     this.preloader.setShowPreloader(false);
 
