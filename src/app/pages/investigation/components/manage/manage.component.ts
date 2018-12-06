@@ -219,18 +219,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private pageLoad() {
-<<<<<<< HEAD
-        if (this.stateInvest) {
-            this.pageRefreshInvestigate(this.stateInvest);
-        } else {
-            if (this.investCode == 'NEW') return;
-            this.s_invest.InvestigategetByCon(this.investCode)
-                .takeUntil(this.destroy$)
-                .subscribe((x: fromModels.InvestigateModel) => {
-                    if (!this.checkResponse(x)) return;
-                    this.pageRefreshInvestigate(x[0]);
-                });
-=======
         switch (this.mode) {
             case 'C':
                 if (this.stateInvest) {
@@ -246,7 +234,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.pageRefreshInvestigate(x[0]);
                     });
                 break;
->>>>>>> FL_J
         }
     }
 
