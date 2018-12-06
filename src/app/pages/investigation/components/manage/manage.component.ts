@@ -103,8 +103,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
             InvestigateCode: new FormControl(this.investCode, Validators.required),
             InvestigateNo: new FormControl(null, Validators.required),
             DateStart: new FormControl(null, Validators.required),
-            DateEnd: new FormControl(null, Validators.required),
-            Subject: new FormControl(null),
+            DateEnd: new FormControl(null),
+            Subject: new FormControl(null, Validators.required),
             IsActive: new FormControl(1),
             InvestigateDetail: this.fb.array([])
         });
