@@ -104,7 +104,6 @@ export class ManageComponent implements OnInit {
     this.setShowButton();
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
-    // this.navService.setInnerTextNextPageButton('งานจับกุม')
   }
   public onPrint = (content) => {
     this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
@@ -215,6 +214,7 @@ export class ManageComponent implements OnInit {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
+    this.navService.setNextPageButton(false);
   }
 
   private getParamFromActiveRoute() {
@@ -973,10 +973,15 @@ export class ManageComponent implements OnInit {
             await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].forEach(item => {
               if (item.LawsuitType == 1) { countType++; }
             })
-            countType > 0 ? this.navService.setPrevPageButton(true) : null
+            if (countType > 0) {
+              this.navService.setNextPageButton(true);
+              this.navService.setInnerTextNextPageButton('เปรียบเทียบปรับ')
+            }else {
+              this.navService.setNextPageButton(false);
+            }
           } else {
-            console.log('เปรียบเทียบปรับ')
-            // this.navService.setInnerTextNextPageButton('เปรียบเทียบปรับ')
+            this.navService.setNextPageButton(true);
+            this.navService.setInnerTextNextPageButton('งานพิสูจน์')
           }
 
           let IsLawsuitComplete = res[0]['LawsuitArrestIndicment'][0].IsLawsuitComplete;

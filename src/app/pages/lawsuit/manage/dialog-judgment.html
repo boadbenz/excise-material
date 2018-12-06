@@ -64,7 +64,7 @@
           <label class="control-label col-sm-3 text-right">วันที่อ่านคดีพิพากษา: </label>
           <div class="col-md-9">
             <my-date-picker-th name="JudgementDate" [(ngModel)]="lawsuitArrestFormDialog.JudgementDate" placeholder=""
-              locale="th" [options]="LawsuitDateOptions" required></my-date-picker-th>
+              locale="th" [options]="LawsuitDateOptions" class="form-control form-control-sm unset-form-control" required></my-date-picker-th>
             <!-- <input class="form-control form-control-sm" type="text" [(ngModel)]="JudgementDate"> -->
           </div>
         </div>
@@ -139,7 +139,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">วันที่กำหนดชำระ: </label>
               <div class="col-md-9">
-                <my-date-picker-th name="JudgementDate" [(ngModel)]="lawsuitArrestFormDialog.PaymentDate" name="PaymentDate"
+                <my-date-picker-th name="JudgementDate" class="form-control form-control-sm unset-form-control" [(ngModel)]="lawsuitArrestFormDialog.PaymentDate" name="PaymentDate"
                   placeholder="" locale="th" [options]="LawsuitDateOptions" required></my-date-picker-th>
               </div>
             </div>
@@ -171,7 +171,7 @@
             <div class="form-group row">
               <label class="col-form-label text-right col-md-3">วันที่เริ่มชำระค่าปรับ: </label>
               <div class="col-md-9">
-                <my-date-picker-th name="PaymentPeroidStartDate" [(ngModel)]="lawsuitArrestFormDialog.PaymentPeroidStartDate"
+                <my-date-picker-th name="PaymentPeroidStartDate" class="form-control form-control-sm unset-form-control" [(ngModel)]="lawsuitArrestFormDialog.PaymentPeroidStartDate"
                   placeholder="" locale="th" [options]="LawsuitDateOptions" required></my-date-picker-th>
               </div>
             </div>
