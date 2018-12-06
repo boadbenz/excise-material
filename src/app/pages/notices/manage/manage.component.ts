@@ -302,6 +302,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.preloader.setShowPreloader(true);
                 this.noticeService.print(this.noticeCode).subscribe((res)=>{
                     this.preloader.setShowPreloader(false);
+
+                    const file = new Blob([res], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
                     console.log(res);
                 });
             }
