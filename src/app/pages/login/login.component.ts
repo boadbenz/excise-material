@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
 
   returnUrl: string;
   fullName: string;
-  officeName: string;
+  operationPosName: string;
 
   constructor(private authService: AuthService,
     private router: Router,
@@ -49,9 +49,10 @@ export class LoginComponent implements OnInit {
       await this.authService.userAuth(params).subscribe(async res => {
         if (res.StaffCode != null) {
           this.fullName = res.TitleName + res.FirstName + " " + res.LastName;
-          this.officeName = res.OfficeName;
+          this.operationPosName = res.OperationPosName;
           console.log("fullName : ", this.fullName)
-          console.log("officeName : ", this.officeName)
+          console.log("operationPosName : ", this.operationPosName)
+
           if (this.authService.signin(form)) {
             this.router.navigate([this.returnUrl]);
           };
@@ -59,14 +60,12 @@ export class LoginComponent implements OnInit {
       });
     }
   }
+
   ClearErrMsg() {
     this.errMsg = '';
   }
 
-  ngOnInit() {
-    this.fullName;
-    this.officeName;
-  }
+  ngOnInit() { }
 
   // onSubmit(form: any) {
   //   if (this.authService.signin(form)) {
