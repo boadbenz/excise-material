@@ -1,0 +1,755 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+    <app-printdoc-modal (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
+</ng-template>
+
+<div class="wizard-content">
+    <div class="wizard-circle wizard clearfix clearfix">
+        <div class="steps tab-wizard">
+            <ul role="tablist">
+                <li role="tab" class="current" aria-disabled="false" aria-selected="true">
+                    <a>
+                        <span class="current-info audible">current step: </span>
+                        <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 2. งานจับกุม </a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 3. รับคำกล่าวโทษ </a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
+                </li>
+                <li role="tab" class="disabled" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
+                </li>
+                <li role="tab" class="disabled" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 6. นำส่งเงินรายได้ </a>
+                </li>
+                <li role="tab" class="disabled" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- รายละเอียดคดี -->
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดคดี</h4>
+    </div>
+    <div class="card-body">
+
+        <form class="form-horizontal">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่ใบงาน :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="ArrestCode" name="ArrestCode" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่คดีรับคำกล่าวโทษ :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="LawsuiltCode" name="LawsuiltCode" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ฐานความผิดมาตรา :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="SectionName" name="SectionName" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ฐานความผิด :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="GuiltBaseName" name="GuiltBaseName" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">บทกำหนดโทษ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="SectionNo" name="SectionNo" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">อัตราโทษ :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="PenaltyDesc" name="PenaltyDesc" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="table-responsive table-striped ">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center">ลำดับ</th>
+                                    <th>ของกลาง</th>
+                                    <th>จำนวน</th>
+                                    <th>หน่วย</th>
+                                    <th>ปริมาณสุทธิ</th>
+                                    <th>หน่วย</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of ArrestProduct; let i=index;">
+                                    <td class="text-center">{{i + 1}}</td>
+                                    <td>
+                                        <input type="text" value="{{item.ProductDesc}}" class="form-control form-control-sm" readonly>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="{{item.Qty}}" class="form-control form-control-sm" readonly>
+                                    </td>
+                                    <td>
+                                        <select class="form-control form-control-sm" [(ngModel)]="item.QtyUnit" name="QtyUnit{{i}}" readonly>
+                                            <option *ngFor="let opt of UnitOption" value="{{opt.ProductUnitCode}}">{{opt.ProductUnitNameTH}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="{{item.NetVolume}}" class="form-control form-control-sm" readonly>
+                                    </td>
+                                    <td>
+                                        <select class="form-control form-control-sm" [(ngModel)]="item.NetVolumeUnit" name="NetVolumeUnit{{i}}" readonly>
+                                            <option *ngFor="let opt of UnitOption" value="{{opt.ProductUnitCode}}">{{opt.ProductUnitNameTH}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- ตรวจรับของกลาง -->
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">ตรวจรับของกลาง</h4>
+    </div>
+    <div class="card-body">
+
+        <form class="form-horizontal">
+            <div class="row form-group">
+                <div class="col">
+                    <input type="checkbox" id="md_checkbox_2" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                    <label for="md_checkbox_2">ตรวจรับของกลาง</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col">
+                    <input type="checkbox" id="md_checkbox_3" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                    <label for="md_checkbox_3">ตรวจพิสูจน์นอกสถานที่ทำการ</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ทะเบียนตรวจพิสูจน์ :</label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <input type="text" [(ngModel)]="ReportNo" name="ReportNo" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <label class="col-form-label">/{{ProveYear}}</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เขียนที่ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <input type="text" class="form-control" [(ngModel)]="ProveStation" name="ProveStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                        matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of options" [value]="option.OfficeName" (click)="onAutoSelecteWord(option)">
+                            {{ option.OfficeName }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label">วันที่ตรวจรับ :
+                </label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="ProveDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <!-- <div style="width:45%">
+
+                    </div> -->
+                    <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
+
+                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                    <input type="time" [(ngModel)]="ProveTime" name="ProveTime" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หนังสือนำส่งเลขที่ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="DeliveryDocNo" name="DeliveryDocNo" class="form-control form-control-sm" [disabled]="showEditField">
+                    </div>
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
+                </label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <my-date-picker-th name="DeliveryDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="DeliveryDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="DeliveryDate" name="DeliveryDate" [disabled]="showEditField"> -->
+
+                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                    <input type="time" [(ngModel)]="DeliveryTime" name="DeliveryTime" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานนำส่ง :</label>
+                <div class="form-group col-lg-4 col-md-7">
+                    <input type="text" class="form-control" [(ngModel)]="ProveDelivery" name="ProveDelivery" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                        matInput [matAutocomplete]="auto4" (input)="DeliveryOnAutoChange($event.target.value)" (focus)="DeliveryOnAutoFocus($event.target.value)"
+                        [disabled]="showEditField">
+                    <mat-autocomplete #auto4="matAutocomplete">
+                        <mat-option *ngFor="let optionD of Deliveryoptions" [value]="optionD.OfficeName" (click)="DeliveryOnAutoSelecteWord(optionD)">
+                            {{ optionD.OfficeName }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </div>
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้ตรวจรับ :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" class="form-control" [(ngModel)]="ProveStaffName" name="ProveStaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                            matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <mat-autocomplete #auto2="matAutocomplete">
+                            <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffonAutoSelecteWord(sOption)">
+                                {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="PosExaminer" name="PosExaminer" class="form-control form-control-sm" disabled>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="form-group col-lg-4 col-md-7">
+                    <input type="text" [(ngModel)]="DeptExaminer" name="DeptExaminer" class="form-control form-control-sm" disabled>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- พิสูจน์ของกลาง -->
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">พิสูจน์ของกลาง</h4>
+    </div>
+    <div class="card-body">
+        <form class="form-horizontal">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">วันที่พิสูจน์ :
+                </label>
+                <div class="form-group input-group  col-lg-4 col-md-7">
+                    <my-date-picker-th name="ProveDate" [options]="myDatePickerOptions" class="form-control form-control-sm unset-form-control"
+                        [(ngModel)]="ProveDate" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required></my-date-picker-th>
+                    <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveDate" name="ProveDate" [disabled]="showEditField"> -->
+
+                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                    <input type="time" [(ngModel)]="ProveTime" name="ProveTime" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้ตรวจพิสูจน์ :</label>
+                <div class="form-group col-lg-4 col-md-7">
+                    <input type="text" class="form-control" [(ngModel)]="ScienceStaffName" name="ScienceStaffName" placeholder="พิมพ์ข้อความ"
+                        aria-label="Number" matInput [matAutocomplete]="auto3" (input)="ScienceStaffonAutoChange($event.target.value)"
+                        (focus)="ScienceStaffonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <!--  -->
+                    <mat-autocomplete #auto3="matAutocomplete">
+                        <mat-option *ngFor="let ScOption of Scienceoptions" [value]="ScOption.TitleName + ScOption.FirstName + ' ' + ScOption.LastName"
+                            (click)="ScienceStaffonAutoSelecteWord(ScOption)">
+                            {{ ScOption.TitleName }}{{ ScOption.FirstName }} {{ ScOption.LastName }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="form-group col-lg-4 col-md-7">
+                    <input type="text" [(ngModel)]="PosScience" name="PosScience" class="form-control form-control-sm" disabled>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="col-lg-4 col-md-7 form-group ">
+                    <input type="text" [(ngModel)]="DeptScience" name="DeptScience" class="form-control form-control-sm" disabled>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">คำสั่ง :</label>
+                <div class="col-lg-10 col-md-12 form-group ">
+                    <input type="text" [(ngModel)]="Command" name="Command" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+            </div>
+
+            <div class="row form-group" style="margin-top:20px;">
+                <div class="col-lg-10 col-md-9 col-sm-8"></div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <button (click)="AddProduct()" class="btn btn-block btn-themecolor" [disabled]="showEditField" data-toggle="modal" data-target="#SciencePopup">เพิ่มของกลาง</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="table-responsive table-striped ">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center">ลำดับ</th>
+                                    <th>ของกลาง</th>
+                                    <th style="text-align: center">ตามปริมาณ</th>
+                                    <th style="text-align: center">ตามมูลค่า</th>
+                                    <th style="text-align: center">พิสูจน์ทางเคมีหรือวิทยาศาสตร์</th>
+                                    <th style="text-align: center">มูลค่าภาษีพิสูจน์</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- *ngIf="lsPD.IsAction!='D'" -->
+                                <!-- | callback: filterProductDel let i=index;-->
+                                <tr *ngFor="let lsPD of oProve.ProveProduct | IsActivePipe; let i=index;">
+                                    <td style="text-align: center">{{i+1}}</td>
+                                    <td>{{lsPD.ProductDesc}}</td>
+                                    <td style="text-align: center">{{lsPD.ReferenceVatRate == '1' ?'/':'X'}}</td>
+                                    <td style="text-align: center">{{lsPD.ReferenceVatQty == '1' ?'/':'X'}}</td>
+                                    <td style="text-align: center">{{lsPD.ProveScienceResult == null || lsPD.ProveScienceResult == '' ?'X':'/'}} </td>
+                                    <td style="text-align: center">{{lsPD.VatProve}}</td>
+                                    <td>
+                                        <a *ngIf="showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" data-toggle="modal" data-target="#SciencePopup">
+                                            <i class="mdi mdi-eye fa-lg"></i>
+                                        </a>
+                                        <a *ngIf="!showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" [hidden]="showEditField" data-toggle="modal"
+                                            data-target="#SciencePopup">
+                                            <i class="ti-pencil-alt btn-action"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a class="text-warning" (click)="onDeleteProduct(lsPD.ProductSeq)" [hidden]="showEditField">
+                                            <i class="fa fa-trash-o fa-lg"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- เอกสารแนบภายใน -->
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+    </div>
+    <div class="card-body">
+        <div class="row form-group">
+            <div class="col-lg-10 col-md-9 col-sm-8"></div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <button class="btn btn-block btn-themecolor" (click)="AddDocument()" [disabled]="showEditField">เพิ่มเอกสารแนบ</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive table-striped ">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center">ลำดับ</th>
+                                <th>ชื่อเอกสารแนบ</th>
+                                <th>ที่อยู่เอกสารแนบ</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let lsDoc of ListProveDoc | IsActivePipe; let i=index;">
+                                <td style="text-align: center">{{i+1}}</td>
+                                <td>
+                                    <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control form-control-sm" [disabled]="showEditField">
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-sm" [(ngModel)]="lsDoc.FilePath" name="lsDoc.FilePath" style="border-right: 0;"
+                                            [disabled]="showEditField">
+                                        <div class="input-group-append">
+                                            <input [id]="'communicateAttach'+lsDoc.DocumentSeq" type="file" (change)="changeComunicateFile($event, lsDoc.DocumentSeq)"
+                                                hidden>
+                                            <label [for]="'communicateAttach'+lsDoc.DocumentSeq" class="input-group-text custom-file-upload text-secondary" [hidden]="showEditField">
+                                                <i class="ti-more-alt"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="javaScript:void(0);" class="text-warning">
+                                        <i class="fa fa-trash-o fa-lg" (click)="DelDocument(lsDoc.DocumentSeq)" [hidden]="showEditField"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Pop up พิสูจน์ -->
+<div class="modal fade" id="SciencePopup" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-theme">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <h4 class="modal-title text-white">รายละเอียดพิสูจน์ของกลาง
+                        </h4>
+                    </div>
+
+                    <a href="javaScript:void(0);" class="close text-white font-14" data-dismiss="modal" data-target="testimonyPopup">
+                        <span aria-hidden="true">
+                            <i class=" ti-close"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-body font-14">
+                <!-- รายละเอียดการคำนวณอัตราภาษีพิสูจน์ -->
+                <div class="card card-outline-bluish unset-radius">
+                    <div class="card-header unset-radius">
+                        <app-card-actions-collapse></app-card-actions-collapse>
+                        <h4 class="card-title m-b-0">รายละเอียดการคำนวณอัตราภาษีพิสูจน์</h4>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-horizontal">
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">ของกลางจากจับกลุ่ม :</label>
+                                <div class="col-lg-10 col-md-7">
+                                    <div class="form-group ">
+                                        <select [(ngModel)]="ProductID" name="ProductID" class="form-control form-control-sm" [disabled]="modePopup == 'I'?false:'true'"
+                                            (change)="SelecteArrestProduct($event)">
+                                            <option *ngFor="let opt of ArrestProduct" value={{opt.ProductID}}>{{opt.ProductDesc}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">เพิ่ม/แก้ไขของกลาง :</label>
+                                <div class="col-lg-10 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="text" [(ngModel)]="oProveProduct.ProductDesc" name="oProveProduct.ProductDesc" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">จำนวน :</label>
+                                <div class="col-lg-4 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="text" [(ngModel)]="oProveProduct.Qty" name="oProveProduct.Qty" class="form-control form-control-sm" [disabled]="showEditField">
+                                    </div>
+                                </div>
+                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                        <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">ปริมาณสุทธิ :</label>
+                                <div class="col-lg-4 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="number" [(ngModel)]="oProveProduct.NetVolume" name="oProveProduct.NetVolume" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <select [(ngModel)]="oProveProduct.NetVolumeUnit" name="oProveProduct.NetVolumeUnit" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                        <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-sm-4 control-label">อัตราภาษี :</label>
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <input type="checkbox" class="filled-in chk-col-indigo" [disabled]="showEditField" [checked]="oProveProduct.ReferenceVatRate!='' && oProveProduct.ReferenceVatRate !=nul">
+                                    <label for="md_checkbox_5">ตามมูลค่าร้อยละ </label>&nbsp;&nbsp;
+                                    <input type="number" [(ngModel)]="oProveProduct.ReferenceVatRate" name="oProveProduct.ReferenceVatRate" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label"></label>
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <input type="checkbox" class="filled-in chk-col-indigo" [disabled]="showEditField" [checked]="oProveProduct.ReferenceVatQty!='' && oProveProduct.ReferenceVatQty!=nul">
+                                    <label for="md_checkbox_5">ตามปริมาณต่อ </label>&nbsp;&nbsp;
+                                    <input type="number" [(ngModel)]="oProveProduct.ReferenceVatQty" name="oProveProduct.ReferenceVatQty" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label"></label>
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <label for="">หน่วย </label>&nbsp;&nbsp;
+                                    <select [(ngModel)]="oProveProduct.ReferenceVatUnit" name="oProveProduct.ReferenceVatUnit" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                        <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label"></label>
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <label for="">หน่วยละ (บาท) </label>&nbsp;&nbsp;
+                                    <input type="number" [(ngModel)]="oProveProduct.ReferenceVatValue" name="oProveProduct.ReferenceVatValue" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">ราคาขายปลีกแนะนำ :</label>
+                                <div class="col-lg-4 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="number" [(ngModel)]="oProveProduct.ReferenceRetailPrice" name="oProveProduct.ReferenceRetailPrice" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
+                                <div class="form-group col-lg-4 col-md-7">
+                                    <select [(ngModel)]="oProveProduct.ReferenceRetailUnit" name="oProveProduct.ReferenceRetailUnit" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                        <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">ราคาขายปลีกจริง :</label>
+                                <div class="col-lg-4 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="number" [(ngModel)]="oProveProduct.RetailPrice" name="oProveProduct.RetailPrice" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
+                                <div class="form-group col-lg-4 col-md-7">
+                                    <select [(ngModel)]="oProveProduct.RetailUnit" name="oProveProduct.RetailUnit" class="form-control form-control-sm" [disabled]="showEditField">
+                                        <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">มูลค่าภาษีพิสูจน์ :</label>
+                                <div class="col-lg-4 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="number" [(ngModel)]="oProveProduct.VatProve" name="oProveProduct.VatProve" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ปริมาณของกลางที่เหลือจากการพิสูจน์ -->
+                <div class="card card-outline-bluish unset-radius">
+                    <div class="card-header unset-radius">
+                        <app-card-actions-collapse></app-card-actions-collapse>
+                        <h4 class="card-title m-b-0">ปริมาณของกลางที่เหลือจากการพิสูจน์</h4>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-horizontal">
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">จำนวน :</label>
+                                <div class="col-lg-4 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="number" [(ngModel)]="oProveProduct.QtyBalance" name="oProveProduct.QtyBalance" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <select [(ngModel)]="oProveProduct.QtyBalanceUnit" name="oProveProduct.QtyBalanceUnit" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                        <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">ปริมาณสุทธิ :</label>
+                                <div class="col-lg-4 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="number" [(ngModel)]="oProveProduct.NetVolumeBalance" name="oProveProduct.NetVolumeBalance" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+                                <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <select [(ngModel)]="oProveProduct.NetVolumeBalanceUnit" name="oProveProduct.NetVolumeBalanceUnit" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                        <option *ngFor="let opt of UnitOption" value={{opt.ProductUnitCode}}>{{opt.ProductUnitNameTH}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">หมายเหตุ :</label>
+                                <div class="form-group col-lg-4 col-md-12">
+                                    <input type="text" [(ngModel)]="oProveProduct.Remarks" name="oProveProduct.Remarks" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- รายงานผลการพิสูจน์ -->
+                <div class="card card-outline-bluish unset-radius">
+                    <div class="card-header unset-radius">
+                        <app-card-actions-collapse></app-card-actions-collapse>
+                        <h4 class="card-title m-b-0">รายงานผลการพิสูจน์</h4>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-horizontal">
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :</label>
+                                <div class="col-lg-3 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="text" [(ngModel)]="oProveScience.DeliveryDocNo" name="oProveScience.DeliveryDocNo" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+                                <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :</label>
+                                <div class="form-group input-group  col-lg-5 col-md-8">
+                                    <div style="width:50%">
+                                        <my-date-picker-th name="ProveScienceDate" [options]="myDatePickerOptions" [(ngModel)]="ProveScienceDate" [disabled]="showEditField"></my-date-picker-th>
+                                    </div>
+                                    <!-- <input type="date" class="form-control form-control-sm" [(ngModel)]="ProveScienceDate" name="ProveScienceDate" [disabled]="showEditField"> -->
+
+                                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                                    <input type="time" [(ngModel)]="ProveScienceTime" name="ProveScienceTime" class="form-control form-control-sm" [disabled]="showEditField">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่คำขอ :</label>
+                                <div class="col-lg-3 col-md-7">
+                                    <div class="form-group ">
+                                        <input type="text" [(ngModel)]="oProveScience.RequestNo" name="oProveScience.RequestNo" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+                                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่รายงานผล :</label>
+                                <div class="form-group input-group  col-lg-5 col-md-7">
+                                    <input type="text" [(ngModel)]="oProveScience.ReportNo" name="oProveScience.ReportNo" class="form-control form-control-sm"
+                                        [disabled]="showEditField">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group input-group  col-lg-4 col-md-7">
+                                    <input type="checkbox" [(ngModel)]="IsProveScience" name="IsProveScience" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                                    <label for="md_checkbox_7">ส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ </label>&nbsp;&nbsp;
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-3 col-md-6 control-label">รายงานผลทางเคมีหรือวิทยาศาสตร์ :</label>
+                                <div class="col-lg-9 col-md-6">
+                                    <div class="form-group ">
+                                        <input type="text" [(ngModel)]="oProveProduct.ProveScienceResult" name="oProveProduct.ProveScienceResult" class="form-control form-control-sm"
+                                            [disabled]="showEditField">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-lg-3 col-md-6 control-label">รายงานการตรวจพิสูจน์ของกลาง :</label>
+                                <div class="col-lg-9 col-md-6">
+                                    <div class="form-group ">
+                                        <textarea [(ngModel)]="oProveProduct.ProveResult" name="oProveProduct.ProveResult" cols="" rows="5" class="form-control form-control-sm"
+                                            [disabled]="showEditField"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-2 col-sm-4">
+                    <button type="button" class="btn btn-block btn-themecolor" data-toggle="modal" data-target="#SciencePopup" (click)="ClosePopupProduct()"
+                        [disabled]="showEditField">บันทึก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

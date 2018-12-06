@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, HostListener, Input, ElementRef, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NavigationService } from './navigation.service';
 import { NgForm } from '@angular/forms';
@@ -12,7 +12,8 @@ import { NgForm } from '@angular/forms';
     styleUrls: ['./navigation.component.scss']
 
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
+
     newButton: any;
     printButton: any;
     editButton: any;
@@ -21,9 +22,11 @@ export class NavigationComponent implements OnInit {
     saveButton: any;
     searchBar: any;
     nextPageButton: any;
+    prevPageButton: any;
 
-    nextPage: string;
-    nextPageTitle: string;
+    nextPage: string = '';
+    nextPageTitle: any;
+    prevPageTitle: any;
 
     constructor(
         private router: Router,
@@ -38,26 +41,13 @@ export class NavigationComponent implements OnInit {
         this.saveButton = this.navService.showSaveButton;
         this.searchBar = this.navService.showSearchBar;
         this.nextPageButton = this.navService.showNextPageButton;
+        this.nextPageTitle = this.navService.innerTextNextPageButton;
+
+        this.prevPageButton = this.navService.showPrevPageButton;
+        this.prevPageTitle = this.navService.innerTextPrevPageButton;
     }
 
-    ngOnInit(): void {
-        this.router.events
-            .filter(event => event instanceof NavigationEnd)
-            .map(() => this.activatedRoute)
-            .map(route => {
-                // tslint:disable-next-line:curly
-                while (route.firstChild) route = route.firstChild;
-                return route;
-            })
-            .filter(route => route.outlet === 'primary')
-            .mergeMap(route => route.data)
-            .subscribe((event) => {
-                if (event['nextPage']) {
-                    const next = event['nextPage'];
-                    this.nextPage = next['url'];
-                    this.nextPageTitle = next['title'];
-                }
-            });
+    ngOnInit() {
 
         this.router.events.subscribe((evt) => {
             if (!(evt instanceof NavigationEnd)) {
@@ -75,6 +65,9 @@ export class NavigationComponent implements OnInit {
         });
     }
 
+    ngOnDestroy(): void {
+    }
+
     clickAdvSearch() {
         this.navService.setAdvSearch();
     }
@@ -85,11 +78,15 @@ export class NavigationComponent implements OnInit {
     }
 
     clickNew() {
-        this.router.navigate([`${this.nextPage}`, 'C', 'NEW']);
+        this.navService.setOnNextPage(true);
     }
 
     clickNextPage() {
         this.navService.setOnNextPage(true);
+    }
+
+    clickPrevPage() {
+        this.navService.setOnPrevPage(true);
     }
 
     clickPrint() {
@@ -97,7 +94,7 @@ export class NavigationComponent implements OnInit {
     }
 
     clickEdit() {
-        // set false
+        // // set false
         this.navService.setEditField(false);
         this.navService.setEditButton(false);
         this.navService.setPrintButton(false);
@@ -123,7 +120,7 @@ export class NavigationComponent implements OnInit {
     }
 
     clickSave() {
-        // set true
+        // set event click save
         this.navService.setOnSave(true);
     }
 

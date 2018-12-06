@@ -40,7 +40,8 @@
     </div>
 </div>
 
-<form class="form-horizontal" [formGroup]="revenueForm">
+<!-- รายละเอียดการนำส่งเงินรายได้ -->
+<form class="form-horizontal">
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -48,23 +49,25 @@
         </div>
         <div class="card-body">
 
-
+            
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่นำส่งเงิน :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" class="form-control form-control-sm" value="Auto Generate" readonly>
+                        <input type="text" name="RevenueCode" [(ngModel)]="RevenueCode" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
                 </label>
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="date" formControlName="RevenueDate" class="form-control form-control-sm" formControlName="RevenueDate" placeholder="วว/ดด/ปปปป"
-                        appDatepicker [readOnly]="showEditField">
-
+                    <div style="width:45%">
+                        <my-date-picker-th name="RevenueDate" [(ngModel)]="RevenueDate" 
+                        [ngClass]="{'ng-touched':isRequired}" [disabled]="mode=='R'" 
+                        required ></my-date-picker-th>
+                    </div>
                     <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" formControlName="RevenueTime" class="form-control form-control-sm" [readOnly]="showEditField">
+                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 35px;" class="form-control form-control-sm" [disabled]="mode=='R'">
                 </div>
             </div>
 
@@ -73,14 +76,22 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="RevenueCode" class="form-control form-control-sm" [readOnly]="showEditField" *ngIf="isNumber(obj[key])">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">เรียน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="InformTo" class="form-control form-control-sm" [readOnly]="showEditField">
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="InformTo" name="InformTo" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                    matInput [matAutocomplete]="auto4" (input)="InformToonAutoChange($event.target.value)"
+                    [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                <mat-autocomplete #auto4="matAutocomplete">
+                    <mat-option *ngFor="let infOption of InformTooptions" [value]="infOption.TitleName + infOption.FirstName + ' ' + infOption.LastName">
+                        {{ infOption.TitleName }}{{ infOption.FirstName }} {{ infOption.LastName }}
+                    </mat-option>
+                </mat-autocomplete>
                 </div>
             </div>
 
@@ -89,22 +100,30 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="StationName" class="form-control form-control-sm" [readOnly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="RevenueStation" name="RevenueStation" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                            matInput [matAutocomplete]="auto3" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <mat-autocomplete #auto3="matAutocomplete">
+                            <mat-option *ngFor="let option of options" [value]="option.OfficeName" 
+                                (click)="onAutoSelecteWord(option)" (onSelectionChange)="onAutoSelecteWord(option)">
+                                {{ option.OfficeName }}
+                            </mat-option>
+                        </mat-autocomplete>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="StaffName" class="form-control form-control-sm" [readOnly]="showEditField">
-
-                    <!-- <input type="text" formControlName="StaffName" class="form-control form-control-sm" [disabled]="showEditField" matInput [matAutocomplete]="auto"
-                        (input)="onAutoChange($event.target.value)">
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                        matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of options" [value]="option.name">
-                            {{ option.name }}
+                        <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
+                            (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
+                            {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
                         </mat-option>
-                    </mat-autocomplete> -->
+                    </mat-autocomplete>
                 </div>
             </div>
 
@@ -113,14 +132,14 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="PositionName" class="form-control form-control-sm" [readOnly]="showEditField">
+                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required readonly>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" [readOnly]="showEditField">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required readonly>
                 </div>
             </div>
 
@@ -129,14 +148,22 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" name="" id="" class="form-control form-control-sm" [readOnly]="showEditField">
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffName" name="StaffName" placeholder="พิมพ์ข้อความ" aria-label="Number"
+                            matInput [matAutocomplete]="auto2" (input)="StaffonAutoChange($event.target.value)" (focus)="StaffonAutoFocus($event.target.value)"
+                            [ngClass]="{'ng-touched':isRequired}" required [disabled]="mode=='R'">
+                        <mat-autocomplete #auto2="matAutocomplete">
+                            <mat-option *ngFor="let sOption of Staffoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffonAutoSelecteWord(sOption)" (onSelectionChange)="StaffonAutoSelecteWord(sOption)">
+                                {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                            </mat-option>
+                        </mat-autocomplete>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="OfficeName" class="form-control form-control-sm" [readOnly]="showEditField">
+                    <input type="text" [(ngModel)]="PosStaff" name="PosStaff" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required readonly>
                 </div>
             </div>
             <div class="row">
@@ -144,20 +171,33 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" formControlName="OfficeShortName" class="form-control form-control-sm" [readOnly]="showEditField">
+                        <input type="text" [(ngModel)]="DeptStaff" name="DeptStaff" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}" required readonly>
                     </div>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">สถานะนำส่งเงิน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <select formControlName="RevenueStatus" class="form-control form-control-sm" [disabled]="showEditField">
+                        <!-- [(ngModel)]="RevenueStatus" name="RevenueStatus" -->
+                    <select class="form-control form-control-sm" disabled [(ngModel)]="RevenueStatus" name="RevenueStatus">
+                        <option value="0"></option>
+                        <option value="1">นำส่งเงินรายได้</option>
+                        <option value="2">รับรายการนำส่งเงิน</option>
                     </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 col-md-7 col-sm-8">
+                </div>
+
+                <div class="form-group col-lg-2 col-md-7 col-sm-8">
+                    <button type="button" (click)="ShowRevenueCompare()" class="btn btn-block btn-themecolor" [disabled]="showEditField" >อัพเดตรายการนำส่ง</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- รายการที่ยังไม่นำส่งเงินรายได้ -->
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -173,10 +213,13 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>
+                                            <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();" [disabled]="showEditField">
+                                            <label for="H_0" class="m-0"></label>
+                                        </th>
                                         <th style="text-align: center">ลำดับ</th>
                                         <th>เลขคดีเปรียบเทียบ</th>
-                                        <th>เลขที่ใบเสร็จ</th>
+                                        <th style="text-align: center;">เลขที่ใบเสร็จ</th>
                                         <th>ผู้ต้องหา</th>
                                         <th>ผู้รับชำระค่าปรับ</th>
                                         <th>วันที่ชำระ</th>
@@ -187,112 +230,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr *ngIf="!ListRevenueDetailPaging"><td colspan="11">ไม่พบข้อมูล</td></tr>
+                                    <tr *ngFor="let item of ListRevenueDetailPaging; let i=index;">
                                         <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
+                                            <input type="checkbox" class="filled-in chk-col-indigo" id="ListChK{{i}}" name="ListChK{{i}}" [(ngModel)]="item.IsCheck"
+                                                (change)="checkIfAllChbSelected();" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField" >
+                                            <label [for]="'ListChK'+i" class="m-0"></label>
                                         </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
-                                        </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
-                                        </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
-                                        </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center">
-                                            <input type="checkbox" id="td_1" class="filled-in chk-col-indigo" [checked]="isCheckAll">
-                                            <label for="td_1" class="m-0"></label>
-                                        </td>
-                                        <td style="text-align: center">1</td>
-                                        <td>001/2561</td>
-                                        <td>001/2561</td>
-                                        <td>นายธวัชชัย บิงขุนทด</td>
-                                        <td>น.ส.แพรทิพย์ โครตแสนลี</td>
-                                        <td>10 พ.ค. 2561</td>
-                                        <td>10,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>2,000,000</td>
-                                        <td>6,000,000</td>
+                                        <th style="text-align: center">{{i + 1}}</th>
+                                        <th>{{ item.CompareCode }}</th>
+                                        <th style="text-align: center;">{{ item.ReceiptNo }}</th>
+                                        <th>{{ item.LawBreaker }}</th>
+                                        <th>{{ item.StaffReceip }}</th>
+                                        <th>{{ item.PaymentDate }}</th>
+                                        <th>{{ item.TotalFine | number:0 }}</th>
+                                        <th>{{ item.BribeMoney | number:0 }}</th>
+                                        <th>{{ item.TreasuryMoney | number:0 }}</th>
+                                        <th>{{ item.RewardMoney | number:0 }}</th>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         <div class="card-footer card-footer-unset">
-                            <div class="row justify-content-between m-l-5">
-                                <div clas="col">
-                                    <a class="icn-pagination text-secondary" href="javaScript:void(0)"> |
-                                        << </a>
-                                            <label> หน้าที่
-                                                <select>
-                                                    <option value="1">1</option>
-                                                </select> จาก 1 หน้า</label>
-                                            <a class="icn-pagination m-r-10 text-secondary" href="javaScript:void(0)"> >>| </a>
-                                            รายการที่ 1 - 1 จาก 1 รายการ
-                                </div>
-                                <div class="col col-lg-3 text-right">
-                                    <label>แสดง
-                                        <select>
-                                            <option (click)="numPage = 5">5</option>
-                                            <option (click)="numPage = 10">10</option>
-                                            <option (click)="numPage = 15">15</option>
-                                            <option (click)="numPage = 20">20</option>
-                                        </select> รายการ</label>
-                                </div>
-                            </div>
+                            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+                            </app-pagination-table>
                         </div>
                     </div>
                 </div>
@@ -300,31 +263,31 @@
                 <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">ยอดนำส่งรวม :</label>
                     <div class="form-group col-lg-4 col-md-7">
-                        <input type="text" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="CompareFine" name="CompareFine" class="form-control form-control-sm" readonly>
                     </div>
 
                     <label for="" class="col-lg-2 col-md-4 control-label">จำนวนคดี :</label>
                     <div class="col-lg-4 col-md-7 form-group ">
-                        <input type="text" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="MistreatNo" name="MistreatNo" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินสินบน :</label>
                     <div class="form-group col-lg-4 col-md-7">
-                        <input type="text" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="BribeMoney" name="BribeMoney" class="form-control form-control-sm" readonly>
                     </div>
 
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินรางวัล :</label>
                     <div class="col-lg-4 col-md-7 form-group ">
-                        <input type="text" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="TreasuryMoney" name="TreasuryMoney" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
 
                 <div class="row">
                     <label for="" class="col-lg-2 col-md-4 control-label">เงินส่งคลัง :</label>
                     <div class="form-group col-lg-4 col-md-7">
-                        <input type="text" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="RewardMoney" name="RewardMoney" class="form-control form-control-sm" readonly>
                     </div>
                 </div>
             </form>

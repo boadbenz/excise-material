@@ -9,7 +9,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 
 const routes: Routes = [
     {
@@ -19,9 +21,11 @@ const routes: Routes = [
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
                 { title: 'ค้นหารายการนำส่งเงินรายได้', url: '/income/list' },
-                { title: 'จัดการข้อมูลนำส่งเงินรายได้' }
+                { title: 'จัดการข้อมูลนำส่งเงินรายได้' },
+                
             ],
-            nextPage: { title: '', url: '' }
+            nextPage: { title: '', url: '' },
+            codePage: 'ILG60-07-02-00-00'
         },
         component: ManageComponent
     }
@@ -34,14 +38,17 @@ const routes: Routes = [
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
-        NgbModule.forRoot(),
         RouterModule.forChild(routes),
         CardActionsModule,
-        PrintDocModalModule
+        PrintDocModalModule,
+        MyDatePickerTHModule,
+        MatAutocompleteModule,
+        PaginationTableModule
     ],
     declarations: [
         ManageComponent
     ],
-    providers: [IncomeService]
+    providers: [IncomeService],
+    exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

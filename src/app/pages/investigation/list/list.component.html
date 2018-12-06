@@ -75,7 +75,7 @@
                         <td>{{item.Subject}}</td>
                         <td>{{item.DateStart | date:'dd-MM-yyyy'}}</td>
                         <td>{{item.DateEnd | date:'dd-MM-yyyy'}}</td>
-                        <td>{{item.InvestigationDetail.length}}</td>
+                        <td>{{item.InvestigateDetail?.length}}</td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.InvestigateCode)">
                                 <i class="fa fa-eye fa-lg"></i>

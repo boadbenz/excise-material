@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PrintDocModalComponent } from './print-doc-modal.component';
+import { PrintLawsuitModalComponent } from './print-doc-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  declarations: [PrintDocModalComponent],
-  exports: [PrintDocModalComponent]
+  declarations: [PrintLawsuitModalComponent],
+  exports: [PrintLawsuitModalComponent]
 })
-export class PrintDocModalModule { }
+export class PrintLawsuitModalModule { }
