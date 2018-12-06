@@ -1,3 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+.mat-expansion-panel-content {
+    font: unset !important;
+}
+.swal2-confirm{
+    background: #3085d6 !important;
+}
+
+mat-dialog-container.mat-dialog-container {
+    padding: unset;
+}
+
+input:read-only,
+textarea:read-only,
+select:disabled {
+    color: black !important; 
+    font-size: .9rem !important
+}

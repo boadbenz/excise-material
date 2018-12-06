@@ -80,7 +80,7 @@
             </div>
           </div>
           <div class="text-right">
-            <button type="submit" class="btn waves-effect waves-light text-white btn-search">ค้นข้อมูล</button>
+            <button type="submit" class="btn waves-effect waves-light text-white btn-search" (click)="onAdvSearch()">ค้นข้อมูล</button>
           </div>
         </form>
       </div>
@@ -105,15 +105,15 @@
             <tbody>
               <tr class="footable" *ngFor="let item of listData | slice:0:numberPage; let i = index;">
                 <td>{{i+1}}</td>
-                <td>{{item.arrestCode}}</td>
-                <td>{{item.lawsuitNo}}</td>
-                <td>{{item.proofNo}}</td>
-                <td>{{item.caseNumber}}</td>
-                <td>{{item.titleName}}{{item.firstName}} {{item.lastName}}</td>
-                <td>{{item.lawsuitDate}}</td>
-                <td>{{item.departmentlawName}}</td>
+                <td>{{item.ArrestCode}}</td>
+                <td>{{item.IsOutside === 1 ? 'น ' + item.LawsuitNo: item.LawsuitNo }}</td>
+                <td>{{item.ProveReportNo}}</td>
+                <td>{{item.IsOutside === 1 ? 'น ' + item.CompareCode: item.CompareCode}}</td>
+                <td>{{item.AdjustStaff[0].TitleName}}{{item.AdjustStaff[0].FirstName}} {{item.AdjustStaff[0].LastName}}</td>
+                <td>{{item.CompareDate}}</td>
+                <td>{{item.AdjustStaff[0].OfficeShortName}}</td>
                 <td>
-                  <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.arrestCode)">
+                  <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.CompareID, item.IndictmentID)">
                     <i class="mdi mdi-eye fa-lg"></i>
                   </a>
                 </td>

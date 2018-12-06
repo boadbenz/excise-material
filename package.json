@@ -32,6 +32,7 @@
     "@ngrx/router-store": "4.1.1",
     "@ngrx/store": "^5.2.0",
     "@ngrx/store-devtools": "4.0.0",
+    "@toverux/ngx-sweetalert2": "^4.0.0",
     "@types/jquery": "^2.0.42",
     "core-js": "^2.4.1",
     "jquery": "^3.3.1",
@@ -39,6 +40,7 @@
     "mydatepicker-th": "^0.1.1",
     "mydatepicker-thai": "^0.1.1",
     "rxjs": "^5.1.0",
+    "sweetalert2": "^7.30.0",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {

@@ -337,17 +337,17 @@ export class ManageComponent implements OnInit {
   }
 
   private async onNextPage() {
-    let IndictmentID: string;
+    let indictmentID: string;
     let lawsuitID: string;
     this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
       params => {
         lawsuitID = params.LawsuitID;
-        lawsuitID = params.IndictmentID;
+        indictmentID = params.IndictmentID;
       }
     );
 
     let IsProve = 0;
-    this.lawsuitService.LawsuitArrestGetByCon(lawsuitID).then(res => {
+    this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
 
       IsProve = res[0].LawsuitArrestIndicment[0].IsProve;
       console.log('result====>', res);
@@ -374,6 +374,21 @@ export class ManageComponent implements OnInit {
   }
 
   private async onCancel() {
+
+    // this.preLoaderService.setShowPreloader(true);
+    // let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
+    // let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
+    // let indictmentID: string;
+    // if (IsLawsuitComplete == 0) {
+    //
+    // }else {
+    // // let IsLawsuitComplete = 1;
+    //   this.activeRoute.queryParams.subscribe(
+    //     params => { this.LawsuitID = params.LawsuitID;  indictmentID = params.IndictmentID; }
+    //   );
+    //   let ArrestIndicmentDetail = await this.lawsuitService.GetArrestIndicmentDetailgetByCon(IndictmentDetailID)
+    //   console.log(ArrestIndicmentDetail)
+
     let indictmentID = this.IndictmentID;
     let IsLawsuitComplete = await this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
       return res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
@@ -420,6 +435,49 @@ export class ManageComponent implements OnInit {
       this.navService.setDeleteButton(true);
       this.navService.setEditButton(true);
     }
+
+
+    // let IsLawsuitComplete = 0;
+    // this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
+
+    //   IsLawsuitComplete = res[0].LawsuitArrestIndicment[0].IsLawsuitComplete;
+    // });
+
+    // if (!confirm("ยืนยันการทำรายการหรือไม่")) {
+    //   return;
+    // } else {
+    //   if (IsLawsuitComplete == 1) {
+    //     this.navService.setCancelButton(false);
+    //     this.navService.setSaveButton(false);
+    //     this.navService.setEditField(true);
+    //     this.navService.showFieldEdit.subscribe(async p => {
+    //       this.showEditField = true;
+    //       this.ngOnInit();
+    //     });
+    //   } else {
+    //     this.lawsuitService.GetArrestIndicmentDetailgetByCon(indictmentID).then(result => {
+    //       console.log('result====>', result);
+    //       if (result.LawsuitJudgement) {
+    //         // case 2.1.1
+    //       } else {
+    //         // this.ngOnInit();
+    //         this.navService.setEditField(true);
+    //         this.navService.showFieldEdit.subscribe(async p => {
+    //           this.showEditField = true;
+
+    //           // this.ngOnInit();
+    //         });
+    //       }
+    //     });
+
+    //     this.navService.setEditField(true);
+    //     this.navService.setCancelButton(false);
+    //     this.navService.setSaveButton(false);
+    //   }
+    //   this.navService.setPrintButton(true);
+    //   this.navService.setDeleteButton(true);
+    //   this.navService.setEditButton(true);
+    // }
   }
   private async onDelete() {
     this.preLoaderService.setShowPreloader(true);
@@ -854,7 +912,6 @@ export class ManageComponent implements OnInit {
           this.staff.LawsuitStation = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStation
           this.staff.LawsuitStationCode = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStationCode
           this.staff.StaffID = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0].StaffID
-
           if (res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length != 0 && res[0]['LawsuitArrestIndicment'].length > 0) {
             this.lawsuitForm.controls['LawsuitDocument'].setValue(await this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']))
             let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];

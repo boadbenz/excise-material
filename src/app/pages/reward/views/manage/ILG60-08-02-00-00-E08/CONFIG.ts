@@ -6,10 +6,32 @@ import { IRequestArrestLawsuit } from 'app/pages/reward/interfaces/RequestArrest
 
 export class CONFIG extends ManageConfig {
   @Input()
-  public IndictmentID: number;
+  set inputData(val) {
+    this.inputData$.next(val);
+  }
+  get inputData() {
+    return this.inputData$.asObservable();
+  }
+  public inputData$ = new BehaviorSubject<any>(null);
 
-  public defaultData: IRequestArrestLawsuit;
+  public columns: any = {};
 
+  // = {
+  //   ArrestCode: '',
+  //   OccurrenceDate: '',
+  //   OccurrenceTime: '',
+  //   staffName: '',
+  //   PositionName: '',
+  //   OfficeName: '',
+  //   location: '',
+  //   LawsuitNo: '',
+  //   LawsuitDate: '',
+  //   LawsuitTime: '',
+  //   SubSectionType: '',
+  //   GuiltBaseName: '',
+  //   SectionNo: '',
+  //   PenaltyDesc: ''
+  // }
   public columnsDefault: ColumnsInterface[] = [
     {
       field: 'TitleName',
