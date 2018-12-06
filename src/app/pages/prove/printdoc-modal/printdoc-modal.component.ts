@@ -1,5 +1,10 @@
-import { Component, OnInit,Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProveService } from '../prove.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import swal from 'sweetalert2';
+
 
 @Component({
     selector: 'app-printdoc-modal',
@@ -8,26 +13,49 @@ import { ProveService } from '../prove.service';
 })
 
 export class PrintDocModalComponent implements OnInit {
+    printDoc = [];
 
     isOpen = false;
     isCheckAll = false;
     document = new Array<Document>();
 
     @Input() ProveID: string;
+    @Input() ArrestCode: string;
+    @Input() IndictmentID: string;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
 
     constructor(
         private proveService: ProveService,
-        private _chRef: ChangeDetectorRef
+        private preloader: PreloaderService
     ) { }
 
     ngOnInit() {
-        debugger
+        this.printDoc = [
+            {
+                IsChecked: false,
+                DocName: 'บันทึกการตรวจรับของกลาง',
+                DocType: 0,
+                DocTypeName: 'แบบฟอร์ม'
+            },
+            {
+                IsChecked: false,
+                DocName: 'บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4',
+                DocType: 0,
+                DocTypeName: 'แบบฟอร์ม'
+            }
+        ];
+
         this.proveService.MasDocumentMaingetAll(this.ProveID).then(result => {
-            this.document = new Array<Document>();
-            this.document = result;
+            let pValue = {
+                "IsChecked": false,
+                "DocName": result[0].DocumentName,
+                "DocType": result[0].DocumentType,
+                "DocTypeName": "เอกสารแนบภายใน"
+            };
+
+            this.printDoc.push(pValue);
         })
     }
 
@@ -35,8 +63,43 @@ export class PrintDocModalComponent implements OnInit {
         this.isCheckAll = !this.isCheckAll;
     }
 
-    toggle(e) {
-    //    this.advSearch = !this.advSearch;
+    onPrint(f: any) {
+        let _print = this.printDoc.filter(x => x.IsChecked == true && x.DocType == 0)
+        if (_print.length) {
+            _print.filter(x => x.DocName == "บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4").map(item => {
+                this.preloader.setShowPreloader(true);
+                this.proveService.ProveReport2getByCon(this.ArrestCode, this.ProveID, this.IndictmentID)
+                    .subscribe(x => {
+                        const blob = new Blob([x], { type: "application/pdf" });
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = `${this.ProveID}.pdf`;
+                        link.click();
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            });
+        }
+        else {
+            swal({
+                title: '',
+                text: "กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!",
+                type: 'warning',
+                confirmButtonText: 'ตกลง'
+            });
+            //alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
+        }
     }
 
     dismiss(e: any) {

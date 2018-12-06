@@ -24,7 +24,7 @@ import { MyDatePickerModule } from "mydatepicker";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { IndicmentModalComponent } from '../indictment/indicment-modal.component';
 import { DialogJudgment } from './dialog-judgment'
-
+import { StepWizardModule } from '../../component/step-wizard/step-wizard.module';
 const routes: Routes = [
   {
     path: "",
@@ -61,7 +61,8 @@ const routes: Routes = [
     MatDialogModule,
     MyDatePickerTHModule,
     MyDatePickerModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    StepWizardModule
     // DetailModule,
   ],
   entryComponents: [DialogJudgment],

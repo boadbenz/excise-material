@@ -9,12 +9,15 @@ import { toLocalShort, compareDate, toLocalNumeric, setZeroHours, getDateMyDatep
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
+import { SwalComponent } from '@toverux/ngx-sweetalert2';
 
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit, OnDestroy {
+
+    @ViewChild('alertSwal') private alertSwal: SwalComponent;
 
     months:any[];
     monthsTh:any[];
@@ -60,7 +63,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.21');
+        this.sidebarService.setVersion('0.0.2.26');
         this.paginage.TotalItems = 0;
 
         // this.preLoaderService.setShowPreloader(true);
@@ -108,7 +111,7 @@ export class ListComponent implements OnInit, OnDestroy {
             let edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate);
+                this.showSwal(Message.checkDate, "warning");
                 return false;
             }
 
@@ -130,8 +133,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearchComplete(list) {
-        if (list === undefined) {
-            alert(Message.noRecord)
+        if (!list || list.length==0) {
+            this.showSwal(Message.noRecord, "warning");
             return false;
         }
 
@@ -148,7 +151,7 @@ export class ListComponent implements OnInit, OnDestroy {
                     l.StaffLastName = "";
                     l.StaffOfficeName = "";
                     insert = false;
-                    
+
                     // i.childs.push(l);
                     i.SuspectFullname += "<br/>"+l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
                     break;
@@ -216,6 +219,12 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async pageChanges(event) {
         this.noticeList = await this.notice.slice(event.startIndex - 1, event.endIndex);
+    }
+
+    private showSwal(msg:string, iconType:any){
+        this.alertSwal.text = msg;
+        this.alertSwal.type = iconType;
+        this.alertSwal.show();
     }
 
 }

@@ -28,6 +28,8 @@ import { JudgmentModel } from "../models/judgment";
 import { IMyDpOptions } from "mydatepicker";
 import { MatAutocomplete } from '@angular/material';
 
+import Swal from 'sweetalert2'
+
 import { DialogJudgment } from './dialog-judgment'
 @Component({
   selector: "app-manage",
@@ -60,6 +62,7 @@ export class ManageComponent implements OnInit {
   lawsuitFormNoData: boolean;
   LawsuitStaffOnsave: any = [];
   LawsuitLocationOnSave: any = [];
+  IsLawsuitType: any;
   staff: any = {};
   private getDataFromListPage: any;
   private onPrintSubscribe: any;
@@ -77,7 +80,7 @@ export class ManageComponent implements OnInit {
 
   MasStaff = new Array<MasStaff>();
   lstype = [{ id: '0', name: 'ส่งฟ้องศาล' }, { id: '1', name: 'เปรียบเทียบปรับ', }, { id: '2', name: 'ไม่มีตัวตน', }];
-  lsend = [{ id: '0', name: 'กรมสรรพสามิต', }, { id: '1', name: 'ศาล', }, { id: '2', name: 'พนักงานฝ่ายปกครอง/พนักงายอัยการ', }];
+  lsend = [{ id: '0', name: 'กรมสรรพสามิต', }, { id: '1', name: 'ศาล', }, { id: '2', name: 'พนักงานสอบสวน/พนักงายอัยการ', }];
   staffState: any[] = []
   lawsuitTypeSelected: number;
   suggestions: any[] = [];
@@ -101,7 +104,6 @@ export class ManageComponent implements OnInit {
     this.setShowButton();
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
-    // this.navService.setInnerTextNextPageButton('งานจับกุม')
   }
   public onPrint = (content) => {
     this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
@@ -121,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.20');
+    this.sidebarService.setVersion('0.0.0.22');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     this.navigate_service();
@@ -167,7 +169,7 @@ export class ManageComponent implements OnInit {
         console.log('this.lawsuitForm.valid===>', this.findInvalidControls())
         if (!this.lawsuitForm.valid) {
           this.isRequired = true;
-          alert(Message.checkData)
+          Swal(Message.checkData)
           return false;
         }
         this.onSave();
@@ -212,6 +214,7 @@ export class ManageComponent implements OnInit {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
+    this.navService.setNextPageButton(false);
   }
 
   private getParamFromActiveRoute() {
@@ -241,14 +244,20 @@ export class ManageComponent implements OnInit {
           console.log(PaymentFine[0].IsRequestBribe)
           if (PaymentFine != 0) {
             if (PaymentFine[0].IsRequestBribe == 1) {
-              alert('ไม่สามารถทำรายการได้');
+              Swal({
+                text: "ไม่สามารถทำรายการได้",
+                type: 'warning',
+              })
               console.log("IsRequestBribe == 1")
               return;
             } else {
               if (element['LawsuitType'] != 0) {
                 let compare = await this.lawsuitService.LawsuitComparegetByLawsuitID(this.LawsuitID)
                 if (compare != 0) {
-                  alert('ไม่สามารถทำรายการได้');
+                  Swal({
+                    text: "ไม่สามารถทำรายการได้",
+                    type: 'warning',
+                  })
                   console.log("compare != 0")
                   return;
                 } else {
@@ -272,7 +281,10 @@ export class ManageComponent implements OnInit {
                     this.showEditField = false;
                     return;
                   } else {
-                    alert('ไม่สามารถทำรายการได้');
+                    Swal({
+                      text: "ไม่สามารถทำรายการได้",
+                      type: 'warning',
+                    })
                     this.navService.setEditField(true);
                     this.navService.setEditButton(true);
                     this.navService.setPrintButton(true);
@@ -307,7 +319,10 @@ export class ManageComponent implements OnInit {
           this.showEditField = false;
           return;
         } else {
-          alert('ไม่สามารถทำรายการได้');
+          Swal({
+            text: "ไม่สามารถทำรายการได้",
+            type: 'warning',
+          })
           this.navService.setEditField(true);
           this.navService.setEditButton(true);
           this.navService.setPrintButton(true);
@@ -473,11 +488,11 @@ export class ManageComponent implements OnInit {
       let updDel = await this.lawsuitService.LawsuitArrestupdDeleteLawsuit(this.lawsuitArrestForm.value.ArrestCode, IndictmentID)
       console.log(updDel.IsSuccess == "True")
       if (updDel.IsSuccess == "True") {
-        alert("ลบข้อมูลสำเร็จ")
+        Swal("ลบข้อมูลสำเร็จ")
         this.preLoaderService.setShowPreloader(false);
         this.router.navigate(['/lawsuit/list']);
       } else {
-        alert("ลบข้อมูลไม่สำเร็จ")
+        Swal("ลบข้อมูลไม่สำเร็จ")
         this.preLoaderService.setShowPreloader(false);
         return;
       }
@@ -567,7 +582,10 @@ export class ManageComponent implements OnInit {
           index++;
         });
         if (update.IsSuccess == "True") {
-          alert("บันทึกสำเร็จ")
+          Swal({
+            text: "บันทึกสำเร็จ",
+            type: 'success',
+          })
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           this.navService.setEditField(true);
           this.navService.setEditButton(true);
@@ -577,14 +595,17 @@ export class ManageComponent implements OnInit {
           this.navService.setCancelButton(false);
           console.log(checkComplete)
           checkComplete.length > 0 ? this.modal = this.ngbModel.open(this.indicmetModal, { size: 'lg', centered: true }) : console.log("none")
-        } else {
-          alert("บันทึกไม่สำเร็จ")
+        } else {{}
+          Swal({
+            text: "บันทึกไม่สำเร็จ",
+            type: 'warning',
+          })
         }
 
 
       } else {
         if (update.IsSuccess == "True") {
-          alert("บันทึกสำเร็จ")
+          Swal("บันทึกสำเร็จ")
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           this.navService.setEditField(true);
           this.navService.setEditButton(true);
@@ -595,24 +616,24 @@ export class ManageComponent implements OnInit {
           console.log(checkComplete)
           checkComplete.length > 0 ? this.modal = this.ngbModel.open(this.indicmetModal, { size: 'lg', centered: true }) : console.log("none")
         } else {
-          alert("บันทึกไม่สำเร็จ")
+          Swal("บันทึกไม่สำเร็จ")
         }
       }
     }
     /// save IsLawsuitComplete = 0
     else {
       let lawsuitNo = "";
-      if (Number(this.lawsuitForm.controls['LawsuitNo'].value) > 0 && this.lawsuitForm.controls['LawsuitNoSub'].value > 0) {
+      if (this.lawsuitForm.controls['LawsuitNo'].value && this.lawsuitForm.controls['LawsuitNoSub'].value > 0) {
         lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
       } else {
-        alert("กรุณากรอกเลขที่คดีรับคำกล่าวโทษเป็นตัวเลข")
+        Swal("กรุณากรอกเลขที่คดีรับคำกล่าวโทษไม่ถูกต้อง")
         return;
       }
       let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
       let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
       return await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut).then(async res => {
         if (res.length != 0) {
-          alert("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
+          Swal("เลขคดีรับคำกล่าวโทษซ้ำ กรุณา กรอกใหม่");
           this.preLoaderService.setShowPreloader(false);
           return;
         } else {
@@ -669,7 +690,7 @@ export class ManageComponent implements OnInit {
             json.LawsuitEnd = 2
             await this.lawsuitService.LawsuitinsAll(json).then(async response => {
               if (response.IsSuccess == "True") {
-                alert("บันทึกสำเร็จ");
+                Swal("บันทึกสำเร็จ");
                 console.log('response', response);
               }
             });
@@ -689,7 +710,7 @@ export class ManageComponent implements OnInit {
             // });
             await this.lawsuitService.LawsuitinsAll(json).then(async result => {
               if (result.IsSuccess == "True") {
-                alert("บันทึกสำเร็จ");
+                Swal("บันทึกสำเร็จ");
                 await this.lawsuitService.LawsuitArrestIndicmentupdByCon(this.IndictmentID)
                 // await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
                 let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
@@ -810,7 +831,7 @@ export class ManageComponent implements OnInit {
       LawsuitStation: new FormControl(null, Validators.required),
       AccuserTestimony: new FormControl(null, Validators.required),
       LawsuitNo: new FormControl(null, Validators.required),
-      LawsuitNoSub: new FormControl(null, Validators.required),
+      LawsuitNoSub: new FormControl(this.getNowDate().date.year + 543, Validators.required),
       LawsuitStaff: this.fb.array([this.createStaffForm()]),
       LawsuitTableList: this.fb.array([this.createTableListForm()]),
       LawsuitDocument: this.fb.array([]),
@@ -829,7 +850,6 @@ export class ManageComponent implements OnInit {
       this.IsLawsuitComplete = res[0]['IsLawsuitComplete'];
       this.lawsuitList = res ? res : [];
       this.lawsuitFormNoData = true;
-      console.log('LawsuitArrestGetByCon page reload step 2 in line 983 ', res);
       if (res.length != 0) {
         await this.lawsuitService.MasStaffMaingetAll().then(masstaff => {
           const _masstaff = masstaff;
@@ -888,12 +908,10 @@ export class ManageComponent implements OnInit {
         console.log('IsLawsuitComplete==>', IsLawsuitComplete)
         /// LawsuitComplete status = 1
         if (IsLawsuitComplete == 1) {
-          console.log(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0])
           this.staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0]
           this.staff.LawsuitStation = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStation
           this.staff.LawsuitStationCode = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStationCode
           this.staff.StaffID = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0].StaffID
-          console.log(this.staff)
           if (res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length != 0 && res[0]['LawsuitArrestIndicment'].length > 0) {
             this.lawsuitForm.controls['LawsuitDocument'].setValue(await this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']))
             let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
@@ -906,6 +924,7 @@ export class ManageComponent implements OnInit {
 
             let IsOutsideCheck = false;
             if (isout == 1) {
+              this.IsLawsuitType = " น. ";
               IsOutsideCheck = true;
             }
 
@@ -948,9 +967,25 @@ export class ManageComponent implements OnInit {
             //this.setItemFormArray(staff, 'LawsuitStaff', this.lawsuitForm);
           }
           let IsProve = res[0]['LawsuitArrestIndicment'][0].IsProve;
+          console.log(IsProve)
+          if (IsProve == 0) {
+            var countType = 0;
+            await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].forEach(item => {
+              if (item.LawsuitType == 1) { countType++; }
+            })
+            if (countType > 0) {
+              this.navService.setNextPageButton(true);
+              this.navService.setInnerTextNextPageButton('เปรียบเทียบปรับ')
+            }else {
+              this.navService.setNextPageButton(false);
+            }
+          } else {
+            this.navService.setNextPageButton(true);
+            this.navService.setInnerTextNextPageButton('งานพิสูจน์')
+          }
+
           let IsLawsuitComplete = res[0]['LawsuitArrestIndicment'][0].IsLawsuitComplete;
           let arrList = [];
-          console.log('resposne ise=====>', res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
           await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].map(item => {
             this.LawsuitTableListShow = true;
             item['LawsuitArrestLawbreaker'].map(arrestLaw => {
@@ -1020,7 +1055,6 @@ export class ManageComponent implements OnInit {
           let isProve = res[0]['LawsuitArrestIndicment'][0]['IsProve'];
           let lawsuitType = res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'];
           console.log('+++IsLawsuitComplete', IsLawsuitComplete);
-          console.log(arrList)
 
           /// LawsuitComplete status = 0
         } else {
@@ -1028,19 +1062,12 @@ export class ManageComponent implements OnInit {
           let IsProve = res[0]['LawsuitArrestIndicment'][0].IsProve;
           let IsLawsuitComplete = res[0]['LawsuitArrestIndicment'][0].IsLawsuitComplete;
           let arrList = [];
-          console.log('LawsuitArrestIndicment', res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'])
           await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].map(item => {
-
             this.LawsuitTableListShow = true;
             item['LawsuitArrestLawbreaker'].map(arrestLaw => {
               const middleName = (arrestLaw.LawbreakerMiddleName) ? arrestLaw.LawbreakerMiddleName : '';
-              // item.LawsuitType = 1
-              // item.LawsuitEnd = 1
-
               item.lawBrakerFullName = `${arrestLaw.LawbreakerTitleName ? arrestLaw.LawbreakerTitleName : ""} ${arrestLaw.LawbreakerFirstName} ${middleName} ${arrestLaw.LawbreakerLastName}`
-              console.log(item)
             });
-
             /// add LawsuitTableList
             if (item.LawsuitArrestProductDetail != null && item.LawsuitArrestProductDetail.length) {
               item.ProductDesc = item.LawsuitArrestProductDetail.ProductProductDesc;
@@ -1070,8 +1097,6 @@ export class ManageComponent implements OnInit {
               'IsLawsuitComplete': IsLawsuitComplete,
             };
             /// add EntityType
-            console.log('item EntityType===>', item.LawsuitArrestLawbreaker[0])
-
             if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].EntityType == 1) {
               a.EntityType = 'บุคคลธรรมดา';
             } else if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].EntityType == 2) {
@@ -1084,7 +1109,6 @@ export class ManageComponent implements OnInit {
               a.LawbreakerType = 'ต่างชาติ';
             }
             /// add LawsuitNoRef
-            console.log('item.LawsuitArrestLawbreaker[0]===>', item.LawsuitArrestLawbreaker[0])
             if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 1) {
               a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].IDCard;
             } else if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].LawbreakerType == 0) {
@@ -1096,15 +1120,16 @@ export class ManageComponent implements OnInit {
             }
             arrList.push(a)
           });
-
+          // Staff Default
           this.setItemFormArray(arrList, 'LawsuitTableList', this.lawsuitForm);
-          /// load  MasStaffMaingetAll and  MasOfficeMaingetAll for full text search
-
+          // let staffAreest = this.masStaffList.find(element => {
+          //   return element.StaffCode = res[0]['LawsuitArrestStaff'][0].StaffCode;
+          // })
+          // this.onChangeFullnameReslut(staffAreest)
           console.log('IsLawsuitComplete ==== 0')
         }
 
       } else {
-        console.log(res.length)
         this.lawsuitFormNoData = false
       }
     });
@@ -1113,7 +1138,6 @@ export class ManageComponent implements OnInit {
   }
   async setlawsuitForm(res) {
     /// get IsLawsuit check box (IsLawsuitCheck)
-    console.log(res)
 
     let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
     let IsLawsuitCheck = true;
@@ -1128,8 +1152,11 @@ export class ManageComponent implements OnInit {
     let IsOutsideCheck = true;
     if (isout == 1) {
       IsOutsideCheck = true;
+      this.IsLawsuitType = " น. ";
     } else {
       IsOutsideCheck = false
+      this.IsLawsuitType = " น. ";
+
     }
 
     ///set lawsuitForm
@@ -1190,7 +1217,6 @@ export class ManageComponent implements OnInit {
     }
   }
   onChangeFullnameReslut(text) {
-    console.log(text)
     this.LawsuitStaffOnsave = text
     this.staff.FirstName = text.FirstName
     this.staff.LastName = text.LastName
@@ -1231,12 +1257,30 @@ export class ManageComponent implements OnInit {
   }
   changeLawsuitEnd(value, index) {
     let array = this.lawsuitForm.get('LawsuitTableList') as FormArray;
+    if (value == 0) {
+      this.lsend = [
+        { id: '1', name: 'ศาล', },
+        { id: '2', name: 'พนักงานสอบสวน/พนักงายอัยการ', }
+      ];
+    } else if (value == 1) {
+      this.lsend = [
+        { id: '0', name: 'กรมสรรพสามิต', },
+      ];
+    } else if (value == 2) {
+      this.lsend = [
+        { id: '2', name: 'พนักงานสอบสวน/พนักงายอัยการ', }
+      ];
+    }
     value == 0 ? array.controls[index].get('LawsuitEnd').setValue(1) : array.controls[index].get('LawsuitEnd').setValue(0);
   }
   IsOutsideCheckReq() {
     if (this.lawsuitForm.controls['IsOutsideCheck'].value === true) {
+      this.IsLawsuitType = " น. ";
+      this.lawsuitForm.controls['LawsuitNo'].setValue("น.");
       this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
       this.lawsuitForm.controls['IsLawsuitCheck'].setValue(false);
+    } else {
+      this.IsLawsuitType = "";
     }
   }
   public validateData = function (data) {

@@ -18,6 +18,8 @@ import { ProveService } from '../../prove/prove.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MainMasterService } from '../../../services/main-master.service';
 
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
+
 const routes: Routes = [
     {
         path: '',
@@ -48,7 +50,8 @@ const routes: Routes = [
         ModalLawbreakerModule,
         PrintDocModalModule,
         MyDatePickerTHModule,
-        NoticeSuspectModalModule
+        NoticeSuspectModalModule,
+        SweetAlert2Module.forRoot()
     ],
     declarations: [
         ManageComponent

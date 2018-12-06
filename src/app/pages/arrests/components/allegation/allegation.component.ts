@@ -22,6 +22,7 @@ import { Acceptability } from '../../models';
 import { LoaderService } from 'app/core/loader/loader.service';
 // import { setViewLawbreaker } from '../allegation-detail-modal/allegation-detail-modal.component';
 import swal from 'sweetalert2'
+import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
 
 @Component({
   selector: 'app-allegation',
@@ -273,11 +274,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
           indict.ArrestIndicmentDetail.map(d => {
             let law = d.ArrestLawbreaker.find(l => l.LawbreakerID == d.LawbreakerID);
-            // this.addArrestLawbreaker(setViewLawbreaker(law));
+            this.addArrestLawbreaker(setViewLawbreaker(law));
           });
-          // indictDetail.ArrestLawbreaker.map(law => {
-          //   this.addArrestLawbreaker(setViewLawbreaker(law));
-          // })
         }
       })
       .catch((error) => this.catchError(error));

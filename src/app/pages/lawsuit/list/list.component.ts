@@ -12,7 +12,7 @@ import { PreloaderService } from "../../../shared/preloader/preloader.component"
 import { SidebarService } from "../../../shared/sidebar/sidebar.component";
 import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { IMyDpOptions } from 'mydatepicker';
-
+import Swal from 'sweetalert2'
 @Component({
   selector: "app-list",
   templateUrl: "./list.component.html",
@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.20');
+    this.sidebarService.setVersion('0.0.0.22');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
     // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
@@ -53,16 +53,19 @@ export class ListComponent implements OnInit, OnDestroy {
         this.onSearch(Textsearch);
       }
     });
+    
     this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
       if (status) {
         await this.navService.setOnNextPage(false);
         this.router.navigate(['/notice/manage', 'C', 'NEW']);
       }
     });
+    this.navService.showAdvSearch.next(true);
     this.preLoaderService.setShowPreloader(false);
   }
 
   ngOnDestroy() {
+    this.navService.showAdvSearch.next(false);
     this.subOnSearchByKeyword.unsubscribe();
     this.subSetNextPage.unsubscribe();
   }
@@ -79,25 +82,28 @@ export class ListComponent implements OnInit, OnDestroy {
   };
 
   onDateChanged(event) {
-      setTimeout(() => {
-        if (this.advForm.value.LawsuitDateFrom.epoc > this.advForm.value.LawsuitDateTo.epoc) {
-          this.advForm.controls['LawsuitDateTo'].setValue({
-            date: this.advForm.value.LawsuitDateFrom.date,
-            epoc: this.advForm.value.LawsuitDateFrom.epoc,
-            formatted: this.advForm.value.LawsuitDateFrom.formatted,
-            jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
-          });
-          console.log(this.advForm.controls['LawsuitDateTo'])
-          alert(Message.checkDate);
-          return;
+    setTimeout(() => {
+      if (this.advForm.value.LawsuitDateFrom.epoc > this.advForm.value.LawsuitDateTo.epoc) {
+        this.advForm.controls['LawsuitDateTo'].setValue({
+          date: this.advForm.value.LawsuitDateFrom.date,
+          epoc: this.advForm.value.LawsuitDateFrom.epoc,
+          formatted: this.advForm.value.LawsuitDateFrom.formatted,
+          jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
+        });
+        console.log(this.advForm.controls['LawsuitDateTo'])
+        Swal({
+          text: Message.checkDate,
+          type: 'warning',
+        })
+        return;
+      }
+      else {
+        this.LawsuitDateFromOptions = {
+          dateFormat: 'dd/mmm/yyyy',
+          disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 }
         }
-        else {
-          this.LawsuitDateFromOptions = {
-            dateFormat: 'dd/mmm/yyyy',
-            disableSince: { year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1 }
-          }
-        }
-      }, 100);
+      }
+    }, 100);
   }
   onDateFromChanged(event) {
     setTimeout(() => {
@@ -108,7 +114,10 @@ export class ListComponent implements OnInit, OnDestroy {
           formatted: this.advForm.value.LawsuitDateFrom.formatted,
           jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
         });
-        alert(Message.checkDate);
+        Swal({
+          text: Message.checkDate,
+          type: 'warning',
+        })
         return;
       }
       else if (!event) {
@@ -120,7 +129,7 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }, 100);
   }
-  
+
   async onSearch(Textsearch: any) {
     this.preLoaderService.setShowPreloader(true);
     await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
@@ -136,7 +145,10 @@ export class ListComponent implements OnInit, OnDestroy {
       const sDateCompare = new Date(form.value.LawsuitDateFrom.jsdate);
       const eDateCompare = new Date(form.value.LawsuitDateTo.jsdate);
       if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-        alert(Message.checkDate);
+        Swal({
+          text: Message.checkDate,
+          type: 'warning',
+        })
         return false;
       }
       // console.log('form.value.LawsuitDateFrom ===>', form.value.LawsuitDateFrom)
@@ -162,7 +174,10 @@ export class ListComponent implements OnInit, OnDestroy {
   private onSearchComplete(list: any) {
     /* Alert When No Data To Show */
     if (!list.length) {
-      alert(Message.noRecord);
+      Swal({
+        text: Message.noRecord,
+        type: 'warning',
+      })
       this.resultsPerPage = [];
       return false;
     }
@@ -191,7 +206,7 @@ export class ListComponent implements OnInit, OnDestroy {
     } else {
       item.LawsuitID = '';
     }
-    if(item.LawsuitID != "") {
+    if (item.LawsuitID != "") {
       this.router.navigate(['/lawsuit/manage', 'R'], {
         queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
       });
@@ -200,8 +215,8 @@ export class ListComponent implements OnInit, OnDestroy {
         queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
       });
     }
-      
-    
+
+
 
   }
 

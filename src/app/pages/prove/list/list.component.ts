@@ -11,6 +11,7 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
@@ -63,10 +64,11 @@ export class ListComponent implements OnInit {
     }
 
     async ngOnInit() {
+        this.sidebarService.setVersion('Prove 0.0.0.21');
+
+        //this.advSearch.next(true);
         this.DeliveryDateTo = null;
         this.ProveDateTo = null;
-
-        this.sidebarService.setVersion('Prove 0.0.0.13');
 
         //this.preLoaderService.setShowPreloader(true);
         //this.onSearch({ Textsearch: "" });
@@ -89,6 +91,16 @@ export class ListComponent implements OnInit {
         this.subOnSearch.unsubscribe();
     }
 
+    ShowAlertNoRecord()
+    {
+        swal({
+            title: '',
+            text: Message.noRecord,
+            type: 'warning',
+            confirmButtonText : 'ตกลง'
+        });
+    }
+
     async onSearch(Textsearch: any) {
         this.preLoaderService.setShowPreloader(true);
 
@@ -97,7 +109,8 @@ export class ListComponent implements OnInit {
 
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord);
+            this.ShowAlertNoRecord();
+            //alert(Message.noRecord);
             this.ListProve = [];
             this.preLoaderService.setShowPreloader(false);
         });
@@ -158,7 +171,8 @@ export class ListComponent implements OnInit {
             this.onSearchComplete(list);
             this.preLoaderService.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            alert(Message.noRecord);
+            //alert(Message.noRecord);
+            this.ShowAlertNoRecord();
             this.preLoaderService.setShowPreloader(false);
         });
     }
@@ -167,7 +181,8 @@ export class ListComponent implements OnInit {
         this.Prove = [];
 
         if (!list.length) {
-            alert(Message.noRecord);
+            this.ShowAlertNoRecord();
+            //alert(Message.noRecord);
             this.ListProve = [];
 
             return false;
@@ -193,11 +208,15 @@ export class ListComponent implements OnInit {
             item.ProveOneDeptScience = "";
 
             if(vProveStaff.length > 0){
-                item.ProveOneStaff = vProveStaff[0].TitleName + vProveStaff[0].FirstName + " " + vProveStaff[0].LastName;
+                item.ProveOneStaff = `${vProveStaff[0].TitleName == 'null' || vProveStaff[0].TitleName == null ? '' : vProveStaff[0].TitleName}` 
+                                   + `${vProveStaff[0].FirstName == 'null' || vProveStaff[0].FirstName == null ? '' : vProveStaff[0].FirstName}` + " " 
+                                   + `${vProveStaff[0].LastName == 'null' || vProveStaff[0].LastName == null ? '' : vProveStaff[0].LastName}`;
             }
 
             if(vProveStaffScience.length > 0){
-                item.ProveOneStaffScience = vProveStaffScience[0].TitleName + vProveStaffScience[0].FirstName + " " + vProveStaffScience[0].LastName;
+                item.ProveOneStaffScience = `${vProveStaffScience[0].TitleName == 'null' || vProveStaffScience[0].TitleName == null ? '' : vProveStaffScience[0].TitleName}` 
+                                          + `${vProveStaffScience[0].FirstName == 'null' || vProveStaffScience[0].FirstName == null? '' : vProveStaffScience[0].FirstName}` + " " 
+                                          + `${vProveStaffScience[0].LastName == 'null' || vProveStaffScience[0].LastName == null ? '' : vProveStaffScience[0].LastName}`;
                 item.ProveOneDeptScience =  vProveStaffScience[0].OfficeShortName;
             }
         })
@@ -252,7 +271,8 @@ export class ListComponent implements OnInit {
             const edate = `${this._dateDeliveryStartTo.year}-${this._dateDeliveryStartTo.month}-${this._dateDeliveryStartTo.day}`;
 
             if (!compareDate(new Date(sdate) , new Date(edate))) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning');
+                //alert(Message.checkDate)
                 setTimeout(() => {
                     this.DeliveryDateTo = { date: this._dateDeliveryStartFrom };
                 }, 0);
@@ -276,7 +296,8 @@ export class ListComponent implements OnInit {
             const ePdate = `${this._dateProveStartTo.year}-${this._dateProveStartTo.month}-${this._dateProveStartTo.day}`;
 
             if (!compareDate(new Date(sPdate), new Date(ePdate))) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning');
+                //alert(Message.checkDate)
                 setTimeout(() => {
                     this.ProveDateTo = { date: this._dateProveStartFrom };
                 }, 0);

@@ -206,7 +206,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     ILG60_03_02_00_00_E18 = this.manageConfig.ILG60_03_02_00_00_E18;
     ILG60_03_02_00_00_E20 = this.manageConfig.ILG60_03_02_00_00_E20;
     ILG60_03_02_00_00_E21 = this.manageConfig.ILG60_03_02_00_00_E21;
-    ILG60_03_03_00_00_E15 = this.manageConfig.ILG60_03_03_00_00_E15;
     ILG60_03_02_00_00_E25 = this.manageConfig.ILG60_03_02_00_00_E25;
     ILG60_03_02_00_00_E28 = this.manageConfig.ILG60_03_02_00_00_E28;
 
@@ -421,7 +420,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ILG60_03_02_00_00_E18.next(true);
         this.ILG60_03_02_00_00_E20.next(true);
         this.ILG60_03_02_00_00_E21.next(true);
-        this.ILG60_03_03_00_00_E15.next(true);
         this.ILG60_03_02_00_00_E25.next(true);
         this.ILG60_03_02_00_00_E28.next(true);
     }
@@ -849,30 +847,29 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
-        lawbreaker.RowId = 1;
-        lawbreaker.IsModify = 'c';
+    // addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
+    //     lawbreaker.RowId = 1;
+    //     lawbreaker.IsModify = 'c';
 
-        this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
-        let sort = this.sortFormArray(this.ArrestLawbreaker.value);
-        sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
-            .catch((error) => this.catchError(error));
-    }
+    //     this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
+    //     let sort = this.sortFormArray(this.ArrestLawbreaker.value);
+    //     sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
+    //         .catch((error) => this.catchError(error));
+    // }
 
     addAllegation() {
-        
-        // let arrest = this.arrestFG.value as fromModels.Arrest;
-        // this.store.dispatch(new fromStore.CreateArrest(arrest));
-        // this.router.navigate(
-        //     [`arrest/allegation`, 'C'],
-        //     {
-        //         queryParams: {
-        //             arrestMode: this.mode,
-        //             arrestCode: this.arrestCode,
-        //             indictmentId: '',
-        //             guiltbaseId: ''
-        //         }
-        //     });
+        let arrest = this.arrestFG.value as fromModels.Arrest;
+        this.store.dispatch(new fromStore.CreateArrest(arrest));
+        this.router.navigate(
+            [`arrest/allegation`, 'C'],
+            {
+                queryParams: {
+                    arrestMode: this.mode,
+                    arrestCode: this.arrestCode,
+                    indictmentId: '',
+                    guiltbaseId: ''
+                }
+            });
     }
 
     viewAllegation(indictmentId: number, guiltbaseId: number) {

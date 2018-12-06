@@ -7,13 +7,12 @@ import { MasOfficeModel } from 'app/models/mas-office.model';
 import { IRequestCommand } from '../../interfaces/RequestCommand';
 import { MasStaffModel } from 'app/models';
 import { IILG60_08_03_00_00_E08_DATA } from './ILG60-08-03-00-00-E08/CONFIG';
-
 export class BribeConfig extends RewardHelper {
   public formGroup: FormGroup;
   public OfficeCode = '102546';
   public RequestBribeRewardID: number;
 
-  public mode$ = new BehaviorSubject<string>('');
+  public mode: string;
   public ArrestCode$ = new BehaviorSubject<string>('');
   public RequestBribeID$ = new BehaviorSubject<number>(null);
   public RequestBribeRewardID$ = new BehaviorSubject<number>(null);
@@ -63,4 +62,17 @@ export class BribeConfig extends RewardHelper {
   // Icon
   public ILG60_08_03_00_00_E18_DISABLED$ = new BehaviorSubject<boolean>(false); // Icon ค้นหาที่อยู่เอกสารแนบ […]
   public ILG60_08_03_00_00_E19_DISABLED$ = new BehaviorSubject<boolean>(false); // [ลบ]
+
+  public form_bribe_detai = {
+    check: [true],
+    LawbreakerName: [''],
+    FineTypeName: [''],
+    PaymentDate: [''],
+    ReceiptBookNo: [''],
+    Receipt: [''],
+    PaymentPeriodNo: [''],
+    PaymentFine: [''],
+    BribeMoney: [''],
+    NetBribeMoney: ['']
+  };
 }

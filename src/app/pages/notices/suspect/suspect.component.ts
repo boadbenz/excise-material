@@ -18,6 +18,7 @@ import { getDateMyDatepicker, setDateMyDatepicker, MyDatePickerOptions, convertD
 import { Message } from 'app/config/message';
 import { ImageType } from 'app/config/imageType';
 import { MainMasterService } from '../../../services/main-master.service';
+import { SwalComponent } from '@toverux/ngx-sweetalert2';
 
 @Component({
     selector: 'app-suspect',
@@ -25,6 +26,8 @@ import { MainMasterService } from '../../../services/main-master.service';
     styleUrls: ['./suspect.component.scss']
 })
 export class SuspectComponent implements OnInit, OnDestroy {
+    @ViewChild('alertSwal') private alertSwal: SwalComponent;
+    
     months:any[];
 
     constructor(
@@ -211,7 +214,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
                 if (!this.SuspectFG.valid) {
                     this.isRequired = true;
-                    alert(Message.checkData);
+                    this.showSwal(Message.checkData, "warning");
                     return false;
                 }
 
@@ -333,13 +336,13 @@ export class SuspectComponent implements OnInit, OnDestroy {
         }, () => { success = false; });
 
         if (success) {
-            alert(Message.saveComplete);
+            this.showSwal(Message.saveComplete, "success");
             this.router.routeReuseStrategy.shouldReuseRoute = function() {
               return false;
             };
             this.router.navigateByUrl('/notice/suspect/R/'+suspectID);
         } else {
-            alert(Message.saveFail);
+            this.showSwal(Message.saveFail, "error");
         }
 
         this.preloader.setShowPreloader(false);
@@ -369,10 +372,10 @@ export class SuspectComponent implements OnInit, OnDestroy {
         }, () => { IsSuccess = false; })
 
         if (IsSuccess) {
-            alert(Message.saveComplete);
+            this.showSwal(Message.saveComplete, "success");
             this.GetByCon(this.suspectId);
         } else {
-            alert(Message.saveFail);
+            this.showSwal(Message.saveFail, "error");
         }
         // Set Preloader
         this.preloader.setShowPreloader(false);
@@ -520,7 +523,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
         ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
 
         if (!isMatch) {
-            alert(Message.checkImageType)
+            this.showSwal(Message.checkImageType, "warning");
             return
         }
 
@@ -534,5 +537,11 @@ export class SuspectComponent implements OnInit, OnDestroy {
         };
 
         reader.readAsDataURL(file);
+    }
+
+    private showSwal(msg:string, iconType:any){
+        this.alertSwal.text = msg;
+        this.alertSwal.type = iconType;
+        this.alertSwal.show();
     }
 }

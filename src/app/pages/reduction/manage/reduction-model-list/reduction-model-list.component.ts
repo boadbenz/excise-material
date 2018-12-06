@@ -12,39 +12,13 @@ export class ReductionModelListComponent implements OnInit {
    * Data ID from parent page
    */
   @Input() id: any;
+  @Input() listData: any[] = [];
 
   /**
    * Sent something to parent
    */
   @Output() result: EventEmitter<number> = new EventEmitter();
   @Output() d = new EventEmitter();
-
-  public listTest = [
-    {
-      fullName: 'นายธวัชชัย บิงขุนทด',
-      oldFine: '1,400,000.00',
-      newFine: '',
-      dateFine: '10-ม.ค.-2560',
-      payment: 'เงินสด',
-      receiptNo: '33',
-      receiptRef: '001/2561',
-      statusCase: 'รับรายการนำส่ง',
-      typeCase: 'เปรียบเทียบคดี',
-      period: '1/1'
-    },
-    {
-      fullName: 'นายสุชาติ ปัญโญใหญ่',
-      oldFine: '1,400,000.00',
-      newFine: '',
-      dateFine: '10-ม.ค.-2560',
-      payment: 'เงินสด',
-      receiptNo: '34',
-      receiptRef: '001/2561',
-      statusCase: 'รับรายการนำส่ง',
-      typeCase: 'เปรียบเทียบคดี',
-      period: '1/1'
-    },
-  ];
 
   // decrear form angular
   public checkBoxForm: FormGroup;
@@ -53,13 +27,15 @@ export class ReductionModelListComponent implements OnInit {
   public selected: any[] = [];
 
   constructor(private formBuilder: FormBuilder) {
-    // Create a new array with a form control for each order
-    const controls = this.listTest.map(c => new FormControl(false));
-    this.checkNo = 0;
-    this._formBuilderGroup(controls);
   }
 
   ngOnInit() {
+    console.log(this.id);
+    console.log(this.listData);
+    // Create a new array with a form control for each order
+    const controls = this.listData.map(c => new FormControl(false));
+    this.checkNo = 0;
+    this._formBuilderGroup(controls);
   }
 
   public activeModel() {
@@ -76,28 +52,29 @@ export class ReductionModelListComponent implements OnInit {
   }
 
   private _checked() {
-    const selected = this.checkBoxForm.value.listTest
-      .map((v, i) => v ? this.listTest[i].receiptNo : null)
+    const selected = this.checkBoxForm.value.listData
+      .map((v, i) => v ? this.listData[i].receiptNo : null)
       .filter(v => v !== null);
 
     return selected;
   }
 
   private _formBuilderGroup(controls) {
+    console.log(controls);
     this.checkBoxForm = this.formBuilder.group({
-      listTest: new FormArray(controls)
+      listData: new FormArray(controls)
     });
   }
 
   public checkAll(value: boolean) {
     if (!value) {
-      this.checkNo = this.listTest.length;
+      this.checkNo = this.listData.length;
     } else {
       this.checkNo = 0;
     }
 
     // Create a new array with a form control for each order
-    const controls = this.listTest.map(c => new FormControl(false));
+    const controls = this.listData.map(c => new FormControl(false));
 
     const checkAllControls = controls.map(control => {
       control.setValue(!value);
@@ -116,7 +93,7 @@ export class ReductionModelListComponent implements OnInit {
       this.checkNo -= 1;
     }
 
-    if (this.checkNo === this.listTest.length) {
+    if (this.checkNo === this.listData.length) {
       this.allChecked = true;
     } else {
       this.allChecked = false;

@@ -18,7 +18,7 @@ import { ProveDocument } from '../proveDoc';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
-//import swal from 'sweetalert2';
+import swal from 'sweetalert2'
 
 declare var $: any;
 
@@ -120,7 +120,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     PosScience: string;             // ตำแหน่งผู้พิสูจน์
     DeptScience: string;            // หน่วยงานผู้พิสูจน์
     Command: string                 // คำสั่ง
-
+    SummaryProveResult: string;     // สรุปผลการตรวจพิสูจน์
 
 
     // **************************************
@@ -163,7 +163,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     oProveDeliverProduct: ProveDeliverProduct;
     oProveDocument: ProveDocument;
 
-    //swal = require('sweetalert2');
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
@@ -273,7 +272,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSave(false);
 
                 if (this.IsDelivery == false) {
-                    alert(Message.checkDelivery);
+                    this.ShowAlertWarning(Message.checkDelivery);
+
+                    //alert(Message.checkDelivery);
 
                     return false;
                 }
@@ -288,7 +289,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         || this.ProveStaffName == ""   // ผู้ตรวจรับ
                     ) {
                         this.isRequired = true;
-                        alert(Message.checkData);
+                        this.ShowAlertWarning(Message.checkData);
+                        //alert(Message.checkData);
 
                         return false;
                     }
@@ -307,7 +309,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 // || this.Command == ""                // คำสั่ง
                             ) {
                                 this.isRequired = true;
-                                alert(Message.checkData);
+                                this.ShowAlertWarning(Message.checkData);
+                                //alert(Message.checkData);
 
                                 return false;
                             }
@@ -319,7 +322,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 //|| this.Command == ""               // คำสั่ง
                             ) {
                                 this.isRequired = true;
-                                alert(Message.checkData);
+                                this.ShowAlertWarning(Message.checkData);
+                                //alert(Message.checkData);
 
                                 return false;
                             }
@@ -338,7 +342,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                             || this.StaffSendName == ""   // ผู้นำส่ง
                         ) {
                             this.isRequired = true;
-                            alert(Message.checkData);
+                            this.ShowAlertWarning(Message.checkData);
+                            //alert(Message.checkData);
 
                             return false;
                         }
@@ -374,31 +379,42 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 this.navService.setOnCancel(false);
 
-                if (confirm(Message.confirmAction)) {
-                    if (this.mode === 'C') {
-                        this.router.navigate(['/prove/list']);
-                    } else if (this.mode === 'R') {
-                        // set false
-                        this.navService.setSaveButton(false);
-                        this.navService.setCancelButton(false);
-                        // set true
-                        this.navService.setPrintButton(true);
-                        this.navService.setEditButton(true);
-                        this.navService.setDeleteButton(true);
-                        this.navService.setEditField(true);
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'ยืนยัน',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.value) {
+                        if (this.mode === 'C') {
+                            this.router.navigate(['/prove/list']);
+                        } else if (this.mode === 'R') {
+                            // set false
+                            this.navService.setSaveButton(false);
+                            this.navService.setCancelButton(false);
+                            // set true
+                            this.navService.setPrintButton(true);
+                            this.navService.setEditButton(true);
+                            this.navService.setDeleteButton(true);
+                            this.navService.setEditField(true);
 
-                        await this.ProveArrestgetByCon();
+                            this.ProveArrestgetByCon();
+                        }
                     }
-                }
-                else {
-                    this.navService.setSaveButton(true);
-                    this.navService.setCancelButton(true);
+                    else {
+                        this.navService.setSaveButton(true);
+                        this.navService.setCancelButton(true);
 
-                    this.navService.setPrintButton(false);
-                    this.navService.setEditButton(false);
-                    this.navService.setDeleteButton(false);
-                    this.navService.setEditField(false);
-                }
+                        this.navService.setPrintButton(false);
+                        this.navService.setEditButton(false);
+                        this.navService.setDeleteButton(false);
+                        this.navService.setEditField(false);
+                    }
+                })
             }
         });
 
@@ -424,14 +440,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
 
         this.oProve.DeliveryDate = cDateDelivery;
-
-        if (this.IsOutside == true) {
-            this.oProve.ProveReportNo = "น." + this.DeliveryDocNo + "/" + this.ProveYear;
-        }
-        else {
-            this.oProve.ProveReportNo = this.DeliveryDocNo + "/" + this.ProveYear;
-        }
-
+        this.oProve.ProveReportNo = this.DeliveryDocNo + "/" + this.ProveYear;
         this.oProve.ProveDate = cProveDate;
         this.oProve.IndictmentID = this.IndictmentID;
         this.oProve.Command = this.Command;
@@ -528,6 +537,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                             item.ProveScienceID = ProveScienceID;
                         }
 
+                        item.ReferenceDate = "";
+                        item.VatProve = item.VatProve.replace(',', '');
+
                         await this.proveService.ProveProductinsAll(item).then(async pRes => {
 
                             if (!pRes.IsSuccess) {
@@ -565,7 +577,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
                 if (isSuccess) {
-                    alert(Message.saveComplete);
+                    this.ShowAlertSuccess(Message.saveComplete);
+                    //alert(Message.saveComplete);
                     this.onComplete();
                     this.getProveByID();
                     this.preloader.setShowPreloader(false);
@@ -573,7 +586,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
             }
             else {
-                alert(Message.saveFail);
+                this.ShowAlertError(Message.saveFail);
+                //alert(Message.saveFail);
             }
         }, (error) => { console.error(error); return false; });
     }
@@ -642,6 +656,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                 else {
                     item.ProveScienceID = "";
                 }
+
+                item.ReferenceDate = "";
+                item.VatProve = item.VatProve.replace(',', '');
 
                 await this.proveService.ProveProductupdByCon(item).then(async pRes => {
                     if (!pRes.IsSuccess) {
@@ -753,27 +770,42 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
         if (isSuccess) {
-            alert(Message.saveComplete);
+            this.ShowAlertSuccess(Message.saveComplete);
+            //alert(Message.saveComplete);
             this.onComplete();
             this.getProveByID();
             this.preloader.setShowPreloader(false);
         } else {
-            alert(Message.saveFail);
+            this.ShowAlertError(Message.saveFail);
+            //alert(Message.saveFail);
             this.preloader.setShowPreloader(false);
         }
     }
 
     onDelete() {
-        if (confirm(Message.confirmAction)) {
-            this.proveService.ProveupdDelete(this.ProveID).then(async IsSuccess => {
-                if (IsSuccess) {
-                    alert(Message.saveComplete);
-                    this.router.navigate(['/prove/list']);
-                } else {
-                    alert(Message.saveFail);
-                }
-            }, (error) => { console.error(error); return false; });
-        }
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                this.proveService.ProveupdDelete(this.ProveID).then(async IsSuccess => {
+                    if (IsSuccess) {
+                        this.ShowAlertSuccess(Message.saveComplete);
+                        //alert(Message.saveComplete);
+                        this.router.navigate(['/prove/list']);
+                    } else {
+                        this.ShowAlertError(Message.saveFail);
+                        //alert(Message.saveFail);
+                    }
+                }, (error) => { console.error(error); return false; });
+            }
+        })
     }
 
     ngOnDestroy(): void {
@@ -1000,13 +1032,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 var PRN = this.oProve.ProveReportNo.split('/');
 
                 if (PRN.length > 1) {
-                    if (this.oProve.IsOutside == 1) {
-                        this.DeliveryDocNo = PRN[0].replace("น.", "");
-                    }
-                    else {
-                        this.DeliveryDocNo = PRN[0];
-                    }
-
+                    this.DeliveryDocNo = PRN[0];
                     this.ProveYear = PRN[1];
                 }
 
@@ -1045,7 +1071,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorID == "15");
                 if (PScienceStaff.length) {
-                    this.ScienceStaffName = PScienceStaff[0].TitleName + PScienceStaff[0].FirstName + ' ' + PScienceStaff[0].LastName;
+                    this.ScienceStaffName = `${PScienceStaff[0].TitleName == 'null' || PScienceStaff[0].TitleName == null ? '' : PScienceStaff[0].TitleName}`
+                        + `${PScienceStaff[0].FirstName == 'null' || PScienceStaff[0].FirstName == null ? '' : PScienceStaff[0].FirstName}` + ' '
+                        + `${PScienceStaff[0].LastName == 'null' || PScienceStaff[0].LastName == null ? '' : PScienceStaff[0].LastName}`;
+
                     this.PosScience = PScienceStaff[0].PositionName;
                     this.DeptScience = PScienceStaff[0].OfficeName;
                     this.StaffScienceID = PScienceStaff[0].StaffID;
@@ -1065,14 +1094,29 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.oProve.ProveStaff = [];
 
                 this.lsProveProduct = res.ProveProduct;
+                this.SummaryProveResult = "";
+
+                let pIndex = 0;
                 this.lsProveProduct.map(item => {
                     // item.IsNewItem = false;
                     // item.IsDelItem = false;
-
+                    pIndex += 1;
+                    debugger
                     item.Remarks = `${item.Remarks == null || item.Remarks == "null" ? '' : item.Remarks}`;
                     item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
-                    item.ProveResult = `${item.ProveResult == null ? '' : item.ProveResult}`;
-                    item.VatProve = (+item.VatProve).toFixed(4);
+                    item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? 'ของกลางลำดับที่ ' + pIndex : item.ProveResult}`;
+                    item.VatProve = (+item.VatProve).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });;
+
+                    if(item.ProveScienceID == '0'){
+                        item.IsProdScience = false;
+                    }
+                    else{
+                        item.IsProdScience = true;
+                    }
+
+                    if (item.ProveResult != "") {
+                        this.SummaryProveResult += item.ProveResult + "\n";
+                    }
                 });
 
                 // for (var i = 0; i < this.lsProveProduct.length; i += 1) {
@@ -1139,7 +1183,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         }
                     }
                 }, (err: HttpErrorResponse) => {
-                    alert(err.message);
+                    this.ShowAlertError(err.message);
+                    //alert(err.message);
                 });
 
                 this.checkNextPage();
@@ -1147,7 +1192,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.preloader.setShowPreloader(false);
             }
         }, (err: HttpErrorResponse) => {
-            alert(err.message);
+            this.ShowAlertError(err.message);
+            //alert(err.message);
         });
 
     }
@@ -1173,6 +1219,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         }
                     }
                 }
+
+                this.ArrestProduct = [];
 
                 await this.proveService.ArrestIndictmentProductgetByIndictmentID(this.IndictmentID).then(async res => {
                     if (res.length > 0) {
@@ -1551,7 +1599,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             ContributorID: "15"
         }
 
-        this.ScienceStaffName = this.Scienceoptions[0].TitleName + this.Scienceoptions[0].FirstName + ' ' + this.Scienceoptions[0].LastName;
+        this.ScienceStaffName = `${this.Scienceoptions[0].TitleName == 'null' || this.Scienceoptions[0].TitleName == null ? '' : this.Scienceoptions[0].TitleName}`
+            + `${this.Scienceoptions[0].FirstName == 'null' || this.Scienceoptions[0].FirstName == null ? '' : this.Scienceoptions[0].FirstName}` + ' '
+            + `${this.Scienceoptions[0].LastName == 'null' || this.Scienceoptions[0].LastName == null ? '' : this.Scienceoptions[0].LastName}`;
         this.PosScience = this.Scienceoptions[0].OperationPosName;
         this.DeptScience = this.Scienceoptions[0].OfficeName;
     }
@@ -1909,7 +1959,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             || this.oProveProduct.ProveResult == "" || this.oProveProduct.ProveResult == undefined
         ) {
             this.isPopupRequired = true;
-            alert(Message.checkData);
+            this.ShowAlertWarning(Message.checkData);
+            //alert(Message.checkData);
 
             return false;
         }
@@ -1921,6 +1972,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.IsProveScience = true;
             this.showScienceField = false;
         }
+
+        this.SummaryProveResult = "";
+
+        this.lsProveProduct.map(item => {
+            item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? '' : item.ProveResult}`;
+
+            if (item.ProveResult != "") {
+                this.SummaryProveResult += item.ProveResult + "\n";
+            }
+        });
 
         $("#SciencePopup .close").click();
     }
@@ -2213,20 +2274,58 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     VatProveFormat() {
-        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve).toFixed(4);
+        debugger
+        this.oProveProduct.VatProve = (+this.oProveProduct.VatProve.replace(',', '')).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
     }
 
     varidateQtyBalance() {
         if (this.oProveProduct.QtyBalance > this.oProveProduct.Qty) {
-            alert("จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
+            this.ShowAlertWarning("จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของกลางที่ตรวจพิสูจน์ !");
+            //alert("จำนวนของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินจำนวนของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
             this.oProveProduct.QtyBalance = this.oProveProduct.Qty;
         }
     }
 
     varidateNetVolumeBalance() {
         if (this.oProveProduct.NetVolumeBalance > this.oProveProduct.NetVolume) {
-            alert("ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินปริมาณสุทธิของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
+            this.ShowAlertWarning("ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ ต้องไม่เกินปริมาณสุทธิของของกลางที่ตรวจพิสูจน์");
+            //alert("ปริมาณสุทธิของของกลางที่เหลือจากการพิสูจน์ต้องไม่เกินปริมาณสุทธิของการส่งพิสูจน์ทางเคมีหรือวิทยาศาสตร์ !!!")
             this.oProveProduct.NetVolumeBalance = this.oProveProduct.NetVolume;
         }
+    }
+
+    ShowAlertWarning(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'warning',
+            confirmButtonText: 'ตกลง'
+        });
+    }
+
+    ShowAlertSuccess(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'success',
+            confirmButtonText: 'ตกลง'
+        });
+    }
+
+    ShowAlertError(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'error',
+            confirmButtonText: 'ตกลง'
+        });
+    }
+
+    VaridateNumber(event) {
+        let e = <KeyboardEvent>event;
+        if (e.keyCode > 31 && ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode != 44)) {
+            return false;
+        }
+        return true;
     }
 }

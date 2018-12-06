@@ -95,7 +95,7 @@ export class CoreInterceptor implements HttpInterceptor {
 
       if (1 === this._pendingRequests) {
         this._pendingRequestsStatus.next(true);
-        // this.preloaderService.setShowPreloader(true);
+        this.preloaderService.setShowPreloader(true);
       }
     }
 
@@ -132,7 +132,7 @@ export class CoreInterceptor implements HttpInterceptor {
         .append('Content-Type', 'application/json')
     });
     // set header
-    console.log('request', request);
+    // console.log('request', request);
 
     return next.handle(request).pipe(
       map(event => {
