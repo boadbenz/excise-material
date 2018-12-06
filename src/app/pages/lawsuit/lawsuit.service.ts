@@ -3,6 +3,7 @@ import { appConfig } from "../../app.config";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Lawsuit } from "./models/lawsuit";
 import { Arrest } from "../model/arrest";
+import { LoaderService } from "app/core/loader/loader.service";
 import { Notice } from "../notices/notice";
 import { StringifyOptions } from "querystring";
 
@@ -11,7 +12,10 @@ export class LawsuitService {
 
   private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private loaderService: LoaderService
+    ) { }
 
   private async responsePromiseGetWithStatus(params: string, url: string) {
     const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -28,7 +32,6 @@ export class LawsuitService {
 
     return await this.http.get<any>(getUrl).toPromise() || [];
   }
-
 
   async getByKeywordOnInt(): Promise<Lawsuit[]> {
     const params = { 'Textsearch': '' };
@@ -118,18 +121,18 @@ export class LawsuitService {
   }
 
   async MasDocumentMaingetAll(DocumentType: any, ReferenceCode: any) {
-    const params = {DocumentType, ReferenceCode};
+    const params = { DocumentType, ReferenceCode };
     const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async MasDocumentMaingetinsAll(document: any) {
-    const params = document; 
+    const params = document;
     const url = `${appConfig.api7789}/MasDocumentMaininsAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
-  
+
   async MasDocumentMaingetAllString(documentType: DocumentType, ReferenceCode: string) {
     const params = { DocumentType: documentType, ReferenceCode: ReferenceCode };
     const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
@@ -171,7 +174,7 @@ export class LawsuitService {
     const url = `${appConfig.api8083}/LawsuitJudgementupdDelete`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
-  
+
   async LawsuitJudgementupdByCon(Judgement) {
     const url = `${appConfig.api8083}/LawsuitJudgementupdByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(Judgement), url);
@@ -204,8 +207,8 @@ export class LawsuitService {
   }
 
   async MasDocumentMaininsAll(DocumentType, ReferenceCode) {
-    const params = { 
-      DocumentType: DocumentType ,
+    const params = {
+      DocumentType: DocumentType,
       ReferenceCode: ReferenceCode
     };
     const url = `${appConfig.api8083}/LawsuitupdByCon`;
@@ -297,6 +300,14 @@ export class LawsuitService {
     const params = {};
     const url = `${appConfig.api7789}/MasCourtMaingetAll`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+  }
+
+  LawsuitReportArrestgetByCon(IndictmentID) {
+    const params = { IndictmentID };
+    const url = `${appConfig.apiReport}/LawsuitArrestgetByCon.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .map(x => x)
+
   }
   // async getByKeyword(filterValue) {
   //   const params = JSON.stringify(filterValue);
