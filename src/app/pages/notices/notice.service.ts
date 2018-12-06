@@ -237,7 +237,7 @@ export class NoticeService {
 
     public print(noticeCode: any){
         const params = { 'NoticeCode': noticeCode };
-        const url = `${appConfig.apiXCSReport}/NoticegetByCon.aspx`;
+        const url = `${appConfig.apiReport}/NoticegetByCon.aspx`;
         return this.http.post(url, params, {...this.httpOptions, responseType: 'blob'}).map(res=>res);
     }
 

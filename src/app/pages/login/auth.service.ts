@@ -34,13 +34,6 @@ export class AuthService {
     localStorage.removeItem('currentUser');
   }
 
-  // async userAuth(userIn, passIn) {
-  //   const params = { userIn: userIn,
-  //                    passIn: passIn };
-  //   const url = `${appConfig.api8088}/userAuthen`;
-  //   return await this.httpClient.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-  // }
-
   userAuth(params): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     const url = `${appConfig.api8086}/UACVerifyLogIn`
