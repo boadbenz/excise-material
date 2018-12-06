@@ -53,17 +53,19 @@ export class ListComponent implements OnInit, OnDestroy {
         this.onSearch(Textsearch);
       }
     });
-    this.navService.showAdvSearch.next(true);
+    
     this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
       if (status) {
         await this.navService.setOnNextPage(false);
         this.router.navigate(['/notice/manage', 'C', 'NEW']);
       }
     });
+    this.navService.showAdvSearch.next(true);
     this.preLoaderService.setShowPreloader(false);
   }
 
   ngOnDestroy() {
+    this.navService.showAdvSearch.next(false);
     this.subOnSearchByKeyword.unsubscribe();
     this.subSetNextPage.unsubscribe();
   }
@@ -89,7 +91,10 @@ export class ListComponent implements OnInit, OnDestroy {
           jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
         });
         console.log(this.advForm.controls['LawsuitDateTo'])
-        Swal(Message.checkDate);
+        Swal({
+          text: Message.checkDate,
+          type: 'warning',
+        })
         return;
       }
       else {
@@ -109,7 +114,10 @@ export class ListComponent implements OnInit, OnDestroy {
           formatted: this.advForm.value.LawsuitDateFrom.formatted,
           jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
         });
-        Swal(Message.checkDate);
+        Swal({
+          text: Message.checkDate,
+          type: 'warning',
+        })
         return;
       }
       else if (!event) {
@@ -137,7 +145,10 @@ export class ListComponent implements OnInit, OnDestroy {
       const sDateCompare = new Date(form.value.LawsuitDateFrom.jsdate);
       const eDateCompare = new Date(form.value.LawsuitDateTo.jsdate);
       if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-        Swal(Message.checkDate);
+        Swal({
+          text: Message.checkDate,
+          type: 'warning',
+        })
         return false;
       }
       // console.log('form.value.LawsuitDateFrom ===>', form.value.LawsuitDateFrom)
@@ -163,7 +174,10 @@ export class ListComponent implements OnInit, OnDestroy {
   private onSearchComplete(list: any) {
     /* Alert When No Data To Show */
     if (!list.length) {
-      Swal(Message.noRecord);
+      Swal({
+        text: Message.noRecord,
+        type: 'warning',
+      })
       this.resultsPerPage = [];
       return false;
     }
