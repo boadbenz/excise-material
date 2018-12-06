@@ -1099,6 +1099,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             if (!this.checkIsSuccess(x)) return;
             this.investCode = investCode;
             this.investMode = 'R';
+            this.resetConfig();
             await this.insertInvestigateDetail(investCode);
 
         }, () => { this.saveFail(); return; })
