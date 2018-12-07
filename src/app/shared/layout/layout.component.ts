@@ -17,7 +17,7 @@ export class LayoutComponent implements OnInit {
   constructor(private preloader: PreloaderService) {
     this.fName = localStorage.getItem('fullName');
     this.opName = localStorage.getItem('operationPosName');
-    this.offName = localStorage.getItem('officeName');
+    this.offName = localStorage.getItem('officeShortName');
   }
 
   ngOnInit() {
