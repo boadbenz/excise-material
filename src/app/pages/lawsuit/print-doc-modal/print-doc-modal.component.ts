@@ -118,7 +118,8 @@ export class PrintLawsuitModalComponent implements OnInit {
   async onPrint() {
     let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
     if (_print.length) {
-      this.lawsuitService.LawsuitReportArrestgetByCon(this.lawsuitID).subscribe(x => {
+      console.log(this.IndictmentID)
+      this.lawsuitService.LawsuitReportArrestgetByCon(this.IndictmentID).subscribe(x => {
         const file = new Blob([x], { type: 'application/pdf' });
         const fileURL = URL.createObjectURL(file);
         window.open(fileURL);
