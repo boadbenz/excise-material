@@ -7,9 +7,11 @@ import {
   ITransactionRunningupdByCon,
   ITransactionRunninginsAll
 } from '../interfaces/TransactionRunning';
+import { appConfig } from 'app/app.config';
 
 @Injectable()
 export class TransactionRunningService extends HelperService {
+  public ApiPrefixUrl = appConfig.api8087;
   constructor(private http: HttpClient) {
     super();
   }

@@ -53,7 +53,8 @@ export class FineService {
 
     getByConAdv(form: any) {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8881}/CompareListgetByConAdv`;
+        const url = `${appConfig.api8887}/CompareListgetByConAdv`;
+
         try {
             console.log(this.http.post<Compare[]>(url, params, this.httpOptions));
             return this.http.post<Compare[]>(url, params, this.httpOptions);
@@ -63,7 +64,7 @@ export class FineService {
 
     }
     async compareArrestGetByCon(ArrestCode: string) {
-      // http://103.233.193.62:8881/XCS60/CompareListgetByConAdv
+      // http://192.168.3.158:8881/XCS60/CompareListgetByConAdv
       const params = { 'ArrestCode' : ArrestCode };
       const url = `${appConfig.api8887}/CompareListgetByConAdv`;
 
@@ -184,6 +185,18 @@ export class FineService {
     async CompareupdByCon(oCompare: Compare): Promise<any> {
         const params = JSON.stringify(oCompare);
         const url = `${appConfig.api8881}/CompareupdByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async CompareUpdDelete(oCompare: Compare): Promise<any> {
+        const params = JSON.stringify(oCompare);
+        const url = `${appConfig.api8881}/CompareUpdDelete`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

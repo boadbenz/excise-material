@@ -12,6 +12,8 @@ import { NoticeService } from '../notice.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MainMasterService } from '../../../services/main-master.service';
 
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
+
 const routes: Routes = [
   {
       path: '',
@@ -40,7 +42,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NgbModule.forRoot(),
     CardActionsModule,
-    MyDatePickerTHModule
+    MyDatePickerTHModule,
+    SweetAlert2Module.forRoot()
   ],
   declarations: [SuspectComponent],
   exports: [SuspectComponent],

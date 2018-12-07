@@ -31,6 +31,7 @@ export function setZero(num: number) {
 }
 
 export function toLocalShort(date: string): string {
+    if (!date) return;
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const dd = new Date(date);
     return dd.toLocaleString('th-TH', options);
@@ -54,24 +55,36 @@ export function toTimeShort(date: string): string {
 
 export const MyDatePickerOptions: IMyOptions = {
     dateFormat: 'dd mmm yyyy',
-    showClearDateBtn: false,
-    height: '30px'
+    showClearDateBtn: true,
+    height: '30px',
+    alignSelectorRight: true,
+    openSelectorOnInputClick: true,
+    editableDateField: false
 };
 
-export function setDateMyDatepicker(date: Date) {
+export function setDateMyDatepicker(date: any) {
     if (!date)
         return { myDate: null };
-
-    date = new Date(date);
-    return { date: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } }
+        
+    if (date.jsdate) {
+        return date;
+    } else {
+        const d = new Date(date);
+        return !d.getFullYear() ? date : { date: { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() } };
+    }
 }
 
 export function getDateMyDatepicker(date: any) {
     if (!date)
         return null;
 
-    date = date.date
-    return new Date(`${date.year}-${date.month}-${date.day}`);
+    if (date.date) {
+        const d = date.date;
+        return new Date(`${d.year}-${d.month}-${d.day}`);
+    } else {
+        return date;
+    }
+
 }
 
 export function convertDateForSave(date: Date) {

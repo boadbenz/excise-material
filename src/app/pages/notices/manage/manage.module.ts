@@ -8,7 +8,8 @@ import { NoticeService } from '../notice.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { NgbModule, NgbDatepickerI18n } from '@ng-bootstrap/ng-bootstrap';
-import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
+// import { SuspectModalModule } from '../../component/suspect-modal/suspect-modal.module';
+import { NoticeSuspectModalModule } from '../../component/notice-suspect-modal/notice-suspect-modal.module';
 import { PrintDocModalModule } from '../print-doc-modal/print-doc-modal.module';
 import { ArrestsService } from '../../arrests/arrests.service';
 import { ModalLawbreakerModule } from '../../component/modal-lawbreaker/modal-lawbreaker.module';
@@ -16,6 +17,8 @@ import { DatepickerI18nService } from '../../../services/datepicker-i18n.service
 import { ProveService } from '../../prove/prove.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MainMasterService } from '../../../services/main-master.service';
+
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 
 const routes: Routes = [
     {
@@ -43,10 +46,12 @@ const routes: Routes = [
         NgbModule.forRoot(),
         RouterModule.forChild(routes),
         CardActionsModule,
-        SuspectModalModule,
+        // SuspectModalModule,
         ModalLawbreakerModule,
         PrintDocModalModule,
-        MyDatePickerTHModule
+        MyDatePickerTHModule,
+        NoticeSuspectModalModule,
+        SweetAlert2Module.forRoot()
     ],
     declarations: [
         ManageComponent

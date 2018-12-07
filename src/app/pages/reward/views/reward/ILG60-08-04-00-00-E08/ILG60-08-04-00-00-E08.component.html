@@ -1,0 +1,171 @@
+<div class="row">
+  <div class="col-md-12">
+    <!-- <app-form-group [columns]="columnsForm" ></app-form-group> -->
+    <!-- {{formGroup.value | json}} -->
+    <form [formGroup]="formGroup" *ngIf="formGroup" (change)="formChange(formGroup)">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เลขที่อ้างอิง : </label>
+            <div class="col-md-8">
+              <select formControlName="ReferenceNo" class="form-control form-control-sm">
+                <option [value]="item" *ngFor="let item of ReferenceNoList">{{item}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
+            <div class="col-md-8">
+              <input class="form-control form-control-sm" type="text" formControlName="RequestRewardCode" [attr.disabled]="true">
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เขียนที่ : </label>
+            <div class="col-md-8">
+              <input class="form-control form-control-sm" type="text" formControlName="Station" [ngbTypeahead]="searchStation">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
+            <div class="col-md-3">
+              <my-date-picker formControlName="RequestDate" placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions"></my-date-picker>
+              <!-- <input class="form-control form-control-sm" type="text" formControlName="RequestDate"> -->
+            </div>
+            <label class="col-form-label text-center col-md-2">เวลา</label>
+            <div class="col-md-3">
+              <input class="form-control form-control-sm" type="text" formControlName="RequestTime">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- <app-table-data [columns]="columnsTable$ | async" [data]="inputDataTable$ | async" [options]="TableDataOptions"></app-table-data> -->
+        <div class="table-responsive table-striped no-wrap">
+          <!-- {{checkList | json}} -->
+          <table class="dataTable table table-sm table-striped table-hover">
+            <thead>
+              <tr>
+                <th>
+                  <!-- <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkAll"></mat-checkbox> -->
+                </th>
+                <th>ลำดับ</th>
+                <th class="footable-sortable ng-star-inserted">
+                  ชื่อผู้ต้องหา
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  วันที่ชำระ
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  ใบเสร็จเล่มที่
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  เลขที่อ้างอิง
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  งวดชำระ
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  ค่าปรับตามงวด
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  เงินสินบน
+                </th>
+
+                <th class="footable-sortable ng-star-inserted">
+                  เงินรางวัล
+                </th>
+
+                <th class="footable-sortable" colspan="1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dataItem of listData; let i=index">
+                <td>
+                    <input type="checkbox" [id]="'td'+i" name="ischeck" [(ngModel)]="checkList[i]" (change)="checkboxHandle(dataItem.PaymentFineID, i , checkList[i])" class="filled-in chk-col-indigo">
+                    <label [for]="'td'+i" class="m-0"></label>
+                  <!-- <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]" (change)="checkboxHandle(dataItem.PaymentFineID, i , checkList[i])"></mat-checkbox> -->
+                </td>
+                <td>{{i+1}}</td>
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['LawbreakerName']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['PaymentDueDate'] | thaiDate}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['ReceiptBookNo']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['ReceiptNo']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['PaymentPeriodNo']}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['PaymentFine'] | currency : ' '}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['BribeMoney'] | currency : ' '}}
+                </td>
+
+                <td class="footable-sortable ng-star-inserted">
+                  {{dataItem['RewardMoney'] | currency : ' '}}
+                </td>
+
+                <td class="footable-sortable" colspan="1"></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th colspan=5 class="text-right">
+                  รวม
+                </th>
+                <ng-container *ngFor="let item of (columnsTable$ | async)">
+                  <ng-container *ngIf="item?.isSum;">
+                    <th class="footable-sortable">
+                      {{((aggregate[item.field]?.sum) || 0) | currency: ' '}}
+                    </th>
+                  </ng-container>
+
+                </ng-container>
+                <th></th>
+
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
