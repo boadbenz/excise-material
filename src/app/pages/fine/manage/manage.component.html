@@ -421,14 +421,14 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">คดีเปรียบเทียบที่ : </label>
             <div class="row col-md-4">
-                <div class="row col-md-2">
-                    <span *ngIf="receipt.IsOutside">น</span>
+                <div class="row col-md-4">
+                    <span *ngIf="receipt.IsOutside" style="font-size: 1.5rem">น</span>
                   </div>
-                  <div class="row col-md-10">
+                  <div class="row col-md-8">
                       <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
                       [disabled]="showEditField">
                   </div>
-            </div> /
+            </div> <span style="font-size: 1.5rem">/</span>
             <div class="col-md-4">
                 <div class="row col-md-10">
                     <input class="form-control" type="text" [(ngModel)]="receipt.CompareYear" name="CompareNo"
@@ -476,11 +476,11 @@
                          matInput [matAutocomplete]="autoStaff"
                          (input)="StaffonAutoChange($event.target.value)"
                          (focus)="StaffonAutoFocus($event.target.value)"
-                         [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, index)">
+                         [disabled]="showEditField || item.CompareReceiptID" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, i)">
                   <mat-autocomplete #autoStaff="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                (click)="StaffonAutoSelecteWord(sOption, '1')" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 1, index)">
+                                (click)="StaffonAutoSelecteWord(sOption, '1')" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 1, i)">
                       {{ sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName }}
                     </mat-option>
                   </mat-autocomplete>
@@ -1073,18 +1073,18 @@
                   <label class="col-form-label col-md-2">แบบอนุมัติ : </label>
                   <div class="custom-control custom-radio col-form-label col-md-8">
                     <input name="approveRadio" id="typeOne" [value]="1"
-                           class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType" type="radio">
+                           class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType" type="radio"  [disabled]="showEditField">
                     <label for="typeOne" class="col-4">แบบอนุมัติ 1</label>
                     <input name="approveRadio" id="typeTwo" [value]="2"
-                           class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="compareUserDetailPopup.ApproveType">
+                           class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="compareUserDetailPopup.ApproveType"  [disabled]="showEditField">
                     <label for="typeTwo" class="col-4">แบบอนุมัติ 2</label>
                     <input name="approveRadio" id="typeThree" [value]="3"
                            class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType"
-                           type="radio">
+                           type="radio"  [disabled]="showEditField">
                     <label for="typeThree" class="col-4">แบบอนุมัติ 3</label>
                     <input name="approveRadio" id="typeFour" [value]="4"
                            class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType"
-                           type="radio">
+                           type="radio"  [disabled]="showEditField">
                     <label for="typeFour" class="col-4">แบบอนุมัติ 4</label>
                   </div>
                 </div>
