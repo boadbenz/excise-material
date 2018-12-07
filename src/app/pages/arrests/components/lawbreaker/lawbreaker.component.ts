@@ -39,6 +39,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         private s_mainMaster: MainMasterService,
         private s_lawbreaker: fromServices.ArrestLawbreakerService,
         private s_masLawbreaker: fromServices.ArrestMasLawbreakerService,
+        private s_arrest: fromServices.ArrestService,
         private activatedRoute: ActivatedRoute,
         private navService: NavigationService,
         private fb: FormBuilder,
@@ -62,6 +63,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     // LawbreakerItem: Lawbreaker;
     LawbreakerFG: FormGroup;
+    disableForeign = false;
+    disableCompany = false;
     requiredPassport = false;
     requiredCompanyRegister = false;
 
@@ -96,7 +99,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.LawbreakerFG = this.createForm();
-        this.sidebarService.setVersion('0.0.0.32');
+        this.sidebarService.setVersion(this.s_arrest.version);
 
         await this.active_route();
         await this.navigate_service();
@@ -260,6 +263,10 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     this.typeheadRaces
                         .find(x => x.RaceCode == _Lfg.RaceCode).RaceNameTH;
 
+                if (_Lfg.EntityType == '2') {
+                    _Lfg.LawbreakerFirstName = _Lfg.CompanyName;
+                }
+
                 console.log(JSON.stringify(_Lfg));
 
                 switch (this.mode) {
@@ -308,6 +315,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 this.latitude.nativeElement.value = law.GPS && law.GPS.split(',')[0];
                 this.longitude.nativeElement.value = law.GPS && law.GPS.split(',')[1];
 
+                law.ResultCount = this.s_masLawbreaker.ArrestLawsuitResultCountgetByLawbreakerID(LawbreakerID)
+
                 if (law.SubDistrictCode && law.DistrictCode && law.ProvinceCode) {
                     law.Region = `${law.SubDistrict} ${law.District} ${law.Province}`;
                 }
@@ -345,13 +354,25 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         const e = this.LawbreakerFG.value.EntityType;
         const l = this.LawbreakerFG.value.LawbreakerType;
 
+        this.disableForeign = false;
+        this.disableCompany = false;
         this.requiredCompanyRegister = false;
         this.requiredPassport = false;
 
         if (e == '1' && l == '0') {
+            // บุคคลธรรมดา, ต่างชาติ
+            this.disableCompany = true;
             this.requiredPassport = true;
             this.card3 = true;
+        } else if (e == '1' && l == '1') {
+            // บุคคลธรรมดา, ชาวไทย
+            this.disableCompany = true;
+            this.disableForeign = true;
+            this.card3 = false;
+            this.card4 = false;
         } else if (e == '2') {
+            // นิติบุคคล
+            this.disableForeign = true;
             this.requiredCompanyRegister = true;
             this.card4 = true;
         }
@@ -368,9 +389,9 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadRegion
                     .filter(v =>
-                        v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                        v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+                        (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+                            .toLowerCase()
+                            .indexOf(term.toLowerCase()) > -1
                     ).slice(0, 10));
 
     searchTitleName = (text$: Observable<string>) =>

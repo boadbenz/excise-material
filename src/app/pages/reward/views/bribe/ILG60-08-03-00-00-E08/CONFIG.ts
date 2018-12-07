@@ -1,19 +1,88 @@
 import { BribeConfig } from '../bribe.config';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-interface';
-import { Input } from '@angular/core';
+import { Input, Output, EventEmitter } from '@angular/core';
+import { IFormChange } from 'app/pages/reward/interfaces/FormChange';
 
+// tslint:disable-next-line:class-name
+export interface IILG60_08_03_00_00_E08_DATA {
+  insDetailIDs?: number[];
+  delDetailIDs?: number[];
+  CommandDetailID?: number;
+  NoticeCodeAndName?: string;
+  RequestBribeCode?: string;
+  Station?: string;
+  RequestDate?: string;
+  RequestTime?: string;
+  Informeracknowledge?: string;
+}
 export class CONFIG extends BribeConfig {
+  @Output() public formData: EventEmitter<IFormChange> = new EventEmitter();
   @Input()
-  set inputData(val){
-      this.inputData$.next(val)
+  set inputData(val) {
+    this.inputData$.next(val);
   }
   get inputData() {
-      return this.inputData$.asObservable();
+    return this.inputData$.asObservable();
   }
   public inputData$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set RequestCommand(val) {
+    this.RequestCommand$.next(val);
+  }
+  get RequestCommand() {
+    return this.RequestCommand$.asObservable();
+  }
+  public RequestCommand$ = new BehaviorSubject<any>(null);
+
+  @Input()
+  set RequestBribe(val) {
+    this.RequestBribe$.next(val);
+  }
+  get RequestBribe() {
+    return this.RequestBribe$.asObservable();
+  }
+  public RequestBribe$ = new BehaviorSubject<any>(null);
+
   public RequestArrestLawsuit$ = new BehaviorSubject<any>(null);
 
+  // public columnsForm: ColumnsInterface[] = [
+  //   {
+  //     field: 'DetailIDs'
+  //   },
+  //   {
+  //     field: 'CommandDetailID',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'เลขที่ใบแจ้งความนำจับ',
+  //     field: 'NoticeCodeAndName',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'เลขที่คำร้องขอ',
+  //     field: 'RequestBribeCode'
+  //   },
+  //   {
+  //     title: 'เขียนที่',
+  //     field: 'Station',
+  //     isRequired: true
+  //   },
+  //   {
+  //     title: 'วันที่จัดทำ',
+  //     field: 'RequestDate',
+  //     default: `${this.setZero((new Date).getHours())}.${this.setZero((new Date).getMinutes())} น.`,
+  //     isRequired: true,
+  //     title2: 'เวลา',
+  //     field2: 'RequestTime'
+  //   },
+  //   {
+  //     title: 'ผู้แจ้งความได้ทราบว่า',
+  //     isRequired: true,
+  //     field: 'Informeracknowledge'
+  //   }
+  // ];
 
   public columnsTable: ColumnsInterface[] = [
     {
@@ -26,7 +95,10 @@ export class CONFIG extends BribeConfig {
     },
     {
       title: 'วันที่ชำระ',
-      field: 'PaymentDate'
+      field: 'PaymentDate',
+      default: `${this.setZero(new Date().getHours())}.${this.setZero(
+        new Date().getMinutes()
+      )} น.`
     },
     {
       title: 'ใบเสร็จเล่มที่',

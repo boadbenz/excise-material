@@ -14,54 +14,53 @@
           <div class="form-body">
             <div class="row">
               <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">เลขที่ใบงาน : </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" ngModel name="ArrestCode">
+                <div class=" row">
+                  <label class="control-label col-sm-3 text-right">เลขที่ใบงาน : </label>
+                  <div class="form-group col-md-9">
+                    <input class="form-control form-control-sm" type="text" ngModel name="ArrestCode">
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="form-group has-danger row">
-                  <label class="col-form-label text-right col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
-                  <div class="col-md-8">
-                    <input class="form-control" type="text" ngModel name="LawsuitNo">
+                <div class="has-danger row">
+                  <label class="control-label col-sm-4 text-right">เลขที่คดีรับคำกล่าวโทษ : </label>
+                  <div class="form-group col-md-8">
+                    <input class="form-control form-control-sm" type="text" ngModel name="LawsuitNo">
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">วันที่รับคดี : </label>
-                  <div class="col-md-4">
+                <div class="row">
+                  <label class="control-label col-sm-3 text-right">วันที่รับคดี : </label>
+                  <div class="form-group col-md-4">
                     <my-date-picker-th ngModel name="LawsuitDateFrom" placeholder="" locale="th" [options]="LawsuitDateFromOptions"
-                      (dateChanged)="onDateFromChanged($event)"></my-date-picker-th>
-                    <!-- <input class="form-control" type="date" ngModel name="LawsuitDateFrom" id="LawsuitDateFrom"> -->
+                      (dateChanged)="onDateFromChanged($event)" class="form-control form-control-sm unset-form-control"></my-date-picker-th>
+                    <!-- <input class="form-control form-control-sm" type="date" ngModel name="LawsuitDateFrom" id="LawsuitDateFrom"> -->
                   </div>
-                  <label class="col-form-label text-right col-md-1 px-0">ถึง : </label>
+                  <label class="control-label col-sm-1 text-right px-0">ถึง : </label>
                   <div class="col-md-4">
                     <my-date-picker-th ngModel name="LawsuitDateTo" placeholder="" locale="th" [options]="LawsuitDateToOptions"
-                      (dateChanged)="onDateChanged($event)"></my-date-picker-th>
-                    <!-- <input class="form-control" type="date" ngModel name="LawsuitDateTo"> -->
+                      (dateChanged)="onDateChanged($event)" class="form-control form-control-sm unset-form-control"></my-date-picker-th>
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-4">ชื่อผู้รับคดี : </label>
-                  <div class="col-md-8">
-                    <input class="form-control" type="text" ngModel name="StaffName">
+                <div class="row">
+                  <label class="control-label col-sm-4 text-right">ชื่อผู้รับคดี : </label>
+                  <div class="form-group col-md-8">
+                    <input class="form-control form-control-sm" type="text" ngModel name="StaffName">
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label text-right col-md-3">หน่วยงาน : </label>
-                  <div class="col-md-9">
-                    <input class="form-control" type="text" ngModel name="OfficeName">
+                <div class="row">
+                  <label class="control-label col-sm-3 text-right">หน่วยงาน : </label>
+                  <div class="form-group col-md-9">
+                    <input class="form-control form-control-sm" type="text" ngModel name="OfficeName">
                   </div>
                 </div>
               </div>

@@ -24,7 +24,7 @@ export class SuspectService {
 
     async searchByKeyword(Textsearch: string): Promise<NoticeMasSuspect[]> {
         const params = JSON.stringify(Textsearch);
-        const lawbreakerUrl = `${appConfig.api8082}/NoticeLawbreakergetByKeyword`;
+        const lawbreakerUrl = `${appConfig.api8082}/NoticeMasLawbreakergetByKeyword`;
         const suspectUrl = `${appConfig.api8082}/NoticeMasSuspectgetByKeyword`;
         const url = { lawbreakerUrl, suspectUrl };
 
@@ -33,7 +33,7 @@ export class SuspectService {
 
     searchAdv(form: any): Promise<NoticeMasSuspect[]> {
         const params = JSON.stringify(form);
-        const lawbreakerUrl = `${appConfig.api8082}/NoticeLawbreakergetByConAdv`;
+        const lawbreakerUrl = `${appConfig.api8082}/NoticeMasLawbreakergetByConAdv`;
         const suspectUrl = `${appConfig.api8082}/NoticeMasSuspectgetByConAdv`;
         const url = { lawbreakerUrl, suspectUrl };
 
@@ -41,34 +41,34 @@ export class SuspectService {
     }
 
     private async response(params: string, url: any) {
-        const lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise()
+        // let lawbreaker = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise();
 
-        if (lawbreaker.NoticeLawbreaker.length) {
-            let response: NoticeMasSuspect[] = [];
-            lawbreaker.NoticeLawbreaker.map(item => {
-                let obj: any = item;
-                obj = this.renameProp('LawbreakerID', 'SuspectID', obj);
-                obj = this.renameProp('LawbreakerType', 'SuspectType', obj);
-                obj = this.renameProp('LawbreakerTitleCode', 'SuspectTitleCode', obj);
-                obj = this.renameProp('LawbreakerTitleName', 'SuspectTitleName', obj);
-                obj = this.renameProp('LawbreakerFirstName', 'SuspectFirstName', obj);
-                obj = this.renameProp('LawbreakerMiddleName', 'SuspectMiddleName', obj);
-                obj = this.renameProp('LawbreakerLastName', 'SuspectLastName', obj);
-                obj = this.renameProp('LawbreakerOtherName', 'SuspectOtherName', obj);
-                obj = this.renameProp('LawbreakerDesc', 'SuspectDesc', obj);
-                response.push(obj);
-            })
-            return response;
-        } else {
+        // if (lawbreaker.length) {
+        //     let response: NoticeMasSuspect[] = [];
+        //     lawbreaker.map(item => {
+        //         let obj: any = item;
+        //         obj = this.renameProp('LawbreakerID', 'SuspectID', obj);
+        //         obj = this.renameProp('LawbreakerType', 'SuspectType', obj);
+        //         obj = this.renameProp('LawbreakerTitleCode', 'SuspectTitleCode', obj);
+        //         obj = this.renameProp('LawbreakerTitleName', 'SuspectTitleName', obj);
+        //         obj = this.renameProp('LawbreakerFirstName', 'SuspectFirstName', obj);
+        //         obj = this.renameProp('LawbreakerMiddleName', 'SuspectMiddleName', obj);
+        //         obj = this.renameProp('LawbreakerLastName', 'SuspectLastName', obj);
+        //         obj = this.renameProp('LawbreakerOtherName', 'SuspectOtherName', obj);
+        //         obj = this.renameProp('LawbreakerDesc', 'SuspectDesc', obj);
+        //         response.push(obj);
+        //     })
+        //     return response;
+        // } else {
             const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
 
-            if (suspect.ResponseData.length) {
-                return suspect.ResponseData;
+            if (suspect.length) {
+                return suspect;
             } else {
                 alert(Message.noRecord);
                 return new Array<NoticeMasSuspect>();
             }
-        }
+        // }
     }
 
     private renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => {
@@ -143,12 +143,12 @@ export class SuspectModalComponent implements OnInit, OnDestroy {
 
     async onComplete(res: NoticeMasSuspect[]) {
 
+        this.suspect = new Array<NoticeMasSuspect>();
         if (!res.length) {
             alert(Message.noRecord)
             return false;
         }
 
-        this.suspect = new Array<NoticeMasSuspect>();
         const list = await res.map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;

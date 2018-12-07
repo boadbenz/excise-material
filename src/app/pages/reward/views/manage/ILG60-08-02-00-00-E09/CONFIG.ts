@@ -5,7 +5,6 @@ import { ColumnsInterface } from 'app/pages/reward/shared/interfaces/columns-int
 import { ITableDataOptions } from 'app/pages/reward/shared/table-data/table-data.config';
 
 export class CONFIG extends ManageConfig {
-
   public TableDataOptions: ITableDataOptions = {
     isSumFooter: true
   };
@@ -17,18 +16,32 @@ export class CONFIG extends ManageConfig {
     return this.inputData$.asObservable();
   }
   public inputData$ = new BehaviorSubject<any>(null);
-  public FormInput$ = new BehaviorSubject<any>(null);
 
+  @Input()
+  set isEdit(val) {
+    this.isEdit$.next(val);
+  }
+  get isEdit() {
+    return this.isEdit$.asObservable();
+  }
+  public isEdit$ = new BehaviorSubject<any>(null);
+
+  public FormInput$ = new BehaviorSubject<any>(null);
+  public columns: any;
   public FormInputDefault: ColumnsInterface[] = [
     {
       title: 'คำสั่งกรมเลขที่',
-      field: 'CommandNo'
+      field: 'CommandNo',
+      default: ''
     },
     {
       title: 'วันที่ออกคำสั่ง',
       field: 'CommandDate',
+      inputType: 'date',
+      default: this.setDateNow,
       title2: 'เวลา',
-      field2: 'CommandTime'
+      field2: 'CommandTime',
+      default2: this.setTimeNow
     }
   ];
   public columnsTableDefault: ColumnsInterface[] = [
@@ -38,7 +51,8 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'วันที่แจ้งความ',
-      field: 'NoticeDate'
+      field: 'NoticeDate',
+      inputType: 'date'
     },
     {
       title: 'ผู้แจ้งความ',
@@ -59,7 +73,6 @@ export class CONFIG extends ManageConfig {
     {
       title: 'จำนวนส่วน',
       field: 'PartMoney',
-      inputType: 'number',
       width: '50',
       showInput: true
     }

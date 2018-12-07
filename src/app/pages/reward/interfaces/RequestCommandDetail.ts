@@ -1,7 +1,7 @@
 export interface IRequestCommandDetail {
   CommandDetailID?: number;
   NoticeCode?: string;
-  NoticeDate?: Date;
+  NoticeDate?: string;
   TitleName?: string;
   FirstName?: string;
   LastName?: string;

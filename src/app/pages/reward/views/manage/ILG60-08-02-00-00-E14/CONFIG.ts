@@ -43,25 +43,27 @@ export class CONFIG extends ManageConfig {
 
   public TableDataOptions: ITableDataOptions = {
     action: 'VIEW',
-    actionUrl: '/reward/bribe/R',
+    actionUrl: '/reward/reward/R',
     actionFieldParams: ['RequestRewardID']
   };
 
   public FormInputDefault: ColumnsInterface[] = [
     {
       title: 'เงินสินบนที่ขอรับแล้ว',
-      field: 'SumRewardTotal'
+      field: 'SumRewardTotal',
+      isDisabled: true
     }
   ];
   public FormInput$ = new BehaviorSubject<any>(this.FormInputDefault);
   public columnsTableDefault: ColumnsInterface[] = [
     {
       title: 'เลขที่คำร้องขอ',
-      field: 'RequestBribeCode'
+      field: 'RequestRewardCode'
     },
     {
       title: 'วันที่จัดทำคำร้องขอ',
-      field: 'RequestDate'
+      field: 'RequestDate',
+      inputType: 'date'
     },
     {
       title: 'ชื่อผู้ต้องหา',
@@ -69,11 +71,12 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'ลักษณะคดี',
-      field: 'FineType'
+      field: 'FineTypeName'
     },
     {
       title: 'วันที่ชำระเงิน',
-      field: 'PaymentDueDate'
+      field: 'PaymentDueDate',
+      inputType: 'date'
     },
     {
       title: 'งวดชำระ',

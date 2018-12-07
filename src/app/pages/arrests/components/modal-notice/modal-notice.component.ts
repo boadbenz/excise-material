@@ -8,6 +8,7 @@ import { pagination } from 'app/config/pagination';
 import { Message } from 'app/config/message';
 import * as formService from '../../services';
 import { Subject } from 'rxjs/Subject';
+import swal from 'sweetalert2'
 
 @Component({
     selector: 'app-modal-notice',
@@ -71,7 +72,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
         if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate);
+                swal('', Message.checkDate, 'warning');
                 return false;
             }
         }
@@ -87,7 +88,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
     async onSearchComplete(list: ArrestNotice[]) {
 
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
             return;
         }
 
@@ -124,7 +125,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
             const edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.dateStartTo = { date: _sdate.date };
                 }, 0);

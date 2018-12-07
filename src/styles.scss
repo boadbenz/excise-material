@@ -4,6 +4,17 @@
 .mat-expansion-panel-content {
     font: unset !important;
 }
-.cdk-global-overlay-wrapper, .cdk-overlay-container {
-  z-index: 99999 !important;
+.swal2-confirm{
+    background: #3085d6 !important;
+}
+
+mat-dialog-container.mat-dialog-container {
+    padding: unset;
+}
+
+input:read-only,
+textarea:read-only,
+select:disabled {
+    color: black !important; 
+    font-size: .9rem !important
 }
