@@ -243,7 +243,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         x.DateStart = setDateMyDatepicker(x.DateStart);
         x.DateEnd = setDateMyDatepicker(x.DateEnd);
 
-        let investDetail = x.InvestigateDetail;
+        let investDetail = x.InvestigateDetail.filter(x => x.InvestigateDetailID);
         if (!investDetail) return;
         await investDetail.map(id => {
             let staff: fromModels.InvestigateDetailStaff[] = id.InvestigateDetailStaff
