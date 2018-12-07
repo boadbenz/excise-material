@@ -329,8 +329,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         let invest = this.investigateForm.value as fromModels.InvestigateModel;
         const dateStart = getDateMyDatepicker(invest.DateStart);
         const dateEnd = getDateMyDatepicker(invest.DateEnd);
-        invest.DateStart = setZeroHours(dateStart);
-        invest.DateEnd = setZeroHours(dateEnd);
+        invest.DateStart = (dateStart);
+        invest.DateEnd = (dateEnd);
 
         if (!this.stateInvest) {
             this.stateInvest = {
