@@ -88,6 +88,9 @@ input[type=time]::-webkit-clear-button {
 .custom-select[disabled] {
   background-color: #e8edf1;
 }
+.mat-expansion-panel-content {
+  font: unset !important;
+}
 .cdk-global-overlay-wrapper, .cdk-overlay-container {
-  z-index: 99999 !important;
+z-index: 99999 !important;
 }
