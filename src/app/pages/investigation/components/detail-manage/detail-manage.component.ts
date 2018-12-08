@@ -1071,8 +1071,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
 
         form.InvestigateCode = investCode;
-        form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
-        form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
+        const dateStart = getDateMyDatepicker(form.InvestigateDateStart);
+        const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
+        form.InvestigateDateStart = setZeroHours(dateStart);
+        form.InvestigateDateEnd = setZeroHours(dateEnd);
 
         console.log("InvestigateDetailinsAll : ", JSON.stringify(form));
 
@@ -1093,8 +1095,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private async updateInvestigateDetail() {
         this.loaderService.show();
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
-        form.InvestigateDateStart = getDateMyDatepicker(form.InvestigateDateStart);
-        form.InvestigateDateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
+        const dateStart = getDateMyDatepicker(form.InvestigateDateStart);
+        const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
+        form.InvestigateDateStart = setZeroHours(dateStart) ;
+        form.InvestigateDateEnd = setZeroHours(dateEnd);
 
         console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));
 
@@ -1126,7 +1130,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        console.log(`InvestigateDetailStaffinsAll : ${index + 1}`, JSON.stringify(x));
+                        if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailStaffinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -1185,7 +1189,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        console.log(`InvestigateDetailLocalinsAll : ${index + 1}`, JSON.stringify(x))
+                        if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailLocalinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
