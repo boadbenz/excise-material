@@ -12,10 +12,12 @@ export class LayoutComponent implements OnInit {
   isPreloader: any;
   fName: string = "data test";
   opName: string = "";
+  offName: string = "";
 
   constructor(private preloader: PreloaderService) {
-    this.fName = localStorage.getItem('fullName')
-    this.opName = localStorage.getItem('operationPosName')
+    this.fName = localStorage.getItem('fullName');
+    this.opName = localStorage.getItem('operationPosName');
+    this.offName = localStorage.getItem('officeShortName');
   }
 
   ngOnInit() {

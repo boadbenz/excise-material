@@ -31,6 +31,7 @@ import { MasDocumentMainService } from './services/mas-document-main.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManageConfig } from './pages/arrests/components/manage/manage.config';
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -38,7 +39,7 @@ import { ManageConfig } from './pages/arrests/components/manage/manage.config';
         BreadcrumbComponent,
         SidebarComponent,
         RightSidebarComponent,
-        LayoutComponent
+        LayoutComponent,  
     ],
     imports: [
         CommonModule,

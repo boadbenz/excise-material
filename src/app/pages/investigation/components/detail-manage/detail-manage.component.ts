@@ -154,12 +154,11 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         break;
                     case 'R':
                         this.enableBtnModeR();
+                        this.resetConfig();
                         this.onPageLoad();
                         break;
                 }
             });
-
-        // this.resetConfig();
 
         this.navService.showFieldEdit
             .takeUntil(this.destroy$)

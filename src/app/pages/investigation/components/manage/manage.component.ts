@@ -241,7 +241,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         x.DateStart = setDateMyDatepicker(x.DateStart);
         x.DateEnd = setDateMyDatepicker(x.DateEnd);
 
-        let investDetail = x.InvestigateDetail;
+        let investDetail = x.InvestigateDetail.filter(x => x.InvestigateDetailID);
         if (!investDetail) return;
         await investDetail.map(id => {
             let staff: fromModels.InvestigateDetailStaff[] = id.InvestigateDetailStaff
@@ -325,6 +325,10 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onCreateInvestDetail() {
         let invest = this.investigateForm.value as fromModels.InvestigateModel;
+        const dateStart = getDateMyDatepicker(invest.DateStart);
+        const dateEnd = getDateMyDatepicker(invest.DateEnd);
+        invest.DateStart = (dateStart);
+        invest.DateEnd = (dateEnd);
 
         invest.DateStart = getDateMyDatepicker(invest.DateStart);
         invest.DateEnd = getDateMyDatepicker(invest.DateEnd);
