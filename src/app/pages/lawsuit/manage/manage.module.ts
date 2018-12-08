@@ -21,7 +21,8 @@ import { BrowserModule } from "@angular/platform-browser";
 import { DetailModule } from "../detail/detail.module";
 import { MyDatePickerTHModule } from "mydatepicker-th";
 import { MyDatePickerModule } from "mydatepicker";
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { IndicmentModalComponent } from '../indictment/indicment-modal.component';
 const routes: Routes = [
   {
     path: "",
@@ -58,12 +59,14 @@ const routes: Routes = [
     MatDialogModule,
     MyDatePickerTHModule,
     MyDatePickerModule,
+    MatAutocompleteModule
     // DetailModule,
   ],
   entryComponents: [DialogJudgment],
   declarations: [
     ManageComponent,
-    DialogJudgment
+    DialogJudgment,
+    IndicmentModalComponent
   ], providers: [
     { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },
     LawsuitService,

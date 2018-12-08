@@ -6,6 +6,7 @@ import * as fromComponents from './components';
 
 export const ROUTES: Routes = [
     {
+
         path: 'list',
         data: {
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานจับกุม' }],

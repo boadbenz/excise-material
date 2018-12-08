@@ -13,6 +13,7 @@ import {
   toLocalNumeric,
   getDateMyDatepicker
 } from 'app/config/dateFormat';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-list',
@@ -23,7 +24,7 @@ export class ListComponent extends ListConfig implements OnInit {
   constructor(
     private navService: NavigationService,
     private requestListService: RequestListService,
-    private preloaderService: PreloaderService
+    private sidebarService: SidebarService
   ) {
     super();
     this.advSearch = this.navService.showAdvSearch;
@@ -35,20 +36,19 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.1.2');
     this.setShowButton();
-    this.fetchData('');
+    // this.fetchData('');
   }
   public closeAdvSearch() {
     this.navService.showAdvSearch.next(false);
   }
 
   public fetchData(Textsearch) {
-    this.preloaderService.setShowPreloader(true);
     this.requestListService
       .RequestListgetByKeyword({ Textsearch: Textsearch })
       .subscribe((res: IRequestList[]) => {
         this.gridData = this.newData(res);
-        this.preloaderService.setShowPreloader(false);
       });
   }
   private setShowButton() {
@@ -62,11 +62,11 @@ export class ListComponent extends ListConfig implements OnInit {
   private newData(data): IRequestList[] {
     return data.map((m: IRequestList) => ({
       ...m,
+      view: true,
       StaffName: `${m.TitleName}${m.FirstName} ${m.LastName}`
     }));
   }
   public submitAdvSearch($event: FormGroup) {
-    this.preloaderService.setShowPreloader(true);
     console.log(' $event.value', $event.value);
 
     const formData: IRequestListgetByConAdv = $event.value;
@@ -83,8 +83,7 @@ export class ListComponent extends ListConfig implements OnInit {
       getDateMyDatepicker(formData.OccurrenceDateTo)
     );
     this.requestListService.RequestListgetByConAdv(formData).subscribe(res => {
-      this.gridData = this.gridData = this.newData(res);
-      this.preloaderService.setShowPreloader(false);
+      this.gridData = this.newData(res);
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CONFIG } from './CONFIG';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { RequestArrestLawsuitService } from 'app/pages/reward/services/RequestArrestLawsuit.service';
 import {
   IRequestArrestLawsuitGetByIndictmentId,
@@ -25,6 +25,8 @@ import {
   filter
 } from 'rxjs/operators';
 import { MyDatePickerOptions } from 'app/config/dateFormat';
+import { IRequestCommandDetail } from 'app/pages/reward/interfaces/RequestCommandDetail';
+import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 interface IDetailCustom {
   PaymentFineDetailID?: number;
   LawbreakerName: string;
@@ -50,7 +52,9 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
   public totalPart = 0;
   public partMoney = 0;
   public checkList: boolean[] = [];
+  public checkedIdList: any[] = [];
   public MasOfficeMainList: string[] = [];
+  public isEdit = true;
   searchStation = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -63,71 +67,136 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
             ).slice(0, 10)
       )
     );
+  get RequestBribeDetail() {
+    return this.formGroup.get('RequestBribeDetail') as FormArray;
+  }
+  get RequestBribeStaff() {
+    return this.formGroup.get('RequestBribeStaff') as FormArray;
+  }
   constructor(
     private fb: FormBuilder,
     private requestArrestLawsuitService: RequestArrestLawsuitService,
     private bribeService: BribeService,
     private requestPaymentFineDetailService: RequestPaymentFineDetailService,
-    private masOfficeService: MasOfficeService
+    private masOfficeService: MasOfficeService,
+    private navService: NavigationService
   ) {
     super();
-    this.RequestCommand$.subscribe((resCom: IRequestCommand[]) => {
-      if (resCom) {
-        const RequestCommand: IRequestCommand =
-          resCom.length > 0 ? resCom[0] : {};
-        this.totalPart = RequestCommand.TotalPart;
-        this.partMoney = RequestCommand.RequestCommandDetail[0].PartMoney;
+    this.mode$.takeUntil(this.destroy$).subscribe(mode => {
+      if (mode !== null) {
+        switch (mode) {
+          case 'R':
+            this.isEdit = false;
+            break;
 
-        this.checkList = RequestCommand.RequestCommandDetail.map(m => true);
-        this.RequestCommand_NoticeCode_list = RequestCommand.RequestCommandDetail.map(
-          m => ({
-            text: `${m.NoticeCode || ''}/${m.TitleName || ''} ${m.FirstName ||
-              ''} ${m.LastName || ''}`,
-            value: m.NoticeCode,
-            value2: m.CommandDetailID
-          })
-        );
-        this.formGroup.controls['RequestBribeCode'].setValue('Auto Generate');
+          default:
+            break;
+        }
       }
     });
-    this.RequestBribe$.subscribe((resBri: IRequestBribe[]) => {
-      if (resBri) {
-        const RequestBribe: IRequestBribe = resBri.length > 0 ? resBri[0] : {};
-        this.totalPart = RequestBribe.TotalPart;
-        this.partMoney = RequestBribe.PartMoney;
-
-        this.tableDetail = this.mapDetailData(RequestBribe.RequestBribeDetail);
+    this.navService.onEdit.takeUntil(this.destroy$).subscribe(onEdit => {
+      if (onEdit === true) {
+        this.isEdit = true;
       }
     });
     this.formGroup = this.fb.group({
-      DetailIDs: [null],
+      RequestBribeID: [null],
+      RequestBribeRewardID: [null],
+      RequestBribeCode: [null],
       CommandDetailID: [null],
-      NoticeCodeAndName: ['', Validators.required],
-      RequestBribeCode: [''],
-      Station: ['', Validators.required],
       RequestDate: [this.setDateNow, Validators.required],
       RequestTime: [this.setTimeNow],
-      Informeracknowledge: ['', Validators.required]
+      StationCode: [''],
+      Station: ['', Validators.required],
+      BribeTotal: [0],
+      BribeRemainder: [0],
+      Informeracknowledge: ['', Validators.required],
+      StationOfPOA: [''],
+      POADate: [this.setDateNow],
+      POATime: [this.setTimeNow],
+      POANo: [''],
+      StationCodeOfPOA: [''],
+      IsActive: [1],
+      RequestBribeDetail: this.fb.array([]),
+      RequestBribeStaff: this.fb.array([])
     });
-    this.formGroup.controls['NoticeCodeAndName'].valueChanges.subscribe(
-      form => {
-        const index = this.RequestCommand_NoticeCode_list.findIndex(
-          m => m.value === form
-        );
-        // console.log('CommandDetailID', this.RequestCommand_NoticeCode_list[index].value2);
-        this.formGroup.controls['CommandDetailID'].setValue(
-          this.RequestCommand_NoticeCode_list[index].value2
-        );
+    this.RequestCommand$.subscribe((resCom: IRequestCommand[]) => {
+      if (resCom !== null) {
+        if (resCom.length > 0) {
+          const RequestCommand: IRequestCommand = resCom[0];
+          this.totalPart = RequestCommand.TotalPart;
+
+          this.partMoney =
+            RequestCommand.RequestCommandDetail.length > 0
+              ? RequestCommand.RequestCommandDetail[0].PartMoney
+              : 0;
+
+          this.checkList = RequestCommand.RequestCommandDetail.map(m => true);
+          this.RequestCommand_NoticeCode_list = RequestCommand.RequestCommandDetail.map(
+            m => ({
+              text: `${m.NoticeCode || ''}/${m.TitleName || ''} ${m.FirstName ||
+                ''} ${m.LastName || ''}`,
+              value: m.CommandDetailID,
+              value2: m.NoticeCode
+            })
+          );
+          this.formGroup.get('RequestBribeCode').patchValue('Auto Generate');
+        }
       }
-    );
+    });
+    this.RequestBribe$.subscribe((resBri: IRequestBribe[]) => {
+      if (resBri !== null) {
+        if (resBri.length > 0) {
+          const RequestBribe: IRequestBribe = resBri[0];
+          this.RequestCommand_NoticeCode_list = resBri.map(m => ({
+            text: `${m.NoticeCode || ''}/${m.TitleName || ''} ${m.FirstName ||
+              ''} ${m.LastName || ''}`,
+            value: m.CommandDetailID
+          }));
+          Object.keys(this.formGroup.value).forEach(f => {
+            this.formGroup.get(f).patchValue(RequestBribe[f]);
+          });
+
+          RequestBribe.RequestBribeDetail.forEach(f => {
+            const newKey = f;
+            newKey['BribeMoney'] = Number(f.PaymentFine) * 0.2;
+            newKey['NetBribeMoney'] = (Number(newKey['BribeMoney']) / Number(RequestBribe.TotalPart)) * Number(RequestBribe.PartMoney);
+            this.RequestBribeDetail.push(this.fb.group(newKey));
+          });
+          RequestBribe.RequestBribeStaff.forEach(f => {
+            this.RequestBribeStaff.push(this.fb.group(f));
+          });
+
+          RequestBribe.RequestBribeDetail.forEach(f => {
+            this.checkedIdList.push({
+              PaymentFineDetailID: f.PaymentFineDetailID,
+              checked: true
+            });
+          });
+
+          this.totalPart = RequestBribe.TotalPart;
+          this.partMoney = RequestBribe.PartMoney;
+
+          this.tableDetail = this.mapDetailData(
+            this.RequestBribeDetail.value
+          );
+        }
+      }
+    });
+    // this.formGroup.get('CommandDetailID').valueChanges.subscribe(form => {
+    //   const index = this.RequestCommand_NoticeCode_list.findIndex(
+    //     m => m.value === form
+    //   );
+    //   // console.log('CommandDetailID', this.RequestCommand_NoticeCode_list[index].value2);
+    // });
   }
 
   ngOnInit() {
     this.masOfficeService
-    .MasOfficeMaingetAll()
-    .subscribe((Office: MasOfficeModel[]) => {
-      this.MasOfficeMainList = Office.map(m => m.OfficeName);
-    });
+      .MasOfficeMaingetAll()
+      .subscribe((Office: MasOfficeModel[]) => {
+        this.MasOfficeMainList = Office.map(m => m.OfficeName);
+      });
   }
   public RequestArrestLawsuitgetByIndictmentID(
     param: IRequestArrestLawsuitGetByIndictmentId
@@ -141,37 +210,114 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
   public total() {
     return {
       PaymentFine:
-        this.tableDetail.length > 0
-          ? this.tableDetail.map(m => m.PaymentFine).reduce((a, b) => (a += b))
+        this.RequestBribeDetail.length > 0
+          ? this.RequestBribeDetail.value
+              .map(m => ({
+                ...m,
+                PaymentFine: this.tableDetail
+                  .filter(
+                    f =>
+                      Number(f.PaymentFineDetailID) ===
+                      Number(m.PaymentFineDetailID)
+                  )
+                  .map(x => Number(x.PaymentFine))
+              }))
+              .map(m => Number(m.PaymentFine))
+              .reduce((a, b) => (a += b))
           : 0,
       BribeMoney:
-        this.tableDetail.length > 0
-          ? this.tableDetail.map(m => m.BribeMoney).reduce((a, b) => (a += b))
+        this.RequestBribeDetail.length > 0
+          ? this.RequestBribeDetail.value
+              .map(m => ({
+                ...m,
+                BribeMoney: this.tableDetail
+                  .filter(
+                    f =>
+                      Number(f.PaymentFineDetailID) ===
+                      Number(m.PaymentFineDetailID)
+                  )
+                  .map(x => Number(x.BribeMoney))
+              }))
+              .map(m => Number(m.BribeMoney))
+              .reduce((a, b) => (a += b))
           : 0,
       NetBribeMoney:
-        this.tableDetail.length > 0
-          ? this.tableDetail
-              .map(m => m.NetBribeMoney)
+        this.RequestBribeDetail.length > 0
+          ? this.RequestBribeDetail.value
+              .map(m => ({
+                ...m,
+                NetBribeMoney: this.tableDetail
+                  .filter(
+                    f =>
+                      Number(f.PaymentFineDetailID) ===
+                      Number(m.PaymentFineDetailID)
+                  )
+                  .map(x => Number(x.NetBribeMoney))
+              }))
+              .map(m => Number(m.NetBribeMoney))
               .reduce((a, b) => (a += b))
           : 0
     };
   }
-  public selectChange(NoticeCode) {
+  public checkListChange(PaymentFineDetailID, value) {
+    console.log('PaymentFineDetailID', PaymentFineDetailID);
+    console.log('value', value);
+    const index = this.RequestBribeDetail.value.findIndex(
+      f => Number(f.PaymentFineDetailID) === Number(PaymentFineDetailID)
+    );
+    if (!value) {
+      this.RequestBribeDetail.removeAt(index);
+    } else {
+      this.RequestBribeDetail.push(
+        this.fb.group({
+          RequestBribeDetailID: '',
+          PaymentFineDetailID: PaymentFineDetailID,
+          RequestBribeID: '',
+          IsActive: 1
+        })
+      );
+    }
+
+    const indexDetailID = this.checkedIdList.findIndex(
+      i => i.PaymentFineDetailID === PaymentFineDetailID
+    );
+
+    if (indexDetailID !== -1) {
+      this.checkedIdList[indexDetailID].checked = value;
+    }
+  }
+  public async selectChange(CommandDetailID) {
     this.tableDetail = [];
-    this.requestPaymentFineDetailService
+
+    const PaymentFineDetail: IRequestPaymentFineDetail[] = await this.requestPaymentFineDetailService
       .RequestPaymentFineDetailgetByNoticeCode({
-        NoticeCode: NoticeCode
+        NoticeCode: this.RequestCommand_NoticeCode_list.filter(
+          f => Number(f.value) === Number(CommandDetailID)
+        )
+          .map(m => m.value2)
+          .shift()
       })
-      .subscribe((PaymentFineDetail: IRequestPaymentFineDetail[]) => {
-        if (PaymentFineDetail.length > 0) {
-          this.tableDetail = this.mapDetailData(PaymentFineDetail);
-          this.checkList = PaymentFineDetail.map(m => true);
-        } else {
-          alert('ไม่พบข้อมูลที่สามารถขอรับเงินสินบน');
-        }
+      .toPromise();
+
+    if (PaymentFineDetail.length > 0) {
+      this.tableDetail = this.mapDetailData(PaymentFineDetail);
+      this.checkList = PaymentFineDetail.map(m => true);
+      PaymentFineDetail.forEach(element => {
+        this.RequestBribeDetail.push(
+          this.fb.group({
+            RequestBribeDetailID: '',
+            PaymentFineDetailID: `${element.PaymentFineDetailID}`,
+            RequestBribeID: '',
+            IsActive: '1'
+          })
+        );
       });
+    } else {
+      alert('ไม่พบข้อมูลที่สามารถขอรับเงินสินบน');
+    }
   }
   public mapDetailData(detailData: any[]): IDetailCustom[] {
+    this.checkList = detailData.map(m => true);
     return detailData.map(m => ({
       ...m,
       LawbreakerName: `${m.LawbreakerTitleName || ''}${m.LawbreakerFirstName ||
@@ -187,11 +333,17 @@ export class ILG6008030000E08Component extends CONFIG implements OnInit {
     }));
   }
   public changeForm($event: FormGroup) {
-    const DetailIDs: number[] = this.tableDetail.map((m, index) =>
-      this.checkList[index] ? m.PaymentFineDetailID : null
-    );
-    this.formGroup.controls['DetailIDs'].setValue(DetailIDs);
+    // const DetailIDs: number[] = this.tableDetail.map((m, index) =>
+    //   this.checkList[index] ? m.PaymentFineDetailID : null
+    // );
+    // this.formGroup.controls['DetailIDs'].setValue(DetailIDs);
 
-    this.formData.emit({ FormName: 'ILG60-08-03-00-00-E08', FormData: $event });
+    this.formData.emit({
+      FormName: 'ILG60-08-03-00-00-E08',
+      FormData: $event,
+      Object: {
+        checkedIdList: this.checkedIdList
+      }
+    });
   }
 }

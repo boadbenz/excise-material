@@ -1,8 +1,9 @@
 import { RewardConfig } from '../reward.config';
-import { Input } from '@angular/core';
+import { Input, Output, EventEmitter } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IButtonAttr } from 'app/pages/reward/interfaces/ButtonAttr';
 import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
+import { IFormChange } from 'app/pages/reward/interfaces/FormChange';
 
 export const ContributorList: DropdownInterface[] = [
   {
@@ -31,7 +32,7 @@ export const ContributorList: DropdownInterface[] = [
   }
 ];
 export class CONFIG extends RewardConfig {
-  public ContributorList = ContributorList;
+  public ContributorList: DropdownInterface[] = ContributorList;
   @Input()
   set inputData(val) {
     this.inputData$.next(val);
@@ -49,13 +50,46 @@ export class CONFIG extends RewardConfig {
     return this.aggregate08$.asObservable();
   }
   public aggregate08$ = new BehaviorSubject<any>(null);
-
-  public ILG60_08_04_00_00_E13_BUTTON$ = new BehaviorSubject<IButtonAttr>({
+  @Output()
+  public emitChange: EventEmitter<IFormChange> = new EventEmitter();
+  public ILG60_08_04_00_00_E13_BUTTON$: BehaviorSubject<
+    IButtonAttr
+  > = new BehaviorSubject<IButtonAttr>({
     DISABLED: false
   });
 
+  @Input()
+  set Input_nonRequestRewardStaff(val) {
+    this.Input_nonRequestRewardStaff$.next(val);
+  }
+  get Input_nonRequestRewardStaff() {
+    return this.Input_nonRequestRewardStaff$.asObservable();
+  }
+  public Input_nonRequestRewardStaff$ = new BehaviorSubject<any>([]);
+
+  @Input()
+  set Input_RequestBribeRewardgetByIndictmentID(val) {
+    this.Input_RequestBribeRewardgetByIndictmentID$.next(val);
+  }
+  get Input_RequestBribeRewardgetByIndictmentID() {
+    return this.Input_RequestBribeRewardgetByIndictmentID$.asObservable();
+  }
+  public Input_RequestBribeRewardgetByIndictmentID$ = new BehaviorSubject<any>(
+    []
+  );
+
+  @Input()
+  set Input_RequestRewardgetByCon(val) {
+    this.Input_RequestRewardgetByCon$.next(val);
+  }
+  get Input_RequestRewardgetByCon() {
+    return this.Input_RequestRewardgetByCon$.asObservable();
+  }
+  public Input_RequestRewardgetByCon$ = new BehaviorSubject<any>([]);
+
   public formObject = {
     check: true,
+    sort: 4,
     TitleName: '',
     FullName: '',
     PositionName: '',

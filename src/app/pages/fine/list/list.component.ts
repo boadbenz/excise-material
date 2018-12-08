@@ -7,7 +7,7 @@ import { Compare } from '../compare';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { FormGroup, FormControl, NgForm } from "@angular/forms";
+import { FormGroup, FormControl, NgForm } from '@angular/forms';
 import { stringify } from 'querystring';
 import { IMyDpOptions } from 'mydatepicker';
 import { toLocalShort } from 'app/config/dateFormat';
@@ -21,14 +21,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
     advSearch: any;
     Compare = new Array<Compare>();
-    CompareList = new Array<Compare>();
+    CompareList: any = [];
     paginage = pagination;
     private subOnSearch: any;
 
     @ViewChild('fineTable') fineTable: ElementRef;
 
-    CompareDateFrom = "";
-    CompareDateTo = "";
+    CompareDateFrom = '';
+    CompareDateTo = '';
     private today = new Date();
     @ViewChild('advForm') advForm: NgForm;
     constructor(
@@ -113,33 +113,32 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.5');
+        this.sidebarService.setVersion('0.0.0.16');
         const form = new FormGroup({
-            ArrestCode: new FormControl(""),
-            LawsuitCode: new FormControl(""),
-            ProveReportNo: new FormControl(""),
-            CompareCode: new FormControl(""),
-            CompareDateFrom: new FormControl(""),
-            CompareDateTo: new FormControl(""),
-            ProgramCode: new FormControl(""),
-            ProcessCode: new FormControl(""),
-            Staff: new FormControl(""),
-            Department: new FormControl(""),
+            ArrestCode: new FormControl(''),
+            LawsuitCode: new FormControl(''),
+            ProveReportNo: new FormControl(''),
+            CompareCode: new FormControl(''),
+            CompareDateFrom: new FormControl(''),
+            CompareDateTo: new FormControl(''),
+            ProgramCode: new FormControl(''),
+            ProcessCode: new FormControl(''),
+            Staff: new FormControl(''),
+            Department: new FormControl(''),
 
         });
         // this.onAdvSearch(form);
-        this.onSearch({Textsearch:""});
+        // this.onSearch({Textsearch:''});
         this.preLoaderService.setShowPreloader(true);
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
+            console.log(Textsearch);
             if (Textsearch) {
+                
                 await this.navService.setOnSearch('');
-                if(Textsearch.Textsearch && Textsearch.Textsearch == null){
-                    Textsearch = {Textsearch:""};
+                if (Textsearch.Textsearch && Textsearch.Textsearch == null) {
+                    Textsearch = {Textsearch:''};
                 }
-                await this.onSearch(Textsearch);
-            } else {
-                Textsearch = {Textsearch:""};
                 await this.onSearch(Textsearch);
             }
         });
@@ -153,12 +152,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async onSearch(Textsearch: any) {
         if(Textsearch.Textsearch == null){
-            Textsearch = {Textsearch:""};
+            Textsearch = {Textsearch:''};
         }
         await this.fineService.getByKeyword(Textsearch).subscribe(list => {
+            this.Compare = list;
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
-            console.log("fail onSearch");
+            console.log('fail onSearch');
         });
     }
 
@@ -171,11 +171,11 @@ export class ListComponent implements OnInit, OnDestroy {
             form.value.CompareDateFrom = sDateCompare.getTime();
             form.value.CompareDateTo = eDateCompare.getTime();
 
-            isNaN(form.value.CompareDateFrom) ? form.value.CompareDateFrom = "" :  form.value.CompareDateFrom = new Date(form.value.CompareDateFrom).toLocaleString('en-GB', { timeZone: 'UTC' });
-            isNaN(form.value.CompareDateTo) ? form.value.CompareDateTo = "" :  form.value.CompareDateFrom = new Date(form.value.CompareDateTo).toLocaleString('en-GB', { timeZone: 'UTC' });
+            isNaN(form.value.CompareDateFrom) ? form.value.CompareDateFrom = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateFrom).toLocaleString('en-GB', { timeZone: 'UTC' });
+            isNaN(form.value.CompareDateTo) ? form.value.CompareDateTo = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateTo).toLocaleString('en-GB', { timeZone: 'UTC' });
 
-            form.value.ProgramCode = "";
-            form.value.ProcessCode = "";
+            form.value.ProgramCode = '';
+            form.value.ProcessCode = '';
 
             var sendingFormat = {
                 ArrestCode: form.value.ArrestCode,
@@ -190,14 +190,15 @@ export class ListComponent implements OnInit, OnDestroy {
             this.fineService.getByConAdv(sendingFormat).subscribe(async list => {
                 this.onSearchComplete(list)
             }, (err: HttpErrorResponse) => {
-                console.log("fail onAdvSearch", err.message);
+                console.log('fail onAdvSearch', err.message);
             });
         }
     }
 
     onSearchComplete(list: any) {
+        this.Compare = list;
         var IsOutside = 0;
-        var CompareCode = "";
+        var CompareCode = '';
         this.CompareList = [];
         if (list.length < 1) {
             alert(Message.noRecord);
@@ -207,13 +208,13 @@ export class ListComponent implements OnInit, OnDestroy {
         this.CompareList = list.map((item, i) => {
             item.RowsId = i + 1;
             try {
-              item.CompareDate = toLocalShort(item.CompareDate);
+              item.CompareDate = item.CompareDate ? toLocalShort(item.CompareDate) : '';
             } catch (error) {
 
             }
 
             // item.LawsuitID = list.LawsuitArrestIndicment[0];
-            // console.log("Check LIST:"+JSON.stringify(item));
+            // console.log('Check LIST:'+JSON.stringify(item));
             return item;
           });
           /* Set Total Record */
@@ -241,12 +242,12 @@ export class ListComponent implements OnInit, OnDestroy {
         this.paginage.TotalItems = this.CompareList.length;
     }
 
-    clickView(LawsuitID: string, ArrestCode: string, CompareID: string) {
-        if (CompareID == null || CompareID === '') {
-          CompareID = '0';
-        }
-        LawsuitID = LawsuitID.toString().replace('/', '-');
-        this._router.navigate([`/fine/manage/R/${CompareID}/${LawsuitID}/${ArrestCode}`]);
+    clickView(IndictmentID: string, ArrestCode: string, CompareID: string) {
+      if (+CompareID) {
+        this._router.navigate([`/fine/manage/R/${CompareID}/${IndictmentID}/${ArrestCode}`]);
+      } else {
+        this._router.navigate([`/fine/manage/C/0/${IndictmentID}/${ArrestCode}`]);
+      }
     }
 
     async pageChanges(event) {
@@ -259,7 +260,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkReceiveDate);
-            this.CompareDateFrom = "";
+            this.CompareDateFrom = '';
         }
     }
 
@@ -269,7 +270,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (sDateCompare.getTime() > eDateCompare.getTime()) {
             alert(Message.checkReceiveDate);
-            this.CompareDateTo = "";
+            this.CompareDateTo = '';
         }
     }
 }

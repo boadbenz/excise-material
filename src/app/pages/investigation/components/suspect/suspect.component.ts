@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
-import { MyDatePickerOptions, getDateMyDatepicker, convertDateForSave, setDateMyDatepicker } from 'app/config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, setDateMyDatepicker } from 'app/config/dateFormat';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MainMasterService } from 'app/services/main-master.service';
@@ -32,7 +32,8 @@ export class SuspectComponent implements OnInit {
     private navService: NavigationService,
     private fb: FormBuilder,
     private sidebarService: SidebarService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private s_invest: fromServices.InvestgateService
   ) {
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);
@@ -78,7 +79,7 @@ export class SuspectComponent implements OnInit {
 
   async ngOnInit() {
     this.SuspectFG = this.createForm();
-    this.sidebarService.setVersion('0.0.0.32');
+    this.sidebarService.setVersion(this.s_invest.version);
 
     await this.active_route();
     await this.navigate_service();
@@ -88,6 +89,25 @@ export class SuspectComponent implements OnInit {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
     this.SuspectFG.reset();
+    this.navService.setOnEdit(false);
+    this.navService.setOnSave(false);
+    this.navService.setOnDelete(false);
+    this.navService.setOnCancel(false);
+    this.navService.setOnSearch(false);
+    this.navService.setOnPrint(false);
+    this.navService.setOnNextPage(false);
+    this.navService.setOnPrevPage(false);
+
+    this.navService.setEditField(false);
+    this.navService.setSearchBar(false);
+    this.navService.setPrintButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setNewButton(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setPrevPageButton(false);
   }
 
   private createForm(): FormGroup {
@@ -255,21 +275,6 @@ export class SuspectComponent implements OnInit {
         this.onCancel();
       }
     })
-
-    // this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
-    //     if (status) {
-    //         await this.navService.setOnNextPage(false);
-    //         this.router.navigate(
-    //             [`arrest/allegation`, this.allegationMode],
-    //             {
-    //                 queryParams: {
-    //                     arrestCode: this.arrestCode,
-    //                     indictmentId: this.indictmentId,
-    //                     guiltbaseId: this.guiltbaseId
-    //                 }
-    //             });
-    //     }
-    // })
   }
 
   async ArrestSuspectGetByCon(SuspectID: string) {
@@ -344,9 +349,9 @@ export class SuspectComponent implements OnInit {
       .map(term => term === '' ? []
         : this.typeheadRegion
           .filter(v =>
-            v.SubdistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-            v.DistrictNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-            v.ProvinceNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1
+            (`${v.SubdistrictNameTH} ${v.DistrictNameTH} ${v.ProvinceNameTH}`)
+              .toLowerCase()
+              .indexOf(term.toLowerCase()) > -1
           ).slice(0, 10));
 
   searchTitleName = (text$: Observable<string>) =>
@@ -516,25 +521,16 @@ export class SuspectComponent implements OnInit {
     if (!confirm(Message.confirmAction))
       return
 
-    switch (this.mode) {
-      case 'C':
-        window.close();
-      // this.router.navigate(
-      //   [`arrest/allegation`, 'C'],
-      //   {
-      //     queryParams: {
-      //       arrestMode: this.arrestMode,
-      //       arrestCode: this.arrestCode,
-      //       indictmentId: this.indictmentId,
-      //       guiltbaseId: this.guiltbaseId
-      //     }
-      //   });
-      // break;
+    this.router.navigate([`investigation/lawbreaker`, this.mode, this.suspectId]);
+    // switch (this.mode) {
+    //   case 'C':
+    //     this.router.navigate([`arrest/allegation`, this.mode, this.suspectId]);
+    //     break;
 
-      case 'R':
-        this.enableBtnModeR();
-        break;
-    }
+    //   case 'R':
+    //     this.enableBtnModeR();
+    //     break;
+    // }
   }
 
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { FormGroupConfig } from './form-group.config';
 import { ColumnsInterface } from '../interfaces/columns-interface';
+import { setDateMyDatepicker } from 'app/config/dateFormat';
 
 @Component({
   selector: 'app-form-group',
@@ -20,10 +21,14 @@ export class FormGroupComponent extends FormGroupConfig implements OnInit {
         column.forEach((key, index) => {
           // console.log('key', key);
           if (key.default && key.field) {
-            this.formGroup.controls[key.field].setValue(
-              key.default || '',
-              true
-            );
+            if (key.inputType == 'date') {
+              setDateMyDatepicker(new Date(key.default));
+            } else {
+              this.formGroup.controls[key.field].setValue(
+                key.default || '',
+                true
+              );
+            }
           }
           if (key.default2 && key.field2) {
             this.formGroup.controls[key.field2].setValue(

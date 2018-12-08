@@ -9,6 +9,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import * as fromModels from '../../models';
 import * as fromStore from '../../store';
 import * as fromService from '../../services';
+import { ManageComponent } from '../manage/manage.component';
 import { Store } from '@ngrx/store';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { MainMasterService } from 'app/services/main-master.service';
@@ -75,7 +76,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
   isCheckAll: boolean = false;
 
   runningTable = 'ops_arrest';
-  runningOfficeCode = '900012';
+  runningOfficeCode = '901112';
   runningPrefix = 'TN';
 
   // param: Params
@@ -102,7 +103,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.sidebarService.setVersion('0.0.0.34');
+    this.sidebarService.setVersion(this.s_arrest.version);
 
     this.arrestIndictmentFG = this.fb.group({
       IndictmentID: [''],
@@ -125,7 +126,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
     await this.setProductUnitStore();
 
-    this.navService.showFieldEdit.takeUntil(this.destroy$).subscribe(p => this.showEditField = p.valueOf())
+    this.navService.showFieldEdit.takeUntil(this.destroy$).subscribe(p => this.showEditField = p.valueOf());
 
     combineLatest(this.activeRoute.params, this.activeRoute.queryParams)
       .map(results => ({ params: results[0], queryParams: results[1] }))
@@ -159,6 +160,8 @@ export class AllegationComponent implements OnInit, OnDestroy {
             this.loaderService.hide();
             break;
         }
+
+        this.resetConfig();
       });
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
@@ -198,6 +201,19 @@ export class AllegationComponent implements OnInit, OnDestroy {
         this.router.navigate(['/arrest/manage', this.arrestMode, this.newArrestCode || this.arrestCode]);
       }
     })
+  }
+
+  private resetConfig() {
+    let routerConfig = this.router['config'];
+    routerConfig
+      .find(x => x.path == 'arrest')['_loadedConfig'].routes
+      .filter(x => x.path.indexOf('allegation') >= 0)
+      .map(x => {
+        x.data.urls
+          .find(y => y.url.indexOf('/arrest/manage') >= 0).url = `/arrest/manage/${this.arrestMode}/${this.arrestCode}`;
+        return x;
+      })
+    this.router.resetConfig(routerConfig);
   }
 
   private enableBtnModeC() {
@@ -551,15 +567,15 @@ export class AllegationComponent implements OnInit, OnDestroy {
         if (staff.length <= 0) {
           alert('ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ')
           return
-      }
-      if (staff.filter(x => x.ContributorID == '').length > 0) {
+        }
+        if (staff.filter(x => x.ContributorID == '').length > 0) {
           alert('กรุณาเลือกฐานะของผู้จับกุม');
           return;
-      }
-      if (staff.filter(x => x.ContributorID == '6').length <= 0) {
+        }
+        if (staff.filter(x => x.ContributorID == '6').length <= 0) {
           alert('ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ');
           return;
-      }
+        }
       }
     }
 
@@ -802,10 +818,9 @@ export class AllegationComponent implements OnInit, OnDestroy {
         this.indictmentId = x.IndictmentID;
         this.guiltbaseId = i.GuiltBaseID;
 
-        await this.insertArrestProduct(arrestCode, x.IndictmentID).then(async product => {
-          await this.insertArrestLawbreaker(arrestCode, x.IndictmentID, product)
-        })
-        // return Promise.all([product, lawbreaker]);
+        let product = await this.insertArrestProduct(arrestCode, x.IndictmentID).then(product => product);
+        let lawbreaker = await this.insertArrestLawbreaker(arrestCode, x.IndictmentID, product)
+        return Promise.all([product, lawbreaker]);
 
       }, () => { this.saveFail(); return false; })
       .catch((error) => this.catchError(error));
@@ -853,7 +868,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
       .then(async x => {
         if (!this.checkIsSuccess(x)) return;
 
-        let prod = await this.insertArrestProductDetail(x.IndictmentDetailID, productArr);
+        await this.insertArrestProductDetail(x.IndictmentDetailID, productArr);
 
       }, () => { this.saveFail(); return; })
       .catch((error) => this.catchError(error));
@@ -906,8 +921,11 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
   async insertArrestProductDetail(indictmentDetailID: number, productArr: fromModels.ArrestProduct[]) {
 
-    let pd = await productArr.map(async p => {
+    let pd = await productArr
+    .filter(p => p.IsChecked)
+    .map(async p => {
       let pd = new fromModels.ArrestProductDetail();
+      pd.ProductID = parseInt(p.ProductID);
       pd.IsProdcutCo = '1';
       pd.Qty = p.Qty || '0';
       pd.QtyUnit = p.QtyUnit || '-';

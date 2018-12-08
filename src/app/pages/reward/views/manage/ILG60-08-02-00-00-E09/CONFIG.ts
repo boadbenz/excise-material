@@ -27,7 +27,7 @@ export class CONFIG extends ManageConfig {
   public isEdit$ = new BehaviorSubject<any>(null);
 
   public FormInput$ = new BehaviorSubject<any>(null);
-
+  public columns: any;
   public FormInputDefault: ColumnsInterface[] = [
     {
       title: 'คำสั่งกรมเลขที่',
@@ -37,10 +37,11 @@ export class CONFIG extends ManageConfig {
     {
       title: 'วันที่ออกคำสั่ง',
       field: 'CommandDate',
-      default: '',
+      inputType: 'date',
+      default: this.setDateNow,
       title2: 'เวลา',
       field2: 'CommandTime',
-      default2: ''
+      default2: this.setTimeNow
     }
   ];
   public columnsTableDefault: ColumnsInterface[] = [
@@ -50,7 +51,8 @@ export class CONFIG extends ManageConfig {
     },
     {
       title: 'วันที่แจ้งความ',
-      field: 'NoticeDate'
+      field: 'NoticeDate',
+      inputType: 'date'
     },
     {
       title: 'ผู้แจ้งความ',

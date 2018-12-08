@@ -4,3 +4,11 @@
 .mat-expansion-panel-content {
     font: unset !important;
 }
+
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+mat-dialog-container.mat-dialog-container {
+    padding: unset;
+}

@@ -38,7 +38,7 @@ export const routes: Routes = [
         component: fromComponents.DetailManageComponent
     }, 
     {
-        path: 'lawbreaker/:code',
+        path: 'lawbreaker/:mode/:code',
         data: {
           urls: [
             { title: 'หน้าหลัก', url: '/' },

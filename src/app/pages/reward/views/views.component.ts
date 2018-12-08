@@ -7,12 +7,9 @@ import { RewardHelper } from '../reward.helper';
   styleUrls: ['./views.component.scss']
 })
 export class ViewsComponent extends RewardHelper implements OnInit {
-
   constructor() {
     super();
-   }
-
-  ngOnInit() {
   }
 
+  ngOnInit() {}
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, Injectable } from '@angular/core';
 import { MainMasterService } from 'app/services/main-master.service';
-import { LoaderService } from 'app/core/loader/loader.service';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { LoaderService } from 'app/core/loader/loader.service';
+// import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { ArrestService } from '../../services';
 
 @Component({
@@ -26,7 +27,6 @@ export class PrintDocModalComponent implements OnInit {
 
   constructor(
     private s_masmain: MainMasterService,
-    private loaderService: LoaderService,
     private s_arrest: ArrestService,
     private fb: FormBuilder
   ) { }
@@ -43,11 +43,6 @@ export class PrintDocModalComponent implements OnInit {
       ])
     })
 
-    // this.printDoc = [
-    //   {
-    //     DocName: 'บันทึกจับกุม (ส.ส. 2/39)',
-    //     DocType: 'แบบฟอร์ม'
-    //   }]
     this.s_masmain.MasDocumentMaingetAll('3', this.ArrestCode).then(x => {
       x.filter(y => y.IsActive == 1)
         .map(y => {
@@ -59,10 +54,6 @@ export class PrintDocModalComponent implements OnInit {
               DocTypeName: 'เอกสารแนบภายใน'
             })
           )
-          // this.printDoc.push({
-          //   DocName: y.DataSource,
-          //   DocType: 'เอกสารแนบภายใน'
-          // })
         })
     })
   }
@@ -77,37 +68,14 @@ export class PrintDocModalComponent implements OnInit {
   onPrint() {
     let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
     if (_print.length) {
-      _print.map(x => {
-        this.s_arrest.ArrestReportgetByCon(this.ArrestCode).subscribe(response => {
-          console.log(response);
-          
-          // window.open('data:application/pdf,' + response.text());
-          // create a download anchor tag
-          var downloadLink = document.createElement('a');
-          downloadLink.target = '_blank';
-          downloadLink.download = `${this.ArrestCode}.pdf`;
-
-          // convert downloaded data to a Blob
-          var blob = new Blob([response.text()], { type: 'application/pdf' });
-
-          // create an object URL from the Blob
-          var URL = window.URL;
-          var downloadUrl = URL.createObjectURL(blob);
-
-          // set object URL as the anchor's href
-          downloadLink.href = downloadUrl;
-
-          // append the anchor to document body
-          document.body.appendChild(downloadLink);
-
-          // fire a click event on the anchor
-          downloadLink.click();
-
-          // cleanup: remove element and revoke object URL
-          document.body.removeChild(downloadLink);
-          URL.revokeObjectURL(downloadUrl);
-        });
-      })
+      this.s_arrest.ArrestReportgetByCon(this.ArrestCode)
+        .subscribe(x => {
+          const blob = new Blob([x], { type: "application/pdf" });
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = `${this.ArrestCode}.pdf`;
+          link.click();
+        })
     }
   }
 

@@ -9,6 +9,7 @@ export class StepWizardComponent implements OnInit {
 
   // steps: any;
   @Input() sectionId: EventEmitter<number>;
+  @Input() disabledLine: EventEmitter<boolean>;
 
   section = [
     { id: 1, name: 'ใบแจ้งความนำจับ' },

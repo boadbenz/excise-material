@@ -1,25 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CONFIG } from './CONFIG';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  FormControl
+} from '@angular/forms';
 import { INonRequestRewardStaff } from 'app/pages/reward/interfaces/NonRequestRewardStaff';
 import { IRewardBinding } from '../reward.config';
 import { DropdownInterface } from 'app/pages/reward/shared/interfaces/dropdown-interface';
 import { Observable } from 'rxjs/Observable';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  filter,
-  tap
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { MasTitleService } from 'app/pages/reward/services/master/MasTitle.service';
+import { MasTitleModel, MasStaffModel } from 'app/models';
+import { MasStaffService } from 'app/pages/reward/services/master/MasStaff.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ILG60-08-04-00-00-E12',
   templateUrl: './ILG60-08-04-00-00-E12.component.html',
   styleUrls: ['./ILG60-08-04-00-00-E12.component.scss']
 })
-export class ILG6008040000E12Component extends CONFIG implements OnInit {
+export class ILG6008040000E12Component extends CONFIG
+  implements OnInit, OnDestroy {
   public formGroup: FormGroup;
+  public newAddValid: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    true
+  );
   public aggregate = {
     FirstMoney: {
       sum: 0
@@ -39,189 +48,479 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
   };
   public SumBribeMoney = 0;
   public SumRewardMoney = 0;
-  public SumFirstMoney = 0;
+  // public SumFirstMoney = 0;
   public FirstPartTotal = 0;
   public FirstMoneyTotal = 0;
-  public SumSecondMoney = 0;
+  // public SumSecondMoney = 0;
   public SecondPartTotal = 0;
   public SecondMoneyTotal = 0;
+  // public SumTotalMoney = 0;
+  public HaveNotice = 0;
   // public nonRequestRewardStaffData: any[] = [];
 
   public datatable: any[] = [];
-  constructor(private fb: FormBuilder) {
-    super();
-    this.formGroup = this.fb.group({
-      sharedBribeReward: this.fb.array([])
-    });
+  public staffAll: MasStaffModel[] = [];
+  public TitleList: string[] = [];
+  public StaffList: string[] = [];
+  public PositionNameList: string[] = [];
+  public nonRequestRewardStaff: INonRequestRewardStaff[] = [];
+  public Staff_StaffCode_List: DropdownInterface[] = [];
 
-    this.inputData$.subscribe((data: IRewardBinding) => {
-      if (data) {
-        // const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
-        switch (data.methodName) {
-          case 'nonRequestRewardStaff':
-            // console.log('nonRequestRewardStaff', data.data);
-            // this.nonRequestRewardStaffData = data.data;
-            this.datatable = data.data.map(m => ({
-              ...m,
-              FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
-              ContributorName: this.ConvertContributorName(m.ContributorID),
-              FirstPart:
-                m.ContributorID === 6 || m.ContributorID === 7 ? 1 : '',
-              FirstMoney:
-                (Number(this.aggregate.FirstMoney.sum || 0) /
-                  Number(this.aggregate.FirstPart.sum || 0)) *
-                Number(m.FirstPart || 0),
-              SecondMoney:
-                (Number(this.aggregate.SecondMoney.sum || 0) /
-                  Number(this.aggregate.SecondPart.sum || 0)) *
-                Number(m.SecondPart || 0),
-              ToTalMoney: Number(m.FirstMoney || 0) + Number(m.SecondMoney || 0)
-            }));
-            // data.data.forEach(e => {
-            //   // instantiate a new day FormGroup;
-            //   const newDayGroup: FormGroup = this.fb.group({
-            //     check: [true],
-            //     TitleName: [e.TitleName],
-            //     FullName: [
-            //       `${e.TitleName}${e.FirstName}${e.LastName}`,
-            //       Validators.required
-            //     ],
-            //     PositionName: [`${e.PositionName}`],
-            //     PosLevelName: [`${e.PosLevelName}`],
-            //     ContributorName: [
-            //       `${this.ConvertContributorName(e.ContributorID)}`,
-            //       Validators.required
-            //     ],
-            //     ContributorID: [`${e.ContributorID}`],
-            //     FirstPart: [
-            //       e.ContributorID === 6 || e.ContributorID === 7 ? 1 : ''
-            //     ],
-            //     SecondPart: [''],
-            //     FirstMoney: [
-            //       (this.SumFirstMoney / this.FirstPartTotal) * e.FirstPart
-            //     ],
-            //     SecondMoney: [
-            //       (this.SumSecondMoney / this.SecondPartTotal) * e.SecondPart
-            //     ],
-            //     ToTalMoney: [e.FirstMoney + e.SecondMoney]
-            //   });
-            //   // Add it to our formArray
-            //   control.push(newDayGroup);
-            //   // console.log('control.value', control.value);
-            // });
-            break;
+  SumTotalMoney = () => this.FirstMoneyTotal + this.SecondMoneyTotal;
+  SumMoney = () => this.SumBribeMoney + this.SumRewardMoney;
+  SumFirstMoney = () => (this.SumRewardMoney || 0) / 3;
+  SumFirstMoneyPerPart = () =>
+    this.SumFirstMoney() / this.aggregate.FirstPart.sum;
+  FirstRemainder = () => this.SumFirstMoney() - this.aggregate.FirstMoney.sum;
+  SumSecondMoney = () => (this.SumRewardMoney / 3) * 2;
+  SumSecondMoneyPerPart = () =>
+    this.SumSecondMoney() / this.aggregate.SecondPart.sum;
+  SecondRemainder = () =>
+    this.SumSecondMoney() - this.aggregate.SecondMoney.sum;
 
-          case 'RequestBribeRewardgetByIndictmentID':
-            console.log('RequestBribeRewardgetByIndictmentID', data.data);
+  searchTitleName = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 1
+          ? []
+          : this.TitleList.filter(
+              v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
+            ).slice(0, 10)
+      )
+    ); // ยศ	Column	Key Press	ILG60-08-04-00-00-E15
+  searchFullName = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 1
+          ? []
+          : this.Staff_StaffCode_List.filter(
+              v => v.text.toLowerCase().indexOf(term.toLowerCase()) > -1
+            )
+              .slice(0, 10)
+              .map(m => m.text)
+      )
+    ); // ชื่อ-สกุล	Column	Key Press	ILG60-08-04-00-00-E16
+  // ชื่อ-สกุล	Column	Text Change	ILG60-08-04-00-00-E17
 
-            // data.data.forEach(e => {
-            //   // instantiate a new day FormGroup;
-            //   if (e.HaveNotice === 1) {
-            //     const newDayGroup: FormGroup = this.fb.group({
-            //       check: [true],
-            //       TitleName: [''],
-            //       FullName: [''],
-            //       PositionName: [''],
-            //       PosLevelName: [''],
-            //       ContributorName: [
-            //         `${e.HaveNotice === 1 ? 'ผู้แจ้งความนำจับ' : ''}`,
-            //         Validators.required
-            //       ],
-            //       ContributorID: [''],
-            //       FirstPart: [''],
-            //       SecondPart: [''],
-            //       FirstMoney: [''],
-            //       SecondMoney: [''],
-            //       ToTalMoney: [e.HaveNotice === 1 ? this.SumBribeMoney : 0]
-            //     });
-
-            //     // Add it to our formArray
-            //     control.push(newDayGroup);
-            //   }
-            // });
-            break;
-
-          case 'RequestRewardgetByCon':
-            console.log('RequestRewardgetByCon', data.data);
-            this.datatable = data.data[0].RequestRewardStaff.map(m => ({
-              ...m,
-              FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
-              ContributorName: m.ContributorName
-            }));
-            break;
-        }
-      }
-    });
-    this.aggregate08.subscribe(res => {
-      console.log('ageee', res);
-      if (res !== null) {
-        this.SumBribeMoney = res['BribeMoney'];
-        this.SumRewardMoney = res['RewardMoney'];
-        this.changeReactiveForm();
-      }
-    });
-    this.formGroup.controls['sharedBribeReward'].valueChanges.subscribe(
-      selectedValue => {
-        Object.keys(this.aggregate).forEach(element => {
-          const arr: number[] = selectedValue.map(m => Number(m[element]));
-          this.aggregate[element].sum = arr.reduce((a, b) => (a += b));
-        });
-      }
-    );
+  // get RequestBribeRewardForm(): FormArray {
+  //   return this.formGroup.get('RequestBribeRewardForm') as FormArray;
+  // }
+  // get RequestRewardForm(): FormArray {
+  //   return this.formGroup.get('RequestRewardForm') as FormArray;
+  // }
+  // get nonRequestRewardStaffForm(): FormArray {
+  //   return this.formGroup.get('nonRequestRewardStaffForm') as FormArray;
+  // }
+  get sharedBribeRewardForm(): FormArray {
+    return this.formGroup.get('sharedBribeRewardForm') as FormArray;
   }
 
-  ngOnInit() {}
-  public changeReactiveForm() {
-    // const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
-    // control.controls[0]['ToTalMoney'].setValue(Number(res['BribeMoney']));
-    // console.log('formList', control.controls);
-    // this.nonRequestRewardStaffData.forEach((element, index) => {
-    //   control.controls[index].get('check').setValue(true);
-    //   control.controls[index].get('TitleName').setValue(element.TitleName);
-    //   control.controls[index]
-    //     .get('FullName')
-    //     .setValue(
-    //       `${element.TitleName}${element.FirstName}${element.LastName}`,
-    //       Validators.required
-    //     );
-    //   control.controls[index]
-    //     .get('PositionName')
-    //     .setValue(`${element.PositionName}`);
-    //   control.controls[index]
-    //     .get('PosLevelName')
-    //     .setValue(`${element.PosLevelName}`);
-    //   control.controls[index]
-    //     .get('ContributorName')
-    //     .setValue(
-    //       `${this.ConvertContributorName(element.ContributorID)}`,
-    //       Validators.required
-    //     );
-    //   control.controls[index]
-    //     .get('ContributorID')
-    //     .setValue(`${element.ContributorID}`);
-    //   // control.controls[index]
-    //   //   .get('FirstPart')
-    //   //   .setValue(
-    //   //     element.ContributorID === 6 || element.ContributorID === 7 ? 1 : ''
-    //   //   );
-    //   // control.controls[index].get('SecondPart').setValue('');
-    //   control.controls[index]
-    //     .get('FirstMoney')
-    //     .setValue(
-    //       (this.SumFirstMoney / this.aggregate.FirstPart.sum) *
-    //         control.controls[index].get('FirstPart').value
-    //     );
-    //   control.controls[index]
-    //     .get('SecondMoney')
-    //     .setValue(
-    //       (this.SumSecondMoney / this.aggregate.SecondPart.sum) *
-    //         element.SecondPart
-    //     );
-    //   control.controls[index]
-    //     .get('ToTalMoney')
-    //     .setValue(element.FirstMoney + element.SecondMoney);
-    // });
-    //  this.formGroup.controls.sharedBribeReward.controls[0].controls.name.
+  constructor(
+    private fb: FormBuilder,
+    private masTitleService: MasTitleService,
+    private masStaffService: MasStaffService
+  ) {
+    super();
+    this.formGroup = this.fb.group({
+      // RequestBribeRewardForm: this.fb.array([]),
+      // RequestRewardForm: this.fb.array([]),
+      // nonRequestRewardStaffForm: this.fb.array([]),
+      sharedBribeRewardForm: this.fb.array([])
+    });
+    this.aggregate08.takeUntil(this.destroy$).subscribe(aggregate08 => {
+      if (aggregate08 !== null) {
+        this.SumBribeMoney = aggregate08['BribeMoney'];
+        this.SumRewardMoney = aggregate08['RewardMoney'];
+        if (this.sharedBribeRewardForm.length > 0) {
+          this.sharedBribeRewardForm.at(0)
+            .get('ToTalMoney')
+            .patchValue(aggregate08['BribeMoney']);
+        }
+        this.calChangeAll();
+      }
+    });
+    this.Input_nonRequestRewardStaff$.takeUntil(this.destroy$).subscribe(
+      data => {
+        if (data !== null) {
+          this.nonRequestRewardStaff = data;
+
+          const datatable_nonRequestRewardStaff = this.nonRequestRewardStaff.map(
+            m => ({
+              ...m,
+              sort: 3,
+              check: true,
+              FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
+              PositionName: `${m.PositionName || ''}`,
+              PosLevelName: `${m.PosLevelName || ''}`,
+              ContributorName: this.ConvertContributorName(m.ContributorID),
+              FirstPart:
+                m.ContributorID === '6' || m.ContributorID === '7' ? 1 : null,
+              SecondPart: null,
+
+              FirstMoney: 0,
+
+              SecondMoney: 0,
+              ToTalMoney: 0
+            })
+          );
+
+          // const control_nonRequestRewardStaff: FormArray = <FormArray>(
+          //   this.nonRequestRewardStaffForm
+          // );
+
+          datatable_nonRequestRewardStaff.forEach(x => {
+            const objForm = {};
+            Object.keys(x).forEach(f => {
+              objForm[f] = [x[f]];
+            });
+            const newGroup: FormGroup = this.fb.group(objForm);
+            this.sharedBribeRewardForm.push(newGroup);
+          });
+        }
+      }
+    );
+    this.Input_RequestBribeRewardgetByIndictmentID$.takeUntil(
+      this.destroy$
+    ).subscribe(data => {
+      if (data !== null) {
+        const datatable_RequestBribeReward = data;
+
+        // const control_RequestBribeRewardForm: FormArray = <FormArray>(
+        //   this.RequestBribeRewardForm
+        // );
+        datatable_RequestBribeReward
+          .filter(f => f.HaveNotice === 1)
+          .forEach(x => {
+            const newGroup: FormGroup = this.fb.group({
+              check: [true],
+              sort: [1],
+              TitleName: [''],
+              FullName: ['สายลับ (ขอปิดนาม)'],
+              FirstName: ['สายลับ (ขอปิดนาม)'],
+              PositionName: [''],
+              PosLevelName: [''],
+              ContributorName: ['ผู้แจ้งความนำจับ'],
+              ContributorID: [''],
+              FirstPart: [null],
+              FirstMoney: [null],
+              SecondPart: [null],
+              SecondMoney: [null],
+              ToTalMoney: [this.SumBribeMoney]
+            });
+            this.sharedBribeRewardForm.push(newGroup);
+          });
+      }
+    });
+    this.Input_RequestRewardgetByCon$.takeUntil(this.destroy$).subscribe(
+      (data: any[]) => {
+        if (data !== null) {
+          console.log('data', data);
+          if (data.length > 0) {
+            const RequestReward: IRequestReward = data[0];
+            const datatable_RequestReward = RequestReward.RequestRewardStaff.map(
+              m => ({
+                ...m,
+                check: true,
+                sort: 2,
+                FullName: `${m.TitleName || ''}${m.FirstName ||
+                  ''}${m.LastName || ''}`,
+                ContributorName: m.ContributorName
+              })
+            );
+
+            // const control_RequestReward: FormArray = <FormArray>(
+            //   this.RequestRewardForm
+            // );
+            datatable_RequestReward.forEach(x => {
+              const objForm = {};
+              Object.keys(x).forEach(f => {
+                objForm[f] = [x[f]];
+              });
+              const newGroup: FormGroup = this.fb.group(objForm);
+              this.sharedBribeRewardForm.push(newGroup);
+            });
+          }
+        }
+      }
+    );
+
+    this.formGroup.valueChanges
+      .takeUntil(this.destroy$)
+      .subscribe(selectedValue => {
+        // console.log(`formGroup`, selectedValue);
+        // const sumFirstPartRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.FirstPart).length > 0
+        //     ? selectedValue.RequestBribeRewardForm.map(m => m.FirstPart).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumFirstPartRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.FirstPart).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.FirstPart).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumFirstPartnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.FirstPart).length >
+        //   0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.FirstPart)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
+        const sumFirstPartsharedBribeRewardForm =
+          selectedValue.sharedBribeRewardForm.map(m => m.FirstPart).length > 0
+            ? selectedValue.sharedBribeRewardForm
+                .map(m => m.FirstPart)
+                .reduce((a, b) => (a += b))
+            : 0;
+
+        // tslint:disable-next-line:max-line-length
+        this.aggregate.FirstPart.sum =
+          // sumFirstPartRequestBribeRewardForm +
+          // sumFirstPartRequestRewardForm +
+          // sumFirstPartnonRequestRewardStaffForm +
+          sumFirstPartsharedBribeRewardForm;
+
+        // const sumSecondPartRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.SecondPart).length > 0
+        //     ? selectedValue.RequestBribeRewardForm.map(
+        //         m => m.SecondPart
+        //       ).reduce((a, b) => (a += b))
+        //     : 0;
+        // const sumSecondPartRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.SecondPart).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.SecondPart).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumSecondPartnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.SecondPart)
+        //     .length > 0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.SecondPart)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
+        const sumSecondPartsharedBribeRewardForm =
+          selectedValue.sharedBribeRewardForm.map(m => m.SecondPart).length > 0
+            ? selectedValue.sharedBribeRewardForm
+                .map(m => m.SecondPart)
+                .reduce((a, b) => (a += b))
+            : 0;
+
+        // tslint:disable-next-line:max-line-length
+        this.aggregate.SecondPart.sum =
+          // sumSecondPartRequestBribeRewardForm +
+          // sumSecondPartRequestRewardForm +
+          // sumSecondPartnonRequestRewardStaffForm +
+          sumSecondPartsharedBribeRewardForm;
+
+        // const sumFirstRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.FirstMoney).length > 0
+        //     ? selectedValue.RequestBribeRewardForm.map(
+        //         m => m.FirstMoney
+        //       ).reduce((a, b) => (a += b))
+        //     : 0;
+        // const sumFirstRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.FirstMoney).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.FirstMoney).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumFirstnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.FirstMoney)
+        //     .length > 0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.FirstMoney)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
+        const sumFirstsharedBribeRewardForm =
+          selectedValue.sharedBribeRewardForm.map(m => m.FirstMoney).length > 0
+            ? selectedValue.sharedBribeRewardForm
+                .map(m => m.FirstMoney)
+                .reduce((a, b) => (a += b))
+            : 0;
+
+        // tslint:disable-next-line:max-line-length
+        this.aggregate.FirstMoney.sum =
+          // sumFirstRequestBribeRewardForm +
+          // sumFirstRequestRewardForm +
+          // sumFirstnonRequestRewardStaffForm +
+          sumFirstsharedBribeRewardForm;
+
+        // const sumSecondRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.SecondMoney).length >
+        //   0
+        //     ? selectedValue.RequestBribeRewardForm.map(
+        //         m => m.SecondMoney
+        //       ).reduce((a, b) => (a += b))
+        //     : 0;
+        // const sumSecondRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.SecondMoney).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.SecondMoney).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumSecondnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.SecondMoney)
+        //     .length > 0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.SecondMoney)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
+        const sumSecondsharedBribeRewardForm =
+          selectedValue.sharedBribeRewardForm.map(m => m.SecondMoney).length > 0
+            ? selectedValue.sharedBribeRewardForm
+                .map(m => m.SecondMoney)
+                .reduce((a, b) => (a += b))
+            : 0;
+
+        // tslint:disable-next-line:max-line-length
+        this.aggregate.SecondMoney.sum =
+          // sumSecondRequestBribeRewardForm +
+          // sumSecondRequestRewardForm +
+          // sumSecondnonRequestRewardStaffForm +
+          sumSecondsharedBribeRewardForm;
+
+        // const sumTotalRequestBribeRewardForm =
+        //   selectedValue.RequestBribeRewardForm.map(m => m.ToTalMoney).length > 0
+        //     ? selectedValue.RequestBribeRewardForm.map(
+        //         m => m.ToTalMoney
+        //       ).reduce((a, b) => (a += b))
+        //     : 0;
+        // const sumTotalRequestRewardForm =
+        //   selectedValue.RequestRewardForm.map(m => m.ToTalMoney).length > 0
+        //     ? selectedValue.RequestRewardForm.map(m => m.ToTalMoney).reduce(
+        //         (a, b) => (a += b)
+        //       )
+        //     : 0;
+        // const sumTotalnonRequestRewardStaffForm =
+        //   selectedValue.nonRequestRewardStaffForm.map(m => m.ToTalMoney)
+        //     .length > 0
+        //     ? selectedValue.nonRequestRewardStaffForm
+        //         .map(m => m.ToTalMoney)
+        //         .reduce((a, b) => (a += b))
+        //     : 0;
+        const sumTotalsharedBribeRewardForm =
+          selectedValue.sharedBribeRewardForm.map(m => m.ToTalMoney).length > 0
+            ? selectedValue.sharedBribeRewardForm
+                .map(m => m.ToTalMoney)
+                .reduce((a, b) => (a += b))
+            : 0;
+
+        // tslint:disable-next-line:max-line-length
+        this.aggregate.ToTalMoney.sum =
+          // sumTotalRequestBribeRewardForm +
+          // sumTotalRequestRewardForm +
+          // sumTotalnonRequestRewardStaffForm +
+          sumTotalsharedBribeRewardForm;
+      });
+    this.sharedBribeRewardForm.valueChanges
+      .takeUntil(this.destroy$)
+      .subscribe((selectedValue: any[]) => {
+        // console.log(
+        //   `this.sharedBribeRewardForm.valid`,
+        //   this.sharedBribeRewardForm
+        // );
+
+        if (this.sharedBribeRewardForm.valid) {
+          this.ILG60_08_04_00_00_E13_BUTTON$.next({ DISABLED: false });
+        }
+      });
+  }
+  async ngOnInit() {
+    const TitleMain: MasTitleModel[] = await this.masTitleService
+      .MasTitleMaingetAll()
+      .toPromise();
+
+    this.TitleList = TitleMain.map(m => m.TitleNameTH);
+    const StaffMain: MasStaffModel[] = await this.masStaffService
+      .MasStaffMaingetAll()
+      .toPromise();
+
+    this.staffAll = StaffMain;
+    this.Staff_StaffCode_List = StaffMain.map(m => ({
+      text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
+      value: m.StaffCode
+    }));
+    this.StaffList = StaffMain.map(
+      m => `${m.TitleName}${m.FirstName} ${m.LastName}`
+    );
+
+    // this.PositionNameList = TitleMain.map(m => m.PosLevelName);
+
+    this.formChange(this.formGroup);
+  }
+  public calChangeAll() {
+    Object.keys(this.formGroup.value).forEach(controls => {
+      if (controls !== 'RequestBribeRewardForm') {
+        this.formGroup.get(controls).value.forEach((element, index) => {
+          const formArr = this.formGroup.get(controls) as FormArray;
+          const FirstPart: number = formArr.at(index).get('FirstPart').value;
+          formArr
+            .at(index)
+            .get('FirstMoney')
+            .patchValue(this.SumFirstMoneyPerPart() * FirstPart || 0);
+
+          const SecondPart: number = formArr.at(index).get('SecondPart').value;
+          formArr
+            .at(index)
+            .get('SecondMoney')
+            .patchValue(this.SumSecondMoneyPerPart() * SecondPart || 0);
+          this.setTotal(formArr, index);
+        });
+      }
+    });
+  }
+  public setTotal(controls: FormArray, index) {
+    const FirstMoney: number = controls.at(index).get('FirstMoney').value;
+    const SecondMoney: number = controls.at(index).get('SecondMoney').value;
+    controls
+      .at(index)
+      .get('ToTalMoney')
+      .patchValue(Number(FirstMoney) + Number(SecondMoney));
+  }
+  public onChangeSecondPart(controls: FormArray, index) {
+    const SecondPart: number = controls.at(index).get('SecondPart').value;
+    controls
+      .at(index)
+      .get('SecondMoney')
+      .patchValue(this.SumSecondMoneyPerPart() * SecondPart);
+    this.calChangeAll();
+  }
+  public onChangeFirstPart(controls: FormArray, index, value) {
+    controls
+      .at(index)
+      .get('FirstMoney')
+      .patchValue(this.SumFirstMoneyPerPart() * value);
+    this.calChangeAll();
+  }
+  public changeFullName(text, index) {
+    const control = <FormArray>this.sharedBribeRewardForm;
+    const StaffCodeMap = this.Staff_StaffCode_List.filter(f => f.text === text)
+      .map(m => m.value)
+      .shift();
+    const PositionName =
+      this.staffAll
+        .filter(f => f.StaffCode === StaffCodeMap)
+        .map(m => m.OperationPosName)
+        .shift() || '';
+    const PosLevelName =
+      this.staffAll
+        .filter(f => f.StaffCode === StaffCodeMap)
+        .map(m => m.PosLevelName)
+        .shift() || '';
+    control
+      .at(index)
+      .get('PositionName')
+      .patchValue(PositionName);
+    control
+      .at(index)
+      .get('PosLevelName')
+      .patchValue(PosLevelName);
   }
   public ConvertContributorName(id): string {
     let name = '';
@@ -239,60 +538,76 @@ export class ILG6008040000E12Component extends CONFIG implements OnInit {
     }
     return name;
   }
-  addRow() {
+  public onSelectContributor(id, index: number) {
+    // if (index > -1) {
+    //   const control = <FormArray>this.nonRequestRewardStaffForm;
+    //   // tslint:disable-next-line:max-line-length
+    //   control
+    //     .at(index)
+    //     .get('ContributorName')
+    //     .patchValue(
+    //       this.ContributorList.filter(f => f.value === id)
+    //         .map(m => m.text)
+    //         .shift() || ' '
+    //     );
+    // }
+  }
+  public addRow() {
     // This function instantiates a FormGroup for each day
     // and pushes it to our FormArray
 
     // We get our FormArray
-    const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
+    const control = <FormArray>this.sharedBribeRewardForm;
 
     // instantiate a new day FormGroup;
     const newDayGroup: FormGroup = this.initItems();
-
+    this.ILG60_08_04_00_00_E13_BUTTON$.next({ DISABLED: true });
     // Add it to our formArray
     control.push(newDayGroup);
   }
 
-  initItems(): FormGroup {
+  public initItems(): FormGroup {
     // Here, we make the form for each day
     const objForm = {};
     Object.keys(this.formObject).forEach(f => {
-      objForm[f] = [this.formObject[f]];
+      objForm[f] = [this.formObject[f], Validators.required];
     });
 
     return this.fb.group(objForm);
   }
 
-  submit() {
+  public submit() {
     // do stuff and submit result
     console.log(this.formGroup.value);
   }
 
-  public ILG60_08_04_00_00_E15($event) {
-    // ยศ	Column	Key Press	ILG60-08-04-00-00-E15
-  }
-
-  public ILG60_08_04_00_00_E16($event) {
-    // ชื่อ-สกุล	Column	Key Press	ILG60-08-04-00-00-E16
-    // ชื่อ-สกุล	Column	Text Change	ILG60-08-04-00-00-E17
-  }
-  public sumTotal() {
-    return {
-      SumMoney: Number(this.SumBribeMoney) + Number(this.SumRewardMoney),
-      SumFirstMoney: Number(this.SumRewardMoney) / 3,
-      SumFirstMoneyPerPart:
-        Number(this.SumFirstMoney) / Number(this.FirstPartTotal),
-      FirstRemainder: Number(this.SumFirstMoney) - Number(this.FirstMoneyTotal),
-      SumSecondMoney: (Number(this.SumRewardMoney) / 3) * 2,
-      SumSecondMoneyPerPart:
-        Number(this.SumSecondMoney) / Number(this.SecondPartTotal),
-      SecondRemainder:
-        Number(this.SumSecondMoney) - Number(this.SecondMoneyTotal)
-    };
-  }
-  public deleteHandle({ rowItem }) {
-    const control = <FormArray>this.formGroup.controls['sharedBribeReward'];
+  // public sumTotal() {
+  //   return {
+  //     SumMoney: Number(this.SumBribeMoney) + Number(this.SumRewardMoney),
+  //     SumFirstMoney: Number(this.SumRewardMoney) / 3,
+  //     SumFirstMoneyPerPart:
+  //       Number(this.SumFirstMoney) / Number(this.FirstPartTotal),
+  //     FirstRemainder: Number(this.SumFirstMoney) - Number(this.FirstMoneyTotal),
+  //     SumSecondMoney: (Number(this.SumRewardMoney) / 3) * 2,
+  //     SumSecondMoneyPerPart:
+  //       Number(this.SumSecondMoney) / Number(this.SecondPartTotal),
+  //     SecondRemainder:
+  //       Number(this.SumSecondMoney) - Number(this.SecondMoneyTotal)
+  //   };
+  // }
+  public deleteHandle(rowItem) {
+    const control = <FormArray>this.sharedBribeRewardForm;
     // remove the chosen row
     control.removeAt(rowItem);
+  }
+  public formChange(formGroup: FormGroup) {
+    this.emitChange.emit({
+      FormName: 'ILG60-08-04-00-00-E12',
+      FormData: formGroup
+    });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }
