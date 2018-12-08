@@ -1112,9 +1112,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         form.InvestigateCode = investCode;
         const dateStart = getDateMyDatepicker(form.InvestigateDateStart);
         const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
-        form.InvestigateDateStart = setZeroHours(dateStart) ;
+        form.InvestigateDateStart = setZeroHours(dateStart);
         form.InvestigateDateEnd = setZeroHours(dateEnd);
-        
+
         console.log("InvestigateDetailinsAll : ", JSON.stringify(form));
 
         await this.s_investDetail.InvestigateDetailinsAll(form).then(async x => {
@@ -1136,7 +1136,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
         const dateStart = getDateMyDatepicker(form.InvestigateDateStart);
         const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
-        form.InvestigateDateStart = setZeroHours(dateStart) ;
+        form.InvestigateDateStart = setZeroHours(dateStart);
         form.InvestigateDateEnd = setZeroHours(dateEnd);
 
         console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));
@@ -1169,7 +1169,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        console.log(`InvestigateDetailStaffinsAll : ${index + 1}`, JSON.stringify(x));
+                        if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailStaffinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -1228,7 +1228,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        console.log(`InvestigateDetailLocalinsAll : ${index + 1}`, JSON.stringify(x))
+                        if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailLocalinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
