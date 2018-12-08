@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
-import { MyDatePickerOptions, setDateMyDatepicker, compareDate, getDateMyDatepicker } from 'app/config/dateFormat';
+import { MyDatePickerOptions, setDateMyDatepicker, compareDate, getDateMyDatepicker, setZeroHours } from 'app/config/dateFormat';
 import { IMyDateModel } from 'mydatepicker-th';
 import { Message } from 'app/config/message';
 import * as fromGobalModels from 'app/models';
