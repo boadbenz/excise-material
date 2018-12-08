@@ -109,9 +109,9 @@
                 <td>{{item.IsOutside === 1 ? 'น ' + item.LawsuitNo: item.LawsuitNo }}</td>
                 <td>{{item.ProveReportNo}}</td>
                 <td>{{item.IsOutside === 1 ? 'น ' + item.CompareCode: item.CompareCode}}</td>
-                <td>{{item.AdjustStaff[0].TitleName}}{{item.AdjustStaff[0].FirstName}} {{item.AdjustStaff[0].LastName}}</td>
+                <td>{{item.CompareStaff[0].TitleName}}{{item.CompareStaff[0].FirstName}} {{item.CompareStaff[0].LastName}}</td>
                 <td>{{item.CompareDate}}</td>
-                <td>{{item.AdjustStaff[0].OfficeShortName}}</td>
+                <td>{{item.CompareStaff[0].OfficeShortName}}</td>
                 <td>
                   <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.CompareID, item.IndictmentID)">
                     <i class="mdi mdi-eye fa-lg"></i>
