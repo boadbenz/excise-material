@@ -50,6 +50,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     // other options...
     dateFormat: 'dd mmm yyyy'
   };
+  YearOption: IMyDpOptions = {
+    // other options...
+    dateFormat: 'yyyy'
+  };
+  year: any = [];
   compareDate: any = {year: 0, month: 0, day: 0};
   // Object for binding
   headerData: any = {};
@@ -87,7 +92,9 @@ export class ManageComponent implements OnInit, OnDestroy {
   // DataForUpdate
   compareDataUpdate: any;
   compareDataUpdateTmp: any;
-  
+  formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
+        `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`;
+
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -115,12 +122,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.DateToday = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
     this.timeNow = this.getTimeNow();
     this.accused.CompareTime = this.timeNow;
+    this.generateYear();
   }
 
   async ngOnInit() {
     this.preloader.setShowPreloader(true);
-    this.MasofficeMaingetAll();
-    this.MasStaffMaingetAll();
+    await this.MasofficeMaingetAll();
+    await this.MasStaffMaingetAll();
     await this.getRouteParams();
     await this.subscribeHeaderBtn();
     await this.CompareArrestgetByIndictmentID();
@@ -159,6 +167,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     // this.navigate_Service();
   }
   ngOnDestroy() {
+  }
+  generateYear() {
+    for (let i = 100 ; i > 0 ; i--) {
+      this.year.push(((+this.DateToday.date.year) - i) + 544);
+    }
   }
   toDatePickerFormat(d: any) {
     return { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, ' ') };
@@ -202,7 +215,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.approveReportList[i].ApproveStationCode = cmpD[i].ApproveStationCode;
         this.approveReportList[i].ApproveType = cmpD[i].ApproveReportType ? cmpD[i].ApproveReportType : 1;
         this.approveReportList[i].ApproveReportDate = cmpD[i].ApproveReportDate ? this.toDatePickerFormat(new Date(cmpD[i].ApproveReportDate)) : null;
-        this.approveReportList[i].ApproveReportDateShow = this.approveReportList[i].ApproveReportDate.formatted;
+        this.approveReportList[i].ApproveReportDateShow = this.approveReportList[i].ApproveReportDate ? this.approveReportList[i].ApproveReportDate.formatted : null;
         this.approveReportList[i].dateOfIssue = cmpD[i].CommandDate ? this.toDatePickerFormat(new Date(cmpD[i].CommandDate)) : null;
         this.approveReportList[i].departOrder = cmpD[i].CommandNo;
         this.approveReportList[i].detailFact = cmpD[i].Fact;
@@ -310,7 +323,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.receipt.IsOutside = this.compareDataUpdateTmp.IsOutside;
     const compNo: any = this.compareDataUpdateTmp.CompareCode.split('/');
     this.receipt.CompareNo = compNo[0];
+    if ((+compNo[1]) > this.year[this.year.length - 1] || (+compNo[1]) < this.year[0]) {
+      this.year.push((+compNo[1]));
+    }
     this.receipt.CompareYear = compNo[1];
+    if (this.receipt.CompareNo && this.receipt.CompareYear) {
+      this.receipt.isHaveData = true;
+    }
+    console.log(this.receipt);
   }
   searchStaffByContributorID(ContributorID) {
 
@@ -410,27 +430,30 @@ export class ManageComponent implements OnInit, OnDestroy {
             ReceiptBookNo: rec.ReceiptBookNo,
             ReceiptNo: rec.ReceiptNo,
             ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
-            StationCode: rec.StationCode,
-            Station: rec.ReceipStation,
+            StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.StationCode : '',
+            Station: this.accused.StationName,
             CompareDetailID: CompareDetailID,
             PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
             TotalFine: rec.TotalFine,
             RevenueStatus: 0,
-            RevenueDate: '',
             IsActive: 1,
             ReceiptChanel: rec.ReceiptChanel,
             ReferenceNo: rec.ReferenceNo,
             CompareAuthority: 0,
             FineType: 1
           };
+          const reqField: any = ['ReceiptBookNo', 'ReceiptNo', 'ReceiptChanel', 'ReceiptDate'];
           receiptData = rec1;
           console.log('ข้อมูลการส่งใบเสร็จ');
           console.log(rec1);
-          const resp :any = await this.CompareDetailReceipinsAll(receiptData);
-          console.log('ค่าการรีเทิร์น');
-          console.log(resp);
-          if (resp.CompareReceiptID) {
-            await this.ComparePaymentFineinsAll(resp.CompareReceiptID, index);
+          if (this.validateReceiptData(rec1, reqField) && rec.staff && this.isNotValidTxtField(rec.ReceiptStaff)) {
+            receiptData.RevenueDate = '';
+            const resp :any = await this.CompareDetailReceipinsAll(receiptData);
+            console.log('ค่าการรีเทิร์น');
+            console.log(resp);
+            if (resp.CompareReceiptID) {
+              await this.ComparePaymentFineinsAll(resp.CompareReceiptID, index);
+            }
           }
         } catch (err) {
           console.log(err);
@@ -438,6 +461,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+  validateReceiptData(rec, field) {
+    for (const r of field) {
+      if (this.isNotValidTxtField(rec[r])) {
+        return false;
+      }
+    }
+    return true;
   }
   async CompareDetailReceipinsAll(data) {
     try {
@@ -620,7 +651,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     return null;
   }
   isNotValidTxtField(inputBox: any) {
-    return !inputBox || (inputBox && inputBox.length === 0);
+    return !inputBox || (inputBox && inputBox.toString().length === 0);
   }
   async CompareVerifyCompareCode() {
     try {
@@ -691,11 +722,20 @@ export class ManageComponent implements OnInit, OnDestroy {
             const accuse: any = {};
             accuse.LawbreakerName = CompareDetail.LawbreakerName;
             accuse.PaymentFineAppointDate = this.DateToday;
+            accuse.request = 1;
+            this.receipt.CompareYear = this.year[this.year.length - 1];
+            if (resp[0].SubSectionID==366 || resp[0].SubSectionID==367) {
+              accuse.PaymentVatDate = this.jsonCopy(this.DateToday);
+              accuse.isFillVatDate = false;
+            } else {
+              accuse.isFillVatDate = true;
+            }
             this.accused.list.push(accuse);
             // บันทึกการเปรียบเทียบและชำระค่าปรับ
             const receiptData: any = {};
             receiptData.LawBrakerName = CompareDetail.LawbreakerName;
             receiptData.PaymentDate = this.DateToday;
+            receiptData.ReceiptChanel = 1;
             this.receipt.list.push(receiptData);
             // รายงานการขออนุมัติ
             const approve: any = {};
@@ -707,6 +747,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             userData.MistreatNo = CompareDetail.Mistreat;
             this.DataToSave.userData.push(userData);
           }
+          console.log(this.receipt);
         }
         // คำให้การผู้ต้องหา
         this.setAccusedData(resp);
@@ -732,7 +773,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     let i = 0;
     const fineCompare: any = await this.CompareMasLawFineTypegetBySubSectionRuleID(resp.SubSectionRuleID);
     console.log(fineCompare);
-    if (resp.CompareProve[0]) {
+    if (true) {
       for (const cmp of compareDetailTmp) {
         const detail: any = {};
         detail.Mistreat = this.ListCompareDetail[user_count].Mistreat;
@@ -742,81 +783,177 @@ export class ManageComponent implements OnInit, OnDestroy {
         let sum1 = 0;
         let sum2 = 0;
         let sum3 = 0;
-        for (const p of resp.CompareProve[0].CompareProveProduct) {
-          if (loop === 0) {
-            detail.isFirstLoop = true;
-          } else {
-            detail.isFirstLoop = false;
-          }
-          detail.product = p;
-          detail.multi = 1;
-          detail.FineAmount = p.VatProve;
-          detail.FineType = fineCompare.FineType;
-          switch (fineCompare.FineType) {
-            case 0 : {
-              detail.multi = 1;
-              detail.FineAmount = fineCompare[0].FineAmount;
-            } break;
-            case 1 : {
-              for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
-                const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
-                const checkCase2: any = (p.Mistreat === fCmp.MistreatStartNo);
-                if (checkCase1 || checkCase2) {
-                  if (fCmp.FineRate === 0) {
-                    detail.multi = 1;
-                    detail.FineAmount = fCmp.FineAmount;
-                  } else {
-                    detail.multi = fCmp.FineRate;
-                    detail.FineAmount = p.VatProve;
-                  }
-                  break;
-                }
-              }
-            } break;
-            case 2 : {
-              for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
-                const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
-                const checkCase2: any = (p.NetVolume > fCmp.MistreatStartVolume) && (p.NetVolume <= fCmp.MistreatToVolume);
-                if (checkCase1 || checkCase2) {
-                  if (fCmp.FineRate === 0) {
-                    detail.multi = 1;
-                    detail.FineAmount = fCmp.FineAmount;
-                  } else {
-                    detail.multi = fCmp.FineRate;
-                    detail.FineAmount = p.VatProve;
-                  }
-                  break;
-                }
-              }
-            } break;
-            case 3 : {
-              let fineOfMatch = fineCompare.CompareMasLawGuiltbaseFine.filter(f => f.GroupCode === p.GroupCode);
-              let isMatch = fineOfMatch.length > 0 ? true : false;
-              console.log('Match');
-              console.log(isMatch);
-              if (!isMatch) {
-                fineOfMatch = this.jsonCopy(fineCompare.CompareMasLawGuiltbaseFine);
-              }
-              console.log(fineOfMatch);
-              for (const fMatch of fineOfMatch) {
-                if (!fMatch.GroupCode) {
-                  if (detail.Mistreat === fMatch.MistreatStartNo || fMatch === fineOfMatch[fineOfMatch.length - 1]) {
-                    if (fMatch.FineRate === 0) {
+        if (resp.CompareProve[0]) {
+          for (const p of resp.CompareProve[0].CompareProveProduct) {
+            if (loop === 0) {
+              detail.isFirstLoop = true;
+            } else {
+              detail.isFirstLoop = false;
+            }
+            detail.product = p;
+            detail.multi = 1;
+            detail.FineAmount = p.VatProve;
+            detail.FineType = fineCompare.FineType;
+            switch (fineCompare.FineType) {
+              case 0 : {
+                detail.multi = 1;
+                detail.FineAmount = fineCompare.CompareMasLawGuiltbaseFine[0].FineAmount;
+              } break;
+              case 1 : {
+                for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
+                  const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
+                  const checkCase2: any = (p.Mistreat === fCmp.MistreatStartNo);
+                  if (checkCase1 || checkCase2) {
+                    if (fCmp.FineRate === 0) {
                       detail.multi = 1;
-                      detail.FineAmount = fMatch.FineAmount;
+                      detail.FineAmount = fCmp.FineAmount;
                     } else {
-                      detail.multi = fMatch.FineRate;
+                      detail.multi = fCmp.FineRate;
                       detail.FineAmount = p.VatProve;
                     }
                     break;
                   }
                 }
-                
-              }
-              console.log(detail); 
-            } break;
+              } break;
+              case 2 : {
+                for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
+                  const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
+                  const checkCase2: any = (p.NetVolume > fCmp.MistreatStartVolume) && (p.NetVolume <= fCmp.MistreatToVolume);
+                  if (checkCase1 || checkCase2) {
+                    if (fCmp.FineRate === 0) {
+                      detail.multi = 1;
+                      detail.FineAmount = fCmp.FineAmount;
+                    } else {
+                      detail.multi = fCmp.FineRate;
+                      detail.FineAmount = p.VatProve;
+                    }
+                    break;
+                  }
+                }
+              } break;
+              case 3 : {
+                let fineOfMatch = fineCompare.CompareMasLawGuiltbaseFine.filter(f => f.GroupCode === p.GroupCode);
+                let isMatch = fineOfMatch.length > 0 ? true : false;
+                console.log('Match');
+                console.log(isMatch);
+                if (!isMatch) {
+                  fineOfMatch = this.jsonCopy(fineCompare.CompareMasLawGuiltbaseFine);
+                }
+                console.log(fineOfMatch);
+                for (const fMatch of fineOfMatch) {
+                  if (!fMatch.GroupCode) {
+                    if (detail.Mistreat === fMatch.MistreatStartNo || fMatch === fineOfMatch[fineOfMatch.length - 1]) {
+                      if (fMatch.FineRate === 0) {
+                        detail.multi = 1;
+                        detail.FineAmount = fMatch.FineAmount;
+                      } else {
+                        detail.multi = fMatch.FineRate;
+                        detail.FineAmount = p.VatProve;
+                      }
+                      break;
+                    }
+                  }
+                  
+                }
+                console.log(detail); 
+              } break;
+            }
+            console.log(p);
+            detail.all = this.roundDigit((detail.multi * detail.FineAmount));
+            detail.BribeMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
+            detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
+            detail.TreasuryMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.6);
+            sum = (+sum) + (+detail.all);
+            sum1 = (+sum1) + (+detail.BribeMoney);
+            sum2 = (+sum2) + (+detail.RewardMoney);
+            sum3 = (+sum3) + (+detail.TreasuryMoney);
+            detail.userNo = user_count;
+            detail['userNo' + user_count + ':' + i] = detail.all;
+            newDetailArr.push(this.jsonCopy(detail));
+            i++;
+            loop++;
           }
-          console.log(p);
+        } else {
+          detail.Mistreat = this.ListCompareDetail[user_count].Mistreat;
+          let loop = 0;
+          let sum = 0;
+          let sum1 = 0;
+          let sum2 = 0;
+          let sum3 = 0;
+          detail.userNo = user_count;
+          detail['userNo' + user_count + ':' + 0] = detail.all;
+          detail.isFirstLoop = true;
+          detail.isSum = false;
+          detail.product = {};
+          detail.multi = 1;
+            const p: any = {};
+            detail.FineAmount = p.VatProve;
+            detail.FineType = fineCompare.FineType;
+            switch (fineCompare.FineType) {
+              case 0 : {
+                detail.multi = 1;
+                detail.FineAmount = fineCompare.CompareMasLawGuiltbaseFine[0].FineAmount;
+              } break;
+              case 1 : {
+                for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
+                  const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
+                  const checkCase2: any = (p.Mistreat === fCmp.MistreatStartNo);
+                  if (checkCase1 || checkCase2) {
+                    if (fCmp.FineRate === 0) {
+                      detail.multi = 1;
+                      detail.FineAmount = fCmp.FineAmount;
+                    } else {
+                      detail.multi = fCmp.FineRate;
+                      detail.FineAmount = p.VatProve;
+                    }
+                    break;
+                  }
+                }
+              } break;
+              case 2 : {
+                for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
+                  const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
+                  const checkCase2: any = (p.NetVolume > fCmp.MistreatStartVolume) && (p.NetVolume <= fCmp.MistreatToVolume);
+                  if (checkCase1 || checkCase2) {
+                    if (fCmp.FineRate === 0) {
+                      detail.multi = 1;
+                      detail.FineAmount = fCmp.FineAmount;
+                    } else {
+                      detail.multi = fCmp.FineRate;
+                      detail.FineAmount = p.VatProve;
+                    }
+                    break;
+                  }
+                }
+              } break;
+              case 3 : {
+                let fineOfMatch = fineCompare.CompareMasLawGuiltbaseFine.filter(f => f.GroupCode === p.GroupCode);
+                let isMatch = fineOfMatch.length > 0 ? true : false;
+                console.log('Match');
+                console.log(isMatch);
+                if (!isMatch) {
+                  fineOfMatch = this.jsonCopy(fineCompare.CompareMasLawGuiltbaseFine);
+                }
+                console.log(fineOfMatch);
+                for (const fMatch of fineOfMatch) {
+                  if (!fMatch.GroupCode) {
+                    if (detail.Mistreat === fMatch.MistreatStartNo || fMatch === fineOfMatch[fineOfMatch.length - 1]) {
+                      if (fMatch.FineRate === 0) {
+                        detail.multi = 1;
+                        detail.FineAmount = fMatch.FineAmount;
+                      } else {
+                        detail.multi = fMatch.FineRate;
+                        detail.FineAmount = p.VatProve;
+                      }
+                      break;
+                    }
+                  }
+                  
+                }
+                console.log(detail); 
+              } break;
+            }
+          console.log(detail);
           detail.all = this.roundDigit((detail.multi * detail.FineAmount));
           detail.BribeMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
           detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
@@ -827,27 +964,47 @@ export class ManageComponent implements OnInit, OnDestroy {
           sum3 = (+sum3) + (+detail.TreasuryMoney);
           detail.userNo = user_count;
           detail['userNo' + user_count + ':' + i] = detail.all;
-          newDetailArr.push(this.jsonCopy(detail));
-          i++;
-          loop++;
+          console.log(sum, sum1, sum2, sum3);
+          this.DataToSave.userData[detail.userNo].CompareFine = sum;
+          this.DataToSave.userData[detail.userNo].BribeMoney = sum1;
+          this.DataToSave.userData[detail.userNo].RewardMoney = sum2;
+          this.DataToSave.userData[detail.userNo].TreasuryMoney = sum3;
+          console.log(sum, sum1, sum2, sum3);
+          detail.all = sum;
+          detail.BribeMoney = sum1;
+          detail.RewardMoney = sum2;
+          detail.TreasuryMoney = sum3;
+          detail['userNo' + user_count + ':' + i] = detail.all;
+          this.sumAllCompare.sum = sum;
+          this.sumAllCompare.sum1 = sum1;
+          this.sumAllCompare.sum2 = sum2;
+          this.sumAllCompare.sum3 = sum3;
+          detail.isNo2 = true;
         }
-        this.DataToSave.userData[detail.userNo].CompareFine = sum;
-        this.DataToSave.userData[detail.userNo].BribeMoney = sum1;
-        this.DataToSave.userData[detail.userNo].RewardMoney = sum2;
-        this.DataToSave.userData[detail.userNo].TreasuryMoney = sum3;
-        detail.all = sum;
-        detail.BribeMoney = sum1;
-        detail.RewardMoney = sum2;
-        detail.TreasuryMoney = sum3;
-        detail['userNo' + user_count + ':' + i] = detail.all;
-        detail.isSum = 1;
+        console.log(sum, sum1, sum2, sum3);
+        
+        if (resp.CompareProve[0]) {
+          detail.isSum = 1;
+          this.DataToSave.userData[detail.userNo].CompareFine = sum;
+          this.DataToSave.userData[detail.userNo].BribeMoney = sum1;
+          this.DataToSave.userData[detail.userNo].RewardMoney = sum2;
+          this.DataToSave.userData[detail.userNo].TreasuryMoney = sum3;
+          console.log(sum, sum1, sum2, sum3);
+          detail.all = sum;
+          detail.BribeMoney = sum1;
+          detail.RewardMoney = sum2;
+          detail.TreasuryMoney = sum3;
+          detail['userNo' + user_count + ':' + i] = detail.all;
+        }
         newDetailArr.push(this.jsonCopy(detail));
         user_count++;
         i++;
       }
       console.log('cal sum');
       this.ListCompareDetail = newDetailArr;
-      this.calSum();
+      if (resp.CompareProve[0]) {
+        this.calSum();
+      }
     }
     console.log(this.ListCompareDetail);
   }
@@ -996,7 +1153,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     } else {
       this.canCheck(this.editUser.PaymentFineAppointDate);
     }
-    if (!this.editUser.PaymentVatDate) {
+    if (!this.editUser.PaymentVatDate && !this.editUser.isFillVatDate) {
       this.editUser.PaymentVatDate = this.jsonCopy(this.DateToday);
     }
     if (type) {
@@ -1536,24 +1693,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(this.ListCompareDetail);
     this.sumAllCompare = {sum: 0, sum1: 0, sum2: 0, sum3: 0};
     for (const cmp of this.ListCompareDetail) {
-      if (cmp.isSum) {
-        this.ListCompareDetail[i].BribeMoney = sum1;
-        this.ListCompareDetail[i].RewardMoney = sum2;
-        this.ListCompareDetail[i].TreasuryMoney = sum3;
-        this.ListCompareDetail[i].all = sum;
-        this.sumAllCompare.sum = (+this.sumAllCompare.sum) + sum;
-        this.sumAllCompare.sum1 = (+this.sumAllCompare.sum1) + sum1;
-        this.sumAllCompare.sum2 = (+this.sumAllCompare.sum2) + sum2;
-        this.sumAllCompare.sum3 = (+this.sumAllCompare.sum3) + sum3;
-        this.DataToSave.userData[cmp.userNo].CompareFine = sum;
-        this.DataToSave.userData[cmp.userNo].BribeMoney = sum1;
-        this.DataToSave.userData[cmp.userNo].RewardMoney = sum2;
-        this.DataToSave.userData[cmp.userNo].TreasuryMoney = sum3;
-        sum = 0;
-        sum1 = 0;
-        sum2 = 0;
-        sum3 = 0;
-      } else {
+      if (cmp.isNo2) {
         this.ListCompareDetail[i].BribeMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
         this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
         this.ListCompareDetail[i].TreasuryMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.6);
@@ -1561,6 +1701,39 @@ export class ManageComponent implements OnInit, OnDestroy {
         sum1 = (+sum1) + (+cmp.BribeMoney);
         sum2 = (+sum2) + (+cmp.RewardMoney);
         sum3 = (+sum3) + (+cmp.TreasuryMoney);
+        if (i == this.ListCompareDetail.length - 1) {
+          this.sumAllCompare.sum = sum;
+          this.sumAllCompare.sum1 = sum1;
+          this.sumAllCompare.sum2 = sum2;
+          this.sumAllCompare.sum3 = sum3;
+        }
+      } else {
+        if (cmp.isSum) {
+          this.ListCompareDetail[i].BribeMoney = sum1;
+          this.ListCompareDetail[i].RewardMoney = sum2;
+          this.ListCompareDetail[i].TreasuryMoney = sum3;
+          this.ListCompareDetail[i].all = sum;
+          this.sumAllCompare.sum = (+this.sumAllCompare.sum) + sum;
+          this.sumAllCompare.sum1 = (+this.sumAllCompare.sum1) + sum1;
+          this.sumAllCompare.sum2 = (+this.sumAllCompare.sum2) + sum2;
+          this.sumAllCompare.sum3 = (+this.sumAllCompare.sum3) + sum3;
+          this.DataToSave.userData[cmp.userNo].CompareFine = sum;
+          this.DataToSave.userData[cmp.userNo].BribeMoney = sum1;
+          this.DataToSave.userData[cmp.userNo].RewardMoney = sum2;
+          this.DataToSave.userData[cmp.userNo].TreasuryMoney = sum3;
+          sum = 0;
+          sum1 = 0;
+          sum2 = 0;
+          sum3 = 0;
+        } else {
+          this.ListCompareDetail[i].BribeMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
+          this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
+          this.ListCompareDetail[i].TreasuryMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.6);
+          sum = (+sum) + (+cmp['userNo' + cmp.userNo + ':' + i]);
+          sum1 = (+sum1) + (+cmp.BribeMoney);
+          sum2 = (+sum2) + (+cmp.RewardMoney);
+          sum3 = (+sum3) + (+cmp.TreasuryMoney);
+        }
       }
       i++;
     }
@@ -1631,7 +1804,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize(event){
     for (const el of document.getElementsByTagName('p') as any) {
-      console.log(el);
       if (el) {
         el.style.maxWidth = (+(event.target.innerWidth)*0.08) + 'px';
       }
