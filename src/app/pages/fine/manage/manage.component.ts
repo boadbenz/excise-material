@@ -29,6 +29,7 @@ import { IMyDpOptions, IMyDate } from 'mydatepicker';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { toLocalShort } from 'app/config/dateFormat';
 import Swal from 'sweetalert2'
+import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 
 @Component({
   selector: 'app-manage',
@@ -103,7 +104,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private MasterSV: MasterService,
     private router: Router,
     private preloader: PreloaderService,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private masDocumentMainService: MasDocumentMainService
   ) {
     this.isEditMode.receipt = {};
     this.sidebarService.setVersion('0.0.0.22');
@@ -531,6 +533,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             console.log('wait to updaate detail');
           } else {
             console.log('ไม่พบข้อมูล CompareDetailID');
+          }
+        }
+        if (this.AllAddFiles.length > 0) {
+          for (const f of this.AllAddFiles) {
+            if (!f.id) {
+              await this.insertFile(f);
+            }
           }
         }
         await this.navService.setOnSave(false);
@@ -1349,10 +1358,21 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (index || index === 0) {
           if (index > -1) {
             this.filePath.splice(index, 1);
+            this.AllAddFiles.splice(index, 1);
           }
         }
       }
     });
+  }
+  async insertFile(file: any) {
+    try {
+      const resp: any = await this.masDocumentMainService.MasDocumentMaininsAll(file);
+      return resp;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+    
   }
   editApproveReport(item: any, index: any, type: any) {
     console.log(item);
