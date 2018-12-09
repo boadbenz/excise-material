@@ -154,11 +154,13 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   viewData(id: string) {
-    this.router.navigate(['/reduction/manage', 'V', this.detailData.arrestCode], { queryParams: { id: id } });
+    console.log(id);
+    console.log(this.detailData);
+    this.router.navigate(['/reduction/manage', 'V', this.detailData.ArrestCode], { queryParams: { id: id } });
   }
 
   editData(id: string) {
-    this.router.navigate(['/reduction/manage', 'E', this.detailData.arrestCode], { queryParams: { id: id } });
+    this.router.navigate(['/reduction/manage', 'E', this.detailData.ArrestCode], { queryParams: { id: id } });
   }
 
   attachFile(file) {
@@ -181,7 +183,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.getDataFromListPage.unsubscribe();
+    // this.getDataFromListPage.unsubscribe();
     this.navServiceSub.unsubscribe();
   }
 }
