@@ -176,7 +176,7 @@ export const ArrestLawbreakerFormControl = {
     LinkPhoto: new FormControl(''),
     PhotoDesc: new FormControl(''),
     IsActive: new FormControl(null),
-
+    ResultCount: new FormControl(null),
 
     EntityTypeName: new FormControl(null),
     LawbreakerTypeName: new FormControl(null),

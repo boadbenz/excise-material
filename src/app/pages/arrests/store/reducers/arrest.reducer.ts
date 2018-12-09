@@ -9,9 +9,6 @@ export function arrestReducer(
         case fromAction.CREATE_ARREST:
             return action.payload;
 
-        // case fromAction.ADD_ARREST:
-        //     return [...state, action.payload];
-
         case fromAction.UPDATE_ARREST:
             return Object.assign({}, state, action.payload);
 

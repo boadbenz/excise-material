@@ -1,4 +1,4 @@
-<app-step-wizard [sectionId]="2"></app-step-wizard>
+<app-step-wizard [sectionId]="2" [disabledLine]="!ArrestStore?.ArrestNotice.length"></app-step-wizard>
 <form action="" [formGroup]="arrestIndictmentFG">
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
@@ -22,20 +22,22 @@
           </ng-template>
         </div>
 
-        <label for="" class="col-lg-2 col-sm-4 control-label">ฐานความผิด :</label>
-        <div class="form-group col-lg-4 col-md-7 col-sm-8">
-          <input formControlName="GuiltBaseName" type="text" class="form-control form-control-sm" required readonly>
-        </div>
-      </div>
-      <div class="row">
         <label for="" class="col-lg-2 col-sm-4 control-label">บทกำหนดโทษ :</label>
         <div class="form-group col-lg-4 col-md-7 col-sm-8">
           <input formControlName="SectionNo" type="text" class="form-control form-control-sm" required readonly>
         </div>
+      </div>
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-4 control-label">ฐานความผิด :</label>
+        <div class="form-group col-lg-4 col-md-7 col-sm-8">
+          <textarea formControlName="GuiltBaseName" name="" id="" rows="4" class="form-control form-control-sm" required readonly></textarea>
+          <!-- <input type="text"> -->
+        </div>
 
         <label for="" class="col-lg-2 col-sm-4 control-label">อัตราโทษ :</label>
         <div class="form-group col-lg-4 col-md-7 col-sm-8">
-          <input formControlName="PenaltyDesc" type="text" class="form-control form-control-sm" required readonly>
+            <textarea formControlName="PenaltyDesc" rows="4" class="form-control form-control-sm" required readonly></textarea>
+          <!-- <input  type="text"> -->
         </div>
       </div>
     </div>
@@ -82,7 +84,7 @@
                 {{item.get('ProductDesc').value}}
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
-                <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" required
+                <input  pattern="[0-9]" formControlName="Qty" class="form-control form-control-sm" required
                   [attr.disabled]="showEditField ? '' : null">
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
@@ -94,7 +96,7 @@
                   [value]="item.value.QtyUnit" />
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 50px;">
-                <input type="number" min="0" formControlName="NetVolume" class="form-control form-control-sm"
+                <input pattern="[0-9]" formControlName="NetVolume" class="form-control form-control-sm"
                   [attr.disabled]="showEditField ? '' : null">
               </td>
               <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
@@ -133,10 +135,9 @@
           <button type="button" class="btn btn-block btn-themecolor" (click)="openModal(allegationDetail)" [disabled]="showEditField">เพิ่มรายการ</button>
 
           <ng-template #allegationDetail let-c="close" let-d="dismiss">
-            <app-allegation-detail-modal (c)="modal.close()" (d)="modal.dismiss()" 
+            <app-lawbreaker-modal (c)="modal.close()" (d)="modal.dismiss()" 
             (OutputLawbreaker)="addArrestLawbreaker($event)"
-            [ArrestIndictment]="arrestIndictmentFG.value"
-            ></app-allegation-detail-modal>
+            ></app-lawbreaker-modal>
           </ng-template>
         </div>
       </div>

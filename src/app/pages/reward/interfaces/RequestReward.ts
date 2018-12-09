@@ -1,12 +1,13 @@
 import { IRequestRewardDetail } from './RequestRewardDetail';
 import { IRequestRewardStaff } from './RequestRewardStaff';
+import { IResponseCommon } from './ResponseCommon.interface';
 
 export interface IRequestReward {
   RequestRewardID: number;
   RequestBribeRewardID: number;
   RequestRewardCode: string;
   FineType: number;
-  RequestDate: Date;
+  RequestDate: string;
   RequestTime: string;
   StationCode: string;
   Station: string;
@@ -28,4 +29,16 @@ export interface IRequestReward {
 
 export interface IRequestRewardgetByRequestBribeRewardID {
   RequestBribeRewardID: number;
+}
+
+// tslint:disable-next-line:no-empty-interface
+export interface IRequestRewardupdByCon extends IRequestReward {}
+export interface IRequestRewardgetByCon {
+  RequestRewardID: number;
+}
+// tslint:disable-next-line:no-empty-interface
+export interface IRequestRewardinsAll extends IRequestReward {}
+
+export interface IRequestRewardinsAllRespone extends IResponseCommon {
+  RequestRewardID?: number;
 }

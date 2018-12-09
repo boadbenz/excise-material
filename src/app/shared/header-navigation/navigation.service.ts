@@ -29,7 +29,7 @@ export class NavigationService {
 
     innerTextNextPageButton = new BehaviorSubject<string>(null);
     innerTextPrevPageButton = new BehaviorSubject<string>(null);
-    searchByKeyword = new BehaviorSubject<string>(null);
+    searchByKeyword = new BehaviorSubject<any>(null);
 
     constructor() { }
 

@@ -207,42 +207,60 @@ export class DialogJudgment {
                         ]
                     }
 
-                    console.log("Case have JudgementID", this.arrestData['LawsuitJudgement'][0]['JudgementID'])
-                    let updateByCon = await this.lawsuitService.LawsuitJudgementupdByCon(submit)
-                    await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.PaymentFineID)
-                    
-                    console.log(updateByCon)
-                    if (this.lawsuitArrestFormDialog.IsFine == true) {
-                        for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
-                            let payment = {
-                                PaymentFineDetailID: '',
-                                PaymentFineID: updateByCon.PaymentFineID,
-                                NoticeCode: this.LawsuitArrest[0].LawsuitNotice[i].NoticeCode,
-                                IsRequestBribe: this.LawsuitArrest[0].LawsuitNotice[i].IsRequestBribe,
-                                IsActive: this.LawsuitArrest[0].LawsuitNotice[i].IsActive || 1
-                            }
-                            console.log(payment)
-                            let status = await this.lawsuitService.LawsuitPaymentFineDetailinsAll(payment)
-                            console.log(status)
-                        }
+            console.log("Case have JudgementID", this.arrestData['LawsuitJudgement'][0]['JudgementID'])
+            let updateByCon = await this.lawsuitService.LawsuitJudgementupdByCon(submit)
+            await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(updateByCon.PaymentFineID)
+
+            console.log(updateByCon)
+            if (this.lawsuitArrestFormDialog.IsFine == true) {
+                for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
+                    let payment = {
+                        PaymentFineDetailID: '',
+                        PaymentFineID: updateByCon.PaymentFineID,
+                        NoticeCode: this.LawsuitArrest[0].LawsuitNotice[i].NoticeCode,
+                        IsRequestBribe: this.LawsuitArrest[0].LawsuitNotice[i].IsRequestBribe,
+                        IsActive: this.LawsuitArrest[0].LawsuitNotice[i].IsActive || 1
                     }
-                    if (updateByCon.IsSuccess) {
-                    
-                        Swal('บันทึกสำเร็จ!','','success')
-                        this.dialogRef.close();
-                    } else {
-                        Swal('บันทึกไม่สำเร็จ!','','error')
-                        this.dialogRef.close();
-                    }
+                    console.log(payment)
+                    let status = await this.lawsuitService.LawsuitPaymentFineDetailinsAll(payment)
+                    console.log(status)
+                }
+            }
+            if (updateByCon.IsSuccess) {
+                Swal({
+                    text: "บันทึกสำเร็จ",
+                    type: 'success',
+                })
+                this.dialogRef.close();
+            } else {
+                Swal({
+                    text: "บันทึกไม่สำเร็จ",
+                    type: 'warning',
+                })
+                this.dialogRef.close();
+            }
 
 
-                } else {
-                    let PaymentFine = await this.insert()
-                    console.log(PaymentFine)
-                    if (PaymentFine.IsSuccess) {
-                        await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine.PaymentFineID)
-                        Swal('บันทึกสำเร็จ!','','success')
-                        this.dialogRef.close();
+        } else {
+            let PaymentFine = await this.insert()
+            if (PaymentFine.IsSuccess) {
+                await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(PaymentFine.PaymentFineID)
+                Swal({
+                    text: "บันทึกสำเร็จ",
+                    type: 'success',
+                })
+                this.dialogRef.close();
+            }
+            await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
+            if (this.lawsuitArrestFormDialog.IsFine == true) {
+                console.log("Case first insert")
+                for (let i = 0; i < countNoticeCode * this.lawsuitArrestFormDialog.PaymentPeroid; i++) {
+                    let payment = {
+                        PaymentFineDetailID: '',
+                        PaymentFineID: PaymentFine['PaymentFineID'],
+                        NoticeCode: this.LawsuitArrest[0].LawsuitNotice[i].NoticeCode,
+                        IsRequestBribe: this.LawsuitArrest[0].LawsuitNotice[i].IsRequestBribe,
+                        IsActive: this.LawsuitArrest[0].LawsuitNotice[i].IsActive || 1
                     }
                     await this.lawsuitService.LawsuitJudgementupdDelete(this.arrestData['LawsuitJudgement'][0]['JudgementID'])
                     if (this.lawsuitArrestFormDialog.IsFine == true) {
@@ -268,8 +286,10 @@ export class DialogJudgment {
             } else if (result.dismiss === Swal.DismissReason.cancel) {
               return
             }
+
+        }
+        }
         })
-        
 
     }
 

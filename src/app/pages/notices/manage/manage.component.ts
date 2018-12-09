@@ -37,9 +37,13 @@ import {
 } from '../../../models';
 import { IMyDateModel } from 'mydatepicker-th';
 import { replaceFakePath } from 'app/config/dataString';
-import { NoticeMasSuspect } from '../../component/suspect-modal/notice-mas-suspect';
+// import { NoticeMasSuspect } from '../../component/suspect-modal/notice-mas-suspect';
+import { NoticeMasSuspect } from '../../component/notice-suspect-modal/notice-mas-suspect';
 import { MainMasterService } from '../../../services/main-master.service';
 import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
+import { async } from 'q';
+import { TransactionRunningService } from 'app/services/transaction-running.service';
+import { SwalComponent, BeforeOpenEvent } from '@toverux/ngx-sweetalert2';
 
 @Component({
     selector: 'app-manage',
@@ -47,15 +51,23 @@ import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
 })
 export class ManageComponent implements OnInit, OnDestroy {
 
+  @ViewChild('alertSwal') private alertSwal: SwalComponent;
+  @ViewChild('deleteProduct') private deleteProduct: SwalComponent;
+  @ViewChild('deleteSuspect') private deleteSuspect: SwalComponent;
+  @ViewChild('deleteDocument') private deleteDocument: SwalComponent;
+
     private onSaveSubscribe: any;
     private onDeleSubscribe: any;
     private onPrintSubscribe: any;
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
 
+    actionFrom:string;
+    months:any[];
     programSpect: string = 'ILG60-02-02-00';
     mode: string;
     showEditField: Boolean;
+    localEditField: Boolean;
     modal: any;
     noticeCode: string;
     arrestCode: string;
@@ -117,18 +129,23 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ngbModel: NgbModal,
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
-        private mainMasterService: MainMasterService
+        private mainMasterService: MainMasterService,
+        private transactionRunningService: TransactionRunningService, private activatedRoute:ActivatedRoute
     ) {
         // set false
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
-        this.navService.setInnerTextNextPageButton('งานจับกุม')
+        this.navService.setInnerTextNextPageButton('งานจับกุม');
     }
 
     async ngOnInit() {
+        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+        this.activatedRoute.queryParams.subscribe(params => {
+          this.actionFrom = params['from'];
+        });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.12');
+        this.sidebarService.setVersion('0.0.2.27');
 
         this.navigate_service();
 
@@ -142,13 +159,40 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.setRegionStore();
         await this.setProductUnitStore();
         await this.setOfficeStore();
-        await this.setCommunicateStore();
 
         if (this.mode == 'R') {
-            this.getByCon(this.noticeCode);
+            await this.getByCon(this.noticeCode);
+        }else if(this.mode=="C"){
+            this.NoticeInformer.at(0).patchValue({
+                InformerType: true
+            });
+            this.onChangeConceal();
+            let e = {value:1};
+            this.addNoticeDueDate(e);
+        }
+
+        if(this.actionFrom=="edit"){
+            let res = JSON.parse(sessionStorage.getItem("notice_form_data"));
+            if(res){
+                let noticeDate = res.NoticeDate;
+                if(noticeDate){
+                    let date = noticeDate.date;
+                    res.NoticeDate = date.year+"-"+this.months[date.month-1]+"-"+date.day;
+                }
+                let noticeDueDate = res.NoticeDueDate;
+                if(noticeDueDate){
+                    let date = noticeDueDate.date;
+                    res.NoticeDueDate = date.year+"-"+this.months[date.month-1]+"-"+date.day;
+                }
+                this.setDataInit(res);
+            }
         }
 
         this.preloader.setShowPreloader(false);
+
+        let url = this.router.url;
+        let tmps = url.split("?");
+        sessionStorage.setItem("notice_current_page", tmps[0]+"?from=edit");
     }
 
     private active_route() {
@@ -163,8 +207,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.noticeCode = `LS-${(new Date).getTime()}`;
+                this.noticeCode = "NEW";//`LS${(new Date).getTime()}`;
                 this.arrestCode = `TN-${(new Date).getTime()}`;
+
+                this.localEditField = false;
 
             } else if (p['mode'] === 'R') {
                 // set false
@@ -178,6 +224,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setNextPageButton(true);
 
                 this.noticeCode = p['code'];
+
+                this.localEditField = true;
             }
         });
     }
@@ -191,8 +239,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnCancel(false);
                 this.router.navigate(['/notice/list']);
+
+                sessionStorage.removeItem("notice_form_data");
             }
-        })
+        });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
 
@@ -202,7 +252,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 if (!this.noticeForm.valid) {
                     this.isRequired = true;
-                    alert(Message.checkData)
+                    this.showSwal(Message.checkData, "warning");
                     return false;
                 }
 
@@ -210,17 +260,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                 const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
 
                 if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-                    alert(Message.checkDate);
+                    this.showSwal(Message.checkData, "warning");
                     return;
                 }
 
-                if (!this.NoticeSuspect.value.length) {
-                    alert(Message.checkData);
-                    return;
-                }
+                const noticeDate = this.noticeForm.value.NoticeDate;
+                const noticeDueDate = this.noticeForm.value.NoticeDueDate;
 
-                this.noticeForm.value.NoticeDate = convertDateForSave(sDateCompare);
-                this.noticeForm.value.NoticeDueDate = convertDateForSave(eDateCompare);
+                this.noticeForm.value.NoticeDate = noticeDate.date.day+"-"+this.months[noticeDate.date.month-1]+"-"+noticeDate.date.year;//convertDateForSave(sDateCompare);
+                this.noticeForm.value.NoticeDueDate = noticeDueDate.date.day+"-"+this.months[noticeDueDate.date.month-1]+"-"+noticeDueDate.date.year;//convertDateForSave(eDateCompare);
                 this.noticeForm.value.NoticeInformer.map(item => {
                     item.InformerType = item.InformerType == true ? 1 : 0;
                 });
@@ -243,15 +291,31 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
             if (status) {
+                this.preloader.setShowPreloader(true);
                 await this.navService.setOnPrint(false);
-                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+                this.noticeService.print(this.noticeCode).subscribe((res)=>{
+                    this.preloader.setShowPreloader(false);
+
+                    const file = new Blob([res], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
+
+                    // let a = document.createElement("a");
+                    // a.href = fileURL;
+                    // a.target = "_blank";
+                    // a.click();
+                    window.open(fileURL, "_blank");
+                });
             }
         })
 
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/arrest/list']);
+                if(this.arrestCode){
+                    this.router.navigateByUrl('/arrest/manage/R/'+this.arrestCode);
+                }else{
+                    this.router.navigateByUrl('/arrest/manage/C/NEW');
+                }
             }
         })
     }
@@ -266,42 +330,149 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStation: new FormControl(null, Validators.required),
             NoticeDate: new FormControl(noticeDate, Validators.required),
             NoticeTime: new FormControl(noticeTime, Validators.required),
-            NoticeDue: new FormControl(null, Validators.required),
+            NoticeDue: new FormControl(1, Validators.required),
             NoticeDueDate: new FormControl(noticeDueDate, Validators.required),
             NoticeDueTime: new FormControl(null),
             GroupNameDesc: new FormControl('N/A'),
-            CommunicationChanelID: new FormControl(null, Validators.required),
+            CommunicationChanelID: new FormControl(null),
             DataSource: new FormControl(null),
             FilePath: new FormControl(null),
             ArrestCode: new FormControl(null),
-            IsArrest: new FormControl(1),
+            IsArrest: new FormControl(0),
             IsActive: new FormControl(1),
             NoticeStaff: this.fb.array([this.createStaffForm()]),
             NoticeInformer: this.fb.array([this.createInformerForm()]),
             NoticeLocale: this.fb.array([this.createLocaleForm()]),
-            NoticeProduct: this.fb.array([this.createProductForm()]),
+            NoticeProduct: this.fb.array([]),
             NoticeSuspect: this.fb.array([]),
             NoticeDocument: this.fb.array([])
-        })
+        });
     }
 
     private createStaffForm(): FormGroup {
         NoticeStaffFormControl.NoticeCode = new FormControl(this.noticeCode);
+        if(this.actionFrom=="new"){
+            NoticeStaffFormControl.StaffFullName = new FormControl(null, Validators.required);
+            NoticeStaffFormControl.StaffID = new FormControl(null);
+            NoticeStaffFormControl.NoticeCode = new FormControl(null, Validators.required);
+            NoticeStaffFormControl.StaffCode = new FormControl(null, Validators.required);
+            NoticeStaffFormControl.TitleName = new FormControl(null);
+            NoticeStaffFormControl.FirstName = new FormControl(null, Validators.required);
+            NoticeStaffFormControl.LastName = new FormControl(null);
+            NoticeStaffFormControl.PositionCode = new FormControl(null);
+            NoticeStaffFormControl.PositionName = new FormControl(null);
+            NoticeStaffFormControl.PosLevel = new FormControl(null);
+            NoticeStaffFormControl.PosLevelName = new FormControl(null);
+            NoticeStaffFormControl.DepartmentCode = new FormControl(null);
+            NoticeStaffFormControl.DepartmentName = new FormControl(null);
+            NoticeStaffFormControl.DepartmentLevel = new FormControl(null);
+            NoticeStaffFormControl.OfficeCode = new FormControl(null);
+            NoticeStaffFormControl.OfficeName = new FormControl(null);
+            NoticeStaffFormControl.OfficeShortName = new FormControl(null);
+            NoticeStaffFormControl.ContributorCode = new FormControl(null);
+            NoticeStaffFormControl.IsActive = new FormControl(1);
+        }
         return this.fb.group(NoticeStaffFormControl)
     }
 
     private createInformerForm(): FormGroup {
         NoticeInformerFormControl.NoticeCode = new FormControl(this.noticeCode);
+        if(this.actionFrom=="new"){
+            NoticeInformerFormControl.InformerID = new FormControl('22');
+            NoticeInformerFormControl.InformerType = new FormControl(null);
+            NoticeInformerFormControl.TitleCode = new FormControl(null);
+            NoticeInformerFormControl.TitleName = new FormControl(null);
+            NoticeInformerFormControl.FirstName = new FormControl(null, Validators.required);
+            NoticeInformerFormControl.LastName = new FormControl(null);
+            NoticeInformerFormControl.IDCard = new FormControl('N/A');
+            NoticeInformerFormControl.Age = new FormControl(null);
+            NoticeInformerFormControl.GenderType = new FormControl('-');
+            NoticeInformerFormControl.Location = new FormControl('N/A');
+            NoticeInformerFormControl.Address = new FormControl(null);
+            NoticeInformerFormControl.Village = new FormControl(null);
+            NoticeInformerFormControl.Building = new FormControl(null);
+            NoticeInformerFormControl.Floor = new FormControl(null);
+            NoticeInformerFormControl.Room = new FormControl(null);
+            NoticeInformerFormControl.Alley = new FormControl(null);
+            NoticeInformerFormControl.Road = new FormControl(null);
+            NoticeInformerFormControl.SubDistrictCode = new FormControl(null);
+            NoticeInformerFormControl.SubDistrict = new FormControl(null);
+            NoticeInformerFormControl.DistrictCode = new FormControl(null);
+            NoticeInformerFormControl.District = new FormControl(null);
+            NoticeInformerFormControl.ProvinceCode = new FormControl(null);
+            NoticeInformerFormControl.Province = new FormControl(null);
+            NoticeInformerFormControl.ZipCode = new FormControl('N/A');
+            NoticeInformerFormControl.TelephoneNo = new FormControl('N/A');
+            NoticeInformerFormControl.InformerInfo = new FormControl(null);
+            NoticeInformerFormControl.IsActive = new FormControl(1);
+            NoticeInformerFormControl.FullName = new FormControl(null);
+            NoticeInformerFormControl.Region = new FormControl(null);
+        }
         return this.fb.group(NoticeInformerFormControl)
     }
 
     private createLocaleForm(): FormGroup {
         NoticeLocaleFormControl.NoticeCode = new FormControl(this.noticeCode);
+        if(this.actionFrom=="new"){
+            NoticeLocaleFormControl.LocaleID = new FormControl(null);
+            NoticeLocaleFormControl.Location = new FormControl(null);
+            NoticeLocaleFormControl.Address = new FormControl(null);
+            NoticeLocaleFormControl.Village = new FormControl(null);
+            NoticeLocaleFormControl.Building = new FormControl(null);
+            NoticeLocaleFormControl.Floor = new FormControl(null);
+            NoticeLocaleFormControl.Room = new FormControl(null);
+            NoticeLocaleFormControl.Alley = new FormControl(null);
+            NoticeLocaleFormControl.Road = new FormControl(null);
+            NoticeLocaleFormControl.SubDistrictCode = new FormControl(null);
+            NoticeLocaleFormControl.SubDistrict = new FormControl(null);
+            NoticeLocaleFormControl.DistrictCode = new FormControl(null);
+            NoticeLocaleFormControl.District = new FormControl(null);
+            NoticeLocaleFormControl.ProvinceCode = new FormControl(null, Validators.required);
+            NoticeLocaleFormControl.Province = new FormControl(null);
+            NoticeLocaleFormControl.ZipCode = new FormControl('N/A');
+            NoticeLocaleFormControl.Policestation = new FormControl(null);
+            NoticeLocaleFormControl.IsActive = new FormControl(1);
+            NoticeLocaleFormControl.Region = new FormControl(null);
+        }
         return this.fb.group(NoticeLocaleFormControl)
     }
 
     private createProductForm(): FormGroup {
         NoticeProductFormControl.NoticeCode = new FormControl(this.noticeCode);
+        if(this.actionFrom=="new"){
+            NoticeProductFormControl.ProductID = new FormControl(null);
+            NoticeProductFormControl.GroupCode = new FormControl(null);
+            NoticeProductFormControl.IsDomestic = new FormControl(null);
+            NoticeProductFormControl.ProductCode = new FormControl(null);
+            NoticeProductFormControl.BrandCode = new FormControl(null);
+            NoticeProductFormControl.BrandNameTH = new FormControl(null);
+            NoticeProductFormControl.BrandNameEN = new FormControl(null);
+            NoticeProductFormControl.SubBrandCode = new FormControl(null);
+            NoticeProductFormControl.SubBrandNameTH = new FormControl(null);
+            NoticeProductFormControl.SubBrandNameEN = new FormControl(null);
+            NoticeProductFormControl.ModelCode = new FormControl(null);
+            NoticeProductFormControl.ModelName = new FormControl(null);
+            NoticeProductFormControl.FixNo1 = new FormControl(null);
+            NoticeProductFormControl.DegreeCode = new FormControl(null);
+            NoticeProductFormControl.Degree = new FormControl(null);
+            NoticeProductFormControl.SizeCode = new FormControl(null);
+            NoticeProductFormControl.Size = new FormControl(null);
+            NoticeProductFormControl.SizeUnitCode = new FormControl(null);
+            NoticeProductFormControl.SizeUnitName = new FormControl(null);
+            NoticeProductFormControl.FixNo2 = new FormControl(null);
+            NoticeProductFormControl.SequenceNo = new FormControl(null);
+            NoticeProductFormControl.ProductDesc = new FormControl(null);
+            NoticeProductFormControl.CarNo = new FormControl(null);
+            NoticeProductFormControl.Qty = new FormControl(null);
+            NoticeProductFormControl.QtyUnit = new FormControl(null);
+            NoticeProductFormControl.NetVolume = new FormControl(0);
+            NoticeProductFormControl.NetVolumeUnit = new FormControl(null);
+            NoticeProductFormControl.Remarks = new FormControl(null);
+            NoticeProductFormControl.IsActive = new FormControl(1);
+
+            NoticeProductFormControl.BrandFullName = new FormControl(null);
+            NoticeProductFormControl.IsNewItem = new FormControl(false);
+        }
         return this.fb.group(NoticeProductFormControl)
     }
 
@@ -313,74 +484,144 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    private async setDataInit(res:any){
+        this.noticeCode = res.NoticeCode;
+        this.arrestCode = res.ArrestCode;
+        await this.noticeForm.reset({
+            NoticeCode: res.NoticeCode,
+            NoticeStationCode: res.NoticeStationCode,
+            NoticeStation: res.NoticeStation,
+            NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
+            NoticeTime: res.NoticeTime,
+            NoticeDue: res.NoticeDue,
+            NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
+            GroupNameDesc: res.GroupNameDesc || 'N/A',
+            CommunicationChanelID: res.CommunicationChanelID,
+            ArrestCode: res.ArrestCode,
+            IsActive: res.IsActive,
+            IsArrest: res.IsArrest || 1
+        });
+
+        const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
+        staff.map(item => {
+            item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+        });
+
+        await res.NoticeLocale.map(item =>
+            item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
+        )
+
+        const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
+        informer.map(item => {
+            this.isConceal = item.InformerType == 1 ? true : false;
+            item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
+            item.Region += item.District == null ? '' : ` ${item.District}`;
+            item.Region += item.Province == null ? '' : ` ${item.Province}`;
+        });
+
+        const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
+        suspect.map(item => {
+            item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
+            item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+            item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+
+            item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
+            item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
+
+            item.SuspectType = item.SuspectType || 0;
+            item.EntityType = item.EntityType || 0;
+            item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
+            item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
+        }
+        )
+
+        const product = res.NoticeProduct.filter(item => item.IsActive == 1);
+        product.map(item => {
+            item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
+            item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
+            item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
+            item.NetWeight = item.NetWeight || '0';
+            item.NetWeightUnit = item.NetWeightUnit || '0';
+        }
+        )
+
+        await this.setItemFormArray(staff, 'NoticeStaff');
+        await this.setItemFormArray(informer, 'NoticeInformer');
+        await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+        await this.setItemFormArray(product, 'NoticeProduct');
+        await this.setItemFormArray(suspect, 'NoticeSuspect');
+    }
+
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
-            this.noticeCode = res.NoticeCode;
-            this.arrestCode = res.ArrestCode;
-            await this.noticeForm.reset({
-                NoticeCode: res.NoticeCode,
-                NoticeStationCode: res.NoticeStationCode,
-                NoticeStation: res.NoticeStation,
-                NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
-                NoticeTime: res.NoticeTime,
-                NoticeDue: res.NoticeDue,
-                NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
-                GroupNameDesc: res.GroupNameDesc || 'N/A',
-                CommunicationChanelID: res.CommunicationChanelID,
-                ArrestCode: res.ArrestCode,
-                IsActive: res.IsActive,
-                IsArrest: res.IsArrest || 1
-            });
 
-            const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
-            staff.map(item => {
-                item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
-            });
+            // this.noticeCode = res.NoticeCode;
+            // this.arrestCode = res.ArrestCode;
+            // await this.noticeForm.reset({
+            //     NoticeCode: res.NoticeCode,
+            //     NoticeStationCode: res.NoticeStationCode,
+            //     NoticeStation: res.NoticeStation,
+            //     NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
+            //     NoticeTime: res.NoticeTime,
+            //     NoticeDue: res.NoticeDue,
+            //     NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
+            //     GroupNameDesc: res.GroupNameDesc || 'N/A',
+            //     CommunicationChanelID: res.CommunicationChanelID,
+            //     ArrestCode: res.ArrestCode,
+            //     IsActive: res.IsActive,
+            //     IsArrest: res.IsArrest || 1
+            // });
 
-            await res.NoticeLocale.map(item =>
-                item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
-            )
+            // const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
+            // staff.map(item => {
+            //     item.StaffFullName = `${item.TitleName} ${item.FirstName} ${item.LastName}`
+            // });
 
-            const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
-            informer.map(item => {
-                this.isConceal = item.InformerType == 1 ? true : false;
-                item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
-                item.Region += item.District == null ? '' : ` ${item.District}`;
-                item.Region += item.Province == null ? '' : ` ${item.Province}`;
-            });
+            // await res.NoticeLocale.map(item =>
+            //     item.Region = `${item.SubDistrict} ${item.District} ${item.Province}`
+            // )
 
-            const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
-            suspect.map(item => {
-                item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
-                item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
-                item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+            // const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
+            // informer.map(item => {
+            //     this.isConceal = item.InformerType == 1 ? true : false;
+            //     item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
+            //     item.Region += item.District == null ? '' : ` ${item.District}`;
+            //     item.Region += item.Province == null ? '' : ` ${item.Province}`;
+            // });
 
-                item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
-                item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
+            // const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
+            // suspect.map(item => {
+            //     item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
+            //     item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+            //     item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
 
-                item.SuspectType = item.SuspectType || 0;
-                item.EntityType = item.EntityType || 0;
-                item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
-                item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
-            }
-            )
+            //     item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
+            //     item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
 
-            const product = res.NoticeProduct.filter(item => item.IsActive == 1);
-            product.map(item => {
-                item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
-                item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
-                item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
-                item.NetWeight = item.NetWeight || '0';
-                item.NetWeightUnit = item.NetWeightUnit || '0';
-            }
-            )
+            //     item.SuspectType = item.SuspectType || 0;
+            //     item.EntityType = item.EntityType || 0;
+            //     item.SuspectTypeName = item.SuspectTypeName || this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
+            //     item.EntityTypeName = item.EntityTypeName || this.entityTypes.find(el => parseInt(el.value) == item.EntityType).text;
+            // }
+            // )
 
-            await this.setItemFormArray(staff, 'NoticeStaff');
-            await this.setItemFormArray(informer, 'NoticeInformer');
-            await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
-            await this.setItemFormArray(product, 'NoticeProduct');
-            await this.setItemFormArray(suspect, 'NoticeSuspect');
-        })
+            // const product = res.NoticeProduct.filter(item => item.IsActive == 1);
+            // product.map(item => {
+            //     item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
+            //     item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
+            //     item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
+            //     item.NetWeight = item.NetWeight || '0';
+            //     item.NetWeightUnit = item.NetWeightUnit || '0';
+            // }
+            // )
+
+            // await this.setItemFormArray(staff, 'NoticeStaff');
+            // await this.setItemFormArray(informer, 'NoticeInformer');
+            // await this.setItemFormArray(res.NoticeLocale, 'NoticeLocale');
+            // await this.setItemFormArray(product, 'NoticeProduct');
+            // await this.setItemFormArray(suspect, 'NoticeSuspect');
+            this.setDataInit(res);
+        });
 
         // await this.noticeService.getDocument(code).then(async res => {
         //     res.map(item => item.IsNewItem = false)
@@ -390,39 +631,104 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async onCreate() {
 
-        // Set Preloader
-        this.preloader.setShowPreloader(true);
-
         console.log('===================');
         console.log('Create Notice : ', JSON.stringify(this.noticeForm.value));
         console.log('===================');
 
+        let noticeForm = this.noticeForm.value;
+
+        let noticeStaff = [];
+        let noticeInformer = [];
+        let noticeLocale = [];
+        let noticeProduct = [];
+        let noticeSuspect = [];
+        let noticeDocument = [];
+        for(let l of noticeForm.NoticeStaff){
+            l.NoticeCode = this.noticeCode;
+            l.ContributorID = 4;
+            l.IsActive = 1;
+            noticeStaff.push(l);
+        }
+        for(let l of noticeForm.NoticeInformer){
+            l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
+            noticeInformer.push(l);
+        }
+        for(let l of noticeForm.NoticeLocale){
+            l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
+            noticeLocale.push(l);
+        }
+        for(let l of noticeForm.NoticeProduct){
+            l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
+            l.NetVolume = l.NetVolume?l.NetVolume:0;
+            if(!l.ProductCode){
+                this.isRequired = true;
+                this.showSwal(Message.checkData, "warning");
+                return false;
+            }
+            noticeProduct.push(l);
+        }
+        for(let l of noticeForm.NoticeSuspect){
+            l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
+            noticeSuspect.push(l);
+        }
+        for(let l of noticeForm.NoticeDocument){
+            l.NoticeCode = this.noticeCode;
+            l.IsActive = 1;
+            noticeDocument.push(l);
+        }
+        this.noticeForm.value.NoticeStaff = noticeStaff;
+        this.noticeForm.value.NoticeInformer = noticeInformer;
+        this.noticeForm.value.NoticeLocale = noticeLocale;
+        this.noticeForm.value.NoticeProduct = noticeProduct;
+        this.noticeForm.value.NoticeSuspect = noticeSuspect;
+        this.noticeForm.value.NoticeDocument = noticeDocument;
+
+        // Set Preloader
+        this.preloader.setShowPreloader(true);
         let IsSuccess: boolean = true;
         await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
             if (!isSuccess) { IsSuccess = false; return false; };
         }, () => { IsSuccess = false; return; });
 
-        if (IsSuccess) {
-            await this.NoticeDocument.value.map(async doc => {
-                // insert Document
-                await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
-                    if (!docIsSuccess) { IsSuccess = false; return false; };
+        // if (IsSuccess) {
+        //     await this.NoticeDocument.value.map(async doc => {
+        //         // insert Document
+        //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
+        //             if (!docIsSuccess) { IsSuccess = false; return false; };
 
-                }, () => { IsSuccess = false; return false; });
-            });
-        }
+        //         }, () => { IsSuccess = false; return false; });
+        //     });
+        // }
 
         if (IsSuccess) {
-            alert(Message.saveComplete)
-            this.router.navigate(['/notice/manage', 'R', this.noticeCode]);
+            this.showSwal(Message.saveComplete, "success");
+            // this.router.routeReuseStrategy.shouldReuseRoute = function() {
+            //   return false;
+            // };
+            this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
+            this.getByCon(this.noticeCode);
+
+            sessionStorage.removeItem("notice_form_data");
         } else {
-            alert(Message.saveFail)
+            this.showSwal(Message.saveFail, "error");
         }
 
         this.preloader.setShowPreloader(false);
     }
 
     private async onReviced() {
+        let noticeForm = this.noticeForm.value;
+        for(let l of noticeForm.NoticeProduct){
+            if(!l.ProductCode){
+                this.isRequired = true;
+                this.showSwal(Message.checkData, "warning");
+                return false;
+            }
+        }
 
         // Set Preloader
         this.preloader.setShowPreloader(true);
@@ -433,31 +739,53 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         let IsSuccess: boolean = true;
         await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
-            debugger
             if (!isSuccess) { IsSuccess = false; return; };
         }, () => { IsSuccess = false; return; });
 
         if (IsSuccess) {
-            const document = this.NoticeDocument.value;
-            await document.map(async (item: NoticeDocument) => {
-                if (item.IsNewItem) {
-                    await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
-                        if (!docIsSuccess) { IsSuccess = false; return; };
-                    }, () => { IsSuccess = false; return; });
-
-                } else {
-                    this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
-                        if (!docIsSuccess) { IsSuccess = false; return };
-                    }, () => { IsSuccess = false; return; })
+            const products = this.NoticeProduct.value;
+            if(products && products.length>0){
+                for(let i in products){
+                    let l = products[i];
+                    if(l.IsNewItem){
+                        l.IsActive = 1;
+                        l.NetVolume = l.NetVolume?l.NetVolume:0;
+                        await this.noticeService.insProductAll(l).then(async isSuccess => {});
+                    }else{
+                        await this.noticeService.updProduct(l).then(async isSuccess=>{});
+                    }
                 }
-            })
+            }
+
+            const suspects = this.NoticeSuspect.value;
+            if(suspects && suspects.length>0){
+                for(let i in suspects){
+                    let l = suspects[i];
+                    if(l.IsNewItem){
+                        await this.noticeService.insSuspect(l).then(async isSuccess => {});
+                    }
+                }
+            }
+        //     const document = this.NoticeDocument.value;
+        //     await document.map(async (item: NoticeDocument) => {
+        //         if (item.IsNewItem) {
+        //             await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
+        //                 if (!docIsSuccess) { IsSuccess = false; return; };
+        //             }, () => { IsSuccess = false; return; });
+
+        //         } else {
+        //             this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
+        //                 if (!docIsSuccess) { IsSuccess = false; return };
+        //             }, () => { IsSuccess = false; return; })
+        //         }
+        //     })
         }
 
         if (IsSuccess) {
-            alert(Message.saveComplete)
-            this.onComplete()
+            this.showSwal(Message.saveComplete, "success");
+            this.onComplete();
         } else {
-            alert(Message.saveFail)
+            this.showSwal(Message.saveFail, "error");
         }
 
         this.preloader.setShowPreloader(false);
@@ -468,13 +796,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             // Set Preloader
             this.preloader.setShowPreloader(true);
             this.noticeService.updDelete(this.noticeCode).then(IsSuccess => {
+                this.preloader.setShowPreloader(false);
                 if (IsSuccess) {
-                    alert(Message.delComplete)
+                    this.showSwal(Message.delComplete, "success");
                     this.router.navigate(['/notice/list']);
-                } else (
-                    alert(Message.delFail)
-                )
-            })
+                } else {
+                    this.showSwal(Message.delFail, "error");
+                }
+            });
         } else {
             this.router.navigate(['/notice/list']);
         }
@@ -491,6 +820,30 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
 
+        this.getByCon(this.noticeCode);
+
+    }
+
+    getTransactionRunning(officeCode:any):void{
+        this.transactionRunningService.TransactionRunninggetByCon("ops_notice", officeCode).then(res=>{
+            if(res.length>0){
+                const data = res[0];
+                this.transactionRunningService.TransactionRunningupdByCon(data.RunningID).then(res=>{
+                    let str = ""+data.RunningNo;
+                    var pad = "00000"
+                    var ans = pad.substring(0, pad.length - str.length) + str
+                    this.noticeCode = "LS"+officeCode+""+data.RunningYear+ans;
+
+                    this.noticeForm.patchValue({
+                        NoticeCode: this.noticeCode
+                    });
+                });
+            }else{
+                this.transactionRunningService.TransactionRunninginsAll(officeCode, "ops_notice", "LS").then(res=>{
+                    this.getTransactionRunning(officeCode);
+                });
+            }
+        });
     }
 
     _noticeDate: any;
@@ -514,7 +867,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             const edate = getDateMyDatepicker(_edate);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                this.showSwal(Message.checkDate, "warning");
                 setTimeout(() => {
                     this.noticeForm.patchValue({
                         NoticeDueDate: { date: _sdate.date }
@@ -562,6 +915,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     RowId: item.RowId,
                     IsChecked: true,
                     IsNewItem: true,
+                    MistreatNo: item.MistreatNo
                 }
                 this.NoticeSuspect.push(this.fb.group(noticeSuspect))
             });
@@ -571,6 +925,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     addDocument() {
         const lastIndex = this.NoticeDocument.length - 1;
         let document = new NoticeDocument();
+        document.DocumentID = ""+(lastIndex + 1);
+        document.DocumentName = "";
+        document.FilePath = "";
         document.IsNewItem = true;
         if (lastIndex < 0) {
             this.NoticeDocument.push(this.fb.group(document));
@@ -589,9 +946,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async setStaffStore() {
-        // await this.mainMasterService.masStaffMaingetAll().then(res =>
-        //     this.typeheadStaff = res
-        // )
+        await this.mainMasterService.masStaffMaingetAll().then(res =>
+            this.typeheadStaff = res
+        )
     }
 
     private async setProductStore() {
@@ -680,12 +1037,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         text3$
             .debounceTime(200)
             .distinctUntilChanged()
-            .map(term => term === '' ? []
-                : this.typeheadStaff
+            .map(term => this.typeheadStaff
                     .filter(v =>
-                        (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.TitleName || ''} ${v.FirstName || ''} ${v.LastName || ''}`
+                            .toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        // (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.FirstName && v.FirstName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.LastName && v.LastName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (' '.indexOf(term) > -1)
                     ).slice(0, 10));
 
     serachOffice = (text3$: Observable<string>) =>
@@ -695,8 +1054,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             .map(term => term === '' ? []
                 : this.typeheadOffice
                     .filter(v =>
-                        (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        (`${v.OfficeName || ''} ${v.OfficeShortName || ''}`.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                        // (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
@@ -721,6 +1081,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: ele.item.ZipCode
         });
     }
+    blurSelectItemInformmerRegion() {
+        let obj = this.NoticeInformer.at(0).value;
+        if(!obj.ProvinceCode){
+            this.NoticeInformer.at(0).patchValue({
+                Region: ""
+            });
+        }
+    }
 
     selectItemLocaleRegion(ele: any) {
         this.NoticeLocale.at(0).patchValue({
@@ -733,18 +1101,39 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: 'N/A'
         });
     }
+    blurSelectItemLocaleRegion() {
+        let obj = this.NoticeLocale.at(0).value;
+        console.log(obj);
+        if(!obj.ProvinceCode){
+            this.NoticeLocale.at(0).patchValue({
+                Region: ""
+            });
+        }
+    }
 
     selectItemProductItem(ele: any, index: number) {
-        this.NoticeProduct.at(index).reset(ele.item)
+        const productId = this.NoticeProduct.at(index).value.ProductID;
+        if(productId){
+            ele.item.ProductID = productId;
+        }
+        this.NoticeProduct.at(index).reset(ele.item);
         this.NoticeProduct.at(index).patchValue({
             IsActive: 1,
             IsNewItem: true,
             NoticeCode: this.noticeCode,
             GroupCode: ele.item.GroupCode || '1',
             IsDomestic: ele.item.IsDomestic || '1',
-            NetWeight: ele.item.NetWeight || 0,
-            NetWeightUnit: ele.item.NetWeightUnit || 0,
-        })
+            NetVolume: ele.item.NetVolume || 0,
+            NetVolumeUnit: ele.item.NetVolumeUnit || 0,
+        });
+    }
+    blurSelectItemProductItem(index: number) {
+        const productID = this.NoticeProduct.at(index).value.ProductID;
+        if(!productID){
+            this.NoticeProduct.at(index).patchValue({
+                BrandFullName: ""
+            });
+        }
     }
 
     selectItemStaff(e, i) {
@@ -755,51 +1144,88 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeCode: this.noticeCode,
             IsActive: 1,
             StaffFullName: `${e.item.TitleName || ''} ${e.item.FirstName || ''} ${e.item.LastName || ''}`,
-            PositionCode: e.item.PositionCode || e.item.ManagementPosCode,
-            PositionName: e.item.PositionName || e.item.ManagementPosName,
+            PositionCode: e.item.OperationPosCode || e.item.OperationPosCode,
+            PositionName: e.item.OperationPosName || e.item.OperationPosName,
             DepartmentLevel: e.item.DepartmentLevel || e.item.DeptLevel,
             DepartmentCode: e.item.DepartmentCode || e.item.OfficeCode,
             DepartmentName: `${e.item.DepartmentName || e.item.OfficeName}`,
             ContributorCode: e.item.ContributorCode || 2,
             ContributorID: e.item.ContributorID || 1
-        })
+        });
+
+        if(this.mode=="C"){
+            this.getTransactionRunning(e.item.DepartmentCode||e.item.OfficeCode);
+        }
+    }
+    blurSelectItemStaff(i){
+        let noticeStaff = this.NoticeStaff.at(i).value;
+        if(!noticeStaff.StaffCode){
+            this.NoticeStaff.at(i).patchValue({
+                StaffFullName: ""
+            });
+        }
     }
 
     selectItemOffice(e) {
         this.noticeForm.patchValue({
             NoticeStationCode: e.item.OfficeCode || '-',
             NoticeStation: e.item.OfficeName
-        })
+        });
+    }
+    blurSelectItemOffice(){
+        if(!this.noticeForm.value.NoticeStationCode){
+            this.noticeForm.patchValue({NoticeStation:""});
+        }
     }
 
-    async onDeleteProduct(id: string, index: number) {
+    productId:any = "";
+    productIndex:any = "";
+    beforeDeleteProduct(id: string, index: number){
+        this.productId = id;
+        this.productIndex = index;
         if (this.mode === 'C') {
-            this.NoticeProduct.removeAt(index);
-
+            this.NoticeProduct.removeAt(this.productIndex);
         } else if (this.mode === 'R') {
-            if (this.NoticeProduct.at(index).value.IsNewItem) {
-                this.NoticeProduct.removeAt(index);
+            if (this.NoticeProduct.at(this.productIndex).value.IsNewItem) {
+                this.NoticeProduct.removeAt(this.productIndex);
                 return;
             }
+            this.deleteProduct.text = Message.confirmAction;
+            this.deleteProduct.show();
+        }
+    }
+    async onDeleteProduct() {
+        if (this.mode === 'C') {
+            // this.NoticeProduct.removeAt(this.productIndex);
 
-            if (confirm(Message.confirmAction)) {
+        } else if (this.mode === 'R') {
+            // if (this.NoticeProduct.at(this.productIndex).value.IsNewItem) {
+            //     this.NoticeProduct.removeAt(this.productIndex);
+            //     return;
+            // }
+
+            // if (confirm(Message.confirmAction)) {
                 this.preloader.setShowPreloader(true);
 
-                await this.noticeService.productupdDelete(id).then(isSuccess => {
+                await this.noticeService.productupdDelete(this.productId).then(isSuccess => {
                     if (isSuccess === true) {
-                        this.NoticeProduct.removeAt(index);
-                        alert(Message.delProductComplete)
+                        this.NoticeProduct.removeAt(this.productIndex);
+                        this.showSwal(Message.delProductComplete, "success");
                     } else {
-                        alert(Message.delProductFail)
+                        this.showSwal(Message.delProductFail, "error");
                     }
                 })
 
                 this.preloader.setShowPreloader(false);
-            }
+            // }
         }
     }
 
-    async onDeleteSuspect(id: string, index: number) {
+    suspectId:any="";
+    suspectIndex:any="";
+    beforeDeleteSuspect(id: string, index: number){
+        this.suspectId = id;
+        this.suspectIndex = index;
         if (this.mode === 'C') {
             this.NoticeSuspect.removeAt(index);
 
@@ -809,45 +1235,63 @@ export class ManageComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
+            this.deleteSuspect.text = Message.confirmAction;
+            this.deleteSuspect.show();
+        }
+    }
+    async onDeleteSuspect() {
+        if (this.mode === 'C') {
+            // this.NoticeSuspect.removeAt(this.suspectIndex);
 
-                await this.noticeService.suspectupdDelete(id).then(isSuccess => {
-                    if (isSuccess === true) {
-                        this.NoticeSuspect.removeAt(index);
-                        alert(Message.delSuspcetComplete)
-                    } else {
-                        alert(Message.delSuspectFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
+        } else if (this.mode === 'R') {
+
+            this.preloader.setShowPreloader(true);
+
+            await this.noticeService.suspectupdDelete(this.suspectId).then(isSuccess => {
+                if (isSuccess === true) {
+                    this.NoticeSuspect.removeAt(this.suspectIndex);
+                    this.showSwal(Message.delSuspcetComplete, "success");
+                } else {
+                    this.showSwal(Message.delSuspectFail, "error");
+                }
+            })
+            this.preloader.setShowPreloader(false);
         }
     }
 
-    async onDeleteDocument(id: string, index: number) {
+    documentId:any = "";
+    documentIndex:any = "";
+    beforeDeleteDocument(id: string, index: number) {
+        this.documentId = id;
+        this.documentIndex = index;
         if (this.mode === 'C') {
             this.NoticeDocument.removeAt(index);
-
         } else if (this.mode === 'R') {
             if (this.NoticeDocument.at(index).value.IsNewItem) {
                 this.NoticeDocument.removeAt(index);
                 return;
             }
 
-            if (confirm(Message.confirmAction)) {
-                this.preloader.setShowPreloader(true);
+            this.deleteDocument.text = Message.confirmAction;
+            this.deleteDocument.show();
+        }
+    }
+    async onDeleteDocument() {
+        if (this.mode === 'C') {
+            // this.NoticeDocument.removeAt(index);
 
-                await this.noticeService.noticeDocumentupdDelete(id).then(isSuccess => {
-                    if (isSuccess === true) {
-                        this.NoticeDocument.removeAt(index);
-                        alert(Message.delDocumentComplete)
-                    } else {
-                        alert(Message.delDocumentFail)
-                    }
-                })
-                this.preloader.setShowPreloader(false);
-            }
+        } else if (this.mode === 'R') {
+            this.preloader.setShowPreloader(true);
+
+            await this.noticeService.noticeDocumentupdDelete(this.documentId).then(isSuccess => {
+                if (isSuccess === true) {
+                    this.NoticeDocument.removeAt(this.documentIndex);
+                    this.showSwal(Message.delDocumentComplete, "success");
+                } else {
+                    this.showSwal(Message.delDocumentFail, "error");
+                }
+            })
+            this.preloader.setShowPreloader(false);
         }
     }
 
@@ -864,6 +1308,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     openSuspect(e) {
+        sessionStorage.setItem("notice_form_data", JSON.stringify(this.noticeForm.value));
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
 
@@ -909,5 +1354,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             }
         };
+    }
+
+    private showSwal(msg:string, iconType:any){
+        this.alertSwal.text = msg;
+        this.alertSwal.type = iconType;
+        this.alertSwal.show();
     }
 }
