@@ -46,14 +46,13 @@ export class ListComponent implements OnInit, OnDestroy {
     this.sidebarService.setVersion('0.0.0.23');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
-    // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       if (Textsearch) {
         await this.navService.setOnSearch('');
         this.onSearch(Textsearch);
       }
     });
-    
+
     this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
       if (status) {
         await this.navService.setOnNextPage(false);
@@ -131,9 +130,16 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async onSearch(Textsearch: any) {
-    this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
-    this.preLoaderService.setShowPreloader(false);
+    if (this.resultsPerPage.length == 0) {
+      this.preLoaderService.setShowPreloader(true);
+      await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+      this.preLoaderService.setShowPreloader(false);
+    } else {
+      Swal({
+        text: "ไม่พบข้อมูล",
+        type: 'warning',
+      })
+    }
   }
 
   async onAdvSearch(form: any) {
@@ -171,7 +177,21 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setOnPrevPage(false);
   }
 
-  private onSearchComplete(list: any) {
+  private async onSearchComplete(list: any) {
+    // let lawsuitList = []
+    // await list.forEach(lawsuit => {
+    //   lawsuit.LawsuitArrestIndicment.forEach(indicment => {
+    //     let temp = lawsuit;
+    //     temp.LawsuitArrestIndicmentTemp = indicment
+    //     lawsuitList.push(temp)
+        
+
+    //   });
+    // });
+    // console.log(indicmentList)
+    // list = tempList
+
+
     /* Alert When No Data To Show */
     if (!list.length) {
       Swal({
@@ -189,12 +209,8 @@ export class ListComponent implements OnInit, OnDestroy {
       } catch (error) {
 
       }
-
-      //item.LawsuitID = list.LawsuitArrestIndicment[0];
-      //console.log("Check LIST:"+JSON.stringify(item));
       return item;
     });
-    /* Set Total Record */
     this.paginage.TotalItems = this.results.length;
   }
 
@@ -226,7 +242,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   async pageChanges(event) {
     this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
-    console.log('this.resultsPerPage', this.resultsPerPage);
   }
 
   checkNullLawsuitNo(data) {
