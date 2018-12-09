@@ -40,12 +40,12 @@ export class ArrestIndictmentDetailService {
     ArrestIndicmentDetailupdByCon(IndictmentDetail: ArrestIndictmentDetail) {
         const params = IndictmentDetail;
         const url = `${appConfig.api7788}/ArrestIndicmentDetailupdByCon`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     ArrestIndicmentDetailupdDelete(IndictmentDetailID: string) {
         const params = { IndictmentDetailID };
         const url = `${appConfig.api7788}/ArrestIndicmentDetailupdDelete`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 }
