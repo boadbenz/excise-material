@@ -94,7 +94,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   compareDataUpdateTmp: any;
   formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`;
-
+  isReportNo: any = false;
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -108,7 +108,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private masDocumentMainService: MasDocumentMainService
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.22');
+    this.sidebarService.setVersion('0.0.0.23');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -253,12 +253,22 @@ export class ManageComponent implements OnInit, OnDestroy {
               this.approveReportList[i].department3 = st.OfficeShortName;
               this.approveReportList[i].staff3 = st;
             } 
-          } else if ((+st.ProcessCode) === (+j)) {
-            console.log((+st.ProcessCode) == parseFloat(j));
-            this.receipt.list[i].ReceiptStaff = name;
-            this.receipt.list[i].ReceipPosition = st.PositionName;
-            this.receipt.list[i].ReceipDepartment = st.OfficeShortName;
-            this.receipt.list[i].staff = st;
+          } else if (st.ProcessCode && st.ProcessCode.split('.').length == 1) {
+            console.log('staff 19 ', st.ProcessCode, j);
+            const ind: any = parseInt(st.ProcessCode != null ? st.ProcessCode : 0);
+            console.log(ind);
+            if (typeof ind == 'number') {
+              try {
+                console.log((+st.ProcessCode) == parseFloat(j));
+                this.receipt.list[ind].ReceiptStaff = name;
+                this.receipt.list[ind].ReceipPosition = st.PositionName;
+                this.receipt.list[ind].ReceipDepartment = st.OfficeShortName;
+                this.receipt.list[ind].staff = st;
+              } catch (err) {
+                console.log(err);
+              }
+              
+            }
           } else if (!st.ProcessCode && st.ContributorID == 17) {
             console.log('contribute');
             this.accused.staff = st;
@@ -430,11 +440,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             ReceiptBookNo: rec.ReceiptBookNo,
             ReceiptNo: rec.ReceiptNo,
             ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
-            StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.StationCode : '',
+            StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
             Station: this.accused.StationName,
             CompareDetailID: CompareDetailID,
             PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
-            TotalFine: rec.TotalFine,
+            TotalFine: this.sumAllCompare.sum,
             RevenueStatus: 0,
             IsActive: 1,
             ReceiptChanel: rec.ReceiptChanel,
@@ -446,7 +456,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           receiptData = rec1;
           console.log('ข้อมูลการส่งใบเสร็จ');
           console.log(rec1);
-          if (this.validateReceiptData(rec1, reqField) && rec.staff && this.isNotValidTxtField(rec.ReceiptStaff)) {
+          if (this.validateReceiptData(rec1, reqField) && rec.staff && !this.isNotValidTxtField(rec.ReceiptStaff)) {
             receiptData.RevenueDate = '';
             const resp :any = await this.CompareDetailReceipinsAll(receiptData);
             console.log('ค่าการรีเทิร์น');
@@ -689,7 +699,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.headerData.LawsuitNo = resp[0].LawsuitNo;
         if (resp[0].CompareProve[0]) {
           this.headerData.ProveReportNo = resp[0].CompareProve[0].ProveReportNo;
+          this.isReportNo = true;
         }
+        
         this.headerData.LawsuitID = resp[0].LawsuitID;
         this.headerData.OfficeShortName = resp[0].OfficeShortName;
         this.headerData.PositionName = resp[0].PositionName;
@@ -1466,7 +1478,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
       } else {
         Swal(
-          'แจ้งเตือน!',
           'กรุณากรอกข้อมูลคำให้การของผู้ต้องหา.',
           'warning'
         );
@@ -1482,7 +1493,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     let compareFine: any = [];
     if ((+this.params.CompareID) > 0) {
       for (const user of this.ListCompareDetail) {
-        if (!user.isSum) {
+        console.log(!user.isSum , !this.isReportNo);
+        if (!user.isSum || !this.isReportNo) {
           const compareDetailFine: any = {
             CompareFineID: this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareFineID,
             CompareDetailID: this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareDetailID,
@@ -1492,10 +1504,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             FineRate: user.multi,
             IsActive: 1,
             FineType: user.FineType,
-            CompareArrestProductDetail: this.DataToSave.Product
+            CompareArrestProductDetail: this.DataToSave.Product ? this.DataToSave.product : []
           }
           j++;
           compareFine.push(compareDetailFine);
+          if (!this.isReportNo) {
+            CompareData.CompareDetail[id].CompareDetailFine = compareFine;
+            compareFine = [];
+            id++;
+          }
         } else {
           CompareData.CompareDetail[id].CompareDetailFine = this.jsonCopy(compareFine);
           if (this.isDatachange()) {
@@ -1508,19 +1525,25 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
     } else {
       for (const user of this.ListCompareDetail) {
-        if (!user.isSum) {
+        console.log(!user.isSum , !this.isReportNo);
+        if (!user.isSum || !this.isReportNo) {
           const compareDetailFine: any = {
             CompareFineID: null,
             CompareDetailID: null,
-            ProductID: user.product? user.product.ProductID : '',
+            ProductID: user.product ? user.product.ProductID : '',
             ProductFine: user.all ? user.all : this.receipt.list[id].TotalFine,
             VatValue: user.FineAmount,
             FineRate: user.multi,
             IsActive: 1,
             FineType: user.FineType,
-            CompareArrestProductDetail: this.DataToSave.Product
+            CompareArrestProductDetail: this.DataToSave.Product ? this.DataToSave.Product : []
           }
           compareFine.push(compareDetailFine);
+          if (!this.isReportNo) {
+            CompareData.CompareDetail[id].CompareDetailFine = compareFine;
+            compareFine = [];
+            id++;
+          }
         } else {
           CompareData.CompareDetail[id].CompareDetailFine = compareFine;
           compareFine = [];
@@ -1573,10 +1596,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             ReceiptBookNo: rec.ReceiptNo,
             ReceiptNo: rec.ReceiptChanel,
             ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
-            StationCode: rec.StationCode,
-            Station: rec.ReceipStation,
+            StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
+            Station: this.accused.StationName,
             PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
-            TotalFine: rec.TotalFine,
+            TotalFine: this.sumAllCompare.sum,
             RevenueStatus: 0,
             RevenueDate: '',
             IsActive: 1,
@@ -1707,6 +1730,10 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.sumAllCompare.sum2 = sum2;
           this.sumAllCompare.sum3 = sum3;
         }
+        this.DataToSave.userData[cmp.userNo].CompareFine = sum;
+        this.DataToSave.userData[cmp.userNo].BribeMoney = sum1;
+        this.DataToSave.userData[cmp.userNo].RewardMoney = sum2;
+        this.DataToSave.userData[cmp.userNo].TreasuryMoney = sum3;
       } else {
         if (cmp.isSum) {
           this.ListCompareDetail[i].BribeMoney = sum1;
