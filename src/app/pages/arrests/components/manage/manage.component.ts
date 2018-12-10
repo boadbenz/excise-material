@@ -1483,7 +1483,14 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             InvestigationSurveyDocument: a.InvestigationSurveyDocument,
             InvestigationCode: a.InvestigationCode,
             IsActive: a.IsActive,
+            IsLawsuitComplete: a.IsLawsuitComplete || 0,
             ArrestLocale: a.ArrestLocale
+                .map(x => {
+                    x.ArrestCode = a.ArrestCode;
+                    return x;
+                }),
+            ArrestStaff: a.ArrestStaff
+                .filter(x => x.IsModify != 'd')
                 .map(x => {
                     x.ArrestCode = a.ArrestCode;
                     return x;
@@ -1695,7 +1702,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     private async modifyIndictmentProduct(indictmentId: number, pd: fromModels.ArrestProductDetail[], isModify: string) {
         let promises = pd.map(async (x, i) => {
-            debugger
             let p = new fromModels.ArrestIndictmentProduct();
             p.IndictmentID = indictmentId;
             p.ProductID = x[i].ProductID;
