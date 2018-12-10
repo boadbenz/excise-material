@@ -32,7 +32,7 @@ import { ManageConfig } from './manage.config';
 import swal from 'sweetalert2';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
-import { groupArrayItem } from '../../arrest.helper';
+import { groupArrayItem, removeObjectItem } from '../../arrest.helper';
 
 @Component({
     selector: 'app-manage',
@@ -341,6 +341,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             InvestigationSurveyDocument: new FormControl(null),
             InvestigationCode: new FormControl(null),
             IsActive: new FormControl(1),
+            IsLawsuitComplete: new FormControl(0),
             ArrestNotice: this.fb.array([]),
             ArrestStaff: this.fb.array([]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
@@ -902,6 +903,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             IndictmentDetailID: x.IndictmentDetailID || null,
             IndictmentID: x.IndictmentID || null,
             LawbreakerID: x.LawbreakerID || null,
+            IsActive: 1,
             ArrestLawbreaker: this.setArrestLawbreaker(x.ArrestLawbreaker),
             ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail)
         });
@@ -1017,7 +1019,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
         lawbreaker.RowId = 1;
         lawbreaker.IsModify = 'c';
-
+        lawbreaker = removeObjectItem(lawbreaker, 'ResultCount') as fromModels.ArrestLawbreaker;
         this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
         let sort = this.sortFormArray(this.ArrestLawbreaker.value);
         sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
@@ -1402,13 +1404,15 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     private async revised() {
         this.loaderService.show();
-        await this.upateArrest();
-        await this.modifyNotice();
-        await this.modifyStaff();
-        await this.modifyProduct();
-        await this.modifyLawbreaker();
-        await this.modifyIndictment();
-        await this.modifyDocument();
+        Promise.all([
+            await this.upateArrest(),
+            await this.modifyNotice(),
+            await this.modifyStaff(),
+            await this.modifyProduct(),
+            await this.modifyLawbreaker(),
+            await this.modifyIndictment(),
+            await this.modifyDocument()
+        ])
         this.onComplete();
         this.loaderService.hide();
     }
@@ -1449,14 +1453,16 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 .catch((error) => this.catchError(error));
         }
 
-        if (this.arrestCode) {
-            await this.insertArrest();
-            await this.modifyNotice();
-            await this.modifyStaff();
-            await this.modifyProduct();
-            await this.modifyLawbreaker();
-            await this.modifyIndictment();
-            await this.modifyDocument();
+        if (this.arrestCode != 'NEW') {
+            Promise.all([
+                await this.insertArrest(),
+                await this.modifyNotice(),
+                await this.modifyStaff(),
+                await this.modifyProduct(),
+                await this.modifyLawbreaker(),
+                await this.modifyIndictment(),
+                await this.modifyDocument()
+            ])
         }
 
     }
@@ -1495,13 +1501,13 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             IsLawsuitComplete: a.IsLawsuitComplete || 0,
             ArrestLocale: a.ArrestLocale
                 .map(x => {
-                    x.ArrestCode = a.ArrestCode;
+                    x.ArrestCode = this.arrestCode;
                     return x;
                 }),
             ArrestStaff: a.ArrestStaff
                 .filter(x => x.IsModify != 'd')
                 .map(x => {
-                    x.ArrestCode = a.ArrestCode;
+                    x.ArrestCode = this.arrestCode;
                     return x;
                 })
         }
@@ -1621,11 +1627,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     private async modifyLawbreaker() {
         let lawbreakerPromise = await this.ArrestLawbreaker.value
-            .map((x: fromModels.ArrestLawbreaker) => {
+            .map(async (x: fromModels.ArrestLawbreaker, i) => {
                 x.ArrestCode = this.arrestCode
                 switch (x.IsModify) {
                     case 'd':
-                        this.s_lawbreaker.ArrestLawbreakerupdDelete(x.LawbreakerID.toString())
+                        await this.s_lawbreaker.ArrestLawbreakerupdDelete(x.LawbreakerID.toString())
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             })
@@ -1633,7 +1639,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
 
                     case 'c':
-                        this.s_lawbreaker.ArrestLawbreakerinsAll(x)
+                        await this.s_lawbreaker.ArrestLawbreakerinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             })
@@ -1641,7 +1647,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
 
                     case 'u':
-                        this.s_lawbreaker.ArrestLawbreakerupdByCon(x)
+                        await this.s_lawbreaker.ArrestLawbreakerupdByCon(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             })
