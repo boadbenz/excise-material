@@ -2,7 +2,7 @@
   <div class="row">
       <div class="col-lg-5">
           <h4 class="modal-title text-white">เพิ่มผู้ต้องสงสัย
-              <a href="javaScript:void(0);" class="btn btn-ghost" (click)="dismiss('Cross click')" [routerLink]="['/notice/suspect/C/NEW']">
+              <a href="#/notice/suspect/C/NEW" class="btn btn-ghost" (click)="dismiss('Cross click')" target="_blank">
                   <i class="ti-plus"></i>
                   สร้างข้อมูล
               </a>
@@ -130,19 +130,12 @@
                           <td>{{item.get('RowId').value}}</td>
                           <td>{{item.get('SuspectTypeName').value}}</td>
                           <td>{{item.get('EntityTypeName').value}}</td>
-                          <td>{{item.get('SuspectID').value}}</td>
-                          <td>
-                            {{item.get('SuspectFullName').value}}
-                              <!-- <span *ngIf="item.get('EntityType').value == 0">
-                                  {{item.get('SuspectFullName').value}}
-                              </span>
-                              <span *ngIf="item.get('EntityType').value == 1">
-                                  {{item.get('CompanyFullName').value}}
-                              </span> -->
-                          </td>
-                          <td>{{i+1}}</td>
+                          <td>{{getRefer(item)}}</td>
+                          <td>{{item.get('SuspectFullName').value}}</td>
+                          <td>{{item.get('MistreatNo').value}}</td>
                           <td class="text-center">
-                              <a href="javaScript:void(0);" class="text-center text-secondary" (click)="view(item.get('SuspectID').value)">
+                              <a href="#/notice/suspect/R/{{item.get('SuspectID').value?item.get('SuspectID').value:item.get('LawbreakerID').value}}" 
+                                class="text-center text-secondary" target="_blank">
                                   <i class="fa fa-eye fa-lg"></i>
                               </a>
                           </td>
