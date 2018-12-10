@@ -242,32 +242,35 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
                 let _IndictmentDetail = this.ArrestIndictment.at(i).get('ArrestIndicmentDetail') as FormArray;
 
                 _IndictmentDetail.value.map((_f2, j) => {
-                    let _Lawbreaker = this.fb.array(_f2.ArrestLawbreaker);
-                    let _ProductDetail = this.fb.array(_f2.ArrestProductDetail);
+                    // let _Lawbreaker = this.fb.array(_f2.ArrestLawbreaker);
+                    let _ProductDetail = _IndictmentDetail.at(j).get('ArrestProductDetail') as FormArray;
+                    // _IndictmentDetail.at(j).get('ArrestProductDetail') as FormArray;
+                    // this.fb.array(_f2.ArrestProductDetail);
                     const _PD = this.ArrestProduct.value;
                     this.ArrestLawbreaker.value
                         .map(x => {
-                            this.updateItemIndictmentDetail(x, _PD, _Lawbreaker, _ProductDetail, _IndictmentDetail)
+                            this.updateItemIndictmentDetail(x, _PD, _ProductDetail, _IndictmentDetail)
                         });
 
                     // let _ProductDetail = this.fb.array(_f2.ArrestProductDetail)
-                    // this.ArrestProduct.value
-                    //     .map(x => {
-                    //         this.updateProductDetailItemInvestigate(x, _ProductDetail, _IndictmentDetail);
-                    //     });
+                    this.ArrestProduct.value
+                        .map(x => {
+                            this.updateProductDetailItemInvestigate(x, _ProductDetail, _IndictmentDetail);
+                        });
                 });
             });
         }
     }
 
-    updateItemIndictmentDetail(x: any, pd: any[], _Lawbreaker: FormArray, _ProductDetail: FormArray, _IndictmentDetail: FormArray) {
+    updateItemIndictmentDetail(x: any, pd: any[], _ProductDetail: FormArray, _IndictmentDetail: FormArray) {
         const _IL = _IndictmentDetail.value.filter(l => l.LawbreakerID == x.LawbreakerID);
         const _I = _IndictmentDetail.value.findIndex(_i => _i.LawbreakerID == x.LawbreakerID);
 
-        const _PD = pd.length
-            ? _ProductDetail.value.filter(p => pd.find(x => x.ProductID == p.ProductID))
-            : pd;
+        // const _PD = pd.length
+        //     ? _ProductDetail.value.filter(p => pd.find(x => x.ProductID == p.ProductID))
+        //     : pd;
 
+        const _PD = new fromModels.ArrestProductDetail;
         switch (x.IsModify) {
             case 'c':
                 if (!_IL.length) {
@@ -277,7 +280,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
                             this.groupArrestIndictmentDetail({
                                 LawbreakerID: x.LawbreakerID,
                                 ArrestLawbreaker: [x],
-                                ArrestProductDetail: pd
+                                // ArrestProductDetail: [_PD]
                             }).value
                         )
                     } else {
@@ -285,24 +288,11 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
                             this.groupArrestIndictmentDetail({
                                 LawbreakerID: x.LawbreakerID,
                                 ArrestLawbreaker: [x],
-                                ArrestProductDetail: pd
+                                // ArrestProductDetail: [_PD]
                             })
                         )
                     }
                 }
-
-                // if (!_PD.length) {
-                //     const __ProductDetail = _ProductDetail.length ? _ProductDetail.at(0).value : null;
-                //     if (__ProductDetail && __ProductDetail.ProductID == null && __ProductDetail.ProductDesc == null) {
-                //         _IndictmentDetail.at(0).patchValue(
-                //             this.groupArrestIndictmentDetail({
-                //                 // LawbreakerID: x.LawbreakerID,
-                //                 // ArrestLawbreaker: [x],
-                //                 ArrestProductDetail: pd
-                //             }).value
-                //         )
-                //     }
-                // }
                 break;
 
             case 'u':
@@ -310,7 +300,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
                     this.groupArrestIndictmentDetail({
                         LawbreakerID: x.LawbreakerID,
                         ArrestLawbreaker: [x],
-                        ArrestProductDetail: pd
+                        ArrestProductDetail: [_PD]
                     }).value);
                 break;
 
@@ -318,7 +308,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
                 _IndictmentDetail.removeAt(_I);
                 if (_IndictmentDetail.length == 0) {
                     const _LB = new fromModels.ArrestLawbreaker;
-                    const _PD = new fromModels.ArrestProductDetail;
+
                     _IndictmentDetail.push(
                         this.groupArrestIndictmentDetail({
                             LawbreakerID: x.LawbreakerID,

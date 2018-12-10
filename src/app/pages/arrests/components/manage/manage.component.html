@@ -519,7 +519,7 @@
                                 <ng-template ngFor let-item [ngForOf]="getArrestIndicmentDetail(indict)" let-i="index">
                                     <div *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index">
                                         <div *ngIf="lawb.get('LawbreakerID').value">
-                                            <input type="checkbox" [name]="lawb.get('LawbreakerID').value" 
+                                            <input type="checkbox" [name]="lawb.get('LawbreakerID').value"
                                                 [id]="lawb.get('LawbreakerID').value" class="filled-in chk-col-indigo">
                                             <label [for]="lawb.get('LawbreakerID').value">
                                                 {{ lawb.get('LawbreakerTitleName').value }}
