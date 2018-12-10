@@ -172,6 +172,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         private s_transactionRunning: TransactionRunningService,
         private s_productDetail: fromServices.ArrestProductDetailService,
         private s_indictmentDetail: fromServices.ArrestIndictmentDetailService,
+        private s_lawbreaker: fromServices.ArrestLawbreakerService,
         private manageConfig: ManageConfig
     ) {
         // set false
@@ -1270,6 +1271,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     catchError(error: any) {
         console.log(error);
+        this._isSuccess = false;
         this.endLoader();
     }
 
@@ -1401,6 +1403,12 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     private async revised() {
         this.loaderService.show();
         await this.upateArrest();
+        await this.modifyNotice();
+        await this.modifyStaff();
+        await this.modifyProduct();
+        await this.modifyLawbreaker();
+        await this.modifyIndictment();
+        await this.modifyDocument();
         this.onComplete();
         this.loaderService.hide();
     }
@@ -1446,6 +1454,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             await this.modifyNotice();
             await this.modifyStaff();
             await this.modifyProduct();
+            await this.modifyLawbreaker();
             await this.modifyIndictment();
             await this.modifyDocument();
         }
@@ -1502,13 +1511,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         await this.s_arrest.ArrestupdByCon(this.setArrestForSave())
             .then(async x => {
                 if (!this.checkIsSuccess(x)) return;
-
-                await this.modifyNotice();
-                await this.modifyStaff();
-                await this.modifyProduct();
-                await this.modifyIndictment();
-                await this.modifyDocument();
-
             }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
     }
@@ -1615,6 +1617,39 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 }
             })
         return Promise.all(productPromise);
+    }
+
+    private async modifyLawbreaker() {
+        let lawbreakerPromise = await this.ArrestLawbreaker.value
+            .map((x: fromModels.ArrestLawbreaker) => {
+                x.ArrestCode = this.arrestCode
+                switch (x.IsModify) {
+                    case 'd':
+                        this.s_lawbreaker.ArrestLawbreakerupdDelete(x.LawbreakerID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            })
+                            .catch((error) => this.catchError(error));
+                        break;
+
+                    case 'c':
+                        this.s_lawbreaker.ArrestLawbreakerinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            })
+                            .catch((error) => this.catchError(error));
+                        break;
+
+                    case 'u':
+                        this.s_lawbreaker.ArrestLawbreakerupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            })
+                            .catch((error) => this.catchError(error));
+                        break;
+                }
+            })
+        return Promise.all(lawbreakerPromise);
     }
 
     private async modifyIndictment() {
