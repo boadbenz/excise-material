@@ -338,6 +338,8 @@
                         <td>
                             <ng-template #rt let-r="result" let-t="term">
                                 {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}}
+                                <!-- {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}} -->
+                                {{r.ProductDesc}} 
                             </ng-template>
                             <input type="text" class="form-control form-control-sm"
                                 [readonly]="showEditField"
