@@ -28,13 +28,11 @@ import { Store } from '@ngrx/store';
 import * as fromStore from '../../store';
 import * as fromModels from '../../models';
 import * as fromServices from '../../services';
-import { ArrestsService } from '../../arrests.service';
 import { LoaderService } from 'app/core/loader/loader.service';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { IMyDateModel } from 'mydatepicker-th';
 import { ManageConfig } from './manage.config';
 import swal from 'sweetalert2';
-import * as Inputmask from 'inputmask';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
 
@@ -226,28 +224,18 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     ngAfterViewChecked(): void {
-        const selector = document.querySelectorAll('input.numeric');
-
-        Inputmask({
-            'alias': 'numeric',
-            'groupSeparator': ',',
-            'autoGroup': true
-        }).mask(selector);
 
         if (this.ArrestIndictment.length) {
             // เพิ่มสินค้าและผู้ต้องหาให้กับ ArrestIndictmentDetail
             // โดยที่ เพิ่มรายการสินค้าและผู้ต้องหา ให้กับทุกข้อกล่าวหา
             this.ArrestIndictment.value.map((_f1, i) => {
-
                 let _IndictmentDetail = this.ArrestIndictment.at(i).get('ArrestIndicmentDetail') as FormArray;
-
                 _IndictmentDetail.value.map((_f2, j) => {
                     this.ArrestLawbreaker.value
                         .map(x => {
                             this.updateItemIndictmentDetail(x, _IndictmentDetail)
                         });
 
-                    // let _ProductDetail = this.fb.array(_f2.ArrestProductDetail)
                     let _ProductDetail = _IndictmentDetail.at(0).get('ArrestProductDetail') as FormArray;
                     this.ArrestProduct.value
                         .map(x => {
