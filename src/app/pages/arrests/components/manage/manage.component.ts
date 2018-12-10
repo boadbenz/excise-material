@@ -1375,6 +1375,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private async onComplete() {
+        if (!this._isSuccess) {
+            swal('', Message.saveFail, 'error');
+            return;
+        }
+        swal('', Message.saveComplete, 'success');
         switch (this.mode) {
             case 'C':
                 this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
@@ -1436,8 +1441,15 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 .catch((error) => this.catchError(error));
         }
 
-        if (this.arrestCode)
+        if (this.arrestCode) {
             await this.insertArrest();
+            await this.modifyNotice();
+            await this.modifyStaff();
+            await this.modifyProduct();
+            await this.modifyIndictment();
+            await this.modifyDocument();
+        }
+
     }
 
     private async insertArrest() {
@@ -1447,13 +1459,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         await this.s_arrest.ArrestinsAll(newArrest)
             .then(async x => {
                 if (!this.checkIsSuccess(x)) return;
-
-                await this.modifyNotice();
-                await this.modifyStaff();
-                await this.modifyProduct();
-                await this.modifyIndictment();
-                await this.modifyDocument();
-
             }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
     }
