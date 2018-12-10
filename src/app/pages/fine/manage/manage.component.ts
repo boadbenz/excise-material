@@ -109,7 +109,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private masDocumentMainService: MasDocumentMainService
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.24');
+    this.sidebarService.setVersion('0.0.0.25');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -210,6 +210,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       await this.setApproveReportList();
       this.dataForCompare.accused = this.jsonCopy(this.accused);
       this.dataForCompare.approveReportList = this.jsonCopy(this.approveReportList);
+      this.dataForCompare.receipt = this.jsonCopy(this.receipt);
     }
   }
   async setApproveReportList() {
@@ -237,11 +238,18 @@ export class ManageComponent implements OnInit, OnDestroy {
       i = 0;
       for (const list of this.approveReportList) {
         let j: any = 0;
-        
         for (const st of staff) {
           const name: string = (st? st.TitleName: '') + ' ' + st.FirstName + ' ' + st.LastName;
           console.log((+st.ProcessCode) , parseFloat(j + '.1'), st.ContributorID);
-          if (st.ProcessCode && st.ProcessCode.split('.').length == 2) {
+          if (st.ContributorID == 17) {
+            console.log('contribute');
+            this.accused.staff = st;
+            this.accused.CompareStaffName = name;
+            this.accused.OperationPosName = st.PositionName;
+            this.accused.OperationPosCode = st.PositionCode;
+            this.accused.OperationDeptCode = st.OfficeCode;
+            this.accused.OperationDeptName = st.OfficeShortName;
+          } else if (st.ProcessCode && st.ProcessCode.split('.').length == 2) {
             const code: any = st.ProcessCode.split('.');
             j = code[0];
             if ((+st.ProcessCode) == parseFloat(j + '.1')) {
@@ -270,6 +278,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (typeof ind == 'number') {
               try {
                 console.log((+st.ProcessCode) == parseFloat(j));
+                this.receipt.list[ind].OperationPosName = st.PositionName;
+                this.receipt.list[ind].OperationPosCode = st.PositionCode;
                 this.receipt.list[ind].ReceiptStaff = name;
                 this.receipt.list[ind].ReceipPosition = st.PositionName;
                 this.receipt.list[ind].ReceipDepartment = st.OfficeShortName;
@@ -279,12 +289,6 @@ export class ManageComponent implements OnInit, OnDestroy {
               }
               
             }
-          } else if (!st.ProcessCode && st.ContributorID == 17) {
-            console.log('contribute');
-            this.accused.staff = st;
-            this.accused.CompareStaffName = name;
-            this.accused.OperationPosName = st.PositionName;
-            this.accused.OperationDeptName = st.OfficeShortName;
           }
         }
         i++;
@@ -292,18 +296,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
   async setAccusedDataList() {
-    const staff: any = this.searchStaffByContributorID(17);
-    if (staff.length > 0) {
-      this.accused.staff = staff[0];
-      this.accused.CompareStaffName = staff[0].TitleName + ' ' + staff[0].FirstName + ' ' + staff[0].LastName;
-      this.accused.OperationPosName = staff[0].PositionName;
-      this.accused.OperationDeptName = staff[0].OfficeShortName;
-    }
+    // const staff: any = this.searchStaffByContributorID(17);
+    // if (staff.length > 0) {
+    //   this.accused.staff = staff[0];
+    //   this.accused.CompareStaffName = staff[0].TitleName + ' ' + staff[0].FirstName + ' ' + staff[0].LastName;
+    //   this.accused.OperationPosName = staff[0].PositionName;
+    //   this.accused.OperationDeptName = staff[0].OfficeShortName;
+    // }
     this.accused.StationName = this.compareDataUpdateTmp.CompareStation;
     this.accused.StationCode = this.compareDataUpdateTmp.CompareStationCode;
     this.accused.CompareDate = this.toDatePickerFormat(new Date(this.compareDataUpdateTmp.CompareDate));
     this.accused.CompareTime = this.getTimeNow(new Date(this.compareDataUpdateTmp.CompareDate));
-    console.log(staff);
+    // console.log(staff);
   }
   async setCompareDetail() {
     let i = 0;
@@ -484,6 +488,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   async checkReceiptData(CompareDetailID: any, index: any = 0) {
     let receiptData: any = {};
     const rec = this.receipt.list[index];
+    console.log(this.receipt);
     {
       if (this.isNotValidTxtField(rec.PaymentDate)) {
         return false;
@@ -512,11 +517,13 @@ export class ManageComponent implements OnInit, OnDestroy {
           console.log(rec1);
           if (this.validateReceiptData(rec1, reqField) && rec.staff && !this.isNotValidTxtField(rec.ReceiptStaff)) {
             receiptData.RevenueDate = '';
-            const resp :any = await this.CompareDetailReceipinsAll(receiptData);
-            console.log('ค่าการรีเทิร์น');
-            console.log(resp);
-            if (resp.CompareReceiptID) {
-              await this.ComparePaymentFineinsAll(resp.CompareReceiptID, index);
+            if (!this.receipt.list[index].CompareReceiptID) {
+              const resp :any = await this.CompareDetailReceipinsAll(receiptData);
+              console.log('ค่าการรีเทิร์น');
+              console.log(resp);
+              if (resp.CompareReceiptID) {
+                await this.ComparePaymentFineinsAll(resp.CompareReceiptID, index);
+              }
             }
           }
         } catch (err) {
@@ -527,7 +534,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
   validateReceiptData(rec, field) {
+    console.log(rec);
     for (const r of field) {
+      console.log(r);
+        console.log(rec[r]);
       if (this.isNotValidTxtField(rec[r])) {
         return false;
       }
@@ -589,16 +599,27 @@ export class ManageComponent implements OnInit, OnDestroy {
       const resp: any = await this.CompareinsAll()
       console.log('ข้อมูลการรีเทิร์นจาก CompareinsAll');
       console.log(resp);
-      if (resp && resp.CompareDetail) {
-        for (const r of resp.CompareDetail) {
-          if (this.params.CompareID == 0 && resp.CompareDetail && resp.CompareDetail[0].CompareDetailID) {
-            await this.checkReceiptData(r.CompareDetailID);
-          }else if ((+this.params.CompareID) > 0) {
-            console.log('wait to updaate detail');
-          } else {
-            console.log('ไม่พบข้อมูล CompareDetailID');
+      if (resp && (resp.IsSuccess == 'True' || (resp && resp.CompareDetail))) {
+        if (resp.CompareDetail) {
+          let i = 0;
+          for (const r of resp.CompareDetail) {
+            if (resp.CompareDetail && resp.CompareDetail[0].CompareDetailID) {
+              await this.checkReceiptData(r.CompareDetailID, i);
+            }else if ((+this.params.CompareID) > 0) {
+              console.log('wait to updaate detail');
+            } else {
+              console.log('ไม่พบข้อมูล CompareDetailID');
+            }
+            i++;
+          }
+        } else if(resp && resp.IsSuccess == 'True') {
+          let i = 0;
+          for (const r of this.compareDataUpdateTmp.CompareDetail) {
+            await this.checkReceiptData(r.CompareDetailID, i);
+            i++;
           }
         }
+        
         if (this.AllAddFiles.length > 0) {
           for (const f of this.AllAddFiles) {
             if (!f.id) {
@@ -621,6 +642,8 @@ export class ManageComponent implements OnInit, OnDestroy {
           'บันทึกข้อมูลสำเร็จ.',
           'success'
         );
+        const cmpID: any = resp.CompareID;
+        // this.router.navigate([`fine/manage/C/${cmpID}/${this.params.IndictmentID}/${this.params.ArrestCode}`]);
       } else if (resp && resp.IsSuccess == 'True') {
         Swal(
           '',
@@ -630,7 +653,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.dataForCompare.accused = this.jsonCopy(this.accused);
         this.dataForCompare.approveReportList = this.jsonCopy(this.approveReportList);
       } else {
-        console.log('pass2');
+        Swal(
+          '',
+          'ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อ.',
+          'error'
+        );
       }
     } else if ((+this.params.CompareID) > 0) {
       Swal(
@@ -651,7 +678,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(this.accused);
     console.log(this.approveReportList);
     console.log(case1 + ' and ' + case2);
-    return !(case1 && case2);
+    return !(case1 && case2 && case3);
   }
   async CompareinsAll () {
     try {
@@ -687,14 +714,16 @@ export class ManageComponent implements OnInit, OnDestroy {
           } else {
             console.log('ข้อมูล Data เพื่อส่ง CompareinsAll');
             console.log(data);
+            // return null;
             if (this.params.CompareID == 0) {
-              // return await this.fineService.postMethod('CompareinsAll', data);
-              console.log(data);
-              return null;
+              return await this.fineService.postMethod('CompareinsAll', data);
+              // console.log(data);
+              // return null;
             } else {
               console.log(data);
               if (this.isDatachange) {
                 return await this.fineService.postMethod('CompareupdByCon', data);
+                // return null;
               } else {
                 Swal(
                   'ข้อผิดพลาด!',
@@ -1469,6 +1498,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // console.log('data');
     
     const CompareData: any = {
+      CompareID: this.params.CompareID ? (+this.params.CompareID) : '',
       CompareCode: this.receipt.CompareNo + '/' + this.receipt.CompareYear,
       CompareDate: `${this.convertToNormalDate(this.accused.CompareDate.date).toString()} ${this.accused.CompareTime.toString()}:00 +07.00`,
       CompareStation: this.accused.StationName,
@@ -1487,9 +1517,14 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (this.accused.list[id].PaymentFineAppointDate) {
         console.log(this.approveReportList);
         const isAppFill: any = !this.isNotValidTxtField(this.approveReportList[id].ApproveReportDate);
+        let CompareDetailID: any = '';
+        if ((+this.params.CompareID) &&  this.compareDataUpdateTmp.CompareDetail[id]) {
+          CompareDetailID = this.compareDataUpdateTmp.CompareDetail[id].CompareDetailID;
+        }
         try {
           const detail: any = {
-            CompareDetailID: '',
+            CompareID: this.params.CompareID ? (+this.params.CompareID) : '',
+            CompareDetailID: (+CompareDetailID),
             IndictmentDetailID: this.DataToSave.userData[id].IndictmentDetailID,
             CompareAction: null,
             LawbrakerTestimony: this.accused.list[id].LawbrakerTestimony,
@@ -1520,12 +1555,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             AdjustReason: null,
             CompareDetailFine: []
           };
-          if ((+this.params.CompareID) == 0) {
-            detail.CompareDetailReceipt = this.prepareReceiptData();
-          } else {
-            detail.CompareDetailID = this.compareDataUpdateTmp.CompareDetail[id].CompareDetailID;
-            detail.CompareID = this.params.CompareID;
-          }
+          detail.CompareDetailReceipt = this.prepareReceiptData();
+          // if ((+this.params.CompareID) == 0) {
+           
+          // } else {
+          //   detail.CompareDetailID = this.compareDataUpdateTmp.CompareDetail[id].CompareDetailID;
+          //   detail.CompareID = this.params.CompareID;
+          // }
           CompareData.CompareDetail.push(detail);
         } catch (err) {
           console.log(err);
@@ -1551,8 +1587,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(!user.isSum , !this.isReportNo);
         if (!user.isSum || !this.isReportNo) {
           const compareDetailFine: any = {
-            CompareFineID: this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareFineID,
-            CompareDetailID: this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareDetailID,
+            CompareFineID: this.compareDataUpdateTmp.CompareDetail[id] ? (this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j] ? (+this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareFineID) : '') : '',
+            CompareDetailID: this.compareDataUpdateTmp.CompareDetail[id] ? (this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j] ? (+this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareDetailID) : '' ) : '',
             ProductID: user.product? user.product.ProductID : '',
             ProductFine: user.all ? user.all : this.receipt.list[id].TotalFine,
             VatValue: user.FineAmount,
@@ -1606,8 +1642,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
       }
     }
-    
-    
     CompareData.CompareStaff = this.getAllStaff();
     console.log(CompareData);
     return CompareData;
@@ -1642,15 +1676,38 @@ export class ManageComponent implements OnInit, OnDestroy {
   prepareReceiptData() {
     let receiptData: any = [];
     let i: any = 0;
+    console.log(this.receipt);
+    const reqField: any = ['ReceiptBookNo', 'ReceiptNo', 'ReceiptChanel', 'PaymentDate'];
+    
     for (const rec of this.receipt.list) {
-      if (this.isNotValidTxtField(rec.PaymentDate)) {
-        return [];
+      if (rec.CompareReceiptID) {
+        const rec1: any = {
+          CompareReceiptID: rec.CompareReceiptID,
+          ReceiptType: 'A',
+          ReceiptBookNo: rec.ReceiptBookNo,
+          ReceiptNo: rec.ReceiptNo,
+          ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+          StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
+          Station: this.accused.StationName,
+          PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+          TotalFine: this.sumAllCompare.sum,
+          RevenueStatus: 0,
+          RevenueDate: '',
+          IsActive: 1,
+          ReceiptChanel: rec.ReceiptChanel,
+          ReferenceNo: rec.ReferenceNo,
+          CompareAuthority: 0,
+          FineType: 1
+        };
+        receiptData.push(rec1);
+      } else if (!this.validateReceiptData(rec, reqField)) {
+        receiptData.push({});
       } else {
         try {
           const rec1: any = {
             ReceiptType: 'A',
             ReceiptBookNo: rec.ReceiptBookNo,
-            ReceiptNo: rec.ReceiptChanel,
+            ReceiptNo: rec.ReceiptNo,
             ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
             StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
             Station: this.accused.StationName,
@@ -1666,23 +1723,27 @@ export class ManageComponent implements OnInit, OnDestroy {
           };
           receiptData.push(rec1);
         } catch (err) {
-          return [];
+          receiptData.push({});
           console.log(err);
         }
       }
       i++;
     }
+    console.log(receiptData);
     return receiptData;
   }
   getAllStaff() {
     const staff: any = [];
     console.log(this.accused);
     console.log(this.approveReportList);
+    console.log(this.receipt);
     this.accused.staff.ProcessCode = null;
     this.accused.staff.ProgramCode = 'ILG60-06-02-00';
     this.accused.staff.ContributorID = 17;
-    this.accused.staff.PositionName = this.accused.staff.OperationPosName;
-    this.accused.staff.PositionCode = this.accused.staff.OperationPosCode;
+    if (this.accused.staff.OperationPosName) {
+      this.accused.staff.PositionName = this.accused.staff.OperationPosName;
+      this.accused.staff.PositionCode = this.accused.staff.OperationPosCode;
+    }
     staff.push(this.accused.staff);
     // for (const d of this.accused.list) {
     //   d.staff.ProgramCode = d.ProgramCode;
@@ -1696,8 +1757,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         d.staff.ProgramCode = 'ILG60-06-02-03-00';
         d.staff.ProcessCode = i;
         d.staff.ContributorID = 19;
-        d.staff.PositionName = d.staff.OperationPosName;
-        d.staff.PositionCode = d.staff.OperationPosCode;
+        if (d.staff.OperationPosName) {
+          d.staff.PositionName = d.staff.OperationPosName;
+          d.staff.PositionCode = d.staff.OperationPosCode;
+        }
         staffReceipt.push(d.staff);
       } else {
         // staffReceipt = [];
@@ -1711,16 +1774,22 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (d.staff1 && d.staff2 && d.staff3) {
         d.staff1.ProgramCode = 'ILG60-06-02-04-00';
         d.staff1.ProcessCode = i + '.1';
-        d.staff1.PositionName = d.staff1.OperationPosName;
-        d.staff1.PositionCode = d.staff1.OperationPosCode;
+        if (d.staff1.OperationPosName) {
+          d.staff1.PositionName = d.staff1.OperationPosName;
+          d.staff1.PositionCode = d.staff1.OperationPosCode;
+        }
         d.staff2.ProgramCode = 'ILG60-06-02-04-00';
         d.staff2.ProcessCode = i + '.2';
-        d.staff2.PositionName = d.staff2.OperationPosName;
-        d.staff2.PositionCode = d.staff2.OperationPosCode;
+        if (d.staff2.OperationPosName) {
+          d.staff2.PositionName = d.staff2.OperationPosName;
+          d.staff2.PositionCode = d.staff2.OperationPosCode;
+        }
         d.staff3.ProgramCode = 'ILG60-06-02-04-00';
         d.staff3.ProcessCode = i + '.3';
-        d.staff3.PositionName = d.staff3.OperationPosName;
-        d.staff3.PositionCode = d.staff3.OperationPosCode;
+        if (d.staff3.OperationPosName) {
+          d.staff3.PositionName = d.staff3.OperationPosName;
+          d.staff3.PositionCode = d.staff3.OperationPosCode;
+        }
         d.staff1.ContributorID = 39;
         staffApprove.push(d.staff1);
         d.staff2.ContributorID = 40;
