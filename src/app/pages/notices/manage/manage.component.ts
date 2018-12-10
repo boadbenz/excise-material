@@ -145,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.30');
+        this.sidebarService.setVersion('0.0.2.31');
 
         this.navigate_service();
 
@@ -738,9 +738,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
-        console.log('===================');
-        console.log('Update Notice : ', JSON.stringify(this.noticeForm.value));
-        console.log('===================');
+        // console.log('===================');
+        // console.log('Update Notice : ', JSON.stringify(this.noticeForm.value));
+        // console.log('===================');
 
         let IsSuccess: boolean = true;
         await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
@@ -771,19 +771,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }
                 }
             }
-        //     const document = this.NoticeDocument.value;
-        //     await document.map(async (item: NoticeDocument) => {
-        //         if (item.IsNewItem) {
-        //             await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
-        //                 if (!docIsSuccess) { IsSuccess = false; return; };
-        //             }, () => { IsSuccess = false; return; });
+            // const document = this.NoticeDocument.value;
+            // await document.map(async (item: NoticeDocument) => {
+            //     if (item.IsNewItem) {
+            //         await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
+            //             if (!docIsSuccess) { IsSuccess = false; return; };
+            //         }, () => { IsSuccess = false; return; });
 
-        //         } else {
-        //             this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
-        //                 if (!docIsSuccess) { IsSuccess = false; return };
-        //             }, () => { IsSuccess = false; return; })
-        //         }
-        //     })
+            //     } else {
+            //         this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
+            //             if (!docIsSuccess) { IsSuccess = false; return };
+            //         }, () => { IsSuccess = false; return; })
+            //     }
+            // });
         }
 
         if (IsSuccess) {
@@ -1353,7 +1353,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         reader.readAsDataURL(file);
         reader.onload = () => {
-            let dataSource = reader.result.split(',')[1];
+            let data = ""+reader.result;
+            let dataSource = data.split(',')[1];
+            // let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
                     FilePath: replaceFakePath(e.target.value),
@@ -1370,7 +1372,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         reader.readAsDataURL(file);
         reader.onload = () => {
-            let dataSource = reader.result.split(',')[1];
+            let data = ""+reader.result;
+            let dataSource = data.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,

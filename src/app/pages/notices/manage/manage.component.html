@@ -355,7 +355,7 @@
                         <td>
                             <select formControlName="QtyUnit" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null" [ngClass]="{'ng-touched':isRequired}" required>
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                                <option *ngFor="let unit of typeheadProductUnit;" [value]="unit.DutyUnitCode">{{unit.DutyCode}}</option>
                             </select>
                         </td>
                         <td class="text-center">
