@@ -43,17 +43,16 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.23');
+    this.sidebarService.setVersion('0.0.0.24');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
-    // await this.lawsuitService.LawsuitArrestGetByKeyword('').then(list => this.onSearchComplete(list));
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       if (Textsearch) {
         await this.navService.setOnSearch('');
         this.onSearch(Textsearch);
       }
     });
-    
+
     this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
       if (status) {
         await this.navService.setOnNextPage(false);
@@ -131,9 +130,16 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async onSearch(Textsearch: any) {
-    this.preLoaderService.setShowPreloader(true);
-    await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
-    this.preLoaderService.setShowPreloader(false);
+    if (this.resultsPerPage.length == 0) {
+      this.preLoaderService.setShowPreloader(true);
+      await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+      this.preLoaderService.setShowPreloader(false);
+    } else {
+      Swal({
+        text: "ไม่พบข้อมูล",
+        type: 'warning',
+      })
+    }
   }
 
   async onAdvSearch(form: any) {
@@ -170,8 +176,25 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setSaveButton(false);
     this.navService.setOnPrevPage(false);
   }
+  private convertList(list: any) {
+    let tempList = []
+    list.forEach(lawsuit => {
+      lawsuit.LawsuitArrestIndicment.forEach(indicment => {
+        let lawsuitList = {
+          Lawsuit: lawsuit,
+          LawsuitArrestIndicment: indicment
+        }
+        tempList.push(lawsuitList)
+      });
 
-  private onSearchComplete(list: any) {
+    });
+    return tempList;
+  }
+
+  private async onSearchComplete(list: any) {
+    list = await this.convertList(list)
+    console.log(list)
+
     /* Alert When No Data To Show */
     if (!list.length) {
       Swal({
@@ -189,35 +212,25 @@ export class ListComponent implements OnInit, OnDestroy {
       } catch (error) {
 
       }
-
-      //item.LawsuitID = list.LawsuitArrestIndicment[0];
-      //console.log("Check LIST:"+JSON.stringify(item));
       return item;
     });
-    /* Set Total Record */
     this.paginage.TotalItems = this.results.length;
   }
 
   private viewData(item) {
-    // console.log('item==>', item)
-
-    if (item.LawsuitArrestIndicment[0].Lawsuit[0]) {
-      item.LawsuitID = item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID;
-    } else {
-      item.LawsuitID = '';
-    }
+    let LawsuitID = ""
+    if (item.LawsuitArrestIndicment.Lawsuit[0]) {
+      LawsuitID = item.LawsuitArrestIndicment.Lawsuit[0].LawsuitID;
+    } 
     if (item.LawsuitID != "") {
       this.router.navigate(['/lawsuit/manage', 'R'], {
-        queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+        queryParams: { IndictmentID: item.LawsuitArrestIndicment.IndictmentID, LawsuitID: LawsuitID }
       });
     } else {
       this.router.navigate(['/lawsuit/manage', 'C'], {
-        queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+        queryParams: { IndictmentID: item.LawsuitArrestIndicment.IndictmentID, LawsuitID: LawsuitID }
       });
     }
-
-
-
   }
 
   private closeAdvSearch() {
@@ -226,12 +239,11 @@ export class ListComponent implements OnInit, OnDestroy {
 
   async pageChanges(event) {
     this.resultsPerPage = await this.results.slice(event.startIndex - 1, event.endIndex);
-    console.log('this.resultsPerPage', this.resultsPerPage);
   }
 
   checkNullLawsuitNo(data) {
-    if (data.LawsuitArrestIndicment[0].Lawsuit.length > 0) {
-      return data.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitNo;
+    if (data.Lawsuit.length > 0) {
+      return data.Lawsuit[0].LawsuitNo;
     } else {
       return "";
     }
