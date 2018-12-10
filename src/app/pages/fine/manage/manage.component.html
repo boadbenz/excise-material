@@ -517,7 +517,7 @@
           <td class="text-center">
               <input class="form-control" type="text"
               [(ngModel)]="item.ReceiptNo"
-              name="ReceiptNo"
+              [name]="'ReceiptNo' + i"
               [disabled]="showEditField || item.CompareReceiptID" [required]="!(item.ReceiptChanel > 1)">
           </td>
           <td class="text-center">
