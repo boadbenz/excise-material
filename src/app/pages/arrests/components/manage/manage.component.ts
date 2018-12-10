@@ -242,17 +242,13 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
                 let _IndictmentDetail = this.ArrestIndictment.at(i).get('ArrestIndicmentDetail') as FormArray;
 
                 _IndictmentDetail.value.map((_f2, j) => {
-                    // let _Lawbreaker = this.fb.array(_f2.ArrestLawbreaker);
-                    let _ProductDetail = _IndictmentDetail.at(j).get('ArrestProductDetail') as FormArray;
-                    // _IndictmentDetail.at(j).get('ArrestProductDetail') as FormArray;
-                    // this.fb.array(_f2.ArrestProductDetail);
-                    const _PD = this.ArrestProduct.value;
                     this.ArrestLawbreaker.value
                         .map(x => {
-                            this.updateItemIndictmentDetail(x, _PD, _ProductDetail, _IndictmentDetail)
+                            this.updateItemIndictmentDetail(x, _IndictmentDetail)
                         });
 
                     // let _ProductDetail = this.fb.array(_f2.ArrestProductDetail)
+                    let _ProductDetail = _IndictmentDetail.at(0).get('ArrestProductDetail') as FormArray;
                     this.ArrestProduct.value
                         .map(x => {
                             this.updateProductDetailItemInvestigate(x, _ProductDetail, _IndictmentDetail);
@@ -262,13 +258,14 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
     }
 
-    updateItemIndictmentDetail(x: any, pd: any[], _ProductDetail: FormArray, _IndictmentDetail: FormArray) {
+    showGuiltBase(){
+        console.log(this.ArrestIndictment.value);
+        
+    }
+
+    updateItemIndictmentDetail(x: any, _IndictmentDetail: FormArray) {
         const _IL = _IndictmentDetail.value.filter(l => l.LawbreakerID == x.LawbreakerID);
         const _I = _IndictmentDetail.value.findIndex(_i => _i.LawbreakerID == x.LawbreakerID);
-
-        // const _PD = pd.length
-        //     ? _ProductDetail.value.filter(p => pd.find(x => x.ProductID == p.ProductID))
-        //     : pd;
 
         const _PD = new fromModels.ArrestProductDetail;
         switch (x.IsModify) {
@@ -342,6 +339,10 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
 
             case 'd':
                 _ProductDetail.removeAt(_I);
+                if (_ProductDetail.length == 0) {
+                    const PD = new fromModels.ArrestProductDetail();
+                    _ProductDetail.push(this.groupArrestProductDetail(PD))
+                }   
                 break;
         }
     }
