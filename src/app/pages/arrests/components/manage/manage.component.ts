@@ -252,6 +252,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     updateItemIndictmentDetail(x: any, _IndictmentDetail: FormArray) {
+        if (!x.LawbreakerID) return;
         const _IL = _IndictmentDetail.value.filter(l => l.LawbreakerID == x.LawbreakerID);
         const _I = _IndictmentDetail.value.findIndex(_i => _i.LawbreakerID == x.LawbreakerID);
 
@@ -264,16 +265,14 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
                         _IndictmentDetail.at(0).patchValue(
                             this.groupArrestIndictmentDetail({
                                 LawbreakerID: x.LawbreakerID,
-                                ArrestLawbreaker: [x],
-                                // ArrestProductDetail: [_PD]
+                                ArrestLawbreaker: [x]
                             }).value
                         )
                     } else {
                         _IndictmentDetail.push(
                             this.groupArrestIndictmentDetail({
                                 LawbreakerID: x.LawbreakerID,
-                                ArrestLawbreaker: [x],
-                                // ArrestProductDetail: [_PD]
+                                ArrestLawbreaker: [x]
                             })
                         )
                     }
@@ -307,11 +306,13 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     updateProductDetailItemInvestigate(x, _ProductDetail: FormArray, _IndictmentDetail: FormArray) {
+        if (!x.ProductID && !x.ProductDesc) return;
         const _PD = _ProductDetail.value.filter(pd => pd.ProductID == x.ProductID);
         const _I = _ProductDetail.value.findIndex(_i => _i.ProductID == x.ProductID);
         switch (x.IsModify) {
             case 'c':
                 if (!_PD.length) {
+                    debugger
                     const __ProductDetail = _ProductDetail.length ? _ProductDetail.at(0).value : null;
                     if (__ProductDetail && __ProductDetail.ProductID == null && __ProductDetail.ProductDesc == null) {
                         _ProductDetail.at(0).patchValue(this.groupArrestProductDetail(x).value);
@@ -1441,9 +1442,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
     private async createWithOutArrestCode() {
         this.loaderService.show();
         await this.getTransactionRunning();
-
         this.onComplete();
-
         this.loaderService.hide();
     }
 
@@ -1451,7 +1450,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.loaderService.show();
         await this.upateArrest();
         this.onComplete();
-
         this.loaderService.hide();
     }
 
