@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, DoCheck } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
@@ -16,7 +16,6 @@ import { MasOfficeModel } from 'app/models/mas-office.model';
 import { MasStaffModel, RegionModel, MasProductModel, LawbreakerTypes, EntityTypes, ContributorType } from 'app/models';
 import { MasDutyProductUnitModel } from 'app/models/mas-duty-product-unit.model';
 import { MyDatePickerOptions, setDateMyDatepicker, setZero, getDateMyDatepicker, convertDateForSave, compareDate, toLocalShort } from 'app/config/dateFormat';
-// import { ArrestProduct, ArrestProductDetail } from '../../models/arrest-product';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { MainMasterService } from 'app/services/main-master.service';
@@ -41,9 +40,7 @@ import { TransactionRunning } from 'app/models/transaction-running.model';
     templateUrl: './manage.component.html',
     styleUrls: ['./manage.component.scss']
 })
-export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
-
-
+export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     // FormGroup ตรวจสอบสถานะในการบันทึก TN905016100058
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
@@ -220,11 +217,9 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         this.arrestFG = this.createForm();
         this.navigate_Service();
-
     }
 
-    ngAfterViewChecked(): void {
-
+    ngDoCheck(): void {
         if (this.ArrestIndictment.length) {
             // เพิ่มสินค้าและผู้ต้องหาให้กับ ArrestIndictmentDetail
             // โดยที่ เพิ่มรายการสินค้าและผู้ต้องหา ให้กับทุกข้อกล่าวหา
@@ -248,7 +243,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     showGuiltBase(){
         console.log(this.ArrestIndictment.value);
-        
     }
 
     updateItemIndictmentDetail(x: any, _IndictmentDetail: FormArray) {
@@ -312,7 +306,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
         switch (x.IsModify) {
             case 'c':
                 if (!_PD.length) {
-                    debugger
                     const __ProductDetail = _ProductDetail.length ? _ProductDetail.at(0).value : null;
                     if (__ProductDetail && __ProductDetail.ProductID == null && __ProductDetail.ProductDesc == null) {
                         _ProductDetail.at(0).patchValue(this.groupArrestProductDetail(x).value);
@@ -756,7 +749,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
                 })
             );
         })
-
         this.arrestFG.setControl('ArrestNotice', arrestNotice);
     }
     // 2
@@ -992,7 +984,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
         })
     }
 
-
     openModal(e) {
         this.modal = this.modelService.open(e, { size: 'lg', centered: true });
     }
@@ -1075,24 +1066,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewChecked {
             // item.RowId = 1;
             this.setArrestIndictment([item], null);
         }
-
-
-
-    }
-
-    viewAllegation(indictmentId: number, guiltbaseId: number) {
-        let arrest = this.arrestFG.value as fromModels.Arrest;
-        this.store.dispatch(new fromStore.CreateArrest(arrest));
-        this.router.navigate(
-            [`arrest/allegation`, 'R'],
-            {
-                queryParams: {
-                    arrestMode: this.mode,
-                    arrestCode: this.arrestCode,
-                    indictmentId: indictmentId,
-                    guiltbaseId: guiltbaseId
-                }
-            });
     }
 
     addDocument() {

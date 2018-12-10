@@ -516,7 +516,6 @@
 
                     <div formArrayName="ArrestLawbreaker">
                       <div *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
-
                         <div *ngIf="lawb.get('LawbreakerID').value">
                           <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+lawb.get('LawbreakerID').value">
                           <label [for]="j+'-'+lawb.get('LawbreakerID').value">
@@ -526,8 +525,8 @@
                             {{ lawb.get('LawbreakerLastName').value }}
                             {{ lawb.get('LawbreakerOtherName').value }}
                           </label>
-                        </div>
 
+                        </div>
                       </div>
                     </div>
 
