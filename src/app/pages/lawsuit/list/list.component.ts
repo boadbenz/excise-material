@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.23');
+    this.sidebarService.setVersion('0.0.0.24');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
@@ -176,21 +176,24 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setSaveButton(false);
     this.navService.setOnPrevPage(false);
   }
+  private convertList(list: any) {
+    let tempList = []
+    list.forEach(lawsuit => {
+      lawsuit.LawsuitArrestIndicment.forEach(indicment => {
+        let lawsuitList = {
+          Lawsuit: lawsuit,
+          LawsuitArrestIndicment: indicment
+        }
+        tempList.push(lawsuitList)
+      });
+
+    });
+    return tempList;
+  }
 
   private async onSearchComplete(list: any) {
-    // let lawsuitList = []
-    // await list.forEach(lawsuit => {
-    //   lawsuit.LawsuitArrestIndicment.forEach(indicment => {
-    //     let temp = lawsuit;
-    //     temp.LawsuitArrestIndicmentTemp = indicment
-    //     lawsuitList.push(temp)
-        
-
-    //   });
-    // });
-    // console.log(indicmentList)
-    // list = tempList
-
+    list = await this.convertList(list)
+    console.log(list)
 
     /* Alert When No Data To Show */
     if (!list.length) {
@@ -215,25 +218,19 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private viewData(item) {
-    // console.log('item==>', item)
-
-    if (item.LawsuitArrestIndicment[0].Lawsuit[0]) {
-      item.LawsuitID = item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitID;
-    } else {
-      item.LawsuitID = '';
-    }
+    let LawsuitID = ""
+    if (item.LawsuitArrestIndicment.Lawsuit[0]) {
+      LawsuitID = item.LawsuitArrestIndicment.Lawsuit[0].LawsuitID;
+    } 
     if (item.LawsuitID != "") {
       this.router.navigate(['/lawsuit/manage', 'R'], {
-        queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+        queryParams: { IndictmentID: item.LawsuitArrestIndicment.IndictmentID, LawsuitID: LawsuitID }
       });
     } else {
       this.router.navigate(['/lawsuit/manage', 'C'], {
-        queryParams: { IndictmentID: item.LawsuitArrestIndicment[0].IndictmentID, LawsuitID: item.LawsuitID }
+        queryParams: { IndictmentID: item.LawsuitArrestIndicment.IndictmentID, LawsuitID: LawsuitID }
       });
     }
-
-
-
   }
 
   private closeAdvSearch() {
@@ -245,8 +242,8 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   checkNullLawsuitNo(data) {
-    if (data.LawsuitArrestIndicment[0].Lawsuit.length > 0) {
-      return data.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitNo;
+    if (data.Lawsuit.length > 0) {
+      return data.Lawsuit[0].LawsuitNo;
     } else {
       return "";
     }

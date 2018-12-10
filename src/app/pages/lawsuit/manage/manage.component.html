@@ -228,7 +228,7 @@
         <div class="row">
           <div class="col-md-6">
             <div class="row">
-              <label class="control-label col-sm-4 text-right">เลขที่คดีรับคำกล่าวโทษ :  {{ IsLawsuitType }} </label>
+              <label class="control-label col-sm-4 text-right">เลขที่คดี : {{IsLawsuitType}}</label>
               <div class="form-group col-sm-4">
                 <input class="form-control form-control-sm" type="text" formControlName="LawsuitNo" [readonly]="showEditField"
                   [ngClass]="{'ng-touched':isRequired}" [attr.disabled]="IsLawsuitComplete == 1 ? '' : null" style="color: black;"
