@@ -134,11 +134,11 @@
         <div class="col-lg-2 col-md-3 col-sm-4">
           <button type="button" class="btn btn-block btn-themecolor" (click)="openModal(allegationDetail)" [disabled]="showEditField">เพิ่มรายการ</button>
 
-          <ng-template #allegationDetail let-c="close" let-d="dismiss">
-            <app-lawbreaker-modal (c)="modal.close()" (d)="modal.dismiss()" 
+          <!-- <ng-template #allegationDetail let-c="close" let-d="dismiss">
+            <app-allegation-detail-modal (c)="modal.close()" (d)="modal.dismiss()" 
             (OutputLawbreaker)="addArrestLawbreaker($event)"
-            ></app-lawbreaker-modal>
-          </ng-template>
+            ></app-allegation-detail-modal>
+          </ng-template> -->
         </div>
       </div>
 
