@@ -1340,8 +1340,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     private async onEdit() {
         this.loaderService.show();
-
-
+        await this.loadMasterData();
         this.loaderService.hide();
     }
 
@@ -1464,13 +1463,10 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 await this.modifyDocument()
             ])
         }
-
     }
 
     private async insertArrest() {
         const newArrest = this.setArrestForSave();
-        console.log('Arrest : ', JSON.stringify(newArrest));
-
         await this.s_arrest.ArrestinsAll(newArrest)
             .then(async x => {
                 if (!this.checkIsSuccess(x)) return;
