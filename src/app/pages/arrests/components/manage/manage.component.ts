@@ -1571,6 +1571,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
+                        if (this.mode == 'C') return;
                         await this.s_staff.ArrestStaffinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -1693,7 +1694,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         let product = []
         // IndictmentDetail
         let promises = indictmentDetail.filter(x => x.LawbreakerID != null);
-        promises.map(x => {
+        console.log(promises);
+        console.log(indictmentDetail);
+        
+        
+        promises.map((x) => {
             // กรองเอา ProductDetail เฉพาะรายการที่เลือก
             const productIsChecked = x.ArrestProductDetail.filter(p => p.IsChecked);
             const lawbreakerIsChecked = x.ArrestLawbreaker.filter(_x => _x.IsChecked && _x.LawbreakerID == x.LawbreakerID);
