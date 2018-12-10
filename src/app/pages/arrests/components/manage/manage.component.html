@@ -474,7 +474,7 @@
                     <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addIndictment()">เพิ่มข้อกล่าวหา</button>
                 </div>
             </div>
-            <button type="button" (click)="showGuiltBase()">Click</button>
+            <!-- <button type="button" (click)="showGuiltBase()">Click</button> -->
             <div class="table-responsive">
                 <table class="table table-sm table-striped table-set-border" formArrayName="ArrestIndictment">
                     <thead>
@@ -520,8 +520,8 @@
                                     <div *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index">
                                         <div *ngIf="lawb.get('LawbreakerID').value">
                                             <input type="checkbox" [name]="lawb.get('LawbreakerID').value"
-                                                [id]="lawb.get('LawbreakerID').value" class="filled-in chk-col-indigo">
-                                            <label [for]="lawb.get('LawbreakerID').value">
+                                                [id]="j+'-'+lawb.get('LawbreakerID').value" class="filled-in chk-col-indigo">
+                                            <label [for]="j+'-'+lawb.get('LawbreakerID').value">
                                                 {{ lawb.get('LawbreakerTitleName').value }}
                                                 {{ lawb.get('LawbreakerFirstName').value }}
                                                 {{ lawb.get('LawbreakerMiddleName').value }}
@@ -538,8 +538,8 @@
                                         style="width: 300px;">
                                         <div *ngIf="prod.get('ProductID').value">
                                             <input type="checkbox" [name]="prod.get('ProductID').value" 
-                                                [id]="prod.get('ProductID').value" class="filled-in chk-col-indigo">
-                                            <label [for]="prod.get('ProductID').value">{{prod.get('ProductDesc').value}}</label>
+                                                [id]="j+'-'+i+'-'+pIndex+'-'+prod.get('ProductID').value" class="filled-in chk-col-indigo">
+                                            <label [for]="j+'-'+i+'-'+pIndex+'-'+prod.get('ProductID').value">{{prod.get('ProductDesc').value}}</label>
                                         </div>
                                     </div>
                                 </ng-template>
