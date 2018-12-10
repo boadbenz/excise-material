@@ -30,6 +30,7 @@ import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { toLocalShort } from 'app/config/dateFormat';
 import Swal from 'sweetalert2'
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage',
@@ -108,7 +109,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private masDocumentMainService: MasDocumentMainService
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.23');
+    this.sidebarService.setVersion('0.0.0.24');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -167,6 +168,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     // this.navigate_Service();
   }
   ngOnDestroy() {
+    for (const k of Object.keys(this.OnSubscribe)) {
+      this.OnSubscribe[k].unsubscribe();
+    }
   }
   generateYear() {
     for (let i = 100 ; i > 0 ; i--) {
@@ -184,9 +188,15 @@ export class ManageComponent implements OnInit, OnDestroy {
   async CompareDetailgetByCon() {
     try {
       const data: any = { CompareID: +this.params.CompareID }
-      const resp: any = await this.fineService.postMethod('/ComparegetByCon', data);
-      this.compareDataUpdate = this.jsonCopy(resp);
-      this.compareDataUpdateTmp = this.jsonCopy(resp);
+      const resp: any = await this.fineService.postMethod('ComparegetByCon', data);
+      if (resp) {
+        this.compareDataUpdate = this.jsonCopy(resp);
+        this.compareDataUpdateTmp = this.jsonCopy(resp);
+      } else {
+        swal('', 'ไม่พบข้อมูลการเปรียบเทียบ', 'error');
+        this.router.navigate([`/fine/list`]);
+      }
+      
       console.log(JSON.stringify(this.compareDataUpdate) === JSON.stringify(resp));
     } catch (err) {
 
@@ -317,7 +327,8 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (compare.CompareDetailReceipt.length > 0) {
         const length: any = (this.compareDataUpdateTmp.CompareDetail.length - compare.CompareDetailReceipt.length) + i;
         console.log(this.receipt.list[i]);
-        this.receipt.list[i].TotalFine = compare.CompareDetailReceipt[0].TotalFine;
+        // this.receipt.list[i].TotalFine = compare.CompareFine;
+        this.ListCompareDetail[i]['userNo' + i + ':' + i] = compare.CompareFine;
         this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[0].PaymentDate ? this.convertToNormalDate(new Date(compare.CompareDetailReceipt[0].PaymentDate)) : null;
         this.receipt.list[i].ReceipStation = compare.CompareDetailReceipt[0].Station ? compare.CompareDetailReceipt[0].Station : '';
         this.receipt.list[i].ReceiptChanel = compare.CompareDetailReceipt[0].ReceiptChanel ? compare.CompareDetailReceipt[0].ReceiptChanel : '';
@@ -328,6 +339,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       i++;
     }
+    this.calSum();
   }
   setReceiptData() {
     this.receipt.IsOutside = this.compareDataUpdateTmp.IsOutside;
@@ -420,12 +432,54 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
       }
     });
+    this.OnSubscribe.delete = this.navService.onDelete.subscribe(async status => {
+      if (status) {
+        this.deleteCompare();
+      }
+    });
     this.OnSubscribe.print = this.navService.onPrint.subscribe(async status => {
       if (status) {
         await this.navService.setOnPrint(false);
         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
       }
     })
+  }
+  async deleteCompare() {
+    try {
+      if (this.params.CompareID > 0) {
+        Swal({
+          title: 'ยืนยันการทำรายการ?',
+          text: "ต้องการลบข้อมูลจริงหรือไม่!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'ลบ',
+          cancelButtonText: 'ยกเลิก'
+        }).then( async (result) => {
+          if (result.value) {
+            this.preloader.setShowPreloader(true);
+            const data: any = {CompareID: this.params.CompareID};
+            const resp: any = await this.fineService.postMethod('CompareupdDelete', data);
+            if (resp) {
+              if (resp.IsSuccess == 'True') {
+                swal('', 'ลบข้อมูลสำเร็จ', 'success');
+                await this.preloader.setShowPreloader(false);
+                this.router.navigate([`/fine/list`]);
+              } else {
+                this.preloader.setShowPreloader(false);
+                swal('', 'ลบข้อมูลไม่สำเร็จ', 'error');
+              }
+            } else {
+              this.preloader.setShowPreloader(false);
+              swal('', 'ลบข้อมูลไม่สำเร็จ', 'error');
+            }
+          }
+        });
+      }
+    } catch (err) {
+
+    }
   }
   async checkReceiptData(CompareDetailID: any, index: any = 0) {
     let receiptData: any = {};
@@ -563,13 +617,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.showEditField = status;
         console.log(this.params.CompareID);
         Swal(
-          'สำเร็จ!',
+          '',
           'บันทึกข้อมูลสำเร็จ.',
           'success'
         );
       } else if (resp && resp.IsSuccess == 'True') {
         Swal(
-          'สำเร็จ!',
+          '',
           'แก้ไขสำเร็จ.',
           'success'
         );
@@ -580,7 +634,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
     } else if ((+this.params.CompareID) > 0) {
       Swal(
-        'ข้อผิดพลาด!',
+        '',
         'ไม่พบการเปลี่ยนแปลงข้อมูล.',
         'error'
       );
@@ -634,9 +688,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             console.log('ข้อมูล Data เพื่อส่ง CompareinsAll');
             console.log(data);
             if (this.params.CompareID == 0) {
-              return await this.fineService.postMethod('CompareinsAll', data);
-              // console.log(data);
-              // return null;
+              // return await this.fineService.postMethod('CompareinsAll', data);
+              console.log(data);
+              return null;
             } else {
               console.log(data);
               if (this.isDatachange) {
@@ -720,7 +774,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           const LawBreaker: any = lawbreaker.CompareArrestLawbreaker[0];
           if (!LawBreaker) {
             Swal(
-              'ข้อผิดพลาด!',
+              '',
               'ไม่พบข้อมูลผู้ต้องหา.',
               'error'
             );
@@ -767,7 +821,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(resp);
       } else {
         Swal(
-          'ข้อผิดพลาด!',
+          '',
           'ไม่สามารถแสดงข้อมูลได้.',
           'error'
         );
@@ -1251,13 +1305,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         const resp: any = await this.checkReceiptData(this.receipt.list[this.userCompareReceiptDetail.index].CompareDetailID, this.userCompareReceiptDetail.index);
         if (resp.IsSuccess == 'True') {
           Swal(
-            'สำเร็จ!',
+            '',
             'เพิ่มข้อมูลใบเสร็จเรีบยบร้อย.',
             'success'
           );
         } else {
           Swal(
-            'สำเร็จ!',
+            '',
             'เพิ่มข้อมูลใบเสร็จผิดพลาด.',
             'success'
           );
@@ -1265,7 +1319,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       } catch (err) {
         console.log(err);
         Swal(
-          'ผิดพลาด!',
+          '',
           'เกิดข้อผิดพลาดในการเพิ่มใบเสร็จ.',
           'error'
         );
@@ -1293,7 +1347,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               console.log(resp);
               if (resp.error) {
                 Swal(
-                  'ข้อผิดพลาด!',
+                  '',
                   resp.error.error,
                   'error'
                 );
@@ -1302,7 +1356,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.clearDataList(this.receipt.list[index]);
                 this.receipt.list[index].LawBrakerName = name;
                 Swal(
-                  'สำเร็จ!',
+                  '',
                   'ลบสำเร็จ.',
                   'success'
                 );
@@ -1312,7 +1366,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               this.clearDataList(this.receipt.list[index]);
               this.receipt.list[index].LawBrakerName = name;
               Swal(
-                'สำเร็จ!',
+                '',
                 'ลบสำเร็จ.',
                 'success'
               );
@@ -1360,7 +1414,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           try {
             const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
             Swal(
-              'สำเร็จ!',
+              '',
               'ลบไฟล์สำเร็จ.',
               'success'
             );
@@ -1478,6 +1532,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
       } else {
         Swal(
+          '',
           'กรุณากรอกข้อมูลคำให้การของผู้ต้องหา.',
           'warning'
         );
@@ -1586,6 +1641,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   prepareReceiptData() {
     let receiptData: any = [];
+    let i: any = 0;
     for (const rec of this.receipt.list) {
       if (this.isNotValidTxtField(rec.PaymentDate)) {
         return [];
@@ -1593,7 +1649,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         try {
           const rec1: any = {
             ReceiptType: 'A',
-            ReceiptBookNo: rec.ReceiptNo,
+            ReceiptBookNo: rec.ReceiptBookNo,
             ReceiptNo: rec.ReceiptChanel,
             ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
             StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
@@ -1614,6 +1670,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           console.log(err);
         }
       }
+      i++;
     }
     return receiptData;
   }
@@ -1720,6 +1777,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ListCompareDetail[i].BribeMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
         this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
         this.ListCompareDetail[i].TreasuryMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.6);
+        this.DataToSave.userData[cmp.userNo].payment = cmp['userNo' + cmp.userNo + ':' + i];
         sum = (+sum) + (+cmp['userNo' + cmp.userNo + ':' + i]);
         sum1 = (+sum1) + (+cmp.BribeMoney);
         sum2 = (+sum2) + (+cmp.RewardMoney);
@@ -1730,10 +1788,12 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.sumAllCompare.sum2 = sum2;
           this.sumAllCompare.sum3 = sum3;
         }
-        this.DataToSave.userData[cmp.userNo].CompareFine = sum;
+        this.DataToSave.userData[cmp.userNo].CompareFine = cmp['userNo' + cmp.userNo + ':' + i];
         this.DataToSave.userData[cmp.userNo].BribeMoney = sum1;
         this.DataToSave.userData[cmp.userNo].RewardMoney = sum2;
         this.DataToSave.userData[cmp.userNo].TreasuryMoney = sum3;
+        this.receipt.list[cmp.userNo].TotalFine = sum;
+        this.receipt.list[cmp.userNo].CompareFine = cmp['userNo' + cmp.userNo + ':' + i];
       } else {
         if (cmp.isSum) {
           this.ListCompareDetail[i].BribeMoney = sum1;
@@ -1744,7 +1804,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.sumAllCompare.sum1 = (+this.sumAllCompare.sum1) + sum1;
           this.sumAllCompare.sum2 = (+this.sumAllCompare.sum2) + sum2;
           this.sumAllCompare.sum3 = (+this.sumAllCompare.sum3) + sum3;
-          this.DataToSave.userData[cmp.userNo].CompareFine = sum;
+          this.DataToSave.userData[cmp.userNo].CompareFine = cmp['userNo' + cmp.userNo + ':' + i];
           this.DataToSave.userData[cmp.userNo].BribeMoney = sum1;
           this.DataToSave.userData[cmp.userNo].RewardMoney = sum2;
           this.DataToSave.userData[cmp.userNo].TreasuryMoney = sum3;
@@ -1760,6 +1820,9 @@ export class ManageComponent implements OnInit, OnDestroy {
           sum1 = (+sum1) + (+cmp.BribeMoney);
           sum2 = (+sum2) + (+cmp.RewardMoney);
           sum3 = (+sum3) + (+cmp.TreasuryMoney);
+          this.receipt.list[cmp.userNo].TotalFine = sum;
+          this.receipt.list[cmp.userNo].CompareFine = cmp['userNo' + cmp.userNo + ':' + i];
+          this.DataToSave.userData[cmp.userNo].payment = cmp['userNo' + cmp.userNo + ':' + i];
         }
       }
       i++;
@@ -1771,19 +1834,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     const case3: any = this.isNotValidTxtField(this.compareUserDetailPopup.rank2);
     if (case1) {
       Swal(
-        'แจ้งเตือน!',
+        '',
         'กรุณาเลือกผู้เสนอพิจารณาเห็นชอบจากรายการ.',
         'warning'
       );
     } else if (case2) {
       Swal(
-        'แจ้งเตือน!',
+        '',
         'กรุณาเลือกผู้พิจารณาเห็นชอบจากรายการ.',
         'warning'
       );
     } else if (case3) {
       Swal(
-        'แจ้งเตือน!',
+        '',
         'กรุณาเลือกผู้มีอำนาจอนุมัติจากรายการ.',
         'warning'
       );
@@ -1798,7 +1861,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   submitReceipt() {
     if (this.isNotValidTxtField(this.userCompareReceiptDetail.ReceipPosition)) {
       Swal(
-        'แจ้งเตือน!',
+        '',
         'กรุณาเลือกผู้รับชำระค่าปรับจากรายการ.',
         'warning'
       );
