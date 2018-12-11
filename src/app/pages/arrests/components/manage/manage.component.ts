@@ -531,7 +531,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
             await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
 
-            await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
+            await
+
+                await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
 
             await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
         };
@@ -594,6 +596,10 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         _prod.map((x, index) => x.RowId = index + 1);
 
         this.setItemFormArray(_prod, 'ArrestProduct');
+    }
+
+    private async pageRefreshLawbreaker() {
+
     }
 
     private async pageRefreshIndictment(_arrIndict: fromModels.ArrestIndictment[], arrestCode) {
@@ -1019,6 +1025,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
         lawbreaker.RowId = 1;
         lawbreaker.IsModify = 'c';
+        lawbreaker.IsActive = 1;
         lawbreaker = removeObjectItem(lawbreaker, 'ResultCount') as fromModels.ArrestLawbreaker;
         this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
         let sort = this.sortFormArray(this.ArrestLawbreaker.value);
@@ -1409,7 +1416,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             await this.modifyStaff(),
             await this.modifyProduct(),
             await this.modifyLawbreaker(),
-            await this.modifyIndictment(),
+            // await this.modifyIndictment(),
             await this.modifyDocument()
         ])
         this.onComplete();
@@ -1459,7 +1466,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 await this.modifyStaff(),
                 await this.modifyProduct(),
                 await this.modifyLawbreaker(),
-                await this.modifyIndictment(),
+                // await this.modifyIndictment(),
                 await this.modifyDocument()
             ])
         }
@@ -1623,6 +1630,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private async modifyLawbreaker() {
+        let arrestLawbreakerId = [];
         let lawbreakerPromise = await this.ArrestLawbreaker.value
             .map(async (x: fromModels.ArrestLawbreaker, i) => {
                 x.ArrestCode = this.arrestCode
@@ -1639,6 +1647,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         await this.s_lawbreaker.ArrestLawbreakerinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
+                                // set LawbreakerID ใหม่ที่ได้จากการบันทึกเพื่อนำไปใช้ใน ArrestIndictmentDetail
+                                arrestLawbreakerId.push({
+                                    LawbreakerID: x.LawbreakerID,
+                                    ArrestLawbreakerID: y.LawbreakerID
+                                })
                             })
                             .catch((error) => this.catchError(error));
                         break;
@@ -1652,96 +1665,92 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
                 }
             })
-        return Promise.all(lawbreakerPromise);
+
+        let indictmentPromise = await this.modifyIndictment(arrestLawbreakerId);
+
+        return Promise.all([lawbreakerPromise, indictmentPromise]);
     }
 
-    private async modifyIndictment() {
+    private async modifyIndictment(arrestLawbreakerId: any[]) {
         let indictmentPromise = await this.ArrestIndictment.value
             .map(async (x: fromModels.ArrestIndictment) => {
                 x.ArrestCode = this.arrestCode;
                 switch (x.IsModify) {
                     case 'd':
                         await this.s_indictment.ArrestIndictmentupdDelete(x.IndictmentID.toString())
-                            .then(async y => {
+                            .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                await this.modifyIndictmentDetail(x.IndictmentID, x.ArrestIndicmentDetail, x.IsModify);
                             }).catch((error) => this.catchError(error));
                         break;
 
                     case 'c':
                         await this.s_indictment.ArrestIndictmentinsAll(x)
-                            .then(async y => {
+                            .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                await this.modifyIndictmentDetail(y.IndictmentID, x.ArrestIndicmentDetail, x.IsModify);
+                                x.IndictmentID = y.IndictmentID;
                             })
                             .catch((error) => this.catchError(error));
                         break;
 
                     case 'u':
                         await this.s_indictment.ArrestIndictmentupdByCon(x)
-                            .then(async y => {
+                            .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                await this.modifyIndictmentDetail(x.IndictmentID, x.ArrestIndicmentDetail, x.IsModify);
                             })
                             .catch((error) => this.catchError(error));
                         break;
                 }
+
+                return Promise.all([
+                    await this.modifyIndictmentDetail(x.IndictmentID, arrestLawbreakerId, x.ArrestIndicmentDetail, x.IsModify)
+                ])
             })
         return Promise.all(indictmentPromise);
     }
 
-    private async modifyIndictmentDetail(indictmentID: number, indictmentDetail: fromModels.ArrestIndictmentDetail[], isModify: string) {
+    private async modifyIndictmentDetail(indictmentID: number, arrestLawbreakerId: any[], indictmentDetail: fromModels.ArrestIndictmentDetail[], isModify: string) {
         let product = []
         // IndictmentDetail
-        let promises = indictmentDetail.filter(x => x.LawbreakerID != null);
+        let promises = indictmentDetail
+            .filter(x => x.LawbreakerID != null)
+            .map((x) => {
+                // กรองเอา ProductDetail เฉพาะรายการที่เลือก
+                const productIsChecked = x.ArrestProductDetail.filter(p => p.IsChecked);
+                const lawbreakerIsChecked = x.ArrestLawbreaker.filter(_x => _x.IsChecked && _x.LawbreakerID == x.LawbreakerID);
+                product.push(productIsChecked);
 
-        let i = 0;
-        promises.map((x) => {
-            console.log('ArrestIndicmentDetail :', JSON.stringify(x));
-            // กรองเอา ProductDetail เฉพาะรายการที่เลือก
-            const productIsChecked = x.ArrestProductDetail.filter(p => p.IsChecked);
-            const lawbreakerIsChecked = x.ArrestLawbreaker.filter(_x => _x.IsChecked && _x.LawbreakerID == x.LawbreakerID);
-            product.push(productIsChecked);
+                if (lawbreakerIsChecked.length == 1) {
+                    console.log('ArrestIndicmentDetail :', JSON.stringify(x));
+                    x.IndictmentID = indictmentID;
+                    switch (isModify) {
+                        case 'd':
+                            this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
+                                .then(y => {
+                                    if (!this.checkIsSuccess(y)) return;
+                                }).catch((error) => this.catchError(error));
+                            break;
 
+                        case 'c':
+                            // set LawbreakerID ที่ได้จากการบันทึก ArrestLawbreakerinsAll
+                            x.LawbreakerID = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID).ArrestLawbreakerID;
+                            this.s_indictmentDetail.ArrestIndicmentDetailinsAll(x)
+                                .then(y => {
+                                    if (!this.checkIsSuccess(y)) return;
+                                    x.IndictmentDetailID = y.IndictmentDetailID;
+                                }).catch((error) => this.catchError(error));
+                            break;
 
-
-            if (lawbreakerIsChecked.length == 1) {
-                x.IndictmentID = indictmentID;
-                const xx = {
-                    "IndictmentDetailID": "",
-                    "IndictmentID": indictmentID,
-                    "LawbreakerID": x.LawbreakerID,
-                    "LawsuitType": x.LawsuitType,
-                    "IsActive": 1,
-                    "LawsuitEnd": x.LawsuitEnd
+                        case 'u':
+                            this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(x)
+                                .then(y => {
+                                    if (!this.checkIsSuccess(y)) return;
+                                }).catch((error) => this.catchError(error));
+                            break;
+                    }
                 }
-                switch (isModify) {
-                    case 'd':
-                        this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
-                            .then(async y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            }).catch((error) => this.catchError(error));
-                        break;
 
-                    case 'c':
-                        this.s_indictmentDetail.ArrestIndicmentDetailinsAll(xx)
-                            .then(async y => {
-                                if (!this.checkIsSuccess(y)) return;
-                                x.IndictmentDetailID = y.IndictmentDetailID;
-                            }).catch((error) => this.catchError(error));
-                        break;
-
-                    case 'u':
-                        this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(xx)
-                            .then(async y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            }).catch((error) => this.catchError(error));
-                        break;
-                }
-            }
-
-            return Promise.all([this.modifyProductDetail(x.IndictmentDetailID, x, isModify)])
-        })
+                return Promise.all([this.modifyProductDetail(x.IndictmentDetailID, x, isModify)])
+            })
 
         // IndictmentProduct
         // Group รายการที่ซ้ำ
@@ -1783,10 +1792,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     private async modifyProductDetail(indictmentDetailID: number, indictmentDetail: fromModels.ArrestIndictmentDetail, isModify: string) {
         let promise = indictmentDetail.ArrestProductDetail.filter(x => x.IsChecked)
 
-        let i = 0;
         promise.map(async (x) => {
-            console.log('ArrestProductDetail :', JSON.stringify(x));
-
             x.IndictmentDetailID = indictmentDetailID;
             switch (isModify) {
                 case 'd':
