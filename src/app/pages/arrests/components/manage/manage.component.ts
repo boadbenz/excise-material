@@ -1694,44 +1694,53 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         let product = []
         // IndictmentDetail
         let promises = indictmentDetail.filter(x => x.LawbreakerID != null);
-        console.log(promises);
-        console.log(indictmentDetail);
-        
-        
+
+        let i = 0;
         promises.map((x) => {
+            console.log('ArrestIndicmentDetail :', JSON.stringify(x));
             // กรองเอา ProductDetail เฉพาะรายการที่เลือก
             const productIsChecked = x.ArrestProductDetail.filter(p => p.IsChecked);
             const lawbreakerIsChecked = x.ArrestLawbreaker.filter(_x => _x.IsChecked && _x.LawbreakerID == x.LawbreakerID);
             product.push(productIsChecked);
 
+
+
             if (lawbreakerIsChecked.length == 1) {
                 x.IndictmentID = indictmentID;
+                const xx = {
+                    "IndictmentDetailID": "",
+                    "IndictmentID": indictmentID,
+                    "LawbreakerID": x.LawbreakerID,
+                    "LawsuitType": x.LawsuitType,
+                    "IsActive": 1,
+                    "LawsuitEnd": x.LawsuitEnd
+                }
                 switch (isModify) {
                     case 'd':
                         this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
                             .then(async y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                await this.modifyProductDetail(x.IndictmentDetailID, x, isModify);
                             }).catch((error) => this.catchError(error));
                         break;
 
                     case 'c':
-                        this.s_indictmentDetail.ArrestIndicmentDetailinsAll(x)
+                        this.s_indictmentDetail.ArrestIndicmentDetailinsAll(xx)
                             .then(async y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                await this.modifyProductDetail(y.IndictmentDetailID, x, isModify);
+                                x.IndictmentDetailID = y.IndictmentDetailID;
                             }).catch((error) => this.catchError(error));
                         break;
 
                     case 'u':
-                        this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(x)
+                        this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(xx)
                             .then(async y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                await this.modifyProductDetail(x.IndictmentDetailID, x, isModify);
                             }).catch((error) => this.catchError(error));
                         break;
                 }
             }
+
+            return Promise.all([this.modifyProductDetail(x.IndictmentDetailID, x, isModify)])
         })
 
         // IndictmentProduct
@@ -1774,7 +1783,10 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     private async modifyProductDetail(indictmentDetailID: number, indictmentDetail: fromModels.ArrestIndictmentDetail, isModify: string) {
         let promise = indictmentDetail.ArrestProductDetail.filter(x => x.IsChecked)
 
+        let i = 0;
         promise.map(async (x) => {
+            console.log('ArrestProductDetail :', JSON.stringify(x));
+
             x.IndictmentDetailID = indictmentDetailID;
             switch (isModify) {
                 case 'd':

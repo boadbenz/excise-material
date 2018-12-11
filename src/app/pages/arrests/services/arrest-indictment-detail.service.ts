@@ -31,13 +31,13 @@ export class ArrestIndictmentDetailService {
         return this.http.post(url, params).map(x => x.json());
     }
 
-    ArrestIndicmentDetailinsAll(IndictmentDetail: ArrestIndictmentDetail) {
+    ArrestIndicmentDetailinsAll(IndictmentDetail: any) {
         const params = IndictmentDetail;
         const url = `${appConfig.api7788}/ArrestIndicmentDetailinsAll`;
         return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    ArrestIndicmentDetailupdByCon(IndictmentDetail: ArrestIndictmentDetail) {
+    ArrestIndicmentDetailupdByCon(IndictmentDetail: any) {
         const params = IndictmentDetail;
         const url = `${appConfig.api7788}/ArrestIndicmentDetailupdByCon`;
         return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
