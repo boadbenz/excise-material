@@ -615,12 +615,13 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         let _ALawbreaker = [];
         _indict.map(ai => {
             // ดึงข้อมูล ArrestLawbreaker จาก ArrestIndictment -> ArrestIndictmentDetail -> ArrestLawbreaker
-            _ALawbreaker.push(...ai.ArrestIndicmentDetail[0].ArrestLawbreaker);
-
             ai.ArrestIndicmentDetail.map(aid => {
                 aid.ArrestLawbreaker
                     .filter(al => al.LawbreakerID == aid.LawbreakerID && aid.IndictmentDetailID != null)
-                    .map(al => al.IsChecked = Acceptability.INACCEPTABLE);
+                    .map(al => {
+                        _ALawbreaker.push(al);
+                        al.IsChecked = Acceptability.INACCEPTABLE
+                    });
                 aid.ArrestProductDetail
                     .filter(apd => apd.IndictmentDetailID == aid.IndictmentDetailID)
                     .map(apd => apd.IsChecked = true);
@@ -633,6 +634,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     pageRefeshLawbreaker(_ALawbreaker: fromModels.ArrestLawbreaker[]) {
         // Group รายการที่ซ้ำกัน
         _ALawbreaker = groupArrayItem(_ALawbreaker, 'LawbreakerID');
+
         _ALawbreaker.map(al => {
             al = setViewLawbreaker(al);
             this.addArrestLawbreaker(al)
