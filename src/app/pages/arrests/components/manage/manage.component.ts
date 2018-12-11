@@ -32,7 +32,8 @@ import { ManageConfig } from './manage.config';
 import swal from 'sweetalert2';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
-import { groupArrayItem, removeObjectItem } from '../../arrest.helper';
+import { groupArrayItem, removeObjectItem, clearFormArray } from '../../arrest.helper';
+import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
 
 @Component({
     selector: 'app-manage',
@@ -341,7 +342,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             InvestigationSurveyDocument: new FormControl(null),
             InvestigationCode: new FormControl(null),
             IsActive: new FormControl(1),
-            IsLawsuitComplete: new FormControl(0),
+            IsLawsuitComplete: new FormControl(null),
             ArrestNotice: this.fb.array([]),
             ArrestStaff: this.fb.array([]),
             ArrestLocale: this.fb.array([this.createLocalForm()]),
@@ -531,9 +532,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
             await this.pageRefreshProduct(_arr.ArrestProduct, arrestCode);
 
-            await
-
-                await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
+            await this.pageRefreshIndictment(_arr.ArrestIndictment, arrestCode);
 
             await this.pageRefreshDocument(_arr.ArrestDocument, arrestCode);
         };
@@ -598,10 +597,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         this.setItemFormArray(_prod, 'ArrestProduct');
     }
 
-    private async pageRefreshLawbreaker() {
-
-    }
-
     private async pageRefreshIndictment(_arrIndict: fromModels.ArrestIndictment[], arrestCode) {
         let _indict = new Array<fromModels.ArrestIndictment>();
         if (arrestCode != 'NEW') {
@@ -614,8 +609,20 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         }
 
         if (!_indict.length) return;
-
+        this.pageRefeshLawbreaker(_indict);
         this.setArrestIndictment(_indict, null);
+    }
+
+    pageRefeshLawbreaker(_indict: fromModels.ArrestIndictment[]) {
+        let _ALawbreaker = [];
+        // ดึงข้อมูล ArrestLawbreaker จาก ArrestIndictment -> ArrestIndictmentDetail -> ArrestLawbreaker
+        _indict.map(x => _ALawbreaker.push(...x.ArrestIndicmentDetail[0].ArrestLawbreaker))
+        // Group รายการที่ซ้ำกัน
+        _ALawbreaker = groupArrayItem(_ALawbreaker, 'LawbreakerID');
+        _ALawbreaker.map(al => {
+            al = setViewLawbreaker(al);
+            this.addArrestLawbreaker(al)
+        });
     }
 
     private async pageRefreshDocument(_arrDoc: fromModels.ArrestDocument[], arrestCode) {
@@ -905,6 +912,12 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         return arr;
     }
     private groupArrestIndictmentDetail = (x) => {
+        x.ArrestLawbreaker
+            .filter(al => al.LawbreakerID == x.LawbreakerID && x.IndictmentDetailID != null)
+            .map(al => al.IsChecked = true);
+        x.ArrestProductDetail
+            .filter(apd => apd.IndicmentDetailID == x.IndicmentDetailID)
+            .map(apd => apd.IsChecked = true);
         return this.fb.group({
             IndictmentDetailID: x.IndictmentDetailID || null,
             IndictmentID: x.IndictmentID || null,
@@ -1392,6 +1405,14 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         swal('', Message.saveComplete, 'success');
         switch (this.mode) {
             case 'C':
+                this.arrestFG.reset();
+                clearFormArray(this.ArrestNotice);
+                clearFormArray(this.ArrestStaff);
+                clearFormArray(this.ArrestProduct);
+                clearFormArray(this.ArrestLawbreaker);
+                clearFormArray(this.ArrestIndictment);
+                clearFormArray(this.ArrestDocument);
+
                 this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
                 break;
 
@@ -1797,33 +1818,34 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private async modifyProductDetail(indictmentDetailID: number, indictmentDetail: fromModels.ArrestIndictmentDetail, isModify: string) {
-        let promise = indictmentDetail.ArrestProductDetail.filter(x => x.IsChecked)
+        let promise = indictmentDetail.ArrestProductDetail
+            .filter(x => x.IsChecked)
+            .map(async (x) => {
+                x.IndictmentDetailID = indictmentDetailID;
+                debugger
+                switch (isModify) {
+                    case 'd':
+                        await this.s_productDetail.ArrestProductDetailupdDelete(x.ProductID.toString())
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }).catch((error) => this.catchError(error));
+                        break;
 
-        promise.map(async (x) => {
-            x.IndictmentDetailID = indictmentDetailID;
-            switch (isModify) {
-                case 'd':
-                    await this.s_productDetail.ArrestProductDetailupdDelete(x.ProductID.toString())
-                        .then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }).catch((error) => this.catchError(error));
-                    break;
+                    case 'c':
+                        await this.s_productDetail.ArrestProductDetailinsAll(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }).catch((error) => this.catchError(error));
+                        break;
 
-                case 'c':
-                    await this.s_productDetail.ArrestProductDetailinsAll(x)
-                        .then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }).catch((error) => this.catchError(error));
-                    break;
-
-                case 'u':
-                    await this.s_productDetail.ArrestProductDetailupdByCon(x)
-                        .then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        }).catch((error) => this.catchError(error));
-                    break;
-            }
-        })
+                    case 'u':
+                        await this.s_productDetail.ArrestProductDetailupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            }).catch((error) => this.catchError(error));
+                        break;
+                }
+            })
         return Promise.all(promise);
     }
 

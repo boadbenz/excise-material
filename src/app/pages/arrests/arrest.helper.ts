@@ -1,3 +1,5 @@
+import { FormArray } from "@angular/forms";
+
 export function groupArrayItem(array: any[], arg: any) {
     return array.reduce((a, b) => {
         var i = a.findIndex(x => x[arg] === b[arg]);
@@ -12,4 +14,10 @@ export function removeObjectItem(obj: any, arg) {
         }
         return object
     }, {})
-} 
+}
+
+export function clearFormArray(formArray: FormArray) {
+    while (formArray.length !== 0) {
+        formArray.removeAt(0)
+    }
+}
