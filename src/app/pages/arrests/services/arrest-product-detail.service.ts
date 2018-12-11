@@ -29,12 +29,12 @@ export class ArrestProductDetailService {
     ArrestProductDetailupdByCon(ArrestProductDetail: ArrestProductDetail) {
         const params = ArrestProductDetail;
         const url = `${appConfig.api7788}/ArrestProductDetailupdByCon`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
     ArrestProductDetailupdDelete(ProductDetailID: string) {
         const params = { ProductDetailID };
         const url = `${appConfig.api7788}/ArrestProductDetailupdDelete`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
 

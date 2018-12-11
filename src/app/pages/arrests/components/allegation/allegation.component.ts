@@ -22,7 +22,6 @@ import { Acceptability } from '../../models';
 import { LoaderService } from 'app/core/loader/loader.service';
 // import { setViewLawbreaker } from '../allegation-detail-modal/allegation-detail-modal.component';
 import swal from 'sweetalert2'
-import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
 
 @Component({
   selector: 'app-allegation',
@@ -274,8 +273,11 @@ export class AllegationComponent implements OnInit, OnDestroy {
 
           indict.ArrestIndicmentDetail.map(d => {
             let law = d.ArrestLawbreaker.find(l => l.LawbreakerID == d.LawbreakerID);
-            this.addArrestLawbreaker(setViewLawbreaker(law));
+            // this.addArrestLawbreaker(setViewLawbreaker(law));
           });
+          // indictDetail.ArrestLawbreaker.map(law => {
+          //   this.addArrestLawbreaker(setViewLawbreaker(law));
+          // })
         }
       })
       .catch((error) => this.catchError(error));
@@ -298,7 +300,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         let p = y.map((y1, index) => {
           y1.IsChecked = false;
           y1.RowId = index + 1;
-          y1.IsModify = 'r';
+          y1.IsModify = 'v';
           return y1;
         });
 
@@ -338,7 +340,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
           _product = x.map((y, index) => {
             y.IsChecked = false;
             y.RowId = index + 1;
-            y.IsModify = 'r';
+            y.IsModify = 'v';
             return y;
           });
         }
@@ -536,7 +538,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.arrestIndictmentFG.patchValue({
       GuiltBaseID: e.GuiltBaseID,
       ArrestLawGuitbase: e,
-      IsModify: this.mode == 'C' ? 'c' : 'r',
+      IsModify: this.mode == 'C' ? 'c' : 'v',
       SubSectionType: ArrestLawSubSection.SubSectionType,
       GuiltBaseName: e.GuiltBaseName,
       SectionNo: ArrestLawSubSectionRule.SectionNo,
@@ -913,7 +915,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
             .catch((error) => this.catchError(error));
           break;
 
-        case 'r':
+        case 'v':
           if (w.IsChecked) {
             console.log('ArrestIndictmentProduct "r" : ', JSON.stringify(w));
             // let prod = await this.insertArrestProductDetail(indictmentDetailID, parseInt(w.ProductID), w);

@@ -145,7 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.27');
+        this.sidebarService.setVersion('0.0.2.31');
 
         this.navigate_service();
 
@@ -253,6 +253,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (!this.noticeForm.valid) {
                     this.isRequired = true;
                     this.showSwal(Message.checkData, "warning");
+                    return false;
+                }
+
+                if (this.noticeCode=="NEW") {
+                    this.isRequired = true;
+                    this.showSwal("Please check your notice code.", "warning");
                     return false;
                 }
 
@@ -469,7 +475,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeProductFormControl.NetVolumeUnit = new FormControl(null);
             NoticeProductFormControl.Remarks = new FormControl(null);
             NoticeProductFormControl.IsActive = new FormControl(1);
-
+        
             NoticeProductFormControl.BrandFullName = new FormControl(null);
             NoticeProductFormControl.IsNewItem = new FormControl(false);
         }
@@ -523,7 +529,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         suspect.map(item => {
             item.SuspectFullName = !item.SuspectTitleName ? '' : item.SuspectTitleName;
             item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
-            item.SuspectFullName += !item.SuspectFirstName ? '' : ` ${item.SuspectFirstName}`;
+            item.SuspectFullName += !item.SuspectMiddleName ? '' : ` ${item.SuspectMiddleName}`;
+            item.SuspectFullName += !item.SuspectLastName ? '' : ` ${item.SuspectLastName}`;
 
             item.CompanyFullName = !item.CompanyTitleName ? '' : item.CompanyTitleName;
             item.CompanyFullName += !item.CompanyName ? '' : ` ${item.CompanyName}`;
@@ -537,9 +544,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         const product = res.NoticeProduct.filter(item => item.IsActive == 1);
         product.map(item => {
-            item.BrandFullName = item.BrandNameTH == null ? '' : item.BrandNameTH;
-            item.BrandFullName += item.SubBrandNameTH == null ? '' : ` ${item.SubBrandNameTH}`;
-            item.BrandFullName += item.ModelName == null ? '' : ` ${item.ModelName}`;
+            item.BrandFullName = item.ProductDesc?item.ProductDesc:"";
             item.NetWeight = item.NetWeight || '0';
             item.NetWeightUnit = item.NetWeightUnit || '0';
         }
@@ -554,7 +559,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
-
+            
             // this.noticeCode = res.NoticeCode;
             // this.arrestCode = res.ArrestCode;
             // await this.noticeForm.reset({
@@ -733,9 +738,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
-        console.log('===================');
-        console.log('Update Notice : ', JSON.stringify(this.noticeForm.value));
-        console.log('===================');
+        // console.log('===================');
+        // console.log('Update Notice : ', JSON.stringify(this.noticeForm.value));
+        // console.log('===================');
 
         let IsSuccess: boolean = true;
         await this.noticeService.updByCon(this.noticeForm.value).then(async isSuccess => {
@@ -766,19 +771,19 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }
                 }
             }
-        //     const document = this.NoticeDocument.value;
-        //     await document.map(async (item: NoticeDocument) => {
-        //         if (item.IsNewItem) {
-        //             await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
-        //                 if (!docIsSuccess) { IsSuccess = false; return; };
-        //             }, () => { IsSuccess = false; return; });
+            // const document = this.NoticeDocument.value;
+            // await document.map(async (item: NoticeDocument) => {
+            //     if (item.IsNewItem) {
+            //         await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
+            //             if (!docIsSuccess) { IsSuccess = false; return; };
+            //         }, () => { IsSuccess = false; return; });
 
-        //         } else {
-        //             this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
-        //                 if (!docIsSuccess) { IsSuccess = false; return };
-        //             }, () => { IsSuccess = false; return; })
-        //         }
-        //     })
+            //     } else {
+            //         this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
+            //             if (!docIsSuccess) { IsSuccess = false; return };
+            //         }, () => { IsSuccess = false; return; })
+            //     }
+            // });
         }
 
         if (IsSuccess) {
@@ -825,6 +830,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     getTransactionRunning(officeCode:any):void{
+        this.preloader.setShowPreloader(true);
         this.transactionRunningService.TransactionRunninggetByCon("ops_notice", officeCode).then(res=>{
             if(res.length>0){
                 const data = res[0];
@@ -837,6 +843,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.noticeForm.patchValue({
                         NoticeCode: this.noticeCode
                     });
+                    this.preloader.setShowPreloader(false);
                 });
             }else{
                 this.transactionRunningService.TransactionRunninginsAll(officeCode, "ops_notice", "LS").then(res=>{
@@ -891,23 +898,37 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    addSuspect(suspect: NoticeMasSuspect[]) {
+    addSuspect(suspect: any[]) {
         if (suspect.length) {
             suspect.map(item => {
+                let refId = "";
+                if(item.EntityType==1&&(item.SuspectType==1||item.LawbreakerType==1)){
+                    refId = item.IDCard;
+                }else if(item.EntityType==1&&(item.SuspectType==0||item.LawbreakerType==0)){
+                    refId = item.PassportNo;
+                }else if(item.EntityType==0){
+                    refId = item.CompanyRegistrationNo;
+                }
+                let suspectType = item.SuspectType;
+                if(item.LawbreakerType>=0){
+                    suspectType = item.LawbreakerType;
+                }
+
                 let noticeSuspect: NoticeSuspect = {
-                    SuspectID: item.SuspectID.toString(),
-                    SuspectReferenceID: item.SuspectID.toString(),
+                    SuspectID: (item.SuspectID?item.SuspectID:item.LawbreakerID).toString(),
+                    SuspectReferenceID: (item.SuspectID?item.SuspectID:item.LawbreakerID).toString(),
                     NoticeCode: this.noticeCode,
-                    SuspectTitleName: item.SuspectTitleName,
-                    SuspectFirstName: item.SuspectFirstName,
-                    SuspectLastName: item.SuspectLastName,
+                    SuspectTitleName: item.SuspectTitleName?item.SuspectTitleName:item.LawbreakerTitleName,
+                    SuspectFirstName: item.SuspectFirstName?item.SuspectFirstName:item.LawbreakerFirstName,
+                    SuspectMiddleName: item.SuspectMiddleName?item.SuspectMiddleName:item.LawbreakerMiddleName,
+                    SuspectLastName: item.SuspectLastName?item.SuspectLastName:item.LawbreakerLastName,
                     CompanyTitleName: item.CompanyTitle,
                     CompanyName: item.CompanyName,
                     CompanyOtherName: item.CompanyOtherName,
                     IsActive: 1,
 
                     EntityType: item.EntityType,
-                    SuspectType: item.SuspectType,
+                    SuspectType: suspectType,
                     EntityTypeName: item.EntityTypeName,
                     SuspectTypeName: item.SuspectTypeName,
                     CompanyFullName: item.CompanyFullName,
@@ -915,7 +936,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                     RowId: item.RowId,
                     IsChecked: true,
                     IsNewItem: true,
-                    MistreatNo: item.MistreatNo
+                    MistreatNo: item.MistreatNo,
+                    CompanyRegistrationNo: item.CompanyRegistrationNo,
+                    IDCard: item.IDCard,
+                    PassportNo: item.PassportNo
                 }
                 this.NoticeSuspect.push(this.fb.group(noticeSuspect))
             });
@@ -1027,10 +1051,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             .distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadProduct
-                    .filter(v =>
-                        (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
-                        (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    .filter(v => (v.ProductDesc.toLowerCase().indexOf(term.toLowerCase()) > - 1)
+                        // (v.SubBrandNameTH && v.SubBrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.BrandNameTH && v.BrandNameTH.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
+                        // (v.ModelName && v.ModelName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
     searchStaff = (text3$: Observable<string>) =>
@@ -1038,7 +1062,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             .debounceTime(200)
             .distinctUntilChanged()
             .map(term => this.typeheadStaff
-                    .filter(v =>
+                    .filter(v => 
                         (`${v.TitleName || ''} ${v.FirstName || ''} ${v.LastName || ''}`
                             .toLowerCase().indexOf(term.toLowerCase()) > -1)
                         // (v.TitleName && v.TitleName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
@@ -1053,17 +1077,19 @@ export class ManageComponent implements OnInit, OnDestroy {
             .distinctUntilChanged()
             .map(term => term === '' ? []
                 : this.typeheadOffice
-                    .filter(v =>
+                    .filter(v => 
                         (`${v.OfficeName || ''} ${v.OfficeShortName || ''}`.toLowerCase().indexOf(term.toLowerCase()) > -1)
                         // (v.OfficeName && v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1) ||
                         // (v.OfficeShortName && v.OfficeShortName.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
-    formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
-        `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;
+    // formatterProduct = (x: { BrandNameTH: String, SubBrandNameTH: String, ModelName: String }) =>
+    //     `${x.SubBrandNameTH || ''} ${x.BrandNameTH || ''} ${x.ModelName || ''}`;
+    formatterProduct = (x: { ProductDesc: String }) =>
+        `${x.ProductDesc || ''}`;
 
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubdistrictNameTH || ''} ${x.DistrictNameTH || ''} ${x.ProvinceNameTH || ''}`;
+        `${x.SubdistrictNameTH || ''}/${x.DistrictNameTH || ''}/${x.ProvinceNameTH || ''}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
@@ -1103,7 +1129,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     blurSelectItemLocaleRegion() {
         let obj = this.NoticeLocale.at(0).value;
-        console.log(obj);
         if(!obj.ProvinceCode){
             this.NoticeLocale.at(0).patchValue({
                 Region: ""
@@ -1125,6 +1150,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsDomestic: ele.item.IsDomestic || '1',
             NetVolume: ele.item.NetVolume || 0,
             NetVolumeUnit: ele.item.NetVolumeUnit || 0,
+            BrandFullName: ele.item.ProductDesc
         });
     }
     blurSelectItemProductItem(index: number) {
@@ -1327,7 +1353,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         reader.readAsDataURL(file);
         reader.onload = () => {
-            let dataSource = reader.result.split(',')[1];
+            let data = ""+reader.result;
+            let dataSource = data.split(',')[1];
+            // let dataSource = reader.result.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.noticeForm.patchValue({
                     FilePath: replaceFakePath(e.target.value),
@@ -1344,7 +1372,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         reader.readAsDataURL(file);
         reader.onload = () => {
-            let dataSource = reader.result.split(',')[1];
+            let data = ""+reader.result;
+            let dataSource = data.split(',')[1];
             if (dataSource && dataSource !== undefined) {
                 this.NoticeDocument.at(index).patchValue({
                     ReferenceCode: this.noticeCode,
@@ -1360,5 +1389,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.alertSwal.text = msg;
         this.alertSwal.type = iconType;
         this.alertSwal.show();
+    }
+
+    getRefer(item:any){
+        item = item.value;
+        if(item.EntityType==1&&(item.SuspectType==1||item.LawbreakerType==1)){
+          return item.IDCard;
+        }else if(item.EntityType==1&&(item.SuspectType==0||item.LawbreakerType==0)){
+          return item.PassportNo;
+        }else if(item.EntityType==0){
+          return item.CompanyRegistrationNo;
+        }else{
+          return "";
+        }
     }
 }

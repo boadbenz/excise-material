@@ -16,7 +16,7 @@ import { SwalComponent } from '@toverux/ngx-sweetalert2';
     templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit, OnDestroy {
-
+    
     @ViewChild('alertSwal') private alertSwal: SwalComponent;
 
     months:any[];
@@ -63,7 +63,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.27');
+        this.sidebarService.setVersion('0.0.2.31');
         this.paginage.TotalItems = 0;
 
         // this.preLoaderService.setShowPreloader(true);
@@ -151,7 +151,7 @@ export class ListComponent implements OnInit, OnDestroy {
                     l.StaffLastName = "";
                     l.StaffOfficeName = "";
                     insert = false;
-
+                    
                     // i.childs.push(l);
                     i.SuspectFullname += "<br/>"+l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
                     break;

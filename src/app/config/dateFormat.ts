@@ -31,7 +31,6 @@ export function setZero(num: number) {
 }
 
 export function toLocalShort(date: string): string {
-    if (!date) return;
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const dd = new Date(date);
     return dd.toLocaleString('th-TH', options);
@@ -55,7 +54,7 @@ export function toTimeShort(date: string): string {
 
 export const MyDatePickerOptions: IMyOptions = {
     dateFormat: 'dd mmm yyyy',
-    showClearDateBtn: true,
+    showClearDateBtn: false,
     height: '30px',
     alignSelectorRight: true,
     openSelectorOnInputClick: true,

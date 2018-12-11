@@ -1,61 +1,61 @@
 
 export class ArrestLawGuitbase {
-    GuiltBaseID: number;
-    GuiltBaseName: string;
-    Fine: string;
-    IsProve: number;
-    Remark: string;
-    IsActive: number;
-    IsCompare: number;
-    SubSectionRuleID: number;
-    ArrestLawSubSectionRule: ArrestLawSubSectionRule[]
+    GuiltBaseID = 0;
+    GuiltBaseName = '';
+    Fine = '';
+    IsProve = 0;
+    Remark = '';
+    IsActive = 0;
+    IsCompare = 0;
+    SubSectionRuleID = 0;
+    ArrestLawSubSectionRule = new Array<ArrestLawSubSectionRule>()
 
-    RowId: number;
-    IsChecked: boolean;
+    RowId = 0;
+    IsChecked = false;
 }
 
 export class ArrestLawSubSectionRule {
-    SubSectionRuleID: number;
-    SubSectionID: number;
-    SectionNo: number;
-    IsActive: number;
-    ArrestLawSubSection: ArrestLawSubSection[];
-    ArrestLawSection: ArrestLawSection[];
+    SubSectionRuleID = 0;
+    SubSectionID = 0;
+    SectionNo = 0;
+    IsActive = 0;
+    ArrestLawSubSection = new Array<ArrestLawSubSection>();
+    ArrestLawSection = new Array<ArrestLawSection>();
 }
 
 export class ArrestLawSubSection {
-    SubSectionID: number;
-    SubSectionNo: number;
-    SubSectionType: string;
-    SubSectionDesc: string;
-    SectionNo: number;
-    IsActive: number;
+    SubSectionID = 0;
+    SubSectionNo = 0;
+    SubSectionType = '';
+    SubSectionDesc = '';
+    SectionNo = 0;
+    IsActive = 0;
 }
 
 export class ArrestLawSection {
-    SectionNo: number;
-    SectionName: string;
-    SectionDesc1: string;
-    LawGroupID: number;
-    IsActive: number;
-    SectionDesc2: string;
-    SectionDesc3: string;
-    ArrestLawPenalty: ArrestLawPenalty[]
+    SectionNo = 0;
+    SectionName = '';
+    SectionDesc1 = '';
+    LawGroupID = 0;
+    IsActive = 0;
+    SectionDesc2 = '';
+    SectionDesc3 = '';
+    ArrestLawPenalty = new Array<ArrestLawPenalty>()
 }
 
 export class ArrestLawPenalty {
-    PenaltyID: number;
-    SectionNo: number;
-    PenaltyDesc: string;
-    IsFinePrison: number;
-    IsFine: number;
-    FineRateMin: number;
-    FineRateMax: number;
-    FineMin: number;
-    FineMax: number;
-    IsImprison: number;
-    PrisonRateMin: string;
-    IsActive: number;
-    PrisonRateMax: number;
-    IsTaxPaid: number
+    PenaltyID = 0;
+    SectionNo = 0;
+    PenaltyDesc = '';
+    IsFinePrison = 0;
+    IsFine = 0;
+    FineRateMin = 0;
+    FineRateMax = 0;
+    FineMin = 0;
+    FineMax = 0;
+    IsImprison = 0;
+    PrisonRateMin = '';
+    IsActive = 0;
+    PrisonRateMax = 0;
+    IsTaxPaid = 0
 }

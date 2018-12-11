@@ -4,10 +4,14 @@ export class NoticeSuspect {
     public NoticeCode: string;
     public SuspectTitleName: string;
     public SuspectFirstName: string;
+    public SuspectMiddleName: string;
     public SuspectLastName: string;
     public CompanyTitleName: string;
     public CompanyName: string;
     public CompanyOtherName: string;
+    public CompanyRegistrationNo: string;
+    public IDCard:string;
+    public PassportNo:string;
     public IsActive: number;
 
     //--- Custom ---//
