@@ -1673,8 +1673,10 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 }
             })
 
-        let lawbreakerPromise = await this.modifyLawbreaker(arrestProductId);
-        return Promise.all([productPromise, lawbreakerPromise]);
+        // let lawbreakerPromise = ;
+        return Promise.all(productPromise).then(async () => {
+            await this.modifyLawbreaker(arrestProductId)
+        });
     }
 
     private async modifyLawbreaker(arrestProductId: any[]) {
@@ -1714,9 +1716,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 }
             })
 
-        let indictmentPromise = await this.modifyIndictment(arrestLawbreakerId, arrestProductId);
-
-        return Promise.all([lawbreakerPromise, indictmentPromise]);
+        return Promise.all(lawbreakerPromise).then(async () => {
+            await this.modifyIndictment(arrestLawbreakerId, arrestProductId);
+        });
     }
 
     private async modifyIndictment(arrestLawbreakerId: any[], arrestProductId: any[]) {
@@ -1895,18 +1897,18 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
 
                     case 'c':
-                        const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
+                        const productD = arrestProductId.find(pp => pp.ProductID == x.ProductID);
                         if (!apd) return;
-                        x.IndictmentDetailID = indictmentDetailID;
-                        x.ProductID = apd.ArrestProductID;
-                        await this.s_productDetail.ArrestProductDetailinsAll(x)
+                        apd.IndictmentDetailID = indictmentDetailID;
+                        apd.ProductID = productD.ArrestProductID;
+                        await this.s_productDetail.ArrestProductDetailinsAll(apd)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }).catch((error) => this.catchError(error));
                         break;
 
                     case 'u':
-                        await this.s_productDetail.ArrestProductDetailupdByCon(x)
+                        await this.s_productDetail.ArrestProductDetailupdByCon(apd)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }).catch((error) => this.catchError(error));
