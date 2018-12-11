@@ -1,3 +1,109 @@
-<p>
-  manage works!
-</p>
+<div class="card ">
+  <div class="card-header  unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">ข้อมูลส่วนบุคคล</h4>
+  </div>
+  <div class="card-body">
+    <div class="form-body">
+
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-4 control-label">Username :</label>
+        <div class="col-lg-4 col-md-7 col-sm-8 form-group">
+          <input type="text" class="form-control form-control-sm">
+        </div>
+        <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเจ้าพนักงาน :</label>
+        <div class="col-lg-4 col-md-7 col-sm-8 form-group">
+          <input type="text" class="form-control form-control-sm">
+        </div>
+      </div>
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
+        <div class="col-lg-4 col-md-7 col-sm-8 form-group">
+          <input type="text" class="form-control form-control-sm">
+        </div>
+        <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
+        <div class="col-lg-4 col-md-7 col-sm-8 form-group">
+          <input type="text" class="form-control form-control-sm">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card ">
+  <div class="card-header  unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">การจัดการสิทธิ์เข้าถึงข้อมูล</h4>
+  </div>
+
+  <div class="card-body">
+    <div class="form-body">
+      <div class="table-responsive table-striped ">
+        <table #fineTable class="table">
+          <thead>
+            <tr>
+              <th>การจัดการข้อมูล</th>
+              <th style="text-align:center;">สร้างข้อมูล</th>
+              <th style="text-align:center;">เรียกดูข้อมูล</th>
+              <th style="text-align:center;">แก้ไขข้อมูล</th>
+              <th style="text-align:center;">ลบข้อมูล</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of List; let i=index;">
+              <td>{{item.name}} </td>
+              <td style="text-align:center;">
+                <input type="checkbox" name="chk" id="chk{{i}}">
+                <label for="chk{{i}}"></label>
+              </td>
+              <td style="text-align:center;">
+                <input type="checkbox" name="chk1" id="chk1{{i}}">
+                <label for="chk1{{i}}"></label>
+              </td>
+              <td style="text-align:center;">
+                <input type="checkbox" name="chk2" id="chk2{{i}}">
+                <label for="chk2{{i}}"></label>
+              </td>
+              <td style="text-align:center;">
+                <input type="checkbox" name="chk3" id="chk3{{i}}">
+                <label for="chk3{{i}}"></label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table #fineTable class="table">
+          <thead>
+            <tr>
+              <th>การจัดการข้อมูล Master</th>
+              <th style="text-align:center;">สร้างข้อมูล</th>
+              <th style="text-align:center;">เรียกดูข้อมูล</th>
+              <th style="text-align:center;">แก้ไขข้อมูล</th>
+              <th style="text-align:center;">ลบข้อมูล</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of ListMaster; let x=index;">
+              <td>{{item.name}} </td>
+              <td style="text-align:center;">
+                  <input type="checkbox" name="chk4" id="chk4{{x}}">
+                  <label for="chk4{{x}}"></label>
+              </td>
+              <td style="text-align:center;">
+                  <input type="checkbox" name="chk5" id="chk5{{x}}">
+                  <label for="chk5{{x}}"></label>
+              </td>
+              <td style="text-align:center;">
+                  <input type="checkbox" name="chk6" id="chk6{{x}}">
+                  <label for="chk6{{x}}"></label>
+              </td>
+              <td style="text-align:center;">
+                  <input type="checkbox" name="chk7" id="chk7{{x}}">
+                  <label for="chk7{{x}}"></label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

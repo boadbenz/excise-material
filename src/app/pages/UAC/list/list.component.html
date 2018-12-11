@@ -1,1 +1,32 @@
+<div class="card">
+  <div class="card-body">
 
+    <div class="table-responsive table-striped ">
+      <table #fineTable class="table">
+        <thead>
+          <tr>
+            <th class="text-center">ลำดับ</th>
+            <th>ชื่อ</th>
+            <th>ตำแหน่ง</th>
+            <th>หน่วยงาน</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of List; let i=index;" (click)="clickView()">
+            <td style="text-align: center">{{i + 1}}</td>
+            <td>{{item.name}} </td>
+            <td>{{item.pName}}</td>
+            <td>{{item.offName}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer card-footer-unset">
+      <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+        [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+      </app-pagination-table>
+    </div>
+  </div>
+</div>

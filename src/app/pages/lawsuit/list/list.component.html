@@ -91,22 +91,22 @@
             <tbody>
               <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
                 <td class="text-center">{{ item.RowsId || '' }}</td>
-                <td>{{ item.ArrestCode || '' }}</td>
+                <td>{{ item.Lawsuit.ArrestCode || '' }}</td>
                 <td>{{
-                  item.LawsuitArrestIndicment[0].LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
+                  item.LawsuitArrestIndicment.LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
                   || '' }}</td>
-                <td>{{ checkNullLawsuitNo(item) || '' }}</td>
-                <td>{{ item.LawsuitDate || '' }}</td>
+                <td>{{ checkNullLawsuitNo(item.LawsuitArrestIndicment) || '' }}</td>
+                <td>{{ item.Lawsuit.LawsuitDate || '' }}</td>
                 <td>
-                  <div *ngIf="item.LawsuitArrestIndicment[0].Lawsuit[0]">
-                    <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
+                  <div *ngIf="item.LawsuitArrestIndicment.Lawsuit[0]">
+                    <div *ngFor="let staff of item.LawsuitArrestIndicment.Lawsuit[0].LawsuitStaff;">
                       {{ (staff.TitleName || '') + (staff.FirstName || '') + ' ' + (staff.LastName || '')}}
                     </div>
                   </div>
                 </td>
                 <td>
-                  <div *ngIf="item.LawsuitArrestIndicment[0].Lawsuit[0]">
-                    <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
+                  <div *ngIf="item.LawsuitArrestIndicment.Lawsuit[0]">
+                    <div *ngFor="let staff of item.LawsuitArrestIndicment.Lawsuit[0].LawsuitStaff;">
                       {{ (staff.OfficeShortName || '') }}
                     </div>
                   </div>

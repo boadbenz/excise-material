@@ -28,13 +28,13 @@ export class ArrestLawbreakerService {
     ArrestLawbreakerupdByCon(ArrestLawbreaker: ArrestLawbreaker) {
         const params = ArrestLawbreaker;
         const url = `${appConfig.api7788}/ArrestLawbreakerupdByCon`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     ArrestLawbreakerupdDelete(LawbreakerID: string) {
         const params = { LawbreakerID };
         const url = `${appConfig.api7788}/ArrestLawbreakerupdDelete`;
-        return this.http.post(url, params).map(x => x.json());
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     ArrestMasLawbreakergetByCon(LawbreakerID: string) {

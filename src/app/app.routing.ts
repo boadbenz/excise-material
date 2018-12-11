@@ -55,7 +55,7 @@ export const routes: Routes = [
         path: 'uac', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/UAC/list/list.module#ListModule' },
-            { path: 'manage/:mode', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
+            { path: 'manage', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
         ]
     }, 
     // {
