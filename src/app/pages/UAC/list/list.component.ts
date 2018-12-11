@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { pagination } from '../../../config/pagination';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -11,28 +12,18 @@ import { pagination } from '../../../config/pagination';
 export class ListComponent implements OnInit {
 
   paginage = pagination;
-  List: any = [{"name":"นาย อนันชพงศ์ เอี่ยมสำอางค์","pName":"เจ้าพนักงานสรรพสามิตปฏิบัติงาน","offName":"สสพ.ชุมพร"}];
+  // Compare = new Array<Compare>();
+  List: any = [{ "name": "นาย อนันชพงศ์ เอี่ยมสำอางค์", "pName": "เจ้าพนักงานสรรพสามิตปฏิบัติงาน", "offName": "สสพ.ชุมพร" },
+                { "name": "นางสาว นุชนาถ ธรรมโชติ", "pName": "เจ้าพนักงานสรรพสามิตปฏิบัติงาน", "offName": "สสภ.9" }];
   // advSearch: any;
-  constructor() { }
-  onSearchComplete(list: any) {
+  constructor(private router: Router) { }
 
-    this.List = list.map((item, i) => {
-        // item.RowsId = i + 1;
-        // try {
-          
-        // } catch (error) {
+  async pageChanges(event) { }
 
-        // }
-
-        return item;
-      });   
-    this.paginage.TotalItems = this.List.length;
-}
-  ngOnInit() {
-    // this.advSearch.next(true);
+  clickView() {
+      this.router.navigate([`/uac/manage`]); 
   }
-  ngOnDestroy() {
-    // this.advSearch = false;
-}
+  ngOnInit() { }
+  ngOnDestroy() { }
 
 }

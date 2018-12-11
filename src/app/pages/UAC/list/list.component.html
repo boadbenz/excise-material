@@ -1,65 +1,32 @@
 <div class="card">
-    <div class="card-body">
-  
-      <div class="table-responsive table-striped ">
-        <table #fineTable class="table">
-          <thead>
-            <tr>
-              <!-- <th class="text-center">ลำดับ</th>
-              <th>เลขที่ใบงาน</th>
-              <th style="text-align: center">เลขที่คดีรับคำกล่าว</th>
-              <th>ทะเบียนตรวจพิสูจน์</th>
-              <th style="text-align: center">เลขที่เปรียบเทียบคดี</th>
-              <th>ผู้เปรียบเทียบคดี</th>
-              <th style="text-align: center">วันที่เปรียบเทียบคดี</th>
-              <th>หน่วยงาน</th>
-              <th></th> -->
-              <th class="text-center">ลำดับ</th>
-              <th >ชื่อ</th>
-              <th >ตำแหน่ง</th>
-              <th>หน่วยงาน</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-              <tr>
-                  <td style="text-align: center">1</td>
-                  <td>นาย อนันชพงศ์ เอี่ยมสำอางค์</td>
-                  <td>เจ้าพนักงานสรรพสามิตปฏิบัติงาน</td>
-                  <td>สสพ.ชุมพร</td>
-              </tr>
-            <!-- <tr *ngFor="let item of CompareList; let i=index;">
-              <td style="text-align: center">{{i + 1}}</td>
-              <td>{{item}}</td>
-              <td style="text-align: center">
-                <div *ngIf="item.IsOutside == 1">น {{item.LawsuitNo}}</div>
-                <div *ngIf="item.IsOutside != 1">{{item.LawsuitNo}}</div>
-              </td>
-              <td>{{item.ProveReportNo}}</td>
-              <td style="text-align: center">
-                <div *ngIf="item.IsOutside == 1; else notOutside">น {{item.CompareCode}}</div>
-                <ng-template #notOutside>{{item.CompareCode}}</ng-template>
-              </td>
-              <td>{{item.TitleName}}{{item.FirstName}} {{item.LastName}}</td>
-              <td style="text-align: center">{{item.CompareDate}}</td>
-              <td>{{item.OfficeShortName}}</td>
-              <td class="text-center">
-                <a href="javaScript:void(0);" class="text-secondary">
-                  <i class="mdi mdi-eye fa-lg"></i>
-                </a>
-              </td>
-            </tr> -->
-          </tbody>
-        </table>
-      </div>
-  
-      <div class="card-footer card-footer-unset">
-        <!-- <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
-          [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
-        </app-pagination-table> -->
-        <!-- <app-pagination-table [TotalItems]="paginage.TotalItems" (onPageChange)="pageChanges($event)"> -->
-        </app-pagination-table>
-      </div>
+  <div class="card-body">
+
+    <div class="table-responsive table-striped ">
+      <table #fineTable class="table">
+        <thead>
+          <tr>
+            <th class="text-center">ลำดับ</th>
+            <th>ชื่อ</th>
+            <th>ตำแหน่ง</th>
+            <th>หน่วยงาน</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of List; let i=index;" (click)="clickView()">
+            <td style="text-align: center">{{i + 1}}</td>
+            <td>{{item.name}} </td>
+            <td>{{item.pName}}</td>
+            <td>{{item.offName}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer card-footer-unset">
+      <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+        [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+      </app-pagination-table>
     </div>
   </div>
-  
+</div>

@@ -1,3 +1,66 @@
-<p>
-  manage works!
-</p>
+<div class="card ">
+  <div class="card-header  unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">ข้อมูลส่วนบุคคล</h4>
+  </div>
+  <div class="card-body">
+    <div class="form-body">
+
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-4 control-label">Username :</label>
+        <div class="col-lg-4 col-md-7 col-sm-8 form-group">
+          <input type="text" class="form-control form-control-sm">
+        </div>
+        <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเจ้าพนักงาน :</label>
+        <div class="col-lg-4 col-md-7 col-sm-8 form-group">
+          <input type="text" class="form-control form-control-sm">
+        </div>
+      </div>
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
+        <div class="col-lg-4 col-md-7 col-sm-8 form-group">
+          <input type="text" class="form-control form-control-sm">
+        </div>
+        <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
+        <div class="col-lg-4 col-md-7 col-sm-8 form-group">
+          <input type="text" class="form-control form-control-sm">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card ">
+  <div class="card-header  unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">การจัดการสิทธิ์เข้าถึงข้อมูล</h4>
+  </div>
+  <div class="card-body">
+    <div class="form-body">
+      <div class="table-responsive table-striped ">
+        <table #fineTable class="table">
+          <thead>
+            <tr>
+              <th>การจัดการข้อมูล</th>
+              <th style="text-align:center;">สร้างข้อมูล</th>
+              <th style="text-align:center;">เรียกดูข้อมูล</th>
+              <th style="text-align:center;">แก้ไขข้อมูล</th>
+              <th style="text-align:center;">ลบข้อมูล</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of List; let i=index;">
+               <td>{{item.name}} </td>
+                <td style="text-align:center;">
+                    <input type="checkbox" name="myTextEditBox" value="checked" />
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

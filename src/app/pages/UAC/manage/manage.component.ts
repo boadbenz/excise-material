@@ -10,6 +10,17 @@ export class ManageComponent implements OnInit {
 
   constructor() { }
 
+  List: any = [ { "name": "test" },
+                { "name": "test" },
+                { "name": "test" },
+                { "name": "test" },
+                { "name": "test" },
+                { "name": "test" },
+                { "name": "test" },
+                { "name": "test" },
+               
+              ];
+
   ngOnInit() {
   }
 
