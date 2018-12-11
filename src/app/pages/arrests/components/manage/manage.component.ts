@@ -1674,7 +1674,14 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     private async modifyIndictment(arrestLawbreakerId: any[]) {
         let indictmentPromise = await this.ArrestIndictment.value
             .map(async (x: fromModels.ArrestIndictment) => {
+                let newIndictment = new fromModels.ArrestIndictment;
                 x.ArrestCode = this.arrestCode;
+                newIndictment.ArrestCode = x.ArrestCode;
+                newIndictment.GuiltBaseID = x.GuiltBaseID;
+                newIndictment.IsProve = x.IsProve || 1;
+                newIndictment.IsActive = x.IsActive || 1;
+                newIndictment.IsLawsuitComplete = x.IsLawsuitComplete || 0;
+
                 switch (x.IsModify) {
                     case 'd':
                         await this.s_indictment.ArrestIndictmentupdDelete(x.IndictmentID.toString())
@@ -1684,7 +1691,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
 
                     case 'c':
-                        await this.s_indictment.ArrestIndictmentinsAll(x)
+                        await this.s_indictment.ArrestIndictmentinsAll(newIndictment)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                                 x.IndictmentID = y.IndictmentID;
@@ -1693,7 +1700,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
 
                     case 'u':
-                        await this.s_indictment.ArrestIndictmentupdByCon(x)
+                        await this.s_indictment.ArrestIndictmentupdByCon(newIndictment)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             })
@@ -1720,7 +1727,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 product.push(productIsChecked);
 
                 if (lawbreakerIsChecked.length == 1) {
-                    console.log('ArrestIndicmentDetail :', JSON.stringify(x));
                     x.IndictmentID = indictmentID;
                     switch (isModify) {
                         case 'd':
@@ -1733,6 +1739,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         case 'c':
                             // set LawbreakerID ที่ได้จากการบันทึก ArrestLawbreakerinsAll
                             x.LawbreakerID = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID).ArrestLawbreakerID;
+                            console.log('ArrestIndicmentDetail :', JSON.stringify(x));
                             this.s_indictmentDetail.ArrestIndicmentDetailinsAll(x)
                                 .then(y => {
                                     if (!this.checkIsSuccess(y)) return;
