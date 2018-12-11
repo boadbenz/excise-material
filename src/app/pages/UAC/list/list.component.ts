@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
+import { pagination } from '../../../config/pagination';
 
 @Component({
   selector: 'app-list',
@@ -8,22 +9,25 @@ import { NavigationService } from 'app/shared/header-navigation/navigation.servi
   encapsulation: ViewEncapsulation.Emulated
 })
 export class ListComponent implements OnInit {
-  // advSearch: any;
-  constructor(private navService: NavigationService) { 
-     // set false
-    //  this.navService.setEditButton(false);
-    //  this.navService.setDeleteButton(false);
-    //  this.navService.setPrintButton(false);
-    //  this.navService.setSaveButton(false);
-    //  this.navService.setCancelButton(false);
-    //  this.navService.setNextPageButton(false);
-    //  this.navService.setPrevPageButton(false);
-     // set true
-    //  this.navService.setSearchBar(true);
-    //  this.navService.setNewButton(true);
-    //  this.advSearch = this.navService.showAdvSearch;
-  }
 
+  paginage = pagination;
+  List: any = [{"name":"นาย อนันชพงศ์ เอี่ยมสำอางค์","pName":"เจ้าพนักงานสรรพสามิตปฏิบัติงาน","offName":"สสพ.ชุมพร"}];
+  // advSearch: any;
+  constructor() { }
+  onSearchComplete(list: any) {
+
+    this.List = list.map((item, i) => {
+        // item.RowsId = i + 1;
+        // try {
+          
+        // } catch (error) {
+
+        // }
+
+        return item;
+      });   
+    this.paginage.TotalItems = this.List.length;
+}
   ngOnInit() {
     // this.advSearch.next(true);
   }
