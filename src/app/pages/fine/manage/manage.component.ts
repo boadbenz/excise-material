@@ -24,13 +24,14 @@ import { ArrestStaff } from '../../model/arrest-staff';
 import { isNgTemplate } from '@angular/compiler';
 import { async } from 'q';
 import { isArray } from 'jquery';
-import { FormGroup, FormControl, NgForm } from '@angular/forms';
+import { FormGroup, FormControl, NgForm, FormArray, FormBuilder } from '@angular/forms';
 import { IMyDpOptions, IMyDate } from 'mydatepicker';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { toLocalShort } from 'app/config/dateFormat';
 import Swal from 'sweetalert2'
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import swal from 'sweetalert2';
+import { replaceFakePath } from 'app/config/dataString';
 
 @Component({
   selector: 'app-manage',
@@ -41,6 +42,18 @@ export class ManageComponent implements OnInit, OnDestroy {
   isEditMode: any = {};
   IsOutside: number;
   OnSubscribe: any = {};
+  compareForm: FormGroup;
+  compareDocument: any = {
+    DocumentID: '',
+    DocumentName: '',
+    ReferenceCode: '',
+    FilePath: '',
+    DataSource: '',
+
+    // --- Custom --- //
+    IsNewItem: false,
+    IsActive: 1,
+}
   // Html
   modal: any;
   @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -96,6 +109,11 @@ export class ManageComponent implements OnInit, OnDestroy {
   formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`;
   isReportNo: any = false;
+
+  get CompareDocument(): FormArray {
+    return this.compareForm.get('CompareDocument') as FormArray;
+  }
+
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -106,7 +124,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     private router: Router,
     private preloader: PreloaderService,
     private sidebarService: SidebarService,
-    private masDocumentMainService: MasDocumentMainService
+    private masDocumentMainService: MasDocumentMainService,
+    private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
     this.sidebarService.setVersion('0.0.0.25');
@@ -807,7 +826,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               'ไม่พบข้อมูลผู้ต้องหา.',
               'error'
             );
-            this.router.navigate([`/fine/list`]);
+            // this.router.navigate([`/fine/list`]);
           } else {
             CompareDetail.LawbreakerName = LawBreaker ? `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}` : '';
             const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
@@ -1424,8 +1443,16 @@ export class ManageComponent implements OnInit, OnDestroy {
   handleFileInput(files: any) {
     // this.fileToUpload = files.item(0);
     console.log(files);
+    const fileData: any = this.jsonCopy(this.compareDocument);
+    fileData.DocumentName = files.target.files.item(0).name;
+    fileData.IsNewItem = true;
+    fileData.FilePath = replaceFakePath(files.target.value);
+    fileData.DocumentID = this.filePath.length;
+    fileData.CompareCode = this.params.CompareCode;
+    fileData.IsActive = 1;
     this.AllAddFiles.push(files.target.files.item(0));
     this.filePath.push({path: files.target.value, name: files.target.files.item(0).name });
+    
   }
   async deleteFile(id: any, index: any) {
     Swal({
@@ -1991,4 +2018,38 @@ export class ManageComponent implements OnInit, OnDestroy {
       return false;
     }
   }
+  addDocument() {
+    const lastIndex = this.compareDocument.length - 1;
+    let document = this.compareDocument;
+    document.DocumentID = ""+(lastIndex + 1);
+    document.DocumentName = "";
+    document.FilePath = "";
+    document.IsNewItem = true;
+    if (lastIndex < 0) {
+        this.compareDocument.push(this.fb.group(document));
+    } else {
+        const lastDoc = this.compareDocument.at(lastIndex).value;
+        if (lastDoc.DocumentName && lastDoc.FilePath) {
+            this.compareDocument.push(this.fb.group(document));
+        }
+    }
+  }
+  changeNoticeDoc(e: any, index: number) {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        let dataSource = reader.result.toString().split(',')[1];
+        if (dataSource && dataSource !== undefined) {
+            this.compareDocument.at(index).patchValue({
+                ReferenceCode: this.params.CompareID,
+                FilePath: replaceFakePath(e.target.value),
+                DataSource: dataSource,
+                IsActive: 1
+            })
+        }
+    };
+  }
+  documentId:any = "";
+  documentIndex:any = "";
 }
