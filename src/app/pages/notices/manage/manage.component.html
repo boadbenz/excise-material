@@ -68,7 +68,7 @@
                             {{ r.OfficeName }}
                         </ng-template>
     
-                        <input type="text" class="form-control form-control-sm "
+                        <input type="text" class="form-control form-control-sm {{!noticeForm.get('NoticeStation').value?'ng-invalid ng-touched':''}}"
                             [ngClass]="{'ng-touched':isRequired}"
                             required
                             [ngbTypeahead]="serachOffice"
@@ -93,7 +93,7 @@
                             {{ r.TitleName}} {{r.FirstName}} {{r.LastName}}
                         </ng-template>
     
-                        <input type="text" class="form-control form-control-sm"
+                        <input type="text" class="form-control form-control-sm {{!item.value.StaffFullName?'ng-invalid ng-touched':''}}"
                             [ngbTypeahead]="searchStaff"
                             [resultTemplate]="rt"
                             [readOnly]="showEditField"
@@ -292,7 +292,7 @@
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
-                        <input type="text" class="form-control form-control-sm"
+                        <input type="text" class="form-control form-control-sm {{!item.get('Region').value?'ng-invalid ng-touched':''}}"
                             [ngbTypeahead]="searchRegion"
                             [readOnly]="showEditField"
                             [resultTemplate]="rt"
@@ -337,7 +337,6 @@
                         <td class="text-center">{{i+1}}</td>
                         <td>
                             <ng-template #rt let-r="result" let-t="term">
-                                <!-- {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}} -->
                                 {{r.ProductDesc}} 
                             </ng-template>
                             <input type="text" class="form-control form-control-sm"
@@ -533,6 +532,15 @@
   cancelButtonText="OK"
   cancelButtonClass="swal2-confirm"
   [focusCancel]="true">
+</swal>
+
+<swal
+  #deleteNotice
+  text=""
+  type="question"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="onDelete()">
 </swal>
 
 <swal
