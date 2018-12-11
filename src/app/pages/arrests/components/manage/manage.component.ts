@@ -32,7 +32,7 @@ import { ManageConfig } from './manage.config';
 import swal from 'sweetalert2';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
-import { groupArrayItem, removeObjectItem } from '../../arrest.helper';
+import { groupArrayItem, removeObjectItem, clearFormArray } from '../../arrest.helper';
 import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
 
 @Component({
@@ -1405,6 +1405,14 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         swal('', Message.saveComplete, 'success');
         switch (this.mode) {
             case 'C':
+                this.arrestFG.reset();
+                clearFormArray(this.ArrestNotice);
+                clearFormArray(this.ArrestStaff);
+                clearFormArray(this.ArrestProduct);
+                clearFormArray(this.ArrestLawbreaker);
+                clearFormArray(this.ArrestIndictment);
+                clearFormArray(this.ArrestDocument);
+
                 this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
                 break;
 
