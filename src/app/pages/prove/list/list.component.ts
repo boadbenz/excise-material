@@ -64,7 +64,7 @@ export class ListComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Prove 0.0.0.22');
+        this.sidebarService.setVersion('Prove 0.0.0.23');
 
         //this.advSearch.next(true);
         this.DeliveryDateTo = null;
