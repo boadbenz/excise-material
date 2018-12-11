@@ -125,7 +125,6 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
   }
 
   close(e: any) {
-    debugger
     let law = this.Lawbreaker.value
       .filter(x => x.IsChecked == Acceptability.ACCEPTABLE)
 

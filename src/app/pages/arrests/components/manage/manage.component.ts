@@ -34,6 +34,7 @@ import { TransactionRunningService } from 'app/services/transaction-running.serv
 import { TransactionRunning } from 'app/models/transaction-running.model';
 import { groupArrayItem, removeObjectItem, clearFormArray } from '../../arrest.helper';
 import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
+import { Acceptability } from '../../models';
 
 @Component({
     selector: 'app-manage',
@@ -68,6 +69,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     dateStartFrom: any;
     dateStartTo: any;
+    ACCEPTABILITY = Acceptability;
 
     documentType = '3';
     runningTable = 'ops_arrest';
@@ -618,7 +620,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             ai.ArrestIndicmentDetail.map(aid => {
                 aid.ArrestLawbreaker
                     .filter(al => al.LawbreakerID == aid.LawbreakerID && aid.IndictmentDetailID != null)
-                    .map(al => al.IsChecked = true);
+                    .map(al => al.IsChecked = Acceptability.INACCEPTABLE);
                 aid.ArrestProductDetail
                     .filter(apd => apd.IndictmentDetailID == aid.IndictmentDetailID)
                     .map(apd => apd.IsChecked = true);
@@ -1868,21 +1870,21 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         let promise = indictmentDetail.ArrestProductDetail
             .filter(x => x.IsChecked)
             .map(async (x) => {
-                // let apd = new fromModels.ArrestProductDetail();
-                // apd.ProductID = x.ProductID;
-                // apd.ProductDetailID = x.ProductDetailID;
-                // apd.IsProdcutCo = x.IsProdcutCo;
-                // apd.Qty = x.Qty;
-                // apd.QtyUnit = x.QtyUnit;
-                // apd.Size = x.Size;
-                // apd.SizeUnit = x.SizeUnit;
-                // apd.Volume = x.Volume;
-                // apd.VolumeUnit = x.VolumeUnit;
-                // apd.MistreatRate = x.MistreatRate;
-                // apd.Fine = x.Fine;
-                // apd.IndictmentDetailID = indictmentDetailID;
-                // apd.ProductDesc = x.ProductDesc;
-                // apd.IsActive = x.IsActive || 1;
+                let apd = new fromModels.ArrestProductDetail();
+                apd.ProductID = x.ProductID;
+                apd.ProductDetailID = x.ProductDetailID;
+                apd.IsProdcutCo = x.IsProdcutCo;
+                apd.Qty = x.Qty;
+                apd.QtyUnit = x.QtyUnit;
+                apd.Size = x.Size;
+                apd.SizeUnit = x.SizeUnit;
+                apd.Volume = x.Volume;
+                apd.VolumeUnit = x.VolumeUnit;
+                apd.MistreatRate = x.MistreatRate;
+                apd.Fine = x.Fine;
+                apd.IndictmentDetailID = indictmentDetailID;
+                apd.ProductDesc = x.ProductDesc;
+                apd.IsActive = x.IsActive || 1;
 
                 switch (isModify) {
                     case 'd':
