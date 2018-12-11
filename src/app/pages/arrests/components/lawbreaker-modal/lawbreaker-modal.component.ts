@@ -6,10 +6,10 @@ import { Message } from 'app/config/message';
 import { ArrestLawbreakerAllegation, ArrestLawbreaker } from '../../models/arrest-lawbreaker';
 import * as fromService from '../../services'
 import * as fromModel from '../../models';
-import { Acceptability } from '../../models/acceptability';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import swal from 'sweetalert2'
+import { Acceptability } from '../../models';
 
 @Component({
   selector: 'app-lawbreaker-modal',
@@ -19,14 +19,14 @@ import swal from 'sweetalert2'
 export class LawbreakerModalComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
-  
-  ACCEPTABILITY = Acceptability;
 
   constructor(
     private fb: FormBuilder,
     private s_masLawbreaker: fromService.ArrestMasLawbreakerService,
   ) {
   }
+
+  ACCEPTABILITY = Acceptability;
 
   paginage = pagination;
   lawbreakerType = LawbreakerTypes;
@@ -125,7 +125,6 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
   }
 
   close(e: any) {
-    // let law = this.Lawbreaker;
     let law = this.Lawbreaker.value
       .filter(x => x.IsChecked == Acceptability.ACCEPTABLE)
 

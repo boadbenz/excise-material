@@ -34,6 +34,7 @@ import { TransactionRunningService } from 'app/services/transaction-running.serv
 import { TransactionRunning } from 'app/models/transaction-running.model';
 import { groupArrayItem, removeObjectItem, clearFormArray } from '../../arrest.helper';
 import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
+import { Acceptability } from '../../models';
 
 @Component({
     selector: 'app-manage',
@@ -68,6 +69,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     dateStartFrom: any;
     dateStartTo: any;
+    ACCEPTABILITY = Acceptability;
 
     documentType = '3';
     runningTable = 'ops_arrest';
@@ -609,16 +611,30 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         }
 
         if (!_indict.length) return;
-        this.pageRefeshLawbreaker(_indict);
+
+        let _ALawbreaker = [];
+        _indict.map(ai => {
+            // ดึงข้อมูล ArrestLawbreaker จาก ArrestIndictment -> ArrestIndictmentDetail -> ArrestLawbreaker
+            ai.ArrestIndicmentDetail.map(aid => {
+                aid.ArrestLawbreaker
+                    .filter(al => al.LawbreakerID == aid.LawbreakerID && aid.IndictmentDetailID != null)
+                    .map(al => {
+                        _ALawbreaker.push(al);
+                        al.IsChecked = Acceptability.INACCEPTABLE
+                    });
+                aid.ArrestProductDetail
+                    .filter(apd => apd.IndictmentDetailID == aid.IndictmentDetailID)
+                    .map(apd => apd.IsChecked = true);
+            })
+        });
+        this.pageRefeshLawbreaker(_ALawbreaker);
         this.setArrestIndictment(_indict, null);
     }
 
-    pageRefeshLawbreaker(_indict: fromModels.ArrestIndictment[]) {
-        let _ALawbreaker = [];
-        // ดึงข้อมูล ArrestLawbreaker จาก ArrestIndictment -> ArrestIndictmentDetail -> ArrestLawbreaker
-        _indict.map(x => _ALawbreaker.push(...x.ArrestIndicmentDetail[0].ArrestLawbreaker))
+    pageRefeshLawbreaker(_ALawbreaker: fromModels.ArrestLawbreaker[]) {
         // Group รายการที่ซ้ำกัน
         _ALawbreaker = groupArrayItem(_ALawbreaker, 'LawbreakerID');
+
         _ALawbreaker.map(al => {
             al = setViewLawbreaker(al);
             this.addArrestLawbreaker(al)
@@ -911,13 +927,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         o.map(x => { arr.push(this.groupArrestIndictmentDetail(x)) })
         return arr;
     }
-    private groupArrestIndictmentDetail = (x) => {
-        x.ArrestLawbreaker
-            .filter(al => al.LawbreakerID == x.LawbreakerID && x.IndictmentDetailID != null)
-            .map(al => al.IsChecked = true);
-        x.ArrestProductDetail
-            .filter(apd => apd.IndicmentDetailID == x.IndicmentDetailID)
-            .map(apd => apd.IsChecked = true);
+    private groupArrestIndictmentDetail = (x: fromModels.ArrestIndictmentDetail) => {
         return this.fb.group({
             IndictmentDetailID: x.IndictmentDetailID || null,
             IndictmentID: x.IndictmentID || null,
@@ -962,6 +972,8 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         if (Array.isArray(o) && o.length) {
             o.map(x => arr.push(this.groupArrestProductDetail(x)))
         }
+        console.log(arr);
+
         return arr;
     }
     private groupArrestProductDetail = (x: fromModels.ArrestProductDetail) => {
@@ -1413,7 +1425,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 clearFormArray(this.ArrestIndictment);
                 clearFormArray(this.ArrestDocument);
 
-                this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
+                setTimeout(() => {
+                    this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
+                }, 200);
                 break;
 
             case 'R':
@@ -1431,15 +1445,19 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     private async revised() {
         this.loaderService.show();
-        Promise.all([
-            await this.upateArrest(),
-            await this.modifyNotice(),
-            await this.modifyStaff(),
-            await this.modifyProduct(),
-            await this.modifyLawbreaker(),
-            // await this.modifyIndictment(),
-            await this.modifyDocument()
-        ])
+        try {
+            Promise.all([
+                await this.upateArrest(),
+                await this.modifyNotice(),
+                await this.modifyStaff(),
+                await this.modifyProduct(),
+                // await this.modifyLawbreaker(),
+                // await this.modifyIndictment(),
+                await this.modifyDocument()
+            ])
+        } catch (error) {
+        }
+
         this.onComplete();
         this.loaderService.hide();
     }
@@ -1481,15 +1499,19 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         }
 
         if (this.arrestCode != 'NEW') {
-            Promise.all([
-                await this.insertArrest(),
-                await this.modifyNotice(),
-                await this.modifyStaff(),
-                await this.modifyProduct(),
-                await this.modifyLawbreaker(),
-                // await this.modifyIndictment(),
-                await this.modifyDocument()
-            ])
+            try {
+                Promise.all([
+                    await this.insertArrest(),
+                    await this.modifyNotice(),
+                    await this.modifyStaff(),
+                    await this.modifyProduct(),
+                    // await this.modifyLawbreaker(),
+                    // await this.modifyIndictment(),
+                    await this.modifyDocument()
+                ])
+            } catch (error) {
+
+            }
         }
     }
 
@@ -1619,6 +1641,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private async modifyProduct() {
+        let arrestProductId = [];
         let productPromise = await this.ArrestProduct.value
             .map(async (x: fromModels.ArrestProduct) => {
                 x.ProductDesc = this.isObject(x.ProductDesc) ? x.ProductDesc['ProductDesc'] : x.ProductDesc;
@@ -1635,6 +1658,10 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         await this.s_product.ArrestProductinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
+                                arrestProductId.push({
+                                    ProductID: x.ProductID,
+                                    ArrestProductID: y.ProductID
+                                })
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
                         break;
@@ -1647,10 +1674,14 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
                 }
             })
-        return Promise.all(productPromise);
+
+        // let lawbreakerPromise = ;
+        return Promise.all(productPromise).then(async () => {
+            await this.modifyLawbreaker(arrestProductId)
+        });
     }
 
-    private async modifyLawbreaker() {
+    private async modifyLawbreaker(arrestProductId: any[]) {
         let arrestLawbreakerId = [];
         let lawbreakerPromise = await this.ArrestLawbreaker.value
             .map(async (x: fromModels.ArrestLawbreaker, i) => {
@@ -1687,12 +1718,12 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 }
             })
 
-        let indictmentPromise = await this.modifyIndictment(arrestLawbreakerId);
-
-        return Promise.all([lawbreakerPromise, indictmentPromise]);
+        return Promise.all(lawbreakerPromise).then(async () => {
+            await this.modifyIndictment(arrestLawbreakerId, arrestProductId);
+        });
     }
 
-    private async modifyIndictment(arrestLawbreakerId: any[]) {
+    private async modifyIndictment(arrestLawbreakerId: any[], arrestProductId: any[]) {
         let indictmentPromise = await this.ArrestIndictment.value
             .map(async (x: fromModels.ArrestIndictment) => {
                 let newIndictment = new fromModels.ArrestIndictment;
@@ -1730,13 +1761,21 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 }
 
                 return Promise.all([
-                    await this.modifyIndictmentDetail(x.IndictmentID, arrestLawbreakerId, x.ArrestIndicmentDetail, x.IsModify)
+                    await this.modifyIndictmentDetail(
+                        x.IndictmentID, arrestLawbreakerId, arrestProductId,
+                        x.ArrestIndicmentDetail, x.IsModify)
                 ])
             })
         return Promise.all(indictmentPromise);
     }
 
-    private async modifyIndictmentDetail(indictmentID: number, arrestLawbreakerId: any[], indictmentDetail: fromModels.ArrestIndictmentDetail[], isModify: string) {
+    private async modifyIndictmentDetail(
+        indictmentID: number,
+        arrestLawbreakerId: any[],
+        arrestProductId: any[],
+        indictmentDetail: fromModels.ArrestIndictmentDetail[],
+        isModify: string
+    ) {
         let product = []
         // IndictmentDetail
         let promises = indictmentDetail
@@ -1759,8 +1798,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                         case 'c':
                             // set LawbreakerID ที่ได้จากการบันทึก ArrestLawbreakerinsAll
-                            x.LawbreakerID = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID).ArrestLawbreakerID;
-                            console.log('ArrestIndicmentDetail :', JSON.stringify(x));
+                            const lid = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID);
+                            if (!lid) return;
+                            x.LawbreakerID = lid.ArrestLawbreakerID;
                             this.s_indictmentDetail.ArrestIndicmentDetailinsAll(x)
                                 .then(y => {
                                     if (!this.checkIsSuccess(y)) return;
@@ -1777,22 +1817,30 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     }
                 }
 
-                return Promise.all([this.modifyProductDetail(x.IndictmentDetailID, x, isModify)])
+                return Promise.all([this.modifyProductDetail(x.IndictmentDetailID, arrestProductId, x, isModify)])
             })
 
         // IndictmentProduct
         // Group รายการที่ซ้ำ
         let _product = groupArrayItem(product, 'ProductID')
-        let promiseIndictmentProduct = await this.modifyIndictmentProduct(indictmentID, _product, isModify);
+        let promiseIndictmentProduct = await this.modifyIndictmentProduct(indictmentID, arrestProductId, _product, isModify);
 
         return Promise.all([promises, promiseIndictmentProduct]);
     }
 
-    private async modifyIndictmentProduct(indictmentId: number, pd: fromModels.ArrestProductDetail[], isModify: string) {
+    private async modifyIndictmentProduct(
+        indictmentId: number,
+        arrestProductId: any[],
+        pd: fromModels.ArrestProductDetail[],
+        isModify: string
+    ) {
         let promises = pd.map(async (x, i) => {
             let p = new fromModels.ArrestIndictmentProduct();
+            const apd = arrestProductId.find(pp => pp.ProductID == x[i].ProductID);
+            if (!apd) return;
+
             p.IndictmentID = indictmentId;
-            p.ProductID = x[i].ProductID;
+            p.ProductID = apd.ArrestProductID;
             p.IsProdcutCo = '1';
             p.IndictmentProductQty = x[i].Qty || '0';
             p.IndictmentProductQtyUnit = x[i].QtyUnit || '-';
@@ -1817,12 +1865,31 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         return Promise.all(promises);
     }
 
-    private async modifyProductDetail(indictmentDetailID: number, indictmentDetail: fromModels.ArrestIndictmentDetail, isModify: string) {
+    private async modifyProductDetail(
+        indictmentDetailID: number,
+        arrestProductId: any[],
+        indictmentDetail: fromModels.ArrestIndictmentDetail,
+        isModify: string
+    ) {
         let promise = indictmentDetail.ArrestProductDetail
             .filter(x => x.IsChecked)
             .map(async (x) => {
-                x.IndictmentDetailID = indictmentDetailID;
-                debugger
+                let apd = new fromModels.ArrestProductDetail();
+                apd.ProductID = x.ProductID;
+                apd.ProductDetailID = x.ProductDetailID;
+                apd.IsProdcutCo = x.IsProdcutCo;
+                apd.Qty = x.Qty;
+                apd.QtyUnit = x.QtyUnit;
+                apd.Size = x.Size;
+                apd.SizeUnit = x.SizeUnit;
+                apd.Volume = x.Volume;
+                apd.VolumeUnit = x.VolumeUnit;
+                apd.MistreatRate = x.MistreatRate;
+                apd.Fine = x.Fine;
+                apd.IndictmentDetailID = indictmentDetailID;
+                apd.ProductDesc = x.ProductDesc;
+                apd.IsActive = x.IsActive || 1;
+
                 switch (isModify) {
                     case 'd':
                         await this.s_productDetail.ArrestProductDetailupdDelete(x.ProductID.toString())
@@ -1832,14 +1899,18 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
 
                     case 'c':
-                        await this.s_productDetail.ArrestProductDetailinsAll(x)
+                        const productD = arrestProductId.find(pp => pp.ProductID == x.ProductID);
+                        if (!apd) return;
+                        apd.IndictmentDetailID = indictmentDetailID;
+                        apd.ProductID = productD.ArrestProductID;
+                        await this.s_productDetail.ArrestProductDetailinsAll(apd)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }).catch((error) => this.catchError(error));
                         break;
 
                     case 'u':
-                        await this.s_productDetail.ArrestProductDetailupdByCon(x)
+                        await this.s_productDetail.ArrestProductDetailupdByCon(apd)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             }).catch((error) => this.catchError(error));
