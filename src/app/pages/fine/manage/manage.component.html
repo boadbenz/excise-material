@@ -618,27 +618,13 @@
           </td>
           <td>
             <input class="form-control" type="text" name="filePath" [(ngModel)]="item.path"
-                   [disabled]="showEditField">
+                   [disabled]="true">
           </td>
           <td>
             <i class="ti-trash btn-action" [hidden]="showEditField"
                (click)="deleteFile(item.DocumentID, i)"></i>
           </td>
         </tr>
-        <!--<tr class="footable">-->
-        <!--<td class="text-center">1</td>-->
-        <!--<td>-->
-        <!--<input class="form-control" type="text" nmae="fileName" [(ngModel)]="fileData.filename"-->
-        <!--[disabled]="showEditField">-->
-        <!--</td>-->
-        <!--<td>-->
-        <!--<input class="form-control" type="text" name="filePath" [(ngModel)]="fileData.filePath"-->
-        <!--[disabled]="showEditField">-->
-        <!--</td>-->
-        <!--<td>-->
-        <!--<i class="ti-trash btn-action" [hidden]="showEditField"></i>-->
-        <!--</td>-->
-        <!--</tr>-->
         </tbody>
       </table>
     </div>

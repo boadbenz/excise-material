@@ -24,13 +24,14 @@ import { ArrestStaff } from '../../model/arrest-staff';
 import { isNgTemplate } from '@angular/compiler';
 import { async } from 'q';
 import { isArray } from 'jquery';
-import { FormGroup, FormControl, NgForm } from '@angular/forms';
+import { FormGroup, FormControl, NgForm, FormArray, FormBuilder } from '@angular/forms';
 import { IMyDpOptions, IMyDate } from 'mydatepicker';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { toLocalShort } from 'app/config/dateFormat';
 import Swal from 'sweetalert2'
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import swal from 'sweetalert2';
+import { replaceFakePath } from 'app/config/dataString';
 
 @Component({
   selector: 'app-manage',
@@ -41,6 +42,18 @@ export class ManageComponent implements OnInit, OnDestroy {
   isEditMode: any = {};
   IsOutside: number;
   OnSubscribe: any = {};
+  compareForm: FormGroup;
+  compareDocument: any = {
+    DocumentID: '',
+    DocumentName: '',
+    ReferenceCode: '',
+    FilePath: '',
+    DataSource: '',
+
+    // --- Custom --- //
+    IsNewItem: false,
+    IsActive: 1,
+}
   // Html
   modal: any;
   @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -96,6 +109,11 @@ export class ManageComponent implements OnInit, OnDestroy {
   formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`;
   isReportNo: any = false;
+
+  get CompareDocument(): FormArray {
+    return this.compareForm.get('CompareDocument') as FormArray;
+  }
+
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -106,10 +124,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     private router: Router,
     private preloader: PreloaderService,
     private sidebarService: SidebarService,
-    private masDocumentMainService: MasDocumentMainService
+    private masDocumentMainService: MasDocumentMainService,
+    private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.25');
+    this.sidebarService.setVersion('0.0.0.26');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -127,47 +146,67 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.preloader.setShowPreloader(true);
-    await this.MasofficeMaingetAll();
-    await this.MasStaffMaingetAll();
-    await this.getRouteParams();
-    await this.subscribeHeaderBtn();
-    await this.CompareArrestgetByIndictmentID();
-    this.accused.CompareDate = this.compareDate;
-    console.log(this.accused);
-    this.preloader.setShowPreloader(false);
-    this.btnAccuse = document.getElementById('btnAccuse') as HTMLElement;
-    this.receiptSave = document.getElementById('receiptSave') as HTMLElement;
-    this.btnApprove = document.getElementById('btnApprove') as HTMLElement;
-    this.btnAccusedHeader = document.getElementById('btnAccusedHeader') as HTMLElement;
-    if (this.params.CompareID == '0') {
-      this.showEditField = false;
-    } else {
-      this.showEditField = true;
-    }
-    if (this.showEditField) {
-      this.navService.setPrintButton(true);
-      this.navService.setDeleteButton(true);
-      this.navService.setEditButton(true);
+    try {
+      this.preloader.setShowPreloader(true);
+      await this.MasofficeMaingetAll();
+      await this.MasStaffMaingetAll();
+      await this.getRouteParams();
+      await this.subscribeHeaderBtn();
+      await this.CompareArrestgetByIndictmentID();
+      this.accused.CompareDate = this.compareDate;
+      console.log(this.accused);
+      this.preloader.setShowPreloader(false);
+      this.btnAccuse = document.getElementById('btnAccuse') as HTMLElement;
+      this.receiptSave = document.getElementById('receiptSave') as HTMLElement;
+      this.btnApprove = document.getElementById('btnApprove') as HTMLElement;
+      this.btnAccusedHeader = document.getElementById('btnAccusedHeader') as HTMLElement;
+      if (this.params.CompareID == '0') {
+        this.showEditField = false;
+      } else {
+        this.showEditField = true;
+      }
+      if (this.showEditField) {
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setSearchBar(false);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+        this.navService.setNextPageButton(true);
+      } else {
+        this.navService.setSaveButton(true);
+        this.navService.setCancelButton(true);
+        this.navService.setPrintButton(false);
+        this.navService.setSearchBar(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setEditButton(false);
+        this.navService.setNextPageButton(false);
+      }
+      await this.getCompareData();
+      await this.setAllCompareData();
+    } catch (err) {
+      this.navService.setPrintButton(false);
+      this.navService.setDeleteButton(false);
+      this.navService.setEditButton(false);
       this.navService.setSearchBar(false);
       this.navService.setCancelButton(false);
       this.navService.setSaveButton(false);
-      this.navService.setNextPageButton(true);
-    } else {
-      this.navService.setSaveButton(true);
-      this.navService.setCancelButton(true);
-      this.navService.setPrintButton(false);
-      this.navService.setSearchBar(false);
-      this.navService.setDeleteButton(false);
-      this.navService.setEditButton(false);
       this.navService.setNextPageButton(false);
-    }
-    await this.getCompareData();
-    await this.setAllCompareData();
+      this.preloader.setShowPreloader(false);
+      this.router.navigate([`/fine/list`]);
+     }
+    
     console.log( this.showEditField);
     // this.navigate_Service();
   }
   ngOnDestroy() {
+    this.navService.setPrintButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setEditButton(false);
+    this.navService.setSearchBar(false);
+    this.navService.setCancelButton(false);
+    this.navService.setSaveButton(false);
+    this.navService.setNextPageButton(false);
     for (const k of Object.keys(this.OnSubscribe)) {
       this.OnSubscribe[k].unsubscribe();
     }
@@ -194,7 +233,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.compareDataUpdateTmp = this.jsonCopy(resp);
       } else {
         swal('', 'ไม่พบข้อมูลการเปรียบเทียบ', 'error');
-        this.router.navigate([`/fine/list`]);
+        throw 'ไม่พบข้อมูลการเปรียบเทียบ';
       }
       
       console.log(JSON.stringify(this.compareDataUpdate) === JSON.stringify(resp));
@@ -208,9 +247,26 @@ export class ManageComponent implements OnInit, OnDestroy {
       await this.setCompareDetail();
       await this.setReceiptData();
       await this.setApproveReportList();
+      await this.setDocument();
       this.dataForCompare.accused = this.jsonCopy(this.accused);
       this.dataForCompare.approveReportList = this.jsonCopy(this.approveReportList);
       this.dataForCompare.receipt = this.jsonCopy(this.receipt);
+    }
+  }
+  async setDocument() {
+    this.AllAddFiles = [];
+    this.filePath = [];
+    for (const ap of this.compareDataUpdateTmp.CompareDocument) {
+      const fileData: any = this.jsonCopy(this.compareDocument);
+      fileData.DocumentName = ap.DocumentName;
+      fileData.FilePath = ap.FilePath;
+      fileData.DocumentID = ap.DocumentID;
+      fileData.CompareCode = ap.CompareCode;
+      fileData.ReferenceCode = ap.ReferenceCode;
+      fileData.IsActive = 1;
+      this.AllAddFiles.push(fileData);
+      this.filePath.push({path: ap.FilePath, name: ap.DocumentName });
+      this.filePath.push();
     }
   }
   async setApproveReportList() {
@@ -469,7 +525,6 @@ export class ManageComponent implements OnInit, OnDestroy {
               if (resp.IsSuccess == 'True') {
                 swal('', 'ลบข้อมูลสำเร็จ', 'success');
                 await this.preloader.setShowPreloader(false);
-                this.router.navigate([`/fine/list`]);
               } else {
                 this.preloader.setShowPreloader(false);
                 swal('', 'ลบข้อมูลไม่สำเร็จ', 'error');
@@ -680,6 +735,25 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(case1 + ' and ' + case2);
     return !(case1 && case2 && case3);
   }
+  async checkStaff(data: any) {
+    for (const st of data) {
+      if (st.ProcessCode == null) {
+        st.ContributorID = 17;
+      } else if (st.ProcessCode.split('.').length == 1) {
+        st.ContributorID = 19;
+      } else if (st.ProcessCode.split('.').length == 2) {
+        const valStaff: any = st.ProcessCode.split('.');
+        if (valStaff == 1) {
+          st.ContributorID = 39;
+        } else if (valStaff == 2) {
+          st.ContributorID = 40;
+        } else if (valStaff == 2) {
+          st.ContributorID = 41;
+        } 
+      }
+    }
+    return data;
+  }
   async CompareinsAll () {
     try {
       let readyToSave: any = true;
@@ -710,10 +784,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (Object.keys(res).length === 0 || (+this.params.CompareID) > 0) {
           const data: any = await this.prepareDataToSave();
           if (data.length === 0) {
-
+            
           } else {
             console.log('ข้อมูล Data เพื่อส่ง CompareinsAll');
+            data.CompareStaff = this.checkStaff(this.jsonCopy(data.CompareStaff));
             console.log(data);
+
             // return null;
             if (this.params.CompareID == 0) {
               return await this.fineService.postMethod('CompareinsAll', data);
@@ -807,7 +883,8 @@ export class ManageComponent implements OnInit, OnDestroy {
               'ไม่พบข้อมูลผู้ต้องหา.',
               'error'
             );
-            this.router.navigate([`/fine/list`]);
+            throw 'ไม่พบข้อมูลผู้ต้องหา';
+            break;
           } else {
             CompareDetail.LawbreakerName = LawBreaker ? `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}` : '';
             const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
@@ -854,7 +931,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           'ไม่สามารถแสดงข้อมูลได้.',
           'error'
         );
-        this.router.navigate([`/fine/list`]);
+        throw 'ไม่สามารถแสดงข้อมูลได้';
       }
       
     } catch (err) {
@@ -1424,8 +1501,17 @@ export class ManageComponent implements OnInit, OnDestroy {
   handleFileInput(files: any) {
     // this.fileToUpload = files.item(0);
     console.log(files);
-    this.AllAddFiles.push(files.target.files.item(0));
-    this.filePath.push({path: files.target.value, name: files.target.files.item(0).name });
+    const fileData: any = this.jsonCopy(this.compareDocument);
+    fileData.DocumentName = files.target.files.item(0).name;
+    fileData.IsNewItem = true;
+    fileData.FilePath = replaceFakePath(files.target.value);
+    fileData.DocumentID = this.filePath.length;
+    fileData.CompareCode = this.params.CompareCode;
+    fileData.ReferenceCode = this.params.ArrestCode;
+    fileData.IsActive = 1;
+    this.AllAddFiles.push(fileData);
+    this.filePath.push({path: replaceFakePath(files.target.value), name: files.target.files.item(0).name });
+    
   }
   async deleteFile(id: any, index: any) {
     Swal({
@@ -1440,15 +1526,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     }).then( async (result) => {
       if (result.value) {
         if (id) {
-          try {
-            const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
-            Swal(
-              '',
-              'ลบไฟล์สำเร็จ.',
-              'success'
-            );
-          } catch (err) {
-          }
+          // try {
+          //   const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
+          //   Swal(
+          //     '',
+          //     'ลบไฟล์สำเร็จ.',
+          //     'success'
+          //   );
+          // } catch (err) {
+          // }
         }
         if (index || index === 0) {
           if (index > -1) {
@@ -1491,6 +1577,17 @@ export class ManageComponent implements OnInit, OnDestroy {
       data[d] = null;
     }
   }
+  getAllFile() {
+    try {
+      let i: any = 0;
+      for (const f of this.AllAddFiles) {
+        f.DocumentID = i;
+      }
+      return this.AllAddFiles;
+    } catch (err) {
+      console.log(err);
+    }
+  }
   async prepareDataToSave() {
     // console.log(this.approveReportList);
     // console.log(this.accused);
@@ -1509,8 +1606,11 @@ export class ManageComponent implements OnInit, OnDestroy {
       CompareDetail: [
       ],
       CompareStaff: [
+      ],
+      CompareDocument: [
       ]
     };
+    CompareData.CompareDocument = this.getAllFile();
     let id = 0;
     const isFillForm1: any = '';
     for (const user of this.DataToSave.userData) {
@@ -1991,4 +2091,38 @@ export class ManageComponent implements OnInit, OnDestroy {
       return false;
     }
   }
+  addDocument() {
+    const lastIndex = this.compareDocument.length - 1;
+    let document = this.compareDocument;
+    document.DocumentID = ""+(lastIndex + 1);
+    document.DocumentName = "";
+    document.FilePath = "";
+    document.IsNewItem = true;
+    if (lastIndex < 0) {
+        this.compareDocument.push(this.fb.group(document));
+    } else {
+        const lastDoc = this.compareDocument.at(lastIndex).value;
+        if (lastDoc.DocumentName && lastDoc.FilePath) {
+            this.compareDocument.push(this.fb.group(document));
+        }
+    }
+  }
+  changeNoticeDoc(e: any, index: number) {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        let dataSource = reader.result.toString().split(',')[1];
+        if (dataSource && dataSource !== undefined) {
+            this.compareDocument.at(index).patchValue({
+                ReferenceCode: this.params.CompareID,
+                FilePath: replaceFakePath(e.target.value),
+                DataSource: dataSource,
+                IsActive: 1
+            })
+        }
+    };
+  }
+  documentId:any = "";
+  documentIndex:any = "";
 }
