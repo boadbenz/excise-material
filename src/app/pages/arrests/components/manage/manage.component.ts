@@ -32,7 +32,7 @@ import { ManageConfig } from './manage.config';
 import swal from 'sweetalert2';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { TransactionRunning } from 'app/models/transaction-running.model';
-import { groupArrayItem, removeObjectItem, clearFormArray } from '../../arrest.helper';
+import { groupArrayItem, removeObjectItem, clearFormArray, sortFormArray } from '../../arrest.helper';
 import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
 import { Acceptability } from '../../models';
 
@@ -244,9 +244,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         }
     }
 
-    // showGuiltBase() {
-    //     console.log(this.ArrestIndictment.value);
-    // }
+    showGuiltBase() {
+        console.log(this.ArrestIndictment.value);
+    }
 
     updateItemIndictmentDetail(x: any, _IndictmentDetail: FormArray) {
         if (!x.LawbreakerID) return;
@@ -614,6 +614,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
         let _ALawbreaker = [];
         _indict.map(ai => {
+            ai.IsModify = 'v';
             // ดึงข้อมูล ArrestLawbreaker จาก ArrestIndictment -> ArrestIndictmentDetail -> ArrestLawbreaker
             ai.ArrestIndicmentDetail.map(aid => {
                 aid.ArrestLawbreaker
@@ -793,8 +794,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         let modify = this.ArrestIndictment.value.filter(x => x.IsModify != 'd');
         i = (modify.length) && modify[modify.length - 1].RowId;
 
-        o.filter(x => x.RowId == null)
-            .map(x => {
+        o.map(x => {
                 arr.push(
                     this.fb.group({
                         IsModify: x.IsModify || 'c',
@@ -972,8 +972,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         if (Array.isArray(o) && o.length) {
             o.map(x => arr.push(this.groupArrestProductDetail(x)))
         }
-        console.log(arr);
-
         return arr;
     }
     private groupArrestProductDetail = (x: fromModels.ArrestProductDetail) => {
@@ -1053,7 +1051,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         lawbreaker.IsActive = 1;
         lawbreaker = removeObjectItem(lawbreaker, 'ResultCount') as fromModels.ArrestLawbreaker;
         this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
-        let sort = this.sortFormArray(this.ArrestLawbreaker.value);
+        let sort = sortFormArray(this.ArrestLawbreaker.value, 'RowId');
         sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
             .catch((error) => this.catchError(error));
     }
@@ -1099,20 +1097,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         }
     }
 
-    private async sortFormArray(arr: any[]) {
-        let a = await arr.sort((a, b) => {
-            if (a.RowId < b.RowId) return -1; // asc
-            if (a.RowId > b.RowId) return 1; // desc
-            return 0;
-        });
-        let i = 0;
-        a.map((x) => { if (x.RowId != 0) x.RowId = ++i; });
-        return a;
-    }
-
     private deleteFormArray(o: FormArray, i: number, controls: string) {
         o.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let sort = this.sortFormArray(o.value);
+        let sort = sortFormArray(o.value, 'RowId');
         o.value.map(() => o.removeAt(0));
         sort.then(x => this.setItemFormArray(x, controls))
             .catch((error) => this.catchError(error));
@@ -1136,7 +1123,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     deleteNotice(i: number) {
         this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let notice = this.sortFormArray(this.ArrestNotice.value);
+        let notice = sortFormArray(this.ArrestNotice.value, 'RowId');
         this.ArrestNotice.value.map(() => this.ArrestNotice.removeAt(0));
         notice.then(x => this.setNoticeForm(x))
             .catch((error) => this.catchError(error));
@@ -1144,15 +1131,24 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     async deleteIndicment(i: number) {
         this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let indictment = await this.sortFormArray(this.ArrestIndictment.value);
+        const indictment = sortFormArray(this.ArrestIndictment.value, 'RowId');
         this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
-        indictment
-            .filter(x => x.IsModify != 'd')
-            .map((x) => {
-                x.RowId = null;
-                return x;
-            })
-        this.setArrestIndictment(indictment, null);
+        indictment.then((_x) => {
+            debugger
+            _x.filter(x => x.IsModify != 'd')
+                .map((x) => {
+                    x.RowId = null;
+                    return x;
+                });
+            this.setArrestIndictment(_x, null);
+        })
+        // indictment
+        //     .filter(x => x.IsModify != 'd')
+        //     .map((x) => {
+        //         x.RowId = null;
+        //         return x;
+        //     })
+        // this.setArrestIndictment(indictment, null);
     }
 
     searchProduct = (text$: Observable<string>) =>
@@ -1737,9 +1733,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 switch (x.IsModify) {
                     case 'd':
                         await this.s_indictment.ArrestIndictmentupdDelete(x.IndictmentID.toString())
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            }).catch((error) => this.catchError(error));
+                            .then().catch((error) => this.catchError(error));
                         break;
 
                     case 'c':
@@ -1753,10 +1747,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     case 'u':
                         await this.s_indictment.ArrestIndictmentupdByCon(newIndictment)
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            })
-                            .catch((error) => this.catchError(error));
+                            .then().catch((error) => this.catchError(error));
                         break;
                 }
 
