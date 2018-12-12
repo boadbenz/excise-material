@@ -1372,7 +1372,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     private async onEdit() {
         this.loaderService.show();
-        // await this.loadMasterData();
+        await this.loadMasterData();
         this.loaderService.hide();
     }
 
@@ -1784,50 +1784,49 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 // กรองเอา ProductDetail เฉพาะรายการที่เลือก
                 const productIsChecked = x.ArrestProductDetail.filter(p => p.IsChecked);
                 product.push(...productIsChecked);
-                // กรองเอา Lawbreaker ที่เลือก
-                const lawbreakerIsChecked = x.ArrestLawbreaker.filter(_x => _x.IsChecked);
 
-                if (lawbreakerIsChecked.length == 1) {
-                    const newIndictmentDetail = {
-                        IndictmentID: indictmentID,
-                        IsActive: x.IsActive,
-                        LawbreakerID: x.LawbreakerID,
-                    }
-                    switch (isModify) {
-                        case 'd':
-                            await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
-                                .then(y => {
-                                    if (!this.checkIsSuccess(y)) return;
-                                }).catch((error) => this.catchError(error));
-                            break;
-
-                        case 'c':
-                            // set LawbreakerID ที่ได้จากการบันทึก ArrestLawbreakerinsAll
-                            const lid = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID);
-                            if (!lid) return;
-                            newIndictmentDetail.LawbreakerID = lid.ArrestLawbreakerID;
-                            await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
-                                .then(y => {
-                                    if (!this.checkIsSuccess(y)) return;
-                                    x.IndictmentDetailID = y.IndictmentDetailID;
-                                }).catch((error) => this.catchError(error));
-                            break;
-
-                        case 'u':
-                            await this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(newIndictmentDetail)
-                                .then(y => {
-                                    if (!this.checkIsSuccess(y)) return;
-                                }).catch((error) => this.catchError(error));
-                            break;
-                    }
-
-                    // ส่งเฉพาะ indictmentDetail[0] รายการแรกไปเพราะ
-                    // 1 indictmentDetail สามารถมีรายการของกลาได้หลายรายการ 
-                    // กรณีที่มี indictmentDetail มากว่า 1 รายการ จะทำให้รายการของกลาง เพิ่มตามจำนวน indictmentDetail
-                    // จึงให้แสดงรายการของกลางแค่ indictmentDetail[0] เท่านั้น
-                    // เวลาบันทึกจึงต้องเอาข้อมูลจาก indictmentDetail[0]
-                    return Promise.all([this.modifyProductDetail(x.IndictmentDetailID, arrestProductId, indictmentDetail[0], isModify)])
+                const newIndictmentDetail = {
+                    IndictmentID: indictmentID || x.IndictmentID,
+                    IndictmentDetailID: x.IndictmentDetailID,
+                    IsActive: x.IsActive,
+                    LawbreakerID: x.LawbreakerID,
                 }
+                switch (isModify) {
+                    case 'd':
+                        await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
+                            .then().catch((error) => this.catchError(error));
+                        break;
+
+                    case 'c':
+                        // set LawbreakerID ที่ได้จากการบันทึก ArrestLawbreakerinsAll
+                        const lid = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID);
+                        if (!lid) return;
+                        newIndictmentDetail.LawbreakerID = lid.ArrestLawbreakerID;
+                        await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                                x.IndictmentDetailID = y.IndictmentDetailID;
+                            }).catch((error) => this.catchError(error));
+                        break;
+
+                    case 'u':
+                    case 'v':
+                        if (x.ArrestLawbreaker[0].IsChecked) {
+                            await this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(newIndictmentDetail)
+                                .then().catch((error) => this.catchError(error));
+                        } else {
+                            await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
+                                .then().catch((error) => this.catchError(error));
+                        }
+                        break;
+                }
+
+                // ส่งเฉพาะ indictmentDetail[0] รายการแรกไปเพราะ
+                // 1 indictmentDetail สามารถมีรายการของกลาได้หลายรายการ 
+                // กรณีที่มี indictmentDetail มากว่า 1 รายการ จะทำให้รายการของกลาง เพิ่มตามจำนวน indictmentDetail
+                // จึงให้แสดงรายการของกลางแค่ indictmentDetail[0] เท่านั้น
+                // เวลาบันทึกจึงต้องเอาข้อมูลจาก indictmentDetail[0]
+                return Promise.all([this.modifyProductDetail(x.IndictmentDetailID, arrestProductId, indictmentDetail[0], isModify)])
             })
 
         return Promise.all(promises).then(async () => {
@@ -1882,7 +1881,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         isModify: string
     ) {
         let promise = indictmentDetail.ArrestProductDetail
-            .filter(x => x.IsChecked == true)
             .map(async (x) => {
                 let apd = new fromModels.ArrestProductDetail();
                 apd.ProductID = x.ProductID;
@@ -1903,9 +1901,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 switch (isModify) {
                     case 'd':
                         await this.s_productDetail.ArrestProductDetailupdDelete(x.ProductID.toString())
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            }).catch((error) => this.catchError(error));
+                            .then().catch((error) => this.catchError(error));
                         break;
 
                     case 'c':
@@ -1920,10 +1916,14 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
 
                     case 'u':
-                        await this.s_productDetail.ArrestProductDetailupdByCon(apd)
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            }).catch((error) => this.catchError(error));
+                    case 'v':
+                        if (x.IsChecked) {
+                            await this.s_productDetail.ArrestProductDetailupdByCon(apd)
+                                .then().catch((error) => this.catchError(error));
+                        } else {
+                            await this.s_productDetail.ArrestProductDetailupdDelete(x.ProductID.toString())
+                                .then().catch((error) => this.catchError(error));
+                        }
                         break;
                 }
             })
