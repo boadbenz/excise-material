@@ -227,23 +227,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     this.updateIndictmentProductItem(_f3, _IndictmentProduct);
                 })
 
-
                 _IndictmentDetail.value.map((_f2) => {
                     this.ArrestLawbreaker.value
                         .map(x => {
                             this.updateItemIndictmentDetail(x, _IndictmentDetail)
                         });
-
-                    // if (_IndictmentDetail.length == 0) return;
-                    // let _ProductDetail = _IndictmentDetail.at(0).get('ArrestProductDetail') as FormArray;
-                    // this.ArrestProduct.value
-                    //     .map(x => {
-                    //         this.updateProductDetailItemInvestigate(x, _ProductDetail, _IndictmentDetail);
-                    //     });
-                    // if (_ProductDetail.length == 0) {
-                    //     const _APD = new fromModels.ArrestProductDetail;
-                    //     _ProductDetail.push(this.groupArrestProductDetail(_APD));
-                    // }
                 });
 
                 if (_IndictmentDetail.length == 0) {
@@ -326,32 +314,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 break;
         }
     }
-
-    // updateProductDetailItemInvestigate(x, _ProductDetail: FormArray, _IndictmentDetail: FormArray) {
-    //     if (!x.ProductID && !x.ProductDesc) return;
-    //     const _PD = _ProductDetail.value.filter(pd => pd.ProductID == x.ProductID);
-    //     const _I = _ProductDetail.value.findIndex(_i => _i.ProductID == x.ProductID);
-    //     switch (x.IsModify) {
-    //         case 'c':
-    //             if (!_PD.length) {
-    //                 const __ProductDetail = _ProductDetail.length ? _ProductDetail.at(0).value : null;
-    //                 if (__ProductDetail && __ProductDetail.ProductID == null && __ProductDetail.ProductDesc == null) {
-    //                     _ProductDetail.at(0).patchValue(this.groupArrestProductDetail(x).value);
-    //                 } else {
-    //                     _ProductDetail.push(this.groupArrestProductDetail(x));
-    //                 }
-    //             }
-    //             break;
-
-    //         case 'u':
-    //             _ProductDetail.at(_I).patchValue(this.groupArrestProductDetail(x).value)
-    //             break;
-
-    //         case 'd':
-    //             _ProductDetail.removeAt(_I);
-    //             break;
-    //     }
-    // }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -505,7 +467,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                // await this.loadMasterData();
+                await this.loadMasterData();
                 this.showEditField = false;
                 await this.pageRefresh(this.arrestCode);
                 break;
@@ -1459,7 +1421,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     private async onEdit() {
         this.loaderService.show();
-        // await this.loadMasterData();
+        await this.loadMasterData();
         this.loaderService.hide();
     }
 
