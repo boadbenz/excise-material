@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-manage',
@@ -7,6 +8,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.Emulated
 })
 export class ManageComponent implements OnInit {
+
+  form: FormGroup;
 
   constructor() { }
 
@@ -34,7 +37,9 @@ export class ManageComponent implements OnInit {
                         {"name":"ข้อมูลการแบ่งส่วนเงินสินบนและเงินรางวัล"},
                         {"name":"กำหนดสิทธิ์การเข้าถึงข้อมูล"}]
 
-  ngOnInit() {
-  }
+
+ 
+
+  ngOnInit() {}
 
 }
