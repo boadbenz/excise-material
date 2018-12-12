@@ -10,8 +10,14 @@ import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@an
 export class ManageComponent implements OnInit {
 
   form: FormGroup;
-
-  constructor() { }
+  Name: string;
+  positionName: string;
+  officeName: string;
+  constructor() { 
+    this.Name = localStorage.getItem('Name');
+    this.positionName = localStorage.getItem('positionName');
+    this.officeName = localStorage.getItem('officeName');
+  }
 
   List: any = [ { "name": "งานสืบสวน" },
                 { "name": "ใบแจ้งความนำจับ" },

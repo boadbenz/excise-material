@@ -37,13 +37,18 @@ export class ListComponent implements OnInit {
 
   async pageChanges(event) { }
 
-  clickView() {
+  clickView(event: any) {
+    const getdata = event;
+    // event.path[1].innerText
+    localStorage.setItem('Name', getdata.name);
+    localStorage.setItem('positionName', getdata.pName);
+    localStorage.setItem('officeName', getdata.offName);
     this.router.navigate([`/uac/manage`]);
   }
 
   async onAdvSearch(form: any) {
     const getfrom = form
-    console.log("datafrom : ",getfrom) 
+    console.log("datafrom : ", getfrom)
   }
   ngOnInit() { }
   ngOnDestroy() { }
