@@ -474,7 +474,7 @@
           <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addIndictment()">เพิ่มข้อกล่าวหา</button>
         </div>
       </div>
-      <!-- <button type="button" (click)="showGuiltBase()">Click</button> -->
+      <button type="button" (click)="showGuiltBase()">Click</button>
       <div class="table-responsive">
         <table class="table table-sm table-striped table-set-border">
           <thead>
@@ -540,23 +540,17 @@
                 </ng-container>
 
               </td>
-              <td *ngIf="indict.get('IsModify').value != 'd'" style="width: 300px;">
-                <ng-container formArrayName="ArrestIndicmentDetail">
-                  <ng-container *ngFor="let item of getArrestIndicmentDetail(indict); let i2=index" [formGroupName]="i2">
-
-                    <div formArrayName="ArrestProductDetail">
-                      <div *ngFor="let prod of getArrestProductDetail(item); let pIndex=index" class="text-truncate"
-                        style="width: 300px;" [formGroupName]="pIndex">
-                        <ng-container *ngIf="prod.get('ProductID').value">
-                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i2+'-'+pIndex+'pd'">
-                          <label [for]="j+'-'+i2+'-'+pIndex+'pd'">{{prod.get('ProductDesc').value}}</label>
-                        </ng-container>
-                      </div>
+              <td style="width: 300px;">
+                <ng-container formArrayName="ArrestIndictmentProduct">
+                  <ng-container *ngFor="let prod of getArrestIndictmentProduct(indict); let i=index;">
+                    <div [formGroupName]="i" style="width: 300px;" class="text-truncate">
+                      <ng-container *ngIf="prod.get('ProductID').value">
+                        <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" id="{{j+'-'+i+'pd'}}">
+                        <label for="{{j+'-'+i+'pd'}}">{{prod.get('ProductDesc').value}}</label>
+                      </ng-container>
                     </div>
-
                   </ng-container>
                 </ng-container>
-
               </td>
               <td *ngIf="indict.get('IsModify').value != 'd'">
                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(j)">

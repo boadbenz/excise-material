@@ -2,37 +2,37 @@ import { ArrestProductDetail } from './arrest-product';
 import { ArrestLawGuitbase, ArrestLawbreaker } from '.';
 
 export class IndictmentLawbreaker {
-    LawbreakerID = '';
-    LawbreakerFullName = '';
-    CompanyFullName = '';
-    ProductID = '';
-    ProductName = '';
-    Qty = '';
-    QtyUnit = '';
-    Size = '';
-    SizeUnit = '';
-    Weight = '';
-    WeightUnit = '';
-
-    EntityType = 0;
+    LawbreakerID: string;
+    LawbreakerFullName: string;
+    CompanyFullName: string;
+    ProductID: string;
+    ProductName: string;
+    Qty: string;
+    QtyUnit: string;
+    Size: string;
+    SizeUnit: string;
+    Weight: string;
+    WeightUnit: string;
+    EntityType: number;
 }
 
 export class ArrestIndictment {
-    IndictmentID = 0;
-    ArrestCode = '';
-    GuiltBaseID = 0;
-    IsProve = 0;
-    IsActive = 0;
-    IsLawsuitComplete = 0;
-    ArrestIndicmentDetail = new Array<ArrestIndictmentDetail>();
-    ArrestLawGuitbase = new Array<ArrestLawGuitbase>();
+    IndictmentID: number;
+    ArrestCode: string;
+    GuiltBaseID: number;
+    IsProve: number;
+    IsActive: number;
+    IsLawsuitComplete: number;
+    ArrestIndicmentDetail: Array<ArrestIndictmentDetail>;
+    ArrestLawGuitbase: Array<ArrestLawGuitbase>;
+    ArrestIndictmentProduct: Array<ArrestIndictmentProduct>;
 
-    IsModify = '';
-    SubSectionType = '';
-    GuiltBaseName = '';
-    SectionNo = '';
-    PenaltyDesc = '';
-    RowId = 0;
+    IsModify: string;
+    SubSectionType: string;
+    GuiltBaseName: string;
+    SectionNo: string;
+    PenaltyDesc: string;
+    RowId: number;
 }
 
 export class ArrestIndictmentDetail {
@@ -46,47 +46,51 @@ export class ArrestIndictmentDetail {
     ArrestProductDetail?: Array<ArrestProductDetail>;
 }
 
+
+
 export class ArrestIndictmentProduct {
-    IndictmentProductID = 0;
-    IndictmentID = 0;
-    ProductID = 0;
-    IsProdcutCo = '';
-    IndictmentProductQty = '';
-    IndictmentProductQtyUnit = '';
-    IndictmentProductSize = '';
-    IndictmentProductSizeUnit = '';
-    IndictmentProductVolume = '';
-    IndictmentProductVolumeUnit = '';
-    IndictmentProductMistreatRate = '';
-    IndictmentProductFine = '';
-    IndictmentProductIsActive = 0;
-    ProductType = 0;
-    ArrestCode = '';
-    ProductGroupCode = '';
-    ProductIsDomestic = 0;
-    ProductCode = '';
-    ProductBrandCode = '';
-    ProductBrandNameTH = '';
-    ProductBrandNameEN = '';
-    ProductSubBrandCode = '';
-    ProductSubBrandNameTH = '';
-    ProductSubBrandNameEN = '';
-    ProductModelCode = '';
-    ProductModelName = '';
-    ProductFixNo1 = '';
-    ProductDegreeCode = '';
-    ProductDegree = 0;
-    ProductSizeCode = '';
-    ProductSize = '';
-    ProductSizeUnitCode = '';
-    ProductSizeUnitName = '';
-    ProductFixNo2 = 0;
-    ProductSequenceNo = '';
-    ProductDesc = '';
-    ProductCarNo = '';
-    ProductQty = 0;
-    ProductQtyUnit = '';
-    ProductNetVolume = 0;
-    ProductNetVolumeUnit = '';
-    ProductIsActive = 0
+    IndictmentProductID: number;
+    IndictmentID: number;
+    ProductID: number;
+    IsProdcutCo: string;
+    IndictmentProductQty: string;
+    IndictmentProductQtyUnit: string;
+    IndictmentProductSize: string;
+    IndictmentProductSizeUnit: string;
+    IndictmentProductVolume: string;
+    IndictmentProductVolumeUnit: string;
+    IndictmentProductMistreatRate: string;
+    IndictmentProductFine: string;
+    IndictmentProductIsActive: number;
+    ProductType: number;
+    ArrestCode: string;
+    ProductGroupCode: string;
+    ProductIsDomestic: number;
+    ProductCode: string;
+    ProductBrandCode: string;
+    ProductBrandNameTH: string;
+    ProductBrandNameEN: string;
+    ProductSubBrandCode: string;
+    ProductSubBrandNameTH: string;
+    ProductSubBrandNameEN: string;
+    ProductModelCode: string;
+    ProductModelName: string;
+    ProductFixNo1: string;
+    ProductDegreeCode: string;
+    ProductDegree: number;
+    ProductSizeCode: string;
+    ProductSize: string;
+    ProductSizeUnitCode: string;
+    ProductSizeUnitName: string;
+    ProductFixNo2: number;
+    ProductSequenceNo: string;
+    ProductDesc: string;
+    ProductCarNo: string;
+    ProductQty: number;
+    ProductQtyUnit: string;
+    ProductNetVolume: number;
+    ProductNetVolumeUnit: string;
+    ProductIsActive: number;
+
+    IsChecked: boolean;
 }
