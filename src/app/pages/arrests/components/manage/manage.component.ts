@@ -223,7 +223,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 let _IndictmentDetail = this.ArrestIndictment.at(i).get('ArrestIndicmentDetail') as FormArray;
 
                 let _IndictmentProduct = this.ArrestIndictment.at(i).get('ArrestIndictmentProduct') as FormArray;
-                _IndictmentProduct.value.map(_f3 => {
+                this.ArrestProduct.value.map(_f3 => {
                     this.updateIndictmentProductItem(_f3, _IndictmentProduct);
                 })
 
