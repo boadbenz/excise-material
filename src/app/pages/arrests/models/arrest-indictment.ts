@@ -53,7 +53,7 @@ export class ArrestIndictmentProduct {
     IndictmentID: number;
     ProductID: number;
     IsProdcutCo: string;
-    IndictmentProductQty: string;
+    IndictmentProductQty: number;
     IndictmentProductQtyUnit: string;
     IndictmentProductSize: string;
     IndictmentProductSizeUnit: string;
@@ -93,4 +93,5 @@ export class ArrestIndictmentProduct {
     ProductIsActive: number;
 
     IsChecked: boolean;
+    IsModify: string;
 }

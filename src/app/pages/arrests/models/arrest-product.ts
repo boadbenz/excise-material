@@ -45,7 +45,7 @@ export class ArrestProductDetail {
     ProductID: number;
     ProductDetailID?: number;
     IsProdcutCo?: string;
-    Qty?: string;
+    Qty?: number;
     QtyUnit?: string;
     Size?: string;
     SizeUnit?: string;

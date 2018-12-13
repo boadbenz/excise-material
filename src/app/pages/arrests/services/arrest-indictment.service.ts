@@ -68,4 +68,16 @@ export class ArrestIndictmentService {
         const url = `${appConfig.api7788}/ArrestIndictmentProductgetByIndictmentID`;
         return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
+
+    async ArrestIndictmentProductupdByProductID(ProductID: any) {
+        const params = {ProductID};
+        const url = `${appConfig.api7788}/ArrestIndictmentProductupdByProductID`;
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    }
+
+    async ArrestIndictmentProductupdDeleteByProductID(ProductID: string) {
+        const params = {ProductID};
+        const url = `${appConfig.api7788}/ArrestIndictmentProductupdDeleteByProductID`;
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise(); 
+    }
 }
