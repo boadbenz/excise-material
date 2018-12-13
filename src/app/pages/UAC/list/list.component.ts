@@ -4,6 +4,7 @@ import { pagination } from '../../../config/pagination';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, NgForm } from '@angular/forms';
 import { Message } from '../../../config/message';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -13,31 +14,31 @@ import { Message } from '../../../config/message';
 })
 export class ListComponent implements OnInit {
   @ViewChild('advForm') advForm: NgForm;
+  private destroy$: Subject<boolean> = new Subject<boolean>();
   paginage = pagination;
   advSearch: any;
   List: any = [{ "name": "นาย อนันชพงศ์ เอี่ยมสำอางค์", "pName": "เจ้าพนักงานสรรพสามิตปฏิบัติงาน", "offName": "สสพ.ชุมพร" },
   { "name": "นางสาว นุชนาถ ธรรมโชติ", "pName": "เจ้าพนักงานสรรพสามิตปฏิบัติงาน", "offName": "สสภ.9" }];
 
-
-  // advSearch: any;
   constructor(private router: Router,
     private navService: NavigationService, ) {
-    // set false
-    // this.navService.setEditButton(false);
-    // this.navService.setDeleteButton(false);
-    // this.navService.setPrintButton(false);
-    // this.navService.setSaveButton(false);
-    // this.navService.setCancelButton(false);
-    // this.navService.setNextPageButton(false);
-    // set true
+    // set button false
+    this.navService.setEditButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setPrintButton(false);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setNewButton(false);
+    // set button true
     this.navService.setSearchBar(true);
-    // this.navService.setNewButton(false);
+    
     this.advSearch = this.navService.showAdvSearch;
   }
 
   async pageChanges(event) { }
 
-  clickView(event: any) {
+  clickManage(event: any) {
     const getdata = event;
     // event.path[1].innerText
     localStorage.setItem('Name', getdata.name);
@@ -50,7 +51,18 @@ export class ListComponent implements OnInit {
     const getfrom = form
     console.log("datafrom : ", getfrom)
   }
-  ngOnInit() { }
+  ngOnInit() { 
+    this.navigate_Service();
+  }
+  private navigate_Service() {
+
+    // this.navService.setSearchBar.takeUntil(this.destroy$).subscribe(async status => {
+    //   if (status) {
+    //     console.log("onSave")
+    //   }
+    // });
+    
+  }
   ngOnDestroy() { }
 
 }

@@ -18,7 +18,7 @@ const routes: Routes = [
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด' }],
             pageType: 'list',
             // nextPage: { title: '', url: '/list/manage' },
-            codePage: 'XCS60-06-01-000'
+            codePage: 'ILG60-10-10-00-00'
         },
         component: ListComponent
     }

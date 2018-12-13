@@ -10,7 +10,7 @@ import * as custom from 'assets/js/_custom';
 export class LayoutComponent implements OnInit {
 
   isPreloader: any;
-  fName: string = "data test";
+  fName: string = "";
   opName: string = "";
   offName: string = "";
 

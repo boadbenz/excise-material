@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
+import { NavigationService } from 'app/shared/header-navigation/navigation.service';
+import { Subject } from 'rxjs';
+import { Message } from 'app/config/message';
 
 @Component({
   selector: 'app-manage',
@@ -13,7 +16,21 @@ export class ManageComponent implements OnInit {
   Name: string;
   positionName: string;
   officeName: string;
-  constructor() {
+  private destroy$: Subject<boolean> = new Subject<boolean>();
+  constructor(private navService: NavigationService) {
+
+    // set button false
+    this.navService.setEditButton(false);
+    this.navService.setDeleteButton(false);
+    this.navService.setPrintButton(false);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setNextPageButton(false);
+    this.navService.setSearchBar(false);
+    // set button true
+    this.navService.setSaveButton(true);
+    this.navService.setCancelButton(true);
+
     this.Name = localStorage.getItem('Name');
     this.positionName = localStorage.getItem('positionName');
     this.officeName = localStorage.getItem('officeName');
@@ -47,6 +64,22 @@ export class ManageComponent implements OnInit {
   ];
 
 
-  ngOnInit() { }
 
+  ngOnInit() {
+    this.navigate_Service();
+  }
+
+  private navigate_Service() {
+
+    this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
+      if (status) {
+        console.log("onSave")
+      }
+    });
+    this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
+      if (status) {
+        console.log("onCancel")
+      }
+    })
+  }
 }
