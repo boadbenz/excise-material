@@ -50,7 +50,9 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of List; let i=index;">
-              <td>{{item.name}} </td>
+              <div class="td-list">
+                <td >{{item.name}} </td>
+              </div>
               <td style="text-align:center;">
                 <input type="checkbox" name="chk4" id="chk4{{i}}">
                 <label for="chk4{{i}}"></label>
