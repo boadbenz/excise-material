@@ -226,7 +226,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 this.ArrestProduct.value.map(_f3 => {
                     let nip = new fromModels.ArrestIndictmentProduct();
                     nip.ProductID = _f3.ProductID;
-                    nip.IsProdcutCo = _f3.IsProdcutCo || '1';
+                    nip.IsProdcutCo = _f3.IsProdcutCo || 1;
                     nip.IndictmentProductQty = _f3.Qty || '0';
                     nip.IndictmentProductQtyUnit = _f3.QtyUnit || '-';
                     nip.IndictmentProductSize = _f3.Size || '0';
@@ -235,7 +235,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     nip.IndictmentProductVolumeUnit = _f3.VolumeUnit || '-';
                     nip.IndictmentProductMistreatRate = _f3.MistreatRate || '';
                     nip.IndictmentProductFine = _f3.Fine || '';
-                    nip.IndictmentProductIsActive = _f3.IndictmentProductIsActive || '1';
+                    nip.IndictmentProductIsActive = _f3.IndictmentProductIsActive || 1;
                     nip.ProductDesc = _f3.ProductDesc;
                     nip.IsChecked = _f3.IsChecked || true;
                     nip.IsModify = _f3.IsModify || 'c';
@@ -640,7 +640,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 .then(x => {
                     if (this.checkResponse(x)) {
                         ai.ArrestIndictmentProduct = x;
-                        ai.ArrestIndictmentProduct.map(aip => aip.IsModify = 'v');
                     }
                 });
             return ai;
@@ -996,12 +995,12 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         return this.fb.group({
             ProductID: x.ProductID || null,
             ProductDetailID: x.ProductDetailID || null,
-            IsProdcutCo: x.IsProdcutCo || '0',
-            Qty: x.Qty || '0',
+            IsProdcutCo: x.IsProdcutCo || 0,
+            Qty: x.Qty || 0,
             QtyUnit: x.QtyUnit || '-',
-            Size: x.Size || '0',
+            Size: x.Size || 0,
             SizeUnit: x.SizeUnit || '-',
-            Volume: x.Volume || '0',
+            Volume: x.Volume || 0,
             VolumeUnit: x.VolumeUnit || '-',
             MistreatRate: x.MistreatRate || null,
             Fine: x.Fine || null,
@@ -1873,7 +1872,19 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         product: fromModels.ArrestIndictmentProduct[]
     ) {
         let promises = await product.map(async (x) => {
-
+            // let p = new fromModels.ArrestIndictmentProduct();
+            // p.IndictmentID = indictmentId;
+            // p.IsProdcutCo = p.IsProdcutCo || '1';
+            // p.IndictmentProductQty = x.ProductQty;
+            // p.IndictmentProductQtyUnit = x.ProductQtyUnit;
+            // p.IndictmentProductSize = x.ProductSize;
+            // p.IndictmentProductSizeUnit = x.ProductSizeUnitName;
+            // p.IndictmentProductVolume = x.IndictmentProductVolume || '0';
+            // p.IndictmentProductVolumeUnit = x.IndictmentProductVolumeUnit || '-';
+            // p.IndictmentProductMistreatRate = x.IndictmentProductMistreatRate || '';
+            // p.IndictmentProductFine = x.IndictmentProductFine || '';
+            // p.IndictmentProductIsActive = x.IndictmentProductIsActive || 1;
+            
             switch (x.IsModify) {
                 case 'c':
                     const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
