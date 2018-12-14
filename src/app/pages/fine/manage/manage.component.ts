@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.26');
+    this.sidebarService.setVersion('0.0.0.27');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -193,6 +193,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.navService.setSaveButton(false);
       this.navService.setNextPageButton(false);
       this.preloader.setShowPreloader(false);
+      console.log(err);
       this.router.navigate([`/fine/list`]);
      }
     
@@ -256,17 +257,19 @@ export class ManageComponent implements OnInit, OnDestroy {
   async setDocument() {
     this.AllAddFiles = [];
     this.filePath = [];
-    for (const ap of this.compareDataUpdateTmp.CompareDocument) {
-      const fileData: any = this.jsonCopy(this.compareDocument);
-      fileData.DocumentName = ap.DocumentName;
-      fileData.FilePath = ap.FilePath;
-      fileData.DocumentID = ap.DocumentID;
-      fileData.CompareCode = ap.CompareCode;
-      fileData.ReferenceCode = ap.ReferenceCode;
-      fileData.IsActive = 1;
-      this.AllAddFiles.push(fileData);
-      this.filePath.push({path: ap.FilePath, name: ap.DocumentName });
-      this.filePath.push();
+    if (this.compareDataUpdateTmp.CompareDocument) {
+      for (const ap of this.compareDataUpdateTmp.CompareDocument) {
+        const fileData: any = this.jsonCopy(this.compareDocument);
+        fileData.DocumentName = ap.DocumentName;
+        fileData.FilePath = ap.FilePath;
+        fileData.DocumentID = ap.DocumentID;
+        fileData.CompareCode = ap.CompareCode;
+        fileData.ReferenceCode = ap.ReferenceCode;
+        fileData.IsActive = 1;
+        this.AllAddFiles.push(fileData);
+        this.filePath.push({path: ap.FilePath, name: ap.DocumentName });
+        this.filePath.push();
+      }
     }
   }
   async setApproveReportList() {
@@ -737,12 +740,13 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   async checkStaff(data: any) {
     for (const st of data) {
-      if (st.ProcessCode == null) {
+      const ProcessCode: any = st.ProcessCode ? st.ProcessCode.toString() : '';
+      if (ProcessCode == '') {
         st.ContributorID = 17;
-      } else if (st.ProcessCode.split('.').length == 1) {
+      } else if (ProcessCode.split('.').length == 1) {
         st.ContributorID = 19;
-      } else if (st.ProcessCode.split('.').length == 2) {
-        const valStaff: any = st.ProcessCode.split('.');
+      } else if (ProcessCode.split('.').length == 2) {
+        const valStaff: any = ProcessCode.split('.');
         if (valStaff == 1) {
           st.ContributorID = 39;
         } else if (valStaff == 2) {
@@ -787,7 +791,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             
           } else {
             console.log('ข้อมูล Data เพื่อส่ง CompareinsAll');
-            data.CompareStaff = this.checkStaff(this.jsonCopy(data.CompareStaff));
+            data.CompareStaff = await this.checkStaff(this.jsonCopy(data.CompareStaff));
             console.log(data);
 
             // return null;
