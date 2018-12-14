@@ -445,7 +445,8 @@
                 <td>{{item.get('ReferenceID').value}}</td>
                 <td>{{item.get('LawbreakerFullName').value}}</td>
                 <td class="text-center">
-                  <a href="javaScript:void(0);" class="text-warning text-secondary" *ngIf="!showEditField" (click)="deleteLawbreaker(i)">
+                    <!-- *ngIf="!showEditField" -->
+                  <a href="javaScript:void(0);" class="text-warning text-secondary" (click)="deleteLawbreaker(i)">
                     <i class="fa fa-trash-o fa-lg"></i>
                   </a>
                 </td>

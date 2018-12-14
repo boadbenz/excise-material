@@ -267,6 +267,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         const _I = _IndictmentDetail.value.findIndex(_i => _i.LawbreakerID == x.LawbreakerID);
 
         const _PD = new fromModels.ArrestProductDetail;
+
         switch (x.IsModify) {
             case 'c':
                 if (!_IL.length) {
@@ -298,9 +299,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     }).value);
                 break;
 
-            case 'd':
-                _IndictmentDetail.removeAt(_I);
-                break;
+            // case 'd':
+            //     console.log(_I);
+                
+            //     _IndictmentDetail.removeAt(_I);
+            //     break;
         }
     }
 
@@ -627,16 +630,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
         let _ALawbreaker = [];
         let _AIindictment = await _indict.map(async ai => {
-            // ดึงข้อมูล ArrestLawbreaker จาก ArrestIndictment -> ArrestIndictmentDetail -> ArrestLawbreaker
             ai.IsModify = 'v';
-            ai.ArrestIndicmentDetail.map(aid => {
-                aid.ArrestLawbreaker
-                    .map(al => {
-                        al.IsModify = 'v';
-                        _ALawbreaker.push(al)
-                    });
-            });
-
+            ai.ArrestIndicmentDetail.map(x => {
+                x.ArrestLawbreaker[0].IsModify = 'v'
+                _ALawbreaker.push(x.ArrestLawbreaker[0])
+            })
             await this.s_indictment.ArrestIndictmentProductgetByIndictmentID(ai.IndictmentID.toString())
                 .then(x => {
                     if (this.checkResponse(x)) {
@@ -646,6 +644,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 });
             return ai;
         });
+
         Promise.all(_AIindictment).then(indictment => {
             this.pageRefeshLawbreaker(_ALawbreaker);
             this.setArrestIndictment(indictment, null);
@@ -757,8 +756,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         }
     }
 
-    private checkObjectInArray = (o) => o.some(obj => typeof obj === 'object');
-
     // Set Array ArrestNoticeForm
     // 1
     setNoticeForm(n: fromModels.ArrestNotice[]) {
@@ -817,7 +814,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
         o.map(x => {
             if (x.RowId) return;
-            debugger
             arr.push(
                 this.fb.group({
                     IsModify: x.IsModify || 'c',
@@ -974,6 +970,8 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         return arr;
     }
     private groupArrestLawbreaker(x: fromModels.ArrestLawbreaker) {
+        console.log(x.IsModify);
+
         return this.fb.group({
             IsChecked: x.IsChecked || true,
             LawbreakerID: x.LawbreakerID || null,
@@ -1102,7 +1100,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
         lawbreaker.RowId = 1;
-        lawbreaker.IsModify = 'c';
+        lawbreaker.IsModify = lawbreaker.IsModify || 'c';
         lawbreaker.IsActive = 1;
         lawbreaker = removeObjectItem(lawbreaker, 'ResultCount') as fromModels.ArrestLawbreaker;
         this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
