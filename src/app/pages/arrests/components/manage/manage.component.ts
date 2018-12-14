@@ -224,7 +224,22 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                 let _IndictmentProduct = this.ArrestIndictment.at(i).get('ArrestIndictmentProduct') as FormArray;
                 this.ArrestProduct.value.map(_f3 => {
-                    this.updateIndictmentProductItem(_f3, _IndictmentProduct);
+                    let nip = new fromModels.ArrestIndictmentProduct();
+                    nip.ProductID = _f3.ProductID;
+                    nip.IsProdcutCo = _f3.IsProdcutCo || 1;
+                    nip.IndictmentProductQty = _f3.Qty || '0';
+                    nip.IndictmentProductQtyUnit = _f3.QtyUnit || '-';
+                    nip.IndictmentProductSize = _f3.Size || '0';
+                    nip.IndictmentProductSizeUnit = _f3.SizeUnit || '-';
+                    nip.IndictmentProductVolume = _f3.Volume || '0';
+                    nip.IndictmentProductVolumeUnit = _f3.VolumeUnit || '-';
+                    nip.IndictmentProductMistreatRate = _f3.MistreatRate || '';
+                    nip.IndictmentProductFine = _f3.Fine || '';
+                    nip.IndictmentProductIsActive = _f3.IndictmentProductIsActive || 1;
+                    nip.ProductDesc = _f3.ProductDesc;
+                    nip.IsChecked = _f3.IsChecked || true;
+                    nip.IsModify = _f3.IsModify || 'c';
+                    this.updateIndictmentProductItem(nip, _IndictmentProduct);
                 })
 
                 _IndictmentDetail.value.map((_f2) => {
@@ -614,6 +629,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         let _AIindictment = await _indict.map(async ai => {
             // ดึงข้อมูล ArrestLawbreaker จาก ArrestIndictment -> ArrestIndictmentDetail -> ArrestLawbreaker
             ai.IsModify = 'v';
+            // ai.ArrestIndictmentProduct.map(aip => {
+            //     aip 
+            // })
             ai.ArrestIndicmentDetail.map(aid => {
                 aid.ArrestLawbreaker
                     .filter(al => al.LawbreakerID == aid.LawbreakerID)
@@ -798,6 +816,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         i = (modify.length) && modify[modify.length - 1].RowId;
 
         o.map(x => {
+            if (x.RowId) return;
             arr.push(
                 this.fb.group({
                     IsModify: x.IsModify || 'c',
@@ -961,7 +980,8 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             LawbreakerFirstName: x.LawbreakerFirstName || null,
             LawbreakerMiddleName: x.LawbreakerMiddleName || null,
             LawbreakerLastName: x.LawbreakerLastName || null,
-            LawbreakerOtherName: x.LawbreakerOtherName || null
+            LawbreakerOtherName: x.LawbreakerOtherName || null,
+            IsModify: x.IsModify || 'c'
         });
     }
     // --- 2.2
@@ -1021,36 +1041,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             IndictmentProductMistreatRate: x.IndictmentProductMistreatRate,
             IndictmentProductFine: x.IndictmentProductFine,
             IndictmentProductIsActive: x.IndictmentProductIsActive,
-            ProductType: x.ProductType,
-            ArrestCode: x.ArrestCode,
-            ProductGroupCode: x.ProductGroupCode,
-            ProductIsDomestic: x.ProductIsDomestic,
-            ProductCode: x.ProductCode,
-            ProductBrandCode: x.ProductBrandCode,
-            ProductBrandNameTH: x.ProductBrandNameTH,
-            ProductBrandNameEN: x.ProductBrandNameEN,
-            ProductSubBrandCode: x.ProductSubBrandCode,
-            ProductSubBrandNameTH: x.ProductSubBrandNameTH,
-            ProductSubBrandNameEN: x.ProductSubBrandNameEN,
-            ProductModelCode: x.ProductModelCode,
-            ProductModelName: x.ProductModelName,
-            ProductFixNo1: x.ProductFixNo1,
-            ProductDegreeCode: x.ProductDegreeCode,
-            ProductDegree: x.ProductDegree,
-            ProductSizeCode: x.ProductSizeCode,
-            ProductSize: x.ProductSize,
-            ProductSizeUnitCode: x.ProductSizeUnitCode,
-            ProductSizeUnitName: x.ProductSizeUnitName,
-            ProductFixNo2: x.ProductFixNo2,
-            ProductSequenceNo: x.ProductSequenceNo,
             ProductDesc: x.ProductDesc,
-            ProductCarNo: x.ProductCarNo,
-            ProductQty: x.ProductQty,
-            ProductQtyUnit: x.ProductQtyUnit,
-            ProductNetVolume: x.ProductNetVolume,
-            ProductNetVolumeUnit: x.ProductNetVolumeUnit,
-            ProductIsActive: 1,
-            IsChecked: x.IsChecked || false
+            IsChecked: x.IsChecked || false,
+            IsModify: x.IsModify || 'c'
         })
     }
 
@@ -1500,8 +1493,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 await this.modifyNotice(),
                 await this.modifyStaff(),
                 await this.modifyProduct(),
-                // await this.modifyLawbreaker(),
-                // await this.modifyIndictment(),
                 await this.modifyDocument()
             ])
         } catch (error) {
@@ -1554,8 +1545,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     await this.modifyNotice(),
                     await this.modifyStaff(),
                     await this.modifyProduct(),
-                    // await this.modifyLawbreaker(),
-                    // await this.modifyIndictment(),
                     await this.modifyDocument()
                 ])
             } catch (error) {
@@ -1736,14 +1725,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             .map(async (x: fromModels.ArrestLawbreaker, i) => {
                 x.ArrestCode = this.arrestCode
                 switch (x.IsModify) {
-                    case 'd':
-                        await this.s_lawbreaker.ArrestLawbreakerupdDelete(x.LawbreakerID.toString())
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            })
-                            .catch((error) => this.catchError(error));
-                        break;
-
                     case 'c':
                         await this.s_lawbreaker.ArrestLawbreakerinsAll(x)
                             .then(y => {
@@ -1759,6 +1740,15 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     case 'u':
                         await this.s_lawbreaker.ArrestLawbreakerupdByCon(x)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                            })
+                            .catch((error) => this.catchError(error));
+                        break;
+
+                    case 'd':
+                    default:
+                        await this.s_lawbreaker.ArrestLawbreakerupdDelete(x.LawbreakerID.toString())
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                             })
@@ -1805,9 +1795,13 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 }
 
                 return Promise.all([
+                    await this.modifyIndictmentProduct(x.IndictmentID, arrestProductId, x.ArrestIndictmentProduct),
                     await this.modifyIndictmentDetail(
-                        x.IndictmentID, arrestLawbreakerId, arrestProductId,
-                        x.ArrestIndicmentDetail, x.IsModify)
+                        x.IndictmentID,
+                        arrestLawbreakerId,
+                        arrestProductId,
+                        x.ArrestIndictmentProduct,
+                        x.ArrestIndicmentDetail)
                 ])
             })
         return Promise.all(indictmentPromise);
@@ -1817,32 +1811,22 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         indictmentID: number,
         arrestLawbreakerId: any[],
         arrestProductId: any[],
-        indictmentDetail: fromModels.ArrestIndictmentDetail[],
-        isModify: string
+        indictmentProduct: fromModels.ArrestIndictmentProduct[],
+        indictmentDetail: fromModels.ArrestIndictmentDetail[]
     ) {
-        let product = []
-        // IndictmentDetail
         let promises = await indictmentDetail
             .filter(x => x.LawbreakerID != null)
-            .map(async (x) => {
-                // กรองเอา ProductDetail เฉพาะรายการที่เลือก
-                const productIsChecked = x.ArrestProductDetail.filter(p => p.IsChecked);
-                product.push(...productIsChecked);
-
+            .map(async (x: fromModels.ArrestIndictmentDetail) => {
+                const lawbreaker = x.ArrestLawbreaker.find(l => l.LawbreakerID == x.LawbreakerID)
                 const newIndictmentDetail = {
                     IndictmentID: indictmentID || x.IndictmentID,
                     IndictmentDetailID: x.IndictmentDetailID,
                     IsActive: x.IsActive,
                     LawbreakerID: x.LawbreakerID,
                 }
-                switch (isModify) {
-                    case 'd':
-                        await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
-                            .then().catch((error) => this.catchError(error));
-                        break;
 
+                switch (lawbreaker.IsModify) {
                     case 'c':
-                        // set LawbreakerID ที่ได้จากการบันทึก ArrestLawbreakerinsAll
                         const lid = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID);
                         if (!lid) return;
                         newIndictmentDetail.LawbreakerID = lid.ArrestLawbreakerID;
@@ -1855,7 +1839,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     case 'u':
                     case 'v':
-                        if (x.ArrestLawbreaker[0].IsChecked) {
+                        if (lawbreaker.IsChecked) {
                             await this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(newIndictmentDetail)
                                 .then().catch((error) => this.catchError(error));
                         } else {
@@ -1863,55 +1847,72 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                                 .then().catch((error) => this.catchError(error));
                         }
                         break;
+
+                    case 'd':
+                        await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
+                            .then().catch((error) => this.catchError(error));
+                        break;
                 }
 
-                // ส่งเฉพาะ indictmentDetail[0] รายการแรกไปเพราะ
-                // 1 indictmentDetail สามารถมีรายการของกลาได้หลายรายการ 
-                // กรณีที่มี indictmentDetail มากว่า 1 รายการ จะทำให้รายการของกลาง เพิ่มตามจำนวน indictmentDetail
-                // จึงให้แสดงรายการของกลางแค่ indictmentDetail[0] เท่านั้น
-                // เวลาบันทึกจึงต้องเอาข้อมูลจาก indictmentDetail[0]
-                return Promise.all([this.modifyProductDetail(x.IndictmentDetailID, arrestProductId, indictmentDetail[0], isModify)])
+                return Promise.all([
+                    this.modifyProductDetail(
+                        x.IndictmentDetailID,
+                        arrestProductId,        // ArrestProductID ที่ได้จากการบันทึก ArrestProductInsAll
+                        indictmentProduct,      // IndictmentProduct ที่อ้างอิงกับ Indictment
+                        x.ArrestProductDetail,  // ProductDetail ที่อ้างอิงกับ IndictmentDetail
+                        lawbreaker.IsModify,
+                        lawbreaker.IsChecked
+                    )
+                ])
             })
 
-        return Promise.all(promises).then(async () => {
-            await this.modifyIndictmentProduct(indictmentID, arrestProductId, product, isModify)
-        });
+        return Promise.all(promises).then();
     }
 
     private async modifyIndictmentProduct(
         indictmentId: number,
         arrestProductId: any[],
-        pd: fromModels.ArrestProductDetail[],
-        isModify: string
+        product: fromModels.ArrestIndictmentProduct[]
     ) {
-        // IndictmentProduct
-        // Group รายการที่ซ้ำ
-        let _product = groupArrayItem(pd, 'ProductID')
-        let promises = await _product.map(async (x) => {
-            let p = new fromModels.ArrestIndictmentProduct();
-            const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
-            if (!apd) return;
-
-            p.IndictmentID = indictmentId;
-            p.ProductID = apd.ArrestProductID;
-            p.IsProdcutCo = '1';
-            p.IndictmentProductQty = x.Qty || '0';
-            p.IndictmentProductQtyUnit = x.QtyUnit || '-';
-            p.IndictmentProductSize = x.Size || '0';
-            p.IndictmentProductSizeUnit = x.SizeUnit || '-';
-            p.IndictmentProductVolume = '0';
-            p.IndictmentProductVolumeUnit = '-';
-            p.IndictmentProductMistreatRate = '';
-            p.IndictmentProductFine = '';
-            p.IndictmentProductIsActive = 1;
-
-            switch (isModify) {
+        let promises = await product.map(async (x) => {
+            // let p = new fromModels.ArrestIndictmentProduct();
+            // p.IndictmentID = indictmentId;
+            // p.IsProdcutCo = p.IsProdcutCo || '1';
+            // p.IndictmentProductQty = x.ProductQty;
+            // p.IndictmentProductQtyUnit = x.ProductQtyUnit;
+            // p.IndictmentProductSize = x.ProductSize;
+            // p.IndictmentProductSizeUnit = x.ProductSizeUnitName;
+            // p.IndictmentProductVolume = x.IndictmentProductVolume || '0';
+            // p.IndictmentProductVolumeUnit = x.IndictmentProductVolumeUnit || '-';
+            // p.IndictmentProductMistreatRate = x.IndictmentProductMistreatRate || '';
+            // p.IndictmentProductFine = x.IndictmentProductFine || '';
+            // p.IndictmentProductIsActive = x.IndictmentProductIsActive || 1;
+            
+            switch (x.IsModify) {
                 case 'c':
-                    await this.s_indictment.ArrestIndictmentProductinsAll(p)
-                        .then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                        })
-                        .catch((error) => this.catchError(error));
+                    const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
+                    if (!apd) return;
+                    x.IndictmentID = indictmentId;
+                    x.ProductID = apd.ArrestProductID;
+                    await this.s_indictment.ArrestIndictmentProductinsAll(x)
+                        .then().catch((error) => this.catchError(error));
+                    break;
+
+                case 'd':
+                    await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
+                        .then().catch(error => this.catchError(error));
+                    break;
+
+                case 'u':
+                case 'v':
+                    if (x.IsChecked) {
+                        await this.s_indictment.ArrestIndictmentProductupdByProductID(x)
+                            .then().catch(error => this.catchError(error))
+                        break;
+                    } else {
+                        await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
+                            .then().catch(error => this.catchError(error));
+                    }
                     break;
             }
         })
@@ -1921,57 +1922,54 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     private async modifyProductDetail(
         indictmentDetailID: number,
         arrestProductId: any[],
-        indictmentDetail: fromModels.ArrestIndictmentDetail,
-        isModify: string
+        indictmentProduct: fromModels.ArrestIndictmentProduct[],
+        arrestProductDetail: fromModels.ArrestProductDetail[],
+        lawbreakerModify: string,
+        lawbreakerChecked: Acceptability
     ) {
-        let promise = indictmentDetail.ArrestProductDetail
-            .map(async (x) => {
-                let apd = new fromModels.ArrestProductDetail();
-                apd.ProductID = x.ProductID;
-                apd.ProductDetailID = x.ProductDetailID;
-                apd.IsProdcutCo = x.IsProdcutCo;
-                apd.Qty = x.Qty;
-                apd.QtyUnit = x.QtyUnit;
-                apd.Size = x.Size;
-                apd.SizeUnit = x.SizeUnit;
-                apd.Volume = x.Volume;
-                apd.VolumeUnit = x.VolumeUnit;
-                apd.MistreatRate = x.MistreatRate;
-                apd.Fine = x.Fine;
-                apd.IndictmentDetailID = indictmentDetailID;
-                apd.ProductDesc = x.ProductDesc;
-                apd.IsActive = x.IsActive || 1;
+        let indictmentProductPromise: any;
+        let arrestProductDetailPromise: any;
+        if (lawbreakerChecked == this.ACCEPTABILITY.INACCEPTABLE) {
+            // กรณีมีการเช็คเลือกรายการผู้ต้องหา
+            indictmentProductPromise = await indictmentProduct
+                .map(async x => {
+                    if (!x.IsChecked) return;
+                    let apd = new fromModels.ArrestProductDetail();
+                    apd.ProductID = x.ProductID;
+                    apd.IsProdcutCo = x.IsProdcutCo;
+                    apd.Qty = x.IndictmentProductQty;
+                    apd.QtyUnit = x.IndictmentProductQtyUnit;
+                    apd.Size = x.IndictmentProductSize;
+                    apd.SizeUnit = x.IndictmentProductSizeUnit;
+                    apd.Volume = x.IndictmentProductVolume;
+                    apd.VolumeUnit = x.IndictmentProductVolumeUnit;
+                    apd.MistreatRate = x.IndictmentProductMistreatRate;
+                    apd.Fine = x.IndictmentProductFine;
+                    apd.IndictmentDetailID = indictmentDetailID;
+                    apd.ProductDesc = x.ProductDesc;
+                    apd.IsActive = x.IndictmentProductIsActive || 1;
 
-                switch (isModify) {
-                    case 'd':
-                        await this.s_productDetail.ArrestProductDetailupdDelete(x.ProductID.toString())
-                            .then().catch((error) => this.catchError(error));
-                        break;
-
-                    case 'c':
-                        const productD = arrestProductId.find(pp => pp.ProductID == x.ProductID);
-                        if (!apd) return;
-                        apd.IndictmentDetailID = indictmentDetailID;
-                        apd.ProductID = productD.ArrestProductID;
-                        await this.s_productDetail.ArrestProductDetailinsAll(apd)
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                            }).catch((error) => this.catchError(error));
-                        break;
-
-                    case 'u':
-                    case 'v':
-                        if (x.IsChecked) {
-                            await this.s_productDetail.ArrestProductDetailupdByCon(apd)
+                    switch (x.IsModify) {
+                        case 'c':
+                            const productD = arrestProductId.find(pp => pp.ProductID == x.ProductID);
+                            if (!apd) return;
+                            apd.IndictmentDetailID = indictmentDetailID;
+                            apd.ProductID = productD.ArrestProductID;
+                            await this.s_productDetail.ArrestProductDetailinsAll(apd)
                                 .then().catch((error) => this.catchError(error));
-                        } else {
-                            await this.s_productDetail.ArrestProductDetailupdDelete(x.ProductID.toString())
-                                .then().catch((error) => this.catchError(error));
-                        }
-                        break;
-                }
+                            break;
+                    }
+
+
+                })
+        } else if (lawbreakerChecked == this.ACCEPTABILITY.ACCEPTABLE || lawbreakerModify == 'd') {
+            // กรณีไม่มีการเช็คเลือกรายการผู้ต้องหา
+            arrestProductDetailPromise = await arrestProductDetail.map(async x => {
+                await this.s_productDetail.ArrestProductDetailupdDelete(x.ProductDetailID.toString())
+                    .then().catch((error) => this.catchError(error));
             })
-        return Promise.all(promise);
+        }
+        return Promise.all([indictmentProductPromise, arrestProductDetailPromise]);
     }
 
     private async modifyDocument() {

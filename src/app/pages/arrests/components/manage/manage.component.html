@@ -474,7 +474,7 @@
           <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addIndictment()">เพิ่มข้อกล่าวหา</button>
         </div>
       </div>
-      <button type="button" (click)="showGuiltBase()">Click</button>
+      <!-- <button type="button" (click)="showGuiltBase()">Click</button> -->
       <div class="table-responsive">
         <table class="table table-sm table-striped table-set-border">
           <thead>
@@ -489,74 +489,76 @@
           </thead>
           <tbody formArrayName="ArrestIndictment">
             <tr *ngFor="let indict of ArrestIndictment.controls; let j=index;" [formGroupName]="j">
-              <ng-template ngFor let-item [ngForOf]="getArrestLawGuitbase(indict)" let-i="index">
-                <td *ngIf="indict.get('IsModify').value != 'd'" class="text-center">{{indict.get('RowId').value}}</td>
-                <td *ngIf="indict.get('IsModify').value != 'd'" style="width: 200px" class="text-center">
+              <ng-container *ngIf="indict.get('IsModify').value != 'd'">
+                <ng-template ngFor let-item [ngForOf]="getArrestLawGuitbase(indict)" let-i="index">
+                  <td class="text-center">{{indict.get('RowId').value}}</td>
+                  <td style="width: 200px" class="text-center">
 
-                  <ng-container *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
-                    <div class="input-group" *ngFor="let subSection of getArrestLawSubSection(subSectionRule)">
-                      <input id="'SubSectionType'+j" type="text" class="form-control form-control-sm" style="border-right: 0;"
-                        readonly [value]="subSection.get('SubSectionType').value">
-                      <div class="input-group-append">
-                        <a class="input-group-text custom-file-upload text-secondary" (click)="!showEditField && openModal(allegation)">
-                          <i class="ti-more-alt"></i>
-                        </a>
-                        <ng-template #allegation let-c="close" let-d="dismiss">
-                          <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" [inputArrestIndictment]="indict.value"
-                            (outputArrestIndictment)="setArrestIndictment($event, j)"></app-allegation-modal>
-                        </ng-template>
+                    <ng-container *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
+                      <div class="input-group" *ngFor="let subSection of getArrestLawSubSection(subSectionRule)">
+                        <input id="'SubSectionType'+j" type="text" class="form-control form-control-sm" style="border-right: 0;"
+                          readonly [value]="subSection.get('SubSectionType').value">
+                        <div class="input-group-append">
+                          <a class="input-group-text custom-file-upload text-secondary" (click)="!showEditField && openModal(allegation)">
+                            <i class="ti-more-alt"></i>
+                          </a>
+                          <ng-template #allegation let-c="close" let-d="dismiss">
+                            <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" [inputArrestIndictment]="indict.value"
+                              (outputArrestIndictment)="setArrestIndictment($event, j)"></app-allegation-modal>
+                          </ng-template>
+                        </div>
                       </div>
-                    </div>
-                  </ng-container>
+                    </ng-container>
 
-                </td>
-                <td *ngIf="indict.get('IsModify').value != 'd'" style="width: 280px;">
-                  <!-- <span class="text-truncate" style="width: 200px;"> -->
-                  {{item.get('GuiltBaseName').value}}
-                  <!-- </span> -->
-                </td>
-              </ng-template>
+                  </td>
+                  <td style="width: 280px;">
+                    <!-- <span class="text-truncate" style="width: 200px;"> -->
+                    {{item.get('GuiltBaseName').value}}
+                    <!-- </span> -->
+                  </td>
+                </ng-template>
 
-              <td *ngIf="indict.get('IsModify').value != 'd'" style="width: 300px">
-                <ng-container formArrayName="ArrestIndicmentDetail">
-                  <ng-container *ngFor="let item of getArrestIndicmentDetail(indict); let i1=index" [formGroupName]="i1">
+                <td style="width: 300px">
+                  <ng-container formArrayName="ArrestIndicmentDetail">
+                    <ng-container *ngFor="let item of getArrestIndicmentDetail(indict); let i1=index" [formGroupName]="i1">
 
-                    <div formArrayName="ArrestLawbreaker">
-                      <ng-container *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
-                        <ng-container *ngIf="lawb.get('LawbreakerID').value">
-                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i1+'-'+lIndex+'lb'">
-                          <label [for]="j+'-'+i1+'-'+lIndex+'lb'">
-                            {{ lawb.get('LawbreakerTitleName').value }}
-                            {{ lawb.get('LawbreakerFirstName').value }}
-                            {{ lawb.get('LawbreakerMiddleName').value }}
-                            {{ lawb.get('LawbreakerLastName').value }}
-                            {{ lawb.get('LawbreakerOtherName').value }}
-                          </label>
+                      <div formArrayName="ArrestLawbreaker">
+                        <ng-container *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
+                          <ng-container *ngIf="lawb.get('LawbreakerID').value">
+                            <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i1+'-'+lIndex+'lb'">
+                            <label [for]="j+'-'+i1+'-'+lIndex+'lb'">
+                              {{ lawb.get('LawbreakerTitleName').value }}
+                              {{ lawb.get('LawbreakerFirstName').value }}
+                              {{ lawb.get('LawbreakerMiddleName').value }}
+                              {{ lawb.get('LawbreakerLastName').value }}
+                              {{ lawb.get('LawbreakerOtherName').value }}
+                            </label>
+                          </ng-container>
                         </ng-container>
-                      </ng-container>
-                    </div>
+                      </div>
 
+                    </ng-container>
                   </ng-container>
-                </ng-container>
 
-              </td>
-              <td style="width: 300px;">
-                <ng-container formArrayName="ArrestIndictmentProduct">
-                  <ng-container *ngFor="let prod of getArrestIndictmentProduct(indict); let i=index;">
-                    <div [formGroupName]="i" style="width: 300px;" class="text-truncate">
-                      <ng-container *ngIf="prod.get('ProductID').value">
-                        <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" id="{{j+'-'+i+'pd'}}">
-                        <label for="{{j+'-'+i+'pd'}}">{{prod.get('ProductDesc').value}}</label>
-                      </ng-container>
-                    </div>
+                </td>
+                <td style="width: 300px;">
+                  <ng-container formArrayName="ArrestIndictmentProduct">
+                    <ng-container *ngFor="let prod of getArrestIndictmentProduct(indict); let i=index;">
+                      <div [formGroupName]="i" style="width: 300px;" class="text-truncate">
+                        <ng-container *ngIf="prod.get('ProductID').value">
+                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" id="{{j+'-'+i+'pd'}}">
+                          <label for="{{j+'-'+i+'pd'}}">{{prod.get('ProductDesc').value}}</label>
+                        </ng-container>
+                      </div>
+                    </ng-container>
                   </ng-container>
-                </ng-container>
-              </td>
-              <td *ngIf="indict.get('IsModify').value != 'd'">
-                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(j)">
-                  <i class="fa fa-trash-o fa-lg"></i>
-                </a>
-              </td>
+                </td>
+                <td>
+                  <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(j)">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                  </a>
+                </td>
+              </ng-container>
             </tr>
 
           </tbody>
