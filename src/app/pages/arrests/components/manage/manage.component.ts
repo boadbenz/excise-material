@@ -324,7 +324,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 break;
 
             case 'u':
-            // 
+                // 
                 _AProduct.at(_I).patchValue(this.groupArrestIndictmentProduct(x).value)
                 break;
 
@@ -1412,7 +1412,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     private async onEdit() {
         this.loaderService.show();
-        await this.loadMasterData();
+        // await this.loadMasterData();
         this.loaderService.hide();
     }
 
@@ -1467,11 +1467,13 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                 setTimeout(() => {
                     this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
-                }, 200);
+                }, 400);
                 break;
 
             case 'R':
-                location.reload();
+                setTimeout(() => {
+                    this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
+                }, 400);
                 break;
         }
     }
@@ -1745,7 +1747,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
 
                     case 'd':
-                    default:
                         await this.s_lawbreaker.ArrestLawbreakerupdDelete(x.LawbreakerID.toString())
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -1896,8 +1897,8 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                             .then().catch(error => this.catchError(error))
                         break;
                     } else {
-                        await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
-                            .then().catch(error => this.catchError(error));
+                        // await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
+                        //     .then().catch(error => this.catchError(error));
                     }
                     break;
             }
