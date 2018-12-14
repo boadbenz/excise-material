@@ -13,17 +13,17 @@
         </div>
         <label for="" class="col-lg-2 col-sm-4 control-label">ชื่อเจ้าพนักงาน :</label>
         <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-          <input type="text" class="form-control form-control-sm">
+          <input type="text" value="{{Name}}" class="form-control form-control-sm">
         </div>
       </div>
       <div class="row">
         <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
         <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-          <input type="text" class="form-control form-control-sm">
+          <input type="text" value="{{positionName}}" class="form-control form-control-sm">
         </div>
         <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
         <div class="col-lg-4 col-md-7 col-sm-8 form-group">
-          <input type="text" class="form-control form-control-sm">
+          <input type="text" value="{{officeName}}" class="form-control form-control-sm">
         </div>
       </div>
     </div>
@@ -85,20 +85,20 @@
             <tr *ngFor="let item of ListMaster; let x=index;">
               <td>{{item.name}} </td>
               <td style="text-align:center;">
-                  <input type="checkbox" name="chk4" id="chk4{{x}}">
-                  <label for="chk4{{x}}"></label>
+                <input type="checkbox" name="chk4" id="chk4">
+                <label for="chk4"></label>
               </td>
               <td style="text-align:center;">
-                  <input type="checkbox" name="chk5" id="chk5{{x}}">
-                  <label for="chk5{{x}}"></label>
+                <input type="checkbox" name="chk5" id="chk5">
+                <label for="chk5"></label>
               </td>
               <td style="text-align:center;">
-                  <input type="checkbox" name="chk6" id="chk6{{x}}">
-                  <label for="chk6{{x}}"></label>
+                <input type="checkbox" name="chk6" id="chk6">
+                <label for="chk6"></label>
               </td>
               <td style="text-align:center;">
-                  <input type="checkbox" name="chk7" id="chk7{{x}}">
-                  <label for="chk7{{x}}"></label>
+                <input type="checkbox" name="chk7" id="chk7">
+                <label for="chk7"></label>
               </td>
             </tr>
           </tbody>

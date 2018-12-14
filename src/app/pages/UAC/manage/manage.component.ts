@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-manage',
@@ -8,7 +9,15 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class ManageComponent implements OnInit {
 
-  constructor() { }
+  form: FormGroup;
+  Name: string;
+  positionName: string;
+  officeName: string;
+  constructor() { 
+    this.Name = localStorage.getItem('Name');
+    this.positionName = localStorage.getItem('positionName');
+    this.officeName = localStorage.getItem('officeName');
+  }
 
   List: any = [ { "name": "งานสืบสวน" },
                 { "name": "ใบแจ้งความนำจับ" },
@@ -34,7 +43,9 @@ export class ManageComponent implements OnInit {
                         {"name":"ข้อมูลการแบ่งส่วนเงินสินบนและเงินรางวัล"},
                         {"name":"กำหนดสิทธิ์การเข้าถึงข้อมูล"}]
 
-  ngOnInit() {
-  }
+
+ 
+
+  ngOnInit() {}
 
 }
