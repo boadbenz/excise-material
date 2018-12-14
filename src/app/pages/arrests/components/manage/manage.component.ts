@@ -312,6 +312,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         const _I = _AProduct.value.findIndex(_i => _i.ProductID == x.ProductID);
         switch (x.IsModify) {
             case 'c':
+            case 'v':
                 if (!_PD.length) {
                     const __Product = _AProduct.length ? _AProduct.at(0).value : null;
                     if (__Product && __Product.ProductID == null && __Product.ProductDesc == null) {
@@ -323,7 +324,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 break;
 
             case 'u':
-            // case 'v':
+            // 
                 _AProduct.at(_I).patchValue(this.groupArrestIndictmentProduct(x).value)
                 break;
 
