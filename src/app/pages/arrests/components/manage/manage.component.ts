@@ -1946,8 +1946,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                                 .then().catch((error) => this.catchError(error));
                             break;
                     }
-
-
                 })
         } else if (lawbreakerChecked == this.ACCEPTABILITY.ACCEPTABLE || lawbreakerModify == 'd') {
             // กรณีไม่มีการเช็คเลือกรายการผู้ต้องหา
