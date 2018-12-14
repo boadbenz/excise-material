@@ -1897,8 +1897,8 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                             .then().catch(error => this.catchError(error))
                         break;
                     } else {
-                        // await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
-                        //     .then().catch(error => this.catchError(error));
+                        await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
+                            .then().catch(error => this.catchError(error));
                     }
                     break;
             }
