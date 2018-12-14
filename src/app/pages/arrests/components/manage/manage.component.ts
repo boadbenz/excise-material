@@ -270,6 +270,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
         switch (x.IsModify) {
             case 'c':
+            case 'v':
                 if (!_IL.length) {
                     const __IndictmentDetail = _IndictmentDetail.length ? _IndictmentDetail.at(0).value : null;
                     if (__IndictmentDetail && __IndictmentDetail.LawbreakerID == null) {
@@ -299,11 +300,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     }).value);
                 break;
 
-            // case 'd':
-            //     console.log(_I);
-                
-            //     _IndictmentDetail.removeAt(_I);
-            //     break;
+            case 'd':
+                _IndictmentDetail.removeAt(_I);
+                break;
         }
     }
 
@@ -324,6 +323,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 break;
 
             case 'u':
+            // case 'v':
                 _AProduct.at(_I).patchValue(this.groupArrestIndictmentProduct(x).value)
                 break;
 
@@ -969,8 +969,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         return arr;
     }
     private groupArrestLawbreaker(x: fromModels.ArrestLawbreaker) {
-        console.log(x.IsModify);
-
         return this.fb.group({
             IsChecked: x.IsChecked || true,
             LawbreakerID: x.LawbreakerID || null,
