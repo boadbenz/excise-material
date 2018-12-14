@@ -24,14 +24,13 @@ import { ArrestStaff } from '../../model/arrest-staff';
 import { isNgTemplate } from '@angular/compiler';
 import { async } from 'q';
 import { isArray } from 'jquery';
-import { FormGroup, FormControl, NgForm, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, NgForm } from '@angular/forms';
 import { IMyDpOptions, IMyDate } from 'mydatepicker';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { toLocalShort } from 'app/config/dateFormat';
 import Swal from 'sweetalert2'
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import swal from 'sweetalert2';
-import { replaceFakePath } from 'app/config/dataString';
 
 @Component({
   selector: 'app-manage',
@@ -42,18 +41,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   isEditMode: any = {};
   IsOutside: number;
   OnSubscribe: any = {};
-  compareForm: FormGroup;
-  compareDocument: any = {
-    DocumentID: '',
-    DocumentName: '',
-    ReferenceCode: '',
-    FilePath: '',
-    DataSource: '',
-
-    // --- Custom --- //
-    IsNewItem: false,
-    IsActive: 1,
-}
   // Html
   modal: any;
   @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -109,11 +96,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`;
   isReportNo: any = false;
-
-  get CompareDocument(): FormArray {
-    return this.compareForm.get('CompareDocument') as FormArray;
-  }
-
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -124,8 +106,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private router: Router,
     private preloader: PreloaderService,
     private sidebarService: SidebarService,
-    private masDocumentMainService: MasDocumentMainService,
-    private fb: FormBuilder
+    private masDocumentMainService: MasDocumentMainService
   ) {
     this.isEditMode.receipt = {};
     this.sidebarService.setVersion('0.0.0.27');
@@ -146,68 +127,49 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    try {
-      this.preloader.setShowPreloader(true);
-      await this.MasofficeMaingetAll();
-      await this.MasStaffMaingetAll();
-      await this.getRouteParams();
-      await this.subscribeHeaderBtn();
-      await this.CompareArrestgetByIndictmentID();
-      this.accused.CompareDate = this.compareDate;
-      console.log(this.accused);
-      this.preloader.setShowPreloader(false);
-      this.btnAccuse = document.getElementById('btnAccuse') as HTMLElement;
-      this.receiptSave = document.getElementById('receiptSave') as HTMLElement;
-      this.btnApprove = document.getElementById('btnApprove') as HTMLElement;
-      this.btnAccusedHeader = document.getElementById('btnAccusedHeader') as HTMLElement;
-      if (this.params.CompareID == '0') {
-        this.showEditField = false;
-      } else {
-        this.showEditField = true;
-      }
-      if (this.showEditField) {
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        this.navService.setEditButton(true);
-        this.navService.setSearchBar(false);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
-        this.navService.setNextPageButton(true);
-      } else {
-        this.navService.setSaveButton(true);
-        this.navService.setCancelButton(true);
-        this.navService.setPrintButton(false);
-        this.navService.setSearchBar(false);
-        this.navService.setDeleteButton(false);
-        this.navService.setEditButton(false);
-        this.navService.setNextPageButton(false);
-      }
-      await this.getCompareData();
-      await this.setAllCompareData();
-    } catch (err) {
-      this.navService.setPrintButton(false);
-      this.navService.setDeleteButton(false);
-      this.navService.setEditButton(false);
+    this.preloader.setShowPreloader(true);
+    await this.MasofficeMaingetAll();
+    await this.MasStaffMaingetAll();
+    await this.getRouteParams();
+    await this.subscribeHeaderBtn();
+    await this.CompareArrestgetByIndictmentID();
+    this.accused.CompareDate = this.compareDate;
+    console.log(this.accused);
+    this.preloader.setShowPreloader(false);
+    this.btnAccuse = document.getElementById('btnAccuse') as HTMLElement;
+    this.receiptSave = document.getElementById('receiptSave') as HTMLElement;
+    this.btnApprove = document.getElementById('btnApprove') as HTMLElement;
+    this.btnAccusedHeader = document.getElementById('btnAccusedHeader') as HTMLElement;
+    if (this.params.CompareID == '0') {
+      this.showEditField = false;
+    } else {
+      this.showEditField = true;
+    }
+    if (this.showEditField) {
+      this.navService.setPrintButton(true);
+      this.navService.setDeleteButton(true);
+      this.navService.setEditButton(true);
       this.navService.setSearchBar(false);
       this.navService.setCancelButton(false);
       this.navService.setSaveButton(false);
+      this.navService.setNextPageButton(true);
+    } else {
+      this.navService.setSaveButton(true);
+      this.navService.setCancelButton(true);
+      this.navService.setPrintButton(false);
+      this.navService.setSearchBar(false);
+      this.navService.setDeleteButton(false);
+      this.navService.setEditButton(false);
       this.navService.setNextPageButton(false);
       this.preloader.setShowPreloader(false);
-      console.log(err);
+      // console.log(err);
       this.router.navigate([`/fine/list`]);
      }
-    
+
     console.log( this.showEditField);
     // this.navigate_Service();
   }
   ngOnDestroy() {
-    this.navService.setPrintButton(false);
-    this.navService.setDeleteButton(false);
-    this.navService.setEditButton(false);
-    this.navService.setSearchBar(false);
-    this.navService.setCancelButton(false);
-    this.navService.setSaveButton(false);
-    this.navService.setNextPageButton(false);
     for (const k of Object.keys(this.OnSubscribe)) {
       this.OnSubscribe[k].unsubscribe();
     }
@@ -234,9 +196,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.compareDataUpdateTmp = this.jsonCopy(resp);
       } else {
         swal('', 'ไม่พบข้อมูลการเปรียบเทียบ', 'error');
-        throw 'ไม่พบข้อมูลการเปรียบเทียบ';
+        this.router.navigate([`/fine/list`]);
       }
-      
+
       console.log(JSON.stringify(this.compareDataUpdate) === JSON.stringify(resp));
     } catch (err) {
 
@@ -248,7 +210,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       await this.setCompareDetail();
       await this.setReceiptData();
       await this.setApproveReportList();
-      await this.setDocument();
       this.dataForCompare.accused = this.jsonCopy(this.accused);
       this.dataForCompare.approveReportList = this.jsonCopy(this.approveReportList);
       this.dataForCompare.receipt = this.jsonCopy(this.receipt);
@@ -329,7 +290,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               this.approveReportList[i].rank2 = st.PositionName;
               this.approveReportList[i].department3 = st.OfficeShortName;
               this.approveReportList[i].staff3 = st;
-            } 
+            }
           } else if (st.ProcessCode && st.ProcessCode.split('.').length == 1) {
             console.log('staff 19 ', st.ProcessCode, j);
             const ind: any = parseInt(st.ProcessCode != null ? st.ProcessCode : 0);
@@ -346,7 +307,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               } catch (err) {
                 console.log(err);
               }
-              
+
             }
           }
         }
@@ -528,6 +489,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               if (resp.IsSuccess == 'True') {
                 swal('', 'ลบข้อมูลสำเร็จ', 'success');
                 await this.preloader.setShowPreloader(false);
+                this.router.navigate([`/fine/list`]);
               } else {
                 this.preloader.setShowPreloader(false);
                 swal('', 'ลบข้อมูลไม่สำเร็จ', 'error');
@@ -677,7 +639,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             i++;
           }
         }
-        
+
         if (this.AllAddFiles.length > 0) {
           for (const f of this.AllAddFiles) {
             if (!f.id) {
@@ -724,7 +686,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         'error'
       );
     }
-    
+
     this.preloader.setShowPreloader(false);
   }
   isDatachange() {
@@ -753,7 +715,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           st.ContributorID = 40;
         } else if (valStaff == 2) {
           st.ContributorID = 41;
-        } 
+        }
       }
     }
     return data;
@@ -788,12 +750,11 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (Object.keys(res).length === 0 || (+this.params.CompareID) > 0) {
           const data: any = await this.prepareDataToSave();
           if (data.length === 0) {
-            
+
           } else {
             console.log('ข้อมูล Data เพื่อส่ง CompareinsAll');
             data.CompareStaff = await this.checkStaff(this.jsonCopy(data.CompareStaff));
             console.log(data);
-
             // return null;
             if (this.params.CompareID == 0) {
               return await this.fineService.postMethod('CompareinsAll', data);
@@ -864,11 +825,11 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.headerData.ProveReportNo = resp[0].CompareProve[0].ProveReportNo;
           this.isReportNo = true;
         }
-        
+
         this.headerData.LawsuitID = resp[0].LawsuitID;
         this.headerData.OfficeShortName = resp[0].OfficeShortName;
         this.headerData.PositionName = resp[0].PositionName;
-        this.headerData.LawsuitDate = this.toDatePickerFormat(new Date(resp[0].LawsuitDate)).formatted; 
+        this.headerData.LawsuitDate = this.toDatePickerFormat(new Date(resp[0].LawsuitDate)).formatted;
         this.headerData.LawsuitTime = resp[0].LawsuitTime;
         this.headerData.SectionNo = resp[0].SectionNo;
         this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
@@ -887,8 +848,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               'ไม่พบข้อมูลผู้ต้องหา.',
               'error'
             );
-            throw 'ไม่พบข้อมูลผู้ต้องหา';
-            break;
+            this.router.navigate([`/fine/list`]);
           } else {
             CompareDetail.LawbreakerName = LawBreaker ? `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}` : '';
             const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
@@ -935,9 +895,9 @@ export class ManageComponent implements OnInit, OnDestroy {
           'ไม่สามารถแสดงข้อมูลได้.',
           'error'
         );
-        throw 'ไม่สามารถแสดงข้อมูลได้';
+        this.router.navigate([`/fine/list`]);
       }
-      
+
     } catch (err) {
       console.log(err);
     }
@@ -1029,9 +989,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                       break;
                     }
                   }
-                  
+
                 }
-                console.log(detail); 
+                console.log(detail);
               } break;
             }
             console.log(p);
@@ -1124,9 +1084,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                       break;
                     }
                   }
-                  
+
                 }
-                console.log(detail); 
+                console.log(detail);
               } break;
             }
           console.log(detail);
@@ -1158,7 +1118,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           detail.isNo2 = true;
         }
         console.log(sum, sum1, sum2, sum3);
-        
+
         if (resp.CompareProve[0]) {
           detail.isSum = 1;
           this.DataToSave.userData[detail.userNo].CompareFine = sum;
@@ -1365,7 +1325,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       console.log(this.editUser.cancheck);
     }
-    
+
   }
   saveAccused() {
     console.log(this.editUser);
@@ -1505,17 +1465,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   handleFileInput(files: any) {
     // this.fileToUpload = files.item(0);
     console.log(files);
-    const fileData: any = this.jsonCopy(this.compareDocument);
-    fileData.DocumentName = files.target.files.item(0).name;
-    fileData.IsNewItem = true;
-    fileData.FilePath = replaceFakePath(files.target.value);
-    fileData.DocumentID = this.filePath.length;
-    fileData.CompareCode = this.params.CompareCode;
-    fileData.ReferenceCode = this.params.ArrestCode;
-    fileData.IsActive = 1;
-    this.AllAddFiles.push(fileData);
-    this.filePath.push({path: replaceFakePath(files.target.value), name: files.target.files.item(0).name });
-    
+    this.AllAddFiles.push(files.target.files.item(0));
+    this.filePath.push({path: files.target.value, name: files.target.files.item(0).name });
   }
   async deleteFile(id: any, index: any) {
     Swal({
@@ -1530,15 +1481,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     }).then( async (result) => {
       if (result.value) {
         if (id) {
-          // try {
-          //   const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
-          //   Swal(
-          //     '',
-          //     'ลบไฟล์สำเร็จ.',
-          //     'success'
-          //   );
-          // } catch (err) {
-          // }
+          try {
+            const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
+            Swal(
+              '',
+              'ลบไฟล์สำเร็จ.',
+              'success'
+            );
+          } catch (err) {
+          }
         }
         if (index || index === 0) {
           if (index > -1) {
@@ -1557,7 +1508,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(err);
       return null;
     }
-    
+
   }
   editApproveReport(item: any, index: any, type: any) {
     console.log(item);
@@ -1581,23 +1532,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       data[d] = null;
     }
   }
-  getAllFile() {
-    try {
-      let i: any = 0;
-      for (const f of this.AllAddFiles) {
-        f.DocumentID = i;
-      }
-      return this.AllAddFiles;
-    } catch (err) {
-      console.log(err);
-    }
-  }
   async prepareDataToSave() {
     // console.log(this.approveReportList);
     // console.log(this.accused);
     // console.log(this.DataToSave);
     // console.log('data');
-    
+
     const CompareData: any = {
       CompareID: this.params.CompareID ? (+this.params.CompareID) : '',
       CompareCode: this.receipt.CompareNo + '/' + this.receipt.CompareYear,
@@ -1610,11 +1550,8 @@ export class ManageComponent implements OnInit, OnDestroy {
       CompareDetail: [
       ],
       CompareStaff: [
-      ],
-      CompareDocument: [
       ]
     };
-    CompareData.CompareDocument = this.getAllFile();
     let id = 0;
     const isFillForm1: any = '';
     for (const user of this.DataToSave.userData) {
@@ -1661,7 +1598,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           };
           detail.CompareDetailReceipt = this.prepareReceiptData();
           // if ((+this.params.CompareID) == 0) {
-           
+
           // } else {
           //   detail.CompareDetailID = this.compareDataUpdateTmp.CompareDetail[id].CompareDetailID;
           //   detail.CompareID = this.params.CompareID;
@@ -1678,7 +1615,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         );
         return false;
       }
-      
+
       id++;
     }
     console.log(CompareData);
@@ -1775,14 +1712,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     //     console.log(err);
     //   }
     // }
-    
+
   }
   prepareReceiptData() {
     let receiptData: any = [];
     let i: any = 0;
     console.log(this.receipt);
     const reqField: any = ['ReceiptBookNo', 'ReceiptNo', 'ReceiptChanel', 'PaymentDate'];
-    
+
     for (const rec of this.receipt.list) {
       if (rec.CompareReceiptID) {
         const rec1: any = {
@@ -1933,8 +1870,8 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(date);
     }
     return `${date.year}-${date.month}-${date.day}`;
-  
-      
+
+
   }
   calSum() {
     console.log('start');
@@ -2076,12 +2013,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     try {
       decimalCount = Math.abs(decimalCount);
       decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
-  
+
       const negativeSign = amount < 0 ? "-" : "";
-  
+
       let i: any = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
       let j = (i.length > 3) ? i.length % 3 : 0;
-  
+
       return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
     } catch (e) {
       console.log(e)
@@ -2095,38 +2032,4 @@ export class ManageComponent implements OnInit, OnDestroy {
       return false;
     }
   }
-  addDocument() {
-    const lastIndex = this.compareDocument.length - 1;
-    let document = this.compareDocument;
-    document.DocumentID = ""+(lastIndex + 1);
-    document.DocumentName = "";
-    document.FilePath = "";
-    document.IsNewItem = true;
-    if (lastIndex < 0) {
-        this.compareDocument.push(this.fb.group(document));
-    } else {
-        const lastDoc = this.compareDocument.at(lastIndex).value;
-        if (lastDoc.DocumentName && lastDoc.FilePath) {
-            this.compareDocument.push(this.fb.group(document));
-        }
-    }
-  }
-  changeNoticeDoc(e: any, index: number) {
-    let reader = new FileReader();
-    let file = e.target.files[0];
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-        let dataSource = reader.result.toString().split(',')[1];
-        if (dataSource && dataSource !== undefined) {
-            this.compareDocument.at(index).patchValue({
-                ReferenceCode: this.params.CompareID,
-                FilePath: replaceFakePath(e.target.value),
-                DataSource: dataSource,
-                IsActive: 1
-            })
-        }
-    };
-  }
-  documentId:any = "";
-  documentIndex:any = "";
 }
