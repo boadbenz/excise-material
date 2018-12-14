@@ -939,7 +939,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         let pd = new fromModels.ArrestProductDetail();
         pd.ProductID = parseInt(p.ProductID);
         pd.IsProdcutCo = '1';
-        pd.Qty = p.Qty || '0';
+        // pd.Qty = p.Qty || '0';
         pd.QtyUnit = p.QtyUnit || '-';
         pd.Size = p.Size || '0';
         pd.SizeUnit = p.SizeUnitName || '-';
@@ -970,7 +970,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     p.IndictmentID = indictmentId;
     p.ProductID = productId;
     p.IsProdcutCo = '1';
-    p.IndictmentProductQty = product.Qty || '0';
+    // p.IndictmentProductQty = product.Qty || '0';
     p.IndictmentProductQtyUnit = product.QtyUnit || '-';
     p.IndictmentProductSize = product.Size || '0';
     p.IndictmentProductSizeUnit = product.SizeUnitName || '-';
