@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@an
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { Subject } from 'rxjs';
 import { Message } from 'app/config/message';
+import { Router } from '@angular/router';
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
+import swal from 'sweetalert2'
 
 @Component({
   selector: 'app-manage',
@@ -16,8 +19,11 @@ export class ManageComponent implements OnInit {
   Name: string;
   positionName: string;
   officeName: string;
+  showEditField: any;
   private destroy$: Subject<boolean> = new Subject<boolean>();
-  constructor(private navService: NavigationService) {
+  constructor(private navService: NavigationService,
+    private router: Router,
+    private preloader: PreloaderService, ) {
 
     // set button false
     this.navService.setEditButton(false);
@@ -70,15 +76,23 @@ export class ManageComponent implements OnInit {
   }
 
   private navigate_Service() {
+    this.navService.showFieldEdit.subscribe(p => {
+      this.showEditField = p;
+    });
+
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
+        await this.navService.setOnSave(false);
         console.log("onSave")
       }
     });
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
         console.log("onCancel")
+        swal('', 'ยกเลิกการทำรายการ', 'warning');
+        await this.navService.setOnCancel(false);
+        await this.router.navigate([`/uac/list`]);
       }
     })
   }
