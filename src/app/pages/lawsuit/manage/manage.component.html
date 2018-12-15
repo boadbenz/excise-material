@@ -371,6 +371,9 @@
                 </a>
               </td>
             </tr>
+            <tr *ngIf="LawsuitTableList.value.length == 0">
+              <td>ไม่พบข้อมูล</td>
+            </tr>
           </tbody>
         </table>
       </div>
