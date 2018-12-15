@@ -115,7 +115,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.25');
+        this.sidebarService.setVersion('0.0.0.27');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
@@ -137,7 +137,7 @@ export class ListComponent implements OnInit, OnDestroy {
             this.preLoaderService.setShowPreloader(true);
             console.log('pre');
             if (Textsearch) {
-                
+
                 await this.navService.setOnSearch('');
                 if (Textsearch.Textsearch && Textsearch.Textsearch == null) {
                     Textsearch = {Textsearch:''};
