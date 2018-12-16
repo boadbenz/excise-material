@@ -731,27 +731,31 @@ export class ManageComponent implements OnInit, OnDestroy {
     const case1: any = JSON.stringify(this.dataForCompare.accused) === JSON.stringify(this.accused);
     const case2: any = JSON.stringify(this.dataForCompare.approveReportList) === JSON.stringify(this.approveReportList);
     const case3: any = JSON.stringify(this.dataForCompare.receipt) === JSON.stringify(this.receipt);
+    const case4: any = this.AllAddFiles.length == 0;
     console.log(!(case1 && case2));
     console.log(this.dataForCompare);
     console.log(this.accused);
     console.log(this.approveReportList);
     console.log(case1 + ' and ' + case2);
-    return !(case1 && case2 && case3);
+    return !(case1 && case2 && case3 && case4);
   }
   async checkStaff(data: any) {
     for (const st of data) {
       const ProcessCode: any = st.ProcessCode ? st.ProcessCode.toString() : '';
-      if (ProcessCode == '') {
+      if (ProcessCode.length == 0) {
         st.ContributorID = 17;
+        st.ProcessCode = 'ILG60-06-00-02';
       } else if (ProcessCode.split('.').length == 1) {
         st.ContributorID = 19;
+        st.ProcessCode = 'ILG60-06-00-03';
       } else if (ProcessCode.split('.').length == 2) {
         const valStaff: any = ProcessCode.split('.');
-        if (valStaff == 1) {
+        st.ProcessCode = 'ILG60-06-00-04';
+        if (valStaff[1] == 1) {
           st.ContributorID = 39;
-        } else if (valStaff == 2) {
+        } else if (valStaff[1] == 2) {
           st.ContributorID = 40;
-        } else if (valStaff == 2) {
+        } else if (valStaff[1] == 3) {
           st.ContributorID = 41;
         } 
       }
@@ -1513,6 +1517,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     fileData.CompareCode = this.params.CompareCode;
     fileData.ReferenceCode = this.params.ArrestCode;
     fileData.IsActive = 1;
+    fileData.DocumentType = 3;
     this.AllAddFiles.push(fileData);
     this.filePath.push({path: replaceFakePath(files.target.value), name: files.target.files.item(0).name });
     

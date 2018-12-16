@@ -111,7 +111,6 @@ export class ListComponent implements OnInit, OnDestroy {
             } catch (err) {
                 console.log(err);
             }
-
         }, 100);
       }
     async ngOnInit() {
