@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.28');
+    this.sidebarService.setVersion('0.0.0.29');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -760,27 +760,25 @@ export class ManageComponent implements OnInit, OnDestroy {
     return !(case1 && case2 && case3 && case4);
   }
   async checkStaff(data: any) {
-    let i = 0;
     for (const st of data) {
       const ProcessCode: any = st.ProcessCode ? st.ProcessCode.toString() : '';
       if (ProcessCode.length == 0) {
-        data.CompareStaff[i].ContributorID = 17;
-        data.CompareStaff[i].ProcessCode = 'ILG60-06-00-02';
+        st.ContributorID = 17;
+        st.ProcessCode = 'ILG60-06-00-02';
       } else if (ProcessCode.split('.').length == 1) {
-        data.CompareStaff[i].ContributorID = 19;
-        data.CompareStaff[i].ProcessCode = 'ILG60-06-00-03';
+        st.ContributorID = 19;
+        st.ProcessCode = 'ILG60-06-00-03';
       } else if (ProcessCode.split('.').length == 2) {
         const valStaff: any = ProcessCode.split('.');
-        data.CompareStaff[i].ProcessCode = 'ILG60-06-00-04';
+        st.ProcessCode = 'ILG60-06-00-04';
         if (valStaff[1] == 1) {
-          data.CompareStaff[i].ContributorID = 39;
+          st.ContributorID = 39;
         } else if (valStaff[1] == 2) {
-          data.CompareStaff[i].ContributorID = 40;
+          st.ContributorID = 40;
         } else if (valStaff[1] == 3) {
-          data.CompareStaff[i].ContributorID = 41;
+          st.ContributorID = 41;
         } 
       }
-      i++;
     }
     return data;
   }
