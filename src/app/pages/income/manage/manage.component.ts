@@ -411,7 +411,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                 if (item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
                                                     for (var k = 0; k < item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
                                                         this.oRevenueDetail = {
-                                                            RevenueIndex: "0",
+                                                            RevenueIndex: "1",
                                                             RevenueDetailID: res[0].RevenueDetail[a].RevenueDetailID,
                                                             ReceiptBookNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
                                                             ReceiptNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
@@ -420,8 +420,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                             CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
                                                             CompareID: item[j].CompareID,
                                                             CompareCode: item[j].CompareCode,
-                                                            LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName,
-                                                            SurnameLawBreaker:  item[j].RevenueCompareDetail[i].LawbreakerLastName,
+                                                            LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' || item[j].RevenueCompareDetail[i].LawbreakerTitleName == null ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName,
+                                                            SurnameLawBreaker: item[j].RevenueCompareDetail[i].LawbreakerLastName,
                                                             StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
                                                             PaymentDate: toLocalShort(item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
                                                             TotalFine: +`${item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
@@ -455,23 +455,27 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
 
                     var rIndex = this.ListRevenueDetailPaging.length;
-                    for (var a = this.ListRevenueDetailPaging.length - 1; a >= 0; a -= 1) {
-                       rIndex -= 1;
-                       this.ListRevenueDetailPaging[a].RevenueIndex = rIndex;
 
-                       if(a != 0) {
-                           if(this.ListRevenueDetailPaging[a-1].CompareCode == this.ListRevenueDetailPaging[a].CompareCode){
-                                this.ListRevenueDetailPaging[a].CompareCode = "";
-                                this.ListRevenueDetailPaging[a].RevenueIndex = "";
-                                rIndex +=1;
-                           }
-                       }
-
-                    //    this.ListRevenueDetailPaging[a].TotalFine = this.ListRevenueDetailPaging[a].TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-                    //    this.ListRevenueDetailPaging[a].BribeMoney = this.ListRevenueDetailPaging[a].BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                    //    this.ListRevenueDetailPaging[a].TreasuryMoney = this.ListRevenueDetailPaging[a].TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                    //    this.ListRevenueDetailPaging[a].RewardMoney = this.ListRevenueDetailPaging[a].RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                    if(rIndex > 1){
+                        for (var a = this.ListRevenueDetailPaging.length - 1; a >= 0; a -= 1) {
+                            rIndex -= 1;
+                            this.ListRevenueDetailPaging[a].RevenueIndex = rIndex;
+     
+                            if(a != 0) {
+                                if(this.ListRevenueDetailPaging[a-1].CompareCode == this.ListRevenueDetailPaging[a].CompareCode){
+                                     this.ListRevenueDetailPaging[a].CompareCode = "";
+                                     this.ListRevenueDetailPaging[a].RevenueIndex = "";
+                                     rIndex +=1;
+                                }
+                            }
+     
+                         //    this.ListRevenueDetailPaging[a].TotalFine = this.ListRevenueDetailPaging[a].TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+                         //    this.ListRevenueDetailPaging[a].BribeMoney = this.ListRevenueDetailPaging[a].BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                         //    this.ListRevenueDetailPaging[a].TreasuryMoney = this.ListRevenueDetailPaging[a].TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                         //    this.ListRevenueDetailPaging[a].RewardMoney = this.ListRevenueDetailPaging[a].RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                         }
                     }
+                    
 
                     this.checkIfAllChbSelected();
                 }
