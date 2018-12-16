@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.27');
+    this.sidebarService.setVersion('0.0.0.28');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -254,13 +254,26 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.dataForCompare.receipt = this.jsonCopy(this.receipt);
     }
   }
+  async MasDocumentMaingetAll() {
+    try {
+      const data: any = {
+        "DocumentType": "3",
+        "ReferenceCode": "TN9011126100002"
+      };
+      return await this.fineService.postMethod('MasDocumentMaingetAll', data, "7789");
+    } catch (err) {
+      return [];
+    }
+  }
   async setDocument() {
     this.AllAddFiles = [];
     this.filePath = [];
-    if (this.compareDataUpdateTmp.CompareDocument) {
-      for (const ap of this.compareDataUpdateTmp.CompareDocument) {
-        const fileData: any = this.jsonCopy(this.compareDocument);
+    const file: any = await this.MasDocumentMaingetAll();
+    if (file) {
+      for (const ap of file) {
+        const fileData: any = this.jsonCopy(ap);
         fileData.DocumentName = ap.DocumentName;
+        fileData.DataSource = ap.DataSource;
         fileData.FilePath = ap.FilePath;
         fileData.DocumentID = ap.DocumentID;
         fileData.CompareCode = ap.CompareCode;
@@ -268,9 +281,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         fileData.IsActive = 1;
         this.AllAddFiles.push(fileData);
         this.filePath.push({path: ap.FilePath, name: ap.DocumentName });
-        this.filePath.push();
       }
     }
+    this.dataForCompare.document = this.jsonCopy(file);
   }
   async setApproveReportList() {
     const staff: any = this.jsonCopy(this.compareDataUpdateTmp.CompareStaff);
@@ -680,7 +693,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         
         if (this.AllAddFiles.length > 0) {
           for (const f of this.AllAddFiles) {
-            if (!f.id) {
+            if (f.IsNewItem) {
               await this.insertFile(f);
             }
           }
@@ -700,16 +713,23 @@ export class ManageComponent implements OnInit, OnDestroy {
           'บันทึกข้อมูลสำเร็จ.',
           'success'
         );
-        const cmpID: any = resp.CompareID;
-        // this.router.navigate([`fine/manage/C/${cmpID}/${this.params.IndictmentID}/${this.params.ArrestCode}`]);
+        this.params.CompareID = resp.CompareID ? resp.CompareID : this.params.CompareID;
+        this.preloader.setShowPreloader(true);
+        await this.getCompareData();
+        await this.setAllCompareData();
+        this.preloader.setShowPreloader(false);
+        this.router.navigate([`fine/manage/R/${this.params.CompareID}/${this.params.IndictmentID}/${this.params.ArrestCode}`]);
+        
       } else if (resp && resp.IsSuccess == 'True') {
         Swal(
           '',
           'แก้ไขสำเร็จ.',
           'success'
         );
-        this.dataForCompare.accused = this.jsonCopy(this.accused);
-        this.dataForCompare.approveReportList = this.jsonCopy(this.approveReportList);
+        this.preloader.setShowPreloader(true);
+        await this.getCompareData();
+        await this.setAllCompareData();
+        this.preloader.setShowPreloader(false);
       } else {
         Swal(
           '',
@@ -731,7 +751,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const case1: any = JSON.stringify(this.dataForCompare.accused) === JSON.stringify(this.accused);
     const case2: any = JSON.stringify(this.dataForCompare.approveReportList) === JSON.stringify(this.approveReportList);
     const case3: any = JSON.stringify(this.dataForCompare.receipt) === JSON.stringify(this.receipt);
-    const case4: any = this.AllAddFiles.length == 0;
+    const case4: any = JSON.stringify(this.AllAddFiles) === JSON.stringify(this.dataForCompare.document);
     console.log(!(case1 && case2));
     console.log(this.dataForCompare);
     console.log(this.accused);
@@ -1511,13 +1531,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(files);
     const fileData: any = this.jsonCopy(this.compareDocument);
     fileData.DocumentName = files.target.files.item(0).name;
+    fileData.DataSource = fileData.DocumentName;
     fileData.IsNewItem = true;
     fileData.FilePath = replaceFakePath(files.target.value);
-    fileData.DocumentID = this.filePath.length;
+    fileData.DocumentID = null;
     fileData.CompareCode = this.params.CompareCode;
     fileData.ReferenceCode = this.params.ArrestCode;
     fileData.IsActive = 1;
-    fileData.DocumentType = 3;
+    fileData.DocumentType = "3";
     this.AllAddFiles.push(fileData);
     this.filePath.push({path: replaceFakePath(files.target.value), name: files.target.files.item(0).name });
     
@@ -1534,21 +1555,35 @@ export class ManageComponent implements OnInit, OnDestroy {
       cancelButtonText: 'ยกเลิก'
     }).then( async (result) => {
       if (result.value) {
+        console.log(id);
         if (id) {
-          // try {
-          //   const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id});
-          //   Swal(
-          //     '',
-          //     'ลบไฟล์สำเร็จ.',
-          //     'success'
-          //   );
-          // } catch (err) {
-          // }
-        }
-        if (index || index === 0) {
+          try {
+            const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id}, "7789");
+            Swal(
+              '',
+              'ลบไฟล์สำเร็จ.',
+              'success'
+            );
+            if (index > -1) {
+              this.filePath.splice(index, 1);
+              this.AllAddFiles.splice(index, 1);
+            }
+          } catch (err) {
+            Swal(
+              '',
+              'ลบไฟล์ไม่สำเร็จ.',
+              'error'
+            );
+          }
+        } else if (index || index === 0) {
           if (index > -1) {
             this.filePath.splice(index, 1);
             this.AllAddFiles.splice(index, 1);
+            Swal(
+              '',
+              'ลบไฟล์สำเร็จ.',
+              'success'
+            );
           }
         }
       }
