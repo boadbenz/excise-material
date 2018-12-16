@@ -610,14 +610,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="footable" *ngFor="let item of filePath; let i=index;">
+        <tr class="footable" *ngFor="let item of AllAddFiles; let i=index;">
           <td class="text-center">{{ (i+1) }}</td>
           <td>
-            <input class="form-control" type="text" name="fileName" [(ngModel)]="item.name"
+            <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
                    [disabled]="showEditField">
           </td>
           <td>
-            <input class="form-control" type="text" name="filePath" [(ngModel)]="item.path"
+            <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
                    [disabled]="true">
           </td>
           <td>
