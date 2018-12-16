@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.29');
+    this.sidebarService.setVersion('0.0.0.30');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -541,6 +541,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               if (resp.IsSuccess == 'True') {
                 swal('', 'ลบข้อมูลสำเร็จ', 'success');
                 await this.preloader.setShowPreloader(false);
+                this.router.navigate([`/fine/list`]);
               } else {
                 this.preloader.setShowPreloader(false);
                 swal('', 'ลบข้อมูลไม่สำเร็จ', 'error');
@@ -760,17 +761,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     return !(case1 && case2 && case3 && case4);
   }
   async checkStaff(data: any) {
+    console.log(this.jsonCopy(data));
     for (const st of data) {
       const ProcessCode: any = st.ProcessCode ? st.ProcessCode.toString() : '';
-      if (ProcessCode.length == 0) {
+      console.log(ProcessCode.split('.').length);
+      if (st.ProcessCode == null) {
         st.ContributorID = 17;
-        st.ProcessCode = 'ILG60-06-00-02';
+        st.ProgramCode = 'ILG60-06-00-02';
       } else if (ProcessCode.split('.').length == 1) {
         st.ContributorID = 19;
-        st.ProcessCode = 'ILG60-06-00-03';
+        st.ProgramCode = 'ILG60-06-00-03';
       } else if (ProcessCode.split('.').length == 2) {
         const valStaff: any = ProcessCode.split('.');
-        st.ProcessCode = 'ILG60-06-00-04';
+        st.ProgramCode = 'ILG60-06-00-04';
         if (valStaff[1] == 1) {
           st.ContributorID = 39;
         } else if (valStaff[1] == 2) {
@@ -780,6 +783,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         } 
       }
     }
+    console.log(data);
     return data;
   }
   async CompareinsAll () {
