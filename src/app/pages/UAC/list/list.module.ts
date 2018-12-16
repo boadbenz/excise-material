@@ -8,6 +8,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MyDatePickerModule } from 'mydatepicker';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { CardActionsModule } from '../../component/card-actions/card-actions.module';
+
 const routes: Routes = [
     {
         path: '',
@@ -16,7 +18,7 @@ const routes: Routes = [
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด' }],
             pageType: 'list',
             // nextPage: { title: '', url: '/list/manage' },
-            codePage: 'XCS60-06-01-000'
+            codePage: 'ILG60-10-10-00-00'
         },
         component: ListComponent
     }
@@ -30,7 +32,8 @@ const routes: Routes = [
       RouterModule.forChild(routes),
       MyDatePickerTHModule,
       MyDatePickerModule,
-      PaginationTableModule
+      PaginationTableModule,
+      CardActionsModule
     ],
     declarations: [ListComponent],
     providers: []

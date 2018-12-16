@@ -136,7 +136,7 @@ export class ListComponent implements OnInit, OnDestroy {
             this.preLoaderService.setShowPreloader(true);
             console.log('pre');
             if (Textsearch) {
-                
+
                 await this.navService.setOnSearch('');
                 if (Textsearch.Textsearch && Textsearch.Textsearch == null) {
                     Textsearch = {Textsearch:''};

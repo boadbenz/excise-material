@@ -1192,8 +1192,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.preloader.setShowPreloader(false);
             }
         }, (err: HttpErrorResponse) => {
-            this.ShowAlertError(err.message);
-            //alert(err.message);
+            this.ShowAlertError("API ProvegetByCon Error !!");
+            this.preloader.setShowPreloader(false);
         });
 
     }
@@ -1223,77 +1223,90 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ArrestProduct = [];
 
                 await this.proveService.ArrestIndictmentProductgetByIndictmentID(this.IndictmentID).then(async res => {
-                    if (res.length > 0) {
-                        for (var i = 0; i < res.length; i += 1) {
-                            this.oProveProduct = {
-                                ProductID: "",
-                                ProductType: res[i].ProductType,
-                                ProveID: "",
-                                ProductRefID: res[i].ProductID,
-                                GroupCode: res[i].ProductGroupCode,
-                                IsDomestic: res[i].ProductIsDomestic,
-                                ProductCode: res[i].ProductCode,
-                                BrandCode: res[i].ProductBrandCode,
-                                BrandNameTH: res[i].ProductBrandNameTH,
-                                BrandNameEN: res[i].ProductBrandNameEN,
-                                SubBrandCode: res[i].ProductSubBrandCode,
-                                SubBrandNameTH: res[i].ProductSubBrandNameTH,
-                                SubBrandNameEN: res[i].ProductSubBrandNameEN,
-                                ModelCode: res[i].ProductModelCode,
-                                ModelName: res[i].ProductModelName,
-                                FixNo1: res[i].ProductFixNo1,
-                                DegreeCode: res[i].ProductDegreeCode,
-                                Degree: res[i].ProductDegree,
-                                SizeCode: res[i].ProductSizeCode,
-                                Size: res[i].IndictmentProductSize,
-                                SizeUnitCode: res[i].ProductSizeUnitCode,
-                                SizeUnitName: res[i].IndictmentProductSizeUnit,
-                                FixNo2: res[i].ProductFixNo2,
-                                SequenceNo: res[i].ProductSequenceNo,
-                                ProductDesc: res[i].ProductDesc,
-                                CarNo: res[i].ProductCarNo,
-                                Qty: res[i].IndictmentProductQty,
-                                QtyUnit: res[i].IndictmentProductQtyUnit,
-                                QtyBalance: res[i].IndictmentProductQty,
-                                QtyBalanceUnit: res[i].IndictmentProductQtyUnit,
-                                NetVolume: res[i].IndictmentProductVolume,
-                                NetVolumeUnit: res[i].IndictmentProductVolumeUnit,
-                                NetVolumeBalance: res[i].IndictmentProductVolume,
-                                NetVolumeBalanceUnit: res[i].IndictmentProductVolumeUnit,
-                                IsProveScience: "",
-                                ProveScienceID: "",
-                                ProveScienceResult: "",
-                                ReferenceRetailPrice: "",
-                                ReferenceRetailUnit: "",
-                                ReferenceVatRate: "",
-                                ReferenceVatQty: "",
-                                ReferenceVatValue: "",
-                                ReferenceVatUnit: "",
-                                ReferenceDate: "",
-                                RetailPrice: "",
-                                RetailUnit: "",
-                                VatValue: "",
-                                VatUnit: "",
-                                VatProve: "",
-                                ProveResult: "",
-                                Remarks: "",
-                                IsStatusExhibit: "",
-                                IsActive: "1",
-                                DeliverID: "",
-                                IsReferenceVatRate: false,
-                                IsReferenceVatQty: false,
-                                IsProdScience: false,
-                                IsNewItem: true,
-                                IsDelItem: false
+                    if(res.IsSuccess != "False")
+                    {
+                        if (res.length > 0) {
+                            for (var i = 0; i < res.length; i += 1) {
+                                this.oProveProduct = {
+                                    ProductID: "",
+                                    ProductType: res[i].ProductType,
+                                    ProveID: "",
+                                    ProductRefID: res[i].ProductID,
+                                    GroupCode: res[i].ProductGroupCode,
+                                    IsDomestic: res[i].ProductIsDomestic,
+                                    ProductCode: res[i].ProductCode,
+                                    BrandCode: res[i].ProductBrandCode,
+                                    BrandNameTH: res[i].ProductBrandNameTH,
+                                    BrandNameEN: res[i].ProductBrandNameEN,
+                                    SubBrandCode: res[i].ProductSubBrandCode,
+                                    SubBrandNameTH: res[i].ProductSubBrandNameTH,
+                                    SubBrandNameEN: res[i].ProductSubBrandNameEN,
+                                    ModelCode: res[i].ProductModelCode,
+                                    ModelName: res[i].ProductModelName,
+                                    FixNo1: res[i].ProductFixNo1,
+                                    DegreeCode: res[i].ProductDegreeCode,
+                                    Degree: res[i].ProductDegree,
+                                    SizeCode: res[i].ProductSizeCode,
+                                    Size: res[i].IndictmentProductSize,
+                                    SizeUnitCode: res[i].ProductSizeUnitCode,
+                                    SizeUnitName: res[i].IndictmentProductSizeUnit,
+                                    FixNo2: res[i].ProductFixNo2,
+                                    SequenceNo: res[i].ProductSequenceNo,
+                                    ProductDesc: res[i].ProductDesc,
+                                    CarNo: res[i].ProductCarNo,
+                                    Qty: res[i].IndictmentProductQty,
+                                    QtyUnit: res[i].IndictmentProductQtyUnit,
+                                    QtyBalance: res[i].IndictmentProductQty,
+                                    QtyBalanceUnit: res[i].IndictmentProductQtyUnit,
+                                    NetVolume: res[i].IndictmentProductVolume,
+                                    NetVolumeUnit: res[i].IndictmentProductVolumeUnit,
+                                    NetVolumeBalance: res[i].IndictmentProductVolume,
+                                    NetVolumeBalanceUnit: res[i].IndictmentProductVolumeUnit,
+                                    IsProveScience: "",
+                                    ProveScienceID: "",
+                                    ProveScienceResult: "",
+                                    ReferenceRetailPrice: "",
+                                    ReferenceRetailUnit: "",
+                                    ReferenceVatRate: "",
+                                    ReferenceVatQty: "",
+                                    ReferenceVatValue: "",
+                                    ReferenceVatUnit: "",
+                                    ReferenceDate: "",
+                                    RetailPrice: "",
+                                    RetailUnit: "",
+                                    VatValue: "",
+                                    VatUnit: "",
+                                    VatProve: "",
+                                    ProveResult: "",
+                                    Remarks: "",
+                                    IsStatusExhibit: "",
+                                    IsActive: "1",
+                                    DeliverID: "",
+                                    IsReferenceVatRate: false,
+                                    IsReferenceVatQty: false,
+                                    IsProdScience: false,
+                                    IsNewItem: true,
+                                    IsDelItem: false
+                                }
+    
+                                this.ArrestProduct.push(this.oProveProduct);
                             }
-
-                            this.ArrestProduct.push(this.oProveProduct);
+    
+                            this.getProveProduct();
                         }
-
-                        this.getProveProduct();
                     }
+                    else{
+                        this.ShowAlertError("API ArrestIndictmentProductgetByIndictmentID :: Response Error !!");
+                        this.preloader.setShowPreloader(false);
+                    }
+                }, (err: HttpErrorResponse) => {
+                    this.ShowAlertError("API ArrestIndictmentProductgetByIndictmentID Error !!");
+                    this.preloader.setShowPreloader(false);
                 });
             }
+        }, (err: HttpErrorResponse) => {
+            this.ShowAlertError("API LawsuitArrestgetByCon Error !!");
+            this.preloader.setShowPreloader(false);
         });
 
     }
