@@ -28,7 +28,7 @@ export class PrintDocModalComponent implements OnInit {
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
-
+    check: any = {};
     constructor(
         private fineService: FineService,
         private fb: FormBuilder,
@@ -95,16 +95,17 @@ export class PrintDocModalComponent implements OnInit {
     async onPrint(form: any) {
         // let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
         // if (_print.length) {
-        this.preloader.setShowPreloader(true);
-        await this.ReportForm252(this.ArrestCode)
-            .subscribe(x => {
-            const file = new Blob([x], {type: 'application/pdf'});
-            const fileURL = URL.createObjectURL(file);
-            window.open(fileURL);
-            this.preloader.setShowPreloader(false);
+        if (this.check.checkbox3) {
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm252(this.ArrestCode)
+                .subscribe(x => {
+                const file = new Blob([x], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.preloader.setShowPreloader(false);
             })
-        // }
-        this.preloader.setShowPreloader(false);
+        }
+        
         // this._router.navigate([`/fine/list`]);
     }
     private httpOptions = {
