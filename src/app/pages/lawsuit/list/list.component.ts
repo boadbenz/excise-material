@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.24');
+    this.sidebarService.setVersion('0.0.0.25');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
@@ -130,16 +130,9 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async onSearch(Textsearch: any) {
-    if (this.resultsPerPage.length == 0) {
-      this.preLoaderService.setShowPreloader(true);
-      await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
-      this.preLoaderService.setShowPreloader(false);
-    } else {
-      Swal({
-        text: "ไม่พบข้อมูล",
-        type: 'warning',
-      })
-    }
+    this.preLoaderService.setShowPreloader(true);
+    await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+    this.preLoaderService.setShowPreloader(false);
   }
 
   async onAdvSearch(form: any) {
@@ -147,6 +140,9 @@ export class ListComponent implements OnInit, OnDestroy {
       let lawsuitDateToValue = form.value.LawsuitDateTo
       if (!lawsuitDateToValue) {
         lawsuitDateToValue = form.value.LawsuitDateFrom;
+      }
+      if (form.value.LawsuitDateTo == null) {
+        form.value.LawsuitDateTo = form.value.LawsuitDateFrom
       }
       const sDateCompare = new Date(form.value.LawsuitDateFrom.jsdate);
       const eDateCompare = new Date(form.value.LawsuitDateTo.jsdate);
@@ -157,10 +153,10 @@ export class ListComponent implements OnInit, OnDestroy {
         })
         return false;
       }
-      // console.log('form.value.LawsuitDateFrom ===>', form.value.LawsuitDateFrom)
       form.value.LawsuitDateFrom = sDateCompare.toISOString();
       form.value.LawsuitDateTo = eDateCompare.toISOString();
     }
+
     this.preLoaderService.setShowPreloader(true);
     await this.lawsuitService.LawsuitArrestGetByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.advSearch = this.navService.showAdvSearch;
@@ -174,7 +170,10 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
+    this.navService.setNewButton(false);
     this.navService.setOnPrevPage(false);
+    this.navService.setPrevPageButton(false);
+
   }
   private convertList(list: any) {
     let tempList = []
@@ -193,7 +192,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private async onSearchComplete(list: any) {
     list = await this.convertList(list)
-    console.log(list)
 
     /* Alert When No Data To Show */
     if (!list.length) {
@@ -221,8 +219,8 @@ export class ListComponent implements OnInit, OnDestroy {
     let LawsuitID = ""
     if (item.LawsuitArrestIndicment.Lawsuit[0]) {
       LawsuitID = item.LawsuitArrestIndicment.Lawsuit[0].LawsuitID;
-    } 
-    if (item.LawsuitID != "") {
+    }
+    if (LawsuitID != "") {
       this.router.navigate(['/lawsuit/manage', 'R'], {
         queryParams: { IndictmentID: item.LawsuitArrestIndicment.IndictmentID, LawsuitID: LawsuitID }
       });
