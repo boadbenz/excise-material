@@ -1,5 +1,5 @@
 export const appConfig = {
-    //
+    
     // apiUrl: 'http://192.168.3.158:8888/XCS60',
     // api8888: 'http://192.168.3.158:8888/XCS60',
     // api7788: 'http://192.168.3.158:7788/XCS60',
@@ -28,8 +28,8 @@ export const appConfig = {
     api8883: 'http://103.233.193.94:8883/XCS60',
     api8086: 'http://103.233.193.94:8086/XCS60',
     api8087: 'http://103.233.193.94:8087/XCS60',
-    api8887: 'http://103.233.193.94:8887/XCS60',
-    apiReport: 'http://103.233.193.94/Report_XCS',
+    api8887: 'http://103.233.193.94:8887/XCS60',    
+    apiReport:'http://103.233.193.94/Report_XCS',
     mockapi: 'http://demo1735762.mockable.io/XCS60',
 
 }
