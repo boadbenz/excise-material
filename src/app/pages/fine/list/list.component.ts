@@ -111,11 +111,10 @@ export class ListComponent implements OnInit, OnDestroy {
             } catch (err) {
                 console.log(err);
             }
-
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.27');
+        this.sidebarService.setVersion('0.0.0.30');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),

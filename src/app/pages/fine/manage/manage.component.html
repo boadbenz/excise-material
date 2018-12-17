@@ -1,5 +1,5 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
-  <app-printdoc-modal (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
+  <app-printdoc-modal [ArrestCode]="params.ArrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
 </ng-template>
 <!-- <div style="height: 100px; background-color: white;border: 1px solid #ccc;">
 <div *ngFor="let option of options" style="padding:2px;">
@@ -610,14 +610,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="footable" *ngFor="let item of filePath; let i=index;">
+        <tr class="footable" *ngFor="let item of AllAddFiles; let i=index;">
           <td class="text-center">{{ (i+1) }}</td>
           <td>
-            <input class="form-control" type="text" name="fileName" [(ngModel)]="item.name"
+            <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
                    [disabled]="showEditField">
           </td>
           <td>
-            <input class="form-control" type="text" name="filePath" [(ngModel)]="item.path"
+            <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
                    [disabled]="true">
           </td>
           <td>
