@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.31');
+    this.sidebarService.setVersion('0.0.0.32');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
