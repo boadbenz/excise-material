@@ -16,7 +16,8 @@ const routes: Routes = [
         path: '',
         data: {
             // title: 'ค้นหาข้อมูล',
-            urls: [{ title: 'หน้าหลัก', url: '/' },{ title: 'การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด', url: '/uac/list' }, { title: 'ตั้งค่า' }],
+            urls: [{ title: 'หน้าหลัก', url: '/' },{ title: 'ค้นหาเจ้าพนักงานเพื่อจัดการสิทธิเข้าถึงข้อมูล', url: '/uac/list' }, 
+            { title: 'การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด' }],
             pageType: 'list',
             // nextPage: { title: 'แจ้งความ', url: '/fine/manage' },
             codePage: 'ILG60-10-01-00-00'
