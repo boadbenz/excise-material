@@ -104,7 +104,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
-        this.sidebarService.setVersion('Revenue 0.0.0.19');
+        //this.sidebarService.setVersion('Revenue 0.0.0.19');
 
         this.active_Route();
         this.navigate_Service();
@@ -454,28 +454,28 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.paginage.TotalItems = this.ListRevenueDetail.length;
                     this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
 
-                    var rIndex = this.ListRevenueDetailPaging.length;
+                    var rIndex = 1;
 
-                    if(rIndex > 1){
-                        for (var a = this.ListRevenueDetailPaging.length - 1; a >= 0; a -= 1) {
-                            rIndex -= 1;
-                            this.ListRevenueDetailPaging[a].RevenueIndex = rIndex;
-     
-                            if(a != 0) {
-                                if(this.ListRevenueDetailPaging[a-1].CompareCode == this.ListRevenueDetailPaging[a].CompareCode){
-                                     this.ListRevenueDetailPaging[a].CompareCode = "";
-                                     this.ListRevenueDetailPaging[a].RevenueIndex = "";
-                                     rIndex +=1;
-                                }
+                    for(var a = 0; a < this.ListRevenueDetailPaging.length; a++){
+                        if(a != 0) {
+                            if(this.ListRevenueDetailPaging[a-1].CompareCode == this.ListRevenueDetailPaging[a].CompareCode){
+                                this.ListRevenueDetailPaging[a].CompareCode = "";
+                                this.ListRevenueDetailPaging[a].RevenueIndex = "";
                             }
-     
-                         //    this.ListRevenueDetailPaging[a].TotalFine = this.ListRevenueDetailPaging[a].TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-                         //    this.ListRevenueDetailPaging[a].BribeMoney = this.ListRevenueDetailPaging[a].BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                         //    this.ListRevenueDetailPaging[a].TreasuryMoney = this.ListRevenueDetailPaging[a].TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                         //    this.ListRevenueDetailPaging[a].RewardMoney = this.ListRevenueDetailPaging[a].RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                         }
+                            else{
+                                rIndex += 1;
+                                this.ListRevenueDetailPaging[a].RevenueIndex = rIndex;
+                            }  
+                        }
+                        else{
+                            this.ListRevenueDetailPaging[a].RevenueIndex = 1;
+                        }
+
+                        //    this.ListRevenueDetailPaging[a].TotalFine = this.ListRevenueDetailPaging[a].TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+                        //    this.ListRevenueDetailPaging[a].BribeMoney = this.ListRevenueDetailPaging[a].BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                        //    this.ListRevenueDetailPaging[a].TreasuryMoney = this.ListRevenueDetailPaging[a].TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+                        //    this.ListRevenueDetailPaging[a].RewardMoney = this.ListRevenueDetailPaging[a].RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
                     }
-                    
 
                     this.checkIfAllChbSelected();
                 }
