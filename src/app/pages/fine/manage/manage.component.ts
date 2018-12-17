@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.30');
+    this.sidebarService.setVersion('0.0.0.31');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -196,7 +196,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(err);
       this.router.navigate([`/fine/list`]);
      }
-    
+
     console.log( this.showEditField);
     // this.navigate_Service();
   }
@@ -236,7 +236,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         swal('', 'ไม่พบข้อมูลการเปรียบเทียบ', 'error');
         throw 'ไม่พบข้อมูลการเปรียบเทียบ';
       }
-      
+
       console.log(JSON.stringify(this.compareDataUpdate) === JSON.stringify(resp));
     } catch (err) {
 
@@ -342,7 +342,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               this.approveReportList[i].rank2 = st.PositionName;
               this.approveReportList[i].department3 = st.OfficeShortName;
               this.approveReportList[i].staff3 = st;
-            } 
+            }
           } else if (st.ProcessCode && st.ProcessCode.split('.').length == 1) {
             console.log('staff 19 ', st.ProcessCode, j);
             const ind: any = parseInt(st.ProcessCode != null ? st.ProcessCode : 0);
@@ -359,7 +359,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               } catch (err) {
                 console.log(err);
               }
-              
+
             }
           }
         }
@@ -658,9 +658,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             "IsRequestBribe": '0',
             "IsActive": '1'
           });
-        const insPaymentFine: any = await this.fineService.postMethod('ComparePaymentFineinsAll', data);
-        console.log(insPaymentFine);
+        
       }
+      const insPaymentFine: any = await this.fineService.postMethod('ComparePaymentFineinsAll', data);
+      console.log(insPaymentFine);
     } catch (err) {
       console.log(err);
     }
@@ -691,7 +692,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             i++;
           }
         }
-        
+
         if (this.AllAddFiles.length > 0) {
           for (const f of this.AllAddFiles) {
             if (f.IsNewItem) {
@@ -720,7 +721,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.setAllCompareData();
         this.preloader.setShowPreloader(false);
         this.router.navigate([`fine/manage/R/${this.params.CompareID}/${this.params.IndictmentID}/${this.params.ArrestCode}`]);
-        
+
       } else if (resp && resp.IsSuccess == 'True') {
         Swal(
           '',
@@ -745,7 +746,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         'error'
       );
     }
-    
+
     this.preloader.setShowPreloader(false);
   }
   isDatachange() {
@@ -780,7 +781,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           st.ContributorID = 40;
         } else if (valStaff[1] == 3) {
           st.ContributorID = 41;
-        } 
+        }
       }
     }
     console.log(data);
@@ -816,7 +817,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (Object.keys(res).length === 0 || (+this.params.CompareID) > 0) {
           const data: any = await this.prepareDataToSave();
           if (data.length === 0) {
-            
+
           } else {
             console.log('ข้อมูล Data เพื่อส่ง CompareinsAll');
             data.CompareStaff = await this.checkStaff(this.jsonCopy(data.CompareStaff));
@@ -892,11 +893,11 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.headerData.ProveReportNo = resp[0].CompareProve[0].ProveReportNo;
           this.isReportNo = true;
         }
-        
+
         this.headerData.LawsuitID = resp[0].LawsuitID;
         this.headerData.OfficeShortName = resp[0].OfficeShortName;
         this.headerData.PositionName = resp[0].PositionName;
-        this.headerData.LawsuitDate = this.toDatePickerFormat(new Date(resp[0].LawsuitDate)).formatted; 
+        this.headerData.LawsuitDate = this.toDatePickerFormat(new Date(resp[0].LawsuitDate)).formatted;
         this.headerData.LawsuitTime = resp[0].LawsuitTime;
         this.headerData.SectionNo = resp[0].SectionNo;
         this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
@@ -965,7 +966,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         );
         throw 'ไม่สามารถแสดงข้อมูลได้';
       }
-      
+
     } catch (err) {
       console.log(err);
     }
@@ -1057,9 +1058,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                       break;
                     }
                   }
-                  
+
                 }
-                console.log(detail); 
+                console.log(detail);
               } break;
             }
             console.log(p);
@@ -1152,9 +1153,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                       break;
                     }
                   }
-                  
+
                 }
-                console.log(detail); 
+                console.log(detail);
               } break;
             }
           console.log(detail);
@@ -1186,7 +1187,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           detail.isNo2 = true;
         }
         console.log(sum, sum1, sum2, sum3);
-        
+
         if (resp.CompareProve[0]) {
           detail.isSum = 1;
           this.DataToSave.userData[detail.userNo].CompareFine = sum;
@@ -1393,7 +1394,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       console.log(this.editUser.cancheck);
     }
-    
+
   }
   saveAccused() {
     console.log(this.editUser);
@@ -1545,7 +1546,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     fileData.DocumentType = "3";
     this.AllAddFiles.push(fileData);
     this.filePath.push({path: replaceFakePath(files.target.value), name: files.target.files.item(0).name });
-    
+
   }
   async deleteFile(id: any, index: any) {
     Swal({
@@ -1601,7 +1602,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(err);
       return null;
     }
-    
+
   }
   editApproveReport(item: any, index: any, type: any) {
     console.log(item);
@@ -1641,7 +1642,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // console.log(this.accused);
     // console.log(this.DataToSave);
     // console.log('data');
-    
+
     const CompareData: any = {
       CompareID: this.params.CompareID ? (+this.params.CompareID) : '',
       CompareCode: this.receipt.CompareNo + '/' + this.receipt.CompareYear,
@@ -1705,7 +1706,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           };
           detail.CompareDetailReceipt = this.prepareReceiptData();
           // if ((+this.params.CompareID) == 0) {
-           
+
           // } else {
           //   detail.CompareDetailID = this.compareDataUpdateTmp.CompareDetail[id].CompareDetailID;
           //   detail.CompareID = this.params.CompareID;
@@ -1722,7 +1723,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         );
         return false;
       }
-      
+
       id++;
     }
     console.log(CompareData);
@@ -1819,14 +1820,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     //     console.log(err);
     //   }
     // }
-    
+
   }
   prepareReceiptData() {
     let receiptData: any = [];
     let i: any = 0;
     console.log(this.receipt);
     const reqField: any = ['ReceiptBookNo', 'ReceiptNo', 'ReceiptChanel', 'PaymentDate'];
-    
+
     for (const rec of this.receipt.list) {
       if (rec.CompareReceiptID) {
         const rec1: any = {
@@ -1885,6 +1886,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(this.accused);
     console.log(this.approveReportList);
     console.log(this.receipt);
+    this.accused.staff = this.jsonCopy(this.accused.staff);
+    this.receipt.list = this.jsonCopy(this.receipt.list);
+    this.approveReportList = this.jsonCopy(this.approveReportList);
     this.accused.staff.ProcessCode = null;
     this.accused.staff.ProgramCode = 'ILG60-06-02-00';
     this.accused.staff.ContributorID = 17;
@@ -1977,8 +1981,8 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(date);
     }
     return `${date.year}-${date.month}-${date.day}`;
-  
-      
+
+
   }
   calSum() {
     console.log('start');
@@ -2120,12 +2124,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     try {
       decimalCount = Math.abs(decimalCount);
       decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
-  
+
       const negativeSign = amount < 0 ? "-" : "";
-  
+
       let i: any = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
       let j = (i.length > 3) ? i.length % 3 : 0;
-  
+
       return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
     } catch (e) {
       console.log(e)
