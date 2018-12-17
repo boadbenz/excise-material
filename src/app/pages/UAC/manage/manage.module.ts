@@ -19,7 +19,7 @@ const routes: Routes = [
             urls: [{ title: 'หน้าหลัก', url: '/' },{ title: 'การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด', url: '/uac/list' }, { title: 'ตั้งค่า' }],
             pageType: 'list',
             // nextPage: { title: 'แจ้งความ', url: '/fine/manage' },
-            codePage: 'ILG60-10-10-00-00'
+            codePage: 'ILG60-10-01-00-00'
         },
         component: ManageComponent
     }
