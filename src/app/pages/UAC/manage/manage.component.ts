@@ -16,6 +16,7 @@ import swal from 'sweetalert2'
 export class ManageComponent implements OnInit {
 
   form: FormGroup;
+  UserName: string;
   Name: string;
   positionName: string;
   officeName: string;
@@ -36,7 +37,8 @@ export class ManageComponent implements OnInit {
     // set button true
     this.navService.setSaveButton(true);
     this.navService.setCancelButton(true);
-
+    
+    this.UserName = localStorage.getItem('UserName');
     this.Name = localStorage.getItem('Name');
     this.positionName = localStorage.getItem('positionName');
     this.officeName = localStorage.getItem('officeName');
@@ -44,7 +46,7 @@ export class ManageComponent implements OnInit {
 
   List: any = [{ "name": "งานสืบสวน" },
   { "name": "ใบแจ้งความนำจับ" },
-  { "name": "งานจับคุม" },
+  { "name": "งานจับกุม" },
   { "name": "บันทึกรับคำกล่าวโทษ" },
   { "name": "งานตรวจรับและพิสูจน์ของกลาง" },
   { "name": "งานเปรียบเทียบและชำระค่าปรับ" },

@@ -1,15 +1,12 @@
 <form #form="ngForm" (ngSubmit)="onSelect()">
     <div class="modal-header bg-theme">
-        <div class="row">
-            <div class="col-lg-5">
-                <h4 class="modal-title text-white">เลือกรายการข้อกล่าวหาที่ต้องการบันทึกคำกล่าวโทษ</h4>
-            </div>
-            <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
+        <h4 class="modal-title text-white">เลือกรายการข้อกล่าวหาที่ต้องการบันทึกคำกล่าวโทษ
+            <a class="float-lg-right text-white font-14" aria-label="Close" (click)="closePopup()">
                 <span aria-hidden="true">
                     <i class=" ti-close"></i>
                 </span>
             </a>
-        </div>
+        </h4>
     </div>
     <div class="modal-body font-14">
         <div class="table-responsive">
@@ -17,7 +14,6 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th class="text-center">ลำดับ</th>
                         <th>ฐานควมผิดมาตรา</th>
                         <th>ฐานควมผิด</th>
                     </tr>
@@ -25,11 +21,10 @@
                 <tbody>
                     <tr *ngFor="let item of complete; let i=index;">
                         <td class="text-center">
-                            <input name="approveRadio" [id]="'td'+i"  value="{{item.IndictmentID}}" class="col-form-label with-gap radio-col-indigo"
+                            <input name="approveRadio" [id]="'td'+i" value="{{item.IndictmentID}}" class="col-form-label with-gap radio-col-indigo"
                                 [(ngModel)]="radioCheck" type="radio">
                             <label [for]="'td'+i"></label>
                         </td>
-                        <td class="text-center">{{i+1}}</td>
                         <td>{{item.SubSectionType}}</td>
                         <td>{{item.GuiltBaseName}}</td>
                     </tr>

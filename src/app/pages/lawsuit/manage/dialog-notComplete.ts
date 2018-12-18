@@ -35,4 +35,7 @@ export class DialogNotComplete implements OnInit {
     onSelect() {
         this.dialogRef.close(this.radioCheck);
     }
+    closePopup() {
+        this.dialogRef.close();
+    }
 }
