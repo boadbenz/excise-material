@@ -116,6 +116,7 @@ export class PrintLawsuitModalComponent implements OnInit {
   }
 
   async onPrint() {
+    this.preLoaderService.setShowPreloader(true);
     let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
     if (_print.length) {
       console.log(this.IndictmentID)
@@ -123,14 +124,11 @@ export class PrintLawsuitModalComponent implements OnInit {
         const file = new Blob([x], { type: 'application/pdf' });
         const fileURL = URL.createObjectURL(file);
         window.open(fileURL);
+        this.preLoaderService.setShowPreloader(false);
       })
     }
   }
-
-  // onPrint(f: any) {
-  //   console.log(f.value)
-  // }
-
+  
   dismiss(e: any) {
     this.d.emit(e);
   }
