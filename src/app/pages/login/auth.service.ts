@@ -3,7 +3,7 @@ import { appConfig } from "app/app.config";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { HttpService } from "app/core/http.service";
 import { Observable } from 'rxjs';
-import { Http, Response, RequestOptions, Headers, Jsonp } from '@angular/http'
+import { Http, Response, RequestOptions, Headers, Jsonp ,ResponseContentType} from '@angular/http'
 
 @Injectable()
 export class AuthService {
@@ -39,6 +39,21 @@ export class AuthService {
     const url = `${appConfig.api8086}/UACVerifyLogIn`
     return this.http.post(url, params, options)
       .map((res: Response) => res.json())
+      .catch(this.handleErrorObservable);
+  }
+
+  userAuth1(params): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    // const url = `${appConfig.api8086}/UACVerifyLogIn`
+    const url = "http://webtest.excise.go.th/edssows/ldap/userPrivilege?userID=tester&systemID=Test010"
+    return this.http.get(url, options)
+      .map((res: Response) => res.json())
+      .catch(this.handleErrorObservable);
+  }
+  userAuth2(): Observable<any> {
+    let options = new RequestOptions({ responseType: ResponseContentType.Blob });
+    return this.http.get( "http://webtest.excise.go.th/edssows/ldap/userPrivilege?userID=tester&systemID=Test010", options)
+      .map((res: Response) => res)
       .catch(this.handleErrorObservable);
   }
 

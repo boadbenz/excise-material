@@ -46,16 +46,17 @@ export class LoginComponent implements OnInit {
           UserName: User,
           Password: Pass
         };
-        await this.authService.userAuth(params).subscribe(async res => {
-          if (res.StaffCode != null) {
-            this.fullName = res.TitleName + " " + res.FirstName + " " + res.LastName;
-            this.operationPosName = res.OperationPosName;
-            this.OfficeShortName = res.OfficeShortName;
-            localStorage.setItem('fullName', this.fullName);
-            localStorage.setItem('operationPosName', this.operationPosName);
-            localStorage.setItem('officeShortName', this.OfficeShortName);
-            this.router.navigate([this.returnUrl]);
-          } else this.errMsg = res.Msg;
+        await this.authService.userAuth2().subscribe(async res => {
+          console.log("res++++ : ",res);
+          // if (res.StaffCode != null) {
+          //   this.fullName = res.TitleName + " " + res.FirstName + " " + res.LastName;
+          //   this.operationPosName = res.OperationPosName;
+          //   this.OfficeShortName = res.OfficeShortName;
+          //   localStorage.setItem('fullName', this.fullName);
+          //   localStorage.setItem('operationPosName', this.operationPosName);
+          //   localStorage.setItem('officeShortName', this.OfficeShortName);
+          //   this.router.navigate([this.returnUrl]);
+          // } else this.errMsg = res.Msg;
         });
       }
     }
