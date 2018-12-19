@@ -24,14 +24,13 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService,
     private router: Router,
     private http: HttpClient,
-    private layoutComponent: LayoutComponent,
     private route: ActivatedRoute) {
     // reset signin status
     this.authService.signout();
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
-  private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+  
   async onSubmit(form: any) {
     var User = form.userName
     var Pass = form.password;
@@ -46,17 +45,17 @@ export class LoginComponent implements OnInit {
           UserName: User,
           Password: Pass
         };
-        await this.authService.userAuth1().subscribe(async res => {
-          console.log("res++++ : ",res);
-          // if (res.StaffCode != null) {
-          //   this.fullName = res.TitleName + " " + res.FirstName + " " + res.LastName;
-          //   this.operationPosName = res.OperationPosName;
-          //   this.OfficeShortName = res.OfficeShortName;
-          //   localStorage.setItem('fullName', this.fullName);
-          //   localStorage.setItem('operationPosName', this.operationPosName);
-          //   localStorage.setItem('officeShortName', this.OfficeShortName);
-          //   this.router.navigate([this.returnUrl]);
-          // } else this.errMsg = res.Msg;
+        await this.authService.userAuth(params).subscribe(async res => {
+          // console.log("res++++ : ",res);
+          if (res.StaffCode != null) {
+            this.fullName = res.TitleName + " " + res.FirstName + " " + res.LastName;
+            this.operationPosName = res.OperationPosName;
+            this.OfficeShortName = res.OfficeShortName;
+            localStorage.setItem('fullName', this.fullName);
+            localStorage.setItem('operationPosName', this.operationPosName);
+            localStorage.setItem('officeShortName', this.OfficeShortName);
+            this.router.navigate([this.returnUrl]);
+          } else this.errMsg = res.Msg;
         });
       }
     }

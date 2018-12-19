@@ -12,13 +12,6 @@ export class AuthService {
     private HttpService: HttpService,
     private http: Http) { }
 
-  private httpOptions = {
-    headers: new HttpHeaders(
-      {
-        'Content-Type': 'application/json'
-      })
-  };
-
   signin(form: any) {
 
     // return res.map(user => {s
@@ -50,11 +43,20 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
+  private httpOptions = {
+    headers: new HttpHeaders(
+      {
+        // 'Content-Type': 'application/json',
+        // 'Access-Control-Allow-Origin':'*',    
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": 'GET,POST,PATCH,DELETE,PUT,OPTIONS',
+        "Access-Control-Allow-Headers": 'Origin, Content-Type, X-Auth-Token, content-type',
+      })
+  };
+
   private getHeaders() {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json; charset=utf-8');
-    headers.set('Access-Control-Allow-Origin', '*');
-    
     return headers;
   }
 
