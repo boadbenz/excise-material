@@ -962,7 +962,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             LawbreakerID: x.LawbreakerID || null,
             IsActive: 1,
             ArrestLawbreaker: this.setArrestLawbreaker(x.ArrestLawbreaker, x.IndictmentDetailID),
-            ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail)
+            ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail, x.IndictmentDetailID)
         });
     }
     // --- 2.1 
@@ -982,7 +982,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
     private groupArrestLawbreaker(x: fromModels.ArrestLawbreaker) {
         return this.fb.group({
-            IsChecked: x.IsChecked,
+            IsChecked: x.IsModify == 'c' ? this.ACCEPTABILITY.INACCEPTABLE : x.IsChecked ,
             LawbreakerID: x.LawbreakerID || null,
             LawbreakerTitleName: x.LawbreakerTitleName || null,
             LawbreakerFirstName: x.LawbreakerFirstName || null,
@@ -993,12 +993,15 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         });
     }
     // --- 2.2
-    private setArrestProductDetail = (o: fromModels.ArrestProductDetail[]) => {
+    private setArrestProductDetail = (o: fromModels.ArrestProductDetail[], indictmentDetailID: number) => {
         let arr = new FormArray([]);
         if (!this.ArrestProduct.length || !Array.isArray(o)) {
             arr.push(this.groupArrestProductDetail(new fromModels.ArrestProductDetail()))
         } else if (Array.isArray(o) && o.length) {
-            o.map(x => arr.push(this.groupArrestProductDetail(x)))
+            o.map(x => {
+                x.IsChecked = indictmentDetailID ? true : false;
+                arr.push(this.groupArrestProductDetail(x))
+            })
         }
         return arr;
     }
@@ -1018,7 +1021,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             IndictmentDetailID: x.IndictmentDetailID || null,
             ProductDesc: x.ProductDesc || null,
             IsActive: x.IsActive || 1,
-            IsChecked: x.IsChecked || true,
+            IsChecked: x.IsChecked,
         })
     }
     // --- ArrestIndictmentProduct
