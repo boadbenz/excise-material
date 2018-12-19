@@ -3,14 +3,14 @@ import { appConfig } from "app/app.config";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { HttpService } from "app/core/http.service";
 import { Observable } from 'rxjs';
-import { Http, Response, RequestOptions, Headers, Jsonp ,ResponseContentType} from '@angular/http'
+import { Http, Response, RequestOptions, Headers, Jsonp, ResponseContentType } from '@angular/http'
 
 @Injectable()
 export class AuthService {
 
   constructor(private httpClient: HttpClient,
-              private HttpService: HttpService,
-              private http: Http) { }
+    private HttpService: HttpService,
+    private http: Http) { }
 
   private httpOptions = {
     headers: new HttpHeaders(
@@ -42,17 +42,10 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
-  userAuth1(params): Observable<any> {
+  userAuth1(): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
-    // const url = `${appConfig.api8086}/UACVerifyLogIn`
-    const url = "http://webtest.excise.go.th/edssows/ldap/userPrivilege?userID=tester&systemID=Test010"
-    return this.http.get(url, options)
-      .map((res: Response) => res.json())
-      .catch(this.handleErrorObservable);
-  }
-  userAuth2(): Observable<any> {
-    let options = new RequestOptions({ responseType: ResponseContentType.Blob });
-    return this.http.get( "http://webtest.excise.go.th/edssows/ldap/userPrivilege?userID=tester&systemID=Test010", options)
+    // var xhttp = new XMLHttpRequest();
+    return this.httpClient.get('http://webtest.excise.go.th/edssows/ldap/userAndPrivilegeInformation?userID=tester&systemID=Test010', this.httpOptions)
       .map((res: Response) => res)
       .catch(this.handleErrorObservable);
   }
@@ -60,6 +53,8 @@ export class AuthService {
   private getHeaders() {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json; charset=utf-8');
+    headers.set('Access-Control-Allow-Origin', '*');
+    
     return headers;
   }
 
