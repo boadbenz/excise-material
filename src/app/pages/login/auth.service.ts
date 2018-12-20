@@ -35,24 +35,13 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
-  userAuth1(): Observable<any> {
+  ssoService(params): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
-    // var xhttp = new XMLHttpRequest();
-    return this.httpClient.get('http://webtest.excise.go.th/edssows/ldap/userAndPrivilegeInformation?userID=tester&systemID=Test010', this.httpOptions)
-      .map((res: Response) => res)
+    const url = `http://webtest.excise.go.th/EDRestServicesUAT/sso/ExciseUserInfomation`
+    return this.http.post(url, params, options)
+      .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
-
-  private httpOptions = {
-    headers: new HttpHeaders(
-      {
-        // 'Content-Type': 'application/json',
-        // 'Access-Control-Allow-Origin':'*',    
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": 'GET,POST,PATCH,DELETE,PUT,OPTIONS',
-        "Access-Control-Allow-Headers": 'Origin, Content-Type, X-Auth-Token, content-type',
-      })
-  };
 
   private getHeaders() {
     let headers = new Headers();

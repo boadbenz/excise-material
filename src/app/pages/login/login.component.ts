@@ -45,6 +45,18 @@ export class LoginComponent implements OnInit {
           UserName: User,
           Password: Pass
         };
+        // const params = {
+        //   systemId : "WSS",
+        //   userName : "wss001",
+        //   password : "123456",
+        //   ipAddress : "10.11.1.10",
+        //   requestData  : {
+        //   UserId  : "lic02"
+        //    }
+        // };
+        // await this.authService.ssoService(params).subscribe(async res => {
+        //   console.log("res++++ : ",res);
+        // });
         await this.authService.userAuth(params).subscribe(async res => {
           // console.log("res++++ : ",res);
           if (res.StaffCode != null) {
@@ -66,12 +78,5 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() { }
-
-  // onSubmit(form: any) {
-  //   if (this.authService.signin(form)) {
-  //     this.router.navigate([this.returnUrl]);
-  //   };
-
-  // }
 
 }
