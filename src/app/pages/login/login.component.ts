@@ -6,6 +6,7 @@ import { Observable, ReplaySubject } from 'rxjs/Rx';
 import { ThaiDatePipe } from '../reward/pipes/thaiDate.pipe';
 import { from } from 'rxjs/observable/from';
 import { LayoutComponent } from '../../shared/layout/layout.component';
+import { async } from 'q';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,7 @@ export class LoginComponent implements OnInit {
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
-  
+
   async onSubmit(form: any) {
     var User = form.userName
     var Pass = form.password;
@@ -41,22 +42,30 @@ export class LoginComponent implements OnInit {
     }
     if (User && Pass) {
       if (this.authService.signin(from)) {
+
+        // const params = {
+        //   systemId: "WSS",
+        //   UserName: User,
+        //   Password: Pass,
+        //   ipAddress: "10.11.1.10",
+        //   requestData: {
+        //     UserId: "lic02"
+        //   }
+        // };
+        // await this.authService.ssoService(params).subscribe(async res => {
+
+        //   if (res.ResponseMessage == "SUCCESS") {
+        //     // console.log("res++++ : ", res);
+        //     await this.authService.getPin().subscribe(async res =>{
+        //       console.log("getpin : ",res);
+        //     });
+        //   } else this.errMsg = res.ResponseMessage; console.log("res.ErrMsg ++++ : ", res.ResponseMessage);
+        // });
+
         const params = {
           UserName: User,
           Password: Pass
         };
-        // const params = {
-        //   systemId : "WSS",
-        //   userName : "wss001",
-        //   password : "123456",
-        //   ipAddress : "10.11.1.10",
-        //   requestData  : {
-        //   UserId  : "lic02"
-        //    }
-        // };
-        // await this.authService.ssoService(params).subscribe(async res => {
-        //   console.log("res++++ : ",res);
-        // });
         await this.authService.userAuth(params).subscribe(async res => {
           // console.log("res++++ : ",res);
           if (res.StaffCode != null) {
@@ -72,7 +81,7 @@ export class LoginComponent implements OnInit {
       }
     }
   }
-  
+
   ClearErrMsg() {
     this.errMsg = '';
   }
