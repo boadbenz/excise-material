@@ -237,7 +237,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     nip.IndictmentProductFine = _f3.Fine || '';
                     nip.IndictmentProductIsActive = _f3.IndictmentProductIsActive || '1';
                     nip.ProductDesc = _f3.ProductDesc;
-                    nip.IsChecked = _f3.IsChecked || true;
+                    nip.IsChecked = _f3.IsModify == 'c' ? true : _f3.IsChecked;
                     nip.IsModify = _f3.IsModify || 'c';
                     this.updateIndictmentProductItem(nip, _IndictmentProduct);
                 })
@@ -982,7 +982,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
     private groupArrestLawbreaker(x: fromModels.ArrestLawbreaker) {
         return this.fb.group({
-            IsChecked: x.IsModify == 'c' ? this.ACCEPTABILITY.INACCEPTABLE : x.IsChecked ,
+            IsChecked: x.IsModify == 'c' ? this.ACCEPTABILITY.INACCEPTABLE : x.IsChecked,
             LawbreakerID: x.LawbreakerID || null,
             LawbreakerTitleName: x.LawbreakerTitleName || null,
             LawbreakerFirstName: x.LawbreakerFirstName || null,
@@ -999,7 +999,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             arr.push(this.groupArrestProductDetail(new fromModels.ArrestProductDetail()))
         } else if (Array.isArray(o) && o.length) {
             o.map(x => {
-                x.IsChecked = indictmentDetailID ? true : false;
+                // x.IsChecked = indictmentDetailID ? true : false;
                 arr.push(this.groupArrestProductDetail(x))
             })
         }
@@ -1831,6 +1831,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
             switch (x.IsModify) {
                 case 'c':
+                    if (!x.IsChecked) return;
                     const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
                     if (!apd) return;
                     x.IndictmentID = indictmentId;
@@ -1885,7 +1886,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         if (lawbreaker.IsChecked == Acceptability.ACCEPTABLE) return;
                         const lid = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID);
                         if (!lid) return;
-                        console.log(lid);
                         newIndictmentDetail.LawbreakerID = lid.ArrestLawbreakerID;
                         await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
                             .then(y => {
@@ -1925,7 +1925,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         indictmentProduct: fromModels.ArrestIndictmentProduct[],
         arrestProductDetail: fromModels.ArrestProductDetail[],
         lawbreakerModify: string,
-        lawbreakerChecked: Acceptability
+        lawbreakerChecked: fromModels.Acceptability
     ) {
         let indictmentProductPromise: any;
         let arrestProductDetailPromise: any;
@@ -1933,6 +1933,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         if (lawbreakerChecked) {
             // กรณีมีการเช็คเลือกรายการผู้ต้องหา
             indictmentProductPromise = await indictmentProduct
+                .filter(x => x.IndictmentProductID != null)
                 .map(async x => {
                     let apd = new fromModels.ArrestProductDetail();
                     apd.ProductID = x.ProductID;
