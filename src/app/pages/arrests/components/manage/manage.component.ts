@@ -1493,7 +1493,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     case 'R':
                         setTimeout(() => {
                             location.reload();
-                        }, 300);
+                        }, 200);
                         break;
                 }
             }
@@ -1878,7 +1878,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                                 }).catch((error) => this.catchError(error));
                         }
                     }
-
                     break;
             }
         })

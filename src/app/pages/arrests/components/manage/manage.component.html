@@ -547,7 +547,8 @@
                     <ng-container *ngFor="let prod of getArrestIndictmentProduct(indict); let i=index;">
                       <div [formGroupName]="i" style="width: 300px;" class="text-truncate">
                         <ng-container *ngIf="prod.get('ProductID').value">
-                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" id="{{j+'-'+i+'pd'}}">
+                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" id="{{j+'-'+i+'pd'}}"
+                          [disabled]="showEditField">
                           <label for="{{j+'-'+i+'pd'}}">{{prod.get('ProductDesc').value}}</label>
                         </ng-container>
                       </div>
