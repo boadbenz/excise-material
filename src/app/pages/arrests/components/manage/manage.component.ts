@@ -1466,29 +1466,39 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             swal('', Message.saveFail, 'error');
             return;
         }
-        swal('', Message.saveComplete, 'success');
-        switch (this.mode) {
-            case 'C':
-                this.arrestFG.reset();
-                clearFormArray(this.ArrestNotice);
-                clearFormArray(this.ArrestStaff);
-                clearFormArray(this.ArrestProduct);
-                clearFormArray(this.ArrestLawbreaker);
-                clearFormArray(this.ArrestIndictment);
-                clearFormArray(this.ArrestDocument);
 
-                setTimeout(() => {
-                    this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
-                }, 400);
-                break;
+        swal({
+            title: '',
+            text: Message.saveComplete,
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                switch (this.mode) {
+                    case 'C':
+                        this.arrestFG.reset();
+                        clearFormArray(this.ArrestNotice);
+                        clearFormArray(this.ArrestStaff);
+                        clearFormArray(this.ArrestProduct);
+                        clearFormArray(this.ArrestLawbreaker);
+                        clearFormArray(this.ArrestIndictment);
+                        clearFormArray(this.ArrestDocument);
+                        setTimeout(() => {
+                            this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
+                        }, 400);
+                        break;
 
-            case 'R':
-                // setTimeout(() => {
-                //     this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
-                // }, 400);
-                this.enableBthModeR();
-                break;
-        }
+                    case 'R':
+                        setTimeout(() => {
+                            location.reload();
+                        }, 300);
+                        break;
+                }
+            }
+        })
+
     }
 
     private async createWithOutArrestCode() {
@@ -1710,10 +1720,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         await this.s_product.ArrestProductinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                arrestProductId.push({
-                                    ProductID: x.ProductID,
-                                    ArrestProductID: y.ProductID
-                                })
                                 x.ProductID = y.ProductID;
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
@@ -1726,6 +1732,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                             .catch((error) => this.catchError(error));
                         break;
                 }
+
+                arrestProductId.push({
+                    ProductID: x.ProductID,
+                    ArrestProductID: x.ProductID
+                })
             })
 
         // let lawbreakerPromise = ;
@@ -1849,14 +1860,25 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                 case 'u':
                 case 'v':
-                    if (x.IsChecked) {
-                        await this.s_indictment.ArrestIndictmentProductupdByProductID(x)
-                            .then().catch(error => this.catchError(error))
-                        break;
+                    if (x.IndictmentProductID) {
+                        if (x.IsChecked) {
+                            await this.s_indictment.ArrestIndictmentProductupdByProductID(x)
+                                .then().catch(error => this.catchError(error))
+                        } else {
+                            await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
+                                .then().catch(error => this.catchError(error));
+                        }
                     } else {
-                        await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
-                            .then().catch(error => this.catchError(error));
+                        if (x.IsChecked) {
+                            x.IndictmentID = indictmentId;
+                            await this.s_indictment.ArrestIndictmentProductinsAll(x)
+                                .then(y => {
+                                    if (!this.checkIsSuccess(y)) return;
+                                    x.IndictmentProductID = y.IndictmentProductID;
+                                }).catch((error) => this.catchError(error));
+                        }
                     }
+
                     break;
             }
         })
@@ -1895,12 +1917,21 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     case 'u':
                     case 'v':
-                        if (lawbreaker.IsChecked == Acceptability.INACCEPTABLE) {
-                            await this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(newIndictmentDetail)
-                                .then().catch((error) => this.catchError(error));
+                        if (x.IndictmentDetailID) {
+                            if (lawbreaker.IsChecked == Acceptability.INACCEPTABLE) {
+                                await this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(newIndictmentDetail)
+                                    .then().catch((error) => this.catchError(error));
+                            } else {
+                                await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
+                                    .then().catch((error) => this.catchError(error));
+                            }
                         } else {
-                            await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
-                                .then().catch((error) => this.catchError(error));
+                            if (lawbreaker.IsChecked == Acceptability.ACCEPTABLE) return;
+                            await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
+                                .then(y => {
+                                    if (!this.checkIsSuccess(y)) return;
+                                    x.IndictmentDetailID = y.IndictmentDetailID;
+                                }).catch((error) => this.catchError(error));
                         }
                         break;
                 }
@@ -1951,25 +1982,37 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     if (x.IsModify == 'c') {
                         if (!x.IsChecked) return;
-                        console.log(indictmentDetailID, apd);
                         await this.s_productDetail.ArrestProductDetailinsAll(apd)
                             .then().catch((error) => this.catchError(error));
                     } else {
-                        arrestProductDetailPromise = await arrestProductDetail
+
+                        let a = await arrestProductDetail
+                            .filter(proD => proD.ProductID != x.ProductID)
+                            .map(async (proD) => {
+                                if (x.IsChecked && !proD.ProductDetailID) {
+                                    await this.s_productDetail.ArrestProductDetailinsAll(apd)
+                                        .then().catch((error) => this.catchError(error));
+                                }
+                            })
+
+                        let b = await arrestProductDetail
                             .filter(proD => proD.ProductID == x.ProductID)
                             .map(async proD => {
                                 if (x.IsModify == 'd' || !x.IsChecked) {
                                     await this.s_productDetail.ArrestProductDetailupdDelete(proD.ProductDetailID.toString())
                                         .then().catch((error) => this.catchError(error));
 
-                                } else if (x.IsModify == 'u') {
+                                } else {
                                     apd.ProductDetailID = proD.ProductDetailID;
                                     await this.s_productDetail.ArrestProductDetailupdByCon(apd)
                                         .then().catch((error) => this.catchError(error));
                                 }
-                            });
+                            })
+
+                        arrestProductDetailPromise = Promise.all([a, b]);
                     }
-                })
+                });
+
         } else if (!lawbreakerChecked || lawbreakerModify == 'd') {
             if (lawbreakerModify == 'c') return;
             // กรณีไม่มีการเช็คเลือกรายการผู้ต้องหา
