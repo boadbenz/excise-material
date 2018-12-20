@@ -59,6 +59,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/notice/manage', 'C', 'NEW']);
       }
     });
+    this.setShowButton()
     this.navService.showAdvSearch.next(true);
     this.preLoaderService.setShowPreloader(false);
   }

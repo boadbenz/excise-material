@@ -126,7 +126,6 @@ export class ManageComponent implements OnInit {
 
   async ngOnInit() {
     // var user = JSON.parse(localStorage.getItem('user'));
-    // console.log(user)
     this.sidebarService.setVersion('0.0.0.26');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
@@ -875,7 +874,6 @@ export class ManageComponent implements OnInit {
               this.lawsuitForm.controls['ReasonDontLawsuit'].setValue('');
             }
             let isout = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'];
-
             let IsOutsideCheck = false;
             if (isout == 1) {
               this.IsLawsuitType = " น. ";
@@ -1111,7 +1109,7 @@ export class ManageComponent implements OnInit {
       this.IsLawsuitType = " น. ";
     } else {
       IsOutsideCheck = false
-      this.IsLawsuitType = " น. ";
+      this.IsLawsuitType = "";
 
     }
 
