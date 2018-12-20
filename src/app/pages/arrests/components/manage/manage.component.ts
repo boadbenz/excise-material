@@ -1711,10 +1711,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         await this.s_product.ArrestProductinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                arrestProductId.push({
-                                    ProductID: x.ProductID,
-                                    ArrestProductID: y.ProductID
-                                })
                                 x.ProductID = y.ProductID;
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
@@ -1727,6 +1723,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                             .catch((error) => this.catchError(error));
                         break;
                 }
+
+                arrestProductId.push({
+                    ProductID: x.ProductID,
+                    ArrestProductID: x.ProductID
+                })
             })
 
         // let lawbreakerPromise = ;
@@ -1829,19 +1830,31 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     ) {
         let promises = await product.map(async (x) => {
 
+            if (x.IsChecked && !x.IndictmentProductID) {
+                const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
+                if (!apd) return;
+                x.IndictmentID = indictmentId;
+                x.ProductID = apd.ArrestProductID;
+                await this.s_indictment.ArrestIndictmentProductinsAll(x)
+                    .then(y => {
+                        if (!this.checkIsSuccess(y)) return;
+                        x.IndictmentProductID = y.IndictmentProductID;
+                    }).catch((error) => this.catchError(error));
+            }
+
             switch (x.IsModify) {
                 case 'c':
-                    if (!x.IsChecked) return;
-                    const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
-                    if (!apd) return;
-                    x.IndictmentID = indictmentId;
-                    x.ProductID = apd.ArrestProductID;
-                    await this.s_indictment.ArrestIndictmentProductinsAll(x)
-                        .then(y => {
-                            if (!this.checkIsSuccess(y)) return;
-                            x.IndictmentProductID = y.IndictmentProductID;
-                        }).catch((error) => this.catchError(error));
-                    break;
+                // if (!x.IsChecked) return;
+                // const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
+                // if (!apd) return;
+                // x.IndictmentID = indictmentId;
+                // x.ProductID = apd.ArrestProductID;
+                // await this.s_indictment.ArrestIndictmentProductinsAll(x)
+                //     .then(y => {
+                //         if (!this.checkIsSuccess(y)) return;
+                //         x.IndictmentProductID = y.IndictmentProductID;
+                //     }).catch((error) => this.catchError(error));
+                // break;
 
                 case 'd':
                     await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
@@ -1850,6 +1863,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                 case 'u':
                 case 'v':
+                    if (!x.IndictmentProductID) return;
                     if (x.IsChecked) {
                         await this.s_indictment.ArrestIndictmentProductupdByProductID(x)
                             .then().catch(error => this.catchError(error))
@@ -1952,25 +1966,35 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     if (x.IsModify == 'c') {
                         if (!x.IsChecked) return;
-                        console.log(indictmentDetailID, apd);
                         await this.s_productDetail.ArrestProductDetailinsAll(apd)
                             .then().catch((error) => this.catchError(error));
                     } else {
-                        arrestProductDetailPromise = await arrestProductDetail
+
+                        arrestProductDetailPromise = arrestProductDetail
+                            .filter(proD => proD.ProductID != x.ProductID)
+                            .map(async (proD) => {
+                                if (x.IsChecked && !proD.ProductDetailID) {
+                                    await this.s_productDetail.ArrestProductDetailinsAll(apd)
+                                        .then().catch((error) => this.catchError(error));
+                                }
+                            })
+
+                        arrestProductDetailPromise = arrestProductDetail
                             .filter(proD => proD.ProductID == x.ProductID)
                             .map(async proD => {
                                 if (x.IsModify == 'd' || !x.IsChecked) {
                                     await this.s_productDetail.ArrestProductDetailupdDelete(proD.ProductDetailID.toString())
                                         .then().catch((error) => this.catchError(error));
 
-                                } else if (x.IsModify == 'u') {
+                                } else {
                                     apd.ProductDetailID = proD.ProductDetailID;
                                     await this.s_productDetail.ArrestProductDetailupdByCon(apd)
                                         .then().catch((error) => this.catchError(error));
                                 }
-                            });
+                            })
                     }
-                })
+                });
+
         } else if (!lawbreakerChecked || lawbreakerModify == 'd') {
             if (lawbreakerModify == 'c') return;
             // กรณีไม่มีการเช็คเลือกรายการผู้ต้องหา
