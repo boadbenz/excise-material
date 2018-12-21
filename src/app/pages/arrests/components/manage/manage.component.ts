@@ -245,7 +245,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 _IndictmentDetail.value.map((_f2) => {
                     this.ArrestLawbreaker.value
                         .map(x => {
-                            this.updateItemIndictmentDetail(x, _IndictmentDetail)
+                            this.updateItemIndictmentDetail(x, _IndictmentDetail);
                         });
                 });
 
@@ -258,13 +258,13 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     showGuiltBase() {
-        this.ArrestIndictment.value.map(indict => {
-            indict.ArrestIndicmentDetail.map(indictD => {
-                indictD.ArrestProductDetail.filter(prodD => {
-                    console.log(prodD);
-                })
-            })
-        })
+        // this.ArrestIndictment.value.map(indict => {
+        //     indict.ArrestIndicmentDetail.map(indictD => {
+        //         indictD.ArrestProductDetail.filter(prodD => {
+        //             console.log(prodD);
+        //         })
+        //     })
+        // })
         console.log(this.ArrestIndictment.value);
     }
 
@@ -299,16 +299,13 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 break;
 
             case 'u':
+            case 'd':
                 _IndictmentDetail.at(_I).patchValue(
                     this.groupArrestIndictmentDetail({
                         LawbreakerID: x.LawbreakerID,
                         ArrestLawbreaker: [x],
                         ArrestProductDetail: [_PD]
                     }).value);
-                break;
-
-            case 'd':
-                _IndictmentDetail.removeAt(_I);
                 break;
         }
     }
@@ -331,12 +328,8 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 break;
 
             case 'u':
-                // 
-                _AProduct.at(_I).patchValue(this.groupArrestIndictmentProduct(x).value)
-                break;
-
             case 'd':
-                _AProduct.removeAt(_I);
+                _AProduct.at(_I).patchValue(this.groupArrestIndictmentProduct(x).value)
                 break;
         }
     }
@@ -1493,7 +1486,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     case 'R':
                         setTimeout(() => {
                             location.reload();
-                        }, 300);
+                        }, 200);
                         break;
                 }
             }
@@ -1878,7 +1871,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                                 }).catch((error) => this.catchError(error));
                         }
                     }
-
                     break;
             }
         })
@@ -1933,6 +1925,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                                     x.IndictmentDetailID = y.IndictmentDetailID;
                                 }).catch((error) => this.catchError(error));
                         }
+                        break;
+
+                    case 'd':
+                        await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
+                            .then().catch((error) => this.catchError(error));
                         break;
                 }
 
