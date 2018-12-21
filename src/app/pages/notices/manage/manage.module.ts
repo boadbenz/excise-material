@@ -29,7 +29,7 @@ const routes: Routes = [
                 { title: 'ค้นหาใบแจ้งความนำจับ', url: '/notice/list' },
                 { title: 'จัดการข้อมูลใบแจ้งความนำจับ' }
             ],
-            codePage: 'XCS60-02-02-00' 
+            codePage: 'ILG60-02-02-00-00' 
         },
         component: ManageComponent
     }
