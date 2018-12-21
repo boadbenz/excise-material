@@ -1,7 +1,11 @@
 <div class="modal-header bg-theme">
     <div class="row">
         <div class="col-lg-5">
-            <h4 class="modal-title text-white">อ้างอิงใบแจ้งความนำจับ</h4>
+            <h4 class="modal-title text-white">อ้างอิงใบแจ้งความนำจับ
+                <a class="btn btn-ghost" [routerLink]="['/notice/manage', 'C', 'NEW']" target="_blank">
+                    สร้างใบแจ้งความ
+                </a>
+            </h4>
         </div>
         <div class="col-lg-5 col-sm-8">
             <form autocomplete="off" class="app-search" #searchFrom="ngForm" (ngSubmit)="onSearch(searchFrom.value)">

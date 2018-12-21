@@ -9,8 +9,9 @@ import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import * as fromServices from '../../services';
 import * as fromModels from '../../models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
-import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave } from 'app/config/dateFormat';
+import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave, MyDatePickerOptions } from 'app/config/dateFormat';
 import { Subject } from 'rxjs/Subject';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
@@ -30,11 +31,7 @@ export class ListComponent implements OnInit, OnDestroy {
     investigate = new Array<fromModels.InvestigateList>();
     invesList = new Array<fromModels.InvestigateList>();
     paginage = pagination;
-    myDatePickerOptions: IMyOptions = {
-        dateFormat: 'dd mmm yyyy',
-        showClearDateBtn: false,
-        height: '30px'
-    };
+    myDatePickerOptions = MyDatePickerOptions;
 
     @ViewChild('invesTable') invesTable: ElementRef;
 
@@ -59,7 +56,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.sidebarService.setVersion('1.02');
+        this.advSearch.next(true)
+        this.sidebarService.setVersion(this.s_invest.version);
 
         this.navService.searchByKeyword.subscribe(async Textsearch => {
             if (Textsearch) {
@@ -97,7 +95,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate);
+                swal('', Message.checkDate, 'warning');
                 return
             }
         }
@@ -112,7 +110,7 @@ export class ListComponent implements OnInit, OnDestroy {
             .subscribe(list => {
                 this.onSearchComplete(list)
             }, (err: HttpErrorResponse) => {
-                alert(Message.noRecord);
+                swal('', Message.noRecord, 'warning');
             });
     }
 
@@ -120,7 +118,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.investigate = [];
 
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
             return false;
         }
 
@@ -153,7 +151,7 @@ export class ListComponent implements OnInit, OnDestroy {
             const edate = getDateMyDatepicker(this._dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.DateStartTo = { date: this._dateStartFrom.date };
                 }, 0);

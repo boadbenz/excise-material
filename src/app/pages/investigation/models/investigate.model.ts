@@ -1,3 +1,5 @@
+import { Acceptability } from "app/pages/arrests/models";
+
 export class InvestigateModel {
     InvestigateCode: string;
     InvestigateNo: string;
@@ -51,6 +53,9 @@ export class InvestigateDetailStaff {
     RowId: number;
     FullName: string;
     IsModify: string;
+
+    Commander: string;
+    Investigator: string;
 }
 
 export class InvestigateDetailSuspect {
@@ -77,16 +82,17 @@ export class InvestigateDetailSuspect {
 
     SuspectTypeName: string;
     EntityTypeName: string;
-    LawbreakerRefID: string;
     ReferenceID: string;
+    ResultCount: string;
     FullName: string;
     IsModify: string;
+    IsChecked: Acceptability;
     RowId: number;
 }
 
 export class InvestigateDetailLocal {
     LocalID: number;
-    InvestigateDetailID: string;
+    InvestigateDetailID: number;
     GPS: string;
     Location: string;
     Address: string;
@@ -139,7 +145,7 @@ export class InvestigateDetailProduct {
     Qty: number;
     QtyUnit: string;
     NetVolume: number;
-    NetVolumeUnit: number;
+    NetVolumeUnit: string;
     IsActive: number;
 
     RowId: number;

@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpService } from 'app/core/http.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { appConfig } from 'app/app.config';
+import { Observable } from 'rxjs';
+import { LoaderService } from 'app/core/loader/loader.service';
 
 @Injectable()
 export class InvestgateService {
 
   constructor(
     private http: HttpService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private loaderService: LoaderService
   ) { }
 
   private httpOptions = {
@@ -17,6 +20,46 @@ export class InvestgateService {
         'Content-Type': 'application/json'
       })
   };
+
+  version = '0.0.0.13'
+  private onEnd(): void {
+    this.hideLoader();
+  }
+
+  private showLoader(): void {
+    this.loaderService.show();
+  }
+
+  private hideLoader(): void {
+    this.loaderService.hide();
+  }
+
+  private onSuccess(res: Response): void {
+    console.log('Request successful');
+  }
+
+  private onError(res: Response): void {
+    console.log('Error, status code: ' + res.status);
+  }
+
+  private onCatch(error: any, caught: Observable<any>): Observable<any> {
+    return Observable.throw(error);
+  }
+  
+  InvestigateDetailgetByCon(InvestigateDetailID: string) {
+    const params = { InvestigateDetailID };
+    const url = `${appConfig.apiReport}/InvestigateDetailgetByCon.aspx`;
+    this.showLoader();
+    return this.httpClient.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .catch(this.onCatch)
+      .do((res: Response) => {
+        this.onSuccess(res);
+      }, (error: any) => {
+        this.onError(error);
+      })
+      .map(x => x)
+      .finally(() => this.onEnd());
+  }
 
   InvestigateListgetByKeyword(TextSearch: string, StaffCode: string) {
     const params = { TextSearch, StaffCode };
@@ -30,10 +73,10 @@ export class InvestgateService {
     return this.http.post(url, params).map(x => x.json());
   }
 
-  async InvestigategetByCon(InvestigateCode: string) {
+  InvestigategetByCon(InvestigateCode: string) {
     const params = { InvestigateCode };
     const url = `${appConfig.api8888}/InvestigategetByCon`;
-    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    return this.http.post(url, params).map(x => x.json());
   }
 
   async InvestigateinsAll(invest: any) {
@@ -42,16 +85,16 @@ export class InvestgateService {
     return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
-  async InvestigateupdAll(invest: any) {
+  InvestigateupdAll(invest: any) {
     const params = invest;
     const url = `${appConfig.api8888}/InvestigateupdAll`;
-    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    return this.http.post(url, params).map(x => x.json());
   }
 
-  async InvestigateupdDelete(InvestigateCode: string) {
+  InvestigateupdDelete(InvestigateCode: string) {
     const params = { InvestigateCode };
     const url = `${appConfig.api8888}/InvestigateupdDelete`;
-    return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    return this.http.post(url, params).map(x => x.json());
   }
 
   async InvestigateLawsuitResultCountgetByLawbreakerID(LawbreakerID: string) {
@@ -59,4 +102,6 @@ export class InvestgateService {
     const url = `${appConfig.api8888}/InvestigateLawsuitResultCountgetByLawbreakerID`;
     return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
+
+
 }

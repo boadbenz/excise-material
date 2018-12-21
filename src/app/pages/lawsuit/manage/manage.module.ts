@@ -4,7 +4,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Routes, RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ManageComponent, DialogJudgment } from "./manage.component";
+import { ManageComponent } from "./manage.component";
 import { NavigationComponent } from "../../../shared/header-navigation/navigation.component";
 import { HttpClientModule } from "@angular/common/http";
 import { HttpModule } from "@angular/http";
@@ -21,7 +21,11 @@ import { BrowserModule } from "@angular/platform-browser";
 import { DetailModule } from "../detail/detail.module";
 import { MyDatePickerTHModule } from "mydatepicker-th";
 import { MyDatePickerModule } from "mydatepicker";
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { IndicmentModalComponent } from '../indictment/indicment-modal.component';
+import { DialogJudgment } from './dialog-judgment'
+import { StepWizardModule } from '../../component/step-wizard/step-wizard.module';
+import { DialogNotComplete } from './dialog-notComplete';
 const routes: Routes = [
   {
     path: "",
@@ -58,12 +62,19 @@ const routes: Routes = [
     MatDialogModule,
     MyDatePickerTHModule,
     MyDatePickerModule,
+    MatAutocompleteModule,
+    StepWizardModule
     // DetailModule,
   ],
-  entryComponents: [DialogJudgment],
+  entryComponents: [
+    DialogJudgment,
+    DialogNotComplete
+  ],
   declarations: [
     ManageComponent,
-    DialogJudgment
+    DialogJudgment,
+    DialogNotComplete,
+    IndicmentModalComponent
   ], providers: [
     { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },
     LawsuitService,

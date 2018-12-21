@@ -40,6 +40,7 @@ export class RevenueStaff {
 }
 
 export class RevenueDetail {
+    public RevenueIndex?: string;
     public RevenueDetailID?: string;
     public ReceiptBookNo?: string;
     public ReceiptNo?: string;
@@ -49,6 +50,7 @@ export class RevenueDetail {
     public CompareID?: string;
     public CompareCode?: string;
     public LawBreaker?: string;
+    public SurnameLawBreaker?: string;
     public StaffReceip?: string;
     public PaymentDate?: string;
     public TotalFine?: number;

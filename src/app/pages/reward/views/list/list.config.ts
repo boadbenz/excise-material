@@ -1,4 +1,3 @@
-
 import { RewardHelper } from '../../reward.helper';
 import { IRequestList } from '../../interfaces/RequestList.interface';
 import { ITableDataOptions } from '../../shared/table-data/table-data.config';
@@ -33,17 +32,18 @@ export class ListConfig extends RewardHelper {
     {
       title: 'วันที่จับกุม',
       field: 'OccurrenceDate',
-      inputType: 'text',
-      default: ''
+      inputType: 'date',
+      // default: this.setDateNow
     },
     {
       title: 'วันที่จับกุม',
       field: 'OccurrenceDateFrom',
       inputType: 'date',
+      // default: this.setDateNow,
       title2: 'ถึง',
       field2: 'OccurrenceDateTo',
       inputType2: 'date',
-      default: '',
+      // default2: this.setDateNow,
       class: 'col-md-6',
       isFilter: true,
       isHiddenTable: true
@@ -51,17 +51,18 @@ export class ListConfig extends RewardHelper {
     {
       title: 'วันที่รับคดี',
       field: 'LawsuitDate',
-      inputType: 'text',
-      default: ''
+      inputType: 'date',
+      // default: this.setDateNow
     },
     {
       title: 'วันที่รับคดี',
       field: 'LawsuitDateFrom',
       inputType: 'date',
+      // default: this.setDateNow,
       title2: 'ถึง',
       field2: 'LawsuitDateTo',
       inputType2: 'date',
-      default: '',
+      // default2: this.setDateNow,
       class: 'col-md-6',
       isFilter: true,
       isHiddenTable: true

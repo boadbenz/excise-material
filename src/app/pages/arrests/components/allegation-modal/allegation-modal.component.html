@@ -1,4 +1,3 @@
-
 <div class="modal-header bg-theme">
     <div class="row">
         <div class="col-lg-5">
@@ -29,18 +28,25 @@
                     <tr>
                         <th class="text-center"></th>
                         <th class="text-center">ลำดับ</th>
-                        <th>ฐานความผิดมาตรา</th>
-                        <th>ฐานความผิด</th>
-                        <th>บทกำหนดโทษ</th>
-                        <th>อัตราโทษ</th>
+                        <th>
+                            ฐานความผิดมาตรา
+                        </th>
+                        <th>
+                            ฐานความผิด
+                        </th>
+                        <th>
+                            บทกำหนดโทษ
+                        </th>
+                        <th>
+                            อัตราโทษ
+                        </th>
                     </tr>
                 </thead>
                 <tbody formArrayName="LawGuiltbase">
                     <tr *ngFor="let item of LawGuiltbase.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
-                            <input name="noticeRadio" name="IsChecked" formControlName="IsChecked" type="radio" id="td{{i}}"
-                                (change)="setIsChecked(i)" class="with-gap radio-col-indigo">
-                            <label for="td{{i}}" class="m-0"></label>
+                            <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo">
+                            <label [for]="'td'+i" class="m-0"></label>
                         </td>
                         <td class="text-center">{{item.get('RowId').value}}</td>
                         <td class="text-center">

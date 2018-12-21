@@ -39,11 +39,11 @@ export class RequestBribeService extends HelperService {
     return this.http.post(`${this.ApiPrefixUrl}/RequestBribegetByCon`, param);
   }
 
-  public RequestBribeinsAll(param: IRequestBribeinsAll): Observable<any> {
+  public RequestBribeinsAll(param): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/RequestBribeinsAll`, param);
   }
 
-  public RequestBribeupdByCon(param: IRequestBribeupdByCon): Observable<any> {
+  public RequestBribeupdByCon(param): Observable<any> {
     return this.http.post(`${this.ApiPrefixUrl}/RequestBribeupdByCon`, param);
   }
 

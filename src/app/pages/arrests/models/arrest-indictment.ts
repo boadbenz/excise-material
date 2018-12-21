@@ -1,14 +1,6 @@
 import { ArrestProductDetail } from './arrest-product';
 import { ArrestLawGuitbase, ArrestLawbreaker } from '.';
 
-// class OpsArrestIndicmentDetailCollection {
-//     IndictmentDetailID: number;
-//     LawsuitType: number;
-//     IsActive: number;
-//     IndictmentID: number;
-//     LawbreakerID: number;
-// }
-
 export class IndictmentLawbreaker {
     LawbreakerID: string;
     LawbreakerFullName: string;
@@ -21,8 +13,6 @@ export class IndictmentLawbreaker {
     SizeUnit: string;
     Weight: string;
     WeightUnit: string;
-
-    IsChecked: boolean;
     EntityType: number;
 }
 
@@ -33,33 +23,37 @@ export class ArrestIndictment {
     IsProve: number;
     IsActive: number;
     IsLawsuitComplete: number;
-    ArrestIndicmentDetail: ArrestIndictmentDetail[];
-    ArrestLawGuitbase: ArrestLawGuitbase[];
+    ArrestIndicmentDetail: Array<ArrestIndictmentDetail>;
+    ArrestLawGuitbase: Array<ArrestLawGuitbase>;
+    ArrestIndictmentProduct: Array<ArrestIndictmentProduct>;
 
     IsModify: string;
     SubSectionType: string;
     GuiltBaseName: string;
     SectionNo: string;
     PenaltyDesc: string;
+    RowId: number;
 }
 
 export class ArrestIndictmentDetail {
-    IndictmentDetailID: number;
-    LawsuitType: string;
-    LawsuitEnd: number;
-    IsActive: number;
-    IndictmentID: number;
-    LawbreakerID: number;
-    ArrestLawbreaker: ArrestLawbreaker[]
-    ArrestProductDetail: ArrestProductDetail[];
+    IndictmentDetailID?: number;
+    LawsuitType?: string;
+    LawsuitEnd?: number;
+    IsActive?: number;
+    IndictmentID?: number;
+    LawbreakerID?: number;
+    ArrestLawbreaker?: Array<ArrestLawbreaker>;
+    ArrestProductDetail?: Array<ArrestProductDetail>;
 }
+
+
 
 export class ArrestIndictmentProduct {
     IndictmentProductID: number;
     IndictmentID: number;
     ProductID: number;
     IsProdcutCo: string;
-    IndictmentProductQty: string;
+    IndictmentProductQty: number;
     IndictmentProductQtyUnit: string;
     IndictmentProductSize: string;
     IndictmentProductSizeUnit: string;
@@ -67,7 +61,6 @@ export class ArrestIndictmentProduct {
     IndictmentProductVolumeUnit: string;
     IndictmentProductMistreatRate: string;
     IndictmentProductFine: string;
-    // ProductDetailIsActive: number;
     IndictmentProductIsActive: number;
     ProductType: number;
     ArrestCode: string;
@@ -97,5 +90,8 @@ export class ArrestIndictmentProduct {
     ProductQtyUnit: string;
     ProductNetVolume: number;
     ProductNetVolumeUnit: string;
-    ProductIsActive: number
+    ProductIsActive: number;
+
+    IsChecked: boolean;
+    IsModify: string;
 }

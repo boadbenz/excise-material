@@ -1,11 +1,42 @@
 import { FormGroup, Validators } from '@angular/forms';
 import { ColumnsInterface } from './shared/interfaces/columns-interface';
+import { IMyOptions } from 'mydatepicker-th';
+import { setZero, setDateMyDatepicker, MyDatePickerOptions } from 'app/config/dateFormat';
+import { Subject } from 'rxjs/Subject';
 
 export class RewardHelper {
+  public myDatePickerOptions = MyDatePickerOptions;
+  public destroy$: Subject<boolean> = new Subject<boolean>();
   public formGroup: FormGroup;
-
+  public yy_thaibuddha = (new Date().getFullYear() + 543)
+    .toString()
+    .substr(2, 1);
+  public setDateNow = setDateMyDatepicker(new Date());
+  public setTimeNow = `${setZero(new Date().getHours())}.${setZero(
+    new Date().getMinutes()
+  )}`;
   constructor() {}
-
+  public setZero(num: number) {
+    return num < 10 ? '0' + num : num;
+  }
+  public leftPad(str: string, len: number, ch = '0'): string {
+    len = len - str.length + 1;
+    return len > 0 ? new Array(len).join(ch) + str : str;
+  }
+  ConvObjectValue = obj => {
+    const newObj = {};
+    Object.keys(obj).forEach(f => {
+      if (typeof obj[f] === 'number') {
+        newObj[f] = obj[f].toString();
+      } else if (typeof obj[f] === 'undefined') {
+        newObj[f] = '';
+      } else {
+        newObj[f] = obj[f] || '';
+      }
+    });
+    return newObj;
+  };
+  ConvDateTimeToDate = (datetime: string) => datetime ? datetime.substr(0, 10) : '';
   // ===== create form =====
   validateSetting(valid) {
     const arr = [];

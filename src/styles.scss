@@ -7,3 +7,19 @@
 .swal2-confirm{
     background: #3085d6 !important;
 }
+
+mat-dialog-container.mat-dialog-container {
+    padding: unset;
+}
+
+input:read-only,
+textarea:read-only,
+select:disabled {
+    color: black !important; 
+    font-size: .9rem !important
+}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+}

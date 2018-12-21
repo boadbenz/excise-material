@@ -1,43 +1,453 @@
+<app-timeline></app-timeline> 
+<form [formGroup]="BribeFormGroup" (change)="changeForm(BribeFormGroup)">
+  <div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+      <div class="card-actions">
+        <a
+          class=""
+          (click)="
+            ILG60_08_03_00_00_E08_EXPANDED = !ILG60_08_03_00_00_E08_EXPANDED
+          "
+        >
+          <i
+            class="fa"
+            [ngClass]="{
+              'fa-chevron-down': ILG60_08_03_00_00_E08_EXPANDED,
+              'fa-chevron-up': !ILG60_08_03_00_00_E08_EXPANDED
+            }"
+          ></i>
+        </a>
+      </div>
+      <h4 class="card-title m-b-0">คำร้องขอรับเงินสินบน</h4>
+    </div>
+    <div *ngIf="ILG60_08_03_00_00_E08_EXPANDED" class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <input type="hidden" formControlName="CommandDetailID" />
+            <label class="col-form-label col-md-4"
+              >เลขที่ใบแจ้งความนำจับ : 
+            </label>
+            <div class="col-md-8">
+              <select
+                formControlName="CommandDetailID"
+                class="form-control form-control-sm"
+                (change)="selectChange($event)"
+                [attr.disabled]="
+                  mode === 'R' && isEdit === false ? 'disabled' : null
+                "
+              >
+                <option
+                  [value]="item.value"
+                  *ngFor="let item of RequestCommand_NoticeCode_list"
+                >
+                  {{ item.text }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
+            <div class="col-md-8">
+              <input
+                class="form-control form-control-sm"
+                type="text"
+                formControlName="RequestBribeCode"
+                [attr.disabled]="'disabled'"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">เขียนที่ : </label>
+            <div class="col-md-8">
+              <input
+                class="form-control form-control-sm"
+                type="text"
+                formControlName="Station"
+                [ngbTypeahead]="searchStation"
+                [attr.disabled]="
+                  mode === 'R' && isEdit === false ? 'disabled' : null
+                "
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
+            <div class="col-md-3">
+              <my-date-picker
+                formControlName="RequestDate"
+                placeholder="dd/mm/yyyy"
+                locale="th"
+                [options]="myDatePickerOptions"
+                [disabled]="mode === 'R' && isEdit === false"
+              ></my-date-picker>
+              <!--
+                <input class="form-control form-control-sm" type="text" formControlName="RequestDate">
+              -->
+            </div>
+            <label class="col-form-label text-center col-md-2">เวลา</label>
+            <div class="col-md-3">
+              <input
+                class="form-control form-control-sm"
+                type="text"
+                formControlName="RequestTime"
+                [attr.disabled]="
+                  mode === 'R' && isEdit === false ? 'disabled' : null
+                "
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group row">
+            <label class="col-form-label col-md-2"
+              >ผู้แจ้งความได้ทราบว่า :
+            </label>
+            <div class="col-md-10">
+              <textarea
+                class="form-control form-control-sm"
+                rows="8"
+                formControlName="Informeracknowledge"
+                [attr.disabled]="
+                  mode === 'R' && isEdit === false ? 'disabled' : null
+                "
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="dataTable table table-sm table-striped table-hover">
+          <thead>
+            <tr>
+              <th></th>
+              <th class="footable-sortable text-center">ลำดับ</th>
+              <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+              <th class="footable-sortable">ลักษณะคดี</th>
+              <th class="footable-sortable">วันที่ชำระ</th>
+              <th class="footable-sortable">ใบเสร็จเล่มที่</th>
+              <th class="footable-sortable">เลขที่อ้างอิง</th>
+              <th class="footable-sortable">งวดชำระ</th>
+              <th class="footable-sortable">ค่าปรับตามงวด</th>
+              <th class="footable-sortable">เงินสินบน</th>
+              <th class="footable-sortable">เงินสินบนสุทธิ</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="RequestBribeDetail">
+            <ng-container
+              *ngFor="let item of RequestBribeDetail.controls; let i = index"
+            >
+              <tr class="footable" [formGroupName]="i">
+                <td>
+                  <input
+                    type="checkbox"
+                    [id]="'td' + i"
+                    name="ischeck"
+                    formControlName="check"
+                    class="filled-in chk-col-indigo"
+                    [attr.disabled]="
+                      mode === 'R' && isEdit === false ? 'disabled' : null
+                    "
+                  />
+                  <label [for]="'td' + i" class="m-0"></label>
+                </td>
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="">
+                  {{ RequestBribeDetail.at(i).get('LawbreakerName').value }}
+                </td>
+                <td class="">
+                  {{ RequestBribeDetail.at(i).get('FineTypeName').value }}
+                </td>
+                <td>
+                  {{
+                    RequestBribeDetail.at(i).get('PaymentDate').value | thaiDate
+                  }}
+                </td>
+                <td class="text-center">
+                  {{ RequestBribeDetail.at(i).get('ReceiptBookNo').value }}
+                </td>
+                <td class="">
+                  {{ RequestBribeDetail.at(i).get('Receipt').value }}
+                </td>
+                <td class="">
+                  {{ RequestBribeDetail.at(i).get('PaymentPeriodNo').value }}
+                </td>
+                <td>
+                  {{
+                    RequestBribeDetail.at(i).get('PaymentFine').value || 0
+                      | currency: ' '
+                  }}
+                </td>
+                <td>
+                  {{
+                    RequestBribeDetail.at(i).get('BribeMoney').value || 0
+                      | currency: ' '
+                  }}
+                </td>
+                <td>
+                  {{
+                    RequestBribeDetail.at(i).get('NetBribeMoney').value || 0
+                      | currency: ' '
+                  }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th class="text-right" colspan="8">รวม :</th>
+              <td>{{ aggregate.PaymentFine || 0 | currency: ' ' }}</td>
+              <td>{{ aggregate.BribeMoney || 0 | currency: ' ' }}</td>
+              <td>{{ aggregate.NetBribeMoney || 0 | currency: ' ' }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+      <div class="card-actions">
+        <a
+          class=""
+          (click)="
+            ILG60_08_03_00_00_E12_EXPANDED = !ILG60_08_03_00_00_E12_EXPANDED
+          "
+        >
+          <i
+            class="fa"
+            [ngClass]="{
+              'fa-chevron-down': ILG60_08_03_00_00_E12_EXPANDED,
+              'fa-chevron-up': !ILG60_08_03_00_00_E12_EXPANDED
+            }"
+          ></i>
+        </a>
+      </div>
+      <h4 class="card-title m-b-0">หนังสือมอบอำนาจ</h4>
+    </div>
+    <div *ngIf="ILG60_08_03_00_00_E12_EXPANDED" class="card-body">
+      <ng-container>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">เขียนที่ : </label>
+              <div class="col-md-8">
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  formControlName="StationOfPOA"
+                  [ngbTypeahead]="searchStationOfPOA"
+                  [attr.disabled]="
+                  mode === 'R' && isEdit === false ? 'disabled' : null
+                "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
+              <div class="col-md-3">
+                <my-date-picker
+                  formControlName="POADate"
+                  placeholder="dd/mm/yyyy"
+                  locale="th"
+                  [options]="myDatePickerOptions"
+                  [disabled]="mode === 'R' && isEdit === false"
+                ></my-date-picker>
+                <!--
+                  <input class="form-control form-control-sm" type="text" formControlName="RequestDate">
+                -->
+              </div>
+              <label class="col-form-label text-center col-md-2">เวลา</label>
+              <div class="col-md-3">
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  formControlName="POATime"
+                  [attr.disabled]="
+                  mode === 'R' && isEdit === false ? 'disabled' : null
+                "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">ผู้รับมอบอำนาจ : </label>
+              <div class="col-md-8">
+                <input
+                  class="form-control form-control-sm"
+                  formControlName="StaffName"
+                  [ngbTypeahead]="searchStaffMainName"
+                  [attr.disabled]="
+                  mode === 'R' && isEdit === false ? 'disabled' : null
+                "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">ตำแหน่ง : </label>
+              <div class="col-md-8">
+                <input
+                  class="form-control form-control-sm"
+                  formControlName="PositionName"
+                  [attr.readonly]="true"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">หน่วยงาน : </label>
+              <div class="col-md-8">
+                <input
+                  class="form-control form-control-sm"
+                  formControlName="OfficeName"
+                  [attr.readonly]="true"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+      <div class="card-actions">
+        <a
+          class=""
+          (click)="
+            ILG60_08_03_00_00_E16_EXPANDED = !ILG60_08_03_00_00_E16_EXPANDED
+          "
+        >
+          <i
+            class="fa"
+            [ngClass]="{
+              'fa-chevron-down': ILG60_08_03_00_00_E16_EXPANDED,
+              'fa-chevron-up': !ILG60_08_03_00_00_E16_EXPANDED
+            }"
+          ></i>
+        </a>
+      </div>
+      <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+    </div>
+    <div *ngIf="ILG60_08_03_00_00_E16_EXPANDED" class="card-body">
+        <div class="row form-group">
+            <div class="col-lg-10 col-md-9 col-sm-8"></div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+              <button type="button" class="btn btn-block btn-themecolor" [attr.disabled]="(Document.invalid || (mode ==='R' && isEdit === false)) ? 'disabled' : null" 
+                (click)="addDocument()">เพิ่มเอกสารแนบ</button>
+            </div>
+          </div>
+    
+          <div class="table-responsive">
+            <table class="table table-sm table-striped table-set-border">
+              <thead>
+                <tr>
+                  <th class="text-center">ลำดับ</th>
+                  <th>ชื่อเอกสารแนบ</th>
+                  <th>ที่อยู่เอกสารแนบ</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody formArrayName="Document">
+                <tr *ngFor="let item of Document.controls | isMatches:'isDelete':false; let i=index;" [formGroupName]="i">
+                  <td class="text-center">{{i+1}}</td>
+                  <td>
+                    <input type="text" formControlName="DataSource" class="form-control form-control-sm" [attr.disabled]="
+                    mode === 'R' && isEdit === false ? 'disabled' : null
+                  ">
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"
+                        readonly>
+                      <div class="input-group-append">
+                        <input [id]="'Doc'+i" type="file" (change)="changeDocument($event, i)" [style.display]="'none'">
+                        <label [for]="'Doc'+i" class="input-group-text custom-file-upload text-secondary">
+                          <i class="ti-more-alt"></i>
+                        </label>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <a href="javaScript:void(0)" class="text-warning"  (click)="deleteDocument(i)" *ngIf="!(mode === 'R' && isEdit === false)">
+                      <i class="fa fa-trash-o fa-lg"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+    
+          </div>
+    </div>
+  </div>
+</form>
+
 <mat-accordion [multi]="true">
-  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E08_DISABLED$ | async"
-    (opened)="ILG60_08_03_00_00_E08_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E08_EXPANDED$.next(false)">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <h4 class="card-title m-b-0">คำร้องขอรับเงินสินบน</h4>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="card-body">
-        <ILG60-08-03-00-00-E08></ILG60-08-03-00-00-E08>
-      </div>
-    </ng-template>
-  </mat-expansion-panel>
+  <!--
+    <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E08_DISABLED$ | async"
+      (opened)="ILG60_08_03_00_00_E08_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E08_EXPANDED$.next(false)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h4 class="card-title m-b-0">คำร้องขอรับเงินสินบน</h4>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div class="card-body">
+          <ILG60-08-03-00-00-E08 [RequestCommand]="RequestCommand$ | async" [RequestBribe]="RequestBribe$ | async" [mode]="mode$ | async"
+            [inputData]="ILG60_08_03_00_00_E08_DATA$ | async" (formData)="changeForm($event)"></ILG60-08-03-00-00-E08>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E12_DISABLED$ | async"
-    (opened)="ILG60_08_03_00_00_E12_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E12_EXPANDED$.next(false)">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <h4 class="card-title m-b-0">หนังสือมอบอำนาจ</h4>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="card-body">
-        <ILG60-08-03-00-00-E12></ILG60-08-03-00-00-E12>
-      </div>
-    </ng-template>
-  </mat-expansion-panel>
+  <!--
+    <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E12_DISABLED$ | async"
+      (opened)="ILG60_08_03_00_00_E12_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E12_EXPANDED$.next(false)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h4 class="card-title m-b-0">หนังสือมอบอำนาจ</h4>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div class="card-body">
+          <ILG60-08-03-00-00-E12 (emitChange)="changeForm($event)"></ILG60-08-03-00-00-E12>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  -->
 
-  <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E16_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E16_DISABLED$ | async"
-    (opened)="ILG60_08_03_00_00_E16_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E16_EXPANDED$.next(false)">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="card-body">
-        <ILG60-08-03-00-00-E16></ILG60-08-03-00-00-E16>
-      </div>
-    </ng-template>
-  </mat-expansion-panel>
+  <!--
+    <mat-expansion-panel [expanded]="ILG60_08_03_00_00_E16_EXPANDED$ | async" [disabled]="ILG60_08_03_00_00_E16_DISABLED$ | async"
+      (opened)="ILG60_08_03_00_00_E16_EXPANDED$.next(true)" (closed)="ILG60_08_03_00_00_E16_EXPANDED$.next(false)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div class="card-body">
+          <ILG60-08-03-00-00-E16 (emitChange)="changeForm($event)"></ILG60-08-03-00-00-E16>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  -->
 </mat-accordion>
