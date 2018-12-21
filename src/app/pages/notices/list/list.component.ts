@@ -133,36 +133,36 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearchComplete(list) {
+        let datas = [];
         if (!list || list.length==0) {
             this.showSwal(Message.noRecord, "warning");
-            return false;
-        }
-
-        let datas = [];
-        let cnt = 1;
-        for(let l of list){
-            l.index = "";
-            let insert = true;
-            for(let i of datas){
-                if(i.NoticeCode==l.NoticeCode){
-                    l.NoticeDate = "";
-                    l.StaffTitleName = "";
-                    l.StaffFirstName = "";
-                    l.StaffLastName = "";
-                    l.StaffOfficeName = "";
-                    insert = false;
-                    
-                    // i.childs.push(l);
-                    i.SuspectFullname += "<br/>"+l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
-                    break;
+            // return false;
+        }else{
+            let cnt = 1;
+            for(let l of list){
+                l.index = "";
+                let insert = true;
+                for(let i of datas){
+                    if(i.NoticeCode==l.NoticeCode){
+                        l.NoticeDate = "";
+                        l.StaffTitleName = "";
+                        l.StaffFirstName = "";
+                        l.StaffLastName = "";
+                        l.StaffOfficeName = "";
+                        insert = false;
+                        
+                        // i.childs.push(l);
+                        i.SuspectFullname += "<br/>"+l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
+                        break;
+                    }
                 }
-            }
-
-            if(insert){
-                // l.childs = [];
-                l.SuspectFullname = l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
-                datas.push(l);
-                l.index = cnt++;
+    
+                if(insert){
+                    // l.childs = [];
+                    l.SuspectFullname = l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
+                    datas.push(l);
+                    l.index = cnt++;
+                }
             }
         }
 
