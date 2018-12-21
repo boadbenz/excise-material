@@ -67,7 +67,6 @@ export class LoginComponent implements OnInit {
           Password: Pass
         };
         await this.authService.userAuth(params).subscribe(async res => {
-          // console.log("res++++ : ",res);
           if (res.StaffCode != null) {
             this.fullName = res.TitleName + " " + res.FirstName + " " + res.LastName;
             this.operationPosName = res.OperationPosName;
@@ -75,7 +74,10 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('fullName', this.fullName);
             localStorage.setItem('operationPosName', this.operationPosName);
             localStorage.setItem('officeShortName', this.OfficeShortName);
-            this.router.navigate([this.returnUrl]);
+            localStorage.setItem('staffCode', res.StaffCode);
+            localStorage.setItem('officeCode', res.OfficeCode);
+            let url = decodeURIComponent(this.returnUrl);
+            this.router.navigateByUrl(url);
           } else this.errMsg = res.Msg;
         });
       }

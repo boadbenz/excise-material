@@ -63,7 +63,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.32');
+        this.sidebarService.setVersion('0.0.2.33');
         this.paginage.TotalItems = 0;
 
         // this.preLoaderService.setShowPreloader(true);
@@ -167,6 +167,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         this.notice = datas;
+        this.noticeList = this.notice;
         // set total record
         this.paginage.TotalItems = this.notice.length;
     }

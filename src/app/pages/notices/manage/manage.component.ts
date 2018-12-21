@@ -146,7 +146,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.32');
+        this.sidebarService.setVersion('0.0.2.33');
 
         this.navigate_service();
 
@@ -170,6 +170,39 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.onChangeConceal();
             let e = {value:1};
             this.addNoticeDueDate(e);
+
+            let officeCode = localStorage.getItem("officeCode");
+            for(let l of this.typeheadOffice){
+                let code = l.OfficeCode;
+                if(officeCode==code){
+                    this.noticeForm.patchValue({
+                        NoticeStationCode: l.OfficeCode || '-',
+                        NoticeStation: l.OfficeName
+                    });
+                    break;
+                }
+            }
+            let staffCode = localStorage.getItem("staffCode");
+            for(let l of this.typeheadStaff){
+                let code = l.StaffCode;
+                if(staffCode==code){
+                    this.NoticeStaff.at(0).patchValue({
+                        ProgramCode: this.programSpect,
+                        ProcessCode: '0002',
+                        NoticeCode: this.noticeCode,
+                        IsActive: 1,
+                        StaffFullName: `${l.TitleName || ''} ${l.FirstName || ''} ${l.LastName || ''}`,
+                        PositionCode: l.OperationPosCode || l.OperationPosCode,
+                        PositionName: l.OperationPosName || l.OperationPosName,
+                        DepartmentLevel: l.DeptLevel,
+                        DepartmentCode: l.OfficeCode,
+                        DepartmentName: `${l.OfficeName}`,
+                        ContributorCode: 2,
+                        ContributorID: 1
+                    });
+                    break;
+                }
+            }
         }
 
         if(this.actionFrom=="edit"){
@@ -704,37 +737,39 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeSuspect = noticeSuspect;
         this.noticeForm.value.NoticeDocument = noticeDocument;
 
+        console.log(this.noticeForm.value);
+
         // Set Preloader
-        this.preloader.setShowPreloader(true);
-        let IsSuccess: boolean = true;
-        await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
-            if (!isSuccess) { IsSuccess = false; return false; };
-        }, () => { IsSuccess = false; return; });
+        // this.preloader.setShowPreloader(true);
+        // let IsSuccess: boolean = true;
+        // await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
+        //     if (!isSuccess) { IsSuccess = false; return false; };
+        // }, () => { IsSuccess = false; return; });
+
+        // // if (IsSuccess) {
+        // //     await this.NoticeDocument.value.map(async doc => {
+        // //         // insert Document
+        // //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
+        // //             if (!docIsSuccess) { IsSuccess = false; return false; };
+
+        // //         }, () => { IsSuccess = false; return false; });
+        // //     });
+        // // }
 
         // if (IsSuccess) {
-        //     await this.NoticeDocument.value.map(async doc => {
-        //         // insert Document
-        //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
-        //             if (!docIsSuccess) { IsSuccess = false; return false; };
+        //     this.showSwal(Message.saveComplete, "success");
+        //     // this.router.routeReuseStrategy.shouldReuseRoute = function() {
+        //     //   return false;
+        //     // };
+        //     this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
+        //     this.getByCon(this.noticeCode);
 
-        //         }, () => { IsSuccess = false; return false; });
-        //     });
+        //     sessionStorage.removeItem("notice_form_data");
+        // } else {
+        //     this.showSwal(Message.saveFail, "error");
         // }
 
-        if (IsSuccess) {
-            this.showSwal(Message.saveComplete, "success");
-            // this.router.routeReuseStrategy.shouldReuseRoute = function() {
-            //   return false;
-            // };
-            this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
-            this.getByCon(this.noticeCode);
-
-            sessionStorage.removeItem("notice_form_data");
-        } else {
-            this.showSwal(Message.saveFail, "error");
-        }
-
-        this.preloader.setShowPreloader(false);
+        // this.preloader.setShowPreloader(false);
     }
 
     private async onReviced() {
