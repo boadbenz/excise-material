@@ -175,7 +175,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     console.log(this.activeRoute.snapshot.params);
     console.log(this.activeRoute.snapshot.paramMap.get('mode'));
-    console.log(this.activeRoute.snapshot.paramMap.get('code'));
+    console.log(this.activeRoute.snapshot.paramMap.get('compareid'));
+    console.log(this.activeRoute.snapshot.paramMap.get('comparedetailid'))
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
     } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {

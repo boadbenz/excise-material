@@ -80,7 +80,10 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule' }
+            {
+                path: 'manage/:mode/:compareid/:comparedetailid',
+                loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule'
+            }
         ]
     },
 

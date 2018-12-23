@@ -18,18 +18,18 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   reductionModelList: ReductionModelListComponent;
 
   tableData = [
-    {
-      fullName: 'นายธวัชชัย บิงขุนทด',
-      oldFine: '1,400,000.00',
-      newFine: '',
-      dateFine: '10-ม.ค.-2560',
-      payment: 'เงินสด',
-      receiptNo: '33',
-      receiptRef: '001/2561',
-      statusCase: 'รับรายการนำส่ง',
-      typeCase: 'เปรียบเทียบคดี',
-      period: '1/1'
-    }
+    // {
+    //   fullName: 'นายธวัชชัย บิงขุนทด',
+    //   oldFine: '1,400,000.00',
+    //   newFine: '',
+    //   dateFine: '10-ม.ค.-2560',
+    //   payment: 'เงินสด',
+    //   receiptNo: '33',
+    //   receiptRef: '001/2561',
+    //   statusCase: 'รับรายการนำส่ง',
+    //   typeCase: 'เปรียบเทียบคดี',
+    //   period: '1/1'
+    // }
   ];
 
   listData = {
@@ -145,22 +145,28 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _adjustReceiptgetByCon(compareID) {
     this.apiServer.post('/XCS60/AdjustReceiptgetByCon', {CompareID: compareID})
-        .subscribe(response => console.log(response), error => console.log(error));
+        .subscribe(response => {
+          this.tableData = response;
+        }, error => {
+          console.log(error);
+        }
+    );
   }
+
 
   private  _adjustDetailgetByCon(compareID) {
     this.apiServer.post('/XCS60/AdjustDetailgetByCon', {CompareID: compareID})
         .subscribe(response => this.adjustDetailData =  response, error => console.log(error));
   }
 
-  viewData(id: string) {
-    console.log(id);
-    console.log(this.detailData);
-    this.router.navigate(['/reduction/manage', 'V', this.detailData.ArrestCode], { queryParams: { id: id } });
+  viewData(CompareID: string, CompareDetailID: string) {
+    console.log(CompareID, ' and ', CompareDetailID);
+    console.log(this.detailData.ArrestCode);
+    this.router.navigate(['/reduction/manage', 'V', CompareID, CompareDetailID]);
   }
 
-  editData(id: string) {
-    this.router.navigate(['/reduction/manage', 'E', this.detailData.ArrestCode], { queryParams: { id: id } });
+  editData(CompareID: string, CompareDetailID: string) {
+    this.router.navigate(['/reduction/manage', 'E', CompareID, CompareDetailID]);
   }
 
   attachFile(file) {
