@@ -17,7 +17,7 @@
                         </div>
                     </div>
 
-                    <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
+                    <label for="" class="col-lg-2 col-sm-3">วันที่จับกุม :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
                             <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom"
@@ -94,10 +94,10 @@
                         <td>{{item.ArrestCode}}</td>
                         <td class="text-center">{{item.OccurrenceDate}}</td>
                         <td>
-                            <div *ngFor="let staff of item.ArrestStaff;">{{staff.FullName}}</div>
+                            <ng-container *ngFor="let staff of item.ArrestStaff;">{{staff.FullName}}</ng-container>
                         </td>
                         <td>
-                            <div *ngFor="let staff of item.ArrestStaff;">{{staff.OfficeShortName}}</div>
+                            <ng-container *ngFor="let staff of item.ArrestStaff;">{{staff.OfficeShortName}}</ng-container>
                         </td>
                         <td>{{item.ArrestStation}}</td>
                         <td [ngSwitch]="item.IsLawsuitComplete">
