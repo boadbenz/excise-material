@@ -237,7 +237,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     nip.IndictmentProductFine = _f3.Fine || '';
                     nip.IndictmentProductIsActive = _f3.IndictmentProductIsActive || '1';
                     nip.ProductDesc = _f3.ProductDesc;
-                    nip.IsChecked = _f3.IsModify == 'c' ? true : _f3.IsChecked;
+                    nip.IsChecked = _f3.IsChecked;
                     nip.IsModify = _f3.IsModify || 'c';
                     this.updateIndictmentProductItem(nip, _IndictmentProduct, _f1.IsModify);
                 })
