@@ -1424,9 +1424,18 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private async onEdit() {
-        this.loaderService.show();
-        // await this.loadMasterData();
-        this.loaderService.hide();
+        if (
+            !this.typeheadStaff.length &&
+            !this.typeheadOffice.length &&
+            !this.typeheadProduct.length &&
+            !this.typeheadQtyUnit.length &&
+            !this.typeheadNetVolumeUnit.length &&
+            !this.typeheadRegion.length
+        ) {
+            this.loaderService.show();
+            await this.loadMasterData();
+            this.loaderService.hide();
+        }
     }
 
     private async onDelete() {
@@ -1493,7 +1502,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     case 'R':
                         setTimeout(() => {
-                            // location.reload();
+                            location.reload();
                         }, 200);
                         break;
                 }
@@ -1721,7 +1730,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         await this.s_product.ArrestProductinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
-                                x.ProductID = y.ProductID;
+                                // x.ProductID = y.ProductID;
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
                         break;
@@ -1740,7 +1749,6 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 })
             })
 
-        // let lawbreakerPromise = ;
         return Promise.all(productPromise).then(async () => {
             await this.modifyLawbreaker(arrestProductId)
         });
@@ -1761,7 +1769,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                                     LawbreakerID: x.LawbreakerID,
                                     ArrestLawbreakerID: y.LawbreakerID
                                 })
-                                x.LawbreakerID = y.LawbreakerID;
+                                // x.LawbreakerID = y.LawbreakerID;
                             })
                             .catch((error) => this.catchError(error));
                         break;
@@ -1790,7 +1798,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private async modifyIndictment(arrestLawbreakerId: any[], arrestProductId: any[]) {
-        await this.ArrestIndictment.value
+        let indictmentPromise = await this.ArrestIndictment.value
             .map(async (x: fromModels.ArrestIndictment) => {
                 let newIndictment = new fromModels.ArrestIndictment;
                 x.ArrestCode = this.arrestCode;
@@ -1830,9 +1838,10 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                     arrestLawbreakerId,
                     x.ArrestIndictmentProduct,
                     x.ArrestIndicmentDetail);
+
                 return Promise.all([proD, indictD]);
             })
-        // return Promise.all(indictmentPromise);
+        return Promise.all(indictmentPromise);
     }
 
     private async modifyIndictmentProduct(
@@ -1840,6 +1849,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         arrestProductId: any[],
         product: fromModels.ArrestIndictmentProduct[]
     ) {
+
         let promises = await product.map(async (x) => {
 
             switch (x.IsModify) {
@@ -1896,7 +1906,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         let promises = await indictmentDetail
             .filter(x => x.LawbreakerID != null)
             .map(async (x: fromModels.ArrestIndictmentDetail) => {
-                const lawbreaker = x.ArrestLawbreaker.find(l => l.LawbreakerID == x.LawbreakerID)
+                const lawbreaker = x.ArrestLawbreaker.find(l => l.LawbreakerID == x.LawbreakerID);
                 const newIndictmentDetail = {
                     IndictmentID: indictmentID || x.IndictmentID,
                     IndictmentDetailID: x.IndictmentDetailID,
@@ -1943,15 +1953,15 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
                 }
 
-                return Promise.all([
-                    this.modifyProductDetail(
-                        x.IndictmentDetailID,
-                        indictmentProduct,      // IndictmentProduct ที่อ้างอิงกับ Indictment
-                        x.ArrestProductDetail,  // ProductDetail ที่อ้างอิงกับ IndictmentDetail
-                        lawbreaker.IsModify,
-                        lawbreaker.IsChecked
-                    )
-                ])
+                let proD = this.modifyProductDetail(
+                    x.IndictmentDetailID,
+                    indictmentProduct,      // IndictmentProduct ที่อ้างอิงกับ Indictment
+                    x.ArrestProductDetail,  // ProductDetail ที่อ้างอิงกับ IndictmentDetail
+                    lawbreaker.IsModify,
+                    lawbreaker.IsChecked
+                );
+
+                return Promise.all([proD])
             })
 
         return Promise.all(promises).then();
