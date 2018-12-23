@@ -1502,8 +1502,8 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     case 'R':
                         setTimeout(() => {
-                            location.reload();
-                        }, 200);
+                            // location.reload();
+                        }, 100);
                         break;
                 }
             }
@@ -1731,6 +1731,10 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                                 // x.ProductID = y.ProductID;
+                                arrestProductId.push({
+                                    ProductID: x.ProductID,
+                                    ArrestProductID: y.ProductID
+                                })
                             }, () => { this.saveFail(); return; })
                             .catch((error) => this.catchError(error));
                         break;
@@ -1743,10 +1747,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         break;
                 }
 
-                arrestProductId.push({
-                    ProductID: x.ProductID,
-                    ArrestProductID: x.ProductID
-                })
+
             })
 
         return Promise.all(productPromise).then(async () => {
@@ -1849,6 +1850,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
         arrestProductId: any[],
         product: fromModels.ArrestIndictmentProduct[]
     ) {
+        console.log(indictmentId, arrestProductId, product);
 
         let promises = await product.map(async (x) => {
 
@@ -1999,14 +2001,17 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
                     if (x.IsModify == 'c') {
                         if (!x.IsChecked) return;
+                        apd.ProductDetailID = null;
                         await this.s_productDetail.ArrestProductDetailinsAll(apd)
                             .then().catch((error) => this.catchError(error));
                     } else {
-
+                        debugger
                         let a = await arrestProductDetail
                             .filter(proD => proD.ProductID != x.ProductID)
                             .map(async (proD) => {
+                                debugger;
                                 if (x.IsChecked && !proD.ProductDetailID) {
+                                    apd.ProductDetailID = null;
                                     await this.s_productDetail.ArrestProductDetailinsAll(apd)
                                         .then().catch((error) => this.catchError(error));
                                 }
@@ -2015,6 +2020,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                         let b = await arrestProductDetail
                             .filter(proD => proD.ProductID == x.ProductID)
                             .map(async proD => {
+                                debugger
                                 if (x.IsModify == 'd' || !x.IsChecked) {
                                     await this.s_productDetail.ArrestProductDetailupdDelete(proD.ProductDetailID.toString())
                                         .then().catch((error) => this.catchError(error));
