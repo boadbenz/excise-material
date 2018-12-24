@@ -1468,6 +1468,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 this.loaderService.show();
                 await this.loadMasterData();
                 this.loaderService.hide();
+            } else {
+                swal('', Message.cannotModify, 'warning');
             }
 
         }
