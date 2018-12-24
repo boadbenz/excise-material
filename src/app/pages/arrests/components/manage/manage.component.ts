@@ -1453,9 +1453,23 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             !this.typeheadNetVolumeUnit.length &&
             !this.typeheadRegion.length
         ) {
-            this.loaderService.show();
-            await this.loadMasterData();
-            this.loaderService.hide();
+            let isLawsuit = false;
+            this.ArrestIndictment.value.map(x => {
+                if (isLawsuit) return;
+                this.s_lawsuit.ArrestLawsuitgetByIndictmentID(x.IndictmentID).then(y => {
+                    if (this.checkResponse(y)) {
+                        isLawsuit = true;
+                        return;
+                    }
+                })
+            })
+
+            if (!isLawsuit) {
+                this.loaderService.show();
+                await this.loadMasterData();
+                this.loaderService.hide();
+            }
+
         }
     }
 
@@ -1871,7 +1885,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         arrestProductId: any[],
         product: fromModels.ArrestIndictmentProduct[]
     ) {
-        console.log(indictmentId, arrestProductId, product);
 
         let promises = await product.map(async (x) => {
 
@@ -2051,7 +2064,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                                     .filter(indictPro => proD.ProductID != indictPro.ProductID);
 
                                 console.log(x);
-
 
                                 if (x.ProductID != proD.ProductID && !notMatch.length && x.IsChecked) {
                                     apd.ProductDetailID = null;
