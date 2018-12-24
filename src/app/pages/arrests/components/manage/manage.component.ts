@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, DoCheck } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, DoCheck, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
@@ -41,7 +41,7 @@ import { Acceptability, ArrestIndictmentProduct } from '../../models';
     templateUrl: './manage.component.html',
     styleUrls: ['./manage.component.scss']
 })
-export class ManageComponent implements OnInit, OnDestroy, DoCheck {
+export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck {
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
 
@@ -75,7 +75,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     runningTable = 'ops_arrest';
     runningOfficeCode = localStorage.getItem('officeCode');
     runningPrefix = 'TN';
-    
+
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
@@ -206,14 +206,17 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
     async ngOnInit() {
         this.sidebarService.setVersion(this.s_arrest.version);
         this.active_route();
-        if (this.arrestFG) {
-            setTimeout(() => {
-                this.arrestFG.reset();
-            }, 300);
-        }
-        console.log(this.runningOfficeCode);
+        // if (this.arrestFG) {
+        //     setTimeout(() => {
+        //         this.arrestFG.reset();
+        //     }, 300);
+        // }
         this.arrestFG = this.createForm();
         this.navigate_Service();
+    }
+
+    ngAfterViewInit(): void {
+        this.addStaff();
     }
 
     ngDoCheck(): void {
@@ -350,7 +353,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             ArrestTime: new FormControl(ArrestTime, Validators.required),
             OccurrenceDate: new FormControl(ArrestDate, Validators.required),
             OccurrenceTime: new FormControl(ArrestTime, Validators.required),
-            ArrestStationCode: new FormControl(this.runningOfficeCode),
+            ArrestStationCode: new FormControl(null),
             ArrestStation: new FormControl(null, Validators.required),
             HaveCulprit: new FormControl(0),
             Behaviour: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
@@ -372,6 +375,11 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             ArrestDocument: this.fb.array([])
         })
     }
+
+    // private createStaffForm(): FormGroup {
+    //     fromModels.ArrestStaffFormControl.ArrestCode = new FormControl(this.arrestCode);
+    //     return this.fb.group(fromModels.ArrestStaffFormControl);
+    // }
 
     private createLocalForm(): FormGroup {
         fromModels.ArrestLocaleFormControl.ArrestCode = new FormControl(this.arrestCode);
@@ -488,6 +496,19 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             case 'C':
                 this.enableBtnModeC()
                 await this.loadMasterData();
+
+                const staff = this.typeheadStaff.find(x => x.StaffCode == localStorage.getItem('staffCode'));
+                if (staff) {
+                    const _staff = { item: staff };
+                    this.selectItemStaff(_staff, 0);
+                };
+
+                const office = this.typeheadOffice.find(x => x.OfficeCode == this.runningOfficeCode);
+                if (office) {
+                    const _office = { item: office };
+                    this.selectItemOffice(_office);
+                }
+
                 this.showEditField = false;
                 await this.pageRefresh(this.arrestCode);
                 break;
@@ -2029,12 +2050,15 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                                 let notMatch = indictmentProduct
                                     .filter(indictPro => proD.ProductID != indictPro.ProductID);
 
+                                console.log(x);
+
+
                                 if (x.ProductID != proD.ProductID && !notMatch.length && x.IsChecked) {
                                     apd.ProductDetailID = null;
                                     await this.s_productDetail.ArrestProductDetailinsAll(apd)
                                         .then().catch((error) => this.catchError(error));
 
-                                } else if(x.ProductID == proD.ProductID) {
+                                } else if (x.ProductID == proD.ProductID) {
 
                                     if (x.IsModify == 'd' || !x.IsChecked) {
                                         await this.s_productDetail.ArrestProductDetailupdDelete(proD.ProductDetailID.toString())
