@@ -14,13 +14,15 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {
   }
 
+
   ngOnInit() {
   }
   myControl = new FormControl();
   options: string[] = ['One', 'Two', 'Three'];
 
-  @HostListener('window:beforeunload', ['$event'])
-  beforeUnloadHander(event) {
-    this.authService.signout();
-  }
+  // @HostListener('window:beforeunload', ['$event'])
+  // beforeUnloadHander(event) {
+  //   console.log("check evant : ",event)  
+  //     this.authService.signout();
+  // }
 }

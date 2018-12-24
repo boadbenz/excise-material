@@ -62,6 +62,8 @@ export class AuthService {
   }
 
   private getHeadersSSO() {
+
+
     let headers = new Headers();
     // headers.append('Access-Control-Allow-Origin', '*');
     // headers.append('Access-Control-Allow-Method', '*');
