@@ -90,8 +90,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onAdvSearch(form: any) {
-        const sdate = getDateMyDatepicker(form.OccurrenceDateFrom);
-        const edate = getDateMyDatepicker(form.OccurrenceDateTo);
+        let sdate = getDateMyDatepicker(form.OccurrenceDateFrom);
+        let edate = getDateMyDatepicker(form.OccurrenceDateTo);
 
         if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
@@ -101,7 +101,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         form.OccurrenceDateFrom = convertDateForSave(sdate) || '';
-        form.OccurrenceDateTo = convertDateForSave(edate) || '';
+        form.OccurrenceDateTo = convertDateForSave(edate) || convertDateForSave(new Date());
 
         this.arrestService
             .ArrestgetByConAdv(form)

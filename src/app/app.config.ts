@@ -16,7 +16,7 @@ export const appConfig = {
     // apiReport:'http://192.168.3.134:80/Report_XCS',
     // mockapi: 'http://demo1735762.mockable.io/XCS60'
 
-    apiUrl: 'http://103.233.193.94:8888/XCS60',
+    apiUrl:  'http://103.233.193.94:8888/XCS60',
     api8888: 'http://103.233.193.94:8888/XCS60',
     api7788: 'http://103.233.193.94:7788/XCS60',
     api7789: 'http://103.233.193.94:7789/XCS60',
