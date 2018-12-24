@@ -132,6 +132,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   async onSearch(Textsearch: any) {
     this.preLoaderService.setShowPreloader(true);
+    Textsearch = Textsearch.Textsearch == null ? {Textsearch: ""} : Textsearch
     await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch).then(list => this.onSearchComplete(list));
     this.preLoaderService.setShowPreloader(false);
   }
@@ -191,11 +192,22 @@ export class ListComponent implements OnInit, OnDestroy {
     return tempList;
   }
 
-  private async onSearchComplete(list: any) {
-    list = await this.convertList(list)
+  checkLawsuitType(item) {
+    if (item.Lawsuit.length > 0) {
+      return item.Lawsuit[0].IsOutside == 1 ? "น. " : ""
+    } else {
+      return "";
+    }
+  }
 
-    /* Alert When No Data To Show */
-    if (!list.length) {
+  showLawsuitDate(item) {
+    if (item.Lawsuit.length > 0) {
+      return toLocalShort(item.Lawsuit[0].LawsuitDate)
+    }
+  }
+
+  private async onSearchComplete(list: any) {
+    if (list.length == 0) {
       Swal({
         text: Message.noRecord,
         type: 'warning',
@@ -203,14 +215,13 @@ export class ListComponent implements OnInit, OnDestroy {
       this.resultsPerPage = [];
       return false;
     }
+
+    list = await this.convertList(list)
+    /* Alert When No Data To Show */
+
     /* Adjust Another Column */
     this.results = list.map((item, i) => {
       item.RowsId = i + 1;
-      try {
-        item.LawsuitDate = toLocalShort(item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitDate);
-      } catch (error) {
-
-      }
       return item;
     });
     this.paginage.TotalItems = this.results.length;
