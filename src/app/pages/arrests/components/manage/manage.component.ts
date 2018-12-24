@@ -73,8 +73,9 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
 
     documentType = '3';
     runningTable = 'ops_arrest';
-    runningOfficeCode = '901112';
+    runningOfficeCode = localStorage.getItem('officeCode');
     runningPrefix = 'TN';
+    
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
@@ -210,7 +211,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
                 this.arrestFG.reset();
             }, 300);
         }
-
+        console.log(this.runningOfficeCode);
         this.arrestFG = this.createForm();
         this.navigate_Service();
     }
@@ -349,7 +350,7 @@ export class ManageComponent implements OnInit, OnDestroy, DoCheck {
             ArrestTime: new FormControl(ArrestTime, Validators.required),
             OccurrenceDate: new FormControl(ArrestDate, Validators.required),
             OccurrenceTime: new FormControl(ArrestTime, Validators.required),
-            ArrestStationCode: new FormControl(null),
+            ArrestStationCode: new FormControl(this.runningOfficeCode),
             ArrestStation: new FormControl(null, Validators.required),
             HaveCulprit: new FormControl(0),
             Behaviour: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
