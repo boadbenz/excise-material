@@ -65,7 +65,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     actionFrom:string;
     months:any[];
-    programSpect: string = 'ILG60-02-02-00';
+    programSpect: string = 'ILG60-02-02-00-00';
     mode: string;
     showEditField: Boolean;
     localEditField: Boolean;
@@ -146,7 +146,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.32');
+        this.sidebarService.setVersion('0.0.2.33');
 
         this.navigate_service();
 
@@ -170,6 +170,39 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.onChangeConceal();
             let e = {value:1};
             this.addNoticeDueDate(e);
+
+            let officeCode = localStorage.getItem("officeCode");
+            for(let l of this.typeheadOffice){
+                let code = l.OfficeCode;
+                if(officeCode==code){
+                    this.noticeForm.patchValue({
+                        NoticeStationCode: l.OfficeCode || '-',
+                        NoticeStation: l.OfficeName
+                    });
+                    break;
+                }
+            }
+            let staffCode = localStorage.getItem("staffCode");
+            for(let l of this.typeheadStaff){
+                let code = l.StaffCode;
+                if(staffCode==code){
+                    this.NoticeStaff.at(0).patchValue({
+                        ProgramCode: this.programSpect,
+                        ProcessCode: '0002',
+                        NoticeCode: this.noticeCode,
+                        IsActive: 1,
+                        StaffFullName: `${l.TitleName || ''} ${l.FirstName || ''} ${l.LastName || ''}`,
+                        PositionCode: l.OperationPosCode || l.OperationPosCode,
+                        PositionName: l.OperationPosName || l.OperationPosName,
+                        DepartmentLevel: l.DeptLevel,
+                        DepartmentCode: l.OfficeCode,
+                        DepartmentName: `${l.OfficeName}`,
+                        ContributorCode: 2,
+                        ContributorID: 1
+                    });
+                    break;
+                }
+            }
         }
 
         if(this.actionFrom=="edit"){
@@ -338,7 +371,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeTime: new FormControl(noticeTime, Validators.required),
             NoticeDue: new FormControl(1, Validators.required),
             NoticeDueDate: new FormControl(noticeDueDate, Validators.required),
-            NoticeDueTime: new FormControl(null),
+            NoticeDueTime: new FormControl("23.59 น."),
             GroupNameDesc: new FormControl('N/A'),
             CommunicationChanelID: new FormControl(null),
             DataSource: new FormControl(null),
@@ -499,6 +532,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStation: res.NoticeStation,
             NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
             NoticeTime: res.NoticeTime,
+            NoticeDueTime: "23.59 น.",
             NoticeDue: res.NoticeDue,
             NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
             GroupNameDesc: res.GroupNameDesc || 'N/A',
@@ -518,15 +552,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         await res.NoticeLocale.map(item =>
-            item.Region = `${item.SubDistrict}/${item.District}/${item.Province}`
+            item.Region = `${item.SubDistrict+"/" || ''}${item.District+"/"||''}${item.Province}`
         )
 
         const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
         informer.map(item => {
             this.isConceal = item.InformerType == 1 ? true : false;
-            item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
-            item.Region += item.District == null ? '' : `/${item.District}`;
-            item.Region += item.Province == null ? '' : `/${item.Province}`;
+            item.Region = !item.SubDistrict ? '' : `${item.SubDistrict}`;
+            item.Region += !item.District ? '' : `/${item.District}`;
+            item.Region += !item.Province ? '' : `/${item.Province}`;
+            item.Age = !item.Age||item.Age==0?"":item.Age;
         });
 
         const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
@@ -702,40 +737,48 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeSuspect = noticeSuspect;
         this.noticeForm.value.NoticeDocument = noticeDocument;
 
+        console.log(this.noticeForm.value);
+
         // Set Preloader
-        this.preloader.setShowPreloader(true);
-        let IsSuccess: boolean = true;
-        await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
-            if (!isSuccess) { IsSuccess = false; return false; };
-        }, () => { IsSuccess = false; return; });
+        // this.preloader.setShowPreloader(true);
+        // let IsSuccess: boolean = true;
+        // await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
+        //     if (!isSuccess) { IsSuccess = false; return false; };
+        // }, () => { IsSuccess = false; return; });
+
+        // // if (IsSuccess) {
+        // //     await this.NoticeDocument.value.map(async doc => {
+        // //         // insert Document
+        // //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
+        // //             if (!docIsSuccess) { IsSuccess = false; return false; };
+
+        // //         }, () => { IsSuccess = false; return false; });
+        // //     });
+        // // }
 
         // if (IsSuccess) {
-        //     await this.NoticeDocument.value.map(async doc => {
-        //         // insert Document
-        //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
-        //             if (!docIsSuccess) { IsSuccess = false; return false; };
+        //     this.showSwal(Message.saveComplete, "success");
+        //     // this.router.routeReuseStrategy.shouldReuseRoute = function() {
+        //     //   return false;
+        //     // };
+        //     this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
+        //     this.getByCon(this.noticeCode);
 
-        //         }, () => { IsSuccess = false; return false; });
-        //     });
+        //     sessionStorage.removeItem("notice_form_data");
+        // } else {
+        //     this.showSwal(Message.saveFail, "error");
         // }
 
-        if (IsSuccess) {
-            this.showSwal(Message.saveComplete, "success");
-            // this.router.routeReuseStrategy.shouldReuseRoute = function() {
-            //   return false;
-            // };
-            this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
-            this.getByCon(this.noticeCode);
-
-            sessionStorage.removeItem("notice_form_data");
-        } else {
-            this.showSwal(Message.saveFail, "error");
-        }
-
-        this.preloader.setShowPreloader(false);
+        // this.preloader.setShowPreloader(false);
     }
 
     private async onReviced() {
+        const noticeDate = this.noticeForm.value.NoticeDate;
+        const noticeDueDate = this.noticeForm.value.NoticeDueDate;
+
+        this.noticeForm.value.NoticeDate = noticeDate.date.day+"-"+this.months[noticeDate.date.month-1]+"-"+noticeDate.date.year;//convertDateForSave(sDateCompare);
+        this.noticeForm.value.NoticeDueDate = noticeDueDate.date.day+"-"+this.months[noticeDueDate.date.month-1]+"-"+noticeDueDate.date.year;//convertDateForSave(eDateCompare);
+
         let noticeForm = this.noticeForm.value;
         for(let l of noticeForm.NoticeProduct){
             if(!l.ProductCode){
@@ -1040,7 +1083,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         noticeDate.setDate(noticeDate.getDate() + parseInt(dueDate));
         this.noticeForm.patchValue({
             NoticeDueDate: setDateMyDatepicker(noticeDate),
-            NoticeDueTime: noticeTime
+            NoticeDueTime: "23.59 น."
         })
     }
 
@@ -1087,7 +1130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         `${x.ProductDesc || ''}`;
 
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubdistrictNameTH || ''}/${x.DistrictNameTH || ''}/${x.ProvinceNameTH || ''}`;
+        `${x.SubdistrictNameTH+"/" || ''}${x.DistrictNameTH+"/" || ''}${x.ProvinceNameTH || ''}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
