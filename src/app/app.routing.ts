@@ -51,6 +51,12 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
         ]
+    }, {
+        path: 'uac', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/UAC/list/list.module#ListModule' },
+            { path: 'manage', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
+        ]
     }, 
     // {
     //     path: 'reward', component: LayoutComponent,
@@ -74,7 +80,10 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule' }
+            {
+                path: 'manage/:mode/:compareid/:comparedetailid',
+                loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule'
+            }
         ]
     },
 

@@ -4,7 +4,10 @@ import { FineService } from '../fine.service';
 import { ICompareCon } from '../condition-model';
 import { Arrest } from '../../model/arrest';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
-
+import { appConfig } from "app/app.config";
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-printdoc-modal',
@@ -21,14 +24,17 @@ export class PrintDocModalComponent implements OnInit {
     LastName: String;
 
     @Input() pCompareID: string;
+    @Input() ArrestCode: string;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
-
+    check: any = {};
     constructor(
         private fineService: FineService,
         private fb: FormBuilder,
-        private _router: Router   
+        private _router: Router,
+        private preloader: PreloaderService,
+        private http: HttpClient
     ) { }
 
 
@@ -86,11 +92,51 @@ export class PrintDocModalComponent implements OnInit {
         }
       }
 
-    onPrint(form: any) {
-        // console.log(form.value);
-        // this.close('Save click')
-        // this.c.emit(form);
-        this._router.navigate([`/fine/list`]);
+    async onPrint(form: any) {
+        // let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
+        // if (_print.length) {
+        if (this.check.checkbox3) {
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm252(this.ArrestCode)
+                .subscribe(x => {
+                const file = new Blob([x], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.preloader.setShowPreloader(false);
+            })
+        }
+        
+        // this._router.navigate([`/fine/list`]);
+    }
+    private httpOptions = {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    private onCatch(error: any, caught: Observable<any>): Observable<any> {
+        return Observable.throw(error);
+    }
+    private onSuccess(res: Response): void {
+        console.log('Request successful');
+    }
+
+    private onError(res: Response): void {
+        console.log('Error, status code: ' + res.status);
+    }
+    private onEnd(): void {
+        this.preloader.setShowPreloader(false);
+    }
+    ReportForm252(ArrestCode: string) {
+        const params = { ArrestCode: ArrestCode };
+        const url = `${appConfig.apiReport}/ReportForm252.aspx`;
+        
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
     }
 
     dismiss(e: any) {

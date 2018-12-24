@@ -1,5 +1,5 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
-  <app-printdoc-modal (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
+  <app-printdoc-modal [ArrestCode]="params.ArrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-printdoc-modal>
 </ng-template>
 <!-- <div style="height: 100px; background-color: white;border: 1px solid #ccc;">
 <div *ngFor="let option of options" style="padding:2px;">
@@ -195,12 +195,12 @@
           <!--<th class="footable-sortable" style="width:7%">รวม</th>-->
         </tr>
         </thead>
-        <tbody *ngIf="ListCompareDetail?.length > 0 && ListCompareDetail[0].all">
+        <tbody *ngIf="ListCompareDetail?.length > 0">
         <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable"
             [style]="item.sum ? 'font-weight: bold' : '' ">
           <td *ngIf="!item.isSum && item.isFirstLoop"><p>{{ item.LawbreakerName }}</p></td>
           <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.Mistreat }}</td>
-
+          <!-- <td>{{ item.isFirstLoop + ' ' + item.isSum }}</td> -->
           <td *ngIf="!item.isSum && !item.isFirstLoop" colspan="2"></td>
           <td *ngIf="item.isSum" colspan="6"></td>
 
@@ -264,8 +264,8 @@
           </div>
           <div class="col-md-6">
             <div class="form-group row">
-              <label class="col-form-label col-md-4">เขียนที่ : </label>
-              <div class="col-md-7">
+              <label class="col-form-label col-md-3">เขียนที่ : </label>
+              <div class="col-md-9">
                 <input type="text" class="form-control" [(ngModel)]="accused.StationName" name="StationName"
                        placeholder="พิมพ์ข้อความ" aria-label="Number"
                        matInput [matAutocomplete]="auto7" (input)="onAutoChange($event.target.value)"
@@ -308,8 +308,8 @@
           </div>
           <div class="col-md-6">
             <div class="form-group row">
-              <label class="col-form-label col-md-4">ตำแหน่ง : </label>
-              <div class="col-md-7">
+              <label class="col-form-label col-md-3">ตำแหน่ง : </label>
+              <div class="col-md-9">
                 <input class="form-control" type="text" [(ngModel)]="accused.OperationPosName"
                        name="OperationPosName" required disabled>
               </div>
@@ -358,7 +358,7 @@
             <td class="text-center">
                 <my-date-picker-th [(ngModel)]="item.PaymentVatDate" name="PaymentVatDate" placeholder="" locale="th"
                 [options]="DateOption"
-                [disabled]="showEditField"
+                [disabled]="showEditField || item.isFillVatDate"
                 ></my-date-picker-th>
             </td>
             <td>
@@ -372,8 +372,8 @@
               </select>
             </td>
             <td class="text-center">
-              <span *ngIf="item.checkBox1 && !item.checkBox2">ประกัน</span>
-              <span *ngIf="item.checkBox1 && item.checkBox2">ประกันและหลักประกัน</span>
+              <span *ngIf="item.cancheck && item.checkBox1 && !item.checkBox2">ประกัน</span>
+              <span *ngIf="item.cancheck && item.checkBox1 && item.checkBox2">ประกันและหลักประกัน</span>
             </td>
             <td class=" text-center">
               <!-- <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
@@ -410,7 +410,7 @@
             <div class="custom-control custom-checkbox col-form-label col-md-4">
               <input class="col-form-label filled-in chk-col-indigo" id="IsOutside" type="checkbox"
                      [(ngModel)]="receipt.IsOutside" name="IsOutside"
-                     [disabled]="showEditField" (checked)="IsOutside==1">
+                     [disabled]="showEditField || receipt.isHaveData" (checked)="IsOutside==1">
               <label for="IsOutside">คดีเปรียบเทียบนอกสถานที่ทำการ</label>
             </div>
           </div>
@@ -421,20 +421,29 @@
           <div class="form-group row">
             <label class="col-form-label col-md-3">คดีเปรียบเทียบที่ : </label>
             <div class="row col-md-4">
-                <div class="row col-md-2">
-                    <span *ngIf="receipt.IsOutside">น</span>
+                <div class="row col-md-4">
+                    <span *ngIf="receipt.IsOutside" style="padding: 0.5rem;">น</span>
                   </div>
-                  <div class="row col-md-10">
+                  <div class="row col-md-11">
                       <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
-                      [disabled]="showEditField">
+                      [disabled]="showEditField || receipt.isHaveData">
                   </div>
-            </div> /
-            <div class="col-md-4">
-                <div class="row col-md-10">
+            </div> <span style="font-size: 1.5rem">/</span>
+            <div class="col-md-5">
+                <!-- <my-date-picker-th [(ngModel)]="receipt.CompareYear" name="CompareYear"
+                placeholder="" locale="th"
+                [options]="YearOption"
+                [disabled]="showEditField || receipt.isHaveData"
+                aria-required="true" required></my-date-picker-th> -->
+                <!-- <div class="row col-md-10">
                     <input class="form-control" type="text" [(ngModel)]="receipt.CompareYear" name="CompareNo"
-                    [disabled]="showEditField">
+                    [disabled]="showEditField || receipt.isHaveData">
+                </div> -->
+                <div class="row col-md-10">
+                  <select class="form-control" [(ngModel)]="receipt.CompareYear" name="CompareYear" [disabled]="showEditField || receipt.isHaveData">
+                    <option *ngFor="let item of year; let i=index;"  value="{{ item }}">{{ item }}</option>
+                  </select>
                 </div>
-              
             </div>
           </div>
         </div>
@@ -446,12 +455,12 @@
         <tr>
           <th class="footable-sortable text-center">ลำดับ</th>
           <th class="footable-sortable">ชื่อผู้ต้องหา</th>
-          <th class="footable-sortable text-center">วันที่ชำระค่าปรับ</th>
+          <th class="footable-sortable text-center" style="width: 10rem">วันที่ชำระค่าปรับ</th>
           <th class="footable-sortable">ผู้รับชำระค่าปรับ</th>
           <th class="footable-sortable text-center">ช่องทางชำระ</th>
-          <th class="footable-sortable text-center">ใบเสร็จเล่มที่</th>
-          <th class="footable-sortable text-center">ใบเสร็จเลขที่</th>
-          <th class="footable-sortable text-center">เลขอ้างอิง</th>
+          <th class="footable-sortable text-center" style="width: 6rem">ใบเสร็จเล่มที่</th>
+          <th class="footable-sortable text-center" style="width: 6rem">ใบเสร็จเลขที่</th>
+          <th class="footable-sortable text-center" style="width: 10rem">เลขอ้างอิง</th>
           <th class="footable-sortable text-center">สถานะคดี</th>
           <th class="footable-sortable"></th>
         </tr>
@@ -464,11 +473,11 @@
               <my-date-picker-th [(ngModel)]="item.PaymentDate" name="PaymentDate"
               placeholder="" locale="th"
               [options]="DateOption"
-              [disabled]="showEditField || item.CompareReceiptID"
+              [disabled]="showEditField || !(item.CompareReceiptID == null || item.CompareReceiptID == undefined)"
               aria-required="true" required></my-date-picker-th>
           </td>
           <td>
-              <div class="input-group col-md-8">
+              <div class="input-group col-md-12">
                   <input type="text" class="form-control"
                          [(ngModel)]="item.ReceiptStaff"
                          name="ReceipStaff"
@@ -476,11 +485,11 @@
                          matInput [matAutocomplete]="autoStaff"
                          (input)="StaffonAutoChange($event.target.value)"
                          (focus)="StaffonAutoFocus($event.target.value)"
-                         [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, index)">
+                         [disabled]="showEditField || item.CompareReceiptID" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, i)">
                   <mat-autocomplete #autoStaff="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                                (click)="StaffonAutoSelecteWord(sOption, '1')" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 1, index)">
+                                (click)="StaffonAutoSelecteWord(sOption, '1')" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 1, i)">
                       {{ sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName }}
                     </mat-option>
                   </mat-autocomplete>
@@ -508,7 +517,7 @@
           <td class="text-center">
               <input class="form-control" type="text"
               [(ngModel)]="item.ReceiptNo"
-              name="ReceiptNo"
+              [name]="'ReceiptNo' + i"
               [disabled]="showEditField || item.CompareReceiptID" [required]="!(item.ReceiptChanel > 1)">
           </td>
           <td class="text-center">
@@ -517,11 +526,12 @@
               name="ReferenceNo"
               [disabled]="showEditField || !(item.ReceiptChanel > 1) || item.CompareReceiptID" [required]="item.ReceiptChanel > 1">
           </td>
+          <td></td>
           <td>
-            <a *ngIf="isFilledReceipt(i)" (click)="editReceipt(item, i, 0)" class="text-secondary" data-toggle="modal"
+            <!-- <a *ngIf="isFilledReceipt(i)" (click)="editReceipt(item, i, 0)" class="text-secondary" data-toggle="modal"
                data-target="#payPopup">
               <i class="mdi mdi-eye fa-lg"></i>
-            </a>
+            </a> -->
             <!-- <a (click)="editReceipt(item, i, 1)" class="text-warning" [hidden]="showEditField"
                data-toggle="modal"
                data-target="#payPopup" *ngIf="item.PaymentDateShow">
@@ -600,35 +610,21 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="footable" *ngFor="let item of filePath; let i=index;">
+        <tr class="footable" *ngFor="let item of AllAddFiles; let i=index;">
           <td class="text-center">{{ (i+1) }}</td>
           <td>
-            <input class="form-control" type="text" name="fileName" [(ngModel)]="item.name"
+            <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
                    [disabled]="showEditField">
           </td>
           <td>
-            <input class="form-control" type="text" name="filePath" [(ngModel)]="item.path"
-                   [disabled]="showEditField">
+            <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
+                   [disabled]="true">
           </td>
           <td>
             <i class="ti-trash btn-action" [hidden]="showEditField"
                (click)="deleteFile(item.DocumentID, i)"></i>
           </td>
         </tr>
-        <!--<tr class="footable">-->
-        <!--<td class="text-center">1</td>-->
-        <!--<td>-->
-        <!--<input class="form-control" type="text" nmae="fileName" [(ngModel)]="fileData.filename"-->
-        <!--[disabled]="showEditField">-->
-        <!--</td>-->
-        <!--<td>-->
-        <!--<input class="form-control" type="text" name="filePath" [(ngModel)]="fileData.filePath"-->
-        <!--[disabled]="showEditField">-->
-        <!--</td>-->
-        <!--<td>-->
-        <!--<i class="ti-trash btn-action" [hidden]="showEditField"></i>-->
-        <!--</td>-->
-        <!--</tr>-->
         </tbody>
       </table>
     </div>
@@ -929,7 +925,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <!-- <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-form-label col-md-5">ใบเสร็จเลขที่ : </label>
                   <div class="col-md-7">
@@ -939,7 +935,7 @@
                            [disabled]="showEditField || userCompareReceiptDetail.CompareReceiptID" [required]="!(userCompareReceiptDetail.ReceiptChanel > 1)">
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
 
             <div class="row">
@@ -1073,19 +1069,19 @@
                   <label class="col-form-label col-md-2">แบบอนุมัติ : </label>
                   <div class="custom-control custom-radio col-form-label col-md-8">
                     <input name="approveRadio" id="typeOne" [value]="1"
-                           class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType" type="radio">
-                    <label for="typeOne" class="col-4">แบบอนุมัติ 1</label>
+                           class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType" type="radio"  [disabled]="showEditField">
+                    <label for="typeOne" class="col-4">แบบอนุมัติ 1 (คด.3)</label>
                     <input name="approveRadio" id="typeTwo" [value]="2"
-                           class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="compareUserDetailPopup.ApproveType">
-                    <label for="typeTwo" class="col-4">แบบอนุมัติ 2</label>
+                           class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="compareUserDetailPopup.ApproveType"  [disabled]="showEditField">
+                    <label for="typeTwo" class="col-4">แบบอนุมัติ 2 (คด.4)</label>
                     <input name="approveRadio" id="typeThree" [value]="3"
                            class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType"
-                           type="radio">
-                    <label for="typeThree" class="col-4">แบบอนุมัติ 3</label>
+                           type="radio"  [disabled]="showEditField">
+                    <label for="typeThree" class="col-4">แบบอนุมัติ 3 (คด.5)</label>
                     <input name="approveRadio" id="typeFour" [value]="4"
                            class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType"
-                           type="radio">
-                    <label for="typeFour" class="col-4">แบบอนุมัติ 4</label>
+                           type="radio"  [disabled]="showEditField">
+                    <label for="typeFour" class="col-4">แบบอนุมัติ 4 (คด.6)</label>
                   </div>
                 </div>
               </div>

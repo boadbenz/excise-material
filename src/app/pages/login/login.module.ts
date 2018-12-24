@@ -4,7 +4,7 @@ import { LoginComponent } from './login.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './auth.service';
-import { LayoutComponent} from '../../shared/layout/layout.component';
+
 const routes: Routes = [{
 	path: '',
 	component: LoginComponent

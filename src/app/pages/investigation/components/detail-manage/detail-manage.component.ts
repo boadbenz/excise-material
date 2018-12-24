@@ -151,7 +151,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         })
                         this.enableBtnModeC();
                         this.loadMasterData();
-                        this.onSetInvestigateDetailFromState();
                         break;
                     case 'R':
                         this.enableBtnModeR();
@@ -310,40 +309,15 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.loaderService.hide();
     }
 
-    async onSetInvestigateDetailFromState() {
-        if (!this.stateInvest) return;
-
-        if (!this.stateInvest.InvestigateDetail.length) return;
-
-        let invest = this.investigateFG;
-        let x = this.stateInvest.InvestigateDetail[0];
-
-        x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
-        x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
-        x.InvestigateSeq = this.investigateSeq;
-
-        await this.pageRefreshStaff(x.InvestigateDetailStaff);
-
-        await this.pageRefreshSuspect(x.InvestigateDetailSuspect);
-
-        await this.pageRefreshLocal(x.InvestigateDetailLocal);
-
-        await this.pageRefreshProduct(x.InvestigateDetailProduct);
-
-        await this.pageRefreshDocument(this.invesDetailId);
-
-        invest.patchValue(x);
-    }
-
     async onPageLoad() {
         this.loaderService.show();
         let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
 
             let invest = this.investigateFG;
-
             x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
             x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
+            x.InvestigateSeq = this.investigateSeq;
 
             await this.pageRefreshStaff(x.InvestigateDetailStaff);
 
@@ -895,20 +869,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private navigateToManage = () => {
-        switch (this.mode) {
-            case 'C':
-                let invest = (!this.stateInvest) ? new fromModels.InvestigateModel() : this.stateInvest;
-                invest.InvestigateDetail = [this.investigateFG.value]
-                this.store.dispatch(new fromStore.UpdateInvestigate(invest));
-                break;
-
-            case 'R':
-                this.store.dispatch(new fromStore.RemoveInvestigate());
-                break;
-        }
-        this.router.navigate([`/investigation/manage`, this.investMode, this.investCode])
-    };
+    private navigateToManage = () => this.router.navigate([`/investigation/manage`, this.investMode, this.investCode]);
 
     private onRefreshPage = () => this.router.navigate(
         [`/investigation/detail-manage`, 'R'],
@@ -1136,7 +1097,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
         const dateStart = getDateMyDatepicker(form.InvestigateDateStart);
         const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
-        form.InvestigateDateStart = setZeroHours(dateStart);
+        form.InvestigateDateStart = setZeroHours(dateStart) ;
         form.InvestigateDateEnd = setZeroHours(dateEnd);
 
         console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));

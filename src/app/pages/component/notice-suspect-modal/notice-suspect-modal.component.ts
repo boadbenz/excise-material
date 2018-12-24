@@ -41,13 +41,31 @@ export class NoticeSuspectService {
         return this.response(params, url);
     }
 
-    private async response(params: string, url: any) {
-      const suspect = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
+    async countByLawbreakerId(lawbreakerId: any){
+        const params = JSON.stringify({LawbreakerID:lawbreakerId});
+        const suspectUrl = `${appConfig.api8082}/NoticeLawsuitResultCountgetByLawbreakerID`;
+        const url = suspectUrl;
 
-      if (suspect.length) {
-          return suspect;
+        let res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+
+        return res[0].NoticeLawsuitResultCount;
+    }
+
+    private async response(params: string, url: any) {
+      let lawbreakers = await this.http.post<any>(url.lawbreakerUrl, params, this.httpOptions).toPromise();
+
+      if (lawbreakers.length>0) {
+          for(let l of lawbreakers){
+            l.MistreatNo = await this.countByLawbreakerId(l.LawbreakerID);
+          }
+          return lawbreakers;
       } else {
-          alert(Message.noRecord);
+          const suspects = await this.http.post<any>(url.suspectUrl, params, this.httpOptions).toPromise();
+          if(suspects.length>0){
+            return suspects;
+          }else{
+            alert(Message.noRecord);
+          }
           return new Array<NoticeMasSuspect>();
       }
     }
@@ -137,16 +155,27 @@ export class NoticeSuspectModalComponent implements OnInit, OnDestroy {
           item.RowId = i + 1;
           item.IsChecked = false;
           item.SuspectID = item.SuspectID;
-          item.EntityTypeName = this.entityType.find(el => parseInt(el.value) == item.EntityType).text;
-          item.SuspectTypeName = this.suspectTypes.find(el => parseInt(el.value) == item.SuspectType).text;
+
+          let suspectType = item.LawbreakerType;
+          if(item.SuspectType>=0){
+            suspectType = item.SuspectType;
+          }
+
+          item.EntityTypeName = item.EntityType?this.entityType.find(el => parseInt(el.value) == item.EntityType).text:"";
+          item.SuspectTypeName = this.suspectTypes.find(el => parseInt(el.value) == suspectType).text;
           item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
-          item.SuspectFullName = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectLastName}`;
-          item.MistreatNo = "";
+          let fullname = "";
+          if(item.SuspectID){
+            fullname = `${item.SuspectTitleName} ${item.SuspectFirstName} ${item.SuspectMiddleName} ${item.SuspectLastName}`;
+          }else{
+            fullname = `${item.LawbreakerTitleName} ${item.LawbreakerFirstName} ${item.LawbreakerMiddleName} ${item.LawbreakerLastName}`;
+          }
+          item.SuspectFullName = fullname;
+          item.MistreatNo = item.MistreatNo?item.MistreatNo:"0";
           return item;
       });
 
       this.suspect = list;
-      // set total record
       this.paginage.TotalItems = this.suspect.length;
   }
 
@@ -167,9 +196,14 @@ export class NoticeSuspectModalComponent implements OnInit, OnDestroy {
       this.c.emit(e);
   }
 
-  view(id:any):void{
+  view(item:any):void{
     this.close('View click');
-      this._router.navigate([`/notice/suspect/R/${id}`]);
+    console.log(item);
+    let id = item.SuspectID;
+    if(item.LawbreakerID){
+        id = item.LawbreakerID;
+    }
+    window.open(`#/notice/suspect/R/${id}`, "_blank");
   }
 
   async exportData() {
@@ -185,6 +219,19 @@ export class NoticeSuspectModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+  }
+
+  getRefer(item:any){
+      item = item.value;
+      if(item.EntityType==1&&(item.SuspectType==1||item.LawbreakerType==1)){
+        return item.IDCard;
+      }else if(item.EntityType==1&&(item.SuspectType==0||item.LawbreakerType==0)){
+        return item.PassportNo;
+      }else if(item.EntityType==0){
+        return item.CompanyRegistrationNo;
+      }else{
+        return "";
+      }
   }
 
 }

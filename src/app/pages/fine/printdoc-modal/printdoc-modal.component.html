@@ -20,6 +20,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th style="text-align: center;width: 5%"></th>
                                 <th style="text-align: center;width: 7%">ลำดับ</th>
                                 <th>ชื่อเอกสาร</th>
@@ -28,6 +29,13 @@
                         </thead>
                         <tbody>
                             <tr>
+                                <td class="text-center">
+                                        <input type="checkbox" name="checkbox1" [(ngModel)]="check.checkbox1" id="checkbox1" class="filled-in chk-col-indigo">
+                                        <label [for]="'checkbox1'" class="m-0"></label>
+                                        <!-- <input class="col-form-label filled-in chk-col-indigo" name="checkBox1" [(ngModel)]="check.checkBox1" id="insurance"
+                           type="checkbox" >
+                           <label for="insurance"></label> -->
+                                </td>
                                 <td class="text-center">
                                     <!-- <input type="hidden" name="InvestigateDetailID" [(ngModel)]="item.InvestigateDetailID">
                                     <input type="checkbox" [id]="'td'+i" name="checking" ngModel class="filled-in chk-col-indigo">
@@ -38,6 +46,10 @@
                                 <td>แบบฟอร์ม</td>
                             </tr>
                             <tr>
+                                    <td class="text-center">
+                                            <input type="checkbox" name="checkbox2" [(ngModel)]="check.checkbox2" id="checkbox2" class="filled-in chk-col-indigo">
+                                            <label [for]="'checkbox2'" class="m-0"></label>
+                                    </td>
                                 <td class="text-center">
                                     <!-- <input type="hidden" name="InvestigateDetailID" [(ngModel)]="item.InvestigateDetailID">
                                         <input type="checkbox" [id]="'td'+i" name="checking" ngModel class="filled-in chk-col-indigo">
@@ -48,6 +60,10 @@
                                 <td>แบบฟอร์ม</td>
                             </tr>
                             <tr>
+                                    <td class="text-center">
+                                            <input type="checkbox" name="checkbox3" [(ngModel)]="check.checkbox3" id="checkbox3" class="filled-in chk-col-indigo">
+                                            <label [for]="'checkbox3'" class="m-0"></label>
+                                    </td>
                                 <td class="text-center">
                                     <!-- <input type="hidden" name="InvestigateDetailID" [(ngModel)]="item.InvestigateDetailID">
                                             <input type="checkbox" [id]="'td'+i" name="checking" ngModel class="filled-in chk-col-indigo">
@@ -58,6 +74,10 @@
                                 <td>แบบฟอร์ม</td>
                             </tr>
                             <tr>
+                                    <td class="text-center">
+                                            <input type="checkbox" name="checkbox4" [(ngModel)]="check.checkbox4" id="checkbox4" class="filled-in chk-col-indigo">
+                                            <label [for]="'checkbox4'" class="m-0"></label>
+                                    </td>
                                 <td class="text-center">
                                     <!-- <input type="hidden" name="InvestigateDetailID" [(ngModel)]="item.InvestigateDetailID">
                                                 <input type="checkbox" [id]="'td'+i" name="checking" ngModel class="filled-in chk-col-indigo">
@@ -86,7 +106,7 @@
 </div>
 <div class="modal-footer">
     <div class="col-lg-2 col-sm-4">
-        <button type="button" class="btn btn-block btn-themecolor" (click)="close('Print click')">พิมพ์</button>
+        <button type="button" class="btn btn-block btn-themecolor" (click)="onPrint('Print click')">พิมพ์</button>
     </div>
 </div>
 <!-- </form> -->

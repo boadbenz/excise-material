@@ -16,7 +16,7 @@ import { SwalComponent } from '@toverux/ngx-sweetalert2';
     templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit, OnDestroy {
-
+    
     @ViewChild('alertSwal') private alertSwal: SwalComponent;
 
     months:any[];
@@ -63,7 +63,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.27');
+        this.sidebarService.setVersion('0.0.2.33');
         this.paginage.TotalItems = 0;
 
         // this.preLoaderService.setShowPreloader(true);
@@ -133,40 +133,41 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onSearchComplete(list) {
+        let datas = [];
         if (!list || list.length==0) {
             this.showSwal(Message.noRecord, "warning");
-            return false;
-        }
-
-        let datas = [];
-        let cnt = 1;
-        for(let l of list){
-            l.index = "";
-            let insert = true;
-            for(let i of datas){
-                if(i.NoticeCode==l.NoticeCode){
-                    l.NoticeDate = "";
-                    l.StaffTitleName = "";
-                    l.StaffFirstName = "";
-                    l.StaffLastName = "";
-                    l.StaffOfficeName = "";
-                    insert = false;
-
-                    // i.childs.push(l);
-                    i.SuspectFullname += "<br/>"+l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
-                    break;
+            // return false;
+        }else{
+            let cnt = 1;
+            for(let l of list){
+                l.index = "";
+                let insert = true;
+                for(let i of datas){
+                    if(i.NoticeCode==l.NoticeCode){
+                        l.NoticeDate = "";
+                        l.StaffTitleName = "";
+                        l.StaffFirstName = "";
+                        l.StaffLastName = "";
+                        l.StaffOfficeName = "";
+                        insert = false;
+                        
+                        // i.childs.push(l);
+                        i.SuspectFullname += "<br/>"+l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
+                        break;
+                    }
                 }
-            }
-
-            if(insert){
-                // l.childs = [];
-                l.SuspectFullname = l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
-                datas.push(l);
-                l.index = cnt++;
+    
+                if(insert){
+                    // l.childs = [];
+                    l.SuspectFullname = l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
+                    datas.push(l);
+                    l.index = cnt++;
+                }
             }
         }
 
         this.notice = datas;
+        this.noticeList = this.notice;
         // set total record
         this.paginage.TotalItems = this.notice.length;
     }

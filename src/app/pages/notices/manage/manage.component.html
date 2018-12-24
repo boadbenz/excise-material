@@ -53,8 +53,7 @@
     
                         <label for="" class="">&nbsp;เวลา :&nbsp;</label>
                         <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
-                        [readOnly]="true"
-                        [value]="noticeTime.value">
+                        [readOnly]="true">
                     </div>
                 </div>
             </div>
@@ -68,7 +67,7 @@
                             {{ r.OfficeName }}
                         </ng-template>
     
-                        <input type="text" class="form-control form-control-sm "
+                        <input type="text" class="form-control form-control-sm {{!noticeForm.get('NoticeStation').value?'ng-invalid ng-touched':''}}"
                             [ngClass]="{'ng-touched':isRequired}"
                             required
                             [ngbTypeahead]="serachOffice"
@@ -93,7 +92,7 @@
                             {{ r.TitleName}} {{r.FirstName}} {{r.LastName}}
                         </ng-template>
     
-                        <input type="text" class="form-control form-control-sm"
+                        <input type="text" class="form-control form-control-sm {{!item.value.StaffFullName?'ng-invalid ng-touched':''}}"
                             [ngbTypeahead]="searchStaff"
                             [resultTemplate]="rt"
                             [readOnly]="showEditField"
@@ -292,7 +291,7 @@
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
-                        <input type="text" class="form-control form-control-sm"
+                        <input type="text" class="form-control form-control-sm {{!item.get('Region').value?'ng-invalid ng-touched':''}}"
                             [ngbTypeahead]="searchRegion"
                             [readOnly]="showEditField"
                             [resultTemplate]="rt"
@@ -337,7 +336,7 @@
                         <td class="text-center">{{i+1}}</td>
                         <td>
                             <ng-template #rt let-r="result" let-t="term">
-                                {{ r.BrandNameTH }} {{r.SubBrandNameTH}} {{r.ModelName}}
+                                {{r.ProductDesc}} 
                             </ng-template>
                             <input type="text" class="form-control form-control-sm"
                                 [readonly]="showEditField"
@@ -354,7 +353,7 @@
                         <td>
                             <select formControlName="QtyUnit" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null" [ngClass]="{'ng-touched':isRequired}" required>
                                 <option value="" selected disabled></option>
-                                <option *ngFor="let item of typeheadProductUnit;" [value]="item.DutyUnitCode">{{item.DutyCode}}</option>
+                                <option *ngFor="let unit of typeheadProductUnit;" [value]="unit.DutyUnitCode">{{unit.DutyCode}}</option>
                             </select>
                         </td>
                         <td class="text-center">
@@ -393,7 +392,7 @@
                         <th class="text-center">ลำดับ</th>
                         <th>ประเภทผู้ต้องสงสัย</th>
                         <th>ประเภทบุคคล</th>
-                        <th>หมายเลขอ้างอิง</th>
+                        <th>เลขประจำตัว</th>
                         <th>ชื่อ</th>
                         <th>จำนวนครั้งการกระทำผิด</th>
                         <th></th>
@@ -405,7 +404,7 @@
                         <td class="text-center">{{i+1}}</td>
                         <td>{{item.get('SuspectTypeName').value}}</td>
                         <td>{{item.get('EntityTypeName').value}}</td>
-                        <td>{{item.get('SuspectID').value}}</td>
+                        <td>{{getRefer(item)}}</td>
                         <td>
                             {{item.get('SuspectFullName').value}}
                             <!-- <span *ngIf="item.get('EntityType').value == 0">
@@ -415,7 +414,7 @@
                                 {{item.get('CompanyFullName').value}}
                             </span> -->
                         </td>
-                        <td>{{i+1}}</td>
+                        <td>{{item.get('MistreatNo').value}}</td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="onViewSuspect(item.get('SuspectID').value)">
                                 <i class="fa fa-eye fa-lg"></i>
@@ -532,6 +531,15 @@
   cancelButtonText="OK"
   cancelButtonClass="swal2-confirm"
   [focusCancel]="true">
+</swal>
+
+<swal
+  #deleteNotice
+  text=""
+  type="question"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="onDelete()">
 </swal>
 
 <swal

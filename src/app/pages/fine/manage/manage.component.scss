@@ -78,3 +78,19 @@ input[type=time]::-webkit-clear-button {
   appearance: none;
   margin: -10px; 
 }
+::ng-deep .cdk-overlay-pane {
+  /* Do you changes here */
+    min-width:15rem;
+}
+.custom-select {
+  background-color: white;
+}
+.custom-select[disabled] {
+  background-color: #e8edf1;
+}
+.mat-expansion-panel-content {
+  font: unset !important;
+}
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+z-index: 99999 !important;
+}

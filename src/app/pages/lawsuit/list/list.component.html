@@ -15,7 +15,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class=" row">
-                  <label class="control-label col-sm-3 text-right">เลขที่ใบงาน : </label>
+                  <label class="control-label col-sm-3">เลขที่ใบงาน : </label>
                   <div class="form-group col-md-9">
                     <input class="form-control form-control-sm" type="text" ngModel name="ArrestCode">
                   </div>
@@ -23,7 +23,7 @@
               </div>
               <div class="col-md-6">
                 <div class="has-danger row">
-                  <label class="control-label col-sm-4 text-right">เลขที่คดีรับคำกล่าวโทษ : </label>
+                  <label class="control-label col-sm-4">เลขที่คดีรับคำกล่าวโทษ : </label>
                   <div class="form-group col-md-8">
                     <input class="form-control form-control-sm" type="text" ngModel name="LawsuitNo">
                   </div>
@@ -33,13 +33,13 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="row">
-                  <label class="control-label col-sm-3 text-right">วันที่รับคดี : </label>
+                  <label class="control-label col-sm-3">วันที่รับคดี : </label>
                   <div class="form-group col-md-4">
                     <my-date-picker-th ngModel name="LawsuitDateFrom" placeholder="" locale="th" [options]="LawsuitDateFromOptions"
                       (dateChanged)="onDateFromChanged($event)" class="form-control form-control-sm unset-form-control"></my-date-picker-th>
                     <!-- <input class="form-control form-control-sm" type="date" ngModel name="LawsuitDateFrom" id="LawsuitDateFrom"> -->
                   </div>
-                  <label class="control-label col-sm-1 text-right px-0">ถึง : </label>
+                  <label class="control-label col-sm-1 px-0">ถึง : </label>
                   <div class="col-md-4">
                     <my-date-picker-th ngModel name="LawsuitDateTo" placeholder="" locale="th" [options]="LawsuitDateToOptions"
                       (dateChanged)="onDateChanged($event)" class="form-control form-control-sm unset-form-control"></my-date-picker-th>
@@ -48,7 +48,7 @@
               </div>
               <div class="col-md-6">
                 <div class="row">
-                  <label class="control-label col-sm-4 text-right">ชื่อผู้รับคดี : </label>
+                  <label class="control-label col-sm-4">ชื่อผู้รับคดี : </label>
                   <div class="form-group col-md-8">
                     <input class="form-control form-control-sm" type="text" ngModel name="StaffName">
                   </div>
@@ -58,7 +58,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="row">
-                  <label class="control-label col-sm-3 text-right">หน่วยงาน : </label>
+                  <label class="control-label col-sm-3">หน่วยงาน : </label>
                   <div class="form-group col-md-9">
                     <input class="form-control form-control-sm" type="text" ngModel name="OfficeName">
                   </div>
@@ -91,22 +91,22 @@
             <tbody>
               <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
                 <td class="text-center">{{ item.RowsId || '' }}</td>
-                <td>{{ item.ArrestCode || '' }}</td>
+                <td>{{ item.Lawsuit.ArrestCode || '' }}</td>
                 <td>{{
-                  item.LawsuitArrestIndicment[0].LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
+                  item.LawsuitArrestIndicment.LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
                   || '' }}</td>
-                <td>{{ checkNullLawsuitNo(item) || '' }}</td>
-                <td>{{ item.LawsuitDate || '' }}</td>
+                <td>{{ checkNullLawsuitNo(item.LawsuitArrestIndicment) || '' }}</td>
+                <td>{{ item.Lawsuit.LawsuitDate || '' }}</td>
                 <td>
-                  <div *ngIf="item.LawsuitArrestIndicment[0].Lawsuit[0]">
-                    <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
+                  <div *ngIf="item.LawsuitArrestIndicment.Lawsuit[0]">
+                    <div *ngFor="let staff of item.LawsuitArrestIndicment.Lawsuit[0].LawsuitStaff;">
                       {{ (staff.TitleName || '') + (staff.FirstName || '') + ' ' + (staff.LastName || '')}}
                     </div>
                   </div>
                 </td>
                 <td>
-                  <div *ngIf="item.LawsuitArrestIndicment[0].Lawsuit[0]">
-                    <div *ngFor="let staff of item.LawsuitArrestIndicment[0].Lawsuit[0].LawsuitStaff;">
+                  <div *ngIf="item.LawsuitArrestIndicment.Lawsuit[0]">
+                    <div *ngFor="let staff of item.LawsuitArrestIndicment.Lawsuit[0].LawsuitStaff;">
                       {{ (staff.OfficeShortName || '') }}
                     </div>
                   </div>
