@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { ReductionApiService } from '../reduction.api.service';
 
 @Component({
   selector: 'app-manage-detail',
@@ -151,13 +152,35 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
              + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
     }]
 
+  public detailData = {
+    ArrestCode: '',
+    ArrestDate: '',
+    ArrestTime: '',
+    Behaviour: '',
+    CompareCode: '',
+    CompareDate: '',
+    CompareID: '',
+    CompareName: '',
+    CompareOfficeShortName: '',
+    ComparePositionName: '',
+    CompareTime: '',
+    IsMatchNotice: '',
+    LawsuitName: '',
+    LawsuitNo: '',
+    LawsuitOfficeShortName: '',
+    LawsuitPositionName: '',
+    OccurrenceDate: '',
+    OccurrenceTime: '',
+    Prompt: '',
+    Testimony: '',
+  }
+
   public fileItem = [{
     fileName: '',
     filePath: '',
   }];
 
   public fullName: any;
-  public detailData: any;
   public showField: any;
   public viewMode = true;
   public navServiceSub: any;
@@ -166,10 +189,14 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public compareID: string;
   public indictmentID: string;
-
   private getDataFromListPage: any;
 
-  constructor(private router: Router, private activeRoute: ActivatedRoute, private navService: NavigationService) { }
+  constructor(
+    private router: Router,
+    private activeRoute: ActivatedRoute,
+    private navService: NavigationService,
+    private readonly apiService: ReductionApiService
+  ) { }
 
   ngOnInit() {
 
@@ -204,20 +231,33 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     });
 
 
-    this.getDataFromListPage = this.activeRoute.params
-      .subscribe(params => {
-        // check id from manage view page
-        for (let i = 0; i < this.listData.length; i++) {
-          if (params.code === this.listData[i].arrestCode) {
-            this.detailData = this.listData[i];
-            this.fullName =
-              this.listData[i].titleName +
-              this.listData[i].firstName +
-              ' ' +
-              this.listData[i].lastName;
+    // this.getDataFromListPage = this.activeRoute.params
+    //   .subscribe(params => {
+    //     // check id from manage view page
+    //     for (let i = 0; i < this.listData.length; i++) {
+    //       if (params.code === this.listData[i].arrestCode) {
+    //         this.detailData = this.listData[i];
+    //         this.fullName =
+    //           this.listData[i].titleName +
+    //           this.listData[i].firstName +
+    //           ' ' +
+    //           this.listData[i].lastName;
+    //       }
+    //     }
+    //   });
+
+    this.getAdjustArrestgetByCon(this.activeRoute.snapshot.paramMap.get('compareid'));
+  }
+
+  public getAdjustArrestgetByCon(CompareID: any = null): void {
+    if (CompareID == null ) { return }
+    this.apiService.post('/XCS60/AdjustArrestgetByCon', {CompareID: CompareID})
+        .subscribe(response => {
+          if (response.length > 0) {
+            Object.assign(this.detailData, response[0]);
+            console.log(this.detailData);
           }
-        }
-      });
+        }, error => console.log(error))
   }
 
   viewData() {
