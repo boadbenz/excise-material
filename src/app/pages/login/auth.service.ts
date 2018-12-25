@@ -36,7 +36,8 @@ export class AuthService {
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
-
+  
+  //****************************(for test)***************************** */
   ssoService(params): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     const url = `http://webtest.excise.go.th/EDRestServicesUAT/sso/ExciseUserInfomation`
@@ -76,6 +77,8 @@ export class AuthService {
 
     return headers;
   }
+  //****************************(end for test)***************************** */
+
 
   private getHeaders() {
     let headers = new Headers();  
