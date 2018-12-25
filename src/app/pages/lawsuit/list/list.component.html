@@ -93,10 +93,10 @@
                 <td class="text-center">{{ item.RowsId || '' }}</td>
                 <td>{{ item.Lawsuit.ArrestCode || '' }}</td>
                 <td>{{
-                  item.LawsuitArrestIndicment.LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
+                   item.LawsuitArrestIndicment.LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
                   || '' }}</td>
-                <td>{{ checkNullLawsuitNo(item.LawsuitArrestIndicment) || '' }}</td>
-                <td>{{ item.Lawsuit.LawsuitDate || '' }}</td>
+                <td>{{ checkLawsuitType(item.LawsuitArrestIndicment) + checkNullLawsuitNo(item.LawsuitArrestIndicment) || '' }}</td>
+                <td>{{ showLawsuitDate(item.LawsuitArrestIndicment) }}</td>
                 <td>
                   <div *ngIf="item.LawsuitArrestIndicment.Lawsuit[0]">
                     <div *ngFor="let staff of item.LawsuitArrestIndicment.Lawsuit[0].LawsuitStaff;">
