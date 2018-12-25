@@ -36,8 +36,8 @@ export class AuthService {
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
-  
-  //****************************(for test)***************************** */
+
+  /****************************(for test)***************************** */
   ssoService(params): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     const url = `http://webtest.excise.go.th/EDRestServicesUAT/sso/ExciseUserInfomation`
@@ -46,10 +46,10 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
-  userAndPrivilegeInfo() {
+  userAndPrivilegeInfo(User) {
     let options = new RequestOptions({ headers: this.getHeadersSSO() });
-    const url = 'http://webtest.excise.go.th/edssows/ldap/userAndPrivilegeInformation?userID=tester&systemID=Test010'
-    return this.http.get(url, options)
+    const url = "http://webtest.excise.go.th/edssows/ldap/userAndPrivilegeInformation?userID="+User+"&systemID=Test010"
+    return this.http.get(url)
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
@@ -77,7 +77,7 @@ export class AuthService {
 
     return headers;
   }
-  //****************************(end for test)***************************** */
+  /****************************(end for test)***************************** */
 
 
   private getHeaders() {
