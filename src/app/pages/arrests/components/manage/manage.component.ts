@@ -852,6 +852,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
             arr.at(indictmentIndex).patchValue({
                 GuiltBaseID: o_ArrestIndictment.GuiltBaseID,
+                IsProve: o_ArrestIndictment.ArrestLawGuitbase[0].IsProve,
                 ArrestLawGuitbase: this.setArrestLawGuitbase(o_ArrestIndictment.ArrestLawGuitbase).value
             })
         }
@@ -869,7 +870,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     ArrestCode: x.ArrestCode || this.arrestCode,
                     IndictmentID: x.IndictmentID || null,
                     GuiltBaseID: x.GuiltBaseID || null,
-                    IsProve: x.IsProve || 1,
+                    IsProve: x.IsProve,
                     IsActive: 1,
                     IsLawsuitComplete: x.IsLawsuitComplete || null,
                     ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase),
@@ -878,6 +879,9 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 })
             )
         });
+
+        console.log(arr.value);
+        
         this.arrestFG.setControl('ArrestIndictment', arr);
     }
     // --- ArrestGuildBase 1
