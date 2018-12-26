@@ -879,8 +879,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 })
             )
         });
-
-        console.log(arr.value);
         
         this.arrestFG.setControl('ArrestIndictment', arr);
     }
@@ -1553,24 +1551,22 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             confirmButtonText: 'Ok'
         }).then((result) => {
             if (result.value) {
+                this.arrestFG.reset();
+                clearFormArray(this.ArrestNotice);
+                clearFormArray(this.ArrestStaff);
+                clearFormArray(this.ArrestProduct);
+                clearFormArray(this.ArrestLawbreaker);
+                clearFormArray(this.ArrestIndictment);
+                clearFormArray(this.ArrestDocument);
                 switch (this.mode) {
                     case 'C':
-                        this.arrestFG.reset();
-                        clearFormArray(this.ArrestNotice);
-                        clearFormArray(this.ArrestStaff);
-                        clearFormArray(this.ArrestProduct);
-                        clearFormArray(this.ArrestLawbreaker);
-                        clearFormArray(this.ArrestIndictment);
-                        clearFormArray(this.ArrestDocument);
                         setTimeout(() => {
                             this.router.navigate(['/arrest/manage', 'R', this.arrestCode]);
                         }, 400);
                         break;
 
                     case 'R':
-                        setTimeout(() => {
-                            location.reload();
-                        }, 100);
+                        this.pageLoad(this.arrestCode);
                         break;
                 }
             }
@@ -2143,7 +2139,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 apd.IsActive = x.IndictmentProductIsActive || 1;
 
                 const proD = arrestProductDetail.find(y => y.ProductID == x.ProductID);
-                
+
                 if (x.IsModify == 'd' || !x.IsChecked) {
                     await this.s_productDetail.ArrestProductDetailupdDelete(proD.ProductDetailID.toString())
                         .then().catch((error) => this.catchError(error));
