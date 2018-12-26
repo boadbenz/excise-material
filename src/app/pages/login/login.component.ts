@@ -70,18 +70,20 @@ export class LoginComponent implements OnInit {
                     PersonNID: res.pin
                   }
                 }
-                await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
-                  // console.log("res eofficeInfo  : ", res);
-                  if (res.Status == "OK") {
-                    this.fullName = res.PersonInformation.PersonTHTitle + " " +
-                      res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
-                    localStorage.setItem('fullName', this.fullName);
-                    localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion);
-                    localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
-                    let url = decodeURIComponent(this.returnUrl);
-                    this.router.navigateByUrl(url);
-                  } else this.errMsg = "Please Check User or Password "
-                });
+                if (User == Pass) {
+                  await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
+                    // console.log("res eofficeInfo  : ", res);
+                    if (res.Status == "OK") {
+                      this.fullName = res.PersonInformation.PersonTHTitle + " " +
+                        res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
+                      localStorage.setItem('fullName', this.fullName);
+                      localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion);
+                      localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
+                      let url = decodeURIComponent(this.returnUrl);
+                      this.router.navigateByUrl(url);
+                    } else this.errMsg = "Please Check User or Password "
+                  });
+                } else this.errMsg = "User or Password invalid"
               } else this.errMsg = "User or Password invalid"
             });
 
