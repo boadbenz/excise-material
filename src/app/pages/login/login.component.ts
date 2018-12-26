@@ -93,11 +93,11 @@ export class LoginComponent implements OnInit {
         //   } else this.errMsg = res.Msg;
         // });
 
-        const params = {
+        const _params = {
           UserName: User,
           Password: Pass
         };
-        await this.authService.userAuth(params).subscribe(async res => {
+        await this.authService.userAuth(_params).subscribe(async res => {
           if (res.StaffCode != null) {
             this.fullName = res.TitleName + " " + res.FirstName + " " + res.LastName;
             this.operationPosName = res.OperationPosName;
