@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.32');
+    this.sidebarService.setVersion('0.0.0.33');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -184,6 +184,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       await this.getCompareData();
       await this.setAllCompareData();
+      this.calSum();
     } catch (err) {
       this.navService.setPrintButton(false);
       this.navService.setDeleteButton(false);
@@ -900,6 +901,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.headerData.LawsuitDate = this.toDatePickerFormat(new Date(resp[0].LawsuitDate)).formatted;
         this.headerData.LawsuitTime = resp[0].LawsuitTime;
         this.headerData.SectionNo = resp[0].SectionNo;
+        this.headerData.Province = resp[0].Province;
         this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
         this.headerData.PenaltyDesc = resp[0].PenaltyDesc;
         this.params.ArrestCode = resp[0].ArrestCode;

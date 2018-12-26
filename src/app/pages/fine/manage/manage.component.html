@@ -131,19 +131,19 @@
           </div>
         </div>
         <div class="row">
+            <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-md-4">จังหวัด : </label>
+                  <div class="col-md-8">
+                    <input class="form-control" type="text" [(ngModel)]="headerData.Province" name="Province" disabled>
+                  </div>
+                </div>
+              </div>
           <div class="col-md-6">
             <div class="form-group row">
               <label class="col-form-label col-md-4">ฐานความผิดมาตรา : </label>
               <div class="col-md-8">
                 <input class="form-control" type="text" [(ngModel)]="headerData.SectionNo" name="SectionName" disabled>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label col-md-4">ฐานความผิด : </label>
-              <div class="col-md-8">
-                <input class="form-control" type="text" [(ngModel)]="headerData.GuiltbaseName" name="GuiltBaseName" disabled>
               </div>
             </div>
           </div>
@@ -157,14 +157,28 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6">
             <div class="form-group row">
               <label class="col-form-label col-md-4">อัตราโทษ : </label>
               <div class="col-md-8">
-                <input class="form-control" type="text" [(ngModel)]="headerData.PenaltyDesc" name="PenaltyDesc" disabled>
+                  <textarea class="form-control" rows="5"
+                  [(ngModel)]="headerData.PenaltyDesc" name="PenaltyDesc" disabled></textarea>
+                <!-- <input class="form-control" type="text" [(ngModel)]="headerData.PenaltyDesc" name="PenaltyDesc" disabled> -->
               </div>
             </div>
           </div>
+          <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-form-label col-md-4">ฐานความผิด : </label>
+                <div class="col-md-8">
+                    <textarea class="form-control" rows="5"
+                    [(ngModel)]="headerData.GuiltbaseName" name="GuiltbaseName" disabled></textarea>
+                  <!-- <input class="form-control" type="text" [(ngModel)]="headerData.SectionNo" name="SectionNo" disabled> -->
+                </div>
+              </div>
+            </div>
         </div>
       </div>
     </div>
