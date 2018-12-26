@@ -2038,6 +2038,14 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         return Promise.all(promises).then();
     }
 
+    comparer(otherArray) {
+        return (current) => {
+            return otherArray.filter((other) => {
+                return other.ProductID == current.ProductID
+            }).length == 0;
+        }
+    }
+
     private async modifyProductDetail(
         indictmentDetailID: number,
         indictmentProduct: fromModels.ArrestIndictmentProduct[],
@@ -2046,10 +2054,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         lawbreakerChecked: fromModels.Acceptability
     ) {
 
-        let prodIsMatch = indictmentProduct
-            .filter(x => arrestProductDetail.filter(y => y.ProductID == x.ProductID));
-        let prodNotMatch = indictmentProduct
-            .filter(x => arrestProductDetail.filter(y => y.ProductID != x.ProductID));
+        let prodIsMatch = indictmentProduct.filter(x => arrestProductDetail.find(y => y.ProductID == x.ProductID));
+
+        const onlyInA = indictmentProduct.filter(this.comparer(prodIsMatch));
+        const onlyInB = prodIsMatch.filter(this.comparer(indictmentProduct));
+
+        let prodNotMatch = onlyInA.concat(onlyInB);
 
         console.log('prodIsMatch : ', prodIsMatch);
         console.log('prodNotMatch : ', prodNotMatch);
@@ -2080,11 +2090,13 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             return Promise.all(_Promise);
 
         } else if (lawbreakerChecked == this.ACCEPTABILITY.INACCEPTABLE) {
-            
-            let prodIsMatch = indictmentProduct
-                .filter(x => arrestProductDetail.filter(y => y.ProductID == x.ProductID));
-            let prodNotMatch = indictmentProduct
-                .filter(x => arrestProductDetail.filter(y => y.ProductID != x.ProductID));
+
+            let prodIsMatch = indictmentProduct.filter(x => arrestProductDetail.find(y => y.ProductID == x.ProductID));
+
+            let onlyInA = indictmentProduct.filter(this.comparer(prodIsMatch));
+            let onlyInB = prodIsMatch.filter(this.comparer(indictmentProduct));
+
+            let prodNotMatch = onlyInA.concat(onlyInB);
 
             prodNotMatch.map(async x => {
                 let apd = new fromModels.ArrestProductDetail();
@@ -2127,7 +2139,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 apd.IsActive = x.IndictmentProductIsActive || 1;
 
                 const proD = arrestProductDetail.find(y => y.ProductID == x.ProductID);
-
+                debugger
                 if (x.IsModify == 'd' || !x.IsChecked) {
                     await this.s_productDetail.ArrestProductDetailupdDelete(proD.ProductDetailID.toString())
                         .then().catch((error) => this.catchError(error));
