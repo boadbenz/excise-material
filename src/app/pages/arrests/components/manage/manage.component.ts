@@ -2139,7 +2139,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 apd.IsActive = x.IndictmentProductIsActive || 1;
 
                 const proD = arrestProductDetail.find(y => y.ProductID == x.ProductID);
-                debugger
+                
                 if (x.IsModify == 'd' || !x.IsChecked) {
                     await this.s_productDetail.ArrestProductDetailupdDelete(proD.ProductDetailID.toString())
                         .then().catch((error) => this.catchError(error));
