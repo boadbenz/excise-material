@@ -525,7 +525,7 @@
                       <div formArrayName="ArrestLawbreaker">
                         <ng-container *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
                           <ng-container *ngIf="lawb.get('LawbreakerID').value && lawb.get('IsModify').value != 'd'">
-                            <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i1+'-'+lIndex+'lb'"
+                            <input #isCheck type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i1+'-'+lIndex+'lb'"
                             [attr.disabled]="showEditField ? '' : null">
                             <label [for]="j+'-'+i1+'-'+lIndex+'lb'">
                               {{ lawb.get('LawbreakerTitleName').value }}
