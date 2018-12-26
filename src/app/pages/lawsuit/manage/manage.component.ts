@@ -126,7 +126,7 @@ export class ManageComponent implements OnInit {
 
   async ngOnInit() {
     // var user = JSON.parse(localStorage.getItem('user'));
-    this.sidebarService.setVersion('0.0.0.26');
+    this.sidebarService.setVersion('0.0.0.27');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -335,18 +335,11 @@ export class ManageComponent implements OnInit {
   }
 
   private async onNextPage() {
-    let indictmentID: string;
-    let lawsuitID: string;
-    this.getDataFromListPage = this.activeRoute.queryParams.subscribe(
-      params => {
-        lawsuitID = params.LawsuitID;
-        indictmentID = params.IndictmentID;
-      }
-    );
-
+    let lawsuitID = this.LawsuitID;
+    let indictmentID = this.IndictmentID;
     let IsProve = 0;
-    this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
-      IsProve = res[0].LawsuitArrestIndicment[0].IsProve;
+    IsProve = await this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
+      return res[0].LawsuitArrestIndicment[0].IsProve;
     });
     if (IsProve == 0) {/// IdProve = 0 (goto ILG60-06-02-00-00)
       await this.lawsuitService.LawsuitComparegetByLawsuitID(lawsuitID).then(res => {
@@ -358,8 +351,9 @@ export class ManageComponent implements OnInit {
     } else { /// IdProve = 1 (goto ILG60-05-02-00-00)
       await this.lawsuitService.LawsuitProvegetByLawsuitID(lawsuitID).then(res => {
         if (res.length == 0) { /// if not found data
+          this.router.navigate(['/prove/manage/C/' + 0 + '/' + indictmentID]);
         } else { ///if found data
-
+          this.router.navigate(['/prove/manage/R/' + res[0].ProveID + '/' + indictmentID]);
         }
       })
     }
@@ -403,10 +397,11 @@ export class ManageComponent implements OnInit {
   }
 
   private async onDelete() {
-    this.preLoaderService.setShowPreloader(true);
     if (!confirm("ยืนยันการทำรายการหรือไม่")) {
       return;
-    } else {
+    }
+    else {
+      this.preLoaderService.setShowPreloader(true);
       let IndictmentID = Number(this.IndictmentID)
       let updDel = await this.lawsuitService.LawsuitArrestupdDeleteLawsuit(this.lawsuitArrestForm.value.ArrestCode, IndictmentID)
       if (updDel.IsSuccess == "True") {
@@ -502,7 +497,7 @@ export class ManageComponent implements OnInit {
             text: "บันทึกสำเร็จ",
             type: 'success',
           })
-          
+
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           if (checkComplete.length != 0) {
             let popup = {
@@ -626,8 +621,8 @@ export class ManageComponent implements OnInit {
             "LawsuitStaff": tempLawsuitStaff
           }
           if (this.lawsuitForm.controls['LawsuitTableList'].value.length == 0) {
-            json.LawsuitType = 2
-            json.LawsuitEnd = 2
+            json.LawsuitType = 3
+            json.LawsuitEnd = 4
             await this.lawsuitService.LawsuitinsAll(json).then(async response => {
               if (response.IsSuccess == "True") {
                 Swal({

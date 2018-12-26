@@ -1,7 +1,7 @@
 <div class="scollbar">
 
   <div class="modal-header bg-theme">
-    <h5 class="modal-title text-white">ข้อมูลการจับกุม
+    <h5 class="modal-title text-white">คำพิพากษาของศาล
       <a class="float-lg-right text-white font-14" aria-label="Close" (click)="closePopup()">
         <i class=" ti-close"></i>
       </a>
@@ -9,6 +9,14 @@
   </div>
   <div class="modal-body">
     <div class="container">
+      <div class="row">
+        <div class="col">
+            <div class="form-group row float-lg-right">
+                <label class="control-label "> ILG60-04-02-02-00</label>
+              </div>
+        </div>
+   
+      </div>
       <div class="row">
         <div class="col-md-6">
           <div class="form-group row">
@@ -86,8 +94,8 @@
         <div class="col-md-6">
           <div class="form-group row">
             <div class="col-6">
-              <input [(ngModel)]="lawsuitArrestFormDialog.IsFine" name="IsCourtFine" class="filled-in chk-col-indigo" (change)="setValidPayment(lawsuitArrestFormDialog.IsFine)"
-                type="checkbox" id="fine" name="fine">
+              <input [(ngModel)]="lawsuitArrestFormDialog.IsFine" name="IsCourtFine" class="filled-in chk-col-indigo"
+                (change)="setValidPayment(lawsuitArrestFormDialog.IsFine)" type="checkbox" id="fine" name="fine">
               <label class="form-check-label" for="fine">สั่งปรับเป็นจำนวนเงิน (บาท)</label>
             </div>
             <div class="col-6">
