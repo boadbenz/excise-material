@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.33');
+    this.sidebarService.setVersion('0.0.0.34');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -1709,6 +1709,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.compareUserDetailPopup.dateOfIssue = item.dateOfIssue ?  item.dateOfIssue : this.DateToday;
     this.compareUserDetailPopup.payAmount = this.sumAllCompare.sum;
     this.compareUserDetailPopup.ApproveReportDate = this.DateToday;
+    this.compareUserDetailPopup.payAmount = this.roundDigit(this.compareUserDetailPopup.payAmount);
     console.log(this.compareUserDetailPopup);
   }
   saveApprove() {
