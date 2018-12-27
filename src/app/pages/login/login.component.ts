@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
 
 
         //***********************************Used with in the Excise Only (Don't Delete)********************************** */
+
         const params = {
           systemId: "WSS",
           UserName: User,
@@ -121,9 +122,7 @@ export class LoginComponent implements OnInit {
     this.errMsg = '';
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() { }
 
 
 
