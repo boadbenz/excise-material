@@ -26,7 +26,7 @@ const routes: Routes = [
         { title: 'จัดการข้อมูลงานเปรียบแทียบและชำระค่าปรับ' }
       ],
       nextPage: { title: 'ส่งเงินรายได้', url: '/income/manage' },
-      codePage: "ILG60-06-02-00",
+      codePage: "ILG60-06-02-00-00",
     },
     component: ManageComponent
   }

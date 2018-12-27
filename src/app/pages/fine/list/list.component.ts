@@ -17,7 +17,8 @@ import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
-    templateUrl: './list.component.html'
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit, OnDestroy {
 
@@ -114,7 +115,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.32');
+        this.sidebarService.setVersion('0.0.0.33');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
@@ -164,7 +165,16 @@ export class ListComponent implements OnInit, OnDestroy {
             console.log('fail onSearch');
         });
     }
-
+    convertToNormalDate(date: any) {
+        if (!date || (typeof date.year) == 'undefined') {
+          const d = new Date();
+          date = {day: d.getDate(), month: (d.getMonth() + 1), year: d.getFullYear()};
+          console.log(date);
+        }
+        return `${date.year}-${date.month}-${date.day}`;
+    
+    
+    }
     async onAdvSearch(form: any) {
         const sDateCompare = new Date(form.value.CompareDateFrom);
         const eDateCompare = new Date(form.value.CompareDateTo);
@@ -173,10 +183,17 @@ export class ListComponent implements OnInit, OnDestroy {
         } else {
             form.value.CompareDateFrom = sDateCompare.getTime();
             form.value.CompareDateTo = eDateCompare.getTime();
-
-            isNaN(form.value.CompareDateFrom) ? form.value.CompareDateFrom = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateFrom).toLocaleString('en-GB', { timeZone: 'UTC' });
-            isNaN(form.value.CompareDateTo) ? form.value.CompareDateTo = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateTo).toLocaleString('en-GB', { timeZone: 'UTC' });
-
+            console.log(form);
+            // isNaN(form.value.CompareDateFrom) ? form.value.CompareDateFrom = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateFrom).toLocaleString('en-GB', { timeZone: 'UTC' });
+            // isNaN(form.value.CompareDateTo) ? form.value.CompareDateTo = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateTo).toLocaleString('en-GB', { timeZone: 'UTC' });
+            if (form.value.LawsuitDateFrom && (!form.value.LawsuitDateTo)) {
+                console.log(form.value.LawsuitDateFrom);
+                form.value.CompareDateFrom = this.convertToNormalDate(form.value.LawsuitDateFrom.date);
+                const d = new Date();
+                console.log(d);
+                form.value.CompareDateTo = this.convertToNormalDate(new Date());
+            }
+            console.log(form);
             form.value.ProgramCode = '';
             form.value.ProcessCode = '';
 
