@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.33');
+    this.sidebarService.setVersion('0.0.0.34');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -488,15 +488,93 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
     this.OnSubscribe.cancel = this.navService.onCancel.subscribe(async status => {
       if (status) {
-        await this.navService.setOnCancel(false);
-        this.showEditField = status;
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        this.navService.setEditButton(true);
-        this.navService.setSearchBar(false);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
-        this.navService.setNextPageButton(true);
+        Swal({
+          title: 'ยืนยันการทำรายการ?',
+          text: "ต้องการยกเลิกรายการจริงหรือไม่!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'ใช่',
+          cancelButtonText: 'ไม่'
+        }).then( async (result) => {
+          if (result.value) {
+            if (this.params.CompareID && this.params.CompareID > 0) {
+              this.preloader.setShowPreloader(true);
+              this.IsOutside = 0;
+              this.receipt.list = [];
+              const d: Date = new Date();
+              this.compareDate = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}};
+              this.DateToday = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
+              this.timeNow = this.getTimeNow();
+              this.accused.CompareTime = this.timeNow;
+              this.generateYear();
+      
+              this.DataToSave = {};
+              this.accused = {};
+              this.IsOutside = 0;
+              this.compareDocument = {
+                  DocumentID: '',
+                  DocumentName: '',
+                  ReferenceCode: '',
+                  FilePath: '',
+                  DataSource: '',
+      
+                  // --- Custom --- //
+                  IsNewItem: false,
+                  IsActive: 1,
+              }
+              // Html
+              
+                this.year = [];
+                this.compareDate = {year: 0, month: 0, day: 0};
+              // Object for binding
+                this.headerData = {};
+                this.accused = {};
+                this.ListCompareDetail = []; // รายละเอียดค่าปรับ
+                this.receipt = {}; // รายละเอียดค่าปรับ
+                this.approveReportList = []; // รายละเอียดค่าปรับ
+                this.sumAllCompare = { sum: 0, sum1: 0, sum2: 0, sum3: 0};
+              // AutoComplete
+                // this.options = [];
+                // this.optionsStation = [];
+                // rawOptions: any = [];
+              // Staffoptions: any = [];
+              // rawStaffOptions: any = [];
+              // file
+                this.AllAddFiles = [];
+                this.filePath = [];
+              // Popup
+                this.editUser = {};
+                this.userCompareReceiptDetail = {};
+                this.compareUserDetailPopup = {};
+              // Data save all
+                this.DataToSave = {};
+                this.DateToday = {};
+                this.timeNow = {};
+                this.dataForCompare = {};
+              // await this.ngOnInit();
+              await this.CompareArrestgetByIndictmentID();
+              await this.getCompareData();
+              await this.setAllCompareData();
+              await this.navService.setOnCancel(false);
+              this.showEditField = status;
+              this.navService.setPrintButton(true);
+              this.navService.setDeleteButton(true);
+              this.navService.setEditButton(true);
+              this.navService.setSearchBar(false);
+              this.navService.setCancelButton(false);
+              this.navService.setSaveButton(false);
+              this.navService.setNextPageButton(true);
+              this.preloader.setShowPreloader(false);
+            } else {
+              this.router.navigate([`/fine/list`]);
+              // this.navService
+            }
+          }
+        });
+        
+        
       }
     });
     this.OnSubscribe.save = this.navService.onSave.subscribe(async status => {
@@ -733,7 +811,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.getCompareData();
         await this.setAllCompareData();
         this.preloader.setShowPreloader(false);
-      } else {
+      } else if (resp != false) {
         Swal(
           '',
           'ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อ.',
@@ -815,7 +893,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       const res: any = await this.CompareVerifyCompareCode();
       console.log(res);
-      if (Object.keys(res).length === 0 || (+this.params.CompareID) > 0) {
+      if ((res && res.length === 0 ) || Object.keys(res).length === 0 || (+this.params.CompareID) > 0) {
           const data: any = await this.prepareDataToSave();
           if (data.length === 0) {
 
@@ -849,6 +927,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           'คดีเปรียบเทียบซ้ำ กรุณาใส่ใหม่.',
           'error'
         );
+        return false;
       }
     } catch (err) { console.log(err) }
     return null;
@@ -883,7 +962,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   async CompareArrestgetByIndictmentID() {
     this.DataToSave.userData = [];
     this.DataToSave.Product = [];
-    this.accused.list = []
+    this.accused.list = [];
+    this.receipt.list = [];
     try {
       const resp: any = await this.fineService.postMethod('CompareArrestgetByIndictmentID', { IndictmentID: this.params.IndictmentID});
       // ส่วนรายละเอียด Header
@@ -908,6 +988,20 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.headerData.ArrestLocation = `${resp[0].SubDistrict} ${resp[0].District}`;
         this.headerData.ArrestStaffName = `${resp[0].TitleName}${resp[0].FirstName} ${resp[0].LastName}`;
         // รายละเอียดค่าปรับ
+        if (localStorage.getItem('officeShortName')) {
+          this.accused.StationName = localStorage.getItem('officeShortName');
+        }
+        if (localStorage.getItem('fullName')) {
+          this.accused.CompareStaffName = localStorage.getItem('fullName');
+          const staff = this.rawStaffOptions.filter(f => (f.TitleName + f.FirstName + f.LastName) === this.accused.CompareStaffName.replace(/\s/g, ''));
+          this.accused.staff = staff[0];
+        }
+        if (localStorage.getItem('operationPosName')) {
+          this.accused.OperationPosName = localStorage.getItem('operationPosName');
+        }
+        if (localStorage.getItem('officeShortName')) {
+          this.accused.OperationDeptName = localStorage.getItem('officeShortName');
+        }
         for (const lawbreaker of resp[0].CompareArrestIndictmentDetail) {
           this.DataToSave.Product = lawbreaker.CompareArrestProductDetail;
           const CompareDetail: any = {};
@@ -1615,6 +1709,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.compareUserDetailPopup.dateOfIssue = item.dateOfIssue ?  item.dateOfIssue : this.DateToday;
     this.compareUserDetailPopup.payAmount = this.sumAllCompare.sum;
     this.compareUserDetailPopup.ApproveReportDate = this.DateToday;
+    this.compareUserDetailPopup.payAmount = this.roundDigit(this.compareUserDetailPopup.payAmount);
     console.log(this.compareUserDetailPopup);
   }
   saveApprove() {

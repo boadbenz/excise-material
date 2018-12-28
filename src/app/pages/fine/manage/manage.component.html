@@ -625,6 +625,31 @@
         </thead>
         <tbody>
         <tr class="footable" *ngFor="let item of AllAddFiles; let i=index;">
+
+            <td class="text-center">{{ (i+1) }}</td>
+            <td>
+                <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
+                [disabled]="showEditField">
+            </td>
+            <td>
+              <div class="input-group">
+                  <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
+                  [disabled]="true">
+                <div class="input-group-append">
+                  <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)" hidden
+                    [attr.disabled]="showEditField ? '' : null">
+                  <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
+                    <i class="ti-more-alt"></i>
+                  </label>
+                </div>
+              </div>
+            </td>
+            <td>
+              <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteFile(item.DocumentID, i)">
+                <i class="fa fa-trash-o fa-lg"></i>
+              </a>
+            </td>
+<!-- 
           <td class="text-center">{{ (i+1) }}</td>
           <td>
             <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
@@ -637,7 +662,7 @@
           <td>
             <i class="ti-trash btn-action" [hidden]="showEditField"
                (click)="deleteFile(item.DocumentID, i)"></i>
-          </td>
+          </td> -->
         </tr>
         </tbody>
       </table>
@@ -1112,7 +1137,7 @@
                            matInput [matAutocomplete]="autoStaff2"
                            (input)="StaffonAutoChange($event.target.value)"
                            (focus)="StaffonAutoFocus($event.target.value)"
-                           [disabled]="showEditField" [required]="(compareUserDetailPopup.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
+                           [disabled]="showEditField || (compareUserDetailPopup.ApproveType) == 1" [required]="(compareUserDetailPopup.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
                     <mat-autocomplete #autoStaff2="matAutocomplete">
                       <mat-option *ngFor="let sOption of Staffoptions"
                                   [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
