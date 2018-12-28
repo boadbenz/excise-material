@@ -139,14 +139,6 @@
                   </div>
                 </div>
               </div>
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label col-md-4">ฐานความผิดมาตรา : </label>
-              <div class="col-md-8">
-                <input class="form-control" type="text" [(ngModel)]="headerData.SectionNo" name="SectionName" disabled>
-              </div>
-            </div>
-          </div>
         </div>
         <div class="row">
           <div class="col-md-6">
@@ -154,6 +146,14 @@
               <label class="col-form-label col-md-4">บทกำหนดโทษ : </label>
               <div class="col-md-8">
                 <input class="form-control" type="text" [(ngModel)]="headerData.SectionNo" name="SectionNo" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">ฐานความผิดมาตรา : </label>
+              <div class="col-md-8">
+                <input class="form-control" type="text" [(ngModel)]="headerData.SectionNo" name="SectionName" disabled>
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@
           <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.Mistreat }}</td>
           <!-- <td>{{ item.isFirstLoop + ' ' + item.isSum }}</td> -->
           <td *ngIf="!item.isSum && !item.isFirstLoop" colspan="2"></td>
-          <td *ngIf="item.isSum" colspan="6"></td>
+          <td *ngIf="item.isSum && accused.list?.length > 1" colspan="6"></td>
 
           <td *ngIf="!item.isSum && item.product"><p>{{ item.product.BrandNameTH }}</p></td>
           <td *ngIf="!item.isSum">{{ item.multi }}</td>
@@ -224,15 +224,15 @@
           <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.all)) }}</td>
 
           <td *ngIf="!item.isSum"><input class="form-control" [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum()" [disabled]="showEditField"></td>
-          <td *ngIf="item.isSum"><b>{{ formatMoney(roundDigit(item.all)) }}</b></td>
+          <td *ngIf="item.isSum && accused.list?.length > 1"><b>{{ formatMoney(roundDigit(item.all)) }}</b></td>
 
           <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.BribeMoney)) }}</td>
           <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.RewardMoney)) }}</td>
           <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.TreasuryMoney)) }}</td>
 
-          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.BribeMoney)) }}</b></td>
-          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.RewardMoney)) }}</b></td>
-          <td *ngIf="item.product && item.isSum"><b>{{ formatMoney(roundDigit(item.TreasuryMoney)) }}</b></td>
+          <td *ngIf="item.product && item.isSum && accused.list?.length > 1"><b>{{ formatMoney(roundDigit(item.BribeMoney)) }}</b></td>
+          <td *ngIf="item.product && item.isSum && accused.list?.length > 1"><b>{{ formatMoney(roundDigit(item.RewardMoney)) }}</b></td>
+          <td *ngIf="item.product && item.isSum && accused.list?.length > 1"><b>{{ formatMoney(roundDigit(item.TreasuryMoney)) }}</b></td>
         </tr>
         <tr>
           <td colspan="5"></td>
@@ -360,13 +360,13 @@
           <tbody>
           <tr *ngFor="let item of accused.list; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
-            <td>{{item.LawbreakerName }}</td>
+            <td>{{item.LawbreakerName }} {{ showEditField ? 'true' : 'false'  }}</td>
             <td class="text-center">
               <my-date-picker-th [(ngModel)]="item.PaymentFineAppointDate" name="CompareDate" placeholder=""
               (dateChanged)="canCheck($event, i)"
               locale="th"
               [options]="DateOption"
-              [disabled]="showEditField"
+              [disabled]="showEditField ? true : false"
               ></my-date-picker-th>
             </td>
             <td class="text-center">
@@ -487,7 +487,7 @@
               <my-date-picker-th [(ngModel)]="item.PaymentDate" name="PaymentDate"
               placeholder="" locale="th"
               [options]="DateOption"
-              [disabled]="showEditField || !(item.CompareReceiptID == null || item.CompareReceiptID == undefined)"
+              [disabled]="showEditField || ((!(item.CompareReceiptID == null || item.CompareReceiptID == undefined)) && (receipt.RevenueStatus > 0))"
               aria-required="true" required></my-date-picker-th>
           </td>
           <td>
@@ -499,7 +499,7 @@
                          matInput [matAutocomplete]="autoStaff"
                          (input)="StaffonAutoChange($event.target.value)"
                          (focus)="StaffonAutoFocus($event.target.value)"
-                         [disabled]="showEditField || item.CompareReceiptID" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, i)">
+                         [disabled]="showEditField || item.CompareReceiptID  && (receipt.RevenueStatus > 0)" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, i)">
                   <mat-autocomplete #autoStaff="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -515,7 +515,7 @@
           <td class="text-center">
               <select class="custom-select col-12"
               [(ngModel)]="item.ReceiptChanel"
-              name="ReceiptChanel" required [disabled]="item.CompareReceiptID || showEditField">
+              name="ReceiptChanel" required [disabled]="(item.CompareReceiptID  && (receipt.RevenueStatus > 0)) || showEditField">
                 <option value="1" [selected]="true">เงินสด</option>
                 <option value="2">EDC</option>
                 <option value="3">เครดิต</option>
@@ -526,19 +526,19 @@
               <input class="form-control" type="text"
               [(ngModel)]="item.ReceiptBookNo"
               name="ReceiptBookNo"
-              [disabled]="showEditField || item.CompareReceiptID" [required]="!(item.ReceiptChanel > 1)">
+              [disabled]="showEditField || (item.CompareReceiptID  && (receipt.RevenueStatus > 0) )" [required]="!(item.ReceiptChanel > 1)">
           </td>
           <td class="text-center">
               <input class="form-control" type="text"
               [(ngModel)]="item.ReceiptNo"
               [name]="'ReceiptNo' + i"
-              [disabled]="showEditField || item.CompareReceiptID" [required]="!(item.ReceiptChanel > 1)">
+              [disabled]="showEditField ||  (item.CompareReceiptID  && (receipt.RevenueStatus > 0) )" [required]="!(item.ReceiptChanel > 1)">
           </td>
           <td class="text-center">
               <input class="form-control" type="text"
               [(ngModel)]="item.ReferenceNo"
               name="ReferenceNo"
-              [disabled]="showEditField || !(item.ReceiptChanel > 1) || item.CompareReceiptID" [required]="item.ReceiptChanel > 1">
+              [disabled]="showEditField || !(item.ReceiptChanel > 1) || (item.CompareReceiptID  && (receipt.RevenueStatus > 0) )" [required]="item.ReceiptChanel > 1">
           </td>
           <td></td>
           <td>
@@ -609,9 +609,8 @@
   </div>
   <div class="card-body">
     <div class="text-right">
-      <input type="file" id="btn-browse" #file [disabled]="showEditField" (change)="handleFileInput($event)">
       <label for="btn-browse" [ngClass]="{disabled : showEditField}"
-             class="btn waves-effect waves-light btn-navy">
+             class="btn waves-effect waves-light btn-navy" (click)="addNewFile()">
         เพิ่มเอกสารแนบ </label>
     </div>
     <div class="table-responsive">
@@ -636,7 +635,7 @@
                   <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
                   [disabled]="true">
                 <div class="input-group-append">
-                  <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)" hidden
+                  <input [id]="'arrestAttach'+i" type="file" (change)="handleFileInput($event, i)" hidden
                     [attr.disabled]="showEditField ? '' : null">
                   <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
                     <i class="ti-more-alt"></i>
