@@ -49,6 +49,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setCancelButton(false);
         this.navService.setNextPageButton(false);
         // set true
+        this.navService.setSearchBar(false);
         this.navService.setSearchBar(true);
         this.navService.setNewButton(false);
         this.advSearch = this.navService.showAdvSearch;
@@ -115,7 +116,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.34');
+        this.sidebarService.setVersion('0.0.0.35');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
@@ -267,11 +268,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(IndictmentID: string, ArrestCode: string, CompareID: string) {
-      if (+CompareID) {
-        this._router.navigate([`/fine/manage/R/${CompareID}/${IndictmentID}/${ArrestCode}`]);
-      } else {
-        this._router.navigate([`/fine/manage/C/0/${IndictmentID}/${ArrestCode}`]);
-      }
+        // CompareID = (+CompareID)
+        this._router.navigate([`/fine/manage/${(!CompareID || CompareID == '0') ? 'C' : 'R'}/${CompareID}/${IndictmentID}/${ArrestCode}`]);
     }
 
     async pageChanges(event) {

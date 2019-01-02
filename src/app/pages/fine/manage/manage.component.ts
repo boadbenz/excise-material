@@ -128,7 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.34');
+    this.sidebarService.setVersion('0.0.0.35');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -406,7 +406,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(this.receipt.list[i]);
         // this.receipt.list[i].TotalFine = compare.CompareFine;
         this.ListCompareDetail[i]['userNo' + i + ':' + i] = compare.CompareFine;
-        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[0].PaymentDate ? this.convertToNormalDate(new Date(compare.CompareDetailReceipt[0].PaymentDate)) : null;
+        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[0].PaymentDate ? this.toDatePickerFormat(new Date(compare.CompareDetailReceipt[0].PaymentDate)) : null;
         this.receipt.list[i].ReceipStation = compare.CompareDetailReceipt[0].Station ? compare.CompareDetailReceipt[0].Station : '';
         this.receipt.list[i].ReceiptChanel = compare.CompareDetailReceipt[0].ReceiptChanel ? compare.CompareDetailReceipt[0].ReceiptChanel : '';
         this.receipt.list[i].ReceiptBookNo = compare.CompareDetailReceipt[0].ReceiptBookNo ? compare.CompareDetailReceipt[0].ReceiptBookNo : '';
@@ -501,62 +501,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           if (result.value) {
             if (this.params.CompareID && this.params.CompareID > 0) {
               this.preloader.setShowPreloader(true);
-              this.IsOutside = 0;
-              this.receipt.list = [];
-              const d: Date = new Date();
-              this.compareDate = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}};
-              this.DateToday = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
-              this.timeNow = this.getTimeNow();
-              this.accused.CompareTime = this.timeNow;
-              this.generateYear();
-      
-              this.DataToSave = {};
-              this.accused = {};
-              this.IsOutside = 0;
-              this.compareDocument = {
-                  DocumentID: '',
-                  DocumentName: '',
-                  ReferenceCode: '',
-                  FilePath: '',
-                  DataSource: '',
-      
-                  // --- Custom --- //
-                  IsNewItem: false,
-                  IsActive: 1,
-              }
-              // Html
-              
-                this.year = [];
-                this.compareDate = {year: 0, month: 0, day: 0};
-              // Object for binding
-                this.headerData = {};
-                this.accused = {};
-                this.ListCompareDetail = []; // รายละเอียดค่าปรับ
-                this.receipt = {}; // รายละเอียดค่าปรับ
-                this.approveReportList = []; // รายละเอียดค่าปรับ
-                this.sumAllCompare = { sum: 0, sum1: 0, sum2: 0, sum3: 0};
-              // AutoComplete
-                // this.options = [];
-                // this.optionsStation = [];
-                // rawOptions: any = [];
-              // Staffoptions: any = [];
-              // rawStaffOptions: any = [];
-              // file
-                this.AllAddFiles = [];
-                this.filePath = [];
-              // Popup
-                this.editUser = {};
-                this.userCompareReceiptDetail = {};
-                this.compareUserDetailPopup = {};
-              // Data save all
-                this.DataToSave = {};
-                this.DateToday = {};
-                this.timeNow = {};
-                this.dataForCompare = {};
-              // await this.ngOnInit();
-              await this.CompareArrestgetByIndictmentID();
-              await this.getCompareData();
-              await this.setAllCompareData();
+              await this.initData();
               await this.navService.setOnCancel(false);
               this.showEditField = status;
               this.navService.setPrintButton(true);
@@ -567,6 +512,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               this.navService.setSaveButton(false);
               this.navService.setNextPageButton(true);
               this.preloader.setShowPreloader(false);
+              this.showEditField = true;
             } else {
               this.router.navigate([`/fine/list`]);
               // this.navService
@@ -614,8 +560,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         }).then( async (result) => {
           if (result.value) {
             this.preloader.setShowPreloader(true);
+            let resp: any = null;
             const data: any = {CompareID: this.params.CompareID};
-            const resp: any = await this.fineService.postMethod('CompareupdDelete', data);
+            let message: any = '';
+            for (const rec of this.receipt.list) {
+              if (rec.RevenueStatus == 1) {
+                resp = null;
+                message = '';
+                break;
+              } else if (rec === this.receipt.list[this.receipt.list.length - 1]) {
+                resp = await this.fineService.postMethod('CompareupdDelete', data);
+              }
+            }
             if (resp) {
               if (resp.IsSuccess == 'True') {
                 swal('', 'ลบข้อมูลสำเร็จ', 'success');
@@ -668,7 +624,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           console.log(rec1);
           if (this.validateReceiptData(rec1, reqField) && rec.staff && !this.isNotValidTxtField(rec.ReceiptStaff)) {
             receiptData.RevenueDate = '';
-            if (!this.receipt.list[index].CompareReceiptID) {
+            if (!this.receipt.list[index].CompareReceiptID || !(JSON.stringify(this.receipt.list[index]) === JSON.stringify(this.dataForCompare.receipt[index]))) {
               const resp :any = await this.CompareDetailReceipinsAll(receiptData);
               console.log('ค่าการรีเทิร์น');
               console.log(resp);
@@ -774,7 +730,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (this.AllAddFiles.length > 0) {
           for (const f of this.AllAddFiles) {
-            if (f.IsNewItem) {
+            if (f.IsNewItem && f.IsActive) {
               await this.insertFile(f);
             }
           }
@@ -796,9 +752,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         );
         this.params.CompareID = resp.CompareID ? resp.CompareID : this.params.CompareID;
         this.preloader.setShowPreloader(true);
-        await this.getCompareData();
-        await this.setAllCompareData();
+        await this.initData();
         this.preloader.setShowPreloader(false);
+        this.showEditField = true;
         this.router.navigate([`fine/manage/R/${this.params.CompareID}/${this.params.IndictmentID}/${this.params.ArrestCode}`]);
 
       } else if (resp && resp.IsSuccess == 'True') {
@@ -808,8 +764,8 @@ export class ManageComponent implements OnInit, OnDestroy {
           'success'
         );
         this.preloader.setShowPreloader(true);
-        await this.getCompareData();
-        await this.setAllCompareData();
+        this.showEditField = true;
+        await this.initData()
         this.preloader.setShowPreloader(false);
       } else if (resp != false) {
         Swal(
@@ -827,6 +783,70 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     this.preloader.setShowPreloader(false);
+  }
+  async initData() {
+    this.IsOutside = 0;
+    this.receipt.list = [];
+    const d: Date = new Date();
+    this.compareDate = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}};
+    this.DateToday = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
+    this.timeNow = this.getTimeNow();
+    this.accused.CompareTime = this.timeNow;
+    this.generateYear();
+
+    this.DataToSave = {};
+    this.accused = {};
+    this.IsOutside = 0;
+    this.receipt.list = [];
+    this.compareDate = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}};
+    this.DateToday = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
+    this.timeNow = this.getTimeNow();
+    this.accused.CompareTime = this.timeNow;
+    this.compareDocument = {
+        DocumentID: '',
+        DocumentName: '',
+        ReferenceCode: '',
+        FilePath: '',
+        DataSource: '',
+
+        // --- Custom --- //
+        IsNewItem: false,
+        IsActive: 1,
+    }
+    // Html
+    
+      this.year = [];
+      this.compareDate = {year: 0, month: 0, day: 0};
+    // Object for binding
+      this.headerData = {};
+      this.accused = {};
+      this.ListCompareDetail = []; // รายละเอียดค่าปรับ
+      this.receipt = {}; // รายละเอียดค่าปรับ
+      this.approveReportList = []; // รายละเอียดค่าปรับ
+      this.sumAllCompare = { sum: 0, sum1: 0, sum2: 0, sum3: 0};
+    // AutoComplete
+      // this.options = [];
+      // this.optionsStation = [];
+      // rawOptions: any = [];
+    // Staffoptions: any = [];
+    // rawStaffOptions: any = [];
+    // file
+      this.AllAddFiles = [];
+      this.filePath = [];
+    // Popup
+      this.editUser = {};
+      this.userCompareReceiptDetail = {};
+      this.compareUserDetailPopup = {};
+    // Data save all
+      this.DataToSave = {};
+      this.timeNow = {};
+      this.dataForCompare = {};
+    // await this.ngOnInit();
+    this.showEditField = true;
+    this.generateYear();
+    await this.CompareArrestgetByIndictmentID();
+    await this.getCompareData();
+    await this.setAllCompareData();
   }
   isDatachange() {
     const case1: any = JSON.stringify(this.dataForCompare.accused) === JSON.stringify(this.accused);
@@ -1037,6 +1057,20 @@ export class ManageComponent implements OnInit, OnDestroy {
             receiptData.LawBrakerName = CompareDetail.LawbreakerName;
             receiptData.PaymentDate = this.DateToday;
             receiptData.ReceiptChanel = 1;
+            if (localStorage.getItem('officeShortName')) {
+              receiptData.officeShortName = localStorage.getItem('officeShortName');
+            }
+            if (localStorage.getItem('fullName')) {
+              receiptData.ReceiptStaff = localStorage.getItem('fullName');
+              const staff = this.rawStaffOptions.filter(f => (f.TitleName + f.FirstName + f.LastName) === receiptData.ReceiptStaff.replace(/\s/g, ''));
+              receiptData.staff = staff[0];
+            }
+            if (localStorage.getItem('operationPosName')) {
+              receiptData.OperationPosName = localStorage.getItem('operationPosName');
+            }
+            if (localStorage.getItem('officeShortName')) {
+              receiptData.OperationDeptName = localStorage.getItem('officeShortName');
+            }
             this.receipt.list.push(receiptData);
             // รายงานการขออนุมัติ
             const approve: any = {};
@@ -1627,7 +1661,22 @@ export class ManageComponent implements OnInit, OnDestroy {
       return err;
     }
   }
-  handleFileInput(files: any) {
+  addNewFile() {
+    const fileData: any = this.jsonCopy(this.compareDocument);
+    fileData.DocumentName = '';
+    fileData.DataSource = '';
+    fileData.IsNewItem = true;
+    fileData.FilePath = '';
+    fileData.DocumentID = null;
+    fileData.CompareCode = '';
+    fileData.ReferenceCode = '';
+    fileData.IsActive = 0;
+    fileData.DocumentType = "3";
+    this.AllAddFiles.push(fileData);
+    this.filePath.push({path: '', name: '' });
+
+  }
+  handleFileInput(files: any, index: any) {
     // this.fileToUpload = files.item(0);
     console.log(files);
     const fileData: any = this.jsonCopy(this.compareDocument);
@@ -1640,9 +1689,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     fileData.ReferenceCode = this.params.ArrestCode;
     fileData.IsActive = 1;
     fileData.DocumentType = "3";
-    this.AllAddFiles.push(fileData);
-    this.filePath.push({path: replaceFakePath(files.target.value), name: files.target.files.item(0).name });
-
+    this.AllAddFiles[index] = fileData;
+    this.filePath[index] = {path: replaceFakePath(files.target.value), name: files.target.files.item(0).name };
   }
   async deleteFile(id: any, index: any) {
     Swal({
@@ -1692,6 +1740,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   async insertFile(file: any) {
     try {
+      file.DocumentID = null;
       const resp: any = await this.masDocumentMainService.MasDocumentMaininsAll(file);
       return resp;
     } catch (err) {
