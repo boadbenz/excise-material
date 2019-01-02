@@ -265,15 +265,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     showGuiltBase() {
         this.ArrestIndictment.value.map(indict => {
-
-            console.log(indict.ArrestIndictmentProduct);
-
-            // indict.ArrestIndicmentDetail.map(indictD => {
-            //     console.log(indictD.IndictmentProduct);
-
-            // })
+            console.log(indict);
         })
-        // console.log(this.ArrestIndictment.value);
     }
 
     updateItemIndictmentDetail(x: any, _IndictmentDetail: FormArray, indictmentIsModify: string) {
@@ -292,14 +285,16 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                         _IndictmentDetail.at(0).patchValue(
                             this.groupArrestIndictmentDetail({
                                 LawbreakerID: x.LawbreakerID,
-                                ArrestLawbreaker: [x]
+                                ArrestLawbreaker: [x],
+                                IsModify: x.IsModify
                             }, indictmentIsModify).value
                         )
                     } else {
                         _IndictmentDetail.push(
                             this.groupArrestIndictmentDetail({
                                 LawbreakerID: x.LawbreakerID,
-                                ArrestLawbreaker: [x]
+                                ArrestLawbreaker: [x],
+                                IsModify: x.IsModify
                             }, indictmentIsModify)
                         )
                     }
@@ -309,7 +304,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                         _IndictmentDetail.at(_I).patchValue(
                             this.groupArrestIndictmentDetail({
                                 LawbreakerID: x.LawbreakerID,
-                                ArrestLawbreaker: [x]
+                                ArrestLawbreaker: [x],
+                                IsModify: x.IsModify
                             }, indictmentIsModify).value
                         );
                     }
@@ -323,7 +319,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     this.groupArrestIndictmentDetail({
                         LawbreakerID: x.LawbreakerID,
                         ArrestLawbreaker: [x],
-                        ArrestProductDetail: [_PD]
+                        ArrestProductDetail: [_PD],
+                        IsModify: x.IsModify
                     }, indictmentIsModify).value);
                 break;
         }
@@ -679,8 +676,11 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         let _AIindictment = await _indict.map(async ai => {
             ai.IsModify = 'v';
             ai.ArrestIndicmentDetail.map(x => {
-                x.ArrestLawbreaker[0].IsModify = 'v';
-                _ALawbreaker.push(x.ArrestLawbreaker[0])
+                x.IsModify = 'v';
+                if (x.ArrestLawbreaker.length) {
+                    x.ArrestLawbreaker[0].IsModify = 'v';
+                    _ALawbreaker.push(x.ArrestLawbreaker[0])
+                }
             })
             await this.s_indictment.ArrestIndictmentProductgetByIndictmentID(ai.IndictmentID.toString())
                 .then(x => {
@@ -694,7 +694,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         Promise.all(_AIindictment).then(indictment => {
             this.pageRefeshLawbreaker(_ALawbreaker);
             this.setArrestIndictment(indictment, null);
-
         })
 
     }
@@ -879,7 +878,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 })
             )
         });
-        
+
         this.arrestFG.setControl('ArrestIndictment', arr);
     }
     // --- ArrestGuildBase 1
@@ -1003,7 +1002,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             LawbreakerID: x.LawbreakerID || null,
             IsActive: 1,
             ArrestLawbreaker: this.setArrestLawbreaker(x.ArrestLawbreaker, x.IndictmentDetailID, indictmentIsModify),
-            ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail, x.IndictmentDetailID)
+            ArrestProductDetail: this.setArrestProductDetail(x.ArrestProductDetail, x.IndictmentDetailID),
+            IsModify: x.IsModify || 'c'
         });
     }
     // --- 2.1 
@@ -1481,25 +1481,24 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             !this.typeheadNetVolumeUnit.length &&
             !this.typeheadRegion.length
         ) {
-            let isLawsuit = false;
-            this.ArrestIndictment.value.map(x => {
-                if (isLawsuit) return;
-                this.s_lawsuit.ArrestLawsuitgetByIndictmentID(x.IndictmentID).then(y => {
-                    if (this.checkResponse(y)) {
-                        isLawsuit = true;
-                        return;
-                    }
+            let arr = [];
+            let isLawsuit = await this.ArrestIndictment.value.map(async x => {
+                return await this.s_lawsuit.ArrestLawsuitgetByIndictmentID(x.IndictmentID).then(y => {
+                    if (this.checkResponse(y)) arr.push(...y);
+                    return arr;
                 })
             })
+            Promise.all(isLawsuit).then(async x => {
+                if (x.length) {
+                    this.enableBthModeR();
+                    swal('', Message.cannotModify, 'warning');
+                } else {
+                    this.loaderService.show();
+                    await this.loadMasterData();
+                    this.loaderService.hide();
+                }
 
-            if (!isLawsuit) {
-                this.loaderService.show();
-                await this.loadMasterData();
-                this.loaderService.hide();
-            } else {
-                swal('', Message.cannotModify, 'warning');
-            }
-
+            });
         }
     }
 
@@ -1973,9 +1972,10 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         indictmentProduct: fromModels.ArrestIndictmentProduct[],
         indictmentDetail: fromModels.ArrestIndictmentDetail[]
     ) {
-        let promises = await indictmentDetail
-            .filter(x => x.LawbreakerID != null)
-            .map(async (x: fromModels.ArrestIndictmentDetail) => {
+        let promises = indictmentDetail.filter(x => x.LawbreakerID != null)
+        if (promises.length) {
+            // กรณีที่มีผู้ต้องหา
+            indictmentDetail.map(async (x: fromModels.ArrestIndictmentDetail) => {
                 const lawbreaker = x.ArrestLawbreaker.find(l => l.LawbreakerID == x.LawbreakerID);
                 const newIndictmentDetail = {
                     IndictmentID: indictmentID || x.IndictmentID,
@@ -1988,7 +1988,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     case 'c':
                         if (lawbreaker.IsChecked == Acceptability.ACCEPTABLE) return;
                         const lid = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID);
-                        if (!lid) return;
+                        if (lid) return;
                         newIndictmentDetail.LawbreakerID = lid.ArrestLawbreakerID;
                         await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
                             .then(y => {
@@ -2023,7 +2023,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                             .then().catch((error) => this.catchError(error));
                         break;
                 }
-
                 let proD = this.modifyProductDetail(
                     x.IndictmentDetailID,
                     indictmentProduct,      // IndictmentProduct ที่อ้างอิงกับ Indictment
@@ -2034,6 +2033,44 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
                 return Promise.all([proD])
             })
+        } else {
+            // กรณีที่ไม่มีผู้ต้องหา 
+            // แต่มี ProductDetail
+            if (indictmentDetail[0].ArrestProductDetail.length) {
+                let x = indictmentDetail[0]
+                const newIndictmentDetail = {
+                    IndictmentID: indictmentID || x.IndictmentID,
+                    IndictmentDetailID: x.IndictmentDetailID,
+                    IsActive: x.IsActive,
+                    LawbreakerID: x.LawbreakerID || null
+                }
+
+                switch (x.IsModify) {
+                    case 'c':
+                        await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
+                            .then(y => {
+                                if (!this.checkIsSuccess(y)) return;
+                                x.IndictmentDetailID = y.IndictmentDetailID;
+                            }).catch((error) => this.catchError(error));
+                        break;
+
+                    case 'v':
+                    case 'u':
+                        await this.s_indictmentDetail.ArrestIndicmentDetailupdByCon(newIndictmentDetail)
+                            .then().catch((error) => this.catchError(error));
+                        break;
+                }
+
+                let proD = this.modifyProductDetail(
+                    indictmentDetail[0].IndictmentDetailID,
+                    indictmentProduct,                        // IndictmentProduct ที่อ้างอิงกับ Indictment
+                    indictmentDetail[0].ArrestProductDetail,  // ProductDetail ที่อ้างอิงกับ IndictmentDetail
+                    'c',
+                    this.ACCEPTABILITY.INACCEPTABLE
+                );
+                return Promise.all([proD]);
+            }
+        }
 
         return Promise.all(promises).then();
     }
@@ -2053,16 +2090,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         lawbreakerModify: string,
         lawbreakerChecked: fromModels.Acceptability
     ) {
-
-        let prodIsMatch = indictmentProduct.filter(x => arrestProductDetail.find(y => y.ProductID == x.ProductID));
-
-        const onlyInA = indictmentProduct.filter(this.comparer(prodIsMatch));
-        const onlyInB = prodIsMatch.filter(this.comparer(indictmentProduct));
-
-        let prodNotMatch = onlyInA.concat(onlyInB);
-
-        console.log('prodIsMatch : ', prodIsMatch);
-        console.log('prodNotMatch : ', prodNotMatch);
 
         if (lawbreakerModify == 'c' && lawbreakerChecked == this.ACCEPTABILITY.INACCEPTABLE) {
             const _Promise = await indictmentProduct
