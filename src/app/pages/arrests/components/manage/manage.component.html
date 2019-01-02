@@ -368,7 +368,7 @@
                 </td>
                 <td style="max-width: 30px;">
                   <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField"
-                    min="0" step="0.01">
+                    min="0" step="0.01" required>
                 </td>
                 <td style="max-width: 60px;">
                   <ng-template #qtyUnit let-r="result" let-t="term">
@@ -376,11 +376,11 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
-                    [value]="item.value.QtyUnit" />
+                    [value]="item.value.QtyUnit" required/>
                 </td>
                 <td style="max-width: 30px;">
-                  <input type="number" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField"
-                    min="0" step="0.01">
+                  <input type="number" #NetVolume formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField"
+                    min="0" step="0.01" required>
                 </td>
                 <td style="max-width: 60px;">
                   <ng-template #netVolumeUnit let-r="result" let-t="term">
@@ -388,7 +388,7 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
-                    [value]="item.value.NetVolumeUnit" />
+                    [value]="item.value.NetVolumeUnit" required/>
                 </td>
                 <td>
                   <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">

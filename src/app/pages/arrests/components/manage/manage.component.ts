@@ -236,8 +236,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     nip.IndictmentProductQtyUnit = _f3.QtyUnit || '-';
                     nip.IndictmentProductSize = _f3.Size || '0';
                     nip.IndictmentProductSizeUnit = _f3.SizeUnit || '-';
-                    nip.IndictmentProductVolume = _f3.Volume || '0';
-                    nip.IndictmentProductVolumeUnit = _f3.VolumeUnit || '-';
+                    nip.IndictmentProductVolume = _f3.NetVolume || '0';
+                    nip.IndictmentProductVolumeUnit = _f3.NetVolumeUnit || '-';
                     nip.IndictmentProductMistreatRate = _f3.MistreatRate || '';
                     nip.IndictmentProductFine = _f3.Fine || '';
                     nip.IndictmentProductIsActive = _f3.IndictmentProductIsActive || 1;
@@ -655,6 +655,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         if (!_prod.length) return;
 
         _prod.map((x, index) => x.RowId = index + 1);
+console.log(_prod);
 
         this.setItemFormArray(_prod, 'ArrestProduct');
     }
@@ -1044,7 +1045,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             arr.push(this.groupArrestProductDetail(new fromModels.ArrestProductDetail()))
         } else if (Array.isArray(o) && o.length) {
             o.map(x => {
-                // x.IsChecked = indictmentDetailID ? true : false;
                 arr.push(this.groupArrestProductDetail(x))
             })
         }
@@ -1392,7 +1392,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     selectItemNetVolumeUnit(e: any, i: number) {
         this.ArrestProduct.at(i).patchValue({
-            NetVolumeUnit: e.item.DutyCode,
+            NetVolumeUnit: e.item.DutyCode
         })
     }
 
