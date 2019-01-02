@@ -1488,8 +1488,9 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     return arr;
                 })
             })
-            Promise.all(isLawsuit).then(async x => {
-                if (x.length) {
+            Promise.all(isLawsuit).then(async () => {
+                
+                if (arr.length && arr.some(y => y.ArrestCode == this.arrestCode)) {
                     this.enableBthModeR();
                     swal('', Message.cannotModify, 'warning');
                 } else {
