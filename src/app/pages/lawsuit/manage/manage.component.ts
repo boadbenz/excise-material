@@ -126,8 +126,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // var user = JSON.parse(localStorage.getItem('user'));
-    this.sidebarService.setVersion('0.0.0.27');
+    this.sidebarService.setVersion('0.0.0.28');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
