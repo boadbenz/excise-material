@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { IncomeService } from '../income.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Revenue } from '../Revenue';
+import { Revenue } from '../revenue';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.21');
+        this.sidebarService.setVersion('Revenue 0.0.0.24');
         this.RevenueStatus = "";
         //this.advSearch.next(true);
         //this.preloader.setShowPreloader(true);

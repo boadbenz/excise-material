@@ -30,6 +30,8 @@ import { TransactionRunningService } from './services/transaction-running.servic
 import { MasDocumentMainService } from './services/mas-document-main.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManageConfig } from './pages/arrests/components/manage/manage.config';
+import { AuthService } from './pages/login/auth.service';
+
 
 @NgModule({
     declarations: [
@@ -38,7 +40,7 @@ import { ManageConfig } from './pages/arrests/components/manage/manage.config';
         BreadcrumbComponent,
         SidebarComponent,
         RightSidebarComponent,
-        LayoutComponent
+        LayoutComponent,  
     ],
     imports: [
         CommonModule,
@@ -62,6 +64,7 @@ import { ManageConfig } from './pages/arrests/components/manage/manage.config';
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AuthGuard,
+        AuthService,
         NavigationService,
         ManageConfig,
         SidebarService,

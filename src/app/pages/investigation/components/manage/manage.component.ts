@@ -11,7 +11,7 @@ import * as fromService from '../../services';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { Message } from 'app/config/message';
-import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker, toLocalShort, setZeroHours } from 'app/config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker, toLocalShort } from 'app/config/dateFormat';
 import { IMyDateModel } from 'mydatepicker-th';
 import { Subject } from 'rxjs/Subject';
 import * as fromStore from '../../store';
@@ -103,8 +103,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
             InvestigateCode: new FormControl(this.investCode, Validators.required),
             InvestigateNo: new FormControl(null, Validators.required),
             DateStart: new FormControl(null, Validators.required),
-            DateEnd: new FormControl(null, Validators.required),
-            Subject: new FormControl(null),
+            DateEnd: new FormControl(null),
+            Subject: new FormControl(null, Validators.required),
             IsActive: new FormControl(1),
             InvestigateDetail: this.fb.array([])
         });
@@ -207,10 +207,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        const dateStart = getDateMyDatepicker(f.DateStart);
-        const dateEnd = getDateMyDatepicker(f.DateEnd);
-        f.DateStart = setZeroHours(dateStart);
-        f.DateEnd = setZeroHours(dateEnd);
+        f.DateStart = getDateMyDatepicker(f.DateStart);
+        f.DateEnd = getDateMyDatepicker(f.DateEnd);
 
         switch (this.mode) {
             case 'R':
@@ -221,15 +219,21 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private pageLoad() {
-        if (this.investCode == 'NEW' && this.stateInvest) {
-            this.pageRefreshInvestigate(this.stateInvest);
-        } else {
-            this.s_invest.InvestigategetByCon(this.investCode)
-                .takeUntil(this.destroy$)
-                .subscribe((x: fromModels.InvestigateModel) => {
-                    if (!this.checkResponse(x)) return;
-                    this.pageRefreshInvestigate(x[0]);
-                });
+        switch (this.mode) {
+            case 'C':
+                if (this.stateInvest) {
+                    this.pageRefreshInvestigate(this.stateInvest);
+                }
+                break;
+
+            case 'R':
+                this.s_invest.InvestigategetByCon(this.investCode)
+                    .takeUntil(this.destroy$)
+                    .subscribe((x: fromModels.InvestigateModel) => {
+                        if (!this.checkResponse(x)) return;
+                        this.pageRefreshInvestigate(x[0]);
+                    });
+                break;
         }
     }
 
@@ -237,7 +241,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         x.DateStart = setDateMyDatepicker(x.DateStart);
         x.DateEnd = setDateMyDatepicker(x.DateEnd);
 
-        let investDetail = x.InvestigateDetail;
+        let investDetail = x.InvestigateDetail.filter(x => x.InvestigateDetailID);
         if (!investDetail) return;
         await investDetail.map(id => {
             let staff: fromModels.InvestigateDetailStaff[] = id.InvestigateDetailStaff
@@ -323,28 +327,12 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         let invest = this.investigateForm.value as fromModels.InvestigateModel;
         const dateStart = getDateMyDatepicker(invest.DateStart);
         const dateEnd = getDateMyDatepicker(invest.DateEnd);
-        invest.DateStart = setZeroHours(dateStart);
-        invest.DateEnd = setZeroHours(dateEnd);
+        invest.DateStart = (dateStart);
+        invest.DateEnd = (dateEnd);
 
-        if (!this.stateInvest) {
-            this.stateInvest = {
-                InvestigateCode: invest.InvestigateCode,
-                InvestigateNo: invest.InvestigateNo,
-                DateStart: invest.DateStart,
-                DateEnd: invest.DateEnd,
-                Subject: invest.Subject,
-                IsActive: invest.IsActive,
-                InvestigateDetail: []
-            }
-            this.store.dispatch(new fromStore.CreateInvestigate(this.stateInvest))
-        } else {
-            this.stateInvest.InvestigateCode = invest.InvestigateCode;
-            this.stateInvest.InvestigateNo = invest.InvestigateNo;
-            this.stateInvest.DateStart = invest.DateStart;
-            this.stateInvest.DateEnd = invest.DateEnd;
-            this.stateInvest.Subject = invest.Subject;
-            this.store.dispatch(new fromStore.UpdateInvestigate(this.stateInvest));
-        }
+        invest.DateStart = getDateMyDatepicker(invest.DateStart);
+        invest.DateEnd = getDateMyDatepicker(invest.DateEnd);
+        this.store.dispatch(new fromStore.CreateInvestigate(invest));
 
         let InvestigateSeq = 1;
         if (this.InvestigateDetail.length) {
@@ -470,7 +458,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
                 swal('', Message.saveComplete, 'success');
 
-                this.enableBtnModeR();
+                this.router.navigate(['/investigation/manage', this.mode, this.investCode])
             }, (error) => this.catchError(error));
     }
 

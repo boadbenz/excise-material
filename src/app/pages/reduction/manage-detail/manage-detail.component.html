@@ -10,7 +10,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">เลขที่ใบงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.arrestCode" name="arrestCode" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ArrestCode" name="arrestCode" disabled>
             </div>
           </div>
         </div>
@@ -18,9 +18,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่จับกุม : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ArrestDate" name="lawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ArrestTime" name="lawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -31,7 +31,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ผู้กล่าวหา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="fullName" name="" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitName" name="" disabled>
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.positionlawName" name="positionlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitPositionName" name="positionlawName" disabled>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="departmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitOfficeShortName" name="departmentlawName" disabled>
             </div>
           </div>
         </div>
@@ -69,7 +69,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">เลขที่คดีรับคำกล่าวโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitNo" name="lawsuitNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitNo" name="lawsuitNo" disabled>
             </div>
           </div>
         </div>
@@ -77,9 +77,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่รับคดี : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceDate" name="lawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceTime" name="lawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ฐานความผิด : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.faultSubject" name="faultSubject" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.Testimony" name="faultSubject" disabled>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">บทกำหนดโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.faultNo" name="faultNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.Prompt" name="faultNo" disabled>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">อัตราโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.penalty" name="penalty" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.IsMatchNotice" name="penalty" disabled>
             </div>
           </div>
         </div>
@@ -128,7 +128,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">เลขที่คดีเปรียบเทียบ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitNo" name="lawsuitNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareCode" name="lawsuitNo" disabled>
             </div>
           </div>
         </div>
@@ -136,9 +136,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่เปรียบเทียบ : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitDate" name="lawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareDate" name="lawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.lawsuitTime" name="lawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareTime" name="lawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ผู้เปรียบเทียบ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="fullName" name="" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareName" name="" disabled>
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.positionlawName" name="positionlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ComparePositionName" name="positionlawName" disabled>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.departmentlawName" name="departmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareOfficeShortName" name="departmentlawName" disabled>
             </div>
           </div>
         </div>

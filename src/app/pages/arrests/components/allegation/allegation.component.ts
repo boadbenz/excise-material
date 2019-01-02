@@ -300,7 +300,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         let p = y.map((y1, index) => {
           y1.IsChecked = false;
           y1.RowId = index + 1;
-          y1.IsModify = 'r';
+          y1.IsModify = 'v';
           return y1;
         });
 
@@ -340,7 +340,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
           _product = x.map((y, index) => {
             y.IsChecked = false;
             y.RowId = index + 1;
-            y.IsModify = 'r';
+            y.IsModify = 'v';
             return y;
           });
         }
@@ -538,7 +538,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     this.arrestIndictmentFG.patchValue({
       GuiltBaseID: e.GuiltBaseID,
       ArrestLawGuitbase: e,
-      IsModify: this.mode == 'C' ? 'c' : 'r',
+      IsModify: this.mode == 'C' ? 'c' : 'v',
       SubSectionType: ArrestLawSubSection.SubSectionType,
       GuiltBaseName: e.GuiltBaseName,
       SectionNo: ArrestLawSubSectionRule.SectionNo,
@@ -915,7 +915,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
             .catch((error) => this.catchError(error));
           break;
 
-        case 'r':
+        case 'v':
           if (w.IsChecked) {
             console.log('ArrestIndictmentProduct "r" : ', JSON.stringify(w));
             // let prod = await this.insertArrestProductDetail(indictmentDetailID, parseInt(w.ProductID), w);
@@ -939,7 +939,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
         let pd = new fromModels.ArrestProductDetail();
         pd.ProductID = parseInt(p.ProductID);
         pd.IsProdcutCo = '1';
-        pd.Qty = p.Qty || '0';
+        // pd.Qty = p.Qty || '0';
         pd.QtyUnit = p.QtyUnit || '-';
         pd.Size = p.Size || '0';
         pd.SizeUnit = p.SizeUnitName || '-';
@@ -970,7 +970,7 @@ export class AllegationComponent implements OnInit, OnDestroy {
     p.IndictmentID = indictmentId;
     p.ProductID = productId;
     p.IsProdcutCo = '1';
-    p.IndictmentProductQty = product.Qty || '0';
+    // p.IndictmentProductQty = product.Qty || '0';
     p.IndictmentProductQtyUnit = product.QtyUnit || '-';
     p.IndictmentProductSize = product.Size || '0';
     p.IndictmentProductSizeUnit = product.SizeUnitName || '-';

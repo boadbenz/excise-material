@@ -106,7 +106,7 @@
                 <th class="text-center">ลำดับ</th>
                 <th>ประเภทผู้ต้องหา</th>
                 <th>ประเภทบุคคล</th>
-                <th>หมายเลขประจำตัว</th>
+                <th>เลขประจำตัว</th>
                 <th>ชื่อ</th>
                 <th class="text-center">จำนวนครั้งการกระทำผิด</th>
                 <th></th>
@@ -116,7 +116,7 @@
               <tr *ngFor="let item of Lawbreaker.controls; let i=index;" [formGroupName]="i">
                 <td class="text-center">
                   <input name="IsChecked" formControlName="IsChecked" type="radio" id="td{{i}}" [checked]="!item.get('IsChecked').value"
-                    class="with-gap radio-col-indigo" (change)="setIsChecked(i)">
+                  class="with-gap radio-col-indigo" (change)="setIsChecked(i)">
                   <label for="td{{i}}" class="m-0"></label>
                 </td>
                 <td class="text-center">{{item.get('RowId').value}}</td>
@@ -126,8 +126,8 @@
                 <td>{{item.get('LawbreakerFullName').value}}</td>
                 <td class="text-center">{{item.get('ResultCount').value | async}}</td>
                 <td class="text-center">
-                  <a class="text-center text-secondary" 
-                    [routerLink]="['/arrest/lawbreaker', 'R', item.value.LawbreakerID]" target="_blank">
+                  <a class="text-center text-secondary" [routerLink]="['/arrest/lawbreaker', 'R', item.value.LawbreakerID]"
+                    target="_blank">
                     <i class="fa fa-eye fa-lg"></i>
                   </a>
                 </td>

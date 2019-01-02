@@ -1,4 +1,7 @@
 @import '../../../../styles';
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+  z-index: 99999 !important;
+}
   .btn-navy {
     background: rgb(0, 94, 141);
     color: white;
@@ -56,4 +59,38 @@ td p {
 }
 body {
   font-size: 0.9rem !important;
+}
+input[disabled] {
+  color: black;
+}
+.card {
+  font-size: 0.9rem !important;
+  input {
+    padding: 0.3rem;
+    font-size: 0.9rem !important;
+  }
+}
+.without_ampm::-webkit-datetime-edit-ampm-field {
+  display: none;
+}
+input[type=time]::-webkit-clear-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  -ms-appearance:none;
+  appearance: none;
+  margin: -10px; 
+}
+::ng-deep .cdk-overlay-pane {
+  /* Do you changes here */
+    min-width:15rem;
+}
+.custom-select {
+  background-color: white;
+}
+.custom-select[disabled] {
+  background-color: #e8edf1;
+}
+.mat-expansion-panel-content {
+  font: unset !important;
 }

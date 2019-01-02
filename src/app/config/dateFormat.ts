@@ -31,7 +31,6 @@ export function setZero(num: number) {
 }
 
 export function toLocalShort(date: string): string {
-    if (!date) return;
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const dd = new Date(date);
     return dd.toLocaleString('th-TH', options);
@@ -55,7 +54,7 @@ export function toTimeShort(date: string): string {
 
 export const MyDatePickerOptions: IMyOptions = {
     dateFormat: 'dd mmm yyyy',
-    showClearDateBtn: true,
+    showClearDateBtn: false,
     height: '30px',
     alignSelectorRight: true,
     openSelectorOnInputClick: true,
@@ -65,30 +64,30 @@ export const MyDatePickerOptions: IMyOptions = {
 export function setDateMyDatepicker(date: any) {
     if (!date)
         return { myDate: null };
-
+        
     if (date.jsdate) {
         return date;
     } else {
-        const d = new Date(date)
-        return { date: { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() } };
+        const d = new Date(date);
+        return !d.getFullYear() ? date : { date: { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() } };
     }
 }
 
 export function getDateMyDatepicker(date: any) {
     if (!date)
         return null;
-        
+
     if (date.date) {
         const d = date.date;
         return new Date(`${d.year}-${d.month}-${d.day}`);
     } else {
         return date;
     }
-    
+
 }
 
 export function convertDateForSave(date: Date) {
-    if (!date)
+    if (!date || date == undefined)
         return null;
 
     date.setHours(0, -date.getTimezoneOffset(), 0, 0);
@@ -98,7 +97,7 @@ export function convertDateForSave(date: Date) {
 }
 
 export function setZeroHours(date: Date): string {
-    if (!date)
+    if (!date || date == undefined)
         return null;
 
     date = new Date(date);

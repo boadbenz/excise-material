@@ -39,20 +39,21 @@
                         <i class="mdi mdi-menu"></i>
                     </a>
                 </li>
-                <li class="nav-item">
+
+                <!-- <li class="nav-item">
                     <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
                         <i class="ti-menu"></i>
                     </a>
-                </li>
+                </li> -->
 
                 <li *ngIf="prevPageButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
                         <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickPrevPage()">
-                            << {{prevPageTitle | async}}
+                             {{prevPageTitle | async}}
                         </a>
                     </div>
                 </li>
-                
+
                 <li *ngIf="newButton | async" class="nav-item">
                     <div class="nav-link text-muted waves-effect waves-dark">
                         <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickNew()">
@@ -106,7 +107,7 @@
                 </li>
             </ul>
 
-            <div style="color: white; font-size: 19px;position: fixed;left: 33%;">ระบบงานผู้กระทำผิดกฎหมายภาษีสรรพสามิต พ.ร.บ.ภาษีสรรพสามิต พ.ศ.2560</div>
+            <!-- <div style="color: white; font-size: 17px;position: fixed;left: 33%;">ระบบงานผู้กระทำผิดกฎหมายภาษีสรรพสามิต พ.ร.บ.ภาษีสรรพสามิต พ.ศ.2560</div> -->
 
             <!-- <ul *ngIf="searchBar | async" class="navbar-nav my-lg-0">
 

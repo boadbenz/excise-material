@@ -73,6 +73,12 @@ export interface NoticeMasSuspect {
     IsChecked: boolean;
     IsNewItem: boolean;
     MistreatNo: string;
+    LawbreakerTitleName: string;
+    LawbreakerFirstName: string;
+    LawbreakerMiddleName: string;
+    LawbreakerLastName: string;
+    LawbreakerType: number;
+    LawbreakerID: number;
 }
 
 export const SuspectForm = {

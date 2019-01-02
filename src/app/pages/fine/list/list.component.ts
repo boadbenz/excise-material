@@ -12,10 +12,13 @@ import { stringify } from 'querystring';
 import { IMyDpOptions } from 'mydatepicker';
 import { toLocalShort } from 'app/config/dateFormat';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import Swal from 'sweetalert2'
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
-    templateUrl: './list.component.html'
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit, OnDestroy {
 
@@ -46,6 +49,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setCancelButton(false);
         this.navService.setNextPageButton(false);
         // set true
+        this.navService.setSearchBar(false);
         this.navService.setSearchBar(true);
         this.navService.setNewButton(false);
         this.advSearch = this.navService.showAdvSearch;
@@ -109,11 +113,10 @@ export class ListComponent implements OnInit, OnDestroy {
             } catch (err) {
                 console.log(err);
             }
-
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.21');
+        this.sidebarService.setVersion('0.0.0.35');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
@@ -132,15 +135,17 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preLoaderService.setShowPreloader(true);
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            console.log(Textsearch);
+            this.preLoaderService.setShowPreloader(true);
+            console.log('pre');
             if (Textsearch) {
-                
+
                 await this.navService.setOnSearch('');
                 if (Textsearch.Textsearch && Textsearch.Textsearch == null) {
                     Textsearch = {Textsearch:''};
                 }
                 await this.onSearch(Textsearch);
             }
+            this.preLoaderService.setShowPreloader(false);
         });
 
         this.preLoaderService.setShowPreloader(false);
@@ -161,7 +166,16 @@ export class ListComponent implements OnInit, OnDestroy {
             console.log('fail onSearch');
         });
     }
-
+    convertToNormalDate(date: any) {
+        if (!date || (typeof date.year) == 'undefined') {
+          const d = new Date();
+          date = {day: d.getDate(), month: (d.getMonth() + 1), year: d.getFullYear()};
+          console.log(date);
+        }
+        return `${date.year}-${date.month}-${date.day}`;
+    
+    
+    }
     async onAdvSearch(form: any) {
         const sDateCompare = new Date(form.value.CompareDateFrom);
         const eDateCompare = new Date(form.value.CompareDateTo);
@@ -170,10 +184,17 @@ export class ListComponent implements OnInit, OnDestroy {
         } else {
             form.value.CompareDateFrom = sDateCompare.getTime();
             form.value.CompareDateTo = eDateCompare.getTime();
-
-            isNaN(form.value.CompareDateFrom) ? form.value.CompareDateFrom = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateFrom).toLocaleString('en-GB', { timeZone: 'UTC' });
-            isNaN(form.value.CompareDateTo) ? form.value.CompareDateTo = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateTo).toLocaleString('en-GB', { timeZone: 'UTC' });
-
+            console.log(form);
+            // isNaN(form.value.CompareDateFrom) ? form.value.CompareDateFrom = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateFrom).toLocaleString('en-GB', { timeZone: 'UTC' });
+            // isNaN(form.value.CompareDateTo) ? form.value.CompareDateTo = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateTo).toLocaleString('en-GB', { timeZone: 'UTC' });
+            if (form.value.LawsuitDateFrom && (!form.value.LawsuitDateTo)) {
+                console.log(form.value.LawsuitDateFrom);
+                form.value.CompareDateFrom = this.convertToNormalDate(form.value.LawsuitDateFrom.date);
+                const d = new Date();
+                console.log(d);
+                form.value.CompareDateTo = this.convertToNormalDate(new Date());
+            }
+            console.log(form);
             form.value.ProgramCode = '';
             form.value.ProcessCode = '';
 
@@ -201,7 +222,11 @@ export class ListComponent implements OnInit, OnDestroy {
         var CompareCode = '';
         this.CompareList = [];
         if (list.length < 1) {
-            alert(Message.noRecord);
+            swal(
+                'ข้อผิดพลาด',
+                Message.noRecord,
+                'error'
+            );
             return false;
         }
 
@@ -243,11 +268,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(IndictmentID: string, ArrestCode: string, CompareID: string) {
-      if (+CompareID) {
-        this._router.navigate([`/fine/manage/R/${CompareID}/${IndictmentID}/${ArrestCode}`]);
-      } else {
-        this._router.navigate([`/fine/manage/C/0/${IndictmentID}/${ArrestCode}`]);
-      }
+        // CompareID = (+CompareID)
+        this._router.navigate([`/fine/manage/${(!CompareID || CompareID == '0') ? 'C' : 'R'}/${CompareID}/${IndictmentID}/${ArrestCode}`]);
     }
 
     async pageChanges(event) {

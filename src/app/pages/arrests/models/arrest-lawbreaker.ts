@@ -80,7 +80,7 @@ export class ArrestLawbreaker {
     ReferenceID: string;
     ProductID: string;
     ProductName: string;
-    IsChecked:  Acceptability;
+    IsChecked: Acceptability;
     RowId: number;
     IsNewItem: boolean;
     IsModify: string;
