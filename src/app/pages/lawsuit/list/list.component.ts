@@ -139,15 +139,11 @@ export class ListComponent implements OnInit, OnDestroy {
 
   async onAdvSearch(form: any) {
     if (form.value.LawsuitDateFrom) {
-      let lawsuitDateToValue = form.value.LawsuitDateTo
-      if (!lawsuitDateToValue) {
-        lawsuitDateToValue = form.value.LawsuitDateFrom;
-      }
-      if (form.value.LawsuitDateTo == null) {
-        form.value.LawsuitDateTo = form.value.LawsuitDateFrom
-      }
+      form.value.LawsuitDateTo = form.value.LawsuitDateTo == null ? form.value.LawsuitDateFrom : form.value.LawsuitDateTo;
       const sDateCompare = new Date(form.value.LawsuitDateFrom.jsdate);
       const eDateCompare = new Date(form.value.LawsuitDateTo.jsdate);
+      sDateCompare ? sDateCompare.setDate(sDateCompare.getDate() + 1) : null;
+      eDateCompare ? eDateCompare.setDate(eDateCompare.getDate() + 1) : null;
       if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
         Swal({
           text: Message.checkDate,
@@ -158,7 +154,13 @@ export class ListComponent implements OnInit, OnDestroy {
       form.value.LawsuitDateFrom = sDateCompare.toISOString();
       form.value.LawsuitDateTo = eDateCompare.toISOString();
     }
-
+    if(!form.value.LawsuitDateFrom && form.value.LawsuitDateTo) {
+      Swal({
+        text: "รูปแบบวันที่ไม่ถูกต้อง",
+        type: 'warning',
+      })
+      return false;
+    }
     this.preLoaderService.setShowPreloader(true);
     await this.lawsuitService.LawsuitArrestGetByConAdv(form.value).then(list => this.onSearchComplete(list));
     this.advSearch = this.navService.showAdvSearch;
