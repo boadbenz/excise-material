@@ -376,11 +376,11 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
-                    [value]="item.value.QtyUnit" required/>
+                    [value]="item.value.QtyUnit" required />
                 </td>
                 <td style="max-width: 30px;">
-                  <input type="number" #NetVolume formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField"
-                    min="0" step="0.01" required>
+                  <input type="number" #NetVolume formControlName="NetVolume" class="form-control form-control-sm"
+                    [readonly]="showEditField" min="0" step="0.01" required>
                 </td>
                 <td style="max-width: 60px;">
                   <ng-template #netVolumeUnit let-r="result" let-t="term">
@@ -388,7 +388,7 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
-                    [value]="item.value.NetVolumeUnit" required/>
+                    [value]="item.value.NetVolumeUnit" required />
                 </td>
                 <td>
                   <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
@@ -511,10 +511,10 @@
                     </ng-container>
 
                   </td>
-                  <td style="width: 280px;" class="text-truncate">
-                    <!-- <span class="text-truncate" style="width: 200px;"> -->
-                    {{item.get('GuiltBaseName').value}}
-                    <!-- </span> -->
+                  <td style="width: 300px;">
+                    <p class="text-truncate" style="width: 300px;">
+                      {{item.get('GuiltBaseName').value}}
+                    </p>
                   </td>
                 </ng-template>
 
@@ -525,8 +525,8 @@
                       <div formArrayName="ArrestLawbreaker">
                         <ng-container *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
                           <ng-container *ngIf="lawb.get('LawbreakerID').value && lawb.get('IsModify').value != 'd'">
-                            <input #isCheck type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i1+'-'+lIndex+'lb'"
-                            [attr.disabled]="showEditField ? '' : null">
+                            <input #isCheck type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo"
+                              [id]="j+'-'+i1+'-'+lIndex+'lb'" [attr.disabled]="showEditField ? '' : null">
                             <label [for]="j+'-'+i1+'-'+lIndex+'lb'">
                               {{ lawb.get('LawbreakerTitleName').value }}
                               {{ lawb.get('LawbreakerFirstName').value }}
@@ -548,7 +548,7 @@
                       <div [formGroupName]="i" style="width: 300px;" class="text-truncate">
                         <ng-container *ngIf="prod.get('ProductID').value && prod.get('IsModify').value != 'd'">
                           <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" id="{{j+'-'+i+'pd'}}"
-                          [attr.disabled]="showEditField ? '' : null">
+                            [attr.disabled]="showEditField ? '' : null">
                           <label for="{{j+'-'+i+'pd'}}">{{prod.get('ProductDesc').value}}</label>
                         </ng-container>
                       </div>
