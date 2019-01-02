@@ -1466,7 +1466,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 break;
 
             case 'R':
-                this.arrestFG.reset();
+                this.clearForm();
                 this.pageLoad(this.arrestCode);
                 break;
         }
@@ -1489,7 +1489,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 })
             })
             Promise.all(isLawsuit).then(async () => {
-                
+
                 if (arr.length && arr.some(y => y.ArrestCode == this.arrestCode)) {
                     this.enableBthModeR();
                     swal('', Message.cannotModify, 'warning');
@@ -1551,13 +1551,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             confirmButtonText: 'Ok'
         }).then((result) => {
             if (result.value) {
-                this.arrestFG.reset();
-                clearFormArray(this.ArrestNotice);
-                clearFormArray(this.ArrestStaff);
-                clearFormArray(this.ArrestProduct);
-                clearFormArray(this.ArrestLawbreaker);
-                clearFormArray(this.ArrestIndictment);
-                clearFormArray(this.ArrestDocument);
+                this.clearForm();
                 switch (this.mode) {
                     case 'C':
                         setTimeout(() => {
@@ -1572,6 +1566,16 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             }
         })
 
+    }
+
+    private clearForm() {
+        this.arrestFG.reset();
+        clearFormArray(this.ArrestNotice);
+        clearFormArray(this.ArrestStaff);
+        clearFormArray(this.ArrestProduct);
+        clearFormArray(this.ArrestLawbreaker);
+        clearFormArray(this.ArrestIndictment);
+        clearFormArray(this.ArrestDocument);
     }
 
     private async createWithOutArrestCode() {
