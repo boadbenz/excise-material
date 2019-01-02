@@ -1988,7 +1988,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     case 'c':
                         if (lawbreaker.IsChecked == Acceptability.ACCEPTABLE) return;
                         const lid = arrestLawbreakerId.find(xx => xx.LawbreakerID == x.LawbreakerID);
-                        if (lid) return;
+                        if (!lid) return;
                         newIndictmentDetail.LawbreakerID = lid.ArrestLawbreakerID;
                         await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
                             .then(y => {
