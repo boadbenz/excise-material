@@ -87,7 +87,7 @@ export function getDateMyDatepicker(date: any) {
 }
 
 export function convertDateForSave(date: Date) {
-    if (!date)
+    if (!date || date == undefined)
         return null;
 
     date.setHours(0, -date.getTimezoneOffset(), 0, 0);
@@ -97,7 +97,7 @@ export function convertDateForSave(date: Date) {
 }
 
 export function setZeroHours(date: Date): string {
-    if (!date)
+    if (!date || date == undefined)
         return null;
 
     date = new Date(date);

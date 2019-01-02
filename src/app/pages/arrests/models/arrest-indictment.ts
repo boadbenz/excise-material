@@ -44,6 +44,8 @@ export class ArrestIndictmentDetail {
     LawbreakerID?: number;
     ArrestLawbreaker?: Array<ArrestLawbreaker>;
     ArrestProductDetail?: Array<ArrestProductDetail>;
+
+    IsModify: string;
 }
 
 
