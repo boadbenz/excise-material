@@ -126,14 +126,14 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // var user = JSON.parse(localStorage.getItem('user'));
-    this.sidebarService.setVersion('0.0.0.27');
+    this.sidebarService.setVersion('0.0.0.28');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
     await this.createForm();
     await this.createLawsuitForm();
     await this.tools_bar(this.LawsuitID)
+
     await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
     this.preLoaderService.setShowPreloader(false);
   }
@@ -409,7 +409,7 @@ export class ManageComponent implements OnInit {
           this.navService.setNextPageButton(true);
           this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
         }
-      }else {
+      } else {
         return;
       }
     })
@@ -548,7 +548,7 @@ export class ManageComponent implements OnInit {
               this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
             }
             this.preLoaderService.setShowPreloader(false);
-          }  else {
+          } else {
             this.showEditField = false;
             this.navService.setEditField(true);
             this.navService.setEditButton(true);
@@ -598,7 +598,7 @@ export class ManageComponent implements OnInit {
               this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
             }
             this.preLoaderService.setShowPreloader(false);
-          }else {
+          } else {
             this.showEditField = false;
             this.navService.setEditField(true);
             this.navService.setEditButton(true);
@@ -1149,6 +1149,8 @@ export class ManageComponent implements OnInit {
               arrList.push(a)
             }
           });
+          await this.oninitFullname(localStorage)
+
           this.lawsuitForm.controls['AccuserTestimony'].setValue(
             "วันนี้ เวลา " + this.lawsuitForm.controls['LawsuitTime'].value + " ข้าฯ พร้อมด้วยพวกได้ดำเนินการจับกุม" +
             textLawbreak + "พร้อมของกลาง ตามบัญชีของกลาง ส.ส.2/4 โดยแจ้งข้อกล่าวหา " + this.lawsuitArrestForm.controls['GuiltBaseName'].value +
@@ -1249,6 +1251,28 @@ export class ManageComponent implements OnInit {
       this.lawsuitForm.controls['officeCode'].setValue('');
     }
   }
+  oninitFullname(text) {
+    if (text) {
+      let initName = this.masStaffList.filter(item => (item.FullName.includes(text.fullName)));
+      if (initName.length == 1) {
+        let value = initName[0]
+        this.LawsuitStaffOnsave = value
+        this.staff.FirstName = value.FirstName
+        this.staff.LastName = value.LastName
+        this.staff.TitleName = value.TitleName
+        this.staff.FullName = value.FullName
+        this.staff.OperationPosName = value.OperationPosName
+        this.staff.OfficeShortName = value.OfficeShortName
+        this.staff.OfficeCode = value.OfficeCode
+        this.lawsuitForm.controls['FullName'].setValue(this.validateData(value.FullName));
+        this.lawsuitForm.controls['PositionName'].setValue(this.validateData(value.OperationPosName));
+        this.lawsuitForm.controls['DepartmentName'].setValue(this.validateData(value.OfficeShortName));
+        this.lawsuitForm.controls['officeCode'].setValue(value.OfficeCode);
+        this.suggestions = [];
+      }
+    }
+  }
+
   onChangeFullnameReslut(text) {
     this.LawsuitStaffOnsave = text
     this.staff.FirstName = text.FirstName
