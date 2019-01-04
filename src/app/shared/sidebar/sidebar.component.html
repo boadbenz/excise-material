@@ -104,6 +104,7 @@
                         <span class="hide-menu">รายการปรับเพิ่ม-ปรับลด </span>
                     </a>
                 </li>
+
                 <!-- <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/master">
                         <i class="mdi mdi-gauge"></i>
@@ -134,7 +135,7 @@
                                 ข้อมูลหมวดสินค้า</a>
                         </li>
                     </ul>
-                </li> -->
+                </li>  -->
                 <li>
                     <ul>
                         <li>
@@ -144,8 +145,8 @@
                             </a>
                         </li>
                     </ul>
-                    
                 </li>
+
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
@@ -154,9 +155,57 @@
                     </a>
                 </li>
                 <li>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <strong>10</strong>
+                        <span class="hide-menu">งานบริหารจัดการของกลาง</span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/evidenceIn/list">
+                                <span>10.1 ตรวจรับของกลางเพื่อเก็บรักษา</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/evidenceOut/list']">
+                                <span>10.2 คืนของกลาง</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                                <span>10.3 จัดเก็บเข้าพิพิธภัณฑ์</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                                <span>10.4 ขายทอดตลาด</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                                <span>10.5 ทำลายของกลาง</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                                <span>10.6 นำของกลางออกจากคลัง</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                                <span>10.7 โอนย้ายของกลาง</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                                <span>10.7 ทะเบียนบัญชีสินค้าและของกลาง</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/uac/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
-                        <strong>10</strong>
+                        <strong>11</strong>
                         <span class="hide-menu">การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด</span>
                     </a>
                 </li>
