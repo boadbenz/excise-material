@@ -364,6 +364,7 @@ export class ProveService {
       "IndictmentID": IndictmentID
     }
 
+    debugger
     const params = JSON.stringify(pValue);
     const url = `${appConfig.apiReport}/ILL_P038.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
