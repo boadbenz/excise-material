@@ -34,12 +34,12 @@ export class EvidenceTypeModalComponent implements OnInit {
     }
 
     onExternal() {
-        this._router.navigate(['/evidenceIn/manage', 'E', 'C', 'NEW']);
+        this._router.navigate(['/evidenceOut/manage', 'E', 'C', 'NEW']);
         this.close('');
     }
 
     onInternal() {
-        this._router.navigate(['/evidenceIn/manage', 'I', 'C', 'NEW']);
+        this._router.navigate(['/evidenceOut/manage', 'I', 'C', 'NEW']);
         this.close('');
     }
 

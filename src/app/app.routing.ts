@@ -171,8 +171,14 @@ export const routes: Routes = [
         path: 'evidenceIn', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/evidenceIn/list/list.module#ListModule' },
-            { path: 'manage-internal/:mode/:code', loadChildren: './pages/evidenceIn/manage-internal/manage-internal.module#ManageModule' },
-            { path: 'manage-external/:mode/:code', loadChildren: './pages/evidenceIn/manage-external/manage-external.module#ManageModule' }
+            { path: 'manage/:type/:mode/:code', loadChildren: './pages/evidenceIn/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'evidenceOut', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/evidenceOut/list/list.module#ListModule' },
+            { path: 'manage/:type/:mode/:code', loadChildren: './pages/evidenceIn/manage/manage.module#ManageModule' }
         ]
     }
 ];

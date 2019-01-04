@@ -20,10 +20,10 @@ import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import swal from 'sweetalert2';
 
 @Component({
-    selector: 'app-manage-external',
-    templateUrl: './manage-external.component.html'
+    selector: 'app-manage',
+    templateUrl: './manage.component.html'
 })
-export class ManageExternalComponent implements OnInit, OnDestroy {
+export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
     private onSaveSubscribe: any;
     private onEditSubscribe: any;
@@ -34,6 +34,12 @@ export class ManageExternalComponent implements OnInit, OnDestroy {
 
     mode: string;
     modal: any;
+    evitype: any;
+
+
+
+
+
     showEditField: any;
     selectAllChb: any;
     paginage = pagination;
@@ -103,11 +109,11 @@ export class ManageExternalComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        /*this.preloader.setShowPreloader(true);
-        //this.sidebarService.setVersion('Revenue 0.0.0.19');
+       // this.preloader.setShowPreloader(true);
+        this.sidebarService.setVersion('EvidenceIn 0.0.0.2');
 
         this.active_Route();
-        this.navigate_Service();
+        /*this.navigate_Service();
 
         this.RevenueStatus = 0;
         this.RevenueNo = "";
@@ -139,18 +145,19 @@ export class ManageExternalComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.onCancelSubscribe.unsubscribe();
-        this.onEditSubscribe.unsubscribe();
-        this.onSaveSubscribe.unsubscribe();
-        this.onDeleSubscribe.unsubscribe();
-        this.onPrintSubscribe.unsubscribe();
+        // this.onCancelSubscribe.unsubscribe();
+        // this.onEditSubscribe.unsubscribe();
+        // this.onSaveSubscribe.unsubscribe();
+        // this.onDeleSubscribe.unsubscribe();
+        // this.onPrintSubscribe.unsubscribe();
     }
 
-    /*
+   
     private active_Route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
-            //alert(this.mode);
+            this.evitype = p['type'];
+
             if (p['mode'] === 'C') {
                 // set false
                 this.navService.setPrintButton(false);
@@ -160,8 +167,6 @@ export class ManageExternalComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-
-                this.RevenueCode = `LC-${(new Date).getTime()}`;
             } else if (p['mode'] === 'R') {
                 // set false
                 this.navService.setSaveButton(false);
@@ -172,14 +177,14 @@ export class ManageExternalComponent implements OnInit, OnDestroy {
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
 
-                if (p['code']) {
-                    this.RevenueID = p['code'];
-                }
+                // if (p['code']) {
+                //     this.RevenueID = p['code'];
+                // }
             }
         });
     }
 
-    private navigate_Service() {
+    /* private navigate_Service() {
 
         this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
