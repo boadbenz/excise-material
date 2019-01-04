@@ -192,13 +192,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                         NoticeCode: this.noticeCode,
                         IsActive: 1,
                         StaffFullName: `${l.TitleName || ''} ${l.FirstName || ''} ${l.LastName || ''}`,
+                        StaffCode: code,
                         PositionCode: l.OperationPosCode || l.OperationPosCode,
                         PositionName: l.OperationPosName || l.OperationPosName,
                         DepartmentLevel: l.DeptLevel,
                         DepartmentCode: l.OfficeCode,
                         DepartmentName: `${l.OfficeName}`,
                         ContributorCode: 2,
-                        ContributorID: 1
+                        ContributorID: 1,
+                        TitleName: l.TitleName,
+                        FirstName: l.FirstName,
+                        LastName: l.LastName
                     });
                     break;
                 }
@@ -309,8 +313,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 });
 
                 if (this.mode === 'C') {
-                    // this.onCreate();
                     await this.getTransactionRunning(this.noticeForm.value.NoticeStaff[0].DepartmentCode||this.noticeForm.value.NoticeStaff[0].OfficeCode);
+                    // this.onCreate();
 
                 } else if (this.mode === 'R') {
                     this.onReviced();
@@ -598,6 +602,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
+            this.navService.setDeleteButton(true);
             
             // this.noticeCode = res.NoticeCode;
             // this.arrestCode = res.ArrestCode;
@@ -736,40 +741,38 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeProduct = noticeProduct;
         this.noticeForm.value.NoticeSuspect = noticeSuspect;
         this.noticeForm.value.NoticeDocument = noticeDocument;
-
-        console.log(this.noticeForm.value);
-
+        
         // Set Preloader
-        // this.preloader.setShowPreloader(true);
-        // let IsSuccess: boolean = true;
-        // await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
-        //     if (!isSuccess) { IsSuccess = false; return false; };
-        // }, () => { IsSuccess = false; return; });
-
-        // // if (IsSuccess) {
-        // //     await this.NoticeDocument.value.map(async doc => {
-        // //         // insert Document
-        // //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
-        // //             if (!docIsSuccess) { IsSuccess = false; return false; };
-
-        // //         }, () => { IsSuccess = false; return false; });
-        // //     });
-        // // }
+        this.preloader.setShowPreloader(true);
+        let IsSuccess: boolean = true;
+        await this.noticeService.insAll(this.noticeForm.value).then(async isSuccess => {
+            if (!isSuccess) { IsSuccess = false; return false; };
+        }, () => { IsSuccess = false; return; });
 
         // if (IsSuccess) {
-        //     this.showSwal(Message.saveComplete, "success");
-        //     // this.router.routeReuseStrategy.shouldReuseRoute = function() {
-        //     //   return false;
-        //     // };
-        //     this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
-        //     this.getByCon(this.noticeCode);
+        //     await this.NoticeDocument.value.map(async doc => {
+        //         // insert Document
+        //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
+        //             if (!docIsSuccess) { IsSuccess = false; return false; };
 
-        //     sessionStorage.removeItem("notice_form_data");
-        // } else {
-        //     this.showSwal(Message.saveFail, "error");
+        //         }, () => { IsSuccess = false; return false; });
+        //     });
         // }
 
-        // this.preloader.setShowPreloader(false);
+        if (IsSuccess) {
+            this.showSwal(Message.saveComplete, "success");
+            // this.router.routeReuseStrategy.shouldReuseRoute = function() {
+            //   return false;
+            // };
+            this.router.navigateByUrl('/notice/manage/R/'+this.noticeCode);
+            this.getByCon(this.noticeCode);
+
+            sessionStorage.removeItem("notice_form_data");
+        } else {
+            this.showSwal(Message.saveFail, "error");
+        }
+
+        this.preloader.setShowPreloader(false);
     }
 
     private async onReviced() {
@@ -849,7 +852,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(false);
     }
 
-    private onDelete() {
+    public onDelete() {
         // if (confirm(Message.confirmAction)) {
             // Set Preloader
             this.preloader.setShowPreloader(true);

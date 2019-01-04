@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardActionsModule } from '../card-actions/card-actions.module';
 import { PaginationTableModule } from '../pagination-table/pagination-table.module';
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { PaginationTableModule } from '../pagination-table/pagination-table.modu
     FormsModule,
     ReactiveFormsModule,
     CardActionsModule,
-    PaginationTableModule
+    PaginationTableModule,
+    SweetAlert2Module.forRoot()
   ],
   declarations: [NoticeSuspectModalComponent],
   exports: [NoticeSuspectModalComponent],

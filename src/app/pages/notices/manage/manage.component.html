@@ -291,7 +291,7 @@
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
-                        <input type="text" class="form-control form-control-sm {{!item.get('Region').value?'ng-invalid ng-touched':''}}"
+                        <input type="text" class="form-control form-control-sm {{!item.get('ProvinceCode').value?'ng-invalid ng-touched':''}}"
                             [ngbTypeahead]="searchRegion"
                             [readOnly]="showEditField"
                             [resultTemplate]="rt"
@@ -299,8 +299,7 @@
                             (selectItem)="selectItemLocaleRegion($event)" 
                             (blur)="blurSelectItemLocaleRegion()" 
                             [value]="item.get('Region').value"
-                            [ngClass]="{'ng-touched':isRequired}"
-                            required/>
+                            [ngClass]="{'ng-touched':isRequired}"/>
                     </div>
                 </div>
 
