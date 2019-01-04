@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ManageExternalComponent } from './manage-external.component';
+import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { IncomeService } from '../evidenceIn.service';
@@ -20,14 +20,14 @@ const routes: Routes = [
             // title: 'จัดการข้อมูล',
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหารายการนำส่งเงินรายได้', url: '/income/list' },
-                { title: 'จัดการข้อมูลนำส่งเงินรายได้' },
+                { title: 'ค้นหารายการตรวจรับของกลาง', url: '/evidenceIn/list' },
+                { title: 'จัดการข้อมูลรายการตรวจรับของกลาง' },
                 
             ],
             nextPage: { title: '', url: '' },
-            codePage: 'ILG60-07-02-00-00'
+            codePage: 'ILG60-10-02-00-00'
         },
-        component: ManageExternalComponent
+        component: ManageComponent
     }
 ];
 
@@ -46,7 +46,7 @@ const routes: Routes = [
         PaginationTableModule
     ],
     declarations: [
-        ManageExternalComponent
+        ManageComponent
     ],
     providers: [IncomeService],
     exports: [MatAutocompleteModule]
