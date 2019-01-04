@@ -94,7 +94,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
     private createForm(): void {
         this.SuspectFG = new FormGroup({
             SuspectID: new FormControl(null),
-            EntityType: new FormControl(null, Validators.required),
+            EntityType: new FormControl(this.entityTypes[1].value, Validators.required),
             CompanyTitleCode: new FormControl(null),
             CompanyTitle: new FormControl(null),
             CompanyName: new FormControl(null),
@@ -106,7 +106,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
             LicenseDateTo: new FormControl(""),
             TaxID: new FormControl(null),
             ExciseRegNo: new FormControl(null),
-            SuspectType: new FormControl(null, Validators.required),
+            SuspectType: new FormControl(this.suspectTypes[1].value, Validators.required),
             SuspectTitleCode: new FormControl(null),
             SuspectTitleName: new FormControl(null),
             SuspectFirstName: new FormControl(null, Validators.required),
@@ -114,7 +114,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
             SuspectLastName: new FormControl(null, Validators.required),
             SuspectOtherName: new FormControl(null),
             SuspectDesc: new FormControl(null),
-            IDCard: new FormControl(null, Validators.required),
+            IDCard: new FormControl(null, [Validators.required, Validators.maxLength(13), Validators.minLength(13)]),
             PassportNo: new FormControl(null),
             VISAType: new FormControl(null),
             PassportCountryCode: new FormControl(null),
@@ -372,8 +372,8 @@ export class SuspectComponent implements OnInit, OnDestroy {
         }, () => { IsSuccess = false; })
 
         if (IsSuccess) {
-            this.showSwal(Message.saveComplete, "success");
             this.GetByCon(this.suspectId);
+            this.showSwal(Message.saveComplete, "success");
         } else {
             this.showSwal(Message.saveFail, "error");
         }
