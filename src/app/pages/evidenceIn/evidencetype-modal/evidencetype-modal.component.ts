@@ -33,13 +33,8 @@ export class EvidenceTypeModalComponent implements OnInit {
     ngOnInit() {
     }
 
-    onExternal() {
-        this._router.navigate(['/evidenceIn/manage', 'E', 'C', 'NEW']);
-        this.close('');
-    }
-
-    onInternal() {
-        this._router.navigate(['/evidenceIn/manage', 'I', 'C', 'NEW']);
+    onNextPage(page) {
+        this._router.navigate(['/evidenceIn/manage', page, 'C', 'NEW']);
         this.close('');
     }
 
