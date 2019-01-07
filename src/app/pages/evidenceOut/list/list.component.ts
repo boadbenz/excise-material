@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { IncomeService } from '../evidenceOut.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -18,7 +18,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     selector: 'app-list',
     templateUrl: './list.component.html'
 })
+
 export class ListComponent implements OnInit, OnDestroy {
+    private sub: any;
+    evitype: any;
+
 
     advSearch: any;
     revenue = new Array<Revenue>();
@@ -38,16 +42,20 @@ export class ListComponent implements OnInit, OnDestroy {
 
     modal: any;
 
-     // ----- Model ------ //
-     @ViewChild('EvidenceTypeModel') evidenceTypeModel: ElementRef;
+    // ----- Model ------ //
+    @ViewChild('EvidenceTypeModel') evidenceTypeModel: ElementRef;
 
     constructor(
+        private activeRoute: ActivatedRoute,
+        
         private _router: Router,
         private navService: NavigationService,
         private sidebarService: SidebarService,
         private incomeService: IncomeService,
         private preloader: PreloaderService,
         private ngbModel: NgbModal
+
+        
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -65,6 +73,10 @@ export class ListComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.sidebarService.setVersion('evidenceOut 0.0.0.1');
         this.RevenueStatus = "";
+
+        alert(this.activeRoute.snapshot.data['title']);
+
+        this.active_Route();
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
             /*if (Textsearch) {               
@@ -89,12 +101,17 @@ export class ListComponent implements OnInit, OnDestroy {
         })
     }
 
-    
+
     ngOnDestroy(): void {
         this.subOnSearch.unsubscribe();
         this.subSetNextPage.unsubscribe();
     }
 
+    private active_Route() {
+        this.sub = this.activeRoute.params.subscribe(p => {
+            this.evitype = p['type'];
+        });
+    }
     /*
     ShowAlertNoRecord()
     {

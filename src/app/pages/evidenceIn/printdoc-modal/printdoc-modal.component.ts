@@ -15,9 +15,15 @@ export class PrintDocModalComponent implements OnInit {
     printDoc = [
         {
             IsChecked: false,
-            DocName: 'รายงานนำส่งรายได้',
+            DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
             DocType: 0,
             DocTypeName: 'แบบฟอร์ม'
+        },
+        {
+            IsChecked: false,
+            DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+            DocType: 0,
+            DocTypeName: 'เอกสารแนบภายใน'
         }
     ]
 
@@ -74,12 +80,12 @@ export class PrintDocModalComponent implements OnInit {
             //alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
         }
     }
-
+    */
     dismiss(e: any) {
         this.d.emit(e);
     }
 
     close(e: any) {
         this.c.emit(e);
-    }*/
+    }
 }

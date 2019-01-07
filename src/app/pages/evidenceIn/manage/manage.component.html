@@ -42,7 +42,7 @@
 
 
 <form class="form-horizontal">
-    <!-- รายละเอียดประกอบการนำส่ง Internal -->
+    <!-- รายละเอียดประกอบการนำส่ง จากหน่วยงานภายใน -->
     <div *ngIf="evitype == 'I'" class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -193,7 +193,7 @@
     </div>
 
 
-    <!-- รายละเอียดประกอบการนำส่ง External -->
+    <!-- รายละเอียดประกอบการนำส่ง จากหน่วยงานภายนอก -->
     <div *ngIf="evitype == 'E'" class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -257,9 +257,74 @@
                     <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
                 </div>
             </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำส่ง :</label>
+                <div class="form-group col-lg-10 col-md-12">
+                    <input type="text" [(ngModel)]="Remarks" name="Remarks" class="form-control"
+                        [disabled]="showEditField">
+                </div>
+            </div>
         </div>
     </div>
 
+
+    <!-- รายละเอียดประกอบการนำส่ง นำออกจากคลังไปใช้ทางราชการ -->
+    <div *ngIf="evitype == 'G'" class="card card-outline-bluish unset-radius">
+        <div class="card-header unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 class="card-title m-b-0">รายละเอียดประกอบการนำส่ง</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- รายละเอียดการตรวจรับของกลาง -->
     <div class="card card-outline-bluish unset-radius">

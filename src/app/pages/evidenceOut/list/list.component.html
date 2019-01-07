@@ -102,7 +102,7 @@
         <div class="table-responsive table-striped ">
             <table #revenueTable class="table">
                 <thead>
-                    <tr>
+                    <tr *ngIf="evitype == '11'">
                         <th style="text-align: center;width:5%">ลำดับ</th>
                         <th>เลขที่คืน</th>
                         <th style="width:15%">วันที่คืน</th>

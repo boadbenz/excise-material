@@ -89,12 +89,14 @@ export class ListComponent implements OnInit, OnDestroy {
         })
     }
 
-    
     ngOnDestroy(): void {
         this.subOnSearch.unsubscribe();
         this.subSetNextPage.unsubscribe();
     }
 
+    clickView(RevenueID: string) {
+        this._router.navigate([`/evidenceIn/manage/I/R/${RevenueID}`]);
+    }
     /*
     ShowAlertNoRecord()
     {
@@ -204,9 +206,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
-    clickView(RevenueID: string) {
-        this._router.navigate([`/income/manage/R/${RevenueID}`]);
-    }
+    
 
     async pageChanges(event) {
         this.RevenueList = await this.revenue.slice(event.startIndex - 1, event.endIndex);

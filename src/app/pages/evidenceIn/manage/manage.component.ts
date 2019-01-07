@@ -113,9 +113,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sidebarService.setVersion('EvidenceIn 0.0.0.2');
 
         this.active_Route();
-        /*this.navigate_Service();
+        this.navigate_Service();
 
-        this.RevenueStatus = 0;
+        /*this.RevenueStatus = 0;
         this.RevenueNo = "";
         this.RevenueStation == "";
         this.StaffSendName == "";
@@ -149,7 +149,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.onEditSubscribe.unsubscribe();
         // this.onSaveSubscribe.unsubscribe();
         // this.onDeleSubscribe.unsubscribe();
-        // this.onPrintSubscribe.unsubscribe();
+        this.onPrintSubscribe.unsubscribe();
     }
 
    
@@ -184,13 +184,20 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    /* private navigate_Service() {
+     private navigate_Service() {
 
         this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
         });
 
-        this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
+        this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnPrint(false);
+                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+            }
+        })
+
+        /*this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
             if (this.RevenueStatus == 2) {
                 //alert("ไม่สามารถแก้ไขรายการได้");
                 this.ShowAlertWarning("ไม่สามารถแก้ไขรายการได้");
@@ -250,13 +257,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnPrint(false);
-                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-            }
-        })
-
         this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
             if (status) {
                 this.navService.setOnCancel(false);
@@ -299,10 +299,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             }
         })
+        */
     }
 
    
-
+/*
     onDelete() {
         swal({
             title: '',
