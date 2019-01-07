@@ -109,8 +109,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        //this.activeRoute.data.subscribe((data) => console.log(data));
-
         // this.preloader.setShowPreloader(true);
         this.sidebarService.setVersion('EvidenceIn 0.0.0.2');
 
@@ -160,29 +158,73 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.mode = p['mode'];
             this.evitype = p['type'];
 
-            if (p['mode'] === 'C') {
-                // set false
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                this.navService.setEditField(false);
-                // set true
-                this.navService.setSaveButton(true);
-                this.navService.setCancelButton(true);
-            } else if (p['mode'] === 'R') {
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                // set true
-                this.navService.setPrintButton(true);
-                this.navService.setEditButton(true);
-                this.navService.setDeleteButton(true);
-                this.navService.setEditField(true);
+            switch (this.mode) {
+                case 'C':
+                    // set false
+                    this.navService.setPrintButton(false);
+                    this.navService.setEditButton(false);
+                    this.navService.setDeleteButton(false);
+                    this.navService.setEditField(false);
+                    // set true
+                    this.navService.setSaveButton(true);
+                    this.navService.setCancelButton(true);
+                    break;
 
-                // if (p['code']) {
-                //     this.RevenueID = p['code'];
-                // }
+                case 'R':
+                    // set false
+                    this.navService.setSaveButton(false);
+                    this.navService.setCancelButton(false);
+                    // set true
+                    this.navService.setPrintButton(true);
+                    this.navService.setEditButton(true);
+                    this.navService.setDeleteButton(true);
+                    this.navService.setEditField(true);
+
+                    // if (p['code']) {
+                    //     this.RevenueID = p['code'];
+                    // }
+                    break;
             }
+
+            this.activeRoute.data.subscribe(
+                (data) => {
+                    switch (this.evitype) {
+                        case '11I':
+                        case '11E':
+                            data.urls[1].title = "ค้นหารายการคืนของกลาง";
+                            data.urls[2].title = "จัดการข้อมูลรายการคืนของกลาง";
+                            data.codePage = "ILG60-11-02-00-00";
+                            break;
+                        case '12':
+                            data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
+                            data.urls[2].title = "จัดการข้อมูลรายการจัดเก็บเข้าพิพิธภัณฑ์";
+                            data.codePage = "ILG60-12-02-00-00";
+                            break;
+                        case '13':
+                            data.urls[1].title = "ค้นหารายการขายของกลาง";
+                            data.urls[2].title = "จัดการข้อมูลรายการขายของกลาง";
+                            data.codePage = "ILG60-13-02-00-00";
+                            break;
+                        case '14':
+                            data.urls[1].title = "ค้นหารายการทำลายของกลาง";
+                            data.urls[2].title = "จัดการข้อมูลรายการทำลายของกลาง";
+                            data.codePage = "ILG60-14-02-00-00";
+                            break;
+                        case '15G':
+                        case '15D':
+                            data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
+                            data.urls[2].title = "จัดการข้อมูลรายการนำของกลางออกจากคลัง";
+                            data.codePage = "ILG60-15-02-00-00";
+                            break;
+                        case '16':
+                            data.urls[1].title = "ค้นหารายการโอนย้ายของกลาง";
+                            data.urls[2].title = "จัดการข้อมูลรายการโอนย้ายของกลาง";
+                            data.codePage = "ILG60-16-02-00-00";
+                            break;
+                    }
+
+                }
+            );
         });
     }
 

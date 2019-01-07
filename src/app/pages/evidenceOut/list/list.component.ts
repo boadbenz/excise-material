@@ -93,7 +93,12 @@ export class ListComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnNextPage(false);
 
-                this.modal = this.ngbModel.open(this.evidenceTypeModel, { size: 'lg', centered: true });
+                if(this.evitype == "11" || this.evitype == '15'){
+                    this.modal = this.ngbModel.open(this.evidenceTypeModel, { size: 'lg', centered: true });
+                }
+                else{
+                    this._router.navigate(['/evidenceOut/manage', this.evitype, 'C', 'NEW']);
+                }
             }
         })
     }
@@ -113,21 +118,27 @@ export class ListComponent implements OnInit, OnDestroy {
                     switch (this.evitype) {
                         case '11':
                             data.urls[1].title = "ค้นหารายการคืนของกลาง";
+                            data.codePage = "ILG60-11-01-00-00";
                             break;
                         case '12':
                             data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
+                            data.codePage = "ILG60-12-01-00-00";
                             break;
                         case '13':
                             data.urls[1].title = "ค้นหารายการขายทอดตลาด";
+                            data.codePage = "ILG60-13-01-00-00";
                             break;
                         case '14':
                             data.urls[1].title = "ค้นหารายการทำลายของกลาง";
+                            data.codePage = "ILG60-14-01-00-00";
                             break;
                         case '15':
                             data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
+                            data.codePage = "ILG60-15-01-00-00";
                             break;
                         case '16':
                             data.urls[1].title = "ค้นหารายการโอนย้ายของกลาง";
+                            data.codePage = "ILG60-16-01-00-00";
                             break;
                     }
 
@@ -135,6 +146,11 @@ export class ListComponent implements OnInit, OnDestroy {
             );
         });
     }
+
+    clickView(RevenueID: string) {
+        this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', RevenueID]);
+    }
+
     /*
     ShowAlertNoRecord()
     {
@@ -244,9 +260,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
-    clickView(RevenueID: string) {
-        this._router.navigate([`/income/manage/R/${RevenueID}`]);
-    }
+    
 
     async pageChanges(event) {
         this.RevenueList = await this.revenue.slice(event.startIndex - 1, event.endIndex);
