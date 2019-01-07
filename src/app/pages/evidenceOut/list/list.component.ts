@@ -47,7 +47,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     constructor(
         private activeRoute: ActivatedRoute,
-        
+
         private _router: Router,
         private navService: NavigationService,
         private sidebarService: SidebarService,
@@ -55,7 +55,7 @@ export class ListComponent implements OnInit, OnDestroy {
         private preloader: PreloaderService,
         private ngbModel: NgbModal
 
-        
+
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -73,9 +73,6 @@ export class ListComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.sidebarService.setVersion('evidenceOut 0.0.0.1');
         this.RevenueStatus = "";
-
-        alert(this.activeRoute.snapshot.data['title']);
-
         this.active_Route();
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
@@ -110,6 +107,32 @@ export class ListComponent implements OnInit, OnDestroy {
     private active_Route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.evitype = p['type'];
+
+            this.activeRoute.data.subscribe(
+                (data) => {
+                    switch (this.evitype) {
+                        case '11':
+                            data.urls[1].title = "ค้นหารายการคืนของกลาง";
+                            break;
+                        case '12':
+                            data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
+                            break;
+                        case '13':
+                            data.urls[1].title = "ค้นหารายการขายทอดตลาด";
+                            break;
+                        case '14':
+                            data.urls[1].title = "ค้นหารายการทำลายของกลาง";
+                            break;
+                        case '15':
+                            data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
+                            break;
+                        case '16':
+                            data.urls[1].title = "ค้นหารายการโอนย้ายของกลาง";
+                            break;
+                    }
+
+                }
+            );
         });
     }
     /*

@@ -102,6 +102,7 @@
         <div class="table-responsive table-striped ">
             <table #revenueTable class="table">
                 <thead>
+                    <!-- คืนของกลาง -->
                     <tr *ngIf="evitype == '11'">
                         <th style="text-align: center;width:5%">ลำดับ</th>
                         <th>เลขที่คืน</th>
@@ -110,6 +111,65 @@
                         <th style="width:15%">วันที่นำส่งคืน</th>
                         <th style="width:15%">ผู้นำส่งคืน</th>
                         <th style="width:15%">หน่วยงานนำส่งคืน</th>
+                        <th></th>
+                    </tr>
+
+                    <!-- จัดเก็บเข้าพิพิธภัณฑ์ -->
+                    <tr *ngIf="evitype == '12'">
+                        <th style="text-align: center;width:5%">ลำดับ</th>
+                        <th style="width:15%">เลขที่จัดเก็บพิพิธภัณฑ์</th>
+                        <th style="width:15%">วันที่จัดเก็บพิพิธภัณฑ์</th>
+                        <th style="width:15%">เลขที่หนังสือนำส่งคืน</th>
+                        <th style="width:15%">ผู้พิจารณาเห็นชอบ</th>
+                        <th>หน่วยงานนำส่งคืน</th>
+                        <th></th>
+                    </tr>
+
+                    <!-- ขายทอดตลาด -->
+                    <tr *ngIf="evitype == '13'">
+                        <th style="text-align: center;width:5%">ลำดับ</th>
+                        <th style="width:15%">เลขที่ขายทอดตลาด</th>
+                        <th style="width:15%">วันที่ขายทอดตลาด</th>
+                        <th style="width:15%">เลขที่หนังสืออนุมัติ</th>
+                        <th style="width:15%">วันที่อนุมัติ</th>
+                        <th style="width:15%">ผู้เสนออนุมัติ</th>
+                        <th>หน่วยงาน</th>
+                        <th></th>
+                    </tr>
+
+                    <!-- ทำลายของกลาง -->
+                    <tr *ngIf="evitype == '14'">
+                        <th style="text-align: center;width:5%">ลำดับ</th>
+                        <th style="width:15%">เลขที่ทำลายของกลาง</th>
+                        <th style="width:15%">วันที่ทำลายของกลาง</th>
+                        <th style="width:15%">เลขที่หนังสืออนุมัติ</th>
+                        <th style="width:15%">วันที่อนุมัติ</th>
+                        <th style="width:15%">ผู้เสนออนุมัติ</th>
+                        <th>หน่วยงาน</th>
+                        <th></th>
+                    </tr>
+
+                    <!-- นำของกลางออกจากคลัง -->
+                    <tr *ngIf="evitype == '15'">
+                        <th style="text-align: center;width:5%">ลำดับ</th>
+                        <th style="width:15%">เลขที่นำออกจากคลัง</th>
+                        <th style="width:15%">วันที่นำออกจากคลัง</th>
+                        <th style="width:15%">เลขที่หนังสืออนุมัติ</th>
+                        <th style="width:15%">วันที่อนุมัติ</th>
+                        <th style="width:15%">ผู้นำออกจากคลัง</th>
+                        <th>หน่วยงาน</th>
+                        <th></th>
+                    </tr>
+
+                    <!-- โอนย้ายของกลาง -->
+                    <tr *ngIf="evitype == '16'">
+                        <th style="text-align: center;width:5%">ลำดับ</th>
+                        <th style="width:15%">เลขที่โอนย้าย</th>
+                        <th style="width:15%">วันที่โอนย้าย</th>
+                        <th style="width:15%">เลขที่หนังสือนำส่ง</th>
+                        <th style="width:15%">วันที่อนุมัติ</th>
+                        <th style="width:15%">ผู้นำโอนย้าย</th>
+                        <th>หน่วยงาน</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -135,7 +195,7 @@
                         <td>RC0001</td>
                         <td>03 มกราคม 2562</td>
                         <td>กค. 001/2562</td>
-                        <td>03 มกราคม 2562</td>
+                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
                         <td>หน่วยงานภายใน</td>
                         <td class="text-center;">
@@ -149,7 +209,7 @@
                         <td>RC0002</td>
                         <td>03 มกราคม 2562</td>
                         <td>กค. 001/2562</td>
-                        <td>03 มกราคม 2562</td>
+                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
                         <td>หน่วยงานภายใน</td>
                         <td class="text-center;">
@@ -163,7 +223,7 @@
                         <td>RC0003</td>
                         <td>03 มกราคม 2562</td>
                         <td>กค. 001/2562</td>
-                        <td>03 มกราคม 2562</td>
+                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
                         <td>หน่วยงานภายใน</td>
                         <td class="text-center;">
@@ -177,7 +237,7 @@
                         <td>RC0004</td>
                         <td>03 มกราคม 2562</td>
                         <td>กค. 001/2562</td>
-                        <td>03 มกราคม 2562</td>
+                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
                         <td>หน่วยงานภายใน</td>
                         <td class="text-center;">
@@ -191,7 +251,7 @@
                         <td>RC0005</td>
                         <td>03 มกราคม 2562</td>
                         <td>กค. 001/2562</td>
-                        <td>03 มกราคม 2562</td>
+                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
                         <td>สสท.ระนอง สาขาเมือง</td>
                         <td>หน่วยงานภายใน</td>
                         <td class="text-center;">
