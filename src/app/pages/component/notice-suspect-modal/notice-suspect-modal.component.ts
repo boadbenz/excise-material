@@ -214,10 +214,10 @@ export class NoticeSuspectModalComponent implements OnInit, OnDestroy {
             item.CompanyFullName = `${item.CompanyTitle} ${item.CompanyName}`;
             let fullname = "";
             // if(item.SuspectID){
-              fullname = `${item.SuspectTitleName||item.LawbreakerTitleName} 
-                        ${item.SuspectFirstName||item.LawbreakerFirstName} 
-                        ${item.SuspectMiddleName||item.LawbreakerMiddleName} 
-                        ${item.SuspectLastName||item.LawbreakerLastName}`;
+              fullname = `${item.SuspectTitleName||item.LawbreakerTitleName||''} 
+                        ${item.SuspectFirstName||item.LawbreakerFirstName||''} 
+                        ${item.SuspectMiddleName||item.LawbreakerMiddleName||''} 
+                        ${item.SuspectLastName||item.LawbreakerLastName||''}`;
             // }else{
             //   fullname = `${item.LawbreakerTitleName} ${item.LawbreakerFirstName} ${item.LawbreakerMiddleName} ${item.LawbreakerLastName}`;
             // }

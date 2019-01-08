@@ -156,7 +156,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
             LinkPhoto: new FormControl(null),
             PhotoDesc: new FormControl(null),
             IsActive: new FormControl(1)
-        })
+        });
     }
 
     ngOnDestroy(): void {
@@ -319,6 +319,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
             if (res.LinkPhoto) {
                 this.imgNobody.nativeElement.src = res.LinkPhoto;
             }
+            this.navService.setDeleteButton(true);
             this.preloader.setShowPreloader(false);
         });
 
