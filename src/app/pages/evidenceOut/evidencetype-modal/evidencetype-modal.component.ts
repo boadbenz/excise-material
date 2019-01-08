@@ -20,7 +20,7 @@ export class EvidenceTypeModalComponent implements OnInit {
         }
     ]
 
-    @Input() RevenueID: string;
+    @Input() Evitype: string;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
@@ -33,13 +33,8 @@ export class EvidenceTypeModalComponent implements OnInit {
     ngOnInit() {
     }
 
-    onExternal() {
-        this._router.navigate(['/evidenceOut/manage', 'E', 'C', 'NEW']);
-        this.close('');
-    }
-
-    onInternal() {
-        this._router.navigate(['/evidenceOut/manage', 'I', 'C', 'NEW']);
+    onNextPage(page) {
+        this._router.navigate(['/evidenceOut/manage', page, 'C', 'NEW']);
         this.close('');
     }
 

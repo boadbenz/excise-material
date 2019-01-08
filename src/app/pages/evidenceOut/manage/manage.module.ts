@@ -20,7 +20,7 @@ const routes: Routes = [
             // title: 'จัดการข้อมูล',
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหารายการคืนของกลาง', url: '/evidenceOut/list' },
+                { title: 'ค้นหารายการคืนของกลาง', url: '/evidenceIn/list' },
                 { title: 'จัดการข้อมูลรายการคืนของกลาง' },
                 
             ],

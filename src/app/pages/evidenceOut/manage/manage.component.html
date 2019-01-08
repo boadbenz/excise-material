@@ -1,5 +1,5 @@
 <ng-template #printDocModal let-c="close" let-d="dismiss">
-    <app-printdoc-modal (c)="modal.close()" (d)="modal.dismiss()" [RevenueID]="RevenueID"></app-printdoc-modal>
+    <app-printdoc-modal (c)="modal.close()" (d)="modal.dismiss()" [Evitype]="evitype"></app-printdoc-modal>
 </ng-template>
 
 <!-- <div class="wizard-content" style="margin-bottom: 10px;">
@@ -42,158 +42,7 @@
 
 
 <form class="form-horizontal">
-    <!-- รายละเอียดประกอบการนำส่ง Internal -->
-    <div *ngIf="evitype == 'I'" class="card card-outline-bluish unset-radius">
-        <div class="card-header unset-radius">
-            <app-card-actions-collapse></app-card-actions-collapse>
-            <h4 class="card-title m-b-0">รายละเอียดประกอบการนำส่ง</h4>
-        </div>
-        <div class="card-body">
-
-
-            <div class="row">
-                <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่ใบงาน :</label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" name="RevenueCode" [(ngModel)]="RevenueCode" class="form-control form-control-sm" disabled>
-                    </div>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">วันที่จับกุม :
-                </label>
-                <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 30px;" class="form-control form-control-sm"
-                        readonly>
-                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" style="height: 30px;" class="form-control form-control-sm"
-                        readonly>
-                </div>
-            </div>
-
-            <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">ผู้กล่าวหา :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" readonly>
-                    </div>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">สถานที่จับกุม :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่คดีรับคำกล่าวโทษ :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับคดี :
-                </label>
-                <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" readonly>
-                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" readonly>
-                </div>
-            </div>
-
-            <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">ฐานความผิดมาตรา :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">ฐานความผิด :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">บทกำหนดโทษ :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">อัตราโทษ :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
-                </label>
-                <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" readonly>
-                    <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                    <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" readonly>
-                </div>
-            </div>
-            <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" readonly>
-                    </div>
-                </div>
-
-                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
-                </label>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="form-group ">
-                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-                </label>
-                <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- รายละเอียดประกอบการนำส่ง External -->
+    <!-- รายละเอียดประกอบการนำส่ง จากหน่วยงานภายนอก -->
     <div *ngIf="evitype == 'E'" class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
@@ -257,18 +106,30 @@
                     <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
                 </div>
             </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำส่ง :</label>
+                <div class="form-group col-lg-10 col-md-12">
+                    <input type="text" [(ngModel)]="Remarks" name="Remarks" class="form-control" [disabled]="showEditField">
+                </div>
+            </div>
         </div>
     </div>
-
 
     <!-- รายละเอียดการตรวจรับของกลาง -->
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
-            <h4 class="card-title m-b-0">รายละเอียดการตรวจรับของกลาง</h4>
+            <h4 *ngIf="evitype == '11I' || evitype == '11E'" class="card-title m-b-0">รายละเอียดการคืนของกลาง</h4>
+            <h4 *ngIf="evitype == '12'" class="card-title m-b-0">รายละเอียดของกลางที่จัดเก็บเข้าพิพิธภัณฑ์</h4>
+            <h4 *ngIf="evitype == '13'" class="card-title m-b-0">รายละเอียดการขายของกลาง</h4>
+            <h4 *ngIf="evitype == '14'" class="card-title m-b-0">รายละเอียดการทำลายของกลาง</h4>
+            <h4 *ngIf="evitype == '15G'" class="card-title m-b-0">รายละเอียดของกลางที่นำออกไปใช้ในกิจกรรมหรือโครงการของทางราชการ</h4>
+            <h4 *ngIf="evitype == '15D'" class="card-title m-b-0">รายละเอียดของกลางที่นำออกไปบริจาค</h4>
+            <h4 *ngIf="evitype == '16'" class="card-title m-b-0">รายละเอียดของกลางที่โอนย้าย</h4>
         </div>
         <div class="card-body">
-            <div *ngIf="evitype == 'E'" class="row form-group">
+            <div *ngIf="evitype != '11I'" class="row form-group">
                 <div class="col-lg-10 col-md-9 col-sm-8"></div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <button class="btn btn-block btn-themecolor" (click)="AddDocument()" [disabled]="showEditField">เพิ่มของกลาง</button>
@@ -278,62 +139,130 @@
             <form class="form-horizontal">
                 <div class="card">
                     <div class="card-body">
-
                         <div class="table-responsive table-striped ">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>ลำดับ</th>
+                                        <th *ngIf="evitype == '11I' || evitype == '14'"></th>
+                                        <th style="text-align: center">ลำดับ</th>
+                                        <th *ngIf="evitype == '11E'">เลขหนังสือนำส่ง</th>
                                         <th>เลขทะเบียนบัญชี</th>
-                                        <th>ของกลาง</th>
-                                        <th>จำนวนส่ง</th>
+                                        <th>ชื่อของกลาง</th>
+                                        <th *ngIf="evitype == '11I'">สถานะของกลาง</th>
+                                        <th>จำนวน</th>
                                         <th>หน่วย</th>
-                                        <th>ชำรุด</th>
+                                        <th *ngIf="evitype == '11I' || evitype == '11E'">จำนวนคืน</th>
+                                        <th *ngIf="evitype == '12'">จำนวนจัดเก็บ</th>
+                                        <th *ngIf="evitype == '13'">จำนวนขาย</th>
+                                        <th *ngIf="evitype == '14'">จำนวนทำลาย</th>
+                                        <th *ngIf="evitype == '15G' || evitype == '15D'">ชำรุด</th>
+                                        <th *ngIf="evitype == '16'">จำนวนส่ง</th>
                                         <th>หน่วย</th>
-                                        <th>จำนวนรับ</th>
-                                        <th>หน่วย</th>
-                                        <th>หมายเหตุ</th>
+                                        <th *ngIf="evitype == '15G' || evitype == '15D'">จำนวนรับ</th>
+                                        <th *ngIf="evitype == '15G' || evitype == '15D'">หน่วย</th>
+                                        <th *ngIf="evitype == '11E' || evitype == '11I' || evitype == '15G' || evitype == '15D' || evitype == '16'">หมายเหตุ</th>
+                                        <th *ngIf="evitype == '12'">สถานะความเห็นชอบ</th>
+                                        <th *ngIf="evitype == '13' || evitype == '14'">สถานะราชการ</th>
+                                        <th *ngIf="evitype == '13'">จำนวนเงิน</th>
+                                        <th *ngIf="evitype == '13'">ใบเสร็จเล่มที่</th>
+                                        <th *ngIf="evitype == '13'">ใบเสร็จเลขที่</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of ArrestProduct; let i=index;">
-                                        <td>{{i + 1}}</td>
-                                        <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
-                                        </td>
-                                        <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
-                                        </td>
-                                        <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
-                                        </td>
-                                        <td>
-                                            <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control" [disabled]="showEditField">
-                                                <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
-                                                </option>
+                                    <tr>
+                                        <th *ngIf="evitype == '11I' || evitype == '14'">
+                                            <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();"
+                                                [disabled]="showEditField">
+                                            <label for="H_0" class="m-0"></label>
+                                        </th>
+                                        <th style="text-align: center">{{1}}</th>
+
+                                        <!-- เลขหนังสือนำส่ง -->
+                                        <th *ngIf="evitype == '11E'">
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- เลขทะเบียนบัญชี -->
+                                        <th>
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- ชื่อของกลาง -->
+                                        <th>
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- สถานะของกลาง -->
+                                        <th *ngIf="evitype == '11I'">
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- จำนวน -->
+                                        <th>
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- หน่วย -->
+                                        <th>
+                                            <select class="form-control" [disabled]="showEditField">
                                             </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
-                                        </td>
-                                        <td>
-                                            <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control" [disabled]="showEditField">
-                                                <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
-                                                </option>
+                                        </th>
+
+                                        <!-- จำนวนคืน, จำนวนจัดเก็บ, จำนวนขาย, จำนวนทำลาย, ชำรุด, จำนวนส่ง -->
+                                        <th>
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- หน่วย -->
+                                        <th>
+                                            <select class="form-control" [disabled]="showEditField">
                                             </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
-                                        </td>
-                                        <td>
-                                            <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control" [disabled]="showEditField">
-                                                <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
-                                                </option>
+                                        </th>
+
+                                        <!-- จำนวนรับ -->
+                                        <th *ngIf="evitype == '15G' || evitype == '15D'">
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- หน่วย -->
+                                        <th *ngIf="evitype == '15G' || evitype == '15D'">
+                                            <select class="form-control" [disabled]="showEditField">
                                             </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
-                                        </td>
+                                        </th>
+
+                                        <!-- หมายเหตุ -->
+                                        <th *ngIf="evitype == '11E' || evitype == '11I' || evitype == '15G' || evitype == '15D' || evitype == '16'">
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- สถานะความเห็นชอบ -->
+                                        <th *ngIf="evitype == '12'">
+                                            <select class="form-control" [disabled]="showEditField">
+                                            </select>
+                                        </th>
+
+                                        <!-- สถานะราชการ -->
+                                        <th *ngIf="evitype == '13' || evitype == '14'">
+                                            <select class="form-control" [disabled]="showEditField">
+                                            </select>
+                                        </th>
+
+                                        <!-- จำนวนเงิน -->
+                                        <th *ngIf="evitype == '13'">
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- ใบเสร็จเล่มที่ -->
+                                        <th *ngIf="evitype == '13'">
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+
+                                        <!-- ใบเสร็จเลขที่ -->
+                                        <th *ngIf="evitype == '13'">
+                                            <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                        </th>
+                                        <th></th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -341,59 +270,132 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="" class="col-lg-2 col-md-4 control-label">เลขที่รับ :
-                    </label>
-                    <div class="col-lg-4 col-md-7 col-sm-8">
-                        <div class="form-group ">
-                            <input type="text" [(ngModel)]="ArrestCode" name="ArrestCode" class="form-control form-control-sm" readonly>
+                <!-- คืนของกลาง, นำของกลางออกจากคลัง, โอนย้ายของกลาง  -->
+                <div *ngIf="evitype == '11I' || evitype == '11E' || evitype == '15G' || evitype == '15D' || evitype == '16'">
+                    <div class="row">
+                        <label *ngIf="evitype == '11I' || evitype == '11E'" for="" class="col-lg-2 col-md-4 control-label">เลขที่คืน :</label>
+                        <label *ngIf="evitype == '15G' || evitype == '15D' || evitype == '16'" for="" class="col-lg-2 col-md-4 control-label">เลขที่นำออก :</label>
+                        <div class="col-lg-4 col-md-7 col-sm-8">
+                            <div class="form-group ">
+                                <input type="text" [(ngModel)]="ArrestCode" name="ArrestCode" class="form-control form-control-sm" readonly>
+                            </div>
+                        </div>
+
+                        <label *ngIf="evitype == '11I' || evitype == '11E'" for="" class="col-lg-2 col-md-4 control-label">วันที่คืน :</label>
+                        <label *ngIf="evitype == '15G' || evitype == '15D' || evitype == '16'" for="" class="col-lg-2 col-md-4 control-label">วันที่นำออก :</label>
+                        <div class="col-lg-4 col-md-7 col-sm-9">
+                            <div class="form-group input-group">
+                                <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                                    (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
+
+                                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                                <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" readonly>
+                            </div>
                         </div>
                     </div>
 
-                    <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับ :
-                    </label>
-                    <div class="col-lg-4 col-md-7 col-sm-9">
-                        <div class="form-group input-group">
-                            <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
-                                (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
+                    <div class="row">
+                        <label *ngIf="evitype == '11I' || evitype == '11E'" for="" class="col-lg-2 col-md-4 control-label">ผู้คืน :</label>
+                        <label *ngIf="evitype == '15G' || evitype == '15D' || evitype == '16'" for="" class="col-lg-2 col-md-4 control-label">ผู้นำออก :</label>
+                        <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ"
+                                aria-label="Number" matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)"
+                                (focus)="StaffSendonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                                required>
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
+                                    (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
+                                    {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
 
-                            <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                            <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" readonly>
+                        <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+                        </label>
+                        <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                            <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                                required readonly>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                        </label>
+                        <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                            <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                                required readonly>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="" class="col-lg-2 col-md-4 control-label">ผู้ตรวจรับ :
-                    </label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ"
-                            aria-label="Number" matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)"
-                            (focus)="StaffSendonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                            required>
-                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
-                                (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
-                                {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
-                            </mat-option>
-                        </mat-autocomplete>
+
+                <!-- จัดเก็บเข้าพิพิธภัณฑ์, ขายทอดตลาด, ทำลายของกลาง -->
+                <div *ngIf="evitype == '12' || evitype == '13' || evitype == '14'">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();"
+                                [disabled]="showEditField">
+                            <label *ngIf="evitype == '12'" for="H_0" class="m-0">นำของกลางจัดเก็บเข้าพิพิธภัณฑ์เรียบร้อยแล้ว</label>
+                            <label *ngIf="evitype == '13'" for="H_0" class="m-0">นำของกลางขายเรียบร้อยแล้ว</label>
+                            <label *ngIf="evitype == '14'" for="H_0" class="m-0">ทำลายของกลางเรียบร้อยแล้ว</label>
+                        </div>
+
+                        <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">เลขที่เก็บเข้าพิพิธภัณฑ์ :</label>
+                        <label *ngIf="evitype == '13'" for="" class="col-lg-2 col-md-4 control-label">เลขที่ขาย :</label>
+                        <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">เลขที่ทำลาย :</label>
+                        <div class="col-lg-4 col-md-7 col-sm-8">
+                            <div class="form-group ">
+                                <input type="text" [(ngModel)]="ArrestCode" name="ArrestCode" class="form-control form-control-sm" readonly>
+                            </div>
+                        </div>
                     </div>
 
-                    <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
-                    </label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                            required readonly>
+                    <div class="row">
+                        <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">วันที่จัดเก็บ :</label>
+                        <label *ngIf="evitype == '13'" for="" class="col-lg-2 col-md-4 control-label">วันที่ขาย :</label>
+                        <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">วันที่ทำลาย :</label>
+                        <div class="col-lg-4 col-md-7 col-sm-9">
+                            <div class="form-group input-group">
+                                <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                                    (dateChanged)="onSDateChange($event)" ngModel></my-date-picker-th>
+
+                                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                                <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" readonly>
+                            </div>
+                        </div>
+
+                        <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">ผู้จัดเก็บ :</label>
+                        <label *ngIf="evitype == '13'" for="" class="col-lg-2 col-md-4 control-label">ประธานขายของกลาง :</label>
+                        <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">ประธานทำลายของกลาง :</label>
+                        <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="พิมพ์ข้อความ"
+                                aria-label="Number" matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)"
+                                (focus)="StaffSendonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                                required>
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
+                                    (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
+                                    {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
                     </div>
 
-                </div>
+                    <div class="row">
+                        <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+                        </label>
+                        <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                            <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                                required readonly>
+                        </div>
 
-                <div class="row">
-                    <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-                    </label>
-                    <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                        <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                            required readonly>
+                        <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                        </label>
+                        <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                            <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                                required readonly>
+                        </div>
                     </div>
                 </div>
             </form>

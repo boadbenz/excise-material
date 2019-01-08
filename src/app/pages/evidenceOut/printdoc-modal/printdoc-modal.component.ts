@@ -15,13 +15,91 @@ export class PrintDocModalComponent implements OnInit {
     printDoc = [
         {
             IsChecked: false,
-            DocName: 'รายงานนำส่งรายได้',
+            DocName: 'ใบเสร็จชำระภาษี',
+            DocType: 1,
+            DocTypeName: 'เอกสารแนบภายใน',
+            EvidenceType: "11"
+        },
+        {
+            IsChecked: false,
+            DocName: 'หนังสือแจ้งคืน',
+            DocType: 1,
+            DocTypeName: 'เอกสารแนบภายใน',
+            EvidenceType: "11"
+        },
+        {
+            IsChecked: false,
+            DocName: 'รายการบัญชีของกลางเพื่อพิจารณาเห็นชอบ',
             DocType: 0,
-            DocTypeName: 'แบบฟอร์ม'
+            DocTypeName: 'แบบฟอร์ม',
+            EvidenceType: "12"
+        },
+        {
+            IsChecked: false,
+            DocName: 'หนังสือพิจรณาเห็นชอบ',
+            DocType: 1,
+            DocTypeName: 'เอกสารแนบภายใน',
+            EvidenceType: "12"
+        },
+        {
+            IsChecked: false,
+            DocName: 'รายการบัญชีของกลางเพื่อพิจารณาอนุมัติ',
+            DocType: 0,
+            DocTypeName: 'แบบฟอร์ม',
+            EvidenceType: "13"
+        },
+        {
+            IsChecked: false,
+            DocName: 'รายงานผลการขายทอดตลาด',
+            DocType: 1,
+            DocTypeName: 'เอกสารแนบภายใน',
+            EvidenceType: "13"
+        },
+        {
+            IsChecked: false,
+            DocName: 'รายการบัญชีของกลางเพื่อพิจารณาอนุมัติ',
+            DocType: 0,
+            DocTypeName: 'แบบฟอร์ม',
+            EvidenceType: "14"
+        },
+        {
+            IsChecked: false,
+            DocName: 'รายงานผลการทำลายของกลาง',
+            DocType: 1,
+            DocTypeName: 'เอกสารแนบภายใน',
+            EvidenceType: "14"
+        },
+        {
+            IsChecked: false,
+            DocName: 'บันทึกรับมอบของกลางจากคณะกรรมการเก็บรักษาของกลาง',
+            DocType: 0,
+            DocTypeName: 'แบบฟอร์ม',
+            EvidenceType: "15"
+        },
+        {
+            IsChecked: false,
+            DocName: 'บันทึกรับมอบของกลางจากคณะกรรมการเก็บรักษาของกลาง',
+            DocType: 1,
+            DocTypeName: 'เอกสารแนบภายใน',
+            EvidenceType: "15"
+        },
+        {
+            IsChecked: false,
+            DocName: 'หนังสือนำส่ง',
+            DocType: 1,
+            DocTypeName: 'แบบฟอร์ม',
+            EvidenceType: "16"
+        },
+        {
+            IsChecked: false,
+            DocName: 'หนังสืออนุมัติ',
+            DocType: 1,
+            DocTypeName: 'เอกสารแนบภายใน',
+            EvidenceType: "16"
         }
     ]
 
-    @Input() RevenueID: string;
+    @Input() Evitype: string;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
@@ -32,6 +110,7 @@ export class PrintDocModalComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.printDoc = this.printDoc.filter(x => x.EvidenceType == this.Evitype);
     }
 
     /*onPrint(f: any) {
@@ -74,12 +153,12 @@ export class PrintDocModalComponent implements OnInit {
             //alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
         }
     }
-
+*/
     dismiss(e: any) {
         this.d.emit(e);
     }
 
     close(e: any) {
         this.c.emit(e);
-    }*/
+    }
 }
