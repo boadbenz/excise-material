@@ -63,8 +63,11 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.33');
+        this.sidebarService.setVersion('0.0.2.34');
         this.paginage.TotalItems = 0;
+
+        let currentdate = new Date();
+        this.myDatePickerOptions.disableSince = {year: currentdate.getFullYear(), month: currentdate.getMonth()+1, day: currentdate.getDate()+1};
 
         // this.preLoaderService.setShowPreloader(true);
         // await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
@@ -190,7 +193,7 @@ export class ListComponent implements OnInit, OnDestroy {
             const edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                this.showSwal(Message.checkDate, "warning");
                 setTimeout(() => {
                     this.dateStartTo = { date: _sdate.date };
                 }, 0);

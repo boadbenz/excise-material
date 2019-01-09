@@ -58,9 +58,9 @@ export class LoginComponent implements OnInit {
         // };
         // await this.authService.ssoService(params).subscribe(async res => {
         //   if (res.ResponseMessage == "SUCCESS") {
-        //     console.log("res ssoService : ", res);
+        //     // console.log("res++++ : ", res);
         //     await this.authService.userAndPrivilegeInfo(User).subscribe(async res => {
-        //       console.log("getpin : ", res);
+        //       // console.log("getpin : ", res);
         //       if (res.pin) {
         //         // console.log("Hi pin : ", res.pin)
         //         const paramsPinID = {
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
         //         }
         //         if (User == Pass) {
         //           await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
-        //              console.log("res eofficeInfo  : ", res);
+        //             // console.log("res eofficeInfo  : ", res);
         //             if (res.Status == "OK") {
         //               this.fullName = res.PersonInformation.PersonTHTitle + " " +
         //                 res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
@@ -100,7 +100,6 @@ export class LoginComponent implements OnInit {
           Password: Pass
         };
         await this.authService.userAuth(params).subscribe(async res => {
-          console.log("res++++ : ", res);
           if (res.StaffCode != null) {
             this.fullName = res.TitleName + " " + res.FirstName + " " + res.LastName;
             this.operationPosName = res.OperationPosName;

@@ -146,7 +146,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.33');
+        this.sidebarService.setVersion('0.0.2.34');
 
         this.navigate_service();
 
@@ -546,9 +546,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsArrest: res.IsArrest || 1
         });
 
-        if(res.IsArrest==1){
-            this.navService.setDeleteButton(false);
-        }
+        // if(res.IsArrest==1){
+        //     this.navService.setDeleteButton(false);
+        // }
 
         const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
         staff.map(item => {
