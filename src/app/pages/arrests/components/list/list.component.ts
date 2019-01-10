@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
 import { pagination } from 'app/config/pagination';
@@ -8,15 +8,17 @@ import { Arrest } from '../../models/arrest';
 import { getDateMyDatepicker, compareDate, toLocalShort, convertDateForSave, MyDatePickerOptions } from 'app/config/dateFormat';
 import { Message } from 'app/config/message';
 import { ArrestService } from '../../services';
-import { Subscription, Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/takeUntil';
 import swal from 'sweetalert2'
+import { FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit, OnDestroy, DoCheck {
+
 
     // private subOnSearch: Subscription;
     // private subSetNextPage: Subscription;
@@ -24,7 +26,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     paginage = pagination;
     dataTable: any;
-    advSearch: any;
+    advSearch: BehaviorSubject<Boolean>;
     private dateStartFrom: any;
     private dateStartTo: any;
     OccurrenceDateTo: any;
@@ -33,6 +35,7 @@ export class ListComponent implements OnInit, OnDestroy {
     arrest = new Array<Arrest>();
 
     @ViewChild('arrestTable') arrestTable: ElementRef;
+    @ViewChild('advForm') advForm: FormGroup;
 
     myDatePickerOptions = MyDatePickerOptions;
 
@@ -60,7 +63,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.advSearch.next(true);
-        
+
         this.sidebarService.setVersion(this.arrestService.version);
 
         this.navService.searchByKeyword
@@ -80,6 +83,12 @@ export class ListComponent implements OnInit, OnDestroy {
                     this.router.navigate(['/arrest/manage', 'C', 'NEW']);
                 }
             })
+    }
+
+    ngDoCheck(): void {
+        if (this.advSearch.getValue() == false && this.advForm != undefined) {
+            this.advForm.reset();
+        };
     }
 
     onSearch(Textsearch: any) {
@@ -173,6 +182,6 @@ export class ListComponent implements OnInit, OnDestroy {
         // this.subSetNextPage.unsubscribe();
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
-        this.advSearch = false;
+        this.advSearch.next(false);
     }
 }

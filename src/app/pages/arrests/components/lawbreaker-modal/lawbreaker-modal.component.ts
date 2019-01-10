@@ -10,6 +10,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import swal from 'sweetalert2'
 import { Acceptability } from '../../models';
+import { clearFormArray } from '../../arrest.helper';
 
 @Component({
   selector: 'app-lawbreaker-modal',
@@ -83,7 +84,7 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
       swal('', Message.noRecord, 'warning');
       return;
     }
-
+    debugger
     let law = [];
     await list.filter(item => item.IsActive == 1)
       .map(async (item: fromModel.ArrestLawbreaker, i) => {
@@ -115,6 +116,9 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
 
   async pageChanges(event: any) {
     const list = await this.lawbreaker.slice(event.startIndex - 1, event.endIndex);
+    if (this.Lawbreaker.length > 0) {
+      clearFormArray(this.Lawbreaker)
+    }
     this.setItemFormArray(list, 'Lawbreaker');
   }
 
@@ -157,7 +161,7 @@ export function setViewLawbreaker(item: fromModel.ArrestLawbreaker) {
           break;
       }
       break;
-      
+
     case 2: // นิติบุคคล
       item.ReferenceID = item.CompanyRegistrationNo;
       break;

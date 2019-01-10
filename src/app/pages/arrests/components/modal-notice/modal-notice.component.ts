@@ -37,7 +37,8 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
     @Output() c = new EventEmitter();
     @Output() outputNotice = new EventEmitter<ArrestNotice[]>();
 
-    @ViewChild('noticeTable') noticeTable: ElementRef
+    @ViewChild('noticeTable') noticeTable: ElementRef;
+    @ViewChild('advForm') advForm: FormGroup;
 
     constructor(
         // private arrestService: ArrestsService,
@@ -52,7 +53,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         this.noticeFG = this.fb.group({
             ArrestNotice: this.fb.array([])
         })
-    }
+    }    
 
     ngOnDestroy(): void {
         this.paginage.TotalItems = 0;
@@ -160,6 +161,9 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
     toggle() {
         this.advSearch = !this.advSearch;
+        if (this.advSearch == false && this.advForm != undefined) {
+            this.advForm.reset();
+        }
     }
 
     dismiss(e: any) {
@@ -171,6 +175,8 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         if (n.length) {
             this.outputNotice.emit(n);
             this.c.emit(e);
+        } else {
+            swal('', 'กรุณาเลือกรายการใบแจ้งความนำจับ', 'warning')
         }
     }
 
