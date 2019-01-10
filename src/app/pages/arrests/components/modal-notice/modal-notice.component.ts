@@ -98,8 +98,18 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
             item.IsChecked = false;
             item.NoticeDateString = toLocalShort(item.NoticeDate);
             item.NoticeDate = item.NoticeDate;
-            item.ArrestNoticeStaff.map(s => s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`);
-            item.ArrestNoticeSuspect.map(s => s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`);
+            const staff = item.ArrestNoticeStaff
+                .map(s => {
+                    s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+                    return s;
+                });
+            item.ArrestNoticeStaff = staff;
+            const suspect = item.ArrestNoticeSuspect
+                .map(s => {
+                    s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+                    return s;
+                });
+            item.ArrestNoticeSuspect = suspect;
         })
 
         this.notice = list;
