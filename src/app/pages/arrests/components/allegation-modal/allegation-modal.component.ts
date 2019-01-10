@@ -89,6 +89,9 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
             x.IsChecked = false;
             return x;
         });
+        const __list = await this.arrestLawGuitbase.slice(0, 5);
+        const lawGuitbase = await this.setArrestLawGuitbase(__list);
+        this.lawGroupFG.setControl('LawGuiltbase', lawGuitbase);
         this.paginage.TotalItems = list.length;
     }
 
@@ -200,7 +203,6 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
         })
         this.outputArrestIndictment.emit(indictment);
         this.c.emit(e);
-
     }
 
     async pageChanges(event: any) {
