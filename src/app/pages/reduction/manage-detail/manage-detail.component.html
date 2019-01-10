@@ -206,18 +206,18 @@
         </thead>
         <tbody>
           <tr class="footable" *ngFor="let item of reductionDataTable; let i = index;">
-            <td>{{item.fullName}}</td>
-            <td>{{item.exhibit}}</td>
-            <td>{{item.oldFine}}</td>
+            <td>{{item.LawbreakerName}}</td>
+            <td>{{item.ProductDesc}}</td>
+            <td>{{item.OldCompareFine}}</td>
             <td>
-              <input type="text" [(ngModel)]="item.newFine" name="newFine" class="form-control" [disabled]="showField">
+              <input type="text" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField">
             </td>
-            <td>{{item.diffFine}}</td>
-            <td class="status-increase" *ngIf="item.status">ปรับเพิ่ม</td>
-            <td class="status-decrease" *ngIf="!item.status">ปรับลด</td>
-            <td>{{item.bribe}}</td>
-            <td>{{item.prize}}</td>
-            <td>{{item.treasury}}</td>
+            <td>{{item.CompareFineDiff}}</td>
+            <td class="status-increase" *ngIf="item.CompareFineStatus">ปรับเพิ่ม</td>
+            <td class="status-decrease" *ngIf="!item.CompareFineStatus">ปรับลด</td>
+            <td>{{item.CompareFineTreasuryMoney }}</td>
+            <td>{{item.CompareFineBribeMoney}}</td>
+            <td>{{item.CompareFineRewardMoney}}</td>
           </tr>
         </tbody>
       </table>
@@ -249,11 +249,11 @@
         <tbody>
           <tr class="footable" *ngFor="let item of payFineDataTable; let i = index;">
             <td class="text-center">{{i+1}}</td>
-            <td>{{item.fullName}}</td>
-            <td>{{item.dateFine}}</td>
+            <td>{{item.LawbreakerName}}</td>
+            <td>{{item.PaymentDate}}</td>
             <td>{{item.finer}}</td>
             <td>{{item.payment}}</td>
-            <td>{{item.receiptNo}}</td>
+            <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.receiptRef}}</td>
             <td>{{item.status}}</td>
             <td>
