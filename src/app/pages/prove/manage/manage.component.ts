@@ -535,6 +535,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                         if (item.IsProdScience == true) {
                             item.ProveScienceID = ProveScienceID;
+                            item.IsProveScience = "1";
+                        }
+                        else {
+                            item.ProveScienceID = null;
+                            item.IsProveScience = "0";
                         }
 
                         item.ReferenceDate = "";
@@ -652,9 +657,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.lsProveProduct.map(async item => {
                 if (item.IsProdScience == true) {
                     item.ProveScienceID = ProveScienceID;
+                    item.IsProveScience = "1";
                 }
                 else {
-                    item.ProveScienceID = "";
+                    item.ProveScienceID = null;
+                    item.IsProveScience = "0";
                 }
 
                 item.ReferenceDate = "";
@@ -1107,10 +1114,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                     item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? 'ของกลางลำดับที่ ' + pIndex : item.ProveResult}`;
                     item.VatProve = (+item.VatProve).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });;
 
-                    if(item.ProveScienceID == '0'){
+                    if (item.ProveScienceID == '0') {
                         item.IsProdScience = false;
                     }
-                    else{
+                    else {
                         item.IsProdScience = true;
                     }
 
@@ -1223,8 +1230,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ArrestProduct = [];
 
                 await this.proveService.ArrestIndictmentProductgetByIndictmentID(this.IndictmentID).then(async res => {
-                    if(res.IsSuccess != "False")
-                    {
+                    if (res.IsSuccess != "False") {
                         if (res.length > 0) {
                             for (var i = 0; i < res.length; i += 1) {
                                 this.oProveProduct = {
@@ -1288,14 +1294,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                                     IsNewItem: true,
                                     IsDelItem: false
                                 }
-    
+
                                 this.ArrestProduct.push(this.oProveProduct);
                             }
-    
+
                             this.getProveProduct();
                         }
                     }
-                    else{
+                    else {
                         this.ShowAlertError("API ArrestIndictmentProductgetByIndictmentID :: Response Error !!");
                         this.preloader.setShowPreloader(false);
                     }
@@ -1337,12 +1343,110 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // this.ShowDeliveryField = true;
                 this.oProveProduct = {};
                 this.preloader.setShowPreloader(false);
+
+                this.LoadDataFromLocalStorage()
             }
         }
         else {
             this.getProveByID();
         }
     }
+
+    LoadDataFromLocalStorage() {
+        this.oProve.ProveStationCode = localStorage.getItem("officeCode");
+        this.oProve.ProveStation = localStorage.getItem("officeShortName");
+        this.ProveStation = localStorage.getItem("officeShortName");
+
+        let tempUser = this.rawStaffOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
+
+        // ----- ผู้ตรวจรับ -----
+        this.oProveStaff = {
+            StaffID: 0,
+            ProveID: "",
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            LawsuitID: this.LawsuitID,
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "14"
+        }
+
+        this.ProveStaffName = localStorage.getItem("fullName");
+        this.PosExaminer = localStorage.getItem("operationPosName");
+        this.DeptExaminer = localStorage.getItem("officeShortName");
+
+
+        // ----- ผู้พิสูจน์ -----
+        this.oProveScienceStaff = {
+            StaffID: 0,
+            ProveID: "",
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            LawsuitID: this.LawsuitID,
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "15"
+        }
+
+        this.ScienceStaffName = localStorage.getItem("fullName");
+        this.PosScience = localStorage.getItem("operationPosName");
+        this.DeptScience = localStorage.getItem("officeShortName");
+
+
+        // ----- ผู้นำส่ง -----
+        this.oProveStaffSend = {
+            StaffID: 0,
+            ProveID: "",
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-05",
+            LawsuitID: this.LawsuitID,
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "13"
+        }
+
+        this.StaffSendName = localStorage.getItem("fullName");
+        this.PosStaffSend = localStorage.getItem("operationPosName");
+        this.DeptStaffSend = localStorage.getItem("officeShortName");
+    }
+
+
 
     // --- เขียนที่ ---
     async getStation() {
