@@ -47,5 +47,5 @@ export const ArrestLocaleFormControl = {
     ZipCode: new FormControl(null),
     Policestation: new FormControl(null),
     IsActive: new FormControl(1),
-    Region: new FormControl(null)
+    Region: new FormControl(null, Validators.required)
 }

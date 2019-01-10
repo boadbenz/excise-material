@@ -189,7 +189,7 @@
 
                   <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff" [resultTemplate]="rt"
                     [readOnly]="showEditField" [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
-                    value="{{item.value.FullName}}" />
+                    value="{{item.value.FullName}}" (change)="onChangeStaff($event, i)" />
                 </td>
                 <td>
                   <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
@@ -270,10 +270,9 @@
             <ng-template #rt let-r="result" let-t="term">
               {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
             </ng-template>
-
             <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion" [resultTemplate]="rt"
               [readOnly]="showEditField" [inputFormatter]="formatterRegion" (selectItem)="selectItemLocaleRegion($event)"
-              value="{{item.value.Region}}" />
+              value="{{item.value.Region}}" [editable]="false" [ngClass]="{'ng-touched':isRequired}"/>
           </div>
         </div>
         <div class="row">

@@ -53,7 +53,7 @@ export function toTimeShort(date: string): string {
 }
 
 export const MyDatePickerOptions: IMyOptions = {
-    dateFormat: 'dd mmm yyyy',
+    dateFormat: 'dd mmm. yyyy',
     showClearDateBtn: false,
     height: '30px',
     alignSelectorRight: true,

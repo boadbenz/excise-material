@@ -423,16 +423,17 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
-                if (!this.arrestFG.valid) {
+                if (this.arrestFG.invalid) {
                     this.isRequired = true;
                     swal('', Message.checkData, 'warning')
                     return false;
                 }
+
                 const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
                 const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
                 this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
-                if (this.arrestFG.invalid) return;
+
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
                 if (staff.length <= 0) {
                     swal('', 'ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ', 'warning')
@@ -442,15 +443,30 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     swal('', 'กรุณาเลือกฐานะของผู้จับกุม', 'warning');
                     return;
                 }
+                if (staff.filter(x => x.FullName == '').length > 0) {
+                    swal('', 'กรุณากรุณาระบุข้อมูลผู้จับกุม', 'warning');
+                    return;
+                }
                 if (staff.filter(x => x.ContributorID == '6').length <= 0) {
                     swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ', 'warning');
+                    return;
+                }
+                const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
+                const product: fromModels.ArrestProduct[] = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
+                if (lawbreaker.length <= 0 && product.length <= 0) {
+                    swal('', 'ต้องมีรายการ “ผู้ต้องหา” หรือ “ของกลาง” อย่างน้อย 1 รายการ', 'warning');
                     return;
                 }
                 if (!this.ArrestIndictment.value.length) {
                     swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
                     return;
                 }
-                this.onSave();
+                if (this.ArrestIndictment.value.filter(x => x.GuiltBaseID == null).length) {
+                    swal('', 'กรุณาเลือกข้อมูล “ฐานความผิดมาตรา”', 'warning')
+                    return;
+                };
+
+                // this.onSave();
             }
         });
 
@@ -863,11 +879,11 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     IsModify: x.IsModify || 'c',
                     RowId: x.IsModify != 'd' && ++i,
                     ArrestCode: x.ArrestCode || this.arrestCode,
-                    IndictmentID: x.IndictmentID || null,
-                    GuiltBaseID: x.GuiltBaseID || null,
+                    IndictmentID: x.IndictmentID,
+                    GuiltBaseID: x.GuiltBaseID,
                     IsProve: x.IsProve,
                     IsActive: 1,
-                    IsLawsuitComplete: x.IsLawsuitComplete || null,
+                    IsLawsuitComplete: x.IsLawsuitComplete,
                     ArrestLawGuitbase: this.setArrestLawGuitbase(x.ArrestLawGuitbase),
                     ArrestIndicmentDetail: this.setArrestIndicmentDetail(x.ArrestIndicmentDetail, x.IsModify),
                     ArrestIndictmentProduct: this.setArrestIndictmentProduct(x.ArrestIndictmentProduct, x.IsModify)
@@ -890,12 +906,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     private groupArrestLawGuitbase(x: fromModels.ArrestLawGuitbase) {
         return this.fb.group({
             IsChecked: false,
-            GuiltBaseID: x.GuiltBaseID || null,
-            GuiltBaseName: x.GuiltBaseName || null,
+            GuiltBaseID: x.GuiltBaseID,
+            GuiltBaseName: x.GuiltBaseName,
             IsCompare: x.IsCompare || 0,
             IsActive: x.IsActive || 1,
             IsProve: x.IsProve,
-            SubSectionRuleID: x.SubSectionRuleID || null,
+            SubSectionRuleID: x.SubSectionRuleID,
             ArrestLawSubSectionRule: this.setArrestLawSubSectionRule(x.ArrestLawSubSectionRule)
         })
     }
@@ -1340,7 +1356,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     //     })
     // }
 
-    selectItemStaff(e, i) {
+    selectItemStaff(e: any, i: number) {
         let staff: fromModels.ArrestStaff = this.ArrestStaff.at(i).value;
         this.ArrestStaff.at(i).reset(e.item);
         this.ArrestStaff.at(i).patchValue({
@@ -1355,7 +1371,21 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,
-            ContributorID: e.item.ContributorID
+            ContributorID: e.item.ContributorID || staff.ContributorID
+        })
+    }
+
+    onChangeStaff(e: any, i: number) {
+        let staff: fromModels.ArrestStaff = this.ArrestStaff.at(i).value;
+        this.ArrestStaff.at(i).reset();
+        this.ArrestStaff.at(i).patchValue({
+            IsModify: staff.IsModify == 'v' ? 'u' : staff.IsModify,
+            RowId: staff.RowId,
+            FullName: e.target.value,
+            FirstName: e.target.value,
+            ProgramCode: 'ILG60-03-02-00-00',
+            ProcessCode: '02',
+            ContributorID: staff.ContributorID
         })
     }
 
@@ -1394,12 +1424,14 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     changeArrestDoc(e: any, index: number) {
-        // let file = e.target.files[0];
-        this.ArrestDocument.at(index).patchValue({
-            ReferenceCode: this.arrestCode,
-            FilePath: replaceFakePath(e.target.value),
-            IsActive: 1
-        })
+        const file = e.target.files[0];
+        if (file != undefined) {
+            this.ArrestDocument.at(index).patchValue({
+                ReferenceCode: this.arrestCode,
+                FilePath: replaceFakePath(e.target.value),
+                IsActive: 1
+            })
+        }
     }
 
     catchError(error: any) {
