@@ -126,7 +126,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.28');
+    this.sidebarService.setVersion('0.0.0.29');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -826,7 +826,8 @@ export class ManageComponent implements OnInit {
   }
   getNowTime() {
     let hours = "000" + (new Date()).getHours()
-    return hours.substr(hours.length - 2, hours.length) + ":00"
+    let min = "000" + (new Date()).getMinutes()
+    return hours.substr(hours.length - 2, hours.length) + ":" + min.substr(min.length - 2, min.length)
   }
   getNowDate() {
     let now = new Date()
@@ -1149,6 +1150,7 @@ export class ManageComponent implements OnInit {
               arrList.push(a)
             }
           });
+          console.log(localStorage)
           await this.oninitFullname(localStorage)
 
           this.lawsuitForm.controls['AccuserTestimony'].setValue(
@@ -1269,6 +1271,12 @@ export class ManageComponent implements OnInit {
         this.lawsuitForm.controls['DepartmentName'].setValue(this.validateData(value.OfficeShortName));
         this.lawsuitForm.controls['officeCode'].setValue(value.OfficeCode);
         this.suggestions = [];
+        let initOffice = this.masOfficeList.filter(item => (item.OfficeName.includes(value.OfficeName)));
+        if (initOffice.length == 1) {
+          let office = initOffice[0]
+          this.lawsuitForm.controls['LawsuitStation'].setValue(this.validateData(office.OfficeName));
+          this.suggestionsStation = [];
+        }
       }
     }
   }
