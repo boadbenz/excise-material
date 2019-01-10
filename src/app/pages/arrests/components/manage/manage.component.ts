@@ -206,11 +206,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     async ngOnInit() {
         this.sidebarService.setVersion(this.s_arrest.version);
         this.active_route();
-        // if (this.arrestFG) {
-        //     setTimeout(() => {
-        //         this.arrestFG.reset();
-        //     }, 300);
-        // }
         this.arrestFG = this.createForm();
         this.navigate_Service();
     }
@@ -228,14 +223,14 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
                 let _IndictmentProduct = this.ArrestIndictment.at(i).get('ArrestIndictmentProduct') as FormArray;
 
-                this.ArrestProduct.value.map(_f3 => {
+                this.ArrestProduct.value.map((_f3) => {
                     let nip = new fromModels.ArrestIndictmentProduct();
                     nip.ProductID = _f3.ProductID;
                     nip.IsProdcutCo = _f3.IsProdcutCo || '1';
                     nip.IndictmentProductQty = _f3.Qty || '0';
                     nip.IndictmentProductQtyUnit = _f3.QtyUnit || '-';
                     nip.IndictmentProductSize = _f3.Size || '0';
-                    nip.IndictmentProductSizeUnit = _f3.SizeUnit || '-';
+                    nip.IndictmentProductSizeUnit = _f3.SizeUnitName;
                     nip.IndictmentProductVolume = _f3.NetVolume || '0';
                     nip.IndictmentProductVolumeUnit = _f3.NetVolumeUnit || '-';
                     nip.IndictmentProductMistreatRate = _f3.MistreatRate || '';
@@ -358,7 +353,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
-        this.arrestFG.reset();
+        this.clearForm();
     }
 
     private createForm(): FormGroup {
@@ -655,7 +650,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         if (!_prod.length) return;
 
         _prod.map((x, index) => x.RowId = index + 1);
-console.log(_prod);
+        console.log(_prod);
 
         this.setItemFormArray(_prod, 'ArrestProduct');
     }
@@ -899,7 +894,7 @@ console.log(_prod);
             GuiltBaseName: x.GuiltBaseName || null,
             IsCompare: x.IsCompare || 0,
             IsActive: x.IsActive || 1,
-            IsProve: x.IsProve || 1,
+            IsProve: x.IsProve,
             SubSectionRuleID: x.SubSectionRuleID || null,
             ArrestLawSubSectionRule: this.setArrestLawSubSectionRule(x.ArrestLawSubSectionRule)
         })
@@ -1334,6 +1329,8 @@ console.log(_prod);
             ArrestCode: this.arrestCode,
             GroupCode: e.item.GroupCode || product.GroupCode,
             IsDomestic: e.item.IsDomestic || product.IsDomestic,
+            Size: e.item.Size || product.Size,
+            SizeUnitName: e.item.SizeUnitName || product.SizeUnitName
         })
     }
 
@@ -1876,19 +1873,20 @@ console.log(_prod);
                 x.ArrestCode = this.arrestCode;
                 newIndictment.ArrestCode = x.ArrestCode;
                 newIndictment.GuiltBaseID = x.GuiltBaseID;
-                newIndictment.IsProve = x.IsProve || 1;
+                newIndictment.IsProve = x.IsProve;
                 newIndictment.IsActive = x.IsActive || 1;
                 newIndictment.IsLawsuitComplete = x.IsLawsuitComplete || null;
 
+                let indict;
                 switch (x.IsModify) {
                     case 'd':
                         if (this.mode == 'C') return;
-                        await this.s_indictment.ArrestIndictmentupdDelete(x.IndictmentID.toString())
+                        indict = await this.s_indictment.ArrestIndictmentupdDelete(x.IndictmentID.toString())
                             .then().catch((error) => this.catchError(error));
                         break;
 
                     case 'c':
-                        await this.s_indictment.ArrestIndictmentinsAll(newIndictment)
+                        indict = await this.s_indictment.ArrestIndictmentinsAll(newIndictment)
                             .then(async y => {
                                 if (!this.checkIsSuccess(y)) return;
                                 x.IndictmentID = y.IndictmentID;
@@ -1897,7 +1895,7 @@ console.log(_prod);
 
                     case 'u':
                         newIndictment.IndictmentID = x.IndictmentID;
-                        await this.s_indictment.ArrestIndictmentupdByCon(newIndictment)
+                        indict = await this.s_indictment.ArrestIndictmentupdByCon(newIndictment)
                             .then().catch((error) => this.catchError(error));
                         break;
                 }
@@ -1912,7 +1910,7 @@ console.log(_prod);
                     x.ArrestIndictmentProduct,
                     x.ArrestIndicmentDetail);
 
-                return Promise.all([proD, indictD]);
+                return Promise.all([indict, proD, indictD]);
             })
         return Promise.all(indictmentPromise);
     }
