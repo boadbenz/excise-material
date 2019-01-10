@@ -308,15 +308,13 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือ :
-                </label>
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
 
-                <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
-                </label>
+                <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-9">
                     <div class="form-group input-group">
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
@@ -329,9 +327,9 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">กำหนดคืนวันที่ :
-                </label>
+                <label for="" class="col-lg-2 col-md-4 control-label">กำหนดคืนวันที่ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
@@ -347,6 +345,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
@@ -358,9 +357,9 @@
                     <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
                 </div>
             </div>
+
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :
-                </label>
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
@@ -373,14 +372,14 @@
                     <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
                 </div>
             </div>
+
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
                 </div>
 
-                <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :
-                </label>
+                <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-9">
                     <div class="form-group input-group">
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
@@ -397,7 +396,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำออก :</label>
                 <div class="form-group col-lg-10 col-md-12">
-                    <input type="text" [(ngModel)]="oProveProduct.Remarks" name="oProveProduct.Remarks" class="form-control" [disabled]="showEditField">
+                    <input type="text" [(ngModel)]="Remarks" name="Remarks" class="form-control" [disabled]="showEditField">
                 </div>
             </div>
         </div>
@@ -513,7 +512,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำบริจาค :</label>
                 <div class="form-group col-lg-10 col-md-12">
-                    <input type="text" [(ngModel)]="oProveProduct.Remarks" name="oProveProduct.Remarks" class="form-control" [disabled]="showEditField">
+                    <input type="text" [(ngModel)]="Remarks" name="Remarks" class="form-control" [disabled]="showEditField">
                 </div>
             </div>
         </div>
@@ -634,7 +633,7 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
                 <div class="form-group col-lg-10 col-md-12">
-                    <input type="text" [(ngModel)]="oProveProduct.Remarks" name="oProveProduct.Remarks" class="form-control" [disabled]="showEditField">
+                    <input type="text" [(ngModel)]="Remarks" name="Remarks" class="form-control" [disabled]="showEditField">
                 </div>
             </div>
         </div>
