@@ -42,22 +42,22 @@
 
 
 <form class="form-horizontal">
-    <!-- รายละเอียดประกอบการนำส่ง จากหน่วยงานภายนอก -->
-    <div *ngIf="evitype == 'E'" class="card card-outline-bluish unset-radius">
+    <!-- Collab 1 - การคืนของกลาง จากหน่วยงานภายนอก -->
+    <div *ngIf="evitype == '11E'" class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
-            <h4 class="card-title m-b-0">รายละเอียดประกอบการนำส่ง</h4>
+            <h4 class="card-title m-b-0">รายละเอียดการคืนของกลาง</h4>
         </div>
         <div class="card-body">
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือขอคืน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
 
-                <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
+                <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-9">
                     <div class="form-group input-group">
@@ -72,17 +72,93 @@
                 </div>
             </div>
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับคืน :
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้ขอรับคืน :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collab 1 - การคืนของกลาง จากหน่วยงานภายใน -->
+    <div *ngIf="evitype == '11I'" class="card card-outline-bluish unset-radius">
+        <div class="card-header unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 class="card-title m-b-0">รายละเอียดการคืนของกลาง</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ใบเสร็จรับเงินภาษีเล่มที่ :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ใบเสร็จรับเงินภาษีเลขที่ :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">วันที่ชำระภาษี :
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-9">
                     <div class="form-group input-group">
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
                             (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                             required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
 
-                <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือแจ้งคืน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้อนุมัติหนังสือ :
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
@@ -106,17 +182,466 @@
                     <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
                 </div>
             </div>
-
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำส่ง :</label>
-                <div class="form-group col-lg-10 col-md-12">
-                    <input type="text" [(ngModel)]="Remarks" name="Remarks" class="form-control" [disabled]="showEditField">
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่ใบงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่คดี, หน่วยงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- รายละเอียดการตรวจรับของกลาง -->
+    <!-- Collab 1 - จัดเก็บเข้าพิพิธภัณฑ์, ขายทอดตลาด, ทำลายของกลาง -->
+    <div *ngIf="evitype == '12' || evitype == '13' || evitype == '14'" class="card card-outline-bluish unset-radius">
+        <div class="card-header unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 *ngIf="evitype == '12'" class="card-title m-b-0">รายละเอียดความเห็นชอบ</h4>
+            <h4 *ngIf="evitype == '13'" class="card-title m-b-0">รายละเอียดการอนุมัติ</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือ :</label>
+                <label *ngIf="evitype == '13' || evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสืออนุมัติ :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">ผู้เสนอพิจารณาเห็นชอบ :</label>
+                <label *ngIf="evitype == '13' || evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">ผู้เสนออนุมัติ :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาเห็นชอบ :</label>
+                <label *ngIf="evitype == '13' || evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" [(ngModel)]="PosSend" name="PosSend" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collab 1 - นำของกลางออกจากคลัง - ข้อมูลการนำของกลางไปใช้ทางราชการ -->
+    <div *ngIf="evitype == '15G'" class="card card-outline-bluish unset-radius">
+        <div class="card-header unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 class="card-title m-b-0">รายละเอียดการขอนำของกลางออกจากคลังไปใช้ในกิจกรรมหรือโครงการของทางราชการ</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือ :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">กำหนดคืนวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้ขอนำออก :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำออก :</label>
+                <div class="form-group col-lg-10 col-md-12">
+                    <input type="text" [(ngModel)]="oProveProduct.Remarks" name="oProveProduct.Remarks" class="form-control" [disabled]="showEditField">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collab 1 - นำของกลางออกจากคลัง - ข้อมูลการนำของกลางไปบริจาค -->
+    <div *ngIf="evitype == '15D'" class="card card-outline-bluish unset-radius">
+        <div class="card-header unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 class="card-title m-b-0">รายละเอียดการขอนำของกลางออกจากคลังไปบริจาค</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือ :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้เสนออนุมัติ :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้รับบริจาค :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำบริจาค :</label>
+                <div class="form-group col-lg-10 col-md-12">
+                    <input type="text" [(ngModel)]="oProveProduct.Remarks" name="oProveProduct.Remarks" class="form-control" [disabled]="showEditField">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collab 1 - โอนย้ายของกลาง -->
+    <div *ngIf="evitype == '16'" class="card card-outline-bluish unset-radius">
+        <div class="card-header unset-radius">
+            <app-card-actions-collapse></app-card-actions-collapse>
+            <h4 class="card-title m-b-0">รายละเอียดการโอนย้ายของกลาง</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้ขอโอนย้าย :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ประเภทหน่วยงานปลายทาง :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานปลายทาง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField">
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสืออนุมัติ :</label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">วันที่อนุมัติ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="form-group input-group">
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" name="OccurrenceDateFrom" [options]="myDatePickerOptions"
+                            (dateChanged)="onSDateChange($event)" ngModel [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                            required></my-date-picker-th>
+
+                        <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                        <input type="text" [(ngModel)]="RevenueTime" name="RevenueTime" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :
+                </label>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group ">
+                        <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
+                            [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
+                <div class="form-group col-lg-10 col-md-12">
+                    <input type="text" [(ngModel)]="oProveProduct.Remarks" name="oProveProduct.Remarks" class="form-control" [disabled]="showEditField">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Collab 2 - รายละเอียดการคืนของกลาง -->
     <div class="card card-outline-bluish unset-radius">
         <div class="card-header unset-radius">
             <app-card-actions-collapse></app-card-actions-collapse>
