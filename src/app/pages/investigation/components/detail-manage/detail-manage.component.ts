@@ -853,15 +853,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     async onComplete() {
         if (this._isSuccess) {
             swal('', Message.saveComplete, 'success');
+            await this.clearForm();
             switch (this.mode) {
                 case 'C':
                     await this.store.dispatch(new fromStore.RemoveInvestigate);
-                    await this.clearForm();
-
                     this.onRefreshPage();
                     break;
                 case 'R':
-                    location.reload();
+                    this.onPageLoad();
                     break;
             }
         } else {
@@ -1097,7 +1096,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
         const dateStart = getDateMyDatepicker(form.InvestigateDateStart);
         const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
-        form.InvestigateDateStart = setZeroHours(dateStart) ;
+        form.InvestigateDateStart = setZeroHours(dateStart);
         form.InvestigateDateEnd = setZeroHours(dateEnd);
 
         console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));
