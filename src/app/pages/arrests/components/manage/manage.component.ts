@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, DoCheck, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -50,6 +50,14 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     // v: รายการแสดง
     // u: รายการอัพเดท
     // d: รายการที่ถูกลบ
+    @ViewChild('ItemOfficeName') inputOfficeName: ElementRef;
+    @ViewChild('ItemLocalRetion') inputLocalRetion: ElementRef;
+
+    showStaff() {
+        
+        console.log(this.ArrestStaff);
+        
+    }
 
     myDatePickerOptions = MyDatePickerOptions;
     _isSuccess: boolean = false;
@@ -57,7 +65,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     modal: any;
     arrestCode: string;
     showEditField: boolean;
-    isRequired: boolean;
+    isRequired: boolean = false;
     arrestFG: FormGroup;
     typeheadOffice = new Array<MasOfficeModel>();
     typeheadStaff = new Array<MasStaffModel>();
@@ -429,11 +437,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     return false;
                 }
 
-                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
-                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
-                this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
-                this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
-
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
                 if (staff.length <= 0) {
                     swal('', 'ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ', 'warning')
@@ -466,7 +469,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     return;
                 };
 
-                // this.onSave();
+                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
+                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
+                this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
+                this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
+
+                this.onSave();
             }
         });
 
@@ -644,7 +652,13 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 x.Region = `${x.SubDistrict} ${x.District} ${x.Province}`;
             }
         })
+
         arrestForm.patchValue(_arr);
+
+        setTimeout(() => {
+            this.inputOfficeName.nativeElement.value = _arr.ArrestStation;
+            this.inputLocalRetion.nativeElement.value = _arr.ArrestLocale[0].Region;
+        }, 100);
     }
 
     private async pageRefreshProduct(_arrProd: fromModels.ArrestProduct[], arrestCode: string) {
@@ -666,7 +680,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         if (!_prod.length) return;
 
         _prod.map((x, index) => x.RowId = index + 1);
-        console.log(_prod);
 
         this.setItemFormArray(_prod, 'ArrestProduct');
     }
@@ -1331,6 +1344,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             District: e.item.DistrictNameTH,
             ProvinceCode: e.item.ProvinceCode,
             Province: e.item.ProvinceNameTH,
+            Region: `${e.item.SubdistrictNameTH} ${e.item.DistrictNameTH} ${e.item.ProvinceNameTH}`
         })
     }
 
