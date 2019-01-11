@@ -852,18 +852,28 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onComplete() {
         if (this._isSuccess) {
-            swal('', Message.saveComplete, 'success');
-            switch (this.mode) {
-                case 'C':
-                    await this.store.dispatch(new fromStore.RemoveInvestigate);
+            swal({
+                title: '',
+                text: Message.saveComplete,
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then(async (result) => {
+                if (result.value) {
                     await this.clearForm();
+                    switch (this.mode) {
+                        case 'C':
+                            await this.store.dispatch(new fromStore.RemoveInvestigate);
+                            this.onRefreshPage();
+                            break;
+                        case 'R':
+                            this.onPageLoad();
+                            break;
+                    }
+                }
+            });
 
-                    this.onRefreshPage();
-                    break;
-                case 'R':
-                    location.reload();
-                    break;
-            }
         } else {
             swal('', Message.saveFail, 'error')
         }
@@ -1097,7 +1107,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
         const dateStart = getDateMyDatepicker(form.InvestigateDateStart);
         const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
-        form.InvestigateDateStart = setZeroHours(dateStart) ;
+        form.InvestigateDateStart = setZeroHours(dateStart);
         form.InvestigateDateEnd = setZeroHours(dateEnd);
 
         console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));

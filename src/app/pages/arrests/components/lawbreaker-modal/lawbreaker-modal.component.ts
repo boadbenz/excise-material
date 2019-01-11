@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { pagination } from 'app/config/pagination';
 import { LawbreakerTypes, EntityTypes } from 'app/models/drop-downs.model';
@@ -20,6 +20,8 @@ import { clearFormArray } from '../../arrest.helper';
 export class LawbreakerModalComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
+
+  @ViewChild('advForm') advForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -113,6 +115,13 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
       const itemFGs = array.map(item => this.fb.group(item));
       const itemFormArray = this.fb.array(itemFGs);
       this.formGroup.setControl(formControl, itemFormArray);
+    }
+  }
+
+  toggle() {
+    this.advSearch = !this.advSearch;
+    if (this.advSearch == false && this.advForm != undefined) {
+      this.advForm.reset();
     }
   }
 
