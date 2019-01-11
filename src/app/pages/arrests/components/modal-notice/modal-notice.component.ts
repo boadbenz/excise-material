@@ -53,7 +53,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         this.noticeFG = this.fb.group({
             ArrestNotice: this.fb.array([])
         })
-    }    
+    }
 
     ngOnDestroy(): void {
         this.paginage.TotalItems = 0;
@@ -115,7 +115,9 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
         this.notice = list;
         // set total record
-        this.paginage.TotalItems = list.length;
+        const __list = this.notice.slice(0, 5);
+        this.setFormNotice(__list);
+        this.paginage.TotalItems = this.notice.length;
     }
 
     onSDateChange(event: IMyDateModel) {
@@ -180,10 +182,14 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         }
     }
 
-    async pageChanges(event) {
-        const list = await this.notice.slice(event.startIndex - 1, event.endIndex);
+    pageChanges(event) {
+        const list = this.notice.slice(event.startIndex - 1, event.endIndex);
+        this.setFormNotice(list);
+    }
+
+    async setFormNotice(list: ArrestNotice[]) {
         let _noticeList = [];
-        await list.map(item => {
+        list.map(item => {
             let FG = this.fb.group({
                 IsChecked: item.IsChecked,
                 RowId: item.RowId,

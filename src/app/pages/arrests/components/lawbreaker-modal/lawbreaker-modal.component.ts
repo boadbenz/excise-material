@@ -84,7 +84,7 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
       swal('', Message.noRecord, 'warning');
       return;
     }
-    debugger
+
     let law = [];
     await list.filter(item => item.IsActive == 1)
       .map(async (item: fromModel.ArrestLawbreaker, i) => {
@@ -96,7 +96,9 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
 
     this.lawbreaker = law;
     // set total record
-    this.paginage.TotalItems = law.length;
+    const __list = await this.lawbreaker.slice(0, 5);
+    this.setItemFormArray(__list, 'Lawbreaker');
+    this.paginage.TotalItems = this.lawbreaker.length;
   }
 
   setIsChecked(i: number) {
@@ -116,9 +118,6 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
 
   async pageChanges(event: any) {
     const list = await this.lawbreaker.slice(event.startIndex - 1, event.endIndex);
-    if (this.Lawbreaker.length > 0) {
-      clearFormArray(this.Lawbreaker)
-    }
     this.setItemFormArray(list, 'Lawbreaker');
   }
 
