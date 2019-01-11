@@ -26,6 +26,7 @@ import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { setViewSuspect } from '../suspect-modal/suspect-modal.component';
 import swal from 'sweetalert2';
+import { clearFormArray } from 'app/pages/arrests/arrest.helper';
 
 @Component({
     selector: 'app-investigate-detail-manage',
@@ -603,10 +604,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     changeArrestDoc(e: any, index: number) {
-        this.InvestigateDocument.at(index).patchValue({
-            FilePath: replaceFakePath(e.target.value),
-            IsActive: 1
-        })
+        const file = e.target.files[0];
+        if (file != undefined) {
+            this.InvestigateDocument.at(index).patchValue({
+                FilePath: replaceFakePath(e.target.value),
+                IsActive: 1
+            })
+        }
     }
 
     deleteStaff(i: number) {
@@ -790,15 +794,12 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     async clearForm() {
-        let reset = [
-            await this.investigateFG.reset(),
-            await this.clearFormArray(this.InvestigateDetailStaff),
-            await this.clearFormArray(this.InvestigateDetailSuspect),
-            await this.clearFormArray(this.InvestigateDetailLocal),
-            await this.clearFormArray(this.InvestigateDetailProduct),
-            await this.clearFormArray(this.InvestigateDocument)
-        ];
-        Promise.all(reset);
+        this.investigateFG.reset();
+        clearFormArray(this.InvestigateDetailStaff);
+        clearFormArray(this.InvestigateDetailSuspect);
+        clearFormArray(this.InvestigateDetailLocal);
+        clearFormArray(this.InvestigateDetailProduct);
+        clearFormArray(this.InvestigateDocument);
     }
 
     async ngOnDestroy(): Promise<void> {
@@ -842,12 +843,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         console.log(error);
         this._isSuccess = false;
         this.endLoader();
-    }
-
-    clearFormArray = (formArray: FormArray) => {
-        while (formArray.length !== 0) {
-            formArray.removeAt(0)
-        }
     }
 
     async onComplete() {
