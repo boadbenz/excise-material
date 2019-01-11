@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
         //         }
         //         if (User == Pass) {
         //           await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
-        //             // console.log("res eofficeInfo  : ", res);
+        //              console.log("res eofficeInfo  : ", res);
         //             if (res.Status == "OK") {
         //               this.fullName = res.PersonInformation.PersonTHTitle + " " +
         //                 res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
