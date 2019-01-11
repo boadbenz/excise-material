@@ -47,11 +47,12 @@
             {{ r.OfficeName }}
           </ng-template>
 
-          <input type="text" class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}" required
+          <input type="text" #ItemOfficeName class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}"
             [ngbTypeahead]="serachOffice" [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterOffice"
-            (selectItem)="selectItemOffice($event)" [value]="arrestFG.get('ArrestStation').value" (change)="onChangeArrestStation($event)" />
+            (selectItem)="selectItemOffice($event)" (change)="onChangeArrestStation($event)" formControlName="ArrestStation"
+            [ngClass]="{'is-invalid': (arrestFG.get('ArrestStation').invalid && arrestFG.get('ArrestStation').ng-touched) || (arrestFG.get('ArrestStation').invalid && isRequired)}" />
 
-          <input type="text" style="display: none;" formControlName="ArrestStation">
+          <!-- <input type="text" style="display: none;" formControlName="ArrestStation"> -->
         </div>
       </div>
       <div class="row">
@@ -161,7 +162,7 @@
           <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addStaff()">เพิ่มผู้ร่วมจับกุม</button>
         </div>
       </div>
-
+      <button type="button" (click)="showStaff()">Click</button>
       <div class="table-responsive">
         <table class="table table-sm table-striped table-set-border">
           <thead>
@@ -189,7 +190,8 @@
 
                   <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff" [resultTemplate]="rt"
                     [readOnly]="showEditField" [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
-                    value="{{item.value.FullName}}" (change)="onChangeStaff($event, i)" />
+                    (change)="onChangeStaff($event, i)" value="{{item.value.FullName}}" [ngClass]="{'is-invalid': item.get('FullName').invalid && isRequired}" />
+                  <input type="text" formControlName="FullName" required style="display: none;">
                 </td>
                 <td>
                   <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
@@ -260,6 +262,7 @@
             <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField">
           </div>
         </div>
+
         <div class="row">
           <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
           <div class="col-lg-4 col-md-7 col-sm-8 form-group">
@@ -270,9 +273,10 @@
             <ng-template #rt let-r="result" let-t="term">
               {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
             </ng-template>
-            <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion" [resultTemplate]="rt"
-              [readOnly]="showEditField" [inputFormatter]="formatterRegion" (selectItem)="selectItemLocaleRegion($event)"
-              value="{{item.value.Region}}" [editable]="false" [ngClass]="{'ng-touched':isRequired}"/>
+
+            <input type="text" #ItemLocalRetion class="form-control form-control-sm" [ngbTypeahead]="searchRegion"
+              [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterRegion" (selectItem)="selectItemLocaleRegion($event)"
+              [editable]="false" formControlName="Region" [ngClass]="{'is-invalid': (item.get('Region').invalid && item.get('Region').touched) || (item.get('Region').invalid && isRequired)}" />
           </div>
         </div>
         <div class="row">
@@ -363,11 +367,12 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchProduct"
                     [resultTemplate]="rt" [inputFormatter]="formatterProduct" (selectItem)="selectItemProductItem($event, i)"
-                    [value]="item.value.ProductDesc" />
+                    [value]="item.value.ProductDesc" [ngClass]="{'is-invalid': item.get('ProductDesc').invalid && isRequired}" />
+                  <input type="text" formControlName="ProductDesc" required style="display: none;">
                 </td>
                 <td style="max-width: 30px;">
                   <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField"
-                    min="0" step="0.01" required>
+                    min="0" step="0.01" required [ngClass]="{'ng-touched':isRequired}">
                 </td>
                 <td style="max-width: 60px;">
                   <ng-template #qtyUnit let-r="result" let-t="term">
@@ -375,11 +380,12 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
-                    [value]="item.value.QtyUnit" required />
+                    [value]="item.value.QtyUnit" [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" />
+                  <input type="text" formControlName="QtyUnit" required style="display: none;">
                 </td>
                 <td style="max-width: 30px;">
                   <input type="number" #NetVolume formControlName="NetVolume" class="form-control form-control-sm"
-                    [readonly]="showEditField" min="0" step="0.01" required>
+                    [readonly]="showEditField" min="0" step="0.01" required [ngClass]="{'ng-touched':isRequired}">
                 </td>
                 <td style="max-width: 60px;">
                   <ng-template #netVolumeUnit let-r="result" let-t="term">
@@ -387,7 +393,8 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
-                    [value]="item.value.NetVolumeUnit" required />
+                    [value]="item.value.NetVolumeUnit" [ngClass]="{'is-invalid': item.get('NetVolumeUnit').invalid && isRequired}" />
+                  <input type="text" formControlName="NetVolumeUnit" required style="display: none;">
                 </td>
                 <td>
                   <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
