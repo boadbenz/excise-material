@@ -18,48 +18,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     fullName: 'นายสุชาติ ปัญโญใหญ่',
     dateReport: '',
     typeApprove: ''
-  }]
+  }];
 
-  payFineDataTable = [{
-    fullName: 'นายธวัชชัย บิงขุนทด',
-    dateFine: '20-ม.ค.-2560',
-    finer: 'นางสาวฟาติมา ตันดิลกตระกูล',
-    payment: 'เงินสด',
-    receiptNo: '33',
-    receiptRef: '003/2561',
-    status: 'ยังไม่นำส่งรายได้',
-  }, {
-    fullName: 'นายสุชาติ ปัญโญใหญ่',
-    dateFine: '',
-    finer: '',
-    payment: '',
-    receiptNo: '',
-    receiptRef: '',
-    status: 'ยังไม่ชำระค่าปรับ',
-  }]
+  reductionDataTable = [];
 
-  reductionDataTable = [
-  {
-    fullName: 'นายธวัชชัย บิงขุนทด',
-    exhibit: 'Hoegaarden/Witb',
-    oldFine: '800,000.00',
-    newFine: '900,000.00',
-    diffFine: '100,000.00',
-    status: true,
-    bribe: '160,000.00',
-    prize: '160,000.00',
-    treasury: '480,000.00'
-  }, {
-    fullName: 'นายสุชาติ ปัญโญใหญ่',
-    exhibit: 'Hoegaarden/Witb',
-    oldFine: '800,000.00',
-    newFine: '700,000.00',
-    diffFine: '-100,000.00',
-    status: false,
-    bribe: '160,000.00',
-    prize: '160,000.00',
-    treasury: '480,000.00'
-  }]
+  payFineDataTable = [];
+
 
   listData = [
     {
@@ -200,10 +164,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    console.log(this.activeRoute.snapshot.params);
-    console.log(this.activeRoute.snapshot.paramMap.get('mode'));
-    console.log(this.activeRoute.snapshot.paramMap.get('compareid'));
-    console.log(this.activeRoute.snapshot.paramMap.get('comparedetailid'))
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
     } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {
@@ -247,6 +207,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     //   });
 
     this.getAdjustArrestgetByCon(this.activeRoute.snapshot.paramMap.get('compareid'));
+    this.getAdjustFinegetByCon(this.activeRoute.snapshot.paramMap.get('compareid'),
+    this.activeRoute.snapshot.paramMap.get('comparedetailid'));
   }
 
   public getAdjustArrestgetByCon(CompareID: any = null): void {
@@ -255,9 +217,23 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         .subscribe(response => {
           if (response.length > 0) {
             Object.assign(this.detailData, response[0]);
-            console.log(this.detailData);
           }
         }, error => console.log(error))
+  }
+
+  public getAdjustFinegetByCon(CompareID: any = null, CompareDetailID: any = null) {
+    if (CompareID == null || CompareDetailID == null) { return }
+    this.apiService.post('/XCS60/AdjustFinegetByCon', {
+      CompareID: CompareID,
+      CompareDetailID: CompareDetailID
+    })
+    .subscribe(response => {
+      if (response.length > 0) {
+        this.reductionDataTable = response;
+      }
+    }, error => {
+      console.log(error);
+    })
   }
 
   viewData() {
