@@ -47,12 +47,12 @@
             {{ r.OfficeName }}
           </ng-template>
 
-          <input type="text" #ItemOfficeName class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}"
+          <input type="text" class="form-control form-control-sm "
             [ngbTypeahead]="serachOffice" [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterOffice"
-            (selectItem)="selectItemOffice($event)" formControlName="ArrestStation"
-            [ngClass]="{'is-invalid': (arrestFG.get('ArrestStation').invalid && arrestFG.get('ArrestStation').ng-touched) || (arrestFG.get('ArrestStation').invalid && isRequired)}" />
+            (selectItem)="selectItemOffice($event)" value="{{arrestFG.get('ArrestStation').value}}"
+            [ngClass]="{'is-invalid': (arrestFG.get('ArrestStation').invalid && isRequired)}" />
 
-          <!-- <input type="text" style="display: none;" formControlName="ArrestStation">  (change)="onChangeArrestStation($event)"-->
+          <input type="text" style="display: none;" formControlName="ArrestStation" required>
         </div>
       </div>
       <div class="row">

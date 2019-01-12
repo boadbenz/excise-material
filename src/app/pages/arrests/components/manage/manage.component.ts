@@ -50,7 +50,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     // v: รายการแสดง
     // u: รายการอัพเดท
     // d: รายการที่ถูกลบ
-    @ViewChild('ItemOfficeName') inputOfficeName: ElementRef;
+    
     @ViewChild('ItemLocalRetion') inputLocalRetion: ElementRef;
 
     showStaff() {
@@ -531,23 +531,23 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                await this.loadMasterData().then(async () => {
-                    const staff = this.typeheadStaff.find(x => x.StaffCode == localStorage.getItem('staffCode'));
-                    if (staff) {
-                        const _staff = { item: staff };
-                        await this.selectItemStaff(_staff, 0);
-                        this.ArrestStaff.at(0).patchValue({
-                            ContributorID: '6',
-                            ContributorCode: '6'
-                        })
-                    };
+                await this.loadMasterData();
 
-                    const office = this.typeheadOffice.find(x => x.OfficeCode == this.runningOfficeCode);
-                    if (office) {
-                        const _office = { item: office };
-                        await this.selectItemOffice(_office);
-                    }
-                });
+                const staff = this.typeheadStaff.find(x => x.StaffCode == localStorage.getItem('staffCode'));
+                if (staff) {
+                    const _staff = { item: staff };
+                    await this.selectItemStaff(_staff, 0);
+                    this.ArrestStaff.at(0).patchValue({
+                        ContributorID: '6',
+                        ContributorCode: '6'
+                    })
+                };
+
+                const office = this.typeheadOffice.find(x => x.OfficeCode == this.runningOfficeCode);
+                if (office) {
+                    const _office = { item: office };
+                    await this.selectItemOffice(_office);
+                }
 
                 this.showEditField = false;
                 await this.pageRefresh(this.arrestCode);
@@ -621,6 +621,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     private pageRefreshArrest(_arr: fromModels.Arrest) {
+
         let arrestForm = this.arrestFG;
 
         _arr.ArrestDate = this.isObject(_arr.ArrestDate)
@@ -656,7 +657,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         arrestForm.patchValue(_arr);
 
         setTimeout(() => {
-            this.inputOfficeName.nativeElement.value = _arr.ArrestStation;
             this.inputLocalRetion.nativeElement.value = _arr.ArrestLocale[0].Region;
         }, 100);
     }
