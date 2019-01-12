@@ -131,24 +131,6 @@
           </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-form-label col-md-4">จังหวัด : </label>
-                  <div class="col-md-8">
-                    <input class="form-control" type="text" [(ngModel)]="headerData.Province" name="Province" disabled>
-                  </div>
-                </div>
-              </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label class="col-form-label col-md-4">บทกำหนดโทษ : </label>
-              <div class="col-md-8">
-                <input class="form-control" type="text" [(ngModel)]="headerData.SectionNo" name="SectionNo" disabled>
-              </div>
-            </div>
-          </div>
           <div class="col-md-6">
             <div class="form-group row">
               <label class="col-form-label col-md-4">ฐานความผิดมาตรา : </label>
@@ -157,18 +139,16 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6">
             <div class="form-group row">
-              <label class="col-form-label col-md-4">อัตราโทษ : </label>
+              <label class="col-form-label col-md-4">บทกำหนดโทษ : </label>
               <div class="col-md-8">
-                  <textarea class="form-control" rows="5"
-                  [(ngModel)]="headerData.PenaltyDesc" name="PenaltyDesc" disabled></textarea>
-                <!-- <input class="form-control" type="text" [(ngModel)]="headerData.PenaltyDesc" name="PenaltyDesc" disabled> -->
+                <input class="form-control" type="text" [(ngModel)]="headerData.SectionNo" name="SectionNo" disabled>
               </div>
             </div>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6">
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ฐานความผิด : </label>
@@ -179,6 +159,16 @@
                 </div>
               </div>
             </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">อัตราโทษ : </label>
+              <div class="col-md-8">
+                  <textarea class="form-control" rows="5"
+                  [(ngModel)]="headerData.PenaltyDesc" name="PenaltyDesc" disabled></textarea>
+                <!-- <input class="form-control" type="text" [(ngModel)]="headerData.PenaltyDesc" name="PenaltyDesc" disabled> -->
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -205,7 +195,7 @@
           <th class="footable-sortable" style="width:7%">ยอดชำระ</th>
           <th class="footable-sortable" style="width:7%">สินบน(20)</th>
           <th class="footable-sortable" style="width:7%">รางวัล(20)</th>
-          <th class="footable-sortable" style="width:7%">ส่งคลัง(40)</th>
+          <th class="footable-sortable" style="width:7%">ส่งคลัง(60)</th>
           <!--<th class="footable-sortable" style="width:7%">รวม</th>-->
         </tr>
         </thead>
@@ -223,7 +213,7 @@
           <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.FineAmount)) }}</td>
           <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.all)) }}</td>
 
-          <td *ngIf="!item.isSum"><input class="form-control" [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum()" [disabled]="showEditField"></td>
+          <td *ngIf="!item.isSum"><input class="form-control" [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum('userNo' + item.userNo + ':' + i)" [disabled]="showEditField" step='0.01' value='0.00' type='number'></td>
           <td *ngIf="item.isSum && accused.list?.length > 1"><b>{{ formatMoney(roundDigit(item.all)) }}</b></td>
 
           <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.BribeMoney)) }}</td>
@@ -360,9 +350,9 @@
           <tbody>
           <tr *ngFor="let item of accused.list; let i=index;" class="footable">
             <td class="text-center">{{i + 1}}</td>
-            <td>{{item.LawbreakerName }} {{ showEditField ? 'true' : 'false'  }}</td>
+            <td>{{item.LawbreakerName }}</td>
             <td class="text-center">
-              <my-date-picker-th [(ngModel)]="item.PaymentFineAppointDate" name="CompareDate" placeholder=""
+              <my-date-picker-th [(ngModel)]="item.PaymentFineAppointDate" [name]="'CompareDate' + i" placeholder=""
               (dateChanged)="canCheck($event, i)"
               locale="th"
               [options]="DateOption"
@@ -370,13 +360,13 @@
               ></my-date-picker-th>
             </td>
             <td class="text-center">
-                <my-date-picker-th [(ngModel)]="item.PaymentVatDate" name="PaymentVatDate" placeholder="" locale="th"
+                <my-date-picker-th [(ngModel)]="item.PaymentVatDate" [name]="'PaymentVatDate' + i" placeholder="" locale="th"
                 [options]="DateOption"
                 [disabled]="showEditField || item.isFillVatDate"
                 ></my-date-picker-th>
             </td>
             <td>
-              <select [(ngModel)]="item.request" class="form-control" name="request" [disabled]="showEditField">
+              <select [(ngModel)]="item.request" class="form-control" [name]="'request' + i" [disabled]="showEditField">
                 <option [ngValue]="1">
                   ร้องขอ
                 </option>
@@ -438,7 +428,7 @@
                 <div class="row col-md-4">
                     <span *ngIf="receipt.IsOutside" style="padding: 0.5rem;">น</span>
                   </div>
-                  <div class="row col-md-11">
+                  <div class="row col-md-10">
                       <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
                       [disabled]="showEditField || receipt.isHaveData">
                   </div>
@@ -453,7 +443,7 @@
                     <input class="form-control" type="text" [(ngModel)]="receipt.CompareYear" name="CompareNo"
                     [disabled]="showEditField || receipt.isHaveData">
                 </div> -->
-                <div class="row col-md-10">
+                <div class="row col-md-9">
                   <select class="form-control" [(ngModel)]="receipt.CompareYear" name="CompareYear" [disabled]="showEditField || receipt.isHaveData">
                     <option *ngFor="let item of year; let i=index;"  value="{{ item }}">{{ item }}</option>
                   </select>
@@ -484,7 +474,7 @@
           <td class="text-center">{{i + 1}}</td>
           <td>{{item.LawBrakerName}}</td>
           <td class="text-center">
-              <my-date-picker-th [(ngModel)]="item.PaymentDate" name="PaymentDate"
+              <my-date-picker-th [(ngModel)]="item.PaymentDate" [name]="'PaymentDate' + i"
               placeholder="" locale="th"
               [options]="DateOption"
               [disabled]="showEditField || ((!(item.CompareReceiptID == null || item.CompareReceiptID == undefined)) && (receipt.RevenueStatus > 0))"
@@ -494,7 +484,7 @@
               <div class="input-group col-md-12">
                   <input type="text" class="form-control"
                          [(ngModel)]="item.ReceiptStaff"
-                         name="ReceipStaff"
+                         [name]="'ReceipStaff' + i"
                          placeholder="พิมพ์ข้อความ" aria-label="Number"
                          matInput [matAutocomplete]="autoStaff"
                          (input)="StaffonAutoChange($event.target.value)"
@@ -515,7 +505,7 @@
           <td class="text-center">
               <select class="custom-select col-12"
               [(ngModel)]="item.ReceiptChanel"
-              name="ReceiptChanel" required [disabled]="(item.CompareReceiptID  && (receipt.RevenueStatus > 0)) || showEditField">
+              [name]="'ReceiptChanel' + i" required [disabled]="(item.CompareReceiptID  && (receipt.RevenueStatus > 0)) || showEditField">
                 <option value="1" [selected]="true">เงินสด</option>
                 <option value="2">EDC</option>
                 <option value="3">เครดิต</option>
@@ -675,7 +665,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header top-navbar text-white">
-        คำให้การของผู้ต้องหา
+          ข้อมูลการปล่อยตัวชั่วคราว
         <div class="card-actions">
           <i class="ti-close text-white close-popup" data-dismiss="modal" data-target="testimonyPopup"></i>
         </div>
@@ -1106,7 +1096,7 @@
                 <div class="form-group row">
                   <label class="col-form-label col-md-2">แบบอนุมัติ : </label>
                   <div class="custom-control custom-radio col-form-label col-md-8">
-                    <input name="approveRadio" id="typeOne" [value]="1"
+                    <input name="approveRadio" id="typeOne" [value]="1" (click)="clearStaff()"
                            class="col-form-label with-gap radio-col-indigo" [(ngModel)]="compareUserDetailPopup.ApproveType" type="radio"  [disabled]="showEditField">
                     <label for="typeOne" class="col-4">แบบอนุมัติ 1 (คด.3)</label>
                     <input name="approveRadio" id="typeTwo" [value]="2"
