@@ -49,10 +49,10 @@
 
           <input type="text" #ItemOfficeName class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}"
             [ngbTypeahead]="serachOffice" [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterOffice"
-            (selectItem)="selectItemOffice($event)" (change)="onChangeArrestStation($event)" formControlName="ArrestStation"
+            (selectItem)="selectItemOffice($event)" formControlName="ArrestStation"
             [ngClass]="{'is-invalid': (arrestFG.get('ArrestStation').invalid && arrestFG.get('ArrestStation').ng-touched) || (arrestFG.get('ArrestStation').invalid && isRequired)}" />
 
-          <!-- <input type="text" style="display: none;" formControlName="ArrestStation"> -->
+          <!-- <input type="text" style="display: none;" formControlName="ArrestStation">  (change)="onChangeArrestStation($event)"-->
         </div>
       </div>
       <div class="row">

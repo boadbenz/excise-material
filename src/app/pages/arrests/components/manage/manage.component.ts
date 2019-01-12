@@ -34,7 +34,7 @@ import { TransactionRunningService } from 'app/services/transaction-running.serv
 import { TransactionRunning } from 'app/models/transaction-running.model';
 import { groupArrayItem, removeObjectItem, clearFormArray, sortFormArray } from '../../arrest.helper';
 import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
-import { Acceptability, ArrestIndictmentProduct } from '../../models';
+import { Acceptability } from '../../models';
 
 @Component({
     selector: 'app-manage',
@@ -54,9 +54,9 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     @ViewChild('ItemLocalRetion') inputLocalRetion: ElementRef;
 
     showStaff() {
-        
+
         console.log(this.ArrestStaff);
-        
+
     }
 
     myDatePickerOptions = MyDatePickerOptions;
@@ -374,7 +374,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             OccurrenceDate: new FormControl(ArrestDate, Validators.required),
             OccurrenceTime: new FormControl(ArrestTime, Validators.required),
             ArrestStationCode: new FormControl(null),
-            ArrestStation: new FormControl(null, Validators.required),
+            ArrestStation: new FormControl(Validators.required),
             HaveCulprit: new FormControl(0),
             Behaviour: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
             Testimony: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
@@ -531,23 +531,23 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         switch (this.mode) {
             case 'C':
                 this.enableBtnModeC()
-                await this.loadMasterData();
+                await this.loadMasterData().then(async () => {
+                    const staff = this.typeheadStaff.find(x => x.StaffCode == localStorage.getItem('staffCode'));
+                    if (staff) {
+                        const _staff = { item: staff };
+                        await this.selectItemStaff(_staff, 0);
+                        this.ArrestStaff.at(0).patchValue({
+                            ContributorID: '6',
+                            ContributorCode: '6'
+                        })
+                    };
 
-                const staff = this.typeheadStaff.find(x => x.StaffCode == localStorage.getItem('staffCode'));
-                if (staff) {
-                    const _staff = { item: staff };
-                    await this.selectItemStaff(_staff, 0);
-                    this.ArrestStaff.at(0).patchValue({
-                        ContributorID: '6',
-                        ContributorCode: '6'
-                    })
-                };
-
-                const office = this.typeheadOffice.find(x => x.OfficeCode == this.runningOfficeCode);
-                if (office) {
-                    const _office = { item: office };
-                    this.selectItemOffice(_office);
-                }
+                    const office = this.typeheadOffice.find(x => x.OfficeCode == this.runningOfficeCode);
+                    if (office) {
+                        const _office = { item: office };
+                        await this.selectItemOffice(_office);
+                    }
+                });
 
                 this.showEditField = false;
                 await this.pageRefresh(this.arrestCode);
@@ -788,8 +788,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                         })
                     )
                 );
-            }).catch((error) => this.catchError(error));
-        this.loaderService.hide();
+                this.loaderService.hide();
+            }).catch((error) => {
+                this.catchError(error);
+                this.loaderService.hide();
+            });
+
     }
 
     onSDateChange(event: IMyDateModel) {
@@ -1419,11 +1423,13 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         })
     }
 
-    onChangeArrestStation(e: any) {
-        this.arrestFG.patchValue({
-            ArrestStation: e.target.value
-        })
-    }
+    // onChangeArrestStation(e: any) {
+    //     // const arrestStation = this.arrestFG.value;
+    //     debugger
+    //     this.arrestFG.patchValue({
+    //         ArrestStation: e.target.value
+    //     })
+    // }
 
     selectItemQtyUnit(e: any, i: number) {
         this.ArrestProduct.at(i).patchValue({
