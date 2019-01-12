@@ -293,6 +293,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     if (staff.length > 0 && cmpD.length > 0) {
       for (const ap of this.compareDataUpdateTmp.CompareDetail) {
         console.log(cmpD[i]);
+        if (!this.approveReportList[i]) {
+          this.approveReportList.push({});
+        }
         this.approveReportList[i].ApproveStation = cmpD[i].ApproveStation;
         this.approveReportList[i].payDate = this.toDatePickerFormat(new Date(cmpD[i].PaymentFineAppointDate));
         this.approveReportList[i].payTime = this.getTimeNow(new Date(cmpD[i].PaymentFineAppointDate));
@@ -385,6 +388,9 @@ export class ManageComponent implements OnInit, OnDestroy {
   async setCompareDetail() {
     let i = 0;
     for (const compare of this.compareDataUpdateTmp.CompareDetail) {
+      if (!this.accused.list[i]) {
+        this.accused.list.push({});
+      }
       this.accused.list[i].PaymentFineAppointDate = this.toDatePickerFormat(new Date(compare.PaymentFineAppointDate));
       this.accused.list[i].PaymentFineAppointShow = this.accused.list[i].PaymentFineAppointDate.formatted;
       this.accused.list[i].PaymentVatDate = this.toDatePickerFormat(new Date(compare.PaymentVatDate));
@@ -405,8 +411,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         const length: any = (this.compareDataUpdateTmp.CompareDetail.length - compare.CompareDetailReceipt.length) + i;
         console.log(this.receipt.list[i]);
         // this.receipt.list[i].TotalFine = compare.CompareFine;
+        if (!this.ListCompareDetail[i]) {
+          this.ListCompareDetail.push({});
+        }
         this.ListCompareDetail[i]['userNo' + i + ':' + i] = compare.CompareFine;
-        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[0].PaymentDate ? this.toDatePickerFormat(new Date(compare.CompareDetailReceipt[0].PaymentDate)) : null;
+        if (!this.receipt.list[i]) {
+          this.receipt.list.push({});
+        }
+        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[0].PaymentDate ? this.convertToNormalDate(new Date(compare.CompareDetailReceipt[0].PaymentDate)) : null;
         this.receipt.list[i].ReceipStation = compare.CompareDetailReceipt[0].Station ? compare.CompareDetailReceipt[0].Station : '';
         this.receipt.list[i].ReceiptChanel = compare.CompareDetailReceipt[0].ReceiptChanel ? compare.CompareDetailReceipt[0].ReceiptChanel : '';
         this.receipt.list[i].ReceiptBookNo = compare.CompareDetailReceipt[0].ReceiptBookNo ? compare.CompareDetailReceipt[0].ReceiptBookNo : '';
@@ -2187,8 +2199,14 @@ export class ManageComponent implements OnInit, OnDestroy {
           sum1 = (+sum1) + (+cmp.BribeMoney);
           sum2 = (+sum2) + (+cmp.RewardMoney);
           sum3 = (+sum3) + (+cmp.TreasuryMoney);
+          if (!this.receipt.list[cmp.userNo]) {
+            this.receipt.list[cmp.userNo] = {};
+          }
           this.receipt.list[cmp.userNo].TotalFine = sum;
           this.receipt.list[cmp.userNo].CompareFine = cmp['userNo' + cmp.userNo + ':' + i];
+          if (!this.DataToSave.userData[cmp.userNo]) {
+            this.DataToSave.userData[cmp.userNo] = {};
+          }
           this.DataToSave.userData[cmp.userNo].payment = cmp['userNo' + cmp.userNo + ':' + i];
         }
       }
