@@ -25,7 +25,7 @@ import { Subject } from 'rxjs/Subject';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import 'rxjs/add/operator/takeUntil';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-lawbreaker',
@@ -224,11 +224,12 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 if (this.LawbreakerFG.invalid) {
                     this.isRequired = true;
                     if (this.LawbreakerFG.controls.PassportNo.invalid) {
-                        alert('กรุณาระบุ เลขหนังสือเดินทาง');
+                        swal('', 'กรุณาระบุ เลขหนังสือเดินทาง', 'warning');
+                        // swal('', Message.checkData, 'warning')
                     } else if (this.LawbreakerFG.controls.CompanyRegistrationNo.invalid) {
-                        alert('กรุณาระบุ เลขทะเบียนนิติบุคคล')
+                        swal('', 'กรุณาระบุ เลขทะเบียนนิติบุคคล', 'warning')
                     } else {
-                        alert(Message.checkData)
+                        swal('', Message.checkData, 'warning')
                     }
                     return;
                 }
@@ -490,7 +491,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
 
         if (!isMatch) {
-            alert(Message.checkImageType)
+            swal('', Message.checkImageType, 'warning')
             return
         }
 
@@ -530,10 +531,10 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .takeUntil(this.destroy$)
             .subscribe(res => {
                 if (!this.checkResponse(res)) {
-                    alert(Message.saveFail);
+                    swal('', Message.saveFail, 'error');
                     return;
                 }
-                alert(Message.saveComplete);
+                swal('', Message.saveComplete, 'success');
                 this.router.navigate([`/arrest/lawbreaker/R/${res.LawbreakerID}`]);
             });
     }
@@ -543,10 +544,10 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .takeUntil(this.destroy$)
             .subscribe(res => {
                 if (!this.checkResponse(res)) {
-                    alert(Message.saveFail);
+                    swal('', Message.saveFail, 'error');
                     return;
                 }
-                alert(Message.saveComplete);
+                swal('', Message.saveComplete, 'success');
                 this.enableBtnModeR();
             })
     }
