@@ -69,9 +69,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     readonly costofNews = fromGobalModels.CostofNews;
 
     readonly runningTable = 'ops_investigate';
-    readonly runningOfficeCode = '900012';
+    readonly runningOfficeCode = localStorage.getItem('officeCode');
     readonly runningPrefix = 'AI';
-    readonly officeName = '900012';
+    readonly officeName = localStorage.getItem('officeShortName');
     readonly documentType = '3';
 
     @ViewChild('printDocModal') printDocModal: ElementRef;
@@ -315,11 +315,11 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.loaderService.show();
         let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
-
+            
             let invest = this.investigateFG;
             x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
             x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
-            x.InvestigateSeq = this.investigateSeq;
+            // x.InvestigateSeq = this.investigateSeq;
 
             await this.pageRefreshStaff(x.InvestigateDetailStaff);
 
@@ -718,7 +718,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             DistrictCode: e.item.DistrictCode,
             District: e.item.DistrictNameTH,
             ProvinceCode: e.item.ProvinceCode,
-            Province: e.item.ProvinceNameTH
+            Province: e.item.ProvinceNameTH,
+            Region: `${e.item.SubdistrictNameTH} ${e.item.DistrictNameTH} ${e.item.ProvinceNameTH}`
         })
     }
 
@@ -786,6 +787,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     selectItemQtyUnit(e: any, i: number) {
         this.InvestigateDetailProduct.at(i).patchValue({
             QtyUnit: e.item.DutyCode,
+        })
+    }
+
+    changeItemQtyUnit(e: any, i: number) {
+        const qty = this.typeheadQtyUnit.find(x => x.DutyCode == e.target.value);
+        this.InvestigateDetailProduct.at(i).patchValue({
+            QtyUnit: qty ? qty.DutyCode : '',
         })
     }
 

@@ -341,7 +341,8 @@
                                     [ngbTypeahead]="searchUnit" [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit"
                                     (selectItem)="selectItemQtyUnit($event, i)"  
                                     [value]="item.value.QtyUnit"
-                                    [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" />
+                                    [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" 
+                                    (change)="changeItemQtyUnit($event, i)" />
                                 <input style="display: none" type="text" required formControlName="QtyUnit">
                             </td>
                             <td class="text-center">

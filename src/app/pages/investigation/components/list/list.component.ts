@@ -19,7 +19,7 @@ import swal from 'sweetalert2';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-    private staffCode = '134194';
+    private staffCode = localStorage.getItem('staffCode');
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
