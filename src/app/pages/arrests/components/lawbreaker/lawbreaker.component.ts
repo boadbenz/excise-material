@@ -553,26 +553,36 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     onCancel() {
-        if (!confirm(Message.confirmAction))
-            return
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm!'
+        }).then((result) => {
+            if (result.value) {
+                switch (this.mode) {
+                    case 'C':
+                        this.router.navigate(
+                            [`arrest/allegation`, 'C'],
+                            {
+                                queryParams: {
+                                    arrestMode: this.arrestMode,
+                                    arrestCode: this.arrestCode,
+                                    indictmentId: this.indictmentId,
+                                    guiltbaseId: this.guiltbaseId
+                                }
+                            });
+                        break;
 
-        switch (this.mode) {
-            case 'C':
-                this.router.navigate(
-                    [`arrest/allegation`, 'C'],
-                    {
-                        queryParams: {
-                            arrestMode: this.arrestMode,
-                            arrestCode: this.arrestCode,
-                            indictmentId: this.indictmentId,
-                            guiltbaseId: this.guiltbaseId
-                        }
-                    });
-                break;
+                    case 'R':
+                        this.enableBtnModeR();
+                        break;
+                }
+            }
+        })
 
-            case 'R':
-                this.enableBtnModeR();
-                break;
-        }
     }
 }

@@ -395,7 +395,7 @@
                     [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
                     [value]="item.value.NetVolumeUnit" (change)="changeItemNetVolumeUnit($event, i)"
                     [ngClass]="{'is-invalid': item.get('NetVolumeUnit').invalid && isRequired}" />
-                  <input type="text" formControlName="NetVolumeUnit" required>
+                  <input type="text" formControlName="NetVolumeUnit" required style="display: none;">
                 </td>
                 <td>
                   <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">

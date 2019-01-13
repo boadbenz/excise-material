@@ -2254,6 +2254,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     private async modifyDocument() {
         let docPromise = await this.ArrestDocument.value
             .map(async (x: fromModels.ArrestDocument) => {
+                x.ReferenceCode = this.arrestCode;
                 switch (x.IsModify) {
                     case 'd':
                         if (this.mode == 'C') return;
