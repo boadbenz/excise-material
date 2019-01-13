@@ -56,6 +56,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   @ViewChild('deleteProduct') private deleteProduct: SwalComponent;
   @ViewChild('deleteSuspect') private deleteSuspect: SwalComponent;
   @ViewChild('deleteDocument') private deleteDocument: SwalComponent;
+  @ViewChild('cancelEdit') private cancelEdit: SwalComponent;
 
     private onSaveSubscribe: any;
     private onDeleSubscribe: any;
@@ -275,10 +276,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
             if (status) {
-                await this.navService.setOnCancel(false);
-                this.router.navigate(['/notice/list']);
-
-                sessionStorage.removeItem("notice_form_data");
+                if(this.mode==="R"){
+                    this.cancelEdit.text = Message.confirmAction;
+                    this.cancelEdit.show();
+                }else{
+                    this.onCancelEdit();
+                }
             }
         });
 
@@ -515,6 +518,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         
             NoticeProductFormControl.BrandFullName = new FormControl(null);
             NoticeProductFormControl.IsNewItem = new FormControl(false);
+            NoticeProductFormControl.DutyCode = new FormControl(null);
         }
         return this.fb.group(NoticeProductFormControl)
     }
@@ -590,8 +594,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.BrandFullName = item.ProductDesc?item.ProductDesc:"";
             item.NetWeight = item.NetWeight || '0';
             item.NetWeightUnit = item.NetWeightUnit || '0';
-        }
-        )
+            item.DutyCode = this.typeheadProductUnit.find(el => parseInt(el.DutyUnitCode) == item.QtyUnit).DutyCode;
+        });
 
         await this.setItemFormArray(staff, 'NoticeStaff');
         await this.setItemFormArray(informer, 'NoticeInformer');
@@ -998,7 +1002,23 @@ export class ManageComponent implements OnInit, OnDestroy {
                     IDCard: item.IDCard,
                     PassportNo: item.PassportNo
                 }
-                this.NoticeSuspect.push(this.fb.group(noticeSuspect))
+                let suspects = this.NoticeSuspect.value;
+                let isInsert = true;
+                let susId = noticeSuspect.SuspectID;
+                if(suspects.length>0){
+                    for(let l of suspects){
+                        let _susId = l.SuspectID;
+                        if(susId==_susId){
+                            isInsert = false;
+                            break;
+                        }
+                    }
+                }
+                console.log(noticeSuspect);
+
+                if(isInsert){
+                    this.NoticeSuspect.push(this.fb.group(noticeSuspect))
+                }
             });
         }
     }
@@ -1129,6 +1149,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                         (`${v.OfficeName || ''} ${v.OfficeShortName || ''}`.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
+    searchUnit = (text$: Observable<string>) =>
+    text$
+        .debounceTime(300)
+        .distinctUntilChanged()
+        .map(term => term === '' ? []
+            : this.typeheadProductUnit
+                .filter(v => (v.DutyCode.toLowerCase().indexOf(term.toLowerCase()) > - 1)
+                ).slice(0, 10));
+
     formatterProduct = (x: { ProductDesc: String }) =>
         `${x.ProductDesc || ''}`;
 
@@ -1139,6 +1168,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
 
     formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
+
+    formatterUnit = (x: { DutyCode: String }) =>
+        `${x.DutyCode || ''}`;
 
     selectItemInformmerRegion(ele: any) {
         this.NoticeInformer.at(0).patchValue({
@@ -1197,6 +1229,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             BrandFullName: ele.item.ProductDesc
         });
     }
+    selectItemUnit(ele: any, index: number) {
+        this.NoticeProduct.at(index).patchValue({
+            QtyUnit: ele.item.DutyUnitCode
+        });
+    }
     blurSelectItemProductItem(index: number) {
         const productID = this.NoticeProduct.at(index).value.ProductID;
         if(!productID){
@@ -1242,9 +1279,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStation: e.item.OfficeName
         });
     }
-    blurSelectItemOffice(){
-        if(!this.noticeForm.value.NoticeStationCode){
-            this.noticeForm.patchValue({NoticeStation:""});
+    blurSelectItemOffice(input){
+        let val = input.value
+        if(!val){
+            this.noticeForm.patchValue({
+                NoticeStationCode: "",
+                NoticeStation:""
+            });
         }
     }
 
@@ -1446,5 +1487,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         }else{
           return "";
         }
+    }
+
+    async onCancelEdit(){
+        await this.navService.setOnCancel(false);
+        this.router.navigate(['/notice/list']);
+
+        sessionStorage.removeItem("notice_form_data");
     }
 }

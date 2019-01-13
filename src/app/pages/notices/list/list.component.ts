@@ -108,25 +108,39 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onAdvSearch(form: any) {
-        if (this.dateStartFrom && this.dateStartTo) {
+        // if (this.dateStartFrom && this.dateStartTo) {
 
-            let sdate = getDateMyDatepicker(this.dateStartFrom);
-            let edate = getDateMyDatepicker(this.dateStartTo);
+        let currDate = setDateMyDatepicker(new Date());
 
-            if (!compareDate(sdate, edate)) {
-                this.showSwal(Message.checkDate, "warning");
-                return false;
-            }
-
+        if(this.dateStartFrom){
             form.value.DateStartFrom = this.dateStartFrom.date.day+"-"+this.months[this.dateStartFrom.date.month-1]+"-"+this.dateStartFrom.date.year;//setZeroHours(sdate);
+        }else if(!this.dateStartFrom&&this.dateStartTo){
+            this.dateStartFrom = this.dateStartTo;
+            form.value.DateStartFrom = this.dateStartFrom.date.day+"-"+this.months[this.dateStartFrom.date.month-1]+"-"+this.dateStartFrom.date.year;//setZeroHours(sdate);
+        }
+
+        if(this.dateStartTo){
             form.value.DateStartTo = this.dateStartTo.date.day+"-"+this.months[this.dateStartTo.date.month-1]+"-"+this.dateStartTo.date.year;//setZeroHours(edate);
+        }else if(this.dateStartFrom&&!this.dateStartTo){
+            this.dateStartTo = currDate;
+            form.value.DateStartTo = this.dateStartTo.date.day+"-"+this.months[this.dateStartTo.date.month-1]+"-"+this.dateStartTo.date.year;//setZeroHours(edate);
+        }
+
+        let sdate = getDateMyDatepicker(this.dateStartFrom);
+        let edate = getDateMyDatepicker(this.dateStartTo);
+
+        if (!compareDate(sdate, edate)) {
+            this.showSwal(Message.checkDate, "warning");
+            return false;
+        }
+
 
             form.value.DateStartFrom = form.value.DateStartFrom?form.value.DateStartFrom:"";
             form.value.DateStartTo = form.value.DateStartTo?form.value.DateStartTo:"";
-        }else{
-            form.value.DateStartFrom = "";
-            form.value.DateStartTo = "";
-        }
+        // }else{
+        //     form.value.DateStartFrom = "";
+        //     form.value.DateStartTo = "";
+        // }
 
         this.preLoaderService.setShowPreloader(true);
 

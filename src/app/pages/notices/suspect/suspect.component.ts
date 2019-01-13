@@ -373,13 +373,28 @@ export class SuspectComponent implements OnInit, OnDestroy {
         }, () => { IsSuccess = false; })
 
         if (IsSuccess) {
-            this.GetByCon(this.suspectId);
+            this.onComplete();
             this.showSwal(Message.saveComplete, "success");
         } else {
             this.showSwal(Message.saveFail, "error");
         }
         // Set Preloader
         this.preloader.setShowPreloader(false);
+    }
+
+    private async onComplete() {
+        // set true
+        await this.navService.setEditField(true);
+        await this.navService.setEditButton(true);
+        await this.navService.setPrintButton(true);
+        await this.navService.setDeleteButton(true);
+        await this.navService.setNextPageButton(true);
+        // set false
+        await this.navService.setSaveButton(false);
+        await this.navService.setCancelButton(false);
+
+        this.GetByCon(this.suspectId);
+
     }
 
     private async setRegionStore() {
