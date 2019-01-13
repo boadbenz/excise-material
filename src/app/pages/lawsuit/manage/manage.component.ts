@@ -126,7 +126,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.29');
+    this.sidebarService.setVersion('0.0.0.30');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -171,8 +171,10 @@ export class ManageComponent implements OnInit {
       if (status) {
         await this.navService.setOnSave(false);
         console.log('this.lawsuitForm.valid===>', this.findInvalidControls())
-        if (this.findInvalidControls().length > 0) {
+        
+        if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
           this.isRequired = true;
+          console.log(this.lawsuitForm.controls['IsLawsuitCheck'].value)
           Swal({
             text: Message.checkData,
             type: 'warning',
@@ -236,12 +238,12 @@ export class ManageComponent implements OnInit {
     );
   }
 
-  ngOnDestroy() {
-    this.getDataFromListPage.unsubscribe();
-    this.onPrintSubscribe.unsubscribe();
-    this.onSaveSubscribe.unsubscribe();
-    this.onCancelSubscribe.unsubscribe();
-    this.setShowButton()
+  async ngOnDestroy() {
+    await this.getDataFromListPage.unsubscribe();
+    await this.onPrintSubscribe.unsubscribe();
+    await this.onSaveSubscribe.unsubscribe();
+    await this.onCancelSubscribe.unsubscribe();
+    await this.setShowButton()
   }
   private async onEdit() {
     this.navService.setNextPageButton(false);
@@ -456,8 +458,11 @@ export class ManageComponent implements OnInit {
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
     if (IsLawsuitComplete == 1 || IsLawsuitComplete == 0 && Number(this.LawsuitID) > 0) {
       let lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
-      let dateNow = (this.lawsuitForm.controls['LawsuitDate'].value).date
-      let _lawDate = dateNow.year + '-' + dateNow.month + '-' + dateNow.day + "T00:00:00.0";
+
+        let dateNow = this.lawsuitForm.controls['LawsuitDate'].value ? (this.lawsuitForm.controls['LawsuitDate'].value).date : null
+        let _lawDate = dateNow ? dateNow.year + '-' + dateNow.month + '-' + dateNow.day + "T00:00:00.0" : "";
+      
+
       let tempLawsuitStaff = [];
       let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
       let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
@@ -484,7 +489,7 @@ export class ManageComponent implements OnInit {
         "IsActive": this.staff.IsActive
       })
 
-      const json = {
+      let json = {
         "LawsuitID": this.LawsuitID,
         "ArrestCode": this.lawsuitArrestForm.value.ArrestCode,
         "IndictmentID": Number(this.IndictmentID),
@@ -506,6 +511,29 @@ export class ManageComponent implements OnInit {
         "LawsuitStaff": tempLawsuitStaff
       }
 
+      if(isLaw == 0) {
+        json = {
+          "LawsuitID": this.LawsuitID,
+          "ArrestCode": this.lawsuitArrestForm.value.ArrestCode,
+          "IndictmentID": Number(this.IndictmentID),
+          "IsLawsuit": isLaw,
+          "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",
+          "LawsuitNo": "",
+          "LawsuitDate":  "",
+          "LawsuitTime": "",
+          "LawsuitStationCode":  "",
+          "LawsuitStation":  "",
+          "IsOutside": null,
+          "AccuserTestimony":  "",
+          "LawsuitResult": '',
+          "DeliveryDocNo": '',
+          "DeliveryDate": "",
+          "IsActive": 1,
+          "LawsuitType": null,
+          "LawsuitEnd": null,
+          "LawsuitStaff": []
+        }
+      }
       let update = await this.lawsuitService.LawsuitformupdByCon(json)
       let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
       if (LawsuitArrestIndicmentDetail.length != 0) {
@@ -626,18 +654,22 @@ export class ManageComponent implements OnInit {
     /// save IsLawsuitComplete = 0
     else {
       let lawsuitNo = "";
+ 
+      let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
+      let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
       if (this.lawsuitForm.controls['LawsuitNo'].value && this.lawsuitForm.controls['LawsuitNoSub'].value > 0) {
         lawsuitNo = this.lawsuitForm.controls['LawsuitNo'].value + '/' + this.lawsuitForm.controls['LawsuitNoSub'].value;
       } else {
-        Swal({
-          text: "กรุณากรอกเลขที่คดีรับคำกล่าวโทษไม่ถูกต้อง",
-          type: 'warning',
-        });
-        this.preLoaderService.setShowPreloader(false);
-        return;
+        if(isLaw != 0) {
+          Swal({
+            text: "กรุณากรอกเลขที่คดีรับคำกล่าวโทษไม่ถูกต้อง",
+            type: 'warning',
+          });
+          this.preLoaderService.setShowPreloader(false);
+          return;
+        }
+     
       }
-      let isOut = this.lawsuitForm.controls['IsOutsideCheck'].value ? 1 : 0;
-      let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
       return await this.lawsuitService.LawsuitVerifyLawsuitNo(lawsuitNo, this.lawsuitForm.controls['officeCode'].value, isOut).then(async res => {
         console.log(res)
         if (res.length != 0) {
@@ -694,6 +726,29 @@ export class ManageComponent implements OnInit {
             "LawsuitType": Number(this.LawsuitTableList.value[0].LawsuitType),
             "LawsuitEnd": Number(this.LawsuitTableList.value[0].LawsuitEnd),
             "LawsuitStaff": tempLawsuitStaff
+          }
+
+          if(isLaw == 0) {
+            json = {
+              "LawsuitID": this.LawsuitID,
+              "IndictmentID": this.IndictmentID,
+              "IsLawsuit": isLaw,
+              "ReasonDontLawsuit": this.lawsuitForm.controls['ReasonDontLawsuit'].value ? this.lawsuitForm.controls['ReasonDontLawsuit'].value : "",
+              "LawsuitNo": "",
+              "LawsuitDate":  "",
+              "LawsuitTime": "",
+              "LawsuitStationCode":  "",
+              "LawsuitStation":  "",
+              "IsOutside": null,
+              "AccuserTestimony":  "",
+              "LawsuitResult": '',
+              "DeliveryDocNo": '',
+              "DeliveryDate": "",
+              "IsActive": 1,
+              "LawsuitType": null,
+              "LawsuitEnd": null,
+              "LawsuitStaff": []
+            }
           }
           if (this.lawsuitForm.controls['LawsuitTableList'].value.length == 0) {
             json.LawsuitType = 3
@@ -932,18 +987,12 @@ export class ManageComponent implements OnInit {
         console.log('IsLawsuitComplete==>', IsLawsuitComplete)
         /// LawsuitComplete status = 1
         if (IsLawsuitComplete == 1 || IsLawsuitComplete == 0 && Number(this.LawsuitID) > 0) {
-          this.staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0]
-          this.staff.LawsuitStation = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStation
-          this.staff.LawsuitStationCode = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStationCode
-          this.staff.StaffID = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0].StaffID
+      
           if (res[0]['LawsuitArrestIndicment'][0]['Lawsuit'].length != 0 && res[0]['LawsuitArrestIndicment'].length > 0) {
             this.lawsuitForm.controls['LawsuitDocument'].setValue(await this.lawsuitService.MasDocumentMaingetAll(4, res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitID']))
             let islaw = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'];
             let IsLawsuitCheck = true;
-            if (islaw == 1) {
-              IsLawsuitCheck = false;
-              this.lawsuitForm.controls['ReasonDontLawsuit'].setValue('');
-            }
+        
             let isout = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsOutside'];
             let IsOutsideCheck = false;
             if (isout == 1) {
@@ -953,8 +1002,9 @@ export class ManageComponent implements OnInit {
 
             const staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'].filter(item => item.IsActive == 1);
             await staff.map(item => { item.FullName = `${item.TitleName} ${item.FirstName} ${item.LastName}` });
-            const lawsuitNoArr = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitNo'].split('/');
+            const lawsuitNoArr = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitNo'] ? res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitNo'].split('/') : ['',''];
             const _lawsuitDate = new Date(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitDate']);
+
             try {
               await this.lawsuitForm.reset({
                 IsLawsuitCheck: IsLawsuitCheck,
@@ -984,10 +1034,21 @@ export class ManageComponent implements OnInit {
               console.log('error==>', e)
             }
             if (islaw == 1) {
+              this.staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0]
+              this.staff.LawsuitStation = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStation
+              this.staff.LawsuitStationCode = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStationCode
+              this.staff.StaffID = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0].StaffID
+              IsLawsuitCheck = false;
               this.lawsuitForm.controls['ReasonDontLawsuit'].setValue('');
               this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators()
+            } else {
+              this.lawsuitForm.controls['ReasonDontLawsuit'].setValue(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['ReasonDontLawsuit']);
+              this.lawsuitForm.controls['LawsuitDate'].setValue('');
+              this.lawsuitForm.controls['LawsuitTime'].setValue('');
+              this.lawsuitForm.controls['LawsuitNo'].setValue('');
+              this.lawsuitForm.controls['LawsuitNoSub'].setValue('');
+              this.lawsuitForm.controls['IsLawsuitCheck'].setValue(true);
             }
-            //this.setItemFormArray(staff, 'LawsuitStaff', this.lawsuitForm);
           }
           let IsProve = res[0]['LawsuitArrestIndicment'][0].IsProve;
           this.prove = IsProve
@@ -1318,6 +1379,7 @@ export class ManageComponent implements OnInit {
     } else {
       this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators();
     }
+    this.lawsuitForm.clearValidators();
     // this.form.controls["firstName"].setValidators([Validators.minLength(1), Validators.maxLength(30)]);
   }
   changeLawsuitEnd(value, index) {
