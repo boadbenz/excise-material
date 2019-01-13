@@ -26,6 +26,7 @@ import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import 'rxjs/add/operator/takeUntil';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import swal from 'sweetalert2';
+import { removeObjectItem } from '../../arrest.helper';
 
 @Component({
     selector: 'app-lawbreaker',
@@ -268,7 +269,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     _Lfg.LawbreakerFirstName = _Lfg.CompanyName;
                 }
 
-                console.log(JSON.stringify(_Lfg));
+                _Lfg = removeObjectItem(_Lfg, 'ResultCount');
 
                 switch (this.mode) {
                     case 'C':
