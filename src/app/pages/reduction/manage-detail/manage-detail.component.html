@@ -251,11 +251,11 @@
             <td class="text-center">{{i+1}}</td>
             <td>{{item.LawbreakerName}}</td>
             <td>{{item.PaymentDate}}</td>
-            <td>{{item.finer}}</td>
-            <td>{{item.payment}}</td>
+            <td>Missing ผู้รับชำระ</td>
+            <td>{{item.ReceiptChanel}}</td>
             <td>{{item.ReceiptBookNo}}</td>
-            <td>{{item.receiptRef}}</td>
-            <td>{{item.status}}</td>
+            <td>{{item.ReceiptNo}}</td>
+            <td>{{item.IsLawsuitComplete}}</td>
             <td>
               <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" data-target="#finePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
@@ -427,9 +427,9 @@
         <tbody>
           <tr class="footable" *ngFor="let item of approveDataTable; let i = index;">
             <td class="text-center">{{i+1}}</td>
-            <td>{{item.fullName}}</td>
-            <td>{{item.dateReport}}</td>
-            <td>{{item.typeApprove}}</td>
+            <td>{{item.LawbreakerName  }}</td>
+            <td>{{item.ApproveReportDate}}</td>
+            <td>{{item.ApproveReportType}}</td>
             <td>
               <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" data-target="#approvePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
@@ -686,22 +686,22 @@
     <div class="table-responsive table-striped no-wrap">
       <table class="table">
         <thead>
-          <tr>
-            <th class="footable-sortable text-center col-1">ลำดับ</th>
-            <th class="footable-sortable">ชื่อเอกสารแนบ</th>
-            <th class="footable-sortable">ที่อยู่เอกสารแนบ</th>
+          <tr class="row">
+            <th class="footable-sortable text-center col-md-1">ลำดับ</th>
+            <th class="footable-sortable col-md-5">ชื่อเอกสารแนบ</th>
+            <th class="footable-sortable col-me-5">ที่อยู่เอกสารแนบ</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="footable" *ngFor="let item of fileItem; let i = index;">
-            <td class="text-center">{{i+1}}</td>
-            <td>
-              <input class="form-control" type="text" nmae="fileName" [(ngModel)]="item.fileName" [disabled]="showField">
+          <tr class="footable row" *ngFor="let item of fileItem; let i = index;">
+            <td class="text-center col-md-1">{{i+1}}</td>
+            <td class="col-md-5">
+              <input class="form-control" type="text" nmae="fileName" [(ngModel)]="item.DocumentName" [disabled]="showField">
             </td>
-            <td>
-              <input class="form-control" type="text" name="filePath" [(ngModel)]="item.filePath" [disabled]="showField">
+            <td class="col-md-5">
+              <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath" [disabled]="showField">
             </td>
-            <td>
+            <td class="col-md-1">
               <a href="javaScript:void(0);" class="text-secondary" [hidden]="showField">
                 <i class="ti-trash btn-action"></i>
               </a>

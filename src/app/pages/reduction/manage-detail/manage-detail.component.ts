@@ -211,6 +211,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.activeRoute.snapshot.paramMap.get('comparedetailid'));
   }
 
+  // เตรียมข้อมูลรายละเอียดคดีจาก
   public getAdjustArrestgetByCon(CompareID: any = null): void {
     if (CompareID == null ) { return }
     this.apiService.post('/XCS60/AdjustArrestgetByCon', {CompareID: CompareID})
@@ -221,6 +222,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         }, error => console.log(error))
   }
 
+  // ดึงข้อมูลการปรับเพิ่มหรือปรับลด
   public getAdjustFinegetByCon(CompareID: any = null, CompareDetailID: any = null) {
     if (CompareID == null || CompareDetailID == null) { return }
     this.apiService.post('/XCS60/AdjustFinegetByCon', {
@@ -231,6 +233,55 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       if (response.length > 0) {
         this.reductionDataTable = response;
       }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  // ดึงข้อมูลในส่วนของการชำระค่าปรับ
+  public getAdjustReceiptgetByCompareDetailId(CompareDetailID: any = null) {
+    if (CompareDetailID == null) { return; }
+    this.apiService.post('/XCS60/AdjustReceiptgetByCompareDetailId', {
+      CompareDetailID: CompareDetailID
+    })
+    .subscribe(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  // ดึงข้อมูลการจออนุมัติเปรียบเทียบคดีและแบบอนุ
+  public getAdjustDetailgetByCompareDetailId(CompareDetailID: any = null) {
+    if (CompareDetailID == null ) { return; }
+    this.apiService.post('/XCS60/AdjustDetailgetByCompareDetailId', { CompareDetailID: CompareDetailID})
+        .subscribe(response => {
+          console.log(response);
+        }, error => {
+          console.log(error);
+        });
+  }
+
+  // ดึงข้อมูลเอกสารแนบภายใน
+  public getMasDocumentMaingetAll(CompareID: any = null) {
+    if (CompareID == null) { return; }
+    this.apiService.post('/XCS60/MasDocumentMaingetAll', {
+      DocumentType: 10,
+      ReferenceCode: CompareID
+    })
+    .subscribe(response => {
+      console.log(response);
+    }, error => console.log(error));
+  }
+
+  // ดึงข้อมูลตรวจสอบข้อมูล
+  public getAdjustFinecheckComplete(CompareDetailID: any = null) {
+    if (CompareDetailID == null) { return; }
+    this.apiService.post('/XCS60/AdjustFinecheckComplete', {
+      CompareDetailID: CompareDetailID
+    })
+    .subscribe(response => {
+      console.log(response);
     }, error => {
       console.log(error);
     })
