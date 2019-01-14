@@ -558,6 +558,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 if (this.IsReceive) {
                     this.oProveDeliverProduct.ProveID = res.ProveID;
+                    this.oProveDeliverProduct.IsReceive = null;
 
                     await this.proveService.ProveDeliverProductinsAll(this.oProveDeliverProduct).then(async dRes => {
                         if (!dRes.IsSuccess) {
@@ -2265,7 +2266,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
     DelDocument(i: number) {
-        if (confirm(Message.confirmDeleteProduct)) {
+        if (confirm(Message.confirmDeleteDoc)) {
 
             var aIndex;
             aIndex = this.getIndexOf(this.ListProveDoc, i, "DocumentSeq");
