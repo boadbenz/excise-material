@@ -54,6 +54,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     IsNewItem: false,
     IsActive: 1,
 }
+  isFinishLoad: boolean;
   // Html
   modal: any;
   @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -127,8 +128,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     private masDocumentMainService: MasDocumentMainService,
     private fb: FormBuilder
   ) {
+    this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.35');
+    this.sidebarService.setVersion('0.0.0.36');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -185,6 +187,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       await this.getCompareData();
       await this.setAllCompareData();
       this.calSum();
+      this.isFinishLoad = true;
     } catch (err) {
       this.navService.setPrintButton(false);
       this.navService.setDeleteButton(false);
@@ -293,6 +296,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     if (staff.length > 0 && cmpD.length > 0) {
       for (const ap of this.compareDataUpdateTmp.CompareDetail) {
         console.log(cmpD[i]);
+        if (!this.approveReportList[i]) {
+          this.approveReportList.push({});
+        }
         this.approveReportList[i].ApproveStation = cmpD[i].ApproveStation;
         this.approveReportList[i].payDate = this.toDatePickerFormat(new Date(cmpD[i].PaymentFineAppointDate));
         this.approveReportList[i].payTime = this.getTimeNow(new Date(cmpD[i].PaymentFineAppointDate));
@@ -384,11 +390,17 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   async setCompareDetail() {
     let i = 0;
+    let countCD = 0;
     for (const compare of this.compareDataUpdateTmp.CompareDetail) {
+      if (!this.accused.list[i]) {
+        this.accused.list.push({});
+      }
       this.accused.list[i].PaymentFineAppointDate = this.toDatePickerFormat(new Date(compare.PaymentFineAppointDate));
       this.accused.list[i].PaymentFineAppointShow = this.accused.list[i].PaymentFineAppointDate.formatted;
-      this.accused.list[i].PaymentVatDate = this.toDatePickerFormat(new Date(compare.PaymentVatDate));
-      this.accused.list[i].PaymentVatDateShow = this.accused.list[i].PaymentVatDate.formatted;
+      if (compare.PaymentVatDate) {
+        this.accused.list[i].PaymentVatDate = this.toDatePickerFormat(new Date(compare.PaymentVatDate));
+        this.accused.list[i].PaymentVatDateShow = this.accused.list[i].PaymentVatDate.formatted;
+      }
       this.accused.list[i].request = compare.IsRequest;
       this.accused.list[i].Bail = compare.Bail;
       this.accused.list[i].Guaruntee = compare.Guaruntee;
@@ -405,8 +417,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         const length: any = (this.compareDataUpdateTmp.CompareDetail.length - compare.CompareDetailReceipt.length) + i;
         console.log(this.receipt.list[i]);
         // this.receipt.list[i].TotalFine = compare.CompareFine;
-        this.ListCompareDetail[i]['userNo' + i + ':' + i] = compare.CompareFine;
-        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[0].PaymentDate ? this.toDatePickerFormat(new Date(compare.CompareDetailReceipt[0].PaymentDate)) : null;
+        if (!this.receipt.list[i]) {
+          this.receipt.list.push({});
+        }
+        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[0].PaymentDate ? this.convertToNormalDate(new Date(compare.CompareDetailReceipt[0].PaymentDate)) : null;
         this.receipt.list[i].ReceipStation = compare.CompareDetailReceipt[0].Station ? compare.CompareDetailReceipt[0].Station : '';
         this.receipt.list[i].ReceiptChanel = compare.CompareDetailReceipt[0].ReceiptChanel ? compare.CompareDetailReceipt[0].ReceiptChanel : '';
         this.receipt.list[i].ReceiptBookNo = compare.CompareDetailReceipt[0].ReceiptBookNo ? compare.CompareDetailReceipt[0].ReceiptBookNo : '';
@@ -414,8 +428,20 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.receipt.list[i].ReceiptNo = compare.CompareDetailReceipt[0].ReceiptNo ? compare.CompareDetailReceipt[0].ReceiptNo : '';
         this.receipt.list[i].CompareReceiptID = compare.CompareDetailReceipt[0].CompareReceiptID;
       }
+      if (compare.CompareDetailFine) {
+        for (const cd of compare.CompareDetailFine) {
+          if (!this.ListCompareDetail[countCD]) {
+            this.ListCompareDetail.push({});
+          }
+          console.log(cd.ProductFine);
+          this.ListCompareDetail[countCD]['userNo' + i + ':' + countCD] = cd.ProductFine;
+          countCD++;
+        }
+      }
       i++;
     }
+    // console.log('ขอ้มูลการเสียค่าปรับ');
+    // console.log(this.accused);
     this.calSum();
   }
   setReceiptData() {
@@ -487,7 +513,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
     });
     this.OnSubscribe.cancel = this.navService.onCancel.subscribe(async status => {
-      if (status) {
+      if (status && this.isFinishLoad) {
         Swal({
           title: 'ยืนยันการทำรายการ?',
           text: "ต้องการยกเลิกรายการจริงหรือไม่!",
@@ -525,7 +551,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
     this.OnSubscribe.save = this.navService.onSave.subscribe(async status => {
       console.log(status);
-      if (status) {
+      if (status && this.isFinishLoad) {
         if (this.params.CompareID.toString() === '0') {
           this.btnAccusedHeader.click();
         } else {
@@ -534,12 +560,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
     });
     this.OnSubscribe.delete = this.navService.onDelete.subscribe(async status => {
-      if (status) {
+      if (status && this.isFinishLoad) {
         this.deleteCompare();
       }
     });
     this.OnSubscribe.print = this.navService.onPrint.subscribe(async status => {
-      if (status) {
+      if (status && this.isFinishLoad) {
         await this.navService.setOnPrint(false);
         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
       }
@@ -675,7 +701,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     try {
       const rec: any = this.receipt.list[index];
         const data: any = {
-          FineType: 0,
+          FineType: 1,
           ReferenceID: CompareReceiptID,
           PaymentPeriodNo: 1,
           PaymentFine: this.sumAllCompare.sum,
@@ -1005,7 +1031,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
         this.headerData.PenaltyDesc = resp[0].PenaltyDesc;
         this.params.ArrestCode = resp[0].ArrestCode;
-        this.headerData.ArrestLocation = `${resp[0].SubDistrict} ${resp[0].District}`;
+        this.headerData.ArrestLocation = `${resp[0].SubDistrict} ${resp[0].District} ${resp[0].Province}`;
         this.headerData.ArrestStaffName = `${resp[0].TitleName}${resp[0].FirstName} ${resp[0].LastName}`;
         // รายละเอียดค่าปรับ
         if (localStorage.getItem('officeShortName')) {
@@ -1037,7 +1063,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           } else {
             CompareDetail.LawbreakerName = LawBreaker ? `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}` : '';
             const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
-            CompareDetail.Mistreat = Mistreat.Mistreat ? Mistreat.Mistreat : 1;
+            CompareDetail.Mistreat = Mistreat.Mistreat ? Mistreat.Mistreat : 0;
             this.ListCompareDetail.push(CompareDetail);
             // ชื่อผู้ต้องหาคำให้การ
             const accuse: any = {};
@@ -1335,7 +1361,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         user_count++;
         i++;
       }
-      console.log('cal sum');
+      // console.log('cal sum');
       this.ListCompareDetail = newDetailArr;
       if (resp.CompareProve[0]) {
         this.calSum();
@@ -1533,15 +1559,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.accused.list[this.editUser.index].PaymentFineAppointShow = this.editUser.PaymentFineAppointDate.formatted;
     this.accused.list[this.editUser.index].PaymentVatDate = this.editUser.PaymentVatDate;
     this.accused.list[this.editUser.index].PaymentVatDateShow = this.editUser.PaymentVatDate.formatted;
-    if ((this.editUser.Bail && this.editUser.Bail.length > 0) && (this.editUser.Guaruntee && this.editUser.Guaruntee.length > 0)) {
-      this.accused.list[this.editUser.index].IsProvisionalAcquittal = 3;
-    } else if ((this.editUser.Bail && this.editUser.Bail.length > 0)) {
-      this.accused.list[this.editUser.index].IsProvisionalAcquittal = 1;
-    } else if (this.editUser.Guaruntee && this.editUser.Guaruntee.length > 0) {
-      this.accused.list[this.editUser.index].IsProvisionalAcquittal = 2;
-    } else {
-      this.accused.list[this.editUser.index].IsProvisionalAcquittal = 0;
-    }
+    // if ((this.editUser.Bail && this.editUser.Bail.length > 0) && (this.editUser.Guaruntee && this.editUser.Guaruntee.length > 0)) {
+    //   this.accused.list[this.editUser.index].IsProvisionalAcquittal = 3;
+    // } else if ((this.editUser.Bail && this.editUser.Bail.length > 0)) {
+    //   this.accused.list[this.editUser.index].IsProvisionalAcquittal = 1;
+    // } else if (this.editUser.Guaruntee && this.editUser.Guaruntee.length > 0) {
+    //   this.accused.list[this.editUser.index].IsProvisionalAcquittal = 2;
+    // } else {
+    //   this.accused.list[this.editUser.index].IsProvisionalAcquittal = 0;
+    // }
     this.clearDataList(this.editUser);
     console.log(this.accused);
   }
@@ -1764,7 +1790,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   saveApprove() {
     console.log(this.compareUserDetailPopup);
     this.approveReportList[this.compareUserDetailPopup.index] = this.jsonCopy(this.compareUserDetailPopup);
-    this.approveReportList[this.compareUserDetailPopup.index].ApproveReportDateShow = this.compareUserDetailPopup.ApproveReportDate.formatted;
+    this.approveReportList[this.compareUserDetailPopup.index].ApproveReportDateShow = this.compareUserDetailPopup.ApproveReportDate.formatted.split('/').join(' ');
     this.clearDataList(this.compareUserDetailPopup);
   }
   clearDataList(data: any) {
@@ -1788,13 +1814,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     // console.log(this.accused);
     // console.log(this.DataToSave);
     // console.log('data');
-
+    // console.log(this.accused.StationName);
+    const compareStation: any = this.rawOptions.filter(f => (this.accused.StationName) === f.OfficeShortName);
+    // console.log(compareStation);
     const CompareData: any = {
       CompareID: this.params.CompareID ? (+this.params.CompareID) : '',
       CompareCode: this.receipt.CompareNo + '/' + this.receipt.CompareYear,
       CompareDate: `${this.convertToNormalDate(this.accused.CompareDate.date).toString()} ${this.accused.CompareTime.toString()}:00 +07.00`,
       CompareStation: this.accused.StationName,
-      CompareStationCode: this.accused.StationCode,
+      CompareStationCode: ( compareStation && compareStation[0] ) ? compareStation[0].OfficeCode : '',
       IsOutside: this.receipt.IsOutside ? 1 : 0,
       LawsuitID: this.headerData.LawsuitID,
       IsActive: 1,
@@ -1808,7 +1836,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     CompareData.CompareDocument = this.getAllFile();
     let id = 0;
     const isFillForm1: any = '';
+    // console.log('การร้องขอ');
+    // console.log(this.accused);
     for (const user of this.DataToSave.userData) {
+      console.log('ข้อมูลแต่ละคน');
+      console.log(user);
       if (this.accused.list[id].PaymentFineAppointDate) {
         console.log(this.approveReportList);
         const isAppFill: any = !this.isNotValidTxtField(this.approveReportList[id].ApproveReportDate);
@@ -1816,7 +1848,15 @@ export class ManageComponent implements OnInit, OnDestroy {
         if ((+this.params.CompareID) &&  this.compareDataUpdateTmp.CompareDetail[id]) {
           CompareDetailID = this.compareDataUpdateTmp.CompareDetail[id].CompareDetailID;
         }
+        // console.log(this.accused.list[id].PaymentFineAppointDate);
+        // console.log(this.DateToday);
+        let IsProvisionalAcquittal: any = 1;
+        if (JSON.stringify(this.accused.list[id].PaymentFineAppointDate.date) === JSON.stringify(this.DateToday.date)) {
+          IsProvisionalAcquittal = 0;
+          //this.accused.list[id].IsProvisionalAcquittal
+        }
         try {
+          const approveStation: any = this.rawOptions.filter(f => (isAppFill ? this.approveReportList[id].ApproveStation : '') === f.OfficeShortName);;
           const detail: any = {
             CompareID: this.params.CompareID ? (+this.params.CompareID) : '',
             CompareDetailID: (+CompareDetailID),
@@ -1827,7 +1867,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsRequest: this.accused.list[id].request,
             RequestForAction: '',
             CompareReason: isAppFill ? this.approveReportList[id].other : '',
-            IsProvisionalAcquittal:  this.accused.list[id].IsProvisionalAcquittal,
+            IsProvisionalAcquittal:  IsProvisionalAcquittal,
             Bail: this.accused.list[id].Bail,
             Guaruntee: this.accused.list[id].Guaruntee,
             CompareFine: user.CompareFine,
@@ -1838,7 +1878,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             BribeMoney: user.BribeMoney,
             RewardMoney: user.RewardMoney,
             IsActive: 1,
-            ApproveStationCode: isAppFill ? this.approveReportList[id].ApproveStationCode : '',
+            ApproveStationCode: (approveStation && approveStation[0]) ? approveStation[0].OfficeCode : '',
             ApproveStation: isAppFill ? this.approveReportList[id].ApproveStation : '',
             ApproveReportDate: isAppFill ? this.convertToNormalDate(this.approveReportList[id].ApproveReportDate.date) + ' 00:00:00 +07.00' : '',
             CommandNo: isAppFill ? this.approveReportList[id].departOrder : '',
@@ -1846,7 +1886,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             CompareAuthority: null,
             ApproveReportType: isAppFill ? this.approveReportList[id].ApproveType.toString().replace('แบบอนุมัติ ', '') : '',
             MistreatNo: user.MistreatNo,
-            FineType: null,
+            FineType: 1,
             AdjustReason: null,
             CompareDetailFine: []
           };
@@ -1878,14 +1918,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     let j = 0;
     let compareFine: any = [];
     if ((+this.params.CompareID) > 0) {
+      let i = 0;
       for (const user of this.ListCompareDetail) {
-        console.log(!user.isSum , !this.isReportNo);
+        // console.log('receipt by id');
+        // console.log(this.receipt.list[id]);
+        // console.log(!user.isSum , !this.isReportNo);
         if (!user.isSum || !this.isReportNo) {
           const compareDetailFine: any = {
             CompareFineID: this.compareDataUpdateTmp.CompareDetail[id] ? (this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j] ? (+this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareFineID) : '') : '',
             CompareDetailID: this.compareDataUpdateTmp.CompareDetail[id] ? (this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j] ? (+this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareDetailID) : '' ) : '',
             ProductID: user.product? user.product.ProductID : '',
-            ProductFine: user.all ? user.all : this.receipt.list[id].TotalFine,
+            ProductFine: user['userNo' + user.userNo + ':' + i],
             VatValue: user.FineAmount,
             FineRate: user.multi,
             IsActive: 1,
@@ -1908,16 +1951,20 @@ export class ManageComponent implements OnInit, OnDestroy {
           id++;
           j = 0;
         }
+        i++;
       }
     } else {
+      let i = 0;
       for (const user of this.ListCompareDetail) {
-        console.log(!user.isSum , !this.isReportNo);
+        // console.log(!user.isSum , !this.isReportNo);
+        // console.log('receipt by id');
+        // console.log(this.receipt.list[id]);
         if (!user.isSum || !this.isReportNo) {
           const compareDetailFine: any = {
             CompareFineID: null,
             CompareDetailID: null,
             ProductID: user.product ? user.product.ProductID : '',
-            ProductFine: user.all ? user.all : this.receipt.list[id].TotalFine,
+            ProductFine: user['userNo' + user.userNo + ':' + i],
             VatValue: user.FineAmount,
             FineRate: user.multi,
             IsActive: 1,
@@ -1935,6 +1982,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           compareFine = [];
           id++;
         }
+        i++;
       }
     }
     CompareData.CompareStaff = this.getAllStaff();
@@ -2130,16 +2178,23 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
   }
-  calSum() {
+  calSum(id: any = null) {
     console.log('start');
     let i = 0;
     let sum = 0;
     let sum1 = 0;
     let sum2 = 0;
     let sum3 = 0;
-    console.log(this.ListCompareDetail);
+    // console.log(this.ListCompareDetail);
     this.sumAllCompare = {sum: 0, sum1: 0, sum2: 0, sum3: 0};
     for (const cmp of this.ListCompareDetail) {
+      if (cmp['userNo' + cmp.userNo + ':' + i]) {
+        // console.log(cmp['userNo' + cmp.userNo + ':' + i], this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i]));
+        if (cmp['userNo' + cmp.userNo + ':' + i] > parseInt((cmp['userNo' + cmp.userNo + ':' + i]*100).toString())/100.00) {
+          cmp['userNo' + cmp.userNo + ':' + i] = parseInt((cmp['userNo' + cmp.userNo + ':' + i]*100).toString())/100.00;
+          // console.log(cmp['userNo' + cmp.userNo + ':' + i]);
+        }
+      }
       if (cmp.isNo2) {
         this.ListCompareDetail[i].BribeMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
         this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
@@ -2156,9 +2211,9 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.sumAllCompare.sum3 = sum3;
         }
         this.DataToSave.userData[cmp.userNo].CompareFine = cmp['userNo' + cmp.userNo + ':' + i];
-        this.DataToSave.userData[cmp.userNo].BribeMoney = sum1;
-        this.DataToSave.userData[cmp.userNo].RewardMoney = sum2;
-        this.DataToSave.userData[cmp.userNo].TreasuryMoney = sum3;
+        this.DataToSave.userData[cmp.userNo].BribeMoney = cmp.BribeMoney;
+        this.DataToSave.userData[cmp.userNo].RewardMoney = cmp.RewardMoney;
+        this.DataToSave.userData[cmp.userNo].TreasuryMoney = cmp.TreasuryMoney;
         this.receipt.list[cmp.userNo].TotalFine = sum;
         this.receipt.list[cmp.userNo].CompareFine = cmp['userNo' + cmp.userNo + ':' + i];
       } else {
@@ -2184,22 +2239,29 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
           this.ListCompareDetail[i].TreasuryMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.6);
           sum = (+sum) + (+cmp['userNo' + cmp.userNo + ':' + i]);
-          sum1 = (+sum1) + (+cmp.BribeMoney);
-          sum2 = (+sum2) + (+cmp.RewardMoney);
-          sum3 = (+sum3) + (+cmp.TreasuryMoney);
+          sum1 = (+sum1) + (+this.ListCompareDetail[i].BribeMoney);
+          sum2 = (+sum2) + (+this.ListCompareDetail[i].RewardMoney);
+          sum3 = (+sum3) + (+this.ListCompareDetail[i].TreasuryMoney);
+          if (!this.receipt.list[cmp.userNo]) {
+            this.receipt.list[cmp.userNo] = {};
+          }
           this.receipt.list[cmp.userNo].TotalFine = sum;
           this.receipt.list[cmp.userNo].CompareFine = cmp['userNo' + cmp.userNo + ':' + i];
+          if (!this.DataToSave.userData[cmp.userNo]) {
+            this.DataToSave.userData[cmp.userNo] = {};
+          }
           this.DataToSave.userData[cmp.userNo].payment = cmp['userNo' + cmp.userNo + ':' + i];
         }
       }
       i++;
     }
+    console.log(this.ListCompareDetail);
   }
   onSubmit() {
     const case1: any = this.isNotValidTxtField(this.compareUserDetailPopup.position1);
     const case2: any = this.isNotValidTxtField(this.compareUserDetailPopup.rank);
     const case3: any = this.isNotValidTxtField(this.compareUserDetailPopup.rank2);
-    if (case1) {
+    if (case1 && this.compareUserDetailPopup.ApproveType != 1) {
       Swal(
         '',
         'กรุณาเลือกผู้เสนอพิจารณาเห็นชอบจากรายการ.',
@@ -2320,6 +2382,13 @@ export class ManageComponent implements OnInit, OnDestroy {
             })
         }
     };
+  }
+  clearStaff() {
+    this.compareUserDetailPopup.staff = null;
+    this.compareUserDetailPopup.staff1 = null;
+    this.compareUserDetailPopup.ProgramCode = null;
+    this.compareUserDetailPopup.position1 = null;
+    this.compareUserDetailPopup.department1 = null;
   }
   documentId:any = "";
   documentIndex:any = "";
