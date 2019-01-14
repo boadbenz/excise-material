@@ -55,7 +55,7 @@ export class ProveService {
 
   async getProveProductUnit(Textsearch: string): Promise<any> {
     const params = {  };
-    const url = `${appConfig.api7789}/MasDutyUnitMaingetAll`;
+    const url = `${appConfig.api8777}/MasDutyUnitMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -219,7 +219,7 @@ export class ProveService {
 
   async MasDocumentMaininsAll(oProveDocument: ProveDocument): Promise<any> {
     const params = JSON.stringify(oProveDocument);
-    const url = `${appConfig.api7789}/MasDocumentMaininsAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaininsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -231,7 +231,7 @@ export class ProveService {
 
   async MasDocumentMainupdByCon(oProveDocument: ProveDocument): Promise<any> {
     const params = JSON.stringify(oProveDocument);
-    const url = `${appConfig.api7789}/MasDocumentMainupdByCon`;
+    const url = `${appConfig.api8777}/MasDocumentMainupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -243,7 +243,7 @@ export class ProveService {
 
   async MasDocumentMainupdDelete(DocumentID: string): Promise<any> {
     const params = {DocumentID};
-    const url = `${appConfig.api7789}/MasDocumentMainupdDelete`;
+    const url = `${appConfig.api8777}/MasDocumentMainupdDelete`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -299,7 +299,7 @@ export class ProveService {
     }
 
     const params = JSON.stringify(pValue);
-    const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -347,7 +347,7 @@ export class ProveService {
 
   async LawsuitArrestgetByCon(IndictmentID: string): Promise<any> {
     const params = { IndictmentID };
-    const url = `${appConfig.api8083}/LawsuitArrestgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitArrestgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
