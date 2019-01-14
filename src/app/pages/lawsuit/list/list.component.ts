@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.29');
+    this.sidebarService.setVersion('0.0.0.30');
     this.paginage.TotalItems = 0;
     this.preLoaderService.setShowPreloader(true);
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
@@ -254,7 +254,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   checkNullLawsuitNo(data) {
-    if (data.Lawsuit.length > 0) {
+    if (data.Lawsuit.length > 0 && data.Lawsuit[0].LawsuitNo && data.Lawsuit[0].LawsuitNo != "/") {
       return data.Lawsuit[0].LawsuitNo;
     } else {
       return "";
