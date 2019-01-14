@@ -34,7 +34,7 @@ import { TransactionRunningService } from 'app/services/transaction-running.serv
 import { TransactionRunning } from 'app/models/transaction-running.model';
 import { groupArrayItem, removeObjectItem, clearFormArray, sortFormArray } from '../../arrest.helper';
 import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
-import { Acceptability, ArrestIndictmentProduct } from '../../models';
+import { Acceptability } from '../../models';
 
 @Component({
     selector: 'app-manage',
@@ -50,13 +50,13 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     // v: รายการแสดง
     // u: รายการอัพเดท
     // d: รายการที่ถูกลบ
-    @ViewChild('ItemOfficeName') inputOfficeName: ElementRef;
+
     @ViewChild('ItemLocalRetion') inputLocalRetion: ElementRef;
 
     showStaff() {
-        
+
         console.log(this.ArrestStaff);
-        
+
     }
 
     myDatePickerOptions = MyDatePickerOptions;
@@ -236,11 +236,11 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     nip.ProductID = _f3.ProductID;
                     nip.IsProdcutCo = _f3.IsProdcutCo || '1';
                     nip.IndictmentProductQty = _f3.Qty || '0';
-                    nip.IndictmentProductQtyUnit = _f3.QtyUnit || '-';
+                    nip.IndictmentProductQtyUnit = _f3.QtyUnit;
                     nip.IndictmentProductSize = _f3.Size || '0';
                     nip.IndictmentProductSizeUnit = _f3.SizeUnitName;
                     nip.IndictmentProductVolume = _f3.NetVolume || '0';
-                    nip.IndictmentProductVolumeUnit = _f3.NetVolumeUnit || '-';
+                    nip.IndictmentProductVolumeUnit = _f3.NetVolumeUnit;
                     nip.IndictmentProductMistreatRate = _f3.MistreatRate || '';
                     nip.IndictmentProductFine = _f3.Fine || '';
                     nip.IndictmentProductIsActive = _f3.IndictmentProductIsActive || 1;
@@ -374,7 +374,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             OccurrenceDate: new FormControl(ArrestDate, Validators.required),
             OccurrenceTime: new FormControl(ArrestTime, Validators.required),
             ArrestStationCode: new FormControl(null),
-            ArrestStation: new FormControl(null, Validators.required),
+            ArrestStation: new FormControl(Validators.required),
             HaveCulprit: new FormControl(0),
             Behaviour: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
             Testimony: new FormControl('รับสารภาพตลอดข้อกล่าวหา'),
@@ -546,7 +546,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 const office = this.typeheadOffice.find(x => x.OfficeCode == this.runningOfficeCode);
                 if (office) {
                     const _office = { item: office };
-                    this.selectItemOffice(_office);
+                    await this.selectItemOffice(_office);
                 }
 
                 this.showEditField = false;
@@ -621,6 +621,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     private pageRefreshArrest(_arr: fromModels.Arrest) {
+
         let arrestForm = this.arrestFG;
 
         _arr.ArrestDate = this.isObject(_arr.ArrestDate)
@@ -656,7 +657,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         arrestForm.patchValue(_arr);
 
         setTimeout(() => {
-            this.inputOfficeName.nativeElement.value = _arr.ArrestStation;
             this.inputLocalRetion.nativeElement.value = _arr.ArrestLocale[0].Region;
         }, 100);
     }
@@ -788,8 +788,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                         })
                     )
                 );
-            }).catch((error) => this.catchError(error));
-        this.loaderService.hide();
+                this.loaderService.hide();
+            }).catch((error) => {
+                this.catchError(error);
+                this.loaderService.hide();
+            });
+
     }
 
     onSDateChange(event: IMyDateModel) {
@@ -1080,11 +1084,11 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             ProductDetailID: x.ProductDetailID || null,
             IsProdcutCo: x.IsProdcutCo || '0',
             Qty: x.Qty || 0,
-            QtyUnit: x.QtyUnit || '-',
+            QtyUnit: x.QtyUnit,
             Size: x.Size || 0,
-            SizeUnit: x.SizeUnit || '-',
+            SizeUnit: x.SizeUnit,
             Volume: x.Volume || 0,
-            VolumeUnit: x.VolumeUnit || '-',
+            VolumeUnit: x.VolumeUnit,
             MistreatRate: x.MistreatRate || null,
             Fine: x.Fine || null,
             IndictmentDetailID: x.IndictmentDetailID || null,
@@ -1391,6 +1395,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     onChangeStaff(e: any, i: number) {
         let staff: fromModels.ArrestStaff = this.ArrestStaff.at(i).value;
+        if (staff.FullName == e.target.value) return;
         this.ArrestStaff.at(i).reset();
         this.ArrestStaff.at(i).patchValue({
             IsModify: staff.IsModify == 'v' ? 'u' : staff.IsModify,
@@ -1407,8 +1412,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         let contributerId = e.target.value;
         let staff = this.ArrestStaff.at(i).value;
         this.ArrestStaff.at(i).patchValue({
-            ContributorCode: contributerId,
-            IsModify: staff.IsModify == 'v' ? 'u' : staff.IsModify
+            ContributorCode: contributerId
         })
     }
 
@@ -1419,21 +1423,29 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         })
     }
 
-    onChangeArrestStation(e: any) {
-        this.arrestFG.patchValue({
-            ArrestStation: e.target.value
-        })
-    }
-
     selectItemQtyUnit(e: any, i: number) {
         this.ArrestProduct.at(i).patchValue({
             QtyUnit: e.item.DutyCode,
         })
     }
 
+    changeItemQtyUnit(e: any, i: number) {
+        const volume = this.typeheadQtyUnit.find(x => x.DutyCode == e.target.value);
+        this.ArrestProduct.at(i).patchValue({
+            QtyUnit: volume ? volume.DutyCode : ''
+        })
+    }
+
     selectItemNetVolumeUnit(e: any, i: number) {
         this.ArrestProduct.at(i).patchValue({
             NetVolumeUnit: e.item.DutyCode
+        })
+    }
+
+    changeItemNetVolumeUnit(e: any, i: number) {
+        const volume = this.typeheadNetVolumeUnit.find(x => x.DutyCode == e.target.value);
+        this.ArrestProduct.at(i).patchValue({
+            NetVolumeUnit: volume ? volume.DutyCode : ''
         })
     }
 
@@ -2242,6 +2254,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     private async modifyDocument() {
         let docPromise = await this.ArrestDocument.value
             .map(async (x: fromModels.ArrestDocument) => {
+                x.ReferenceCode = this.arrestCode;
                 switch (x.IsModify) {
                     case 'd':
                         if (this.mode == 'C') return;

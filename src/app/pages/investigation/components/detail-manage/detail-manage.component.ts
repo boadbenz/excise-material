@@ -50,6 +50,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     card6 = true;
     card7 = true;
 
+    isRequired: boolean = false;
     _isSuccess: boolean;
     private mode: string;
     invesDetailId: string;
@@ -68,9 +69,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     readonly costofNews = fromGobalModels.CostofNews;
 
     readonly runningTable = 'ops_investigate';
-    readonly runningOfficeCode = '900012';
+    readonly runningOfficeCode = localStorage.getItem('officeCode');
     readonly runningPrefix = 'AI';
-    readonly officeName = '900012';
+    readonly officeName = localStorage.getItem('officeShortName');
     readonly documentType = '3';
 
     @ViewChild('printDocModal') printDocModal: ElementRef;
@@ -314,11 +315,11 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.loaderService.show();
         let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
-
+            
             let invest = this.investigateFG;
             x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
             x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
-            x.InvestigateSeq = this.investigateSeq;
+            // x.InvestigateSeq = this.investigateSeq;
 
             await this.pageRefreshStaff(x.InvestigateDetailStaff);
 
@@ -340,7 +341,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         await staff.map((y, index) => {
             y.RowId = index + 1;
             y.IsModify = 'r';
-            y.FullName = `${y.TitleName} ${y.FirstName} ${y.LastName}`;
+            y.StaffFullName = `${y.TitleName} ${y.FirstName} ${y.LastName}`;
         });
         this.setItemFormArray(staff, 'InvestigateDetailStaff');
     }
@@ -462,6 +463,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.ProgramCode = null;
         item.ProcessCode = null;
         item.InvestigateDetailID = null;
+        item.StaffFullName = null;
         item.StaffCode = null;
         item.TitleName = null;
         item.FirstName = null;
@@ -523,7 +525,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.Province = null;
         item.ZipCode = null;
         item.IsActive = 1;
-        item.Region = null;
+        item.Region = '';
         item.IsModify = 'c';
         if (lastIndex < 0) {
             item.RowId = 1;
@@ -563,12 +565,12 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.SizeUnitName = null;
         item.FixNo2 = null;
         item.SequenceNo = null;
-        item.ProductDesc = null;
+        item.ProductDesc = '';
         item.CarNo = null;
         item.Qty = null;
         item.QtyUnit = null;
         item.NetVolume = null;
-        item.NetVolumeUnit = null;
+        item.NetVolumeUnit = '';
         item.IsActive = null;
         item.IsModify = 'c';
         item.GroupCode = '1';
@@ -716,7 +718,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             DistrictCode: e.item.DistrictCode,
             District: e.item.DistrictNameTH,
             ProvinceCode: e.item.ProvinceCode,
-            Province: e.item.ProvinceNameTH
+            Province: e.item.ProvinceNameTH,
+            Region: `${e.item.SubdistrictNameTH} ${e.item.DistrictNameTH} ${e.item.ProvinceNameTH}`
         })
     }
 
@@ -747,7 +750,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         this.InvestigateDetailStaff.at(i).patchValue({
             IsModify: staff.IsModify == 'r' ? 'u' : staff.IsModify,
             RowId: staff.RowId,
-            FullName: `${e.item.TitleName} ${e.item.FirstName} ${e.item.LastName}`,
+            StaffFullName: `${e.item.TitleName} ${e.item.FirstName} ${e.item.LastName}`,
             ProgramCode: 2,
             ProcessCode: '02',
             PositionCode: e.item.OperationPosCode,
@@ -784,6 +787,13 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     selectItemQtyUnit(e: any, i: number) {
         this.InvestigateDetailProduct.at(i).patchValue({
             QtyUnit: e.item.DutyCode,
+        })
+    }
+
+    changeItemQtyUnit(e: any, i: number) {
+        const qty = this.typeheadQtyUnit.find(x => x.DutyCode == e.target.value);
+        this.InvestigateDetailProduct.at(i).patchValue({
+            QtyUnit: qty ? qty.DutyCode : '',
         })
     }
 
@@ -887,7 +897,16 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         });
 
     private async onEdit() {
-        await this.loadMasterData();
+        if (
+            !this.typeheadStaff.length &&
+            !this.typeheadOffice.length &&
+            !this.typeheadProduct.length &&
+            !this.typeheadQtyUnit.length &&
+            !this.typeheadNetVolumeUnit.length &&
+            !this.typeheadRegion.length
+        ) {
+            await this.loadMasterData();
+        }
     }
 
     private onCancel() {
@@ -927,20 +946,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async onSave() {
-        // if (this.investCode == 'NEW') {
-        //     if (!this.stateInvest) {
-        //         swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
-        //         return;
-        //     }
-
-        //     if (!this.stateInvest.InvestigateNo || !this.stateInvest.DateStart) {
-        //         swal('', 'กรุณาย้อนกลับไประบุ ข้อมูลรายงานการสืบสวน', 'warning');
-        //         return;
-        //     }
-        // }
 
         if (this.investigateFG.invalid) {
             swal('', Message.checkData, 'warning');
+            this.isRequired = true;
             return;
         }
 

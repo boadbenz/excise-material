@@ -25,7 +25,8 @@ import { Subject } from 'rxjs/Subject';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import 'rxjs/add/operator/takeUntil';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-
+import swal from 'sweetalert2';
+import { removeObjectItem } from '../../arrest.helper';
 
 @Component({
     selector: 'app-lawbreaker',
@@ -224,11 +225,12 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 if (this.LawbreakerFG.invalid) {
                     this.isRequired = true;
                     if (this.LawbreakerFG.controls.PassportNo.invalid) {
-                        alert('กรุณาระบุ เลขหนังสือเดินทาง');
+                        swal('', 'กรุณาระบุ เลขหนังสือเดินทาง', 'warning');
+                        // swal('', Message.checkData, 'warning')
                     } else if (this.LawbreakerFG.controls.CompanyRegistrationNo.invalid) {
-                        alert('กรุณาระบุ เลขทะเบียนนิติบุคคล')
+                        swal('', 'กรุณาระบุ เลขทะเบียนนิติบุคคล', 'warning')
                     } else {
-                        alert(Message.checkData)
+                        swal('', Message.checkData, 'warning')
                     }
                     return;
                 }
@@ -267,7 +269,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     _Lfg.LawbreakerFirstName = _Lfg.CompanyName;
                 }
 
-                console.log(JSON.stringify(_Lfg));
+                _Lfg = removeObjectItem(_Lfg, 'ResultCount');
 
                 switch (this.mode) {
                     case 'C':
@@ -490,7 +492,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         ImageType.filter(item => file.type == item.type).map(() => isMatch = true);
 
         if (!isMatch) {
-            alert(Message.checkImageType)
+            swal('', Message.checkImageType, 'warning')
             return
         }
 
@@ -530,10 +532,10 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .takeUntil(this.destroy$)
             .subscribe(res => {
                 if (!this.checkResponse(res)) {
-                    alert(Message.saveFail);
+                    swal('', Message.saveFail, 'error');
                     return;
                 }
-                alert(Message.saveComplete);
+                swal('', Message.saveComplete, 'success');
                 this.router.navigate([`/arrest/lawbreaker/R/${res.LawbreakerID}`]);
             });
     }
@@ -543,35 +545,45 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             .takeUntil(this.destroy$)
             .subscribe(res => {
                 if (!this.checkResponse(res)) {
-                    alert(Message.saveFail);
+                    swal('', Message.saveFail, 'error');
                     return;
                 }
-                alert(Message.saveComplete);
+                swal('', Message.saveComplete, 'success');
                 this.enableBtnModeR();
             })
     }
 
     onCancel() {
-        if (!confirm(Message.confirmAction))
-            return
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm!'
+        }).then((result) => {
+            if (result.value) {
+                switch (this.mode) {
+                    case 'C':
+                        this.router.navigate(
+                            [`arrest/allegation`, 'C'],
+                            {
+                                queryParams: {
+                                    arrestMode: this.arrestMode,
+                                    arrestCode: this.arrestCode,
+                                    indictmentId: this.indictmentId,
+                                    guiltbaseId: this.guiltbaseId
+                                }
+                            });
+                        break;
 
-        switch (this.mode) {
-            case 'C':
-                this.router.navigate(
-                    [`arrest/allegation`, 'C'],
-                    {
-                        queryParams: {
-                            arrestMode: this.arrestMode,
-                            arrestCode: this.arrestCode,
-                            indictmentId: this.indictmentId,
-                            guiltbaseId: this.guiltbaseId
-                        }
-                    });
-                break;
+                    case 'R':
+                        this.enableBtnModeR();
+                        break;
+                }
+            }
+        })
 
-            case 'R':
-                this.enableBtnModeR();
-                break;
-        }
     }
 }

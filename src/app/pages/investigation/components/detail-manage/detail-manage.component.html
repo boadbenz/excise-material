@@ -114,9 +114,9 @@
                                         [resultTemplate]="rt" [readonly]="showEditField" 
                                         [inputFormatter]="formatterStaff"
                                         (selectItem)="selectItemStaff($event, i)" 
-                                        value="{{item.value.FullName}}"
-                                        [ngClass]="{'is-invalid': item.get('FullName').invalid && isRequired}" />
-                                    <input type="text" formControlName="FullName" required style="display: none;">
+                                        value="{{item.value.StaffFullName}}"
+                                        [ngClass]="{'is-invalid': item.get('StaffFullName').invalid && isRequired}" />
+                                    <input type="text" formControlName="StaffFullName" required style="display: none;">
                                 </td>
                                 <td>
                                     <input type="text" formControlName="PositionName" class="form-control form-control-sm"
@@ -341,7 +341,8 @@
                                     [ngbTypeahead]="searchUnit" [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit"
                                     (selectItem)="selectItemQtyUnit($event, i)"  
                                     [value]="item.value.QtyUnit"
-                                    [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" />
+                                    [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" 
+                                    (change)="changeItemQtyUnit($event, i)" />
                                 <input style="display: none" type="text" required formControlName="QtyUnit">
                             </td>
                             <td class="text-center">

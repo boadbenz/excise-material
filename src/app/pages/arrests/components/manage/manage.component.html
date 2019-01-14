@@ -47,12 +47,11 @@
             {{ r.OfficeName }}
           </ng-template>
 
-          <input type="text" #ItemOfficeName class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}"
-            [ngbTypeahead]="serachOffice" [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterOffice"
-            (selectItem)="selectItemOffice($event)" (change)="onChangeArrestStation($event)" formControlName="ArrestStation"
-            [ngClass]="{'is-invalid': (arrestFG.get('ArrestStation').invalid && arrestFG.get('ArrestStation').ng-touched) || (arrestFG.get('ArrestStation').invalid && isRequired)}" />
+          <input type="text" class="form-control form-control-sm " [ngbTypeahead]="serachOffice" [resultTemplate]="rt"
+            [readOnly]="showEditField" [inputFormatter]="formatterOffice" (selectItem)="selectItemOffice($event)" value="{{arrestFG.get('ArrestStation').value}}"
+            [ngClass]="{'is-invalid': (arrestFG.get('ArrestStation').invalid && isRequired)}" />
 
-          <!-- <input type="text" style="display: none;" formControlName="ArrestStation"> -->
+          <input type="text" style="display: none;" formControlName="ArrestStation" required>
         </div>
       </div>
       <div class="row">
@@ -162,7 +161,7 @@
           <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="addStaff()">เพิ่มผู้ร่วมจับกุม</button>
         </div>
       </div>
-      <button type="button" (click)="showStaff()">Click</button>
+
       <div class="table-responsive">
         <table class="table table-sm table-striped table-set-border">
           <thead>
@@ -380,7 +379,8 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
-                    [value]="item.value.QtyUnit" [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" />
+                    [value]="item.value.QtyUnit" [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" 
+                   (change)="changeItemQtyUnit($event, i)"/>
                   <input type="text" formControlName="QtyUnit" required style="display: none;">
                 </td>
                 <td style="max-width: 30px;">
@@ -393,7 +393,8 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
-                    [value]="item.value.NetVolumeUnit" [ngClass]="{'is-invalid': item.get('NetVolumeUnit').invalid && isRequired}" />
+                    [value]="item.value.NetVolumeUnit" (change)="changeItemNetVolumeUnit($event, i)"
+                    [ngClass]="{'is-invalid': item.get('NetVolumeUnit').invalid && isRequired}" />
                   <input type="text" formControlName="NetVolumeUnit" required style="display: none;">
                 </td>
                 <td>
