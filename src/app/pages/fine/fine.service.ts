@@ -123,7 +123,7 @@ export class FineService {
 
     async LawsuitegetByCon(LawsuitID: string): Promise<Lawsuit> {
         const params = { LawsuitID };
-        const url = `${appConfig.api8083}/LawsuitgetByCon`;
+        const url = `${appConfig.api8777}/LawsuitgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

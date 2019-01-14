@@ -19,25 +19,25 @@ export class InvestgateMasLawbreakerService {
 
   async InvestigateMasLawbreakergetByKeyword(TextSearch: any) {
     const params = TextSearch === '' ? { 'TextSearch': '' } : TextSearch;
-    const url = `${appConfig.api8888}/InvestigateMasLawbreakergetByKeyword`;
+    const url = `${appConfig.api8777}/InvestigateMasLawbreakergetByKeyword`;
     return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
   async InvestigateMasLawbreakergetByConAdv(form: any) {
     const params = form;
-    const url = `${appConfig.api8888}/InvestigateMasLawbreakergetByConAdv`;
+    const url = `${appConfig.api8777}/InvestigateMasLawbreakergetByConAdv`;
     return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
   async InvestigateMasLawbreakergetByCon(LawbreakerID: string) {
     const params = { LawbreakerID };
-    const url = `${appConfig.api8888}/InvestigateMasLawbreakergetByCon`;
+    const url = `${appConfig.api8777}/InvestigateMasLawbreakergetByCon`;
     return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
   InvestigateMasLawbreakerupdByCon(lawbreaker: any) {
     const params = lawbreaker;
-    const url = `${appConfig.api8888}/InvestigateMasLawbreakerupdByCon`;
+    const url = `${appConfig.api8777}/InvestigateMasLawbreakerupdByCon`;
     return this.http.post(url, params).map(x => x.json());
   }
 
