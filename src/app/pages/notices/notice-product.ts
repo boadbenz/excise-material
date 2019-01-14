@@ -35,6 +35,7 @@ export class NoticeProduct {
     ProductFullName: string;
     public BrandFullName = '';
     public IsNewItem: boolean;
+    public DutyCode = "";
 }
 
 export const NoticeProductFormControl = {
@@ -70,5 +71,6 @@ export const NoticeProductFormControl = {
     IsActive: new FormControl(1),
 
     BrandFullName: new FormControl(null, Validators.required),
-    IsNewItem: new FormControl(false)
+    IsNewItem: new FormControl(false),
+    DutyCode: new FormControl(null, Validators.required)
 }
