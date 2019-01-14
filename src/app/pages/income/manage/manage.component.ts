@@ -129,6 +129,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.ShowRevenue();
         } else {
             this.preloader.setShowPreloader(false);
+            this.LoadDataFromLocalStorage();
         }
 
         this.paginage.TotalItems = this.ListRevenueDetail.length;
@@ -136,6 +137,73 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.CheckCompareReceive();
 
+    }
+
+    LoadDataFromLocalStorage()
+    {
+        this.oRevenue.StationCode = localStorage.getItem("officeCode");
+        this.oRevenue.StationName = localStorage.getItem("officeShortName");
+        this.RevenueStation = localStorage.getItem("officeShortName");
+
+        let tempUser = this.rawStaffSendOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
+
+
+        // ----- ผู้นำส่ง -----
+        this.oRevenueSendStaff = {
+            StaffID: "",
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-07",
+            RevenueID: "",
+            StaffCode: tempUser[0].StaffCode,
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "20",
+            IsActive: "1"
+        }
+
+        this.StaffSendName = localStorage.getItem("fullName");
+        this.PosSend = localStorage.getItem("operationPosName");
+        this.DeptSend = localStorage.getItem("officeShortName");
+
+
+        // ----- ลงชื่อ -----
+        this.oRevenueStaff = {
+            StaffID: "",
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-07",
+            RevenueID: "",
+            StaffCode: tempUser[0].StaffCode,
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "36",
+            IsActive: "1"
+        }
+
+        this.StaffName = localStorage.getItem("fullName");
+        this.PosStaff = localStorage.getItem("operationPosName");
+        this.DeptStaff = localStorage.getItem("officeShortName");
     }
 
     private active_Route() {
@@ -419,7 +487,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                             RevenueID: this.oRevenue.RevenueID,
                                                             CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
                                                             CompareID: item[j].CompareID,
-                                                            CompareCode: item[j].CompareCode,
+                                                            CompareCode: `${item[j].IsOutside == '1' ? 'น ' + item[j].CompareCode : item[j].CompareCode}`,
                                                             LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' || item[j].RevenueCompareDetail[i].LawbreakerTitleName == null ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName,
                                                             SurnameLawBreaker: item[j].RevenueCompareDetail[i].LawbreakerLastName,
                                                             StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
@@ -1030,7 +1098,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         let date = new Date();
         // 
         // return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
-        return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        //return date.getHours() + ":" + date.getMinutes();
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
     }
 
     selectedChkAll() {
