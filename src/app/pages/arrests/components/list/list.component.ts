@@ -46,22 +46,23 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
         private sidebarService: SidebarService,
         public chRef: ChangeDetectorRef
     ) {
-        // set false
-        this.navService.setEditButton(false);
-        this.navService.setDeleteButton(false);
-        this.navService.setPrintButton(false);
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
-        this.navService.setNextPageButton(false);
-        this.navService.setPrevPageButton(false);
-        // set true
-        this.navService.setSearchBar(true);
-        this.navService.setNewButton(true);
         this.advSearch = this.navService.showAdvSearch;
 
     }
 
     async ngOnInit() {
+        // set false
+        await this.navService.setEditButton(false);
+        await this.navService.setDeleteButton(false);
+        await this.navService.setPrintButton(false);
+        await this.navService.setSaveButton(false);
+        await this.navService.setCancelButton(false);
+        await this.navService.setNextPageButton(false);
+        await this.navService.setPrevPageButton(false);
+        // set true
+        await this.navService.setSearchBar(true);
+        await this.navService.setNewButton(true);
+        
         this.advSearch.next(true);
 
         this.sidebarService.setVersion(this.arrestService.version);
