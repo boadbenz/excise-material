@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { IncomeService } from '../evidenceIn.service';
+import { EvidenceService } from '../evidenceIn.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Revenue, RevenueDetail } from '../revenue';
+import { Evidence_In } from '../evidenceIn';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
@@ -81,8 +81,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     ListChK = [];
     RevenueDetailForUDP = [];
 
-    oRevenue: Revenue;
-    oRevenueDetail: RevenueDetail;
+    // oRevenue: Evidence_In;
+    // oRevenueDetail: RevenueDetail;
     oRevenueSendStaff: Staff;
     oRevenueStaff: Staff;
 
@@ -97,7 +97,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private ngbModel: NgbModal,
         private navService: NavigationService,
-        private IncService: IncomeService,
+        private EviService: EvidenceService,
         private preloader: PreloaderService,
         private router: Router,
         private sidebarService: SidebarService

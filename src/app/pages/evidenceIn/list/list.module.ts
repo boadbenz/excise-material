@@ -4,7 +4,7 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { IncomeService } from '../evidenceIn.service';
+import { EvidenceService } from '../evidenceIn.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
@@ -40,7 +40,7 @@ const routes: Routes = [
       EvidenceTypeModalModule
     ],
     declarations: [ListComponent],
-    providers: [IncomeService],
+    providers: [EvidenceService],
     exports: [MatAutocompleteModule]
   })
   export class ListModule { }
