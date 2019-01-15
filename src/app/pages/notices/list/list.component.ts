@@ -10,6 +10,7 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SwalComponent } from '@toverux/ngx-sweetalert2';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
     selector: 'app-list',
@@ -59,6 +60,8 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navservice.setSearchBar(true);
         this.navservice.setNewButton(true);
+
+        this.navservice.showAdvSearch = new BehaviorSubject<Boolean>(true);
         this.advSearch = this.navservice.showAdvSearch;
     }
 
