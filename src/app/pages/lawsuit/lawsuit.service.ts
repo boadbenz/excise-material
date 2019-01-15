@@ -110,7 +110,7 @@ export class LawsuitService {
 
   async CompareMasLawgetByCon(GuiltBaseID) {
     const params = { GuiltBaseID: GuiltBaseID };
-    const url = `${appConfig.api8881}/CompareMasLawgetByCon`;
+    const url = `${appConfig.api8887}/CompareMasLawgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
