@@ -473,6 +473,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
                 this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
+                this.arrestFG.value.HaveCulprit = 1;
 
                 this.onSave();
             }
