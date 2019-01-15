@@ -1158,7 +1158,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                         item.DeliverTo = `${item.DeliverTo == null ? '' : item.DeliverTo}`;
                     });
 
-                    this.IsReceive = true;
+                    if(this.oProve.ProveDeliverProduct[0].IsReceive == "1"){
+                        this.IsReceive = true;
+                    }else{
+                        this.IsReceive = false;
+                    }
+                    
                     this.ShowReceiveField = false;
 
                     var DelvNo = this.oProve.ProveDeliverProduct[0].DeliverNo.split('/');
@@ -2266,21 +2271,30 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
     DelDocument(i: number) {
-        if (confirm(Message.confirmDeleteDoc)) {
+        swal({
+            title: '',
+            text: Message.confirmDeleteDoc,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                var aIndex;
+                aIndex = this.getIndexOf(this.ListProveDoc, i, "DocumentSeq");
 
-            var aIndex;
-            aIndex = this.getIndexOf(this.ListProveDoc, i, "DocumentSeq");
-
-            if (aIndex != -1) {
-                if (this.ListProveDoc[aIndex].IsNewItem == false) {
-                    this.ListProveDoc[aIndex].IsDelItem = true;
-                }
-                else {
-                    this.ListProveDoc.splice(i, 1);
+                if (aIndex != -1) {
+                    if (this.ListProveDoc[aIndex].IsNewItem == false) {
+                        this.ListProveDoc[aIndex].IsDelItem = true;
+                    }
+                    else {
+                        this.ListProveDoc.splice(i, 1);
+                    }
                 }
             }
-
-        }
+        })
     }
     // ----- End Document -----
 
