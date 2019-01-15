@@ -66,7 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('evidenceIn 0.0.0.7');
+        this.sidebarService.setVersion('evidenceIn 0.0.0.8');
         this.RevenueStatus = "";
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
@@ -97,8 +97,12 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subSetNextPage.unsubscribe();
     }
 
-    clickView(RevenueID: string) {
-        this._router.navigate([`/evidenceIn/manage/I/R/${RevenueID}`]);
+    clickView(EvidenceInID: string, EvidenceInType: number, ProveID: string) {
+        switch(EvidenceInType){
+            case 0 : this._router.navigate([`/evidenceIn/manage/I/R/${EvidenceInID}/${ProveID}`]); break;
+            case 1 : this._router.navigate([`/evidenceIn/manage/E/R/${EvidenceInID}/${ProveID}`]); break;
+            case 2 : this._router.navigate([`/evidenceIn/manage/G/R/${EvidenceInID}/${ProveID}`]); break;
+        }   
     }
 
 
@@ -191,6 +195,8 @@ export class ListComponent implements OnInit, OnDestroy {
                 sFullDate = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
                 form.value.EvidenceInDateStart = setZeroHours(sFullDate);
             }
+        } else {
+            form.value.EvidenceInDateStart = null;
         }
 
         // วันที่รับสิ้นสุด
@@ -201,6 +207,8 @@ export class ListComponent implements OnInit, OnDestroy {
                 eFullDate = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
                 form.value.EvidenceInDateTo = setZeroHours(eFullDate);
             }
+        } else {
+            form.value.EvidenceInDateTo = null;
         }
 
         // วันที่นำส่งเริ่มต้น
@@ -211,6 +219,8 @@ export class ListComponent implements OnInit, OnDestroy {
                 sFullDate = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
                 form.value.DeliveryDateStart = setZeroHours(sFullDate);
             }
+        } else {
+            form.value.DeliveryDateStart = null;
         }
 
         // วันที่นำส่งสิ้นสุด
@@ -221,11 +231,23 @@ export class ListComponent implements OnInit, OnDestroy {
                 eFullDate = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
                 form.value.DeliveryDateTo = setZeroHours(eFullDate);
             }
+        } else {
+            form.value.DeliveryDateTo = null;
         }
 
         // ประเภทรายการรับ
         if (form.value.EvidenceInType == "") {
             form.value.EvidenceInType = null;
+        }
+
+        if ((form.value.chk1 == true && form.value.chk2 == true) || (form.value.chk1 == "" && form.value.chk2 == "")) {
+            form.value.IsReceive = "";
+        } else if (form.value.chk1 == true) {
+            form.value.IsReceive = 1;
+        } else if (form.value.chk2 == true) {
+            form.value.IsReceive = 0;
+        } else {
+            form.value.IsReceive = "";
         }
 
         await this.edidenceService.getByConAdv(form.value).then(async list => {

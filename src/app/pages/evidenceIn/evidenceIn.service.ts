@@ -35,4 +35,26 @@ export class EvidenceService {
       return [];
     }
   }
+
+  async StaffgetByKeyword(): Promise<any> {
+    const params = {};
+    const url = `${appConfig.api8777}/MasStaffMaingetAll`;
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
+
+  async EvidenceInArrestgetByProveID(ProveID: string): Promise<any> {
+    const params = { ProveID };
+    const url = `${appConfig.api8776}/EvidenceInArrestgetByProveID`;
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
 }
