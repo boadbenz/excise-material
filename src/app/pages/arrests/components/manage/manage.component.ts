@@ -195,7 +195,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         this.navService.setNewButton(false);
         this.navService.setSearchBar(false);
         this.navService.setPrevPageButton(false);
-        this.navService.setNextPageButton(false);
 
     }
 
@@ -534,6 +533,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 this.enableBtnModeC()
                 await this.loadMasterData();
 
+                await this.navService.setNextPageButton(false);
+
                 const staff = this.typeheadStaff.find(x => x.StaffCode == localStorage.getItem('staffCode'));
                 if (staff) {
                     const _staff = { item: staff };
@@ -558,6 +559,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 this.enableBthModeR();
                 this.expandCard();
                 this.pageRefresh(arrestCode);
+                await this.navService.setNextPageButton(true);
+                await this.navService.setInnerTextNextPageButton('รับคำกล่าวโทษ');
                 break;
         }
     }
@@ -1425,6 +1428,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     selectItemQtyUnit(e: any, i: number) {
+        // e.preventDefault();
         this.ArrestProduct.at(i).patchValue({
             QtyUnit: e.item.DutyCode,
         })
