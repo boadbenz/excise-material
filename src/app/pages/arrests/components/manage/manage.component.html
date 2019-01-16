@@ -366,7 +366,8 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchProduct"
                     [resultTemplate]="rt" [inputFormatter]="formatterProduct" (selectItem)="selectItemProductItem($event, i)"
-                    [value]="item.value.ProductDesc" [ngClass]="{'is-invalid': item.get('ProductDesc').invalid && isRequired}" />
+                    [value]="item.value.ProductDesc" [ngClass]="{'is-invalid': item.get('ProductDesc').invalid && isRequired}" 
+                    [editable]="false"/>
                   <input type="text" formControlName="ProductDesc" required style="display: none;">
                 </td>
                 <td style="max-width: 30px;">
@@ -378,9 +379,9 @@
                     {{ r.DutyCode }}
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
-                    [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
-                    [value]="item.value.QtyUnit" [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" 
-                   (change)="changeItemQtyUnit($event, i)"/>
+                    [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" [resultFormatter]="formatterUnit"
+                    (selectItem)="selectItemQtyUnit($event, i)" [value]="item.value.QtyUnit" [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}"
+                    (change)="changeItemQtyUnit($event, i)" />
                   <input type="text" formControlName="QtyUnit" required style="display: none;">
                 </td>
                 <td style="max-width: 30px;">
@@ -393,8 +394,7 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
                     [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
-                    [value]="item.value.NetVolumeUnit" (change)="changeItemNetVolumeUnit($event, i)"
-                    [ngClass]="{'is-invalid': item.get('NetVolumeUnit').invalid && isRequired}" />
+                    [value]="item.value.NetVolumeUnit" (change)="changeItemNetVolumeUnit($event, i)" [ngClass]="{'is-invalid': item.get('NetVolumeUnit').invalid && isRequired}" />
                   <input type="text" formControlName="NetVolumeUnit" required style="display: none;">
                 </td>
                 <td>
