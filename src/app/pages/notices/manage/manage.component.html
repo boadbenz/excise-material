@@ -359,7 +359,12 @@
                                 [resultTemplate]="rtUnit"
                                 [inputFormatter]="formatterUnit"
                                 (selectItem)="selectItemUnit($event, i)"
-                                [value]="item.get('DutyCode').value" [ngClass]="{'ng-touched':isRequired}" required/>
+                                [value]="item.get('DutyCode').value" 
+                                [ngClass]="{'ng-touched':isRequired}" required
+                                (keydown.enter)="false"
+                                #unitProductItem
+                                (keyup)="searchDataUnit(unitProductItem, i)"
+                                (blur)="blurDataUnit(unitProductItem, i)"/>
 
                             <!-- <select formControlName="QtyUnit" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null" [ngClass]="{'ng-touched':isRequired}" required>
                                 <option value="" selected disabled></option>

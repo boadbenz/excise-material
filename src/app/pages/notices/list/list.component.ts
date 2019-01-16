@@ -36,7 +36,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd mmm yyyy',
-        showClearDateBtn: false,
+        showClearDateBtn: true,
         height: '30px'
     };
 
