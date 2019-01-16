@@ -51,7 +51,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     // u: รายการอัพเดท
     // d: รายการที่ถูกลบ
 
-    @ViewChild('ItemLocalRetion') inputLocalRetion: ElementRef;
+    // @ViewChild('ItemLocalRetion') inputLocalRetion: ElementRef;
 
     showStaff() {
 
@@ -660,9 +660,9 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
         arrestForm.patchValue(_arr);
 
-        setTimeout(() => {
-            this.inputLocalRetion.nativeElement.value = _arr.ArrestLocale[0].Region;
-        }, 100);
+        // setTimeout(() => {
+        //     this.inputLocalRetion.nativeElement.value = _arr.ArrestLocale[0].Region;
+        // }, 100);
     }
 
     private async pageRefreshProduct(_arrProd: fromModels.ArrestProduct[], arrestCode: string) {
@@ -1342,7 +1342,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     formatterOffice = (x: { OfficeName: string }) => x.OfficeName;
 
-    formatterUnit = (DutyCode: string) => DutyCode;
+    formatterUnit = (x: { DutyCode: string }) => x.DutyCode;
 
     selectItemLocaleRegion(e) {
         this.ArrestLocale.at(0).patchValue({
@@ -1519,7 +1519,17 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         switch (this.mode) {
             case 'C':
                 if (this.arrestCode != 'NEW') {
-                    this.deleteArrest();
+                    this.loaderService.show();
+                    Promise.all([
+                        await this.setDeleteForm(),
+                        await this.deleteArrest(),
+                        await this.modifyNotice(),
+                        await this.modifyStaff(),
+                        await this.modifyProduct(),
+                        await this.modifyDocument()
+                    ])
+                    this.router.navigate(['arrest/list']);
+                    this.loaderService.hide();
                 } else {
                     this.router.navigate([`arrest/list`]);
                 }
@@ -1587,9 +1597,19 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Confirm!'
-                }).then((result) => {
+                }).then(async (result) => {
                     if (result.value) {
-                        this.deleteArrest();
+                        this.loaderService.show();
+                        Promise.all([
+                            await this.setDeleteForm(),
+                            await this.deleteArrest(),
+                            await this.modifyNotice(),
+                            await this.modifyStaff(),
+                            await this.modifyProduct(),
+                            await this.modifyDocument()
+                        ])
+                        this.router.navigate(['arrest/list']);
+                        this.loaderService.hide();
                     }
                 })
             }
@@ -1637,6 +1657,28 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         clearFormArray(this.ArrestIndictment);
         clearFormArray(this.ArrestDocument);
     }
+
+    async setDeleteForm() {
+        for (let index = 0; index < this.ArrestNotice.length; index++) {
+            await this.ArrestNotice.at(index).patchValue({ IsModify: 'd' });
+        }
+        for (let index = 0; index < this.ArrestStaff.length; index++) {
+            await this.ArrestStaff.at(index).patchValue({ IsModify: 'd' });
+        }
+        for (let index = 0; index < this.ArrestProduct.length; index++) {
+            await this.ArrestProduct.at(index).patchValue({ IsModify: 'd' });
+        }
+        for (let index = 0; index < this.ArrestLawbreaker.length; index++) {
+            await this.ArrestLawbreaker.at(index).patchValue({ IsModify: 'd' });
+        }
+        for (let index = 0; index < this.ArrestIndictment.length; index++) {
+            await this.ArrestIndictment.at(index).patchValue({ IsModify: 'd' });
+        }
+        for (let index = 0; index < this.ArrestDocument.length; index++) {
+            await this.ArrestDocument.at(index).patchValue({ IsModify: 'd' });
+        }
+    }
+
 
     private async createWithOutArrestCode() {
         this.loaderService.show();
@@ -1766,19 +1808,11 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     private async deleteArrest() {
-        this.loaderService.show();
         await this.s_arrest.ArrestupdDelete(this.arrestCode)
-            .then(x => {
-                if (this.checkResponse(x)) {
-                    swal('', Message.delComplete, 'success');
-                    this.arrestFG.reset();
-                    this.router.navigate([`arrest/list`]);
-                } else {
-                    swal('', Message.delFail, 'error');
-                }
-            }, () => { swal('', Message.delFail, 'error'); return; })
+            .then(async (x) => {
+                if (!this.checkIsSuccess(x)) return;
+            }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
-        this.loaderService.hide();
     }
 
     private async modifyNotice() {
