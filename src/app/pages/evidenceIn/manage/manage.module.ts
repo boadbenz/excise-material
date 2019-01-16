@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { IncomeService } from '../evidenceIn.service';
+import { EvidenceService } from '../evidenceIn.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -48,7 +48,7 @@ const routes: Routes = [
     declarations: [
         ManageComponent
     ],
-    providers: [IncomeService],
+    providers: [EvidenceService],
     exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

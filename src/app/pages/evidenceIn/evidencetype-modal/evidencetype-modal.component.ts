@@ -34,7 +34,7 @@ export class EvidenceTypeModalComponent implements OnInit {
     }
 
     onNextPage(page) {
-        this._router.navigate(['/evidenceIn/manage', page, 'C', 'NEW']);
+        this._router.navigate(['/evidenceIn/manage', page, 'C', 'NEW','0']);
         this.close('');
     }
 

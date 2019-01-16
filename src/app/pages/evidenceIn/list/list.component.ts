@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { IncomeService } from '../evidenceIn.service';
+import { EvidenceService } from '../evidenceIn.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Revenue } from '../Revenue';
+import { Evidence_In } from '../evidenceIn';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
@@ -21,12 +21,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class ListComponent implements OnInit, OnDestroy {
 
     advSearch: any;
-    revenue = new Array<Revenue>();
-    RevenueList = new Array<Revenue>();
+    evidenceIn = new Array<Evidence_In>();
+    EvidenceInList = new Array<Evidence_In>();
     paginage = pagination;
-    DateStartTo: any;
-    _dateStartFrom: any;
-    _dateStartTo: any;
+    EvidenceInDateTo: any;
+    DeliveryDateTo: any;
+    _dateRecvStartFrom: any;
+    _dateRecvStartTo: any;
+    _dateSendStartFrom: any;
+    _dateSendStartTo: any;
 
     StatusOption = [];
     options = [];
@@ -38,14 +41,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
     modal: any;
 
-     // ----- Model ------ //
-     @ViewChild('EvidenceTypeModel') evidenceTypeModel: ElementRef;
+    // ----- Model ------ //
+    @ViewChild('EvidenceTypeModel') evidenceTypeModel: ElementRef;
 
     constructor(
         private _router: Router,
         private navService: NavigationService,
         private sidebarService: SidebarService,
-        private incomeService: IncomeService,
+        private edidenceService: EvidenceService,
         private preloader: PreloaderService,
         private ngbModel: NgbModal
     ) {
@@ -63,11 +66,11 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('evidenceIn 0.0.0.1');
+        this.sidebarService.setVersion('evidenceIn 0.0.0.8');
         this.RevenueStatus = "";
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            /*if (Textsearch) {               
+            if (Textsearch) {
                 await this.navService.setOnSearch('');
 
                 let ts;
@@ -77,7 +80,7 @@ export class ListComponent implements OnInit, OnDestroy {
                 if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
                 else { this.onSearch(Textsearch); }
 
-            }*/
+            }
         })
 
         this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
@@ -94,187 +97,220 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subSetNextPage.unsubscribe();
     }
 
-    clickView(RevenueID: string) {
-        this._router.navigate([`/evidenceIn/manage/I/R/${RevenueID}`]);
+    clickView(EvidenceInID: string, EvidenceInType: number, ProveID: string) {
+        switch(EvidenceInType){
+            case 0 : this._router.navigate([`/evidenceIn/manage/I/R/${EvidenceInID}/${ProveID}`]); break;
+            case 1 : this._router.navigate([`/evidenceIn/manage/E/R/${EvidenceInID}/${ProveID}`]); break;
+            case 2 : this._router.navigate([`/evidenceIn/manage/G/R/${EvidenceInID}/${ProveID}`]); break;
+        }   
     }
-    /*
-    ShowAlertNoRecord()
-    {
-        swal({
-            title: '',
-            text: Message.noRecord,
-            type: 'warning',
-            confirmButtonText : 'ตกลง'
-        });
-    }
+
 
     onSearch(Textsearch: any) {
         this.preloader.setShowPreloader(true);
 
-        this.incomeService.getByKeyword(Textsearch).subscribe(list => {
+        this.edidenceService.getByKeyword(Textsearch).subscribe(list => {
             this.onSearchComplete(list)
 
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
 
             this.ShowAlertNoRecord();
-            //alert(Message.noRecord);
-            this.RevenueList = [];
+            this.EvidenceInList = [];
             this.preloader.setShowPreloader(false);
         });
     }
 
-    async onAdvSearch(form: any) {
-        this.preloader.setShowPreloader(true);
-        let sDate, eDate, sDateRevenue, eDateRevenue;
-
-        if (form.value.DateStartFrom) {
-            sDate = form.value.DateStartFrom.date;
-
-            if (sDate != undefined) {
-                sDateRevenue = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
-                form.value.DateStartFrom = setZeroHours(sDateRevenue);
-            }
-        }
-
-        if (form.value.DateStartTo) {
-            eDate = form.value.DateStartTo.date;
-
-            if (sDate != undefined) {
-                eDateRevenue = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
-                form.value.DateStartTo = setZeroHours(eDateRevenue);
-            }
-        }
-
-        if(form.value.RevenueStatus == ""){
-            form.value.RevenueStatus = null;
-        }
-
-        await this.incomeService.getByConAdv(form.value).then(async list => {
-            this.onSearchComplete(list);
-            this.preloader.setShowPreloader(false);
-        }, (err: HttpErrorResponse) => {
-            swal('', err.message, 'error');
-            //alert(err.message);
-            this.preloader.setShowPreloader(false);
+    ShowAlertNoRecord() {
+        swal({
+            title: '',
+            text: Message.noRecord,
+            type: 'warning',
+            confirmButtonText: 'ตกลง'
         });
     }
 
     async onSearchComplete(list: any) {
-        this.revenue = [];
+        this.evidenceIn = [];
 
         if (!list.length) {
             this.ShowAlertNoRecord();
-            //alert(Message.noRecord);
-            this.RevenueList = [];
+            this.EvidenceInList = [];
 
             return false;
         }
 
         await list.map((item) => {
-            var StaffSendMoney;
-            item.RevenueDate = toLocalShort(item.RevenueDate);
-            StaffSendMoney = item.RevenueStaff.filter(item => item.ContributorID === 20);
+            item.EvidenceInDate = toLocalShort(item.EvidenceInDate);
+            item.DeliveryDate = toLocalShort(item.DeliveryDate);
 
-            item.RevenueOneStaff = "";
-            item.RevenueOneStaffDept = "";
+            // หน่วยงานที่รับมอบของกลางเพื่อเก็บรักษา
+            item.EvidenceInStaff.filter(f => f.ContributorID == 42).map(s => {
+                item.DeptNameRecv = s.OfficeName;
+            });
 
-            if(StaffSendMoney.length > 0){
-                item.RevenueOneStaff = StaffSendMoney[0].TitleName + StaffSendMoney[0].FirstName + " " + StaffSendMoney[0].LastName;
-                item.RevenueOneStaffDept =  StaffSendMoney[0].OfficeShortName;
-            }
+            // หน่วยงานที่นำส่งของกลาง
+            item.EvidenceInStaff.filter(f => f.ContributorID == 13).map(s => {
+                item.DeptNameSent = s.OfficeName;
+            });
 
-            if (item.RevenueStatus == "1") {
-                item.RevenueStatus = "นำส่งเงินรายได้"
-            }
-            else if (item.RevenueStatus == "2") {
-                item.RevenueStatus = "รับรายการนำส่งเงิน"
-            }
-            else{
-                item.RevenueStatus = "";
+            switch (item.EvidenceInType) {
+                case 0:
+                    item.EvidenceInTypeName = "ตรวจรับของกลางจากหน่วยงานภายใน";
+                    break;
+                case 1:
+                    item.EvidenceInTypeName = "ตรวจรับของกลางจากหน่วยงานภายนอก";
+                    break;
+                case 2:
+                    item.EvidenceInTypeName = "ตรวจรับของกลางที่ถูกนำออกไปใช้ในกิจกรรมของทางราชการ";
+                    break;
             }
         })
 
         if (Array.isArray(list)) {
-            this.revenue = list;
+            this.evidenceIn = list;
         } else {
-            this.revenue.push(list);
+            this.evidenceIn.push(list);
         }
 
         // set total record
-        this.paginage.TotalItems = this.revenue.length;
-        this.RevenueList = this.revenue.slice(0, this.paginage.RowsPerPageOptions[0]);
+        this.paginage.TotalItems = this.evidenceIn.length;
+        this.EvidenceInList = this.evidenceIn.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
-
-    
 
     async pageChanges(event) {
-        this.RevenueList = await this.revenue.slice(event.startIndex - 1, event.endIndex);
+        this.EvidenceInList = await this.evidenceIn.slice(event.startIndex - 1, event.endIndex);
     }
 
+
+    async onAdvSearch(form: any) {
+        this.preloader.setShowPreloader(true);
+        let sDate, eDate, sFullDate, eFullDate;
+
+        // วันที่รับเริ่มต้น
+        if (form.value.EvidenceInDateStart) {
+            sDate = form.value.EvidenceInDateStart.date;
+
+            if (sDate != undefined) {
+                sFullDate = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
+                form.value.EvidenceInDateStart = setZeroHours(sFullDate);
+            }
+        } else {
+            form.value.EvidenceInDateStart = null;
+        }
+
+        // วันที่รับสิ้นสุด
+        if (form.value.EvidenceInDateTo) {
+            eDate = form.value.EvidenceInDateTo.date;
+
+            if (sDate != undefined) {
+                eFullDate = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
+                form.value.EvidenceInDateTo = setZeroHours(eFullDate);
+            }
+        } else {
+            form.value.EvidenceInDateTo = null;
+        }
+
+        // วันที่นำส่งเริ่มต้น
+        if (form.value.DeliveryDateStart) {
+            sDate = form.value.DeliveryDateStart.date;
+
+            if (sDate != undefined) {
+                sFullDate = new Date(`${sDate.year}-${sDate.month}-${sDate.day}`);
+                form.value.DeliveryDateStart = setZeroHours(sFullDate);
+            }
+        } else {
+            form.value.DeliveryDateStart = null;
+        }
+
+        // วันที่นำส่งสิ้นสุด
+        if (form.value.DeliveryDateTo) {
+            eDate = form.value.DeliveryDateTo.date;
+
+            if (sDate != undefined) {
+                eFullDate = new Date(`${eDate.year}-${eDate.month}-${eDate.day}`);
+                form.value.DeliveryDateTo = setZeroHours(eFullDate);
+            }
+        } else {
+            form.value.DeliveryDateTo = null;
+        }
+
+        // ประเภทรายการรับ
+        if (form.value.EvidenceInType == "") {
+            form.value.EvidenceInType = null;
+        }
+
+        if ((form.value.chk1 == true && form.value.chk2 == true) || (form.value.chk1 == "" && form.value.chk2 == "")) {
+            form.value.IsReceive = "";
+        } else if (form.value.chk1 == true) {
+            form.value.IsReceive = 1;
+        } else if (form.value.chk2 == true) {
+            form.value.IsReceive = 0;
+        } else {
+            form.value.IsReceive = "";
+        }
+
+        await this.edidenceService.getByConAdv(form.value).then(async list => {
+            this.onSearchComplete(list);
+            this.preloader.setShowPreloader(false);
+        }, (err: HttpErrorResponse) => {
+            swal('', err.message, 'error');
+            this.preloader.setShowPreloader(false);
+        });
+    }
 
     getCurrentDate() {
         let date = new Date();
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
     }
 
-    onSDateChange(event: IMyDateModel) {
-        this._dateStartFrom = event.date;
-        this.checkDateDelivery();
+    // ----- Validate วันที่รับ -----
+    onSRecvDateChange(event: IMyDateModel) {
+        this._dateRecvStartFrom = event.date;
+        this.checkDateRecv();
     }
 
-    onEDateChange(event: IMyDateModel) {
-        this._dateStartTo = event.date;
-        this.checkDateDelivery();
+    onERecvDateChange(event: IMyDateModel) {
+        this._dateRecvStartTo = event.date;
+        this.checkDateRecv();
     }
 
-    checkDateDelivery() {
-        if (this._dateStartFrom && this._dateStartTo) {
-            const sdate = `${this._dateStartFrom.year}-${this._dateStartFrom.month}-${this._dateStartFrom.day}`;
-            const edate = `${this._dateStartTo.year}-${this._dateStartTo.month}-${this._dateStartTo.day}`;
+    checkDateRecv() {
+        if (this._dateRecvStartFrom && this._dateRecvStartTo) {
+            let sdate = `${this._dateRecvStartFrom.year}-${this._dateRecvStartFrom.month}-${this._dateRecvStartFrom.day}`;
+            let edate = `${this._dateRecvStartTo.year}-${this._dateRecvStartTo.month}-${this._dateRecvStartTo.day}`;
 
             if (!compareDate(new Date(sdate), new Date(edate))) {
                 swal('', Message.checkDate, 'warning');
-                //alert(Message.checkDate)
                 setTimeout(() => {
-                    this.DateStartTo = { date: this._dateStartFrom };
+                    this.EvidenceInDateTo = { date: this._dateRecvStartFrom };
                 }, 0);
             }
         }
     }
 
-    // --- หน่วยงาน ---
-    async getDepartmentRevenue() {
-        await this.incomeService.getDepartment().then(async res => {
-            if (res) {
-                this.rawOptions = res;
+    // ----- Validate วันที่นำส่ง -----
+    onSSendDateChange(event: IMyDateModel) {
+        this._dateSendStartFrom = event.date;
+        this.checkDateSend();
+    }
+
+    onESendDateChange(event: IMyDateModel) {
+        this._dateSendStartTo = event.date;
+        this.checkDateSend();
+    }
+
+    checkDateSend() {
+        if (this._dateSendStartFrom && this._dateSendStartTo) {
+            let sdate = `${this._dateSendStartFrom.year}-${this._dateSendStartFrom.month}-${this._dateSendStartFrom.day}`;
+            let edate = `${this._dateSendStartTo.year}-${this._dateSendStartTo.month}-${this._dateSendStartTo.day}`;
+
+            if (!compareDate(new Date(sdate), new Date(edate))) {
+                swal('', Message.checkDate, 'warning');
+                setTimeout(() => {
+                    this.DeliveryDateTo = { date: this._dateSendStartFrom };
+                }, 0);
             }
-        }, (err: HttpErrorResponse) => {
-            this.preloader.setShowPreloader(false);
-        });
+        }
     }
-
-    onAutoChange(value: string) {
-        // if (value == '') {
-        //     this.options = [];
-
-        //     // this.oProve.ProveStationCode = "";
-        //     // this.oProve.ProveStation = "";
-        // } else {
-        //     this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
-        // }
-    }
-
-    onAutoFocus(value: string) {
-        // if (value == '') {
-        //     this.options = [];
-        // }
-    }
-
-    // onAutoSelecteWord(event) {
-    //     // this.oProve.ProveStationCode = event.OfficeCode;
-    //     // this.oProve.ProveStation = event.OfficeName;
-    // }
-    // ----- End หน่วยงาน ---
-    */
 }
