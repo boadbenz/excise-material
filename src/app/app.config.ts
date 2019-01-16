@@ -1,6 +1,6 @@
 export const appConfig = {
     
-    // apiUrl:  'http://192.168.3.158:8888/XCS60',
+    // apiUrl:  'http://192.168.3.158:8777/XCS60',
     // api8888: 'http://192.168.3.158:8888/XCS60',
     // api7788: 'http://192.168.3.158:7788/XCS60',
     // api7789: 'http://192.168.3.158:7789/XCS60',
@@ -17,7 +17,7 @@ export const appConfig = {
     // mockapi: 'http://demo1735762.mockable.io/XCS60',
     // exciseService: 'http://webtest.excise.go.th'
 //-----------------------------------------------------------------//
-    apiUrl:  'http://103.233.193.94:8888/XCS60',   
+    apiUrl:  'http://103.233.193.94:8777/XCS60',   
     api7788: 'http://103.233.193.94:7788/XCS60',  
     api8082: 'http://103.233.193.94:8082/XCS60', 
     api8882: 'http://103.233.193.94:8882/XCS60',    
