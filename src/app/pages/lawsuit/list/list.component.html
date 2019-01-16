@@ -90,12 +90,13 @@
             </thead>
             <tbody>
               <tr class="footable" *ngFor="let item of resultsPerPage; let i = index;">
-                <td class="text-center">{{ item.RowsId || '' }}</td>
+                <td class="text-center">{{ i + 1 || '' }}</td>
                 <td>{{ item.Lawsuit.ArrestCode || '' }}</td>
                 <td>{{
-                   item.LawsuitArrestIndicment.LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
+                  item.LawsuitArrestIndicment.LawsuitLawGuiltbase[0].LawsuitLawSubSectionRule[0].LawsuitLawSubSection[0].SubSectionType
                   || '' }}</td>
-                <td>{{ checkLawsuitType(item.LawsuitArrestIndicment) + checkNullLawsuitNo(item.LawsuitArrestIndicment) || '' }}</td>
+                <td>{{ checkLawsuitType(item.LawsuitArrestIndicment) + checkNullLawsuitNo(item.LawsuitArrestIndicment)
+                  || '' }}</td>
                 <td>{{ showLawsuitDate(item.LawsuitArrestIndicment) }}</td>
                 <td>
                   <div *ngIf="item.LawsuitArrestIndicment.Lawsuit[0]">

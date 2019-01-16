@@ -17,7 +17,7 @@ export const appConfig = {
     // mockapi: 'http://demo1735762.mockable.io/XCS60',
     // exciseService: 'http://webtest.excise.go.th'
 
-    apiUrl:  'http://103.233.193.94:8888/XCS60',
+    apiUrl:  'http://103.233.193.94:8777/XCS60',
     api8888: 'http://103.233.193.94:8888/XCS60',
     api7788: 'http://103.233.193.94:7788/XCS60',
     api7789: 'http://103.233.193.94:7789/XCS60',
