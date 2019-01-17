@@ -378,8 +378,7 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchProduct"
                     [resultTemplate]="rt" [inputFormatter]="formatterProduct" (selectItem)="selectItemProductItem($event, i)"
-                    [value]="item.value.ProductDesc" [ngClass]="{'is-invalid': item.get('ProductDesc').invalid && isRequired}" 
-                    [editable]="false"/>
+                    [value]="item.value.ProductDesc" [ngClass]="{'is-invalid': item.get('ProductDesc').invalid && isRequired}"/>
                   <input type="text" formControlName="ProductDesc" required style="display: none;">
                 </td>
                 <td style="max-width: 30px;">

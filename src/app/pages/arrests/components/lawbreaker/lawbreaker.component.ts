@@ -105,7 +105,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         await this.active_route();
         await this.navigate_service();
         // await this.setRegionStore();
-        
+
     }
 
     ngOnDestroy(): void {
@@ -361,6 +361,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         this.disableCompany = false;
         this.requiredCompanyRegister = false;
         this.requiredPassport = false;
+        this.card3 = false;
+        this.card4 = false;
 
         setTimeout(() => {
             if (e == '1' && l == '0') {
@@ -372,8 +374,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 // บุคคลธรรมดา, ชาวไทย
                 this.disableCompany = true;
                 this.disableForeign = true;
-                this.card3 = false;
-                this.card4 = false;
+
             } else if (e == '2') {
                 // นิติบุคคล
                 this.disableForeign = true;
@@ -381,7 +382,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 this.card4 = true;
             }
         }, 100);
-        
+
     }
 
     openOffenseDetailModal(e: any) {
@@ -459,7 +460,8 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,
-            Province: ele.item.ProvinceNameTH
+            Province: ele.item.ProvinceNameTH,
+            Region: `${ele.item.SubdistrictNameTH} ${ele.item.DistrictNameTH} ${ele.item.ProvinceNameTH}`
         });
     }
 

@@ -1356,6 +1356,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     selectItemProductItem(e, i) {
+        debugger
         const product = this.ArrestProduct.at(i).value;
         this.ArrestProduct.at(i).reset(e.item);
         this.ArrestProduct.at(i).patchValue({
@@ -1367,7 +1368,11 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             GroupCode: e.item.GroupCode || product.GroupCode,
             IsDomestic: e.item.IsDomestic || product.IsDomestic,
             Size: e.item.Size || product.Size,
-            SizeUnitName: e.item.SizeUnitName || product.SizeUnitName
+            SizeUnitName: e.item.SizeUnitName || product.SizeUnitName,
+            Qty: product.Qty || '',
+            QtyUnit: product.QtyUnit || '',
+            NetVolume: product.NetVolume || '',
+            NetVolumeUnit: product.NetVolumeUnit || ''
         })
     }
 
