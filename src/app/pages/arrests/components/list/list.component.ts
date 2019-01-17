@@ -139,6 +139,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
         })
 
         this.arrest = rows;
+        this.arrestList =  this.arrest.slice(0, 5);
         // set total record     
         this.paginage.TotalItems = this.arrest.length;
 
