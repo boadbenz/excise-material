@@ -110,7 +110,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`;
   isReportNo: any = false;
-
+  logedinUser: any = {};
   get CompareDocument(): FormArray {
     return this.compareForm.get('CompareDocument') as FormArray;
   }
@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.36');
+    this.sidebarService.setVersion('0.0.0.37');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -145,6 +145,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.timeNow = this.getTimeNow();
     this.accused.CompareTime = this.timeNow;
     this.generateYear();
+    this.setAutocompleteStyle();
   }
 
   async ngOnInit() {
@@ -216,6 +217,15 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.OnSubscribe[k].unsubscribe();
     }
   }
+  setAutocompleteStyle() {
+    const cusid_ele = document.getElementsByClassName('cdk-overlay-container');
+    console.log(cusid_ele);
+    for (let i = 0; i < cusid_ele.length; ++i) {
+        let item: any = cusid_ele[i];
+        item.style['z-index'] = '9999';
+        console.log(item);
+    }
+  }
   generateYear() {
     for (let i = 100 ; i > 0 ; i--) {
       this.year.push(((+this.DateToday.date.year) - i) + 544);
@@ -264,7 +274,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         "DocumentType": "3",
         "ReferenceCode": "TN9011126100002"
       };
-      return await this.fineService.postMethod('MasDocumentMaingetAll', data, "7789");
+      return await this.fineService.postMethod('MasDocumentMaingetAll', data, '8777');
     } catch (err) {
       return [];
     }
@@ -428,11 +438,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.receipt.list[i].ReceiptNo = compare.CompareDetailReceipt[0].ReceiptNo ? compare.CompareDetailReceipt[0].ReceiptNo : '';
         this.receipt.list[i].CompareReceiptID = compare.CompareDetailReceipt[0].CompareReceiptID;
       }
+      console.log('compare');
+      console.log(compare);
       if (compare.CompareDetailFine) {
         for (const cd of compare.CompareDetailFine) {
           if (!this.ListCompareDetail[countCD]) {
             this.ListCompareDetail.push({});
           }
+          console.log(cd);
           console.log(cd.ProductFine);
           this.ListCompareDetail[countCD]['userNo' + i + ':' + countCD] = cd.ProductFine;
           countCD++;
@@ -515,7 +528,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.OnSubscribe.cancel = this.navService.onCancel.subscribe(async status => {
       if (status && this.isFinishLoad) {
         Swal({
-          title: 'ยืนยันการทำรายการ?',
+          title: '',
           text: "ต้องการยกเลิกรายการจริงหรือไม่!",
           type: 'warning',
           showCancelButton: true,
@@ -887,29 +900,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     return !(case1 && case2 && case3 && case4);
   }
   async checkStaff(data: any) {
-    console.log(this.jsonCopy(data));
-    for (const st of data) {
-      const ProcessCode: any = st.ProcessCode ? st.ProcessCode.toString() : '';
-      console.log(ProcessCode.split('.').length);
-      if (st.ProcessCode == null) {
-        st.ContributorID = 17;
-        st.ProgramCode = 'ILG60-06-00-02';
-      } else if (ProcessCode.split('.').length == 1) {
-        st.ContributorID = 19;
-        st.ProgramCode = 'ILG60-06-00-03';
-      } else if (ProcessCode.split('.').length == 2) {
-        const valStaff: any = ProcessCode.split('.');
-        st.ProgramCode = 'ILG60-06-00-04';
-        if (valStaff[1] == 1) {
-          st.ContributorID = 39;
-        } else if (valStaff[1] == 2) {
-          st.ContributorID = 40;
-        } else if (valStaff[1] == 3) {
-          st.ContributorID = 41;
-        }
-      }
-    }
-    console.log(data);
     return data;
   }
   async CompareinsAll () {
@@ -960,18 +950,18 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // return null;
               } else {
                 Swal(
-                  'ข้อผิดพลาด!',
+                  '',
                   'ข้อมูลไม่มีการเปลี่ยนแปลง.',
-                  'error'
+                  'warning'
                 );
               }
             }
           }
       } else {
         Swal(
-          'ข้อผิดพลาด!',
+          '',
           'คดีเปรียบเทียบซ้ำ กรุณาใส่ใหม่.',
-          'error'
+          'warning'
         );
         return false;
       }
@@ -997,12 +987,12 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   async MasofficeMaingetAll() {
     try {
-      this.rawOptions = await this.fineService.postMethod('MasOfficeMaingetAll', {}, '7789');
+      this.rawOptions = await this.fineService.postMethod('MasOfficeMaingetAll', {}, '8777');
     } catch (err) { console.log(err); }
   }
   async MasStaffMaingetAll() {
     try {
-      this.rawStaffOptions = await this.fineService.postMethod('MasStaffMaingetAll', {}, '7789');
+      this.rawStaffOptions = await this.fineService.postMethod('MasStaffMaingetAll', {}, '8777');
     } catch (err) { console.log(err); }
   }
   async CompareArrestgetByIndictmentID() {
@@ -1048,6 +1038,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (localStorage.getItem('officeShortName')) {
           this.accused.OperationDeptName = localStorage.getItem('officeShortName');
         }
+        this.logedinUser = this.jsonCopy(this.accused);
+        this.logedinUser.officeCode = localStorage.getItem('officeCode');
+        this.logedinUser.officeShortName = localStorage.getItem('officeShortName');
         for (const lawbreaker of resp[0].CompareArrestIndictmentDetail) {
           this.DataToSave.Product = lawbreaker.CompareArrestProductDetail;
           const CompareDetail: any = {};
@@ -1056,7 +1049,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             Swal(
               '',
               'ไม่พบข้อมูลผู้ต้องหา.',
-              'error'
+              'warning'
             );
             throw 'ไม่พบข้อมูลผู้ต้องหา';
             break;
@@ -1157,42 +1150,50 @@ export class ManageComponent implements OnInit, OnDestroy {
             detail.FineType = fineCompare.FineType;
             switch (fineCompare.FineType) {
               case 0 : {
+                console.log('case 0');
                 detail.multi = 1;
                 detail.FineAmount = fineCompare.CompareMasLawGuiltbaseFine[0].FineAmount;
               } break;
               case 1 : {
+                console.log('case 1');
                 for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
-                  const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
+                  const checkCase1: any = (fCmp == (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length- 1]));
                   const checkCase2: any = (p.Mistreat === fCmp.MistreatStartNo);
                   if (checkCase1 || checkCase2) {
-                    if (fCmp.FineRate === 0) {
+                    if ((!fCmp.FineRate) || fCmp.FineRate == 0 || fCmp.FineRate == null) {
                       detail.multi = 1;
                       detail.FineAmount = fCmp.FineAmount;
+                      console.log('if');
                     } else {
                       detail.multi = fCmp.FineRate;
                       detail.FineAmount = p.VatProve;
+                      console.log('else');
                     }
                     break;
                   }
                 }
               } break;
               case 2 : {
+                console.log('case 2');
                 for (const fCmp of fineCompare.CompareMasLawGuiltbaseFine) {
-                  const checkCase1: any = (fCmp === (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length] - 1));
+                  const checkCase1: any = (fCmp == (fineCompare.CompareMasLawGuiltbaseFine[fineCompare.CompareMasLawGuiltbaseFine.length - 1]));
                   const checkCase2: any = (p.NetVolume > fCmp.MistreatStartVolume) && (p.NetVolume <= fCmp.MistreatToVolume);
                   if (checkCase1 || checkCase2) {
-                    if (fCmp.FineRate === 0) {
+                    if ((!fCmp.FineRate) || fCmp.FineRate == 0 || fCmp.FineRate == null) {
                       detail.multi = 1;
                       detail.FineAmount = fCmp.FineAmount;
+                      console.log('if');
                     } else {
                       detail.multi = fCmp.FineRate;
                       detail.FineAmount = p.VatProve;
+                      console.log('else');
                     }
                     break;
                   }
                 }
               } break;
               case 3 : {
+                console.log('case 3');
                 let fineOfMatch = fineCompare.CompareMasLawGuiltbaseFine.filter(f => f.GroupCode === p.GroupCode);
                 let isMatch = fineOfMatch.length > 0 ? true : false;
                 console.log('Match');
@@ -1203,13 +1204,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                 console.log(fineOfMatch);
                 for (const fMatch of fineOfMatch) {
                   if (!fMatch.GroupCode) {
-                    if (detail.Mistreat === fMatch.MistreatStartNo || fMatch === fineOfMatch[fineOfMatch.length - 1]) {
-                      if (fMatch.FineRate === 0) {
+                    if (detail.Mistreat == fMatch.MistreatStartNo || fMatch === fineOfMatch[fineOfMatch.length - 1]) {
+                      if ((!fMatch.FineRate) || fMatch.FineRate == 0 || fMatch.FineRate == null) {
                         detail.multi = 1;
                         detail.FineAmount = fMatch.FineAmount;
+                        console.log('if');
                       } else {
                         detail.multi = fMatch.FineRate;
                         detail.FineAmount = p.VatProve;
+                        console.log('else');
                       }
                       break;
                     }
@@ -1397,7 +1400,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     return JSON.parse(JSON.stringify(src));
   }
   onAutoChange(value: string) {
-    //
     if (value === '') {
       this.options = [];
       this.optionsStation = [];
@@ -1405,6 +1407,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.options = this.rawOptions.filter(f => f.OfficeShortName.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0,10);;
       this.optionsStation = this.options;
     }
+    this.setAutocompleteStyle();
   }
   onAutoFocus(value: string) {
     if (value === '') {
@@ -1433,6 +1436,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       this.Staffoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0,10);
     }
+    this.setAutocompleteStyle();
   }
   StaffonAutoFocus(value: string) {
     if (value === '') {
@@ -1733,7 +1737,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log(id);
         if (id) {
           try {
-            const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id}, "7789");
+            const resp: any = await this.fineService.postMethod('/MasDocumentMainupdDelete', {'DocumentID': id}, "8777");
             Swal(
               '',
               'ลบไฟล์สำเร็จ.',
@@ -2086,9 +2090,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.accused.staff.ProcessCode = null;
     this.accused.staff.ProgramCode = 'ILG60-06-02-00';
     this.accused.staff.ContributorID = 17;
-    if (this.accused.staff.OperationPosName) {
+    if (this.accused.staff.OperationPosName && this.accused.staff.OperationPosCode) {
       this.accused.staff.PositionName = this.accused.staff.OperationPosName;
       this.accused.staff.PositionCode = this.accused.staff.OperationPosCode;
+    } else {
+      this.accused.staff.PositionName = this.logedinUser.operationPosName;
+      this.accused.staff.PositionCode = this.logedinUser.OperationPosCode;
     }
     staff.push(this.accused.staff);
     // for (const d of this.accused.list) {
@@ -2100,12 +2107,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     let staffReceipt: any = [];
     for (const d of this.receipt.list) {
       if (d.staff) {
-        d.staff.ProgramCode = 'ILG60-06-02-03-00';
+        d.staff.ProgramCode = 'ILG60-06-02-03';
         d.staff.ProcessCode = i;
         d.staff.ContributorID = 19;
-        if (d.staff.OperationPosName) {
+        if (d.staff.OperationPosName && d.staff.OperationPosCode) {
           d.staff.PositionName = d.staff.OperationPosName;
           d.staff.PositionCode = d.staff.OperationPosCode;
+        } else {
+          d.staff.PositionName = this.logedinUser.operationPosName;
+          d.staff.PositionCode = this.logedinUser.OperationPosCode;
         }
         staffReceipt.push(d.staff);
       } else {
@@ -2118,23 +2128,32 @@ export class ManageComponent implements OnInit, OnDestroy {
     let staffApprove: any = [];
     for (const d of this.approveReportList) {
       if (d.staff1 && d.staff2 && d.staff3) {
-        d.staff1.ProgramCode = 'ILG60-06-02-04-00';
+        d.staff1.ProgramCode = 'ILG60-06-02-04';
         d.staff1.ProcessCode = i + '.1';
-        if (d.staff1.OperationPosName) {
+        if (d.staff1.OperationPosName && d.staff1.OperationPosCode) {
           d.staff1.PositionName = d.staff1.OperationPosName;
           d.staff1.PositionCode = d.staff1.OperationPosCode;
+        } else {
+          d.staff1.PositionName = this.logedinUser.operationPosName;
+          d.staff1.PositionCode = this.logedinUser.OperationPosCode;
         }
-        d.staff2.ProgramCode = 'ILG60-06-02-04-00';
+        d.staff2.ProgramCode = 'ILG60-06-02-04';
         d.staff2.ProcessCode = i + '.2';
-        if (d.staff2.OperationPosName) {
+        if (d.staff2.OperationPosName && d.staff2.OperationPosCode) {
           d.staff2.PositionName = d.staff2.OperationPosName;
           d.staff2.PositionCode = d.staff2.OperationPosCode;
+        } else {
+          d.staff2.PositionName = this.logedinUser.operationPosName;
+          d.staff2.PositionCode = this.logedinUser.OperationPosCode;
         }
-        d.staff3.ProgramCode = 'ILG60-06-02-04-00';
+        d.staff3.ProgramCode = 'ILG60-06-02-04';
         d.staff3.ProcessCode = i + '.3';
-        if (d.staff3.OperationPosName) {
+        if (d.staff3.OperationPosName && d.staff3.OperationPosCode) {
           d.staff3.PositionName = d.staff3.OperationPosName;
           d.staff3.PositionCode = d.staff3.OperationPosCode;
+        } else {
+          d.staff3.PositionName = this.logedinUser.operationPosName;
+          d.staff3.PositionCode = this.logedinUser.OperationPosCode;
         }
         d.staff1.ContributorID = 39;
         staffApprove.push(d.staff1);

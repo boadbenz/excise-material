@@ -1,5 +1,5 @@
-@import '../../../../styles';
-.cdk-global-overlay-wrapper, .cdk-overlay-container {
+// @import '../../../../styles';
+.cdk-overlay-container {
   z-index: 99999 !important;
 }
   .btn-navy {
@@ -93,4 +93,8 @@ input[type=time]::-webkit-clear-button {
 }
 .mat-expansion-panel-content {
   font: unset !important;
+}
+:host /deep/ ng2-dropdown-menu div{
+	left: inherit !important;
+	top: inherit !important;
 }
