@@ -1916,21 +1916,29 @@ export class ManageComponent implements OnInit, OnDestroy {
 
       id++;
     }
-    console.log(CompareData);
-    console.log(this.ListCompareDetail);
+    // console.log(CompareData);
+    // console.log(this.ListCompareDetail);
     id = 0;
     let j = 0;
     let compareFine: any = [];
+    let userNoTmp: any = {};
     if ((+this.params.CompareID) > 0) {
       let i = 0;
       for (const user of this.ListCompareDetail) {
+        if (!userNoTmp['u' + user.userNo]) {
+          userNoTmp['u' + user.userNo] = 0;
+          j = 0;
+        } else {
+          j = userNoTmp['u' + user.userNo];
+        }
         // console.log('receipt by id');
         // console.log(this.receipt.list[id]);
         // console.log(!user.isSum , !this.isReportNo);
+        // console.log(this.compareDataUpdateTmp.CompareDetail[user.userNo]);
         if (!user.isSum || !this.isReportNo) {
           const compareDetailFine: any = {
-            CompareFineID: this.compareDataUpdateTmp.CompareDetail[id] ? (this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j] ? (+this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareFineID) : '') : '',
-            CompareDetailID: this.compareDataUpdateTmp.CompareDetail[id] ? (this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j] ? (+this.compareDataUpdateTmp.CompareDetail[id].CompareDetailFine[j].CompareDetailID) : '' ) : '',
+            CompareFineID: this.compareDataUpdateTmp.CompareDetail[user.userNo] ? (this.compareDataUpdateTmp.CompareDetail[user.userNo].CompareDetailFine[j] ? (+this.compareDataUpdateTmp.CompareDetail[user.userNo].CompareDetailFine[j].CompareFineID) : '') : '',
+            CompareDetailID: this.compareDataUpdateTmp.CompareDetail[user.userNo] ? (this.compareDataUpdateTmp.CompareDetail[user.userNo].CompareDetailFine[j] ? (+this.compareDataUpdateTmp.CompareDetail[user.userNo].CompareDetailFine[j].CompareDetailID) : '' ) : '',
             ProductID: user.product? user.product.ProductID : '',
             ProductFine: user['userNo' + user.userNo + ':' + i],
             VatValue: user.FineAmount,
@@ -1939,7 +1947,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             FineType: user.FineType,
             CompareArrestProductDetail: this.DataToSave.Product ? this.DataToSave.product : []
           }
-          j++;
           compareFine.push(compareDetailFine);
           if (!this.isReportNo) {
             CompareData.CompareDetail[id].CompareDetailFine = compareFine;
@@ -1953,9 +1960,10 @@ export class ManageComponent implements OnInit, OnDestroy {
           }
           compareFine = [];
           id++;
-          j = 0;
         }
         i++;
+        userNoTmp['u' + user.userNo] = j;
+        j++;
       }
     } else {
       let i = 0;
