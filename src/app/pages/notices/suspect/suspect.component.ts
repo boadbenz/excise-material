@@ -30,6 +30,8 @@ export class SuspectComponent implements OnInit, OnDestroy {
     
     months:any[];
 
+    emailValid:boolean = false;
+
     constructor(
         private activatedRoute: ActivatedRoute,
         private preloader: PreloaderService,
@@ -155,7 +157,8 @@ export class SuspectComponent implements OnInit, OnDestroy {
             Remarks: new FormControl(null),
             LinkPhoto: new FormControl(null),
             PhotoDesc: new FormControl(null),
-            IsActive: new FormControl(1)
+            IsActive: new FormControl(1),
+            Region: new FormControl(null)
         });
     }
 
@@ -218,6 +221,15 @@ export class SuspectComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
+                let email = this.SuspectFG.get("Email").value;
+                if(email && !this.validateEmail(email)){
+                    this.emailValid = true;
+                    this.showSwal(Message.checkData, "warning");
+                    return false;
+                }
+
+                this.emailValid = false;
+
                 // let birthDay = getDateMyDatepicker(this.SuspectFG.value.BirthDate);
                 let birthDay = this.SuspectFG.value.BirthDate;
                 if(birthDay && birthDay.date!=undefined){
@@ -250,6 +262,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
         this.preloader.setShowPreloader(true);
         this.noticeService.noticeSuspectgetByCon(SuspectID).then(res => {
+            let region = `${res.SubDistrict||''} ${res.District||''} ${res.Province||''}`;
             this.SuspectFG.reset({
                 SuspectID: res.SuspectID,
                 EntityType: res.EntityType,
@@ -313,7 +326,8 @@ export class SuspectComponent implements OnInit, OnDestroy {
                 Remarks: res.Remarks,
                 LinkPhoto: res.LinkPhoto,
                 PhotoDesc: res.PhotoDesc,
-                IsActive: res.IsActive
+                IsActive: res.IsActive,
+                Region: region
             })
 
             if (res.LinkPhoto) {
@@ -388,7 +402,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
         await this.navService.setEditButton(true);
         await this.navService.setPrintButton(true);
         await this.navService.setDeleteButton(true);
-        await this.navService.setNextPageButton(true);
+        await this.navService.setNextPageButton(false);
         // set false
         await this.navService.setSaveButton(false);
         await this.navService.setCancelButton(false);
@@ -436,14 +450,30 @@ export class SuspectComponent implements OnInit, OnDestroy {
         `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
     selectItemRegion(ele: any) {
+        let region = `${ele.item.SubDistrictNameTH||''} ${ele.item.DistrictNameTH||''} ${ele.item.ProvinceNameTH||''}`;
         this.SuspectFG.patchValue({
             SubDistrictCode: ele.item.SubdistrictCode,
-            SubDistrict: ele.item.SubDistrictNameTH,
+            SubDistrict: ele.item.SubdistrictNameTH,
             DistrictCode: ele.item.DistrictCode,
             District: ele.item.DistrictNameTH,
             ProvinceCode: ele.item.ProvinceCode,
-            Province: ele.item.ProvinceNameTH
+            Province: ele.item.ProvinceNameTH,
+            Region: region
         });
+    }
+    blurItemRegion(ele: any) {
+        let val = ele.value;
+        if(!val){
+            this.SuspectFG.patchValue({
+                SubDistrictCode: "",
+                SubDistrict: "",
+                DistrictCode: "",
+                District: "",
+                ProvinceCode: "",
+                Province: "",
+                Region: ""
+            });
+        }
     }
 
     getTitleNames(){
@@ -460,11 +490,18 @@ export class SuspectComponent implements OnInit, OnDestroy {
                         (v.TitleNameEN && v.TitleNameEN.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
     formatterTitleName = (x: { TitleNameTH: string }) => `${x.TitleNameTH || ''}`
-    selectItemTitleName(ele: any) {
-        this.SuspectFG.patchValue({
-            SuspectTitleCode: ele.item.TitleCode,
-            SuspectTitleName: ele.item.TitleNameTH
-        });
+    selectItemTitleName() {
+        let titleCode = this.SuspectFG.get("SuspectTitleCode").value;
+        for(let l of this.titleNames){
+            let _titleCode = l.TitleCode;
+            if(titleCode==_titleCode){
+                this.SuspectFG.patchValue({
+                    SuspectTitleCode: l.TitleCode,
+                    SuspectTitleName: l.TitleNameTH
+                });
+                break;
+            }
+        }
     }
 
     getNationality(){
@@ -481,11 +518,18 @@ export class SuspectComponent implements OnInit, OnDestroy {
                         (v.NationalityNameEn && v.NationalityNameEn.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
     formatterNationality = (x: { NationalityNameTh: string }) => `${x.NationalityNameTh || ''}`
-    selectItemNationality(ele: any) {
-        this.SuspectFG.patchValue({
-            NationalityCode: ele.item.NationalityCode,
-            NationalityNameTH: ele.item.NationalityNameTh
-        });
+    selectItemNationality() {
+        let code = this.SuspectFG.get("NationalityCode").value;
+        for(let l of this.nationnalitys){
+            let _code = l.NationalityCode;
+            if(code==_code){
+                this.SuspectFG.patchValue({
+                    NationalityCode: l.NationalityCode,
+                    NationalityNameTH: l.NationalityNameTh
+                });
+                break;
+            }
+        }
     }
     getRace(){
         this.mainMasterService.MasRaceMaingetAll().then(res=>this.races=res);
@@ -501,11 +545,18 @@ export class SuspectComponent implements OnInit, OnDestroy {
                         (v.RaceNameEN && v.RaceNameEN.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
     formatterRace = (x: { RaceNameTH: string }) => `${x.RaceNameTH || ''}`
-    selectItemRace(ele: any) {
-        this.SuspectFG.patchValue({
-            RaceCode: ele.item.RaceCode,
-            RaceName: ele.item.RaceNameTH
-        });
+    selectItemRace() {
+        let code = this.SuspectFG.get("RaceCode").value;
+        for(let l of this.races){
+            let _code = l.RaceCode;
+            if(code==_code){
+                this.SuspectFG.patchValue({
+                    RaceCode: l.RaceCode,
+                    RaceName: l.RaceNameTH
+                });
+                break;
+            }
+        }
     }
     getReligion(){
         this.mainMasterService.MasReligionMaingetAll().then(res=>this.religions=res);
@@ -522,10 +573,17 @@ export class SuspectComponent implements OnInit, OnDestroy {
                     ).slice(0, 10));
     formatterReligion = (x: { RaceNameTH: string }) => `${x.RaceNameTH || ''}`
     selectItemReligion(ele: any) {
-        this.SuspectFG.patchValue({
-            ReligionCode: ele.item.ReligionCode,
-            ReligionName: ele.item.ReligionNameTH
-        });
+        let code = this.SuspectFG.get("ReligionCode").value;
+        for(let l of this.religions){
+            let _code = l.ReligionCode;
+            if(code==_code){
+                this.SuspectFG.patchValue({
+                    ReligionCode: l.ReligionCode,
+                    ReligionName: l.ReligionNameTH
+                });
+                break;
+            }
+        }
     }
     getCountry(){
         this.mainMasterService.MasCountryMaingetAll().then(res=>this.countries=res);
@@ -559,5 +617,10 @@ export class SuspectComponent implements OnInit, OnDestroy {
         this.alertSwal.text = msg;
         this.alertSwal.type = iconType;
         this.alertSwal.show();
+    }
+
+    private validateEmail(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
     }
 }

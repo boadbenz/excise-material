@@ -1289,6 +1289,37 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    blurDataUnit(ele:any, index:number){
+        if(!ele.value){
+            this.NoticeProduct.at(index).patchValue({
+                QtyUnit: "",
+                DutyCode: ""
+            });
+            ele.value = "";
+        }
+
+    }
+
+    searchDataUnit(ele: any, index:number) {
+        let text = ele.value;
+        let units = this.typeheadProductUnit
+                .filter(v => (v.DutyCode.toLowerCase().indexOf(text.toLowerCase()) > - 1)
+                ).slice(0, 10);
+        if(units.length==1){
+            this.NoticeProduct.at(index).patchValue({
+                QtyUnit: units[0].DutyUnitCode,
+                DutyCode: units[0].DutyCode
+            });
+            ele.value = units[0].DutyCode;
+        }else{
+            this.NoticeProduct.at(index).patchValue({
+                QtyUnit: "",
+                DutyCode: ""
+            });
+            // ele.value = "";
+        }
+    }
+
     productId:any = "";
     productIndex:any = "";
     beforeDeleteProduct(id: string, index: number){
