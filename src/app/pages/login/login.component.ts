@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
         //     await this.authService.userAndPrivilegeInfo(User).subscribe(async res => {
         //       // console.log("getpin : ", res);
         //       if (res.pin) {
-        //         // console.log("Hi pin : ", res.pin)
+        //         console.log("Hi pin : ", res.pin)
         //         const paramsPinID = {
         //           SystemID: "sso",
         //           Username: "pccsso",
@@ -73,13 +73,15 @@ export class LoginComponent implements OnInit {
         //         }
         //         if (User == Pass) {
         //           await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
-        //              console.log("res eofficeInfo  : ", res);
+        //             console.log("res eofficeInfo  : ", res);
         //             if (res.Status == "OK") {
         //               this.fullName = res.PersonInformation.PersonTHTitle + " " +
         //                 res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
         //               localStorage.setItem('fullName', this.fullName);
         //               localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion);
         //               localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
+        //               localStorage.setItem('staffCode', res.PersonInformation.PersonID);
+        //               localStorage.setItem('officeCode', res.PersonInformation.WorkOffCode);
         //               let url = decodeURIComponent(this.returnUrl);
         //               this.router.navigateByUrl(url);
         //             } else this.errMsg = "Please Check User or Password "
