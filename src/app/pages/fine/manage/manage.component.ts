@@ -430,13 +430,15 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (!this.receipt.list[i]) {
           this.receipt.list.push({});
         }
-        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[0].PaymentDate ? this.convertToNormalDate(new Date(compare.CompareDetailReceipt[0].PaymentDate)) : null;
-        this.receipt.list[i].ReceipStation = compare.CompareDetailReceipt[0].Station ? compare.CompareDetailReceipt[0].Station : '';
-        this.receipt.list[i].ReceiptChanel = compare.CompareDetailReceipt[0].ReceiptChanel ? compare.CompareDetailReceipt[0].ReceiptChanel : '';
-        this.receipt.list[i].ReceiptBookNo = compare.CompareDetailReceipt[0].ReceiptBookNo ? compare.CompareDetailReceipt[0].ReceiptBookNo : '';
-        this.receipt.list[i].ReferenceNo = compare.CompareDetailReceipt[0].ReferenceNo != 'null' ? compare.CompareDetailReceipt[0].ReferenceNo : '';
-        this.receipt.list[i].ReceiptNo = compare.CompareDetailReceipt[0].ReceiptNo ? compare.CompareDetailReceipt[0].ReceiptNo : '';
-        this.receipt.list[i].CompareReceiptID = compare.CompareDetailReceipt[0].CompareReceiptID;
+        const recLength: any = compare.CompareDetailReceipt.length;
+        const recLastIndex: any = recLength > 0 ? recLength - 1 : recLength;
+        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[recLastIndex].PaymentDate ? this.convertToNormalDate(new Date(compare.CompareDetailReceipt[recLastIndex].PaymentDate), true) : null;
+        this.receipt.list[i].ReceipStation = compare.CompareDetailReceipt[recLastIndex].Station ? compare.CompareDetailReceipt[recLastIndex].Station : '';
+        this.receipt.list[i].ReceiptChanel = compare.CompareDetailReceipt[recLastIndex].ReceiptChanel ? compare.CompareDetailReceipt[recLastIndex].ReceiptChanel : '';
+        this.receipt.list[i].ReceiptBookNo = compare.CompareDetailReceipt[recLastIndex].ReceiptBookNo ? compare.CompareDetailReceipt[recLastIndex].ReceiptBookNo : '';
+        this.receipt.list[i].ReferenceNo = compare.CompareDetailReceipt[recLastIndex].ReferenceNo != 'null' ? compare.CompareDetailReceipt[recLastIndex].ReferenceNo : '';
+        this.receipt.list[i].ReceiptNo = compare.CompareDetailReceipt[recLastIndex].ReceiptNo ? compare.CompareDetailReceipt[recLastIndex].ReceiptNo : '';
+        this.receipt.list[i].CompareReceiptID = compare.CompareDetailReceipt[recLastIndex].CompareReceiptID;
       }
       console.log('compare');
       console.log(compare);
@@ -2182,6 +2184,18 @@ export class ManageComponent implements OnInit, OnDestroy {
       staff.push(st);
     }
     console.log(staff);
+    if (this.compareDataUpdateTmp) {
+      for (let st of staff) {
+        for (let tmp of this.compareDataUpdateTmp.CompareStaff) {
+          // alert(st.ProcessCode + ' ' + tmp.ProcessCode + ' ' + (!st.ProcessCode && !tmp.ProcessCode));
+          if ((st.ProcessCode == tmp.ProcessCode) || (st.ProcessCode == null && tmp.ProcessCode == 'null')) {
+            st.StaffID = tmp.StaffID;
+            st.CompareID = tmp.CompareID;
+          }
+        }
+      }
+    }
+    
     return staff;
   }
   getStaffData(data: any) {
@@ -2195,15 +2209,21 @@ export class ManageComponent implements OnInit, OnDestroy {
     staffData.IsActive = 1;
     return staffData;
   }
-  convertToNormalDate(date: any) {
+  convertToNormalDate(date: any, isNewDate: any = null) {
     if (!date || (typeof date.year) == 'undefined') {
       const d = new Date();
-      date = {day: d.getDate(), month: d.getMonth(), year: d.getFullYear()};
+      const m: any = d.getMonth() + 1;
+      date = {day: d.getDate(), month: m.length == 1 ? '0' + m : m, year: d.getFullYear()};
       console.log(date);
     }
-    return `${date.year}-${date.month}-${date.day}`;
-
-
+    let m: any;
+    if (isNewDate) {
+      m = date.month == 0 ? (date.month + 1).toString() : date.month;
+    } else {
+      m = date.month == 0 ? (date.month + 1).toString() : date.month;
+    }
+    
+    return `${date.year}-${m}-${date.day}`;
   }
   calSum(id: any = null) {
     console.log('start');
