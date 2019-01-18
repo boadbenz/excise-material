@@ -27,7 +27,8 @@ export class ListComponent implements OnInit, OnDestroy {
     CompareList: any = [];
     paginage = pagination;
     private subOnSearch: any;
-
+    getConAdvSub: any;
+    getConKeySub: any;
     @ViewChild('fineTable') fineTable: ElementRef;
 
     CompareDateFrom = '';
@@ -116,7 +117,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.36');
+        this.sidebarService.setVersion('0.0.0.37');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
@@ -144,22 +145,30 @@ export class ListComponent implements OnInit, OnDestroy {
                     Textsearch = {Textsearch:''};
                 }
                 await this.onSearch(Textsearch);
+                this.preLoaderService.setShowPreloader(false);
             }
-            this.preLoaderService.setShowPreloader(false);
         });
 
         this.preLoaderService.setShowPreloader(false);
     }
 
     ngOnDestroy(): void {
-        this.subOnSearch.unsubscribe();
+        if (this.subOnSearch) {
+            this.subOnSearch.unsubscribe();
+        }
+        if (this.getConAdvSub) {
+            this.getConAdvSub.unsubscribe();
+        }
+        if (this.getConKeySub) {
+            this.getConKeySub.unsubscribe();
+        }
     }
 
     async onSearch(Textsearch: any) {
         if(Textsearch.Textsearch == null){
             Textsearch = {Textsearch:''};
         }
-        await this.fineService.getByKeyword(Textsearch).subscribe(list => {
+        this.getConKeySub = await this.fineService.getByKeyword(Textsearch).subscribe(list => {
             this.Compare = list;
             this.onSearchComplete(list)
         }, (err: HttpErrorResponse) => {
@@ -187,12 +196,13 @@ export class ListComponent implements OnInit, OnDestroy {
             console.log(form);
             // isNaN(form.value.CompareDateFrom) ? form.value.CompareDateFrom = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateFrom).toLocaleString('en-GB', { timeZone: 'UTC' });
             // isNaN(form.value.CompareDateTo) ? form.value.CompareDateTo = '' :  form.value.CompareDateFrom = new Date(form.value.CompareDateTo).toLocaleString('en-GB', { timeZone: 'UTC' });
-            if (form.value.LawsuitDateFrom && (!form.value.LawsuitDateTo)) {
-                console.log(form.value.LawsuitDateFrom);
-                form.value.CompareDateFrom = this.convertToNormalDate(form.value.LawsuitDateFrom.date);
-                const d = new Date();
-                console.log(d);
-                form.value.CompareDateTo = this.convertToNormalDate(new Date());
+            let CompareDateFrom: any = '';
+            let CompareDateTo: any = '';
+            if (form.value.LawsuitDateFrom) {
+                CompareDateFrom = this.convertToNormalDate(form.value.LawsuitDateFrom.date);
+            }
+            if (form.value.LawsuitDateTo) {
+                CompareDateTo = this.convertToNormalDate(form.value.LawsuitDateTo.date);
             }
             console.log(form);
             form.value.ProgramCode = '';
@@ -202,13 +212,16 @@ export class ListComponent implements OnInit, OnDestroy {
                 ArrestCode: form.value.ArrestCode,
                 LawsuitCode: form.value.LawsuitCode,
                 CompareCode: form.value.CompareCode,
+                LawsuitNo: form.value.LawsuitCode,
                 ProveReportNo: form.value.ProveReportNo,
-                CompareDateFrom: form.value.CompareDateFrom,
-                CompareDateTo: form.value.CompareDateTo,
+                CompareDateFrom: CompareDateFrom,
+                CompareDateTo: CompareDateTo,
                 StaffName: form.value.Staff,
                 DepartmentName: form.value.Department,
+                OfficeShortName: form.value.Department,
+                OfficeName: form.value.Department
             }
-            this.fineService.getByConAdv(sendingFormat).subscribe(async list => {
+            this.getConAdvSub = this.fineService.getByConAdv(sendingFormat).subscribe(async list => {
                 this.onSearchComplete(list)
             }, (err: HttpErrorResponse) => {
                 console.log('fail onAdvSearch', err.message);
@@ -223,13 +236,13 @@ export class ListComponent implements OnInit, OnDestroy {
         this.CompareList = [];
         if (list.length < 1) {
             swal(
-                'ข้อผิดพลาด',
+                '',
                 Message.noRecord,
-                'error'
+                'warning'
             );
             return false;
         }
-
+        console.log(list);
         this.CompareList = list.map((item, i) => {
             item.RowsId = i + 1;
             try {
@@ -242,6 +255,7 @@ export class ListComponent implements OnInit, OnDestroy {
             // console.log('Check LIST:'+JSON.stringify(item));
             return item;
           });
+          console.log(this.CompareList);
           /* Set Total Record */
         //   this.paginage.TotalItems = this.results.length;
 

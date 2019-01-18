@@ -213,7 +213,7 @@
           <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.FineAmount)) }}</td>
           <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.all)) }}</td>
 
-          <td *ngIf="!item.isSum"><input class="form-control" [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum('userNo' + item.userNo + ':' + i)" [disabled]="showEditField" step='0.01' value='0.00' type='number'></td>
+          <td *ngIf="!item.isSum"><input class="form-control" [(ngModel)]="item['userNo' + item.userNo + ':' + i]" (keyup)="calSum('userNo' + item.userNo + ':' + i)" [disabled]="showEditField" step='0.01' value='0.00' type='number' [name]="'item' + i"></td>
           <td *ngIf="item.isSum && accused.list?.length > 1"><b>{{ formatMoney(roundDigit(item.all)) }}</b></td>
 
           <td *ngIf="item.product && !item.isSum">{{ formatMoney(roundDigit(item.BribeMoney)) }}</td>
