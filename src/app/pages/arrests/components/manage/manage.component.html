@@ -546,8 +546,9 @@
                       <div formArrayName="ArrestLawbreaker">
                         <ng-container *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
                           <ng-container *ngIf="lawb.get('LawbreakerID').value && lawb.get('IsModify').value != 'd'">
-                            <input #isCheck type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo"
-                              [id]="j+'-'+i1+'-'+lIndex+'lb'" [attr.disabled]="showEditField ? '' : null">
+                            <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo"
+                              [id]="j+'-'+i1+'-'+lIndex+'lb'" [attr.disabled]="showEditField ? '' : null"
+                              (click)="checkedIndictmentLawbreaker(j, i1)">
                             <label [for]="j+'-'+i1+'-'+lIndex+'lb'">
                               {{ lawb.get('LawbreakerTitleName').value }}
                               {{ lawb.get('LawbreakerFirstName').value }}
@@ -567,9 +568,9 @@
                     <ng-container *ngFor="let prod of getArrestIndictmentProduct(indict); let i=index;">
                       <div [formGroupName]="i" style="width: 300px;" class="text-truncate">
                         <ng-container *ngIf="prod.get('ProductID').value && prod.get('IsModify').value != 'd'">
-                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" id="{{j+'-'+i+'pd'}}"
-                            [attr.disabled]="showEditField ? '' : null">
-                          <label for="{{j+'-'+i+'pd'}}">{{prod.get('ProductDesc').value}}</label>
+                          <input formControlName="IsChecked" type="checkbox" class="filled-in chk-col-indigo" [id]="j+'_'+i+'pd'" 
+                            [attr.disabled]="showEditField ? '' : null" (click)="checkedIndictmentProduct(j, i)">
+                          <label [for]="j+'_'+i+'pd'">{{prod.get('ProductDesc').value}}</label>
                         </ng-container>
                       </div>
                     </ng-container>
