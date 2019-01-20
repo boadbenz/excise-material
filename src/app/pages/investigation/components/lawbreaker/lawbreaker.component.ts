@@ -537,7 +537,7 @@ export class LawbreakerComponent implements OnInit {
       confirmButtonText: 'Confirm!'
     }).then((result) => {
       if (result.value) {
-        this.router.navigate([`investigation/lawbreaker`, this.mode, this.lawbreakerId]);
+        this.router.navigate([`suppression/investigation/lawbreaker`, this.mode, this.lawbreakerId]);
       }
     })
 

@@ -102,6 +102,7 @@ export function detectChange() {
         var element = $('ul#sidebarnav li').filter(function () {
             return this.href == url;
         }).addClass('active').parent().addClass('active');
+        
         while (true) {
             if (element.is('li')) {
                 element = element.parent().addClass('in').parent().addClass('active');
@@ -113,10 +114,10 @@ export function detectChange() {
         }
        
     }); 
-    /*$('ul#sidebarnav').on('click', 'li', function() {
+    $('ul#sidebarnav').on('click', 'li', function() {
         $('ul#sidebarnav li.active').removeClass('active');
         $(this).addClass('active');
-    });*/
+    });
     // ============================================================== 
     //tooltip
     // ============================================================== 

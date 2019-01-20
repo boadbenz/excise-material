@@ -514,7 +514,7 @@ export class SuspectComponent implements OnInit {
           return;
         }
         swal('', Message.saveComplete, 'success');
-        this.router.navigate([`/investigation/suspect/R/${res.SuspectID}`]);
+        this.router.navigate([`/suppression/investigation/suspect/R/${res.SuspectID}`]);
       }, (error) => {
         console.log(error);
         swal('', Message.saveFail, 'warning');
@@ -548,7 +548,7 @@ export class SuspectComponent implements OnInit {
       confirmButtonText: 'Confirm!'
     }).then((result) => {
       if (result.value) {
-        this.router.navigate([`investigation/lawbreaker`, this.mode, this.suspectId]);
+        this.router.navigate([`suppression/investigation/lawbreaker`, this.mode, this.suspectId]);
       }
     })
   }

@@ -884,10 +884,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private navigateToManage = () => this.router.navigate([`/investigation/manage`, this.investMode, this.investCode]);
+    private navigateToManage = () => this.router.navigate([`/suppression/investigation/manage`, this.investMode, this.investCode]);
 
     private onRefreshPage = () => this.router.navigate(
-        [`/investigation/detail-manage`, 'R'],
+        [`/suppression/investigation/detail-manage`, 'R'],
         {
             queryParams: {
                 investMode: this.investMode,
