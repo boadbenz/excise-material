@@ -298,7 +298,8 @@
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขทะเบียนนิติบุคคล :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" formControlName="CompanyRegistrationNo" class="form-control form-control-sm"
-                        [ngClass]="{'ng-touched':isRequired}" [required]="requiredCompanyRegister" [readonly]="showEditField">
+                        [ngClass]="{'ng-touched':isRequired}" [readonly]="showEditField" 
+                        [required]="requiredCompanyRegister">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขทะเบียนสรรพสามิต :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">

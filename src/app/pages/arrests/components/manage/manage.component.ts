@@ -59,6 +59,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     }
 
+    getDateMyDatepicker = getDateMyDatepicker;
     myDatePickerOptions = MyDatePickerOptions;
     _isSuccess: boolean = false;
     mode: string;
@@ -482,9 +483,13 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 }
 
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
-                if (staff.length <= 0) {
-                    swal('', 'ต้องมีรายการผู้ร่วมจับกุมอย่างน้อย 1 รายการ', 'warning')
+                if (staff.length < 3) {
+                    swal('', 'ต้องมีรายการผู้จับกุมอย่างน้อย 3 รายการ', 'warning')
                     return
+                }
+                if (staff.filter(x => x.ContributorID == '6').length <= 0) {
+                    swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ', 'warning');
+                    return;
                 }
                 if (staff.filter(x => x.ContributorID == '').length > 0) {
                     swal('', 'กรุณาเลือกฐานะของผู้จับกุม', 'warning');
@@ -492,10 +497,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 }
                 if (staff.filter(x => x.FullName == '').length > 0) {
                     swal('', 'กรุณากรุณาระบุข้อมูลผู้จับกุม', 'warning');
-                    return;
-                }
-                if (staff.filter(x => x.ContributorID == '6').length <= 0) {
-                    swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” อย่างน้อย 1 รายการ', 'warning');
                     return;
                 }
                 const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');

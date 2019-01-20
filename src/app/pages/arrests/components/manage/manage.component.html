@@ -97,7 +97,10 @@
         <div class="col-lg-2 col-md-3 col-sm-4">
           <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="openModal(noticelist)">เพิ่มใบแจ้งความ</button>
           <ng-template #noticelist let-c="close" let-d="dismiss">
-            <app-modal-notice (c)="modal.close()" (d)="modal.dismiss()" (outputNotice)="setNoticeForm($event)"></app-modal-notice>
+            <app-modal-notice 
+            [arrestDate]="getDateMyDatepicker(arrestFG.value.ArrestDate)" 
+            (c)="modal.close()" (d)="modal.dismiss()" 
+            (outputNotice)="setNoticeForm($event)"></app-modal-notice>
           </ng-template>
         </div>
       </div>
