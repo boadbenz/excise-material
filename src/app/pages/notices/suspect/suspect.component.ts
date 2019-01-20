@@ -78,6 +78,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
         this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+        this.myDatePickerOptions.showClearDateBtn = true;
 
         await this.createForm();
 
@@ -189,6 +190,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
                 this.navService.setNextPageButton(false);
                 this.navService.setEditButton(true);
                 this.navService.setEditField(true);
+                this.navService.setDeleteButton(false);
 
                 if (p['code']) {
                     this.suspectId = p["code"];
@@ -232,15 +234,17 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
                 // let birthDay = getDateMyDatepicker(this.SuspectFG.value.BirthDate);
                 let birthDay = this.SuspectFG.value.BirthDate;
-                if(birthDay && birthDay.date!=undefined){
+                if(birthDay&&birthDay.date){
                     birthDay = birthDay.date.day+"-"+this.months[birthDay.date.month-1]+"-"+birthDay.date.year;
+                }else{
+                    birthDay = "";
                 }
                 let passportDateIn = this.SuspectFG.value.PassportDateIn;//getDateMyDatepicker(this.SuspectFG.value.PassportDateIn);
-                if(passportDateIn && passportDateIn.date!=undefined){
+                if(passportDateIn && passportDateIn.date){
                     passportDateIn = passportDateIn.date.day+"-"+this.months[passportDateIn.date.month-1]+"-"+passportDateIn.date.year;
                 }
                 let passportDateOut = this.SuspectFG.value.PassportDateOut;//getDateMyDatepicker(this.SuspectFG.value.PassportDateOut);
-                if(passportDateOut && passportDateOut.date!=undefined){
+                if(passportDateOut && passportDateOut.date){
                     passportDateOut = passportDateOut.date.day+"-"+this.months[passportDateOut.date.month-1]+"-"+passportDateOut.date.year;
                 }
 
@@ -255,7 +259,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
                     this.OnRevice();
                 }
             }
-        })
+        });
     }
 
     GetByCon(SuspectID: string) {
@@ -333,7 +337,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
             if (res.LinkPhoto) {
                 this.imgNobody.nativeElement.src = res.LinkPhoto;
             }
-            this.navService.setDeleteButton(true);
+            this.navService.setDeleteButton(false);
             this.preloader.setShowPreloader(false);
         });
 
@@ -369,15 +373,15 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
         let passportDateIn = this.SuspectFG.value.PassportDateIn;//convertDateForSave(passportDateIn);
         let passportDateOut = this.SuspectFG.value.PassportDateOut;//convertDateForSave(passportDateOut);
-        if(!passportDateIn || passportDateIn.myDate==null){
+        if(!passportDateIn){
             this.SuspectFG.value.PassportDateIn = "";
         }
-        if(!passportDateOut || passportDateOut.myDate==null){
+        if(!passportDateOut){
             this.SuspectFG.value.PassportDateOut = "";
         }
 
         let birthDate = this.SuspectFG.value.BirthDate;//convertDateForSave(passportDateOut);
-        if(!birthDate || birthDate.myDate==null){
+        if(!birthDate){
             this.SuspectFG.value.BirthDate = "";
         }
 
@@ -400,8 +404,8 @@ export class SuspectComponent implements OnInit, OnDestroy {
         // set true
         await this.navService.setEditField(true);
         await this.navService.setEditButton(true);
-        await this.navService.setPrintButton(true);
-        await this.navService.setDeleteButton(true);
+        await this.navService.setPrintButton(false);
+        await this.navService.setDeleteButton(false);
         await this.navService.setNextPageButton(false);
         // set false
         await this.navService.setSaveButton(false);
@@ -450,7 +454,7 @@ export class SuspectComponent implements OnInit, OnDestroy {
         `${x.SubdistrictNameTH} ${x.DistrictNameTH} ${x.ProvinceNameTH}`;
 
     selectItemRegion(ele: any) {
-        let region = `${ele.item.SubDistrictNameTH||''} ${ele.item.DistrictNameTH||''} ${ele.item.ProvinceNameTH||''}`;
+        let region = `${ele.item.SubdistrictNameTH||''} ${ele.item.DistrictNameTH||''} ${ele.item.ProvinceNameTH||''}`;
         this.SuspectFG.patchValue({
             SubDistrictCode: ele.item.SubdistrictCode,
             SubDistrict: ele.item.SubdistrictNameTH,

@@ -216,7 +216,8 @@
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemInformmerRegion($event)"
                             [value]="item.get('Region').value"
-                            (blur)="blurSelectItemInformmerRegion()"/>
+                            (blur)="blurSelectItemInformmerRegion(informerRegion)"
+                            #informerRegion/>
                     </div>
                 </div>
                 <div class="row">
@@ -297,9 +298,10 @@
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemLocaleRegion($event)" 
-                            (blur)="blurSelectItemLocaleRegion()" 
+                            (blur)="blurSelectItemLocaleRegion(localeRegion)" 
                             [value]="item.get('Region').value"
-                            [ngClass]="{'ng-touched':isRequired}"/>
+                            [ngClass]="{'ng-touched':isRequired}"
+                            #localeRegion/>
                     </div>
                 </div>
 
