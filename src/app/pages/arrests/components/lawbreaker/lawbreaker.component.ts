@@ -361,8 +361,6 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         this.disableCompany = false;
         this.requiredCompanyRegister = false;
         this.requiredPassport = false;
-        // this.card3 = false;
-        // this.card4 = false;
 
         setTimeout(() => {
             if (e == '1' && l == '0') {
