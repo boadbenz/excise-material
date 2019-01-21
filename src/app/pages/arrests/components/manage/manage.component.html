@@ -123,7 +123,7 @@
               <ng-container *ngIf="item.get('IsModify').value != 'd'">
                 <td class="text-center">{{item.get('RowId').value}}</td>
                 <td>{{item.get('NoticeCode').value}}</td>
-                <td>{{item.get('NoticeDateString').value}}</td>
+                <td>{{toLocalShort(item.value.NoticeDate)}}</td>
                 <td>
                   <div *ngFor="let staff of item.value.ArrestNoticeStaff;">{{staff.FullName}}</div>
                 </td>

@@ -58,7 +58,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         console.log(this.ArrestStaff);
 
     }
-
+    toLocalShort = toLocalShort;
     getDateMyDatepicker = getDateMyDatepicker;
     myDatePickerOptions = MyDatePickerOptions;
     _isSuccess: boolean = false;
@@ -478,8 +478,23 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 await this.navService.setOnSave(false);
                 if (this.arrestFG.invalid) {
                     this.isRequired = true;
+                    if (this.arrestFG.get('ArrestLocale').invalid)
+                        this.ILG60_03_02_00_00_E18.next(true);
+
                     swal('', Message.checkData, 'warning')
                     return false;
+                }
+
+                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
+                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
+
+                const notice: fromModels.ArrestNotice[] = this.ArrestNotice.value
+                    .filter(x => sDateCompare.valueOf() < (new Date(x.NoticeDate)).valueOf());
+
+                // ถ้ามีรายการ วันที่จับกุม < วันที่แจ้งความ ให้ออกจาก function
+                if (notice.length) {
+                    swal('', '“วันที่จับกุม” ต้องมากกว่าหรือเท่ากับ “วันที่แจ้งความ” ในส่วนใบแจ้งความนำจับ', 'warning')
+                    return;
                 }
 
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
@@ -502,20 +517,22 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
                 const product: fromModels.ArrestProduct[] = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
                 if (lawbreaker.length <= 0 && product.length <= 0) {
+                    this.ILG60_03_02_00_00_E21.next(true);
+                    this.ILG60_03_03_00_00_E15.next(true);
                     swal('', 'ต้องมีรายการ “ผู้ต้องหา” หรือ “ของกลาง” อย่างน้อย 1 รายการ', 'warning');
                     return;
                 }
                 if (!this.ArrestIndictment.value.length) {
+                    this.ILG60_03_02_00_00_E25.next(true);
                     swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
                     return;
                 }
                 if (this.ArrestIndictment.value.filter(x => x.GuiltBaseID == null).length) {
+                    this.ILG60_03_02_00_00_E25.next(true);
                     swal('', 'กรุณาเลือกข้อมูล “ฐานความผิดมาตรา”', 'warning')
                     return;
                 };
 
-                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
-                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
                 this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
                 this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
                 this.arrestFG.value.HaveCulprit = lawbreaker.length > 0 ? 1 : 0;
