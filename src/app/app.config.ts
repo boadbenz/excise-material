@@ -20,7 +20,7 @@ export const appConfig = {
     // exciseService: 'http://webtest.excise.go.th'
 
 
-    
+
 
 //-----------------------------------------------------------------//
     apiUrl:  'http://103.233.193.94:8777/XCS60',   
@@ -56,7 +56,7 @@ export const appConfig = {
     // api8887: 'http://172.30.0.72:8887/XCS60', 
     // api8777: 'http://172.30.0.72:8777/XCS60',
     // api8776: 'http://172.30.0.72:8776/XCS60',   
-    // apiReport:'http://172.30.0.72/Report_XCS',
+    // apiReport:'http://172.30.0.72:8000/Report_XCS',
     // mockapi: 'http://demo1735762.mockable.io/XCS60',
     // exciseService: 'http://webtest.excise.go.th'
 }
