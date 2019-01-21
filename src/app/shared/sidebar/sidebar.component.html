@@ -36,14 +36,14 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
-                <li>
+                <li [ngClass]="{'active': activeRoute('suppression')}">
                     <a class="has-arrow" href="javascript:void(0)">
                         <strong>1</strong>
                         <span class="hide-menu">งานปราบปราม</span>
                     </a>
                     <ul aria-expanded="false" class="collapse">
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/investigation/list">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/suppression/investigation/list">
                                 <span>1.1 รายงานการสืบสวน</span>
                             </a>
                         </li>

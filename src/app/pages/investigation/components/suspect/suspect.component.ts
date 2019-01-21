@@ -331,30 +331,36 @@ export class SuspectComponent implements OnInit {
 
   toggleCard() {
     const e = this.SuspectFG.value.EntityType;
-    const l = this.SuspectFG.value.SuspectType;
+    const l = this.SuspectFG.value.LawbreakerType;
 
     this.disableForeign = false;
     this.disableCompany = false;
     this.requiredCompanyRegister = false;
     this.requiredPassport = false;
 
-    if (e == '1' && l == '0') {
-      // บุคคลธรรมดา, ต่างชาติ
-      this.disableCompany = true;
-      this.requiredPassport = true;
-      this.card3 = true;
-    } else if (e == '1' && l == '1') {
-      // บุคคลธรรมดา, ชาวไทย
-      this.disableCompany = true;
-      this.disableForeign = true;
-      this.card3 = false;
-      this.card4 = false;
-    } else if (e == '2') {
-      // นิติบุคคล
-      this.disableForeign = true;
-      this.requiredCompanyRegister = true;
-      this.card4 = true;
-    }
+    setTimeout(() => {
+      if (e == '1' && l == '0') {
+        // บุคคลธรรมดา, ต่างชาติ
+        this.disableCompany = true;
+        this.requiredPassport = true;
+        this.card3 = true;
+        this.card4 = false;
+
+      } else if (e == '1' && l == '1') {
+        // บุคคลธรรมดา, ชาวไทย
+        this.disableCompany = true;
+        this.disableForeign = true;
+        this.card3 = false;
+        this.card4 = false;
+
+      } else if (e == '2') {
+        // นิติบุคคล
+        this.disableForeign = true;
+        this.requiredCompanyRegister = true;
+        this.card3 = false;
+        this.card4 = true;
+      }
+    }, 100);
   }
 
 
@@ -514,7 +520,7 @@ export class SuspectComponent implements OnInit {
           return;
         }
         swal('', Message.saveComplete, 'success');
-        this.router.navigate([`/investigation/suspect/R/${res.SuspectID}`]);
+        this.router.navigate([`/suppression/investigation/suspect/R/${res.SuspectID}`]);
       }, (error) => {
         console.log(error);
         swal('', Message.saveFail, 'warning');
@@ -548,7 +554,7 @@ export class SuspectComponent implements OnInit {
       confirmButtonText: 'Confirm!'
     }).then((result) => {
       if (result.value) {
-        this.router.navigate([`investigation/lawbreaker`, this.mode, this.suspectId]);
+        this.router.navigate([`suppression/investigation/lawbreaker`, this.mode, this.suspectId]);
       }
     })
   }

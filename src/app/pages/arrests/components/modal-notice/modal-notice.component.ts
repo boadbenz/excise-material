@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { IMyDateModel } from 'mydatepicker-th';
@@ -22,6 +22,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
     dateStartFrom: any;
     dateStartTo: any;
 
+    toLocalShort = toLocalShort;
     myDatePickerOptions = MyDatePickerOptions;
 
     paginage = pagination;
@@ -32,6 +33,8 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
     get ArrestNotice(): FormArray {
         return this.noticeFG.get('ArrestNotice') as FormArray;
     }
+
+    @Input() arrestDate: Date;
 
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
@@ -86,7 +89,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
             .subscribe(x => this.onSearchComplete(x))
     }
 
-    async onSearchComplete(list: ArrestNotice[]) {
+    onSearchComplete(list: ArrestNotice[]) {
 
         if (!list.length) {
             swal('', Message.noRecord, 'warning');
@@ -94,10 +97,9 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         }
 
         this.notice = new Array<ArrestNotice>();
-        await list.filter(item => item.IsActive == 1).map((item, i) => {
+        list.filter(item => item.IsActive == 1).map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;
-            item.NoticeDateString = toLocalShort(item.NoticeDate);
             item.NoticeDate = item.NoticeDate;
             const staff = item.ArrestNoticeStaff
                 .map(s => {
@@ -174,12 +176,21 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
     async close(e: any) {
         const n: ArrestNotice[] = this.ArrestNotice.value.filter(item => item.IsChecked);
-        if (n.length) {
-            this.outputNotice.emit(n);
-            this.c.emit(e);
-        } else {
-            swal('', 'กรุณาเลือกรายการใบแจ้งความนำจับ', 'warning')
+
+        if (!n.length) {
+            swal('', 'กรุณาเลือกรายการใบแจ้งความนำจับ', 'warning');
+            return;
         }
+
+        const _n: ArrestNotice[] = n.filter(x => this.arrestDate.valueOf() < (new Date(x.NoticeDate)).valueOf());
+
+        if (!_n.length) {
+            swal('', '“วันที่จับกุม” ต้องมากกว่าหรือเท่ากับ “วันที่แจ้งความ” ในส่วนใบแจ้งความนำจับ', 'warning')
+            return;
+        }
+
+        this.outputNotice.emit(n);
+        this.c.emit(e);
     }
 
     pageChanges(event) {
@@ -194,7 +205,6 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
                 IsChecked: item.IsChecked,
                 RowId: item.RowId,
                 NoticeCode: item.NoticeCode,
-                NoticeDateString: item.NoticeDateString,
                 NoticeDate: item.NoticeDate,
                 ArrestNoticeStaff: this.fb.array(item.ArrestNoticeStaff),
                 ArrestNoticeSuspect: this.fb.array(item.ArrestNoticeSuspect)

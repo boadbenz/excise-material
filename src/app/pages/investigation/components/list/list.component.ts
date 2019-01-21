@@ -69,7 +69,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate([`/investigation/manage/C/NEW`]);
+                this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
             }
         })
 
@@ -160,7 +160,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(invesCode: string) {
-        this.router.navigate([`/investigation/manage/R/${invesCode}`]);
+        this.router.navigate([`/suppression/investigation/manage/R/${invesCode}`]);
     }
 
     async pageChanges(event) {

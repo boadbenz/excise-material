@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -162,7 +161,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
                 await this.navService.setOnCancel(false);
                 switch (this.mode) {
                     case 'C':
-                        this.router.navigate(['/investigation/list']);
+                        this.router.navigate(['/suppression/investigation/list']);
                         break;
                     case 'R':
                         this.investigateForm.reset();
@@ -340,7 +339,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.router.navigate(
-            [`investigation/detail-manage`, 'C'],
+            [`suppression/investigation/detail-manage`, 'C'],
             {
                 queryParams: {
                     investMode: this.mode,
@@ -353,7 +352,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     onViewInvesDetail(invesDetailId: string, investigateSeq: string) {
 
         this.router.navigate(
-            [`investigation/detail-manage`, 'R'],
+            [`suppression/investigation/detail-manage`, 'R'],
             {
                 queryParams: {
                     investMode: this.mode,
@@ -427,7 +426,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
                     .subscribe(x => {
                         if (this.checkIsSuccess(x)) {
                             swal('', Message.delComplete, 'success');
-                            this.router.navigate(['/investigation/list']);
+                            this.router.navigate(['/suppression/investigation/list']);
                         } else {
                             swal('', Message.delFail, 'error');
                         }
@@ -458,7 +457,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
                 swal('', Message.saveComplete, 'success');
 
-                this.router.navigate(['/investigation/manage', this.mode, this.investCode])
+                this.router.navigate(['/suppression/investigation/manage', this.mode, this.investCode])
             }, (error) => this.catchError(error));
     }
 

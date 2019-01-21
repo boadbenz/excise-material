@@ -361,8 +361,6 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
         this.disableCompany = false;
         this.requiredCompanyRegister = false;
         this.requiredPassport = false;
-        this.card3 = false;
-        this.card4 = false;
 
         setTimeout(() => {
             if (e == '1' && l == '0') {
@@ -370,15 +368,20 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 this.disableCompany = true;
                 this.requiredPassport = true;
                 this.card3 = true;
+                this.card4 = false;
+                
             } else if (e == '1' && l == '1') {
                 // บุคคลธรรมดา, ชาวไทย
                 this.disableCompany = true;
                 this.disableForeign = true;
+                this.card3 = false;
+                this.card4 = false;
 
             } else if (e == '2') {
                 // นิติบุคคล
                 this.disableForeign = true;
                 this.requiredCompanyRegister = true;
+                this.card3 = false;
                 this.card4 = true;
             }
         }, 100);
