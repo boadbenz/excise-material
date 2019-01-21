@@ -184,7 +184,8 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
         const _n: ArrestNotice[] = n.filter(x => this.arrestDate.valueOf() < (new Date(x.NoticeDate)).valueOf());
 
-        if (!_n.length) {
+        // ถ้ามีรายการ วันที่จับกุม < วันที่แจ้งความ ให้ออกจาก function
+        if (_n.length) {
             swal('', '“วันที่จับกุม” ต้องมากกว่าหรือเท่ากับ “วันที่แจ้งความ” ในส่วนใบแจ้งความนำจับ', 'warning')
             return;
         }
