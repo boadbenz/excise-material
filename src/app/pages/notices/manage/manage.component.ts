@@ -1007,14 +1007,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                 let susId = noticeSuspect.SuspectID;
                 if(suspects.length>0){
                     for(let l of suspects){
-                        let _susId = l.SuspectID;
+                        let _susId = l.SuspectReferenceID;
                         if(susId==_susId){
                             isInsert = false;
                             break;
                         }
                     }
                 }
-                console.log(noticeSuspect);
 
                 if(isInsert){
                     this.NoticeSuspect.push(this.fb.group(noticeSuspect))
@@ -1183,10 +1182,17 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: ele.item.ZipCode
         });
     }
-    blurSelectItemInformmerRegion() {
-        let obj = this.NoticeInformer.at(0).value;
-        if(!obj.ProvinceCode){
+    blurSelectItemInformmerRegion(ele:any) {
+        // let obj = this.NoticeInformer.at(0).value;
+        if(!ele.value){
             this.NoticeInformer.at(0).patchValue({
+                SubDistrictCode: "",
+                SubDistrict: "",
+                DistrictCode: "",
+                District: "",
+                ProvinceCode: "",
+                Province: "",
+                ZipCode: "",
                 Region: ""
             });
         }
@@ -1203,11 +1209,18 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: 'N/A'
         });
     }
-    blurSelectItemLocaleRegion() {
-        let obj = this.NoticeLocale.at(0).value;
-        if(!obj.ProvinceCode){
+    blurSelectItemLocaleRegion(ele: any) {
+        // let obj = this.NoticeLocale.at(0).value;
+        if(!ele.value){
             this.NoticeLocale.at(0).patchValue({
-                Region: ""
+                Region: "",
+                SubDistrictCode: "",
+                SubDistrict: "",
+                DistrictCode: "",
+                District: "",
+                ProvinceCode: "",
+                Province: "",
+                ZipCode: ""
             });
         }
     }
