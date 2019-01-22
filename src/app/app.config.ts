@@ -28,8 +28,9 @@ export const appConfig = {
     api8883: 'http://103.233.193.94:8883/XCS60',
     api8086: 'http://103.233.193.94:8086/XCS60',
     api8087: 'http://103.233.193.94:8087/XCS60',
-    api8887: 'http://103.233.193.94:8887/XCS60',    
-    apiReport:'http://103.233.193.94/Report_XCS',
+    api8887: 'http://103.233.193.94:8887/XCS60',
+    api8777: 'http://103.233.193.94:8777/XCS60',
+    apiReport: 'http://103.233.193.94/Report_XCS',
     mockapi: 'http://demo1735762.mockable.io/XCS60',
 
 }
