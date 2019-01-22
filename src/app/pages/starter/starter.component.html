@@ -101,40 +101,48 @@
         counter-increment: step;
         width: 30px;
         height: 30px;
-        line-height: 30px;
+        line-height: 18px;
         border: 1px solid #ddd;
         display: block;
         text-align: center;
         margin: 0 auto 10px auto;
         border-radius: 50%;
-        background-color: white
+        background-color: white;
     }
 
     .progbar li:after {
         content: '';
         position: absolute;
         width: 100%;
-        height: 1px;
+        height: 5px;
         background-color: #ddd;
         top: 15px;
         left: 0px;
-        /* z-index: 0; */
-        /* transform: rotate(90deg);
+        z-index: -1;
+        transform: rotate(90deg);
         -ms-transform: rotate(90deg);
         -moz-transform: rotate(90deg);
         -webkit-transform: rotate(90deg);
-        -o-transform: rotate(90deg); */
+        -o-transform: rotate(90deg);
     }
 
     .progbar li:first-child:after {
-        content: none;
+        /* content: none; */
     }
 
     .progbar li::before {
         border-color: #005c97;
-        border-width: 2px
+        border-width: 6px
     }
-
+    /* .progbar li.active {
+        color: green;
+    }
+    .progbar li.active::before {
+        border-color: green;
+    }
+    .progbar li.active + li::after{
+        background-color: green;
+    } */
     .solid {
         border: 2px solid #ddd;
         width: 10%;
@@ -151,40 +159,46 @@
 
 <div class="container" style="margin-left: -80px;">
     <ul class="progbar">
+        <div class="row" style="margin-bottom: 45px">
+            <span style="color: red ; margin-left: 170px;  font-size: 27px; font-weight: normal;">ประกาศ !!!</span>
+        </div>
         <div class="row" style="margin-bottom: 35px;">
             <li class="active"></li><br>
-            <span style="margin-left: -100px; font-size: 17px;">วันที่ 21 มกราคม 2562</span>
+            <span style="margin-left: -100px; font-size: 17px;font-weight: bold;">วันที่ 21 มกราคม 2562</span>
             <h2 style="margin-left: 280px;float:left; font-size: 13px;">***ให้กรอกข้อมูล ค่าปรับรายสินค้า (หน่วย:บาท)
                 ต่อรายการ
                 ได้ที่เมนู 5.1 รายงานบัญชีสิ่งของ ส.ส 2/4***</h2><br>
             <h2 style="margin-left: 280px;float:left; font-size: 13px;"> ***ตั้งแต่ วันที่ 1 ตุลาคม 2561 เป็นต้นไป ***</h2>
         </div>
+        <div class="row" style="margin-bottom: 35px;">
+            <li></li><br>
+            <span style="margin-left: -100px; font-size: 17px; font-weight: bold;">วันที่ 22 มกราคม 2562</span>
+            <h2 style="margin-left: 280px;float:left; font-size: 13px;">*** หากต้องการเพิ่มข้อมูล (ชนิดสินค้า ,
+                ชนิดยี่ห้อ, อื่นๆ)
+                ติดต่อเจ้าหน้าที่ผู้ดูแลระบบ Tel: 64404, 64409, 64419
+            </h2><br>
+            <h2 style="margin-left: 280px;float:left; font-size: 13px;"> Helpdesk Tel: 02-241-5600 ต่อ 61601-08 ***</h2>
+        </div>
         <div class="row" style="margin-bottom: 80px;">
             <li></li>
-            <span style="margin-left: -100px;  font-size: 17px; margin-right: 118px;">วันที่ 22 มกราคม 2562</span>
+            <span style="margin-left: -100px;  font-size: 17px; margin-right: 118px; font-weight: bold;">วันที่ 23
+                มกราคม 2562</span>
             <h1> </h1>
             <a href="http://192.168.3.134/XCS_Report_Law/UM_2560/UM_2560.pdf" style="margin-left: 280px;float:left; font-size: 13px;">Link=>>
                 ดาวน์โหลดคู่มือใช้งานบันทึกค่าปรับรายสินค้า </a>
         </div>
         <div class="row" style="margin-bottom: 80px;">
             <li></li>
-            <span style="margin-left: -100px;  font-size: 17px; margin-right: 129px;">วันที่ 22 มกราคม 2562</span>
+            <span style="margin-left: -100px;  font-size: 17px; margin-right: 129px; font-weight: bold;">วันที่ 24
+                มกราคม 2562</span>
             <a href="http://192.168.3.134/XCS_Report_Law/UM_60/um_60.pdf" style="margin-left: 280px;float:left; font-size: 13px;">Link=>>
                 ดาวน์โหลดคู่มือใช้งานบันทึกเป้าปราบปราม</a>
         </div>
         <div class="row" style="margin-bottom: 80px;">
             <li></li>
-            <span style="margin-left: -100px;">วันที่ 23 มกราคม 2562</span>
+            <span style="margin-left: -100px; font-weight: bold;">วันที่ 24 มกราคม 2562</span>
             <a href="http://illegal.excise.go.th/XCS_illegal_old/" style="margin-left: 280px;float:left; font-size: 13px;">Link=>>
                 เข้าสู่ระบบงานผู้กระทำผิดกฎหมายสรรพสามิต (พ.ร.บ. สุรา,ยาสูบ และภาษีสรรพสามิต 2527)</a>
         </div>
-        <div class="row" style="margin-bottom: 35px;">
-                <li></li><br>
-                <span style="margin-left: -100px; font-size: 17px;">วันที่ 24 มกราคม 2562</span>
-                <h2 style="margin-left: 280px;float:left; font-size: 13px;">*** หากต้องการเพิ่มข้อมูล (ชนิดสินค้า , ชนิดยี่ห้อ, อื่นๆ)  
-                        ติดต่อเจ้าหน้าที่ผู้ดูแลระบบ Tel: 64404, 64409, 64419  
-                        </h2><br>
-                <h2 style="margin-left: 280px;float:left; font-size: 13px;">  Helpdesk Tel: 02-241-5600 ต่อ 61601-08 ***</h2>
-            </div>
     </ul>
 </div>
