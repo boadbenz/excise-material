@@ -1,23 +1,19 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { EvidenceService } from '../evidenceIn.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Evidence_In } from '../evidenceIn';
-import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { EvidenceService } from '../evidenceIn.service';
+import { Evidence_In, Document, EvidenceInStaff } from '../evidenceIn';
+import { MatAutocomplete } from '@angular/material';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Staff } from '../staff';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { MatAutocomplete } from '@angular/material';
-import { del } from '../../../../../node_modules/@types/selenium-webdriver/http';
-import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
-import { async } from '../../../../../node_modules/@angular/core/testing';
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
-import { pagination } from '../../../config/pagination';
-import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import swal from 'sweetalert2';
+import { pagination } from '../../../config/pagination';
+
 
 @Component({
     selector: 'app-manage',
@@ -44,9 +40,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     rawStaffSendOptions = [];
     StaffSendoptions = [];
     StaffRecvoptions = [];
+    ListEvidenceInItem = [];
+    UnitOption = [];
+    ListDoc = [];
 
-    oEviInSendStaff: Staff;
-    oEviInRecvStaff: Staff;
+    oEviInSendStaff: EvidenceInStaff;
+    oEviInRecvStaff: EvidenceInStaff;
+    oEvidenceIn: Evidence_In;
+    oDocument: Document;
 
     EvidenceInID: string;   // รหัสรับของกลาง
     EvidenceInCode: string; // เลขที่รับของกลาง
@@ -54,6 +55,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     StaffSendName: string;  // ชื่อผู้นำส่ง
     PosStaffSend: string;   // ตำแหน่งผู้นำส่ง
     DeptStaffSend: string;  // แผนกผู้นำส่ง
+    StaffRecvID: string;    // รหัสผู้นำส่ง
     StaffRecvName: string;  // ชื่อผู้รับของกลาง
     PosStaffRecv: string;   // ตำแหน่งผู้รับของกลาง
     DeptStaffRecv: string;  // แผนกผู้รับของกลาง
@@ -82,46 +84,19 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
 
+    // Staffoptions = [];
+    // rawOptions = [];
+    // InformTooptions = [];
+    // options = [];
+
+    // ListRevenueDetailPaging = [];
+    // ListChK = [];
+    // RevenueDetailForUDP = [];
 
 
-    
-    RevenueCode: string;    // เลขที่นำส่งเงิน
-    RevenueNo: string;  // เลขที่หนังสือนำส่ง
-    RevenueNoYear: string;  // ปีเลขที่หนังสือนำส่ง
-    InformTo: string;       // เรียน
-    
-    StaffID: string;        // รหัสผู้จัดทำ
-    StaffName: string;      // ชื่อผู้จัดทำ
-    PosStaff: string;        // ตำแหน่งผู้จัดทำ
-    DeptStaff: string;       // แผนกผู้จัดทำ
-    StaffDeptCode: string;   // รหัสแผนกผู้จัดทำ
-    RevenueStation: string;   // เขียนที่
-    CompareFine: string = "0";      // ยอดนำส่งรวม
-    MistreatNo: number = 0;     // จำนวนคดี
-    BribeMoney: string = "0";     // เงินสินบนรวม
-    RewardMoney: string = "0";    // เงินรางวัลรวม
-    TreasuryMoney: string = "0";  // เงินส่งคลัง
-    RevenueDate: any;       // วันที่นำส่ง
-    RevenueTime: string;    // เวลาที่นำส่ง
-    RevenueStatus: number;  // สถานะนำส่ง
-
-
-
-    
-    
-    Staffoptions = [];
-    rawOptions = [];
-    InformTooptions = [];
-    options = [];
-    ListRevenueDetail = [];
-    ListRevenueDetailPaging = [];
-    ListChK = [];
-    RevenueDetailForUDP = [];
-
-    // oRevenue: Evidence_In;
     // oRevenueDetail: RevenueDetail;
-    
-    oRevenueStaff: Staff;
+
+    // oRevenueStaff: Staff;
 
     isRequired: boolean | false;
 
@@ -131,13 +106,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     constructor(
         private activeRoute: ActivatedRoute,
-        private formBuilder: FormBuilder,
         private ngbModel: NgbModal,
         private navService: NavigationService,
         private EviService: EvidenceService,
         private preloader: PreloaderService,
         private router: Router,
-        private sidebarService: SidebarService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -146,10 +119,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        // this.preloader.setShowPreloader(true);
+        this.preloader.setShowPreloader(true);
 
         this.active_Route();
         this.navigate_Service();
+        this.getUnit();
         await this.getEvidenceInStaff();
 
         this.DeliveryDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
@@ -161,8 +135,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.EvidenceInCode = "Auto Generate";
 
-        if(this.evitype == "I"){
+        if (this.evitype == "I") {
             await this.getProve();
+        }
+
+        if (this.mode === 'R') {
+            await this.ShowEvidenceIn();
+        } else {
+            this.preloader.setShowPreloader(false);
         }
 
         /*this.RevenueStatus = 0;
@@ -180,11 +160,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         
         await this.getStation();
 
-        if (this.mode === 'R') {
-            await this.ShowRevenue();
-        } else {
-            this.preloader.setShowPreloader(false);
-        }
+        
 
         this.paginage.TotalItems = this.ListRevenueDetail.length;
         this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
@@ -230,9 +206,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.navService.setDeleteButton(true);
                     this.navService.setEditField(true);
 
-                    // if (p['code']) {
-                    //     this.RevenueID = p['code'];
-                    // }
+                    if (p['code']) {
+                        this.EvidenceInID = p['code'];
+                    }
                     break;
             }
 
@@ -265,6 +241,49 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+            }
+        });
+
+        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
+            if (status) {
+                this.navService.setOnCancel(false);
+
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'ยืนยัน',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.value) {
+                        if (this.mode === 'C') {
+                            this.router.navigate(['/evidenceIn/list']);
+                        } else if (this.mode === 'R') {
+                            // set false
+                            this.navService.setSaveButton(false);
+                            this.navService.setCancelButton(false);
+                            // set true
+                            this.navService.setPrintButton(true);
+                            this.navService.setEditButton(true);
+                            this.navService.setDeleteButton(true);
+                            this.navService.setEditField(true);
+
+                            this.ShowEvidenceIn();
+                        }
+                    }
+                    else {
+                        this.navService.setSaveButton(true);
+                        this.navService.setCancelButton(true);
+
+                        this.navService.setPrintButton(false);
+                        this.navService.setEditButton(false);
+                        this.navService.setDeleteButton(false);
+                        this.navService.setEditField(false);
+                    }
+                })
             }
         })
 
@@ -328,48 +347,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
-            if (status) {
-                this.navService.setOnCancel(false);
-
-                swal({
-                    title: '',
-                    text: Message.confirmAction,
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'ยืนยัน',
-                    cancelButtonText: 'ยกเลิก'
-                }).then((result) => {
-                    if (result.value) {
-                        if (this.mode === 'C') {
-                            this.router.navigate(['/income/list']);
-                        } else if (this.mode === 'R') {
-                            // set false
-                            this.navService.setSaveButton(false);
-                            this.navService.setCancelButton(false);
-                            // set true
-                            this.navService.setPrintButton(true);
-                            this.navService.setEditButton(true);
-                            this.navService.setDeleteButton(true);
-                            this.navService.setEditField(true);
-    
-                            this.ShowRevenue();
-                        }
-                    }
-                    else{
-                        this.navService.setSaveButton(true);
-                        this.navService.setCancelButton(true);
-    
-                        this.navService.setPrintButton(false);
-                        this.navService.setEditButton(false);
-                        this.navService.setDeleteButton(false);
-                        this.navService.setEditField(false);
-                    }
-                })
-            }
-        })
+        
         */
     }
 
@@ -378,9 +356,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         // ----- ผู้นำส่ง -----
         this.oEviInSendStaff = {
-            StaffID: "",
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-10",
+            EvidenceInStaffID: "",
             EvidenceInID: "",
             StaffCode: localStorage.getItem("staffCode"),
             TitleName: tempUser[0].TitleName,
@@ -406,9 +382,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         // ----- ผู้ตรวจรับของกลาง -----
         this.oEviInRecvStaff = {
-            StaffID: "",
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-10",
+            EvidenceInStaffID: "",
             EvidenceInID: "",
             StaffCode: localStorage.getItem("staffCode"),
             TitleName: tempUser[0].TitleName,
@@ -447,10 +421,57 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.SectionNo = res[0].SectionNo;
                 this.PenaltyDesc = res[0].PenaltyDesc;
                 this.LawsuitNo = res[0].LawsuitNo;
-                
+
             }
         }, (err: HttpErrorResponse) => {
             this.ShowAlertError("พบปัญหาในการติดต่อ Server");
+        });
+    }
+
+    ShowEvidenceIn() {
+        this.EviService.getByCon(this.EvidenceInID).then(async res => {
+            if (res != null) {
+                this.ListEvidenceInItem = [];
+                this.oEvidenceIn = res
+                this.ListEvidenceInItem = res.EvidenceInItem;
+
+                this.DeliveryNo = res.DeliveryNo
+                this.DeliveryDate = setDateMyDatepicker(new Date(res.DeliveryDate));
+                if (res.ReturnDate == null || res.ReturnDate == '') { this.ReturnDate = ""; } else { setDateMyDatepicker(new Date(res.ReturnDate)) }
+                this.DeliveryTime = res.DeliveryTime;
+                this.Remark = res.Remark;
+
+                var sTemp = res.EvidenceInStaff.filter(f => f.ContributorID == "13");
+                if (sTemp.length > 0) {
+                    this.StaffSendName = sTemp[0].TitleName + sTemp[0].FirstName + ' ' + sTemp[0].LastName;
+                    this.PosStaffSend = sTemp[0].PositionName;
+                    this.DeptStaffSend = sTemp[0].OfficeName;
+                    this.StaffSendID = sTemp[0].StaffID;
+                    this.oEviInSendStaff = sTemp[0];
+                }
+
+                this.EvidenceInCode = res.EvidenceInCode;
+                this.EvidenceInDate = setDateMyDatepicker(new Date(res.EvidenceInDate));
+                this.EvidenceInTime = res.EvidenceInTime;
+
+                sTemp = res.EvidenceInStaff.filter(f => f.ContributorID == "42");
+                if (sTemp.length > 0) {
+                    this.StaffRecvName = sTemp[0].TitleName + sTemp[0].FirstName + ' ' + sTemp[0].LastName;
+                    this.PosStaffRecv = sTemp[0].PositionName;
+                    this.DeptStaffRecv = sTemp[0].OfficeName;
+                    this.StaffSendID = sTemp[0].StaffID;
+                    this.oEviInRecvStaff = sTemp[0];
+                }
+
+                this.ListDoc = [];
+                this.preloader.setShowPreloader(false);
+            } else {
+                this.ShowAlertError("พบปัญหาในการติดต่อ Server");
+                this.preloader.setShowPreloader(false);
+                this.router.navigate(['/evidenceIn/list']);
+            }
+        }, (err: HttpErrorResponse) => {
+            this.ShowAlertError("API EvidenceIngetByCon :: " + err.message);
         });
     }
 
@@ -491,9 +512,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     StaffSendonAutoSelecteWord(event) {
         this.oEviInSendStaff = {
-            StaffID: this.StaffSendID,
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-10",
+            EvidenceInStaffID: this.StaffSendID,
             EvidenceInID: this.EvidenceInID,
             StaffCode: event.StaffCode,
             TitleName: event.TitleName,
@@ -522,9 +541,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.DeptStaffSend = "";
 
         this.oEviInSendStaff = {
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-10",
-            StaffID: this.StaffSendID,
+            EvidenceInStaffID: this.StaffSendID,
             EvidenceInID: this.EvidenceInID,
             StaffCode: "",
             TitleName: "",
@@ -572,9 +589,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     StaffRecvonAutoSelecteWord(event) {
         this.oEviInRecvStaff = {
-            StaffID: this.StaffSendID,
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-10",
+            EvidenceInStaffID: this.StaffRecvID,
             EvidenceInID: this.EvidenceInID,
             StaffCode: event.StaffCode,
             TitleName: event.TitleName,
@@ -603,9 +618,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.DeptStaffRecv = "";
 
         this.oEviInRecvStaff = {
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-10",
-            StaffID: this.StaffSendID,
+            EvidenceInStaffID: this.StaffRecvID,
             EvidenceInID: this.EvidenceInID,
             StaffCode: "",
             TitleName: "",
@@ -624,6 +637,18 @@ export class ManageComponent implements OnInit, OnDestroy {
             ContributorID: "42",
             IsActive: "1"
         }
+    }
+
+
+    // **********************************
+    // ----------- Unit ----------
+    // **********************************
+    getUnit() {
+        this.EviService.getProveProductUnit('').then(async res => {
+            if (res) {
+                this.UnitOption = res;
+            }
+        }, (err: HttpErrorResponse) => { });
     }
 
 
@@ -658,9 +683,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
 
-    // **********************************
-    // ------------ DateTime -----------
-    // **********************************
+    // ***********************************************
+    // ------------ DateTime & All Function ----------
+    // ***********************************************
     getCurrentDate() {
         let date = new Date();
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
@@ -669,6 +694,79 @@ export class ManageComponent implements OnInit, OnDestroy {
     getCurrentTime() {
         let date = new Date();
         return date.getHours() + ":" + date.getMinutes();
+    }
+
+    getIndexOf(arr, val, prop) {
+        var l = arr.length,
+            k = 0;
+        for (k = 0; k < l; k = k + 1) {
+            if (arr[k][prop] == val) {
+                return k;
+            }
+        }
+        return -1;
+    }
+
+
+    // **********************************
+    // ------------ Document -----------
+    // **********************************
+    AddDocument() {
+        this.oDocument = {};
+        this.oDocument.ReferenceCode = this.ProveID;
+        this.oDocument.DocumentSeq = this.ListDoc.length;
+        this.oDocument.DocumentType = "5";
+        this.oDocument.IsNewItem = true;
+        this.oDocument.IsDelItem = false;
+
+        this.ListDoc.push(this.oDocument);
+    }
+
+    changeComunicateFile(e: any, i: number) {
+        let reader = new FileReader();
+        let file = e.target.files[0];
+        let fileName: string = file.name;
+        let fileType: string = file.type;
+
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            let dataSource = reader.result.split(',')[1];
+            if (dataSource && dataSource !== undefined) {
+                this.ListDoc[i].FilePath = e.target.value;
+                this.ListDoc[i].DataSource = "";
+                this.ListDoc[i].DocumentType = 5;
+                this.ListDoc[i].DocumentName = fileName;
+                this.ListDoc[i].IsActive = 1;
+            }
+        };
+    }
+
+
+    DelDocument(i: number) {
+        swal({
+            title: '',
+            text: Message.confirmDeleteDoc,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                var aIndex;
+                aIndex = this.getIndexOf(this.ListDoc, i, "DocumentSeq");
+
+                if (aIndex != -1) {
+                    if (this.ListDoc[aIndex].IsNewItem == false) {
+                        this.ListDoc[aIndex].IsDelItem = true;
+                    }
+                    else {
+                        this.ListDoc.splice(i, 1);
+                    }
+                }
+            }
+        })
     }
 
 
@@ -721,153 +819,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             })
         }
     
-        ShowRevenue() {
-            this.IncService.getByCon(this.RevenueID).then(async res => {
-                if (res.length > 0 && res != null) {
-                    // if (res[0].RevenueDetail.length > 0) {
-                    //     this.ReceiptBookNo = res[0].RevenueDetail[0].ReceiptBookNo;
-                    // }
-                    // else {
-                    //     this.ReceiptBookNo = "";
-                    // }
-                    this.ListRevenueDetail = [];
-                    this.oRevenue.RevenueID = res[0].RevenueID;
-                    this.oRevenue.RevenueCode = res[0].RevenueCode;
-                    this.oRevenue.StationCode = res[0].StationCode;
-                    this.oRevenue.StationName = res[0].StationName;
-    
-                    this.RevenueCode = res[0].RevenueCode;
-                    this.RevenueStation = res[0].StationName;
-    
-                    var RN = res[0].RevenueNo.split('/');
-    
-                    if (RN.length > 1) {
-                        this.RevenueNo = RN[0];
-                        this.RevenueNoYear = RN[1];
-                    }
-    
-                    //this.RevenueNo = res[0].RevenueNo;
-                    this.InformTo = res[0].InformTo;
-                    this.RevenueStatus = res[0].RevenueStatus;
-    
-                    var RDate = res[0].RevenueDate.toString().split(" ");
-                    this.RevenueDate = setDateMyDatepicker(new Date(RDate[0]));
-                    this.RevenueTime = res[0].RevenueTime;
-    
-                    var SStaff = res[0].RevenueStaff.filter(f => f.ContributorID == "20");
-                    if (SStaff.length > 0) {
-                        this.StaffSendName = SStaff[0].TitleName + SStaff[0].FirstName + ' ' + SStaff[0].LastName;
-                        this.PosSend = SStaff[0].PositionName;
-                        this.DeptSend = SStaff[0].OfficeName;
-                        this.StaffSendID = SStaff[0].StaffID;
-                        this.oRevenueSendStaff = SStaff[0];
-                    }
-    
-                    var Staff = res[0].RevenueStaff.filter(f => f.ContributorID == "36");
-                    if (Staff.length) {
-                        this.StaffName = Staff[0].TitleName + Staff[0].FirstName + ' ' + Staff[0].LastName;
-                        this.PosStaff = Staff[0].PositionName;
-                        this.DeptStaff = Staff[0].OfficeName;
-                        this.StaffID = Staff[0].StaffID;
-                        this.StaffDeptCode = Staff[0].OfficeCode;
-                        this.oRevenueStaff = Staff[0];
-                    }
-    
-                    await this.ShowRevenueCompare();
-    
-                    debugger
-                    this.preloader.setShowPreloader(true);
-                    if (res[0].RevenueDetail.length > 0) {
-                        for (var a = 0; a < res[0].RevenueDetail.length; a += 1) {
-                            await this.IncService.RevenueComparegetByCompareReceiptID(res[0].RevenueDetail[a].CompareReceiptID).then(async item => {
-                                this.preloader.setShowPreloader(false);
-                                if (item.length > 0) {
-                                    for (var j = 0; j < item.length; j += 1) {
-                                        if (item[j].RevenueCompareDetail.length > 0) {
-                                            for (var i = 0; i < item[j].RevenueCompareDetail.length; i += 1) {
-                                                try {
-                                                    if (item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
-                                                        for (var k = 0; k < item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
-                                                            this.oRevenueDetail = {
-                                                                RevenueIndex: "1",
-                                                                RevenueDetailID: res[0].RevenueDetail[a].RevenueDetailID,
-                                                                ReceiptBookNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
-                                                                ReceiptNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
-                                                                RevenueStatus: "1",
-                                                                RevenueID: this.oRevenue.RevenueID,
-                                                                CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
-                                                                CompareID: item[j].CompareID,
-                                                                CompareCode: item[j].CompareCode,
-                                                                LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' || item[j].RevenueCompareDetail[i].LawbreakerTitleName == null ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName,
-                                                                SurnameLawBreaker: item[j].RevenueCompareDetail[i].LawbreakerLastName,
-                                                                StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
-                                                                PaymentDate: toLocalShort(item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
-                                                                TotalFine: +`${item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
-                                                                BribeMoney: +`${item[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : item[0].RevenueCompareDetail[i].BribeMoney}`,
-                                                                TreasuryMoney: +`${item[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : item[0].RevenueCompareDetail[i].TreasuryMoney}`,
-                                                                RewardMoney: +`${item[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : item[0].RevenueCompareDetail[i].RewardMoney}`,
-                                                                IsCheck: true,
-                                                                IsNewItem: false,
-                                                                IsDelItem: false
-                                                            }
-    
-                                                            this.ListRevenueDetail.push(this.oRevenueDetail);
-                                                        }
-                                                    }
-                                                } catch{ }
-                                            }
-                                        }
-    
-                                    }
-                                }
-    
-                                this.preloader.setShowPreloader(false);
-                            }, (err: HttpErrorResponse) => {
-                                this.ShowAlertError(err.message);
-                                //alert(err.message);
-                            });
-                        }
-    
-                        // set total record
-                        this.paginage.TotalItems = this.ListRevenueDetail.length;
-                        this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
-    
-                        var rIndex = 1;
-    
-                        for(var a = 0; a < this.ListRevenueDetailPaging.length; a++){
-                            if(a != 0) {
-                                if(this.ListRevenueDetailPaging[a-1].CompareCode == this.ListRevenueDetailPaging[a].CompareCode){
-                                    this.ListRevenueDetailPaging[a].CompareCode = "";
-                                    this.ListRevenueDetailPaging[a].RevenueIndex = "";
-                                }
-                                else{
-                                    rIndex += 1;
-                                    this.ListRevenueDetailPaging[a].RevenueIndex = rIndex;
-                                }  
-                            }
-                            else{
-                                this.ListRevenueDetailPaging[a].RevenueIndex = 1;
-                            }
-    
-                            //    this.ListRevenueDetailPaging[a].TotalFine = this.ListRevenueDetailPaging[a].TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-                            //    this.ListRevenueDetailPaging[a].BribeMoney = this.ListRevenueDetailPaging[a].BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                            //    this.ListRevenueDetailPaging[a].TreasuryMoney = this.ListRevenueDetailPaging[a].TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                            //    this.ListRevenueDetailPaging[a].RewardMoney = this.ListRevenueDetailPaging[a].RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                        }
-    
-                        this.checkIfAllChbSelected();
-                    }
-                } else {
-                    this.ShowAlertError("พบปัญหาในการติดต่อ Server");
-                    //alert("พบปัญหาในการติดต่อ Server");
-                    this.preloader.setShowPreloader(false);
-                    this.router.navigate(['/income/list']);
-                }
-            }, (err: HttpErrorResponse) => {
-                this.ShowAlertError("API RevenuegetByCon :: " + err.message);
-                //alert(err.message);
-            });
-        }
+        
     
         async ShowRevenueCompare() {
             if (this.RevenueDate != null && this.RevenueDate != "") {

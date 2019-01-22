@@ -354,57 +354,58 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>ลำดับ</th>
-                                        <th>เลขทะเบียนบัญชี</th>
-                                        <th>ของกลาง</th>
-                                        <th>จำนวนส่ง</th>
-                                        <th>หน่วย</th>
-                                        <th>ชำรุด</th>
-                                        <th>หน่วย</th>
-                                        <th>จำนวนรับ</th>
-                                        <th>หน่วย</th>
+                                        <th style="text-align:center;">ลำดับ</th>
+                                        <th style="width:14%">เลขทะเบียนบัญชี</th>
+                                        <th style="width:30%">ของกลาง</th>
+                                        <th style="width:7%">จำนวนส่ง</th>
+                                        <th style="width:9%">หน่วย</th>
+                                        <th style="width:7%">ชำรุด</th>
+                                        <th style="width:9%">หน่วย</th>
+                                        <th style="width:7%">จำนวนรับ</th>
+                                        <th style="width:9%">หน่วย</th>
                                         <th>หมายเหตุ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of ArrestProduct; let i=index;">
-                                        <td>{{i + 1}}</td>
+                                    <tr *ngFor="let item of ListEvidenceInItem ; let i=index;">
+                                        <td style="text-align:center;">{{i + 1}}</td>
                                         <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                            {{item.EvidenceInItemID}}
+                                            <input type="text" [(ngModel)]="item.EvidenceInItemID" name="item.EvidenceInItemID" class="form-control form-control-sm" [disabled]="showEditField">
+                                        </td>
+                                        <!-- <td>
+                                            <input type="text" [(ngModel)]="item.ProductDesc" name="item.ProductDesc" class="form-control form-control-sm" [disabled]="showEditField">
                                         </td>
                                         <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                            <input type="text" [(ngModel)]="item.DeliveryQty" name="item.DeliveryQty" class="form-control form-control-sm" [disabled]="showEditField">
                                         </td>
                                         <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
-                                        </td>
-                                        <td>
-                                            <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control" [disabled]="showEditField">
+                                            <select class="form-control form-control-sm" [disabled]="showEditField">
                                                 <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                            <input type="text" [(ngModel)]="item.DamageQty" name="item.DamageQty" class="form-control form-control-sm" [disabled]="showEditField">
                                         </td>
                                         <td>
-                                            <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control" [disabled]="showEditField">
+                                            <select class="form-control form-control-sm" [disabled]="showEditField">
                                                 <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                            <input type="text" [(ngModel)]="item.DamageSize" name="item.DamageSize" class="form-control form-control-sm" [disabled]="showEditField">
                                         </td>
                                         <td>
-                                            <select [(ngModel)]="oProveProduct.QtyUnit" name="oProveProduct.QtyUnit" class="form-control" [disabled]="showEditField">
+                                            <select class="form-control form-control-sm" [disabled]="showEditField">
                                                 <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
-                                        </td>
+                                            <input type="text" [(ngModel)]="item.DamageNetVolumn" name="item.DamageNetVolumn" class="form-control form-control-sm" [disabled]="showEditField">
+                                        </td> -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -498,7 +499,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let lsDoc of ListProveDoc ; let i=index;">
+                                <tr *ngFor="let lsDoc of ListDoc | IsActivePipe ; let i=index;">
                                     <td style="text-align: center">{{i+1}}</td>
                                     <td>
                                         <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
