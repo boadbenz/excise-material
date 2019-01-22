@@ -48,15 +48,15 @@ export const appConfig = {
 
 //-----------------------------------------------------------------//
     //for training
-    // apiUrl:  'http://172.30.0.72:8888/XCS60',   
-    // api7788: 'http://172.30.0.72:7788/XCS60',  
-    // api8882: 'http://172.30.0.72:8882/XCS60',    
-    // api8883: 'http://172.30.0.72:8883/XCS60',
-    // api8086: 'http://172.30.0.72:8086/XCS60',  
-    // api8887: 'http://172.30.0.72:8887/XCS60', 
-    // api8777: 'http://172.30.0.72:8777/XCS60',
-    // api8776: 'http://172.30.0.72:8776/XCS60',   
-    // apiReport:'http://172.30.0.72:8000/Report_XCS',
+    // apiUrl:  'http://10.10.0.72:8888/XCS60',   
+    // api7788: 'http://10.10.0.72:7788/XCS60',  
+    // api8882: 'http://10.10.0.72:8882/XCS60',    
+    // api8883: 'http://10.10.0.72:8883/XCS60',
+    // api8086: 'http://10.10.0.72:8086/XCS60',  
+    // api8887: 'http://10.10.0.72:8887/XCS60', 
+    // api8777: 'http://10.10.0.72:8777/XCS60',
+    // api8776: 'http://10.10.0.72:8776/XCS60',   
+    // apiReport:'http://10.10.0.72:8000/Report_XCS',
     // mockapi: 'http://demo1735762.mockable.io/XCS60',
     // exciseService: 'http://webtest.excise.go.th'
 }

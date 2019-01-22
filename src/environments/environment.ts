@@ -12,7 +12,7 @@ export const environment = {
 
 // export const environment = {
 //     production: false,
-//     hostXCS60: 'http://172.30.0.72:8883/XCS60',
-//     api: 'http://172.30.0.72:8883',
-//     api90: 'http://172.30.0.72:8777'
+//     hostXCS60: 'http://10.10.0.72:8883/XCS60',
+//     api: 'http://10.10.0.72:8883',
+//     api90: 'http://10.10.0.72:8777'
 // };

@@ -1,2 +1,158 @@
-<div>
-</div>
+<!-- <div class="wizard-content1" style="margin-bottom: 10px;">
+    <div class="wizard-circle wizard clearfix clearfix">
+        <div class="steps tab-wizard">
+            <ul role="tablist">
+                <li class="current" aria-disabled="false" aria-selected="true">
+                    <a style="margin: 40px"> 
+                        <span style="margin-left: -620px;" class="step"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="steps tab-wizard">
+            <ul role="tablist">
+                <li role="tab" class="current" aria-disabled="false" aria-selected="true">
+                    <a style="margin: 40px">
+                        <span style="margin-left: -620px;" class="step"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="steps tab-wizard">
+            <ul role="tablist">
+                <li role="tab" class="current" aria-disabled="false" aria-selected="true">
+                    <a style="margin: 40px">
+                        <span style="margin-left: -620px;;" class="step"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="steps tab-wizard">
+            <ul role="tablist">
+                <li role="tab" class="current" aria-disabled="false" aria-selected="true">
+                    <a style="margin: 40px">
+                        <span style="margin-left: -620px;;" class="step"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+
+
+<!-- <mat-vertical-stepper [linear]="isLinear" #stepper>
+    
+    <mat-step>
+        <form>
+            <ng-template matStepLabel>วันที่ 21 มกราคม 2562</ng-template>
+            <div>
+                <a style="font-size: 13px" href="https://material.angular.io/components/stepper/overview?fbclid=IwAR2TTQXrTtyd7X6b9T0k-ab1Lrxm2nRBuoDCUC1jB0zYoNLMkLnOe-XwKvA">link
+                    test</a>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <form>
+            <ng-template matStepLabel>วันที่ 21 มกราคม 2562</ng-template>
+            <div>
+                <a style="font-size: 13px" href="https://material.angular.io/components/stepper/overview?fbclid=IwAR2TTQXrTtyd7X6b9T0k-ab1Lrxm2nRBuoDCUC1jB0zYoNLMkLnOe-XwKvA">link
+                    test</a>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <form>
+            <ng-template matStepLabel>วันที่ 21 มกราคม 2562</ng-template>
+            <div>
+                <a style="font-size: 13px" href="https://material.angular.io/components/stepper/overview?fbclid=IwAR2TTQXrTtyd7X6b9T0k-ab1Lrxm2nRBuoDCUC1jB0zYoNLMkLnOe-XwKvA">link
+                    test</a>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <form>
+            <ng-template matStepLabel>วันที่ 21 มกราคม 2562</ng-template>
+            <div>
+                <a style="font-size: 13px" href="https://material.angular.io/components/stepper/overview?fbclid=IwAR2TTQXrTtyd7X6b9T0k-ab1Lrxm2nRBuoDCUC1jB0zYoNLMkLnOe-XwKvA">link
+                    test</a>
+            </div>
+        </form>
+    </mat-step>
+</mat-vertical-stepper> -->
+<style type="text/css">
+    .container {
+        width: 100%;
+    }
+
+    .progbar {
+        counter-reset: step;
+    }
+
+    .progbar li {
+        list-style-type: none;
+        float: left;
+        width: 33.33%;
+        position: relative;
+        text-align: center;
+    }
+
+    .progbar li:before {
+        content: counter(step);
+        counter-increment: step;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border: 1px solid #ddd;
+        display: block;
+        text-align: center;
+        margin: 0 auto 10px auto;
+        border-radius: 50%;
+        background-color: white
+    }
+
+    .progbar li:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background-color: #ddd;
+        top: 15px;
+        left: 0px;
+        z-index: 1000;
+        transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+    }
+
+    .progbar li:first-child:after {
+        content: none;
+    }
+
+    .progbar li::before {
+        border-color: #005c97;
+        border-width: 2px
+    }
+</style>
+
+<!-- <div class="container" style="margin-left: -80px;">
+    <ul class="progbar">
+        <div class="row" style="margin-bottom: 80px;">
+            <li class="active"></li>
+            <span style="margin-left: -100px;">วันที่ 21 มกราคม 2562</span> 
+        </div>
+        <div class="row" style="margin-bottom: 80px;">
+            <li></li>
+            <span style="margin-left: -100px;">วันที่ 22 มกราคม 2562</span>
+        </div>
+        <div class="row" style="margin-bottom: 80px;">
+            <li></li>
+            <span style="margin-left: -100px;">วันที่ 22 มกราคม 2562</span>
+        </div>
+        <div class="row" style="margin-bottom: 80px;">
+            <li></li>
+            <span style="margin-left: -100px;">วันที่ 23 มกราคม 2562</span>
+        </div>
+    </ul>
+</div> -->
