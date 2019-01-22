@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.37');
+    this.sidebarService.setVersion('0.0.0.38');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -329,9 +329,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         let j: any = 0;
         for (const st of staff) {
           const name: string = (st? st.TitleName: '') + ' ' + st.FirstName + ' ' + st.LastName;
-          console.log((+st.ProcessCode) , parseFloat(j + '.1'), st.ContributorID);
+          // console.log((+st.ProcessCode) , parseFloat(j + '.1'), st.ContributorID);
           if (st.ContributorID == 17) {
-            console.log('contribute');
+            // console.log('contribute');
             this.accused.staff = st;
             this.accused.CompareStaffName = name;
             this.accused.OperationPosName = st.PositionName;
@@ -343,22 +343,22 @@ export class ManageComponent implements OnInit, OnDestroy {
             j = code[0];
             if ((+st.ProcessCode) == parseFloat(j + '.1')) {
               console.log((+st.ProcessCode) , parseFloat(j + '.1'));
-              this.approveReportList[i].staff = name;
-              this.approveReportList[i].position1 = st.PositionName;
-              this.approveReportList[i].department1 = st.OfficeShortName;
-              this.approveReportList[i].staff1 = st;
+              this.approveReportList[j].staff = name;
+              this.approveReportList[j].position1 = st.PositionName;
+              this.approveReportList[j].department1 = st.OfficeShortName;
+              this.approveReportList[j].staff1 = this.jsonCopy(st);
             } else if ((+st.ProcessCode) === parseFloat(j + '.2')) {
               console.log((+st.ProcessCode) , parseFloat(j + '.2'));
-              this.approveReportList[i].reviewer = name;
-              this.approveReportList[i].rank = st.PositionName;
-              this.approveReportList[i].department2 = st.OfficeShortName;
-              this.approveReportList[i].staff2 = st;
+              this.approveReportList[j].reviewer = name;
+              this.approveReportList[j].rank = st.PositionName;
+              this.approveReportList[j].department2 = st.OfficeShortName;
+              this.approveReportList[j].staff2 = this.jsonCopy(st);
             } else if ((+st.ProcessCode) === parseFloat(j + '.3')) {
               console.log((+st.ProcessCode) , parseFloat(j + '.3'));
-              this.approveReportList[i].approver = name;
-              this.approveReportList[i].rank2 = st.PositionName;
-              this.approveReportList[i].department3 = st.OfficeShortName;
-              this.approveReportList[i].staff3 = st;
+              this.approveReportList[j].approver = name;
+              this.approveReportList[j].rank2 = st.PositionName;
+              this.approveReportList[j].department3 = st.OfficeShortName;
+              this.approveReportList[j].staff3 = this.jsonCopy(st);
             }
           } else if (st.ProcessCode && st.ProcessCode.split('.').length == 1) {
             console.log('staff 19 ', st.ProcessCode, j);
@@ -1057,7 +1057,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             break;
           } else {
             CompareDetail.LawbreakerName = LawBreaker ? `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}` : '';
-            const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerID, resp[0].SubSectionID);
+            const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerRefID);
             CompareDetail.Mistreat = Mistreat.Mistreat ? Mistreat.Mistreat : 0;
             this.ListCompareDetail.push(CompareDetail);
             // ชื่อผู้ต้องหาคำให้การ
@@ -1387,13 +1387,12 @@ export class ManageComponent implements OnInit, OnDestroy {
   async setAccusedData(resp: any) {
     // this.accused.list = [];
   }
-  async CompareCountMistreatgetByCon(LawbreakerID, SubSectionID) {
+  async CompareCountMistreatgetByCon(LawbreakerRefID) {
     try {
       const data: any = {
-        LawbreakerID: LawbreakerID,
-        SubSectionID: SubSectionID
+        LawbreakerRefID: LawbreakerRefID
       };
-      return await this.fineService.postMethod('/CompareCountMistreatgetByCon', data);
+      return await this.fineService.postMethod('CompareCountMistreatgetByCon', data);
     } catch (err) {
       console.log(err);
     }
@@ -2137,7 +2136,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     i = 0;
     let staffApprove: any = [];
     for (const d of this.approveReportList) {
-      if (d.staff1 && d.staff2 && d.staff3) {
+      if (d.staff1) {
         d.staff1.ProgramCode = 'ILG60-06-02-04';
         d.staff1.ProcessCode = i + '.1';
         if (d.staff1.OperationPosName && d.staff1.OperationPosCode) {
@@ -2147,6 +2146,13 @@ export class ManageComponent implements OnInit, OnDestroy {
           d.staff1.PositionName = this.logedinUser.operationPosName;
           d.staff1.PositionCode = this.logedinUser.OperationPosCode;
         }
+        d.staff1.ContributorID = 39;
+        staffApprove.push(d.staff1);
+      } else {
+        // staffApprove = [];
+        // break;
+      }
+      if (d.staff2) {
         d.staff2.ProgramCode = 'ILG60-06-02-04';
         d.staff2.ProcessCode = i + '.2';
         if (d.staff2.OperationPosName && d.staff2.OperationPosCode) {
@@ -2156,6 +2162,10 @@ export class ManageComponent implements OnInit, OnDestroy {
           d.staff2.PositionName = this.logedinUser.operationPosName;
           d.staff2.PositionCode = this.logedinUser.OperationPosCode;
         }
+        d.staff2.ContributorID = 40;
+        staffApprove.push(d.staff2);
+      }
+      if (d.staff3) {
         d.staff3.ProgramCode = 'ILG60-06-02-04';
         d.staff3.ProcessCode = i + '.3';
         if (d.staff3.OperationPosName && d.staff3.OperationPosCode) {
@@ -2165,16 +2175,9 @@ export class ManageComponent implements OnInit, OnDestroy {
           d.staff3.PositionName = this.logedinUser.operationPosName;
           d.staff3.PositionCode = this.logedinUser.OperationPosCode;
         }
-        d.staff1.ContributorID = 39;
-        staffApprove.push(d.staff1);
-        d.staff2.ContributorID = 40;
-        staffApprove.push(d.staff2);
         d.staff3.ContributorID = 41;
         staffApprove.push(d.staff3);
         i++;
-      } else {
-        // staffApprove = [];
-        // break;
       }
     }
     for (const st of staffReceipt) {
@@ -2190,6 +2193,10 @@ export class ManageComponent implements OnInit, OnDestroy {
           // alert(st.ProcessCode + ' ' + tmp.ProcessCode + ' ' + (!st.ProcessCode && !tmp.ProcessCode));
           if ((st.ProcessCode == tmp.ProcessCode) || (st.ProcessCode == null && tmp.ProcessCode == 'null')) {
             st.StaffID = tmp.StaffID;
+            st.CompareID = tmp.CompareID;
+            st.PosLevelName = st.operationPosName;
+            st.PosLevel = st.OperationPosCode;
+          } else {
             st.CompareID = tmp.CompareID;
             st.PosLevelName = st.operationPosName;
             st.PosLevel = st.OperationPosCode;
