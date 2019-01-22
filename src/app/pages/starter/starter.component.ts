@@ -11,9 +11,9 @@ export class StarterComponent implements OnInit {
 	title:string;
 	subtitle:string;
 	
-	isLinear = true;
-	firstFormGroup: FormGroup;
-	secondFormGroup: FormGroup;
+	isLinear = false;
+	// firstFormGroup: FormGroup;
+	// secondFormGroup: FormGroup;
 	constructor(private navService: NavigationService,private _formBuilder: FormBuilder) {
 			this.title = "Starter Page";
 			this.subtitle = "This is some text within a card block."
