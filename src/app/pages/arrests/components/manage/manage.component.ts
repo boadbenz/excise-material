@@ -485,11 +485,9 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     return false;
                 }
 
-                const sDateCompare = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
-                const eDateCompare = getDateMyDatepicker(this.arrestFG.value.OccurrenceDate);
-
+                const _ArrestDate = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
                 const notice: fromModels.ArrestNotice[] = this.ArrestNotice.value
-                    .filter(x => sDateCompare.valueOf() < (new Date(x.NoticeDate)).valueOf());
+                    .filter(x => _ArrestDate.valueOf() < (new Date(x.NoticeDate)).valueOf());
 
                 // ถ้ามีรายการ วันที่จับกุม < วันที่แจ้งความ ให้ออกจาก function
                 if (notice.length) {
@@ -532,10 +530,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     swal('', 'กรุณาเลือกข้อมูล “ฐานความผิดมาตรา”', 'warning')
                     return;
                 };
-
-                this.arrestFG.value.ArrestDate = convertDateForSave(sDateCompare);
-                this.arrestFG.value.OccurrenceDate = convertDateForSave(eDateCompare);
-                this.arrestFG.value.HaveCulprit = lawbreaker.length > 0 ? 1 : 0;
                 this.onSave();
             }
         });
@@ -1831,15 +1825,18 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     private setArrestForSave() {
         let a: fromModels.Arrest = this.arrestFG.value;
+        const ArrestDate = getDateMyDatepicker(a.ArrestDate);
+        const OccurrenceDate = getDateMyDatepicker(a.OccurrenceDate);
+        const HaveCulprit = this.ArrestLawbreaker.value.filter(l => l.IsModify != 'd').length > 0 ? 1 : 0;
         return {
             ArrestCode: this.arrestCode,
-            ArrestDate: a.ArrestDate,
+            ArrestDate: convertDateForSave(ArrestDate),
             ArrestTime: a.ArrestTime,
-            OccurrenceDate: a.OccurrenceDate,
+            OccurrenceDate: getDateMyDatepicker(OccurrenceDate),
             OccurrenceTime: a.OccurrenceTime,
             ArrestStationCode: a.ArrestStationCode,
             ArrestStation: a.ArrestStation,
-            HaveCulprit: a.HaveCulprit,
+            HaveCulprit: HaveCulprit,
             Behaviour: a.Behaviour,
             Testimony: a.Testimony,
             Prompt: a.Prompt,
