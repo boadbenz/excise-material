@@ -14,53 +14,79 @@ export class Evidence_In {
     public DeptNameRecv?: string; 
     public Remark?: string;
     public ReturnDate?: string;
-    public IsEdit?: string;
-    // public RevenueDetail?: RevenueDetail[];
-    // public RevenueStaff?: RevenueStaff[];
+    public IsActive?: number;
+    public IsEdit?: number;
+    public EvidenceInItem?: EvidenceInItem[];
+    public EvidenceInStaff?: EvidenceInStaff[];
 }
 
-// export class RevenueStaff {
-//     public StaffID?: string;
-//     public ProgramCode?: string;
-//     public ProcessCode?: string;
-//     public RevenueID?: string;
-//     public StaffCode?: string;
-//     public TitleName?: string;
-//     public FirstName?: string;
-//     public LastName?: string;
-//     public PositionCode?: string;
-//     public PositionName?: string;
-//     public PosLevel?: string;
-//     public PosLevelName?: string;
-//     public DepartmentCode?: string;
-//     public DepartmentName?: string;
-//     public DepartmentLevel?: string;
-//     public OfficeCode?: string;
-//     public OfficeName?: string;
-//     public OfficeShortName?: string;
-//     public ContributorCode?: string;
-//     public ISACTIVE?: number;
-// }
+export class EvidenceInStaff {
+    public EvidenceInStaffID?: string;
+    public EvidenceInID?: string;
+    public StaffCode?: string;
+    public TitleName?: string;
+    public FirstName?: string;
+    public LastName?: string;
+    public PositionCode?: string;
+    public PositionName?: string;
+    public PosLevel?: string;
+    public PosLevelName?: string;
+    public DepartmentCode?: string;
+    public DepartmentName?: string;
+    public DepartmentLevel?: string;
+    public OfficeCode?: string;
+    public OfficeName?: string;
+    public OfficeShortName?: string;
+    public ContributorID?: string;
+    public IsActive?: string;
+}
 
-// export class RevenueDetail {
-//     public RevenueIndex?: string;
-//     public RevenueDetailID?: string;
-//     public ReceiptBookNo?: string;
-//     public ReceiptNo?: string;
-//     public RevenueStatus?: string;
-//     public RevenueID?: string;
-//     public CompareReceiptID ?: number;
-//     public CompareID?: string;
-//     public CompareCode?: string;
-//     public LawBreaker?: string;
-//     public SurnameLawBreaker?: string;
-//     public StaffReceip?: string;
-//     public PaymentDate?: string;
-//     public TotalFine?: number;
-//     public BribeMoney?: number;
-//     public RewardMoney?: number;
-//     public TreasuryMoney?: number;
-//     public IsCheck?: boolean;
-//     public IsNewItem?: boolean;
-//     public IsDelItem?: boolean;
-// }
+export class EvidenceInItem {
+    public EvidenceInItemID?: string;
+    public EvidenceInItemCode?: string;
+    public EvidenceInID?: string;
+    public GroupCode?: string;
+    public IsDomestic?: string;
+    public ProductCode?: string;
+    public BrandCode ?: number;
+    public BrandNameTH?: string;
+    public BrandNameEN?: string;
+    public SubBrandCode?: string;
+    public SubBrandNameTH?: string;
+    public SubBrandNameEN?: string;
+    public ModelCode?: string;
+    public ModelName?: number;
+    public FixNo1?: string;
+    public DegreeCode?: string;
+    public Degree?: string;
+    public FixNo2?: string;
+    public SequenceNo?: string;
+    public ProductDesc?: string;
+    public CarNo?: string;
+    public DeliveryQty?: string;
+    public DeliveryQtyUnit?: string;
+    public DeliverySize?: string;
+    public DeliverySizeUnit?: string;
+    public DeliveryNetVolumnUnit?: string;
+    public DamageQty?: string;
+    public DamageQtyUnit?: string;
+    public DamageSize?: string;
+    public DamageSizeUnit?: string;
+    public DamageNetVolumn?: string;
+    public DamageNetVolumnUnit?: string;
+    public IsActive?: string;
+    public EvidenceStockBalance?: string;
+}
+
+export class Document {
+    public DocumentSeq?: number;
+    public DocumentID?: string;
+    public ReferenceCode?: string;
+    public FilePath?: string;
+    public DataSource?: string;
+    public DocumentType?: string;
+    public DocumentName?: string;
+    public IsActive?: string;
+    public IsNewItem?: boolean;
+    public IsDelItem?: boolean;
+}

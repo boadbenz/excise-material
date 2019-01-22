@@ -57,4 +57,29 @@ export class EvidenceService {
       await alert(error);
     }
   }
+
+  async getByCon(EvidenceInID: string): Promise<any> {
+    const params = { EvidenceInID };
+    const url = `${appConfig.api8776}/EvidenceIngetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async getProveProductUnit(Textsearch: string): Promise<any> {
+    const params = {  };
+    const url = `${appConfig.api8777}/MasDutyUnitMaingetAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
+    } catch (error) {
+      // await alert(error);
+      return [];
+    }
+  }
 }
