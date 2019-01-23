@@ -66,7 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('evidenceIn 0.0.0.8');
+        this.sidebarService.setVersion('evidenceIn 0.0.0.9');
         this.RevenueStatus = "";
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
