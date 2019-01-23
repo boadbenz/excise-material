@@ -1,10 +1,9 @@
 .container {
     width: 100%;
-    margin: 0%
 }
 
 .progbar {
-    counter-reset: step;
+     counter-reset: step;
 }
 
 .progbar li {
@@ -17,10 +16,11 @@
 }
 
 .progbar li:before {
-    content: counter(step);
-    counter-increment: step;
-    width: 23px;
-    height: 23px;
+    // content: counter(step);
+    // counter-increment: xxx;
+    content: '';
+    width: 18px;
+    height: 18px;
     line-height: 17px;
     border: 1px solid #ddd;
     display: block;
@@ -34,7 +34,7 @@
 }
 
 .progbar li:after {
-    content: '';
+    // content: '';
     position: absolute;
     width: 100%;
     height: 5px;
@@ -50,9 +50,9 @@
     -o-transform: rotate(90deg);
 }
 
-.progbar li:first-child:after {
-    content: none;
-}
+// .progbar li:first-child:after {
+//     content: none;
+// }
 
 /* .progbar li::before {
     border-color: #005c97;
@@ -70,10 +70,10 @@
 } */
 .solid {
     border: 1px solid #ddd;
-    width: 36pc;
+    width: 35pc;
     // height: 1px;
-    top: 497px;
-    left: -97px;
+    top: 500px;
+    left: -90px;
     transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
@@ -84,7 +84,16 @@
     z-index: 0;
     margin: -2px;
 }
-
+.solid1 {
+    border: 1px solid #ddd;
+    width: 88pc;
+    top: 154px;
+    left: 91px;
+    background-color: #ddd;
+    position: absolute;
+    z-index: 0;
+    margin: -2px;
+}
 /* .solid1 {
     border: 2px solid rgb(216, 67, 8);
     width: 20%;
