@@ -292,10 +292,10 @@ export class ProveService {
     }
   }
 
-  async MasDocumentMaingetAll(ReferenceCode: string): Promise<any> {
+  async MasDocumentMaingetAll(ReferenceCode: string, _DocumentType: string): Promise<any> {
     let pValue = {
       "ReferenceCode" : ReferenceCode,
-      "DocumentType" : 5
+      "DocumentType" : _DocumentType
     }
 
     const params = JSON.stringify(pValue);

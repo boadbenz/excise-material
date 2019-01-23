@@ -378,32 +378,30 @@ export class ManageComponent implements OnInit, OnDestroy {
         }).then((result) => {
             if (result.value) {
                 if (this.RevenueStatus == 1) {
-                    if (confirm(Message.confirmAction)) {
-                        this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
-                            if (IsSuccess) {
-                                var isSuccess = true;
-                                this.ListRevenueDetail.filter(item => (item.IsCheck === true))
-                                    .map(async item => {
-                                        await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
-                                            if (!item.IsSuccess) {
-                                                isSuccess = item.IsSuccess;
-                                                return false;
-                                            }
-                                        }, (error) => { console.error(error); return false; });
-                                    });
+                    this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
+                        if (IsSuccess) {
+                            var isSuccess = true;
+                            this.ListRevenueDetail.filter(item => (item.IsCheck === true))
+                                .map(async item => {
+                                    await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
+                                        if (!item.IsSuccess) {
+                                            isSuccess = item.IsSuccess;
+                                            return false;
+                                        }
+                                    }, (error) => { console.error(error); return false; });
+                                });
 
-                                if (isSuccess) {
-                                    this.oRevenue = {};
-                                    this.ShowAlertSuccess(Message.saveComplete);
-                                    // alert(Message.saveComplete);
-                                    this.router.navigate(['/income/list']);
-                                }
-                            } else {
-                                this.ShowAlertError(Message.saveFail);
-                                //alert(Message.saveFail);
+                            if (isSuccess) {
+                                this.oRevenue = {};
+                                this.ShowAlertSuccess(Message.saveComplete);
+                                // alert(Message.saveComplete);
+                                this.router.navigate(['/income/list']);
                             }
-                        }, (error) => { console.error(error); return false; });
-                    }
+                        } else {
+                            this.ShowAlertError(Message.saveFail);
+                            //alert(Message.saveFail);
+                        }
+                    }, (error) => { console.error(error); return false; });
                 }
                 else if (this.RevenueStatus == 2) {
                     this.ShowAlertWarning(Message.cannotDelete);

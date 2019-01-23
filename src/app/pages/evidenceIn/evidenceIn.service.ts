@@ -83,56 +83,33 @@ export class EvidenceService {
     }
   }
 
-  async TransactionRunninggetByCon(RunningTable, RunningOfficeCode): Promise<any> {
-    let pValue = {
-      "RunningTable": RunningTable,
-      "RunningOfficeCode": RunningOfficeCode
-    }
-
-    const params = JSON.stringify(pValue);
-    const url = `${appConfig.api8777}/TransactionRunninggetByCon`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async TransactionRunninginsAll(RunningOfficeCode, RunningTable, RunningPrefix): Promise<any> {
-    let pValue = {
-      "RunningOfficeCode": RunningOfficeCode,
-      "RunningTable": RunningTable,
-      "RunningPrefix": RunningPrefix
-    }
-
-    const params = JSON.stringify(pValue);
-    const url = `${appConfig.api8777}/TransactionRunninginsAll`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async TransactionRunningupdByCon(RunningID): Promise<any> {
-    const params = { RunningID };
-    const url = `${appConfig.api8777}/TransactionRunningupdByCon`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
   async EvidenceIninsAll(oEvidence: Evidence_In): Promise<any> {
     const params = JSON.stringify(oEvidence);
     const url = `${appConfig.api8776}/EvidenceIninsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async EvidenceInupdByCon(oEvidence: Evidence_In): Promise<any> {
+    const params = JSON.stringify(oEvidence);
+    const url = `${appConfig.api8776}/EvidenceInupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async EvidenceInupdDelete(EvidenceInID: string): Promise<any> {
+    const params = { EvidenceInID };
+    const url = `${appConfig.api8776}/EvidenceInupdDelete`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
