@@ -7,7 +7,7 @@ export class Evidence_In {
     public IsReceive?: string;
     public DeliveryNo?: string;
     public DeliveryDate?: string;
-    public DeliveryTime?: number;
+    public DeliveryTime?: string;
     public EvidenceInType?: string;
     public EvidenceInTypeName?: string; 
     public DeptNameSent?: string; 
@@ -75,7 +75,26 @@ export class EvidenceInItem {
     public DamageNetVolumn?: string;
     public DamageNetVolumnUnit?: string;
     public IsActive?: string;
-    public EvidenceStockBalance?: string;
+    public EvidenceStockBalance?: EvidenceStockBalance[];
+}
+
+export class EvidenceStockBalance{
+    public StockID?: string;
+    public WarehouseID?: string;
+    public ReceiveQty?: string;
+    public ReceiveQtyUnit?: string;
+    public ReceiveSize?: string;
+    public ReceiveSizeUnit?: string;
+    public ReceiveNetVolumn?: string;
+    public ReceiveNetVolumnUnit?: string;
+    public BalanceQty?: string;
+    public BalanceQtyUnit?: string;
+    public BalanceSize?: string;
+    public BalanceSizeUnit?: string;
+    public BalanceNetVolumn?: string;
+    public BalanceNetVolumnUnit?: string;
+    public IsFinish?: number;
+    public IsReceive?: number;
 }
 
 export class Document {
