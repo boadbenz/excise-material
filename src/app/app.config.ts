@@ -31,7 +31,7 @@ export const appConfig = {
     api8887: 'http://103.233.193.94:8887/XCS60', 
     api8777: 'http://103.233.193.94:8777/XCS60',
     api8776: 'http://103.233.193.94:8776/XCS60',   
-    apiReport:'http://103.233.193.94:8000/Report_XCS',
+    apiReport:'http://103.233.193.62:8000/Report_XCS',
     mockapi: 'http://demo1735762.mockable.io/XCS60',
     exciseService: 'http://webtest.excise.go.th'
     //*******/This is api stoped on colo server********//
