@@ -94,6 +94,7 @@
         width: 33.33%;
         position: relative;
         text-align: center;
+        z-index: 6;
     }
 
     .progbar li:before {
@@ -108,6 +109,9 @@
         margin: 0 auto 10px auto;
         border-radius: 50%;
         background-color: white;
+        border-color: #005c97;
+        border-width: 3px;
+        
     }
 
     .progbar li:after {
@@ -118,7 +122,8 @@
         background-color: #ddd;
         top: 15px;
         left: 0px;
-        z-index: -1;
+        z-index: 1;
+
         transform: rotate(90deg);
         -ms-transform: rotate(90deg);
         -moz-transform: rotate(90deg);
@@ -127,13 +132,13 @@
     }
 
     .progbar li:first-child:after {
-        /* content: none; */
+        content: none;
     }
 
-    .progbar li::before {
+    /* .progbar li::before {
         border-color: #005c97;
         border-width: 3px
-    }
+    } */
 
     /* .progbar li.active {
         color: green;
@@ -144,10 +149,27 @@
     .progbar li.active + li::after{
         background-color: green;
     } */
-    /* .solid {
-        border: 2px solid #ddd;
-        width: 10%;
+    .solid {
+        border: 1px solid #ddd;
+        width: 53%;
         height: 1px;
+        top: 386px;
+        left: -84px;
+        transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        background-color: #ddd;
+        position: relative;
+        z-index: 0;
+        margin: -2px;
+    }
+
+    /* .solid1 {
+        border: 2px solid rgb(216, 67, 8);
+        width: 20%;
+        height: 40px;
         top: 15px;
         left: 0px;
         transform: rotate(90deg);
@@ -155,10 +177,51 @@
         -moz-transform: rotate(90deg);
         -webkit-transform: rotate(90deg);
         -o-transform: rotate(90deg);
+        background-color: rgb(216, 67, 8);
+        position: relative;
+        z-index: 4;
+    }
+
+    .solid2 {
+        border: 2px solid rgb(133, 196, 18);
+        width: 25%;
+        height: 50px;
+        top: 15px;
+        left: 0px;
+        transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        background-color: rgb(133, 196, 18);
+        position: relative;
+        z-index: 5;
     } */
 </style>
+<!-- <div class="container" style="margin-left: -80px;">
+        <div class="solid">1</div>
+        <ul class="progbar">
+                
+                <div class="row">
+                        <li></li>
+                        
+                    </div>
+                    <div class="row">
+                            <li></li>
+                       
+                    </div>
+                    <div class="row">
+                            <li></li>
+                        
+                    </div>
+        </ul>
+</div> -->
+
+
+
 
 <div class="container" style="margin-left: -80px;">
+        <div class="solid"></div>
     <ul class="progbar">
         <div class="row" style="margin-bottom: 45px">
             <span style="color: red ; margin-left: 170px;  font-size: 27px; font-weight: normal;">ประกาศ !!!</span>
@@ -203,3 +266,11 @@
         </div>
     </ul>
 </div>
+
+<!-- <div class="container">
+    <ul class="progbar">
+        <li class="active"> step 1</li>
+        <li >step 2</li>
+        <li >step 3</li>
+    </ul>
+</div> -->
