@@ -58,6 +58,13 @@ export const routes: Routes = [
             { path: 'manage', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
         ]
     }, 
+    {
+        path: 'report', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/report/list/list.module#ListModule' },
+            { path: 'manage', loadChildren: './pages/report/manage/manage.module#ManageModule' }
+        ]
+    }, 
     // {
     //     path: 'reward', component: LayoutComponent,
     //     children: [

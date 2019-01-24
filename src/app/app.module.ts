@@ -40,7 +40,7 @@ import { AuthService } from './pages/login/auth.service';
         BreadcrumbComponent,
         SidebarComponent,
         RightSidebarComponent,
-        LayoutComponent,  
+        LayoutComponent,
     ],
     imports: [
         CommonModule,
