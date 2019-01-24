@@ -1185,7 +1185,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 this.ListProveDoc = [];
 
-                this.proveService.MasDocumentMaingetAll(this.oProve.ProveID).then(async doc => {
+                this.proveService.MasDocumentMaingetAll(this.oProve.ProveID, "5").then(async doc => {
                     if (doc.length > 0) {
                         this.ListProveDoc = doc;
 
