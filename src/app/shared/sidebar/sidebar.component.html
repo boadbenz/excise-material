@@ -56,48 +56,48 @@
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li [ngClass]="{'active': activeRoute('arrest')}">
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/arrest/list">
                         <strong>2</strong>
                         <span class="hide-menu">บันทึกการจับกุม(ส.ส. 2/39)</span>
                     </a>
                 </li>
-                <li>
+                <li [ngClass]="{'active': activeRoute('lawsuit')}">
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/lawsuit/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>3</strong>
                         <span class="hide-menu">รับคำกล่าวโทษ </span>
                     </a>
                 </li>
-                <li>
+                <li [ngClass]="{'active': activeRoute('prove')}">
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/prove/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>4</strong>
                         <span class="hide-menu">งานตรวจรับและพิสูจน์ของกลาง</span>
                     </a>
                 </li>
-                <li>
+                <li [ngClass]="{'active': activeRoute('fine')}">
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/fine/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>5</strong>
                         <span class="hide-menu">งานเปรียบเทียบและชำระค่าปรับ</span>
                     </a>
                 </li>
-                <li>
+                <li [ngClass]="{'active': activeRoute('income')}">
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/income/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>6</strong>
                         <span class="hide-menu">นำส่งเงินรายได้</span>
                     </a>
                 </li>
-                <li>
+                <li [ngClass]="{'active': activeRoute('reward')}">
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/reward/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>7</strong>
                         <span class="hide-menu">คำร้องขอรับเงินสินบนรางวัล</span>
                     </a>
                 </li>
-                <li>
+                <li [ngClass]="{'active': activeRoute('reduction')}">
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/reduction/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>8</strong>
@@ -135,7 +135,7 @@
                         </li>
                     </ul>
                 </li> -->
-                <li>
+                <li [ngClass]="{'active': activeRoute('reward')}">
                     <ul>
                         <li>
                             <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/reward']">
@@ -153,7 +153,7 @@
                         <span class="hide-menu">การจัดการของกลาง</span>
                     </a>
                 </li>
-                <li>
+                <li [ngClass]="{'active': activeRoute('uac')}">
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/uac/list">
                         <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>10</strong>

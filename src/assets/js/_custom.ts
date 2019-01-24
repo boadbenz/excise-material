@@ -116,7 +116,7 @@ export function detectChange() {
     }); 
     $('ul#sidebarnav').on('click', 'li', function() {
         $('ul#sidebarnav li.active').removeClass('active');
-        $(this).addClass('active');
+        // $(this).addClass('active');
     });
     // ============================================================== 
     //tooltip

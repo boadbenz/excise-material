@@ -115,9 +115,14 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
     }
 
     private createForm(): FormGroup {
-        ArrestLawbreakerFormControl.LinkPhoto = new FormControl("C:\\Image");
+        // ArrestLawbreakerFormControl.LinkPhoto = new FormControl("C:\\Image");
         ArrestLawbreakerFormControl.IsActive = new FormControl(1);
-        return new FormGroup(ArrestLawbreakerFormControl);
+        const newFormGroup = {
+            ...ArrestLawbreakerFormControl,
+            Latitude: new FormControl(),
+            Longitude: new FormControl()
+        }
+        return new FormGroup(newFormGroup);
     }
 
     private active_route() {
@@ -237,6 +242,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                 }
 
                 let _Lfg = this.LawbreakerFG.value;
+
                 const birthDay = this.isObject(_Lfg.BirthDate)
                     && getDateMyDatepicker(_Lfg.BirthDate);
 
@@ -270,7 +276,11 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
                     _Lfg.LawbreakerFirstName = _Lfg.CompanyName;
                 }
 
+                _Lfg.LinkPhoto = `C:\\Image\\${_Lfg.PhotoDesc}`;
+
                 _Lfg = removeObjectItem(_Lfg, 'ResultCount');
+                _Lfg = removeObjectItem(_Lfg, 'Latitude');
+                _Lfg = removeObjectItem(_Lfg, 'Longitude');
 
                 switch (this.mode) {
                     case 'C':
@@ -510,7 +520,7 @@ export class LawbreakerComponent implements OnInit, OnDestroy {
             img.src = reader.result;
             this.LawbreakerFG.patchValue({
                 LinkPhoto: reader.result,
-                PhotoDesc: file.name
+                PhotoDesc: reader.result
             })
         };
 
