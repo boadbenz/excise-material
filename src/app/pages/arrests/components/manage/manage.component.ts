@@ -1980,7 +1980,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                                     LawbreakerID: x.LawbreakerID,
                                     ArrestLawbreakerID: y.LawbreakerID
                                 })
-                                // x.LawbreakerID = y.LawbreakerID;
                             })
                             .catch((error) => this.catchError(error));
                         break;
@@ -2001,6 +2000,13 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                             })
                             .catch((error) => this.catchError(error));
                         break;
+                }
+
+                if (x.IsModify != 'c') {
+                    arrestLawbreakerId.push({
+                        LawbreakerID: x.LawbreakerID,
+                        ArrestLawbreakerID: x.LawbreakerID
+                    })
                 }
             })
 
@@ -2043,23 +2049,19 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                         break;
                 }
 
+                let proD = await this.modifyIndictmentProduct(
+                    x.IndictmentID,
+                    x.IsModify,
+                    arrestProductId,
+                    x.ArrestIndictmentProduct);
+                let indictD = await this.modifyIndictmentDetail(
+                    x.IndictmentID,
+                    x.IsModify,
+                    arrestLawbreakerId,
+                    x.ArrestIndictmentProduct,
+                    x.ArrestIndicmentDetail);
 
-                return Promise.all(indict).then(async () => {
-
-                    let proD = await this.modifyIndictmentProduct(
-                        x.IndictmentID,
-                        x.IsModify,
-                        arrestProductId,
-                        x.ArrestIndictmentProduct);
-                    let indictD = await this.modifyIndictmentDetail(
-                        x.IndictmentID,
-                        x.IsModify,
-                        arrestLawbreakerId,
-                        x.ArrestIndictmentProduct,
-                        x.ArrestIndicmentDetail);
-
-                        return Promise.all([proD, indictD]);
-                });
+                return Promise.all([indict, proD, indictD]);
             })
         return Promise.all(indictmentPromise);
     }
@@ -2076,6 +2078,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 if (!x.IsChecked) return;
                 const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
                 if (!apd) return;
+                debugger
+                console.log(indictmentId);
                 x.IndictmentID = indictmentId;
                 x.ProductID = apd.ArrestProductID;
                 await this.s_indictment.ArrestIndictmentProductinsAll(x)
@@ -2098,15 +2102,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     } else {
                         await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
                             .then().catch(error => this.catchError(error));
-                    }
-                } else {
-                    if (x.IsChecked) {
-                        x.IndictmentID = indictmentId;
-                        await this.s_indictment.ArrestIndictmentProductinsAll(x)
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                                x.IndictmentProductID = y.IndictmentProductID;
-                            }).catch((error) => this.catchError(error));
                     }
                 }
             }
@@ -2154,13 +2149,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                             await this.s_indictmentDetail.ArrestIndicmentDetailupdDelete(x.IndictmentDetailID.toString())
                                 .then().catch((error) => this.catchError(error));
                         }
-                    } else {
-                        if (lawbreaker.IsChecked == Acceptability.ACCEPTABLE) return;
-                        await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
-                            .then(y => {
-                                if (!this.checkIsSuccess(y)) return;
-                                x.IndictmentDetailID = y.IndictmentDetailID;
-                            }).catch((error) => this.catchError(error));
                     }
 
                 } else if (lawbreaker.IsModify == 'd') {
@@ -2194,7 +2182,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     LawbreakerID: x.LawbreakerID || null
                 }
 
-                if (x.IsModify == 'c' || indictmentModify == 'c') {
+                if (indictmentModify == 'c' || x.IsModify == 'c') {
                     await this.s_indictmentDetail.ArrestIndicmentDetailinsAll(newIndictmentDetail)
                         .then(y => {
                             if (!this.checkIsSuccess(y)) return;
