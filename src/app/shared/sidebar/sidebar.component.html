@@ -135,7 +135,7 @@
                         </li>
                     </ul>
                 </li>  -->
-                <li>
+                <li [ngClass]="{'active': activeRoute('reward')}">
                     <ul>
                         <li>
                             <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/reward']">
