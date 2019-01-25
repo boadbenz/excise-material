@@ -173,8 +173,8 @@ export const ArrestLawbreakerFormControl = {
     FatherName: new FormControl(''),
     MotherName: new FormControl(''),
     Remarks: new FormControl(''),
-    LinkPhoto: new FormControl(''),
-    PhotoDesc: new FormControl(''),
+    LinkPhoto: new FormControl(),
+    PhotoDesc: new FormControl(),
     IsActive: new FormControl(null),
     ResultCount: new FormControl(null),
 
