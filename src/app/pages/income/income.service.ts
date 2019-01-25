@@ -248,7 +248,7 @@ export class IncomeService {
 
   RevenueReportgetByCon(RevenueID: string) {
     const params = { RevenueID };
-    const url = `${appConfig.apiReport}/RevenuegetByCon.aspx`;
+    const url = `${appConfig.apiReport}/ILG60_00_07_001.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .catch(this.onCatch)
       .do((res: Response) => {

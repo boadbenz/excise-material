@@ -126,7 +126,7 @@ export class PrintDocModalComponent implements OnInit {
     }
     ReportForm252(ArrestCode: string) {
         const params = { ArrestCode: ArrestCode };
-        const url = `${appConfig.apiReport}/ReportForm252.aspx`;
+        const url = `${appConfig.apiReport}/ILG60_00_04_002.aspx`;
         
         return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
             .catch(this.onCatch)

@@ -48,7 +48,7 @@ export class InvestgateService {
   
   InvestigateDetailgetByCon(InvestigateDetailID: string) {
     const params = { InvestigateDetailID };
-    const url = `${appConfig.apiReport}/InvestigateDetailgetByCon.aspx`;
+    const url = `${appConfig.apiReport}/ILG60_00_01_001.aspx`;
     this.showLoader();
     return this.httpClient.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .catch(this.onCatch)

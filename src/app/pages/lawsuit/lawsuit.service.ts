@@ -304,7 +304,7 @@ export class LawsuitService {
 
   LawsuitReportArrestgetByCon(IndictmentID) {
     const params = { IndictmentID };
-    const url = `${appConfig.apiReport}/LawsuitArrestgetByCon.aspx`;
+    const url = `${appConfig.apiReport}/ILG60_00_04_001.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .map(x => x)
 
