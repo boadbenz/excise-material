@@ -1644,7 +1644,12 @@ export class ManageComponent implements OnInit {
 
 //   public LawsuitDateOptions: IMyDpOptions = {
 //     dateFormat: 'dd mmm yyyy',
-//     disableSince: { year: new Date().getFullYear(), month: new Date().getMonth() + 1, day: new Date().getDate() + 1 },
+//     showClearDateBtn: false,
+//     height: '30px',
+//     alignSelectorRight: true,
+//     openSelectorOnInputClick: true,
+//     editableDateField: false
+//     // disableSince: { year: new Date().getFullYear(), month: new Date().getMonth() + 1, day: new Date().getDate() + 1 },
 //   };
 
 //   constructor(
@@ -1839,7 +1844,7 @@ export class ManageComponent implements OnInit {
 //       let LawbreakerMiddleName = ltempLawbreaker.LawbreakerMiddleName ? ltempLawbreaker.LawbreakerMiddleName + " " : ""
 //       let LawbreakerLastName = ltempLawbreaker.LawbreakerLastName ? ltempLawbreaker.LawbreakerLastName : ""
 //       temp.LawBrakerFullName = LawbreakerTitleName + " " + LawbreakerFirstName + " " + LawbreakerMiddleName + LawbreakerLastName
-
+//       temp.IndictmentDetailID = Lawbreaker.IndictmentDetailID
 //       temp.LawsuitType = Lawbreaker.LawsuitType
 //       temp.LawsuitEnd = Lawbreaker.LawsuitEnd
 
@@ -1893,14 +1898,14 @@ export class ManageComponent implements OnInit {
 
 //   private async createLawsuitForm(lawsuit) {
 
-//     let splitLawsuitNo = lawsuit.LawsuitNo.split('/')
+//     let splitLawsuitNo = lawsuit.LawsuitNo ? lawsuit.LawsuitNo.split('/') : ["", ""]
 
 //     this.lawsuitForm = this.fb.group({
 //       IsLawsuit: new FormControl(lawsuit.IsLawsuit == 1 ? false : true),
 //       ReasonDontLawsuit: new FormControl(lawsuit.ReasonDontLawsuit),
-//       IsOutside: new FormControl(lawsuit.IsLawsuit == 1 ? false : true),
-//       LawsuitDate: new FormControl(lawsuit.LawsuitDate || null, Validators.required),
-//       LawsuitTime: new FormControl(lawsuit.LawsuitTime || null, Validators.required),
+//       IsOutside: new FormControl(lawsuit.IsOutside == 1 ? true : false),
+//       LawsuitDate: new FormControl(this.convertDateStringtoObject(lawsuit.LawsuitDate) || null, Validators.required),
+//       LawsuitTime: new FormControl(lawsuit.LawsuitTime ? lawsuit.LawsuitTime : "" || null, Validators.required),
 //       FullName: new FormControl(null, Validators.required),
 //       PositionName: new FormControl(null, Validators.required),
 //       DepartmentName: new FormControl(null, Validators.required),
@@ -1915,7 +1920,9 @@ export class ManageComponent implements OnInit {
 //       LawsuitStationCode: new FormControl(lawsuit.LawsuitStationCode),
 //     });
 //     let staff = await this.setFullname(lawsuit.LawsuitStaff)
-//     this.onSelectFullname(staff[0])
+//     await this.onSelectFullname(staff[0])
+//     this.lawsuitForm.controls['LawsuitDate'].setValue(null);
+//     lawsuit.IsLawsuit == 0 ? null : await this.setAccuserTestimony()
 //   }
 //   async setFullname(staff) {
 //     await staff.map(item => {
@@ -1927,11 +1934,11 @@ export class ManageComponent implements OnInit {
 
 //     let status = this.IndictmentID > 0 && this.LawsuitID > 0;
 //     this.IsLawsuitComplete = lawsuit[0].IsLawsuitComplete
-//     console.log(status)
+
 //     this.showEditField = status ? true : false
 
 //     await this.createLawsuitForm(lawsuit[0].LawsuitArrestIndicment[0].Lawsuit[0])
-//     await this.setAccuserTestimony()
+
 
 //   }
 
@@ -2021,6 +2028,15 @@ export class ManageComponent implements OnInit {
 //       year: new Date().getFullYear(),
 //     }
 //     return { date: now };
+//   }
+
+//   public convertDateStringtoObject(date) {
+//     let now = {
+//       day: new Date(date).getDate(),
+//       month: new Date(date).getMonth() + 1,
+//       year: new Date(date).getFullYear(),
+//     }
+//     return date ? { date: now } : undefined;
 //   }
 
 //   public convertDateFormat(date) {
@@ -2272,7 +2288,9 @@ export class ManageComponent implements OnInit {
 
 //   setValueSave() {
 //     let value = this.lawsuitForm.value
+//     let islaw = value.IsLawsuit ? 0 : 1
 //     let tempLawsuitStaff = []
+
 //     tempLawsuitStaff.push({
 //       "StaffID": value.LawsuitStaff[0].StaffID,
 //       "ProgramCode": "XCS-60",
@@ -2295,32 +2313,35 @@ export class ManageComponent implements OnInit {
 //       "ContributorID": 12,
 //       "IsActive": value.LawsuitStaff[0].IsActive
 //     })
+
 //     return {
 //       "LawsuitID": this.LawsuitID,
 //       "ArrestCode": this.lawsuitArrestForm.value.ArrestCode,
 //       "IndictmentID": this.IndictmentID,
-//       "IsLawsuit": value.IsLawsuit ? 0 : 1,
+//       "IsLawsuit": islaw,
 //       "ReasonDontLawsuit": value.ReasonDontLawsuit ? value.ReasonDontLawsuit : "",
-//       "LawsuitNo": value.lawsuitNo + "/" + value.LawsuitNoSub,
-//       "LawsuitDate": typeof value.LawsuitDate == "string" ? value.LawsuitDate : this.convertDateObjecttoFormat(value.LawsuitDate),
-//       "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
-//       "LawsuitStationCode": this.lawsuitForm.controls['LawsuitStationCode'].value,
-//       "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
-//       "IsOutside": value.IsOutside ? 1 : 0,
-//       "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
+//       "LawsuitNo": islaw == 0 ? "" : value.LawsuitNo + "/" + value.LawsuitNoSub,
+//       "LawsuitDate": islaw == 0 ? "" : typeof value.LawsuitDate == "string" ? value.LawsuitDate : this.convertDateObjecttoFormat(value.LawsuitDate),
+//       "LawsuitTime": islaw == 0 ? "" : this.lawsuitForm.controls['LawsuitTime'].value,
+//       "LawsuitStationCode": islaw == 0 ? "" : this.lawsuitForm.controls['LawsuitStationCode'].value,
+//       "LawsuitStation": islaw == 0 ? "" : this.lawsuitForm.controls['LawsuitStation'].value,
+//       "IsOutside": islaw == 0 ? null : value.IsOutside ? 1 : 0,
+//       "AccuserTestimony": islaw == 0 ? "" : this.lawsuitForm.controls['AccuserTestimony'].value,
 //       "LawsuitResult": '',
 //       "DeliveryDocNo": '',
-//       "DeliveryDate": typeof value.LawsuitDate == "string" ? value.LawsuitDate : this.convertDateObjecttoFormat(value.LawsuitDate),
+//       "DeliveryDate": islaw == 0 ? "" : typeof value.LawsuitDate == "string" ? value.LawsuitDate : this.convertDateObjecttoFormat(value.LawsuitDate),
 //       "IsActive": 1,
-//       "LawsuitType": Number(this.LawsuitTableList.value[0].LawsuitType),
-//       "LawsuitEnd": Number(this.LawsuitTableList.value[0].LawsuitEnd),
-//       "LawsuitStaff": tempLawsuitStaff
+//       "LawsuitType": islaw == 0 ? null : Number(this.LawsuitTableList.value[0].LawsuitType),
+//       "LawsuitEnd": islaw == 0 ? null : Number(this.LawsuitTableList.value[0].LawsuitEnd),
+//       "LawsuitStaff": islaw == 0 ? [] : tempLawsuitStaff
 //     }
 //   }
 
 //   async saveEdit() {
 
 //     let result = this.setValueSave()
+//     console.log(result)
+
 //     // let service = await this.lawsuitService.LawsuitinsAll(result)
 //     let service = await this.lawsuitService.LawsuitformupdByCon(result)
 //     if (service.IsSuccess) {
