@@ -47,9 +47,6 @@ export class MasterService {
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
-    } catch (error) {
-      //await alert(error);
-    }
+    } catch (error) { }
   }
-  
 }

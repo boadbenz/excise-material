@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { EvidenceService } from '../evidenceIn.service';
 import { IncomeService } from '../../income/income.service';
-import { ProveService } from '../../prove/prove.service'
+import { ProveService } from '../../prove/prove.service';
+import { MasterService } from '../../model/master.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -47,7 +48,7 @@ const routes: Routes = [
         PaginationTableModule,
     ],
     declarations: [ManageComponent,IsActivePipe],
-    providers: [EvidenceService, IncomeService, ProveService],
+    providers: [EvidenceService, IncomeService, ProveService, MasterService],
     exports: [MatAutocompleteModule]
 })
 export class ManageModule { }
