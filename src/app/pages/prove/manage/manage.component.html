@@ -367,13 +367,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- *ngIf="lsPD.IsAction!='D'" -->
-                                <!-- | callback: filterProductDel let i=index;-->
                                 <tr *ngFor="let lsPD of lsProveProduct; let i=index;">
                                     <td style="text-align: center">{{i+1}}</td>
                                     <td>{{lsPD.ProductDesc}}</td>
-                                    <!-- <td style="text-align: center">{{lsPD.ReferenceVatRate != '' ?'/':''}}</td>
-                                    <td style="text-align: center">{{lsPD.ReferenceVatQty != '' ?'/':''}}</td> -->
                                     <td style="text-align: center">{{lsPD.IsProdScience == '1' ?'/':''}} </td>
                                     <td style="text-align: right;">{{lsPD.VatProve }}</td>
                                     <td>
@@ -384,10 +380,6 @@
                                             data-target="#SciencePopup">
                                             <i class="ti-pencil-alt btn-action"></i>
                                         </a>
-                                        <!-- &nbsp;
-                                        <a class="text-warning" (click)="onDeleteProduct(lsPD.ProductSeq)" [hidden]="showEditField">
-                                            <i class="fa fa-trash-o fa-lg"></i>
-                                        </a> -->
                                     </td>
                                 </tr>
                             </tbody>
