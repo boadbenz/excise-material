@@ -509,7 +509,10 @@ export class SuspectComponent implements OnInit, OnDestroy {
     }
 
     getNationality(){
-        this.mainMasterService.MasNationalityMaingetAll().then(res=>this.nationnalitys=res);
+        this.mainMasterService.MasNationalityMaingetAll().then(res=>{
+            this.nationnalitys=res;
+            console.log(this.nationnalitys);
+        });
     }
     searchNationality = (text3$: Observable<string>) =>
         text3$
