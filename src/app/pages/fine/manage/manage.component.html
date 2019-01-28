@@ -380,11 +380,11 @@
               <span *ngIf="item.cancheck && item.checkBox1 && item.checkBox2">ประกันและหลักประกัน</span>
             </td>
             <td class=" text-center">
-              <!-- <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
-                 data-target="#testimonyPopup">
+              <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
+                 data-target="#testimonyPopup" [hidden]="!showEditField">
                 <i class="mdi mdi-eye fa-lg"></i>
-              </a> -->
-              <a *ngIf="item.cancheck" (click)="editAccused(item, i, 1)" class="text-warning" [hidden]="showEditField"
+              </a>
+              <a (click)="editAccused(item, i, 1)" class="text-warning" [hidden]="showEditField"
                  data-toggle="modal"
                  data-target="#testimonyPopup">
                 <i class="ti-pencil-alt btn-action"></i>
@@ -778,7 +778,7 @@
             </div> -->
           </div>
           <div class="text-right">
-            <button type="submit" class="btn waves-effect waves-light btn-navy">บันทึก</button>
+            <button type="submit" class="btn waves-effect waves-light btn-navy" [hidden]="showEditField">บันทึก</button>
             <button type="button" class="btn waves-effect waves-light btn-navy" [disabled]="showEditField"
                     data-toggle="modal" data-target="#testimonyPopup" id="btnAccuse"
                     (click)="saveAccused()" hidden>บันทึก

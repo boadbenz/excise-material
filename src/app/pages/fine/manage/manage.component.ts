@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.38');
+    this.sidebarService.setVersion('0.0.0.39');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -321,7 +321,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.approveReportList[i].detailFact = cmpD[i].Fact;
         this.approveReportList[i].other = cmpD[i].CompareReason;
         let j = 0;
-        console.log( this.approveReportList[i]);
+        // console.log( this.approveReportList[i]);
         i++;
       }
       i = 0;
@@ -342,28 +342,28 @@ export class ManageComponent implements OnInit, OnDestroy {
             const code: any = st.ProcessCode.split('.');
             j = code[0];
             if ((+st.ProcessCode) == parseFloat(j + '.1')) {
-              console.log((+st.ProcessCode) , parseFloat(j + '.1'));
+              // console.log((+st.ProcessCode) , parseFloat(j + '.1'));
               this.approveReportList[j].staff = name;
               this.approveReportList[j].position1 = st.PositionName;
               this.approveReportList[j].department1 = st.OfficeShortName;
               this.approveReportList[j].staff1 = this.jsonCopy(st);
             } else if ((+st.ProcessCode) === parseFloat(j + '.2')) {
-              console.log((+st.ProcessCode) , parseFloat(j + '.2'));
+              // console.log((+st.ProcessCode) , parseFloat(j + '.2'));
               this.approveReportList[j].reviewer = name;
               this.approveReportList[j].rank = st.PositionName;
               this.approveReportList[j].department2 = st.OfficeShortName;
               this.approveReportList[j].staff2 = this.jsonCopy(st);
             } else if ((+st.ProcessCode) === parseFloat(j + '.3')) {
-              console.log((+st.ProcessCode) , parseFloat(j + '.3'));
+              // console.log((+st.ProcessCode) , parseFloat(j + '.3'));
               this.approveReportList[j].approver = name;
               this.approveReportList[j].rank2 = st.PositionName;
               this.approveReportList[j].department3 = st.OfficeShortName;
               this.approveReportList[j].staff3 = this.jsonCopy(st);
             }
           } else if (st.ProcessCode && st.ProcessCode.split('.').length == 1) {
-            console.log('staff 19 ', st.ProcessCode, j);
+            // console.log('staff 19 ', st.ProcessCode, j);
             const ind: any = parseInt(st.ProcessCode != null ? st.ProcessCode : 0);
-            console.log(ind);
+            // console.log(ind);
             if (typeof ind == 'number') {
               try {
                 console.log((+st.ProcessCode) == parseFloat(j));
@@ -1092,10 +1092,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (localStorage.getItem('officeShortName')) {
               receiptData.OperationDeptName = localStorage.getItem('officeShortName');
             }
+            
             this.receipt.list.push(receiptData);
             // รายงานการขออนุมัติ
             const approve: any = {};
             approve.LawBrakerName = CompareDetail.LawbreakerName;
+            approve.ApproveStation = receiptData.officeShortName;
+            approve.ApproveType = 1;
+            if (localStorage.getItem('officeCode')) {
+              receiptData.officeCode = localStorage.getItem('officeCode');
+            }
             this.approveReportList.push(approve);
             const userData: any = {};
             userData.LawbrakerName =  CompareDetail.LawbreakerName;
