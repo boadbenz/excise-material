@@ -1644,7 +1644,7 @@ export class ManageComponent implements OnInit {
 
 //   public LawsuitDateOptions: IMyDpOptions = {
 //     dateFormat: 'dd mmm yyyy',
-//     showClearDateBtn: false,
+//     showClearDateBtn: true,
 //     height: '30px',
 //     alignSelectorRight: true,
 //     openSelectorOnInputClick: true,
@@ -1904,7 +1904,7 @@ export class ManageComponent implements OnInit {
 //       IsLawsuit: new FormControl(lawsuit.IsLawsuit == 1 ? false : true),
 //       ReasonDontLawsuit: new FormControl(lawsuit.ReasonDontLawsuit),
 //       IsOutside: new FormControl(lawsuit.IsOutside == 1 ? true : false),
-//       LawsuitDate: new FormControl(this.convertDateStringtoObject(lawsuit.LawsuitDate) || null, Validators.required),
+//       LawsuitDate: new FormControl(await this.convertDateStringtoObject(lawsuit.LawsuitDate), Validators.required),
 //       LawsuitTime: new FormControl(lawsuit.LawsuitTime ? lawsuit.LawsuitTime : "" || null, Validators.required),
 //       FullName: new FormControl(null, Validators.required),
 //       PositionName: new FormControl(null, Validators.required),
@@ -1919,9 +1919,10 @@ export class ManageComponent implements OnInit {
 //       officeCode: new FormControl(lawsuit.officeCode),
 //       LawsuitStationCode: new FormControl(lawsuit.LawsuitStationCode),
 //     });
-//     let staff = await this.setFullname(lawsuit.LawsuitStaff)
-//     await this.onSelectFullname(staff[0])
-//     this.lawsuitForm.controls['LawsuitDate'].setValue(null);
+
+//     // this.lawsuitForm.controls['LawsuitDate'].setValue("");
+//     let staff = lawsuit.IsLawsuit == 0 ? null : await this.setFullname(lawsuit.LawsuitStaff)
+//     lawsuit.IsLawsuit == 0 ? null : await this.onSelectFullname(staff[0])
 //     lawsuit.IsLawsuit == 0 ? null : await this.setAccuserTestimony()
 //   }
 //   async setFullname(staff) {
@@ -2036,7 +2037,7 @@ export class ManageComponent implements OnInit {
 //       month: new Date(date).getMonth() + 1,
 //       year: new Date(date).getFullYear(),
 //     }
-//     return date ? { date: now } : undefined;
+//     return { date: now };
 //   }
 
 //   public convertDateFormat(date) {
