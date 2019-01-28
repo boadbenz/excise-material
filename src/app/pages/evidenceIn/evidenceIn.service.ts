@@ -118,4 +118,15 @@ export class EvidenceService {
       return [];
     }
   }
+
+  async MasProductMaingetAll(): Promise<any> {
+    const params = {};
+    const url = `${appConfig.api8777}/MasProductMaingetAll`;
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
 }

@@ -67,6 +67,7 @@ export class EvidenceInItem {
     public DeliveryQtyUnit?: string;
     public DeliverySize?: string;
     public DeliverySizeUnit?: string;
+    public DeliveryNetVolumn?: string;
     public DeliveryNetVolumnUnit?: string;
     public DamageQty?: string;
     public DamageQtyUnit?: string;
@@ -75,11 +76,17 @@ export class EvidenceInItem {
     public DamageNetVolumn?: string;
     public DamageNetVolumnUnit?: string;
     public IsActive?: string;
+    public Remark?: string;
+    public ReceiveQty?: string;
+    public ReceiveNetVolumn?: string;
+    public IsNewItem?: boolean;
+    public IsDelItem?: boolean;
     public EvidenceStockBalance?: EvidenceStockBalance[];
 }
 
 export class EvidenceStockBalance{
     public StockID?: string;
+    public EvidenceInItemID?: string;
     public WarehouseID?: string;
     public ReceiveQty?: string;
     public ReceiveQtyUnit?: string;
@@ -93,8 +100,8 @@ export class EvidenceStockBalance{
     public BalanceSizeUnit?: string;
     public BalanceNetVolumn?: string;
     public BalanceNetVolumnUnit?: string;
-    public IsFinish?: number;
-    public IsReceive?: number;
+    public IsFinish?: string;
+    public IsReceive?: string;
 }
 
 export class Document {

@@ -421,7 +421,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate(['/fine/manage/C/0/' + this.IndictmentID]);
+                this.router.navigate(['/fine/manage/C/0/' + this.IndictmentID + '/' + this.ArrestCode]);
             }
         })
     }
@@ -1158,12 +1158,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                         item.DeliverTo = `${item.DeliverTo == null ? '' : item.DeliverTo}`;
                     });
 
-                    if(this.oProve.ProveDeliverProduct[0].IsReceive == "1"){
+                    if (this.oProve.ProveDeliverProduct[0].IsReceive == "1") {
                         this.IsReceive = true;
-                    }else{
+                    } else {
                         this.IsReceive = false;
                     }
-                    
+
                     this.ShowReceiveField = false;
 
                     var DelvNo = this.oProve.ProveDeliverProduct[0].DeliverNo.split('/');
