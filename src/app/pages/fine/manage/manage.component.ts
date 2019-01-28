@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.39');
+    this.sidebarService.setVersion('0.0.0.40');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -1057,7 +1057,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             break;
           } else {
             CompareDetail.LawbreakerName = LawBreaker ? `${LawBreaker.LawbreakerTitleName ? LawBreaker.LawbreakerTitleName : ''}${LawBreaker.LawbreakerFirstName} ${LawBreaker.LawbreakerMiddleName ? LawBreaker.LawbreakerMiddleName : ''} ${LawBreaker.LawbreakerLastName}` : '';
-            const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerRefID);
+            const Mistreat: any = await this.CompareCountMistreatgetByCon(LawBreaker.LawbreakerRefID, resp[0].SubSectionID);
             CompareDetail.Mistreat = Mistreat.Mistreat ? Mistreat.Mistreat : 0;
             this.ListCompareDetail.push(CompareDetail);
             // ชื่อผู้ต้องหาคำให้การ
@@ -1393,10 +1393,11 @@ export class ManageComponent implements OnInit, OnDestroy {
   async setAccusedData(resp: any) {
     // this.accused.list = [];
   }
-  async CompareCountMistreatgetByCon(LawbreakerRefID) {
+  async CompareCountMistreatgetByCon(LawbreakerRefID, SubSectionID) {
     try {
       const data: any = {
-        LawbreakerRefID: LawbreakerRefID
+        LawbreakerRefID: LawbreakerRefID,
+        SubSectionID: SubSectionID
       };
       return await this.fineService.postMethod('CompareCountMistreatgetByCon', data);
     } catch (err) {
