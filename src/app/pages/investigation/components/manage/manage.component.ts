@@ -17,6 +17,7 @@ import * as fromStore from '../../store';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import swal from 'sweetalert2'
+import { sortFormArray } from 'app/pages/arrests/arrest.helper';
 
 
 @Component({
@@ -237,10 +238,16 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private async pageRefreshInvestigate(x: fromModels.InvestigateModel) {
-        x.DateStart = setZeroHours(setDateMyDatepicker(x.DateStart));
-        x.DateEnd = setZeroHours(setDateMyDatepicker(x.DateEnd));
 
-        let investDetail = x.InvestigateDetail.filter(x => x.InvestigateDetailID);
+        x.DateStart = (setDateMyDatepicker(x.DateStart));
+        x.DateEnd = (setDateMyDatepicker(x.DateEnd));
+
+        let investDetail = x.InvestigateDetail
+            .filter(x => x.InvestigateDetailID)
+            .sort((a, b) => {
+                return parseInt(a.InvestigateSeq) - parseInt(b.InvestigateSeq);
+            });
+        x.InvestigateDetail = investDetail;
         if (!investDetail) return;
         await investDetail.map(id => {
             let staff: fromModels.InvestigateDetailStaff[] = id.InvestigateDetailStaff
@@ -259,8 +266,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
             id.InvestigateDetailStaff = staff;
         })
-        investDetail.sort((a, b) => { if (a.InvestigateSeq < b.InvestigateSeq) return -1; })
-        this.setItemFormArray(investDetail, 'InvestigateDetail')
+
+        this.setItemFormArray(investDetail, 'InvestigateDetail');
         this.investigateForm.patchValue(x);
         this.investigateNo0.nativeElement.value = x.InvestigateNo && x.InvestigateNo.split('/')[0];
         this.investigateNo1.nativeElement.value = x.InvestigateNo && x.InvestigateNo.split('/')[1];
@@ -324,10 +331,10 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onCreateInvestDetail() {
         let invest = this.investigateForm.value as fromModels.InvestigateModel;
-        const dateStart = getDateMyDatepicker(invest.DateStart);
-        const dateEnd = getDateMyDatepicker(invest.DateEnd);
-        invest.DateStart = (dateStart);
-        invest.DateEnd = (dateEnd);
+        // const dateStart = getDateMyDatepicker(invest.DateStart);
+        // const dateEnd = getDateMyDatepicker(invest.DateEnd);
+        // invest.DateStart = setZeroHours(dateStart);
+        // invest.DateEnd = setZeroHours(dateEnd);
 
         invest.DateStart = getDateMyDatepicker(invest.DateStart);
         invest.DateEnd = getDateMyDatepicker(invest.DateEnd);

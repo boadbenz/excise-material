@@ -186,7 +186,11 @@
                             <td>{{item.get('SuspectTypeName').value}}</td>
                             <td>{{item.get('EntityTypeName').value}}</td>
                             <td>{{item.get('ReferenceID').value}}</td>
-                            <td>{{item.get('FullName').value}}</td>
+                            <td>
+                                {{item.get('SuspectTitleName').value}}
+                                {{item.get('SuspectFirstName').value}}
+                                {{item.get('SuspectLastName').value}}
+                            </td>
                             <td colspan="2" class="text-center">
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteSuspect(i)">
                                     <i class="fa fa-trash-o fa-lg"></i>
@@ -374,7 +378,8 @@
                 <div class="col-lg-10 col-sm-8">
                     <div class="form-group ">
                         <textarea formControlName="InvestigateDetail" cols="30" rows="5" class="form-control form-control-sm"
-                            [readOnly]="showEditField" required></textarea>
+                            [readOnly]="showEditField" required 
+                            [ngClass]="{'is-invalid': investigateFG.get('InvestigateDetail').invalid && isRequired}"></textarea>
                     </div>
                 </div>
             </div>

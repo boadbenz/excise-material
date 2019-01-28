@@ -31,6 +31,7 @@ export function setZero(num: number) {
 }
 
 export function toLocalShort(date: string): string {
+    if (!date) return null;
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const dd = new Date(date);
     return dd.toLocaleString('th-TH', options);
