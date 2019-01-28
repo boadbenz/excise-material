@@ -2290,7 +2290,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.ListProveDoc[aIndex].IsDelItem = true;
                     }
                     else {
-                        this.ListProveDoc.splice(i, 1);
+                        this.ListProveDoc.splice(aIndex, 1);
                     }
                 }
             }

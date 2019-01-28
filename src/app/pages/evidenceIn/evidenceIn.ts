@@ -44,6 +44,7 @@ export class EvidenceInStaff {
 export class EvidenceInItem {
     public EvidenceInItemID?: string;
     public EvidenceInItemCode?: string;
+    public ProductSeq?: number;
     public EvidenceInID?: string;
     public GroupCode?: string;
     public IsDomestic?: string;
