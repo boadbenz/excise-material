@@ -10,7 +10,7 @@ import * as fromService from '../../services';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { Message } from 'app/config/message';
-import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker, toLocalShort } from 'app/config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker, toLocalShort, setZeroHours } from 'app/config/dateFormat';
 import { IMyDateModel } from 'mydatepicker-th';
 import { Subject } from 'rxjs/Subject';
 import * as fromStore from '../../store';
@@ -206,8 +206,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        f.DateStart = getDateMyDatepicker(f.DateStart);
-        f.DateEnd = getDateMyDatepicker(f.DateEnd);
+        f.DateStart = setZeroHours(getDateMyDatepicker(f.DateStart));
+        f.DateEnd = setZeroHours(getDateMyDatepicker(f.DateEnd));
 
         switch (this.mode) {
             case 'R':
@@ -237,8 +237,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private async pageRefreshInvestigate(x: fromModels.InvestigateModel) {
-        x.DateStart = setDateMyDatepicker(x.DateStart);
-        x.DateEnd = setDateMyDatepicker(x.DateEnd);
+        x.DateStart = setZeroHours(setDateMyDatepicker(x.DateStart));
+        x.DateEnd = setZeroHours(setDateMyDatepicker(x.DateEnd));
 
         let investDetail = x.InvestigateDetail.filter(x => x.InvestigateDetailID);
         if (!investDetail) return;

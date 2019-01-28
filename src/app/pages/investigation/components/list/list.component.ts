@@ -9,7 +9,7 @@ import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import * as fromServices from '../../services';
 import * as fromModels from '../../models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
-import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave, MyDatePickerOptions } from 'app/config/dateFormat';
+import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave, MyDatePickerOptions, setZeroHours } from 'app/config/dateFormat';
 import { Subject } from 'rxjs/Subject';
 import swal from 'sweetalert2';
 
@@ -100,8 +100,8 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         }
 
-        form.DateStart = sdate || '';
-        form.DateEnd = edate || '';
+        form.DateStart = setZeroHours(sdate) || '';
+        form.DateEnd = setZeroHours(edate) || '';
 
         console.log(JSON.stringify(form));
         
@@ -130,6 +130,7 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.investigate = rows;
+        this.invesList =  this.investigate.slice(0, 5);
         // set total record
         this.paginage.TotalItems = this.investigate.length;
     }
