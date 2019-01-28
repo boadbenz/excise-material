@@ -147,7 +147,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.34');
+        this.sidebarService.setVersion('0.0.2.35');
 
         this.navigate_service();
 
@@ -718,13 +718,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             l.IsActive = 1;
             noticeLocale.push(l);
         }
+        
+        console.log(noticeForm.NoticeProduct);
         for(let l of noticeForm.NoticeProduct){
             l.NoticeCode = this.noticeCode;
             l.IsActive = 1;
             l.NetVolume = l.NetVolume?l.NetVolume:0;
-            if(!l.ProductCode){
+            if(!l.ProductCode || !l.DutyCode){
                 this.isRequired = true;
                 this.showSwal(Message.checkData, "warning");
+                this.preloader.setShowPreloader(false);
                 return false;
             }
             noticeProduct.push(l);
@@ -788,9 +791,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         let noticeForm = this.noticeForm.value;
         for(let l of noticeForm.NoticeProduct){
-            if(!l.ProductCode){
+            if(!l.ProductCode||!l.DutyCode){
                 this.isRequired = true;
                 this.showSwal(Message.checkData, "warning");
+                this.preloader.setShowPreloader(false);
                 return false;
             }
         }
@@ -1244,7 +1248,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     selectItemUnit(ele: any, index: number) {
         this.NoticeProduct.at(index).patchValue({
-            QtyUnit: ele.item.DutyUnitCode
+            QtyUnit: ele.item.DutyUnitCode,
+            DutyCode: ele.item.DutyCode
         });
     }
     blurSelectItemProductItem(index: number) {
@@ -1303,12 +1308,24 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     blurDataUnit(ele:any, index:number){
+        let text = ele.value;
         if(!ele.value){
             this.NoticeProduct.at(index).patchValue({
                 QtyUnit: "",
                 DutyCode: ""
             });
             ele.value = "";
+        }else{
+            let units = this.typeheadProductUnit
+                    .filter(v => (v.DutyCode.toLowerCase().indexOf(text.toLowerCase()) > - 1)
+                    ).slice(0, 10);
+            if(units.length<0||units.length>0){
+                this.NoticeProduct.at(index).patchValue({
+                    QtyUnit: "",
+                    DutyCode: ""
+                });
+                ele.value = "";
+            }
         }
 
     }
@@ -1324,12 +1341,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 DutyCode: units[0].DutyCode
             });
             ele.value = units[0].DutyCode;
-        }else{
-            this.NoticeProduct.at(index).patchValue({
-                QtyUnit: "",
-                DutyCode: ""
-            });
-            // ele.value = "";
         }
     }
 
