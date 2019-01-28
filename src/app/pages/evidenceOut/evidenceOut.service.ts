@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Revenue, RevenueDetail } from './evidenceOut';
+import { EvidenceOut } from './evidenceOut';
 import { appConfig } from '../../app.config';
 import { Observable } from "rxjs/Observable";
 
@@ -21,6 +21,6 @@ export class EvidenceOutService {
   getByKeyword(Textsearch: string) {
     const params = Textsearch;
     const url = `${appConfig.api8775}/EvidenceOutgetByKeyword`;
-    return this.http.post<Evidence_In[]>(url, params, this.httpOptions);
+    return this.http.post<EvidenceOut[]>(url, params, this.httpOptions);
   }
 }
