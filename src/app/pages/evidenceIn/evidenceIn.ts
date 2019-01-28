@@ -22,6 +22,7 @@ export class Evidence_In {
 
 export class EvidenceInStaff {
     public EvidenceInStaffID?: string;
+    public ProveID?: string;
     public EvidenceInID?: string;
     public StaffCode?: string;
     public TitleName?: string;
@@ -49,14 +50,14 @@ export class EvidenceInItem {
     public GroupCode?: string;
     public IsDomestic?: string;
     public ProductCode?: string;
-    public BrandCode ?: number;
+    public BrandCode ?: string;
     public BrandNameTH?: string;
     public BrandNameEN?: string;
     public SubBrandCode?: string;
     public SubBrandNameTH?: string;
     public SubBrandNameEN?: string;
     public ModelCode?: string;
-    public ModelName?: number;
+    public ModelName?: string;
     public FixNo1?: string;
     public DegreeCode?: string;
     public Degree?: string;
