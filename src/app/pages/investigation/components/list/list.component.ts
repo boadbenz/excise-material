@@ -19,7 +19,7 @@ import swal from 'sweetalert2';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-    private staffCode = localStorage.getItem('staffCode');
+    staffCode = localStorage.getItem('staffCode');
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -104,7 +104,7 @@ export class ListComponent implements OnInit, OnDestroy {
         form.DateEnd = setZeroHours(edate) || '';
 
         console.log(JSON.stringify(form));
-        
+
         this.s_invest.InvestigateListgetByConAdv(form)
             .takeUntil(this.destroy$)
             .subscribe(list => {
@@ -130,7 +130,7 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.investigate = rows;
-        this.invesList =  this.investigate.slice(0, 5);
+        this.invesList = this.investigate.slice(0, 5);
         // set total record
         this.paginage.TotalItems = this.investigate.length;
     }

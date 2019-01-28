@@ -155,7 +155,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         this.loadMasterData();
                         break;
                     case 'R':
-                        this.enableBtnModeR();
                         this.resetConfig();
                         this.onPageLoad();
                         break;
@@ -313,6 +312,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onPageLoad() {
         this.loaderService.show();
+        this.enableBtnModeR();
+        
         let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
             
@@ -709,7 +710,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     formatterOffice = (x: { OfficeName: string }) => x.OfficeName;
 
-    formatterUnit = (DutyCode: string) => DutyCode;
+    formatterUnit = (x: {DutyCode: string}) => x.DutyCode;
 
     selectItemLocaleRegion(e, i) {
         this.InvestigateDetailLocal.at(i).patchValue({

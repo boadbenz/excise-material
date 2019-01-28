@@ -114,14 +114,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.activeRoute.params.takeUntil(this.destroy$).subscribe(p => {
             this.mode = p['mode'];
             this.investCode = p['code'];
-            switch (this.mode) {
-                case 'C':
-                    this.enableBtnModeC();
-                    break;
-                case 'R':
-                    this.enableBtnModeR();
-                    break;
-            }
             this.pageLoad();
         });
     }
@@ -221,12 +213,14 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     private pageLoad() {
         switch (this.mode) {
             case 'C':
+                this.enableBtnModeC();
                 if (this.stateInvest) {
                     this.pageRefreshInvestigate(this.stateInvest);
                 }
                 break;
 
             case 'R':
+                this.enableBtnModeR();
                 this.s_invest.InvestigategetByCon(this.investCode)
                     .takeUntil(this.destroy$)
                     .subscribe((x: fromModels.InvestigateModel) => {
@@ -458,13 +452,22 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.s_invest.InvestigateupdAll(invest)
             .takeUntil(this.destroy$)
             .subscribe(x => {
-                if (!this.checkIsSuccess(x)) {
+                if (this.checkIsSuccess(x)) {
+                    swal({
+                        title: '',
+                        text: Message.saveComplete,
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                    }).then(async (result) => {
+                        if (result.value) {
+                            this.pageLoad();
+                        }
+                    });
+                } else {
                     swal('', Message.saveFail, 'error');
-                    return;
                 }
-                swal('', Message.saveComplete, 'success');
-
-                this.router.navigate(['/suppression/investigation/manage', this.mode, this.investCode])
             }, (error) => this.catchError(error));
     }
 

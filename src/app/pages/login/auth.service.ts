@@ -55,8 +55,8 @@ export class AuthService {
 
   eofficeInfo(params): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeadersSSO() });
-    const url = `http://uat.eoffice.excise.go.th:7003/EOfficeWS/HrstPersonInformation `
-    return this.HttpService.post(url, params, options)
+    const url = `http://uat.eoffice.excise.go.th:7003/EOfficeWS/HrstPersonInformation`
+    return this.http.post(url, params, options)
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
