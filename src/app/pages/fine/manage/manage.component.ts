@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.40');
+    this.sidebarService.setVersion('0.0.0.41');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -1396,7 +1396,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   async CompareCountMistreatgetByCon(LawbreakerRefID, SubSectionID) {
     try {
       const data: any = {
-        LawbreakerRefID: LawbreakerRefID,
+        LawbreakerID: LawbreakerRefID,
         SubSectionID: SubSectionID
       };
       return await this.fineService.postMethod('CompareCountMistreatgetByCon', data);
