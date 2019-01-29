@@ -7,6 +7,8 @@ import { ProveService } from '../prove.service';
 import { ArrestService } from '../../model/arrest.service';
 import { LawsuitService } from '../../model/lawsuit.service';
 import { MasterService } from '../../model/master.service';
+import { Evidence_In, Document, EvidenceInStaff, EvidenceInItem, EvidenceStockBalance } from '../../evidenceIn/evidenceIn';
+import { EvidenceService } from '../../evidenceIn/evidenceIn.service';
 import { Arrest } from '../../model/arrest';
 import { Prove } from '../prove';
 import { MatAutocomplete } from '@angular/material';
@@ -162,6 +164,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     oTempProduct: ProveProduct;
     oProveDeliverProduct: ProveDeliverProduct;
     oProveDocument: ProveDocument;
+    oEvidenceIn: Evidence_In;
+    oEviInStaff: EvidenceInStaff;
+    oEvidenceInItem: EvidenceInItem;
 
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -174,6 +179,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private ArrestSV: ArrestService,
         private LawsuitSV: LawsuitService,
         private MasterSV: MasterService,
+        private EviInSV: EvidenceService,
         private router: Router,
         private preloader: PreloaderService
     ) {
@@ -503,6 +509,86 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsReceive: "1",
                 IsActive: 1,
             }
+
+
+            // **************************************************
+            // -------------- Set Data for Evidence -------------
+            // **************************************************
+            this.oEvidenceIn = {
+                EvidenceInID: "",
+                EvidenceInCode: "",
+                DeliveryNo: this.DeliverNo + "/" + this.DeliverNoYear,
+                DeliveryDate: cDateDeliver,
+                EvidenceInType: "0",
+                IsActive: 1,
+                IsEdit: 1,
+                EvidenceInStaff: []
+            }
+
+            this.oEviInStaff = {
+                EvidenceInStaffID: "",
+                EvidenceInID: "",
+                StaffCode: this.oProveStaffSend.StaffCode,
+                TitleName: this.oProveStaffSend.TitleName,
+                FirstName: this.oProveStaffSend.FirstName,
+                LastName: this.oProveStaffSend.LastName,
+                PositionCode: this.oProveStaffSend.PositionCode,
+                PositionName: this.oProveStaffSend.PositionName,
+                PosLevel: this.oProveStaffSend.PosLevel,
+                PosLevelName: this.oProveStaffSend.PosLevelName,
+                DepartmentCode: this.oProveStaffSend.DepartmentCode,
+                DepartmentName: this.oProveStaffSend.DepartmentName,
+                DepartmentLevel: this.oProveStaffSend.DepartmentLevel,
+                OfficeCode: this.oProveStaffSend.OfficeCode,
+                OfficeName: this.oProveStaffSend.OfficeName,
+                OfficeShortName: this.oProveStaffSend.OfficeShortName,
+                ContributorID: "13",
+                IsActive: "1"
+            }
+
+            this.oEvidenceIn.EvidenceInStaff.push(this.oEviInStaff);
+
+            for(let i = 0; i < this.oProve.ProveProduct.length; i++){
+                this.oEvidenceInItem = {
+                    EvidenceInItemID: "",
+                    EvidenceInItemCode: "",
+                    ProductSeq: i,
+                    EvidenceInID: "",
+                    GroupCode: this.oProve.ProveProduct[i].GroupCode,
+                    IsDomestic: this.oProve.ProveProduct[i].IsDomestic,
+                    ProductCode: this.oProve.ProveProduct[i].ProductCode,
+                    BrandCode: this.oProve.ProveProduct[i].BrandCode,
+                    BrandNameTH: this.oProve.ProveProduct[i].BrandNameTH,
+                    BrandNameEN: this.oProve.ProveProduct[i].BrandNameEN,
+                    SubBrandCode: this.oProve.ProveProduct[i].SubBrandCode,
+                    SubBrandNameTH: this.oProve.ProveProduct[i].SubBrandNameTH,
+                    SubBrandNameEN: this.oProve.ProveProduct[i].SubBrandNameEN,
+                    ModelCode: this.oProve.ProveProduct[i].ModelCode,
+                    ModelName: this.oProve.ProveProduct[i].ModelName,
+                    FixNo1: this.oProve.ProveProduct[i].FixNo1,
+                    FixNo2: this.oProve.ProveProduct[i].FixNo2,
+                    SequenceNo: this.oProve.ProveProduct[i].SequenceNo,
+                    ProductDesc: this.oProve.ProveProduct[i].ProductDesc,
+                    DeliveryQty: "",
+                    DeliveryQtyUnit: "",
+                    DeliverySize: this.oProve.ProveProduct[i].Size,
+                    DeliverySizeUnit: this.oProve.ProveProduct[i].SizeUnitCode,
+                    DeliveryNetVolumn: "",
+                    DeliveryNetVolumnUnit: "",
+                    DamageQty: "",
+                    DamageQtyUnit: "",
+                    DamageSize: this.oProve.ProveProduct[i].Size,
+                    DamageSizeUnit: this.oProve.ProveProduct[i].SizeUnitCode,
+                    DamageNetVolumn: "",
+                    DamageNetVolumnUnit: "",
+                    ReceiveQty: "",
+                    ReceiveNetVolumn: "",
+                    IsActive: "",
+                    EvidenceStockBalance: []
+                }
+
+                this.oEvidenceIn.EvidenceInItem.push(this.oEvidenceInItem);
+            }
         }
     }
 
@@ -522,11 +608,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                     await this.proveService.ProveScienceinsAll(this.oProveScience).then(async sRes => {
                         if (!sRes.IsSuccess) {
                             isSuccess = sRes.IsSuccess;
-                            return false;
                         }
 
                         ProveScienceID = sRes.ProveScienceID;
-                    }, (error) => { console.error(error); return false; });
+                    }, (error) => { isSuccess = false; console.error(error); });
                 }
 
                 if (this.lsProveProduct.length > 0) {
@@ -549,9 +634,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                             if (!pRes.IsSuccess) {
                                 isSuccess = pRes.IsSuccess;
-                                return false;
                             }
-                        }, (error) => { console.error(error); return false; });
+                        }, (error) => { isSuccess = false; console.error(error); });
                     });
                 }
 
@@ -563,9 +647,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     await this.proveService.ProveDeliverProductinsAll(this.oProveDeliverProduct).then(async dRes => {
                         if (!dRes.IsSuccess) {
                             isSuccess = dRes.IsSuccess;
-                            return false;
                         }
-                    }, (error) => { console.error(error); return false; });
+                    }, (error) => { isSuccess = false; console.error(error); });
                 }
 
                 if (this.ListProveDoc.length > 0) {
@@ -575,9 +658,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                         await this.proveService.MasDocumentMaininsAll(item).then(IsSuccess => {
                             if (!IsSuccess) {
                                 isSuccess = IsSuccess;
-                                return false;
                             }
-                        }, (error) => { isSuccess = false; console.error(error); return false; });
+                        }, (error) => { isSuccess = false; console.error(error); });
                     });
                 }
 
@@ -2290,7 +2372,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.ListProveDoc[aIndex].IsDelItem = true;
                     }
                     else {
-                        this.ListProveDoc.splice(i, 1);
+                        this.ListProveDoc.splice(aIndex, 1);
                     }
                 }
             }

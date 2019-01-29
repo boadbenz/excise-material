@@ -379,48 +379,53 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let item of ListEvidenceInItem ; let i=index;">
+                            <tr *ngFor="let item of ListEvidenceInItem | IsActivePipe ; let i=index;">
                                 <td style="text-align:center;">{{i + 1}}</td>
                                 <td>
                                     <input type="text" [(ngModel)]="item.EvidenceInItemCode" name="item.EvidenceInItemCode" class="form-control form-control-sm" style="font-size: 14px" 
-                                        [disabled]="showEditField || evitype != 'G'">
+                                        [disabled]="showEditField || evitype != 'G'" [ngClass]="{'ng-touched':isRequired}" required>
                                 </td>
                                 <td>
                                     <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.ProductDesc" name="item.ProductDesc" placeholder=""
-                                        aria-label="Number" matInput [matAutocomplete]="auto4" (input)="ProductonAutoChange($event.target.value)"
-                                        (focus)="ProductonAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'E'"
+                                        aria-label="Number" [matAutocomplete]="auto4" (input)="ProductonAutoChange($event.target.value, item.ProductSeq)"
+                                        (focus)="ProductonAutoFocus($event.target.value, item.ProductSeq)" [disabled]="showEditField || evitype != 'E'"
                                         [ngClass]="{'ng-touched':isRequired}" required>
                                     <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
-                                        <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.ProductDesc" (click)="ProductonAutoSelecteWord(pOption, i)"
-                                            (onSelectionChange)="ProductonAutoSelecteWord(pOption, i)">
+                                        <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.ProductDesc" (click)="ProductonAutoSelecteWord(pOption, item.ProductSeq)"
+                                            (onSelectionChange)="ProductonAutoSelecteWord(pOption, item.ProductSeq)">
                                             {{ pOption.ProductDesc }}
                                         </mat-option>
                                     </mat-autocomplete>
                                 </td>
                                 <td>
                                     <input type="text" [(ngModel)]="item.DeliveryQty" name="item.DeliveryQty" class="form-control form-control-sm" style="font-size: 14px"
-                                        [disabled]="showEditField || evitype != 'E'" (input)="CalReceive(i)">
+                                        [disabled]="showEditField || evitype != 'E'" (input)="CalReceive(item.ProductSeq)" 
+                                        [ngClass]="{'ng-touched':isRequired}" required>
                                 </td>
                                 <td>
                                     <input type="text" [(ngModel)]="item.DamageQty" name="item.DamageQty" class="form-control form-control-sm" style="font-size: 14px"
-                                        [disabled]="showEditField" (input)="CalReceive(i)">
+                                        [disabled]="showEditField" (input)="CalReceive(item.ProductSeq)"
+                                        [ngClass]="{'ng-touched':isRequired}" required>
                                 </td>
                                 <td>
                                     <input type="text" [(ngModel)]="item.ReceiveQty" name="item.ReceiveQty" class="form-control form-control-sm" style="font-size: 14px"  readonly>
                                 </td>
                                 <td>
-                                    <select [(ngModel)]="item.DeliveryQtyUnit" name="item.DeliveryQtyUnit" class="form-control form-control-sm" style="font-size: 14px"  [disabled]="showEditField || evitype != 'E'">
+                                    <select [(ngModel)]="item.DeliveryQtyUnit" name="item.DeliveryQtyUnit" class="form-control form-control-sm" style="font-size: 14px"  
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
                                 </td>
                                 <td>
                                     <input type="text" [(ngModel)]="item.DeliveryNetVolumn" name="item.DeliveryNetVolumn" class="form-control form-control-sm" style="font-size: 14px" 
-                                        [disabled]="showEditField || evitype != 'E'" (input)="CalReceiveNetVolumn(i)">
+                                        [disabled]="showEditField || evitype != 'E'" (input)="CalReceiveNetVolumn(item.ProductSeq)"
+                                        [ngClass]="{'ng-touched':isRequired}" required>
                                 </td>
                                 <td>
                                     <input type="text" [(ngModel)]="item.DamageNetVolumn" name="item.DamageNetVolumn" class="form-control form-control-sm" style="font-size: 14px" 
-                                        [disabled]="showEditField" (input)="CalReceiveNetVolumn(i)">
+                                        [disabled]="showEditField" (input)="CalReceiveNetVolumn(item.ProductSeq)"
+                                        [ngClass]="{'ng-touched':isRequired}" required>
                                 </td>
                                 <td>
                                     <input type="text" [(ngModel)]="item.ReceiveNetVolumn" name="item.ReceiveNetVolumn" class="form-control form-control-sm" style="font-size: 14px" 
@@ -428,14 +433,14 @@
                                 </td>
                                 <td>
                                     <select [(ngModel)]="item.DeliveryNetVolumnUnit" name="item.DeliveryNetVolumnUnit" class="form-control form-control-sm" style="font-size: 14px" 
-                                        [disabled]="showEditField || evitype != 'E'">
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
                                 </td>
                                 <td>
                                     <a href="javaScript:void(0);" class="text-warning">
-                                        <i class="fa fa-trash-o fa-lg" (click)="DelDocument(lsDoc.DocumentSeq)" [hidden]="showEditField"></i>
+                                        <i class="fa fa-trash-o fa-lg" (click)="DelProduct(item.ProductSeq)" [hidden]="showEditField"></i>
                                     </a>
                                 </td>
                             </tr>

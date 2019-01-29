@@ -78,6 +78,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     Remark: string;         // เหตุผลในการนำส่ง
     EvidenceInType: string; // ประเภทการรับของกลาง
     WarehouseID: string;    // รหัสคลังจัดเก็บ
+    OldWarehouseID: string; // รหัสคลัดจัดเก็บเดิม
 
 
     // -------- ตรวจรัยจากหน่วยงานภายใน -------
@@ -156,26 +157,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.EvidenceInCode = "Auto Generate";
         this.WarehouseID = "1";
-
-        /*this.RevenueStatus = 0;
-        this.RevenueNo = "";
-        this.RevenueStation == "";
-        this.StaffSendName == "";
-        this.StaffName == "";
-        this.InformTo = "";
-        this.StaffID = "";
-        this.StaffSendID = "";
-        
-        this.paginage.TotalItems = this.ListRevenueDetail.length;
-        this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
-*/
     }
 
     ngOnDestroy(): void {
         this.onCancelSubscribe.unsubscribe();
-        // this.onEditSubscribe.unsubscribe();
         this.onSaveSubscribe.unsubscribe();
-        // this.onDeleSubscribe.unsubscribe();
+        this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
     }
 
@@ -254,6 +241,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set action save = false
                 await this.navService.setOnSave(false);
 
+                let listProd = this.ListEvidenceInItem.filter(f => f.EvidenceInItemCode == "" || f.ProductDesc == ""
+                                || f.DeliveryQty == "" || f.DamageQty == "" || f.DeliveryQtyUnit == ""
+                                || f.DeliveryNetVolumn == "" || f.DamageNetVolumn == "" || f.DeliveryNetVolumnUnit == "");
+
                 if (this.DeliveryNo == "" || this.DeliveryNo == undefined
                     || this.DeliveryDate == null || this.DeliveryDate == undefined
                     || this.DeliveryTime == "" || this.DeliveryTime == undefined
@@ -262,7 +253,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     || this.EvidenceInCode == "" || this.EvidenceInCode == undefined
                     || this.EvidenceInDate == null || this.EvidenceInDate == undefined
                     || this.EvidenceInTime == "" || this.EvidenceInTime == undefined
-                    || this.StaffRecvName == "" || this.StaffRecvName == undefined) {
+                    || this.StaffRecvName == "" || this.StaffRecvName == undefined
+                    || listProd.length > 0) {
                     this.isRequired = true;
                     this.ShowAlertWarning(Message.checkData);
 
@@ -272,7 +264,25 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (this.mode === 'C') {
                     await this.onInsEvidenceIn();
                 } else if (this.mode === 'R') {
-                    await this.onUdpEvidenceIn();
+                    if (this.OldWarehouseID == this.WarehouseID) {
+                        await this.onUdpEvidenceIn();
+                    } else {
+                        swal({
+                            title: '',
+                            text: "ยืนยันที่จัดเปลี่ยนคลังจัดเก็บของกลาง ใช่หรือไม่?",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'ยืนยัน',
+                            cancelButtonText: 'ยกเลิก'
+                        }).then((result) => {
+                            if (result.value) {
+                                this.onUdpEvidenceIn();
+                            }
+                        })
+                    }
+
                 }
             }
         });
@@ -467,11 +477,20 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
 
                 // -------------- Product -------------------------
+                let t = 0;
                 this.oEvidenceIn.EvidenceInItem.map(item => {
                     item.ReceiveQty = item.EvidenceStockBalance[0].ReceiveQty;
                     item.ReceiveNetVolumn = item.EvidenceStockBalance[0].ReceiveNetVolumn;
                     item.IsNewItem = false;
                     item.IsDelItem = false;
+                    item.ProductSeq = t;
+
+                    if (item.EvidenceStockBalance.length > 0) {
+                        this.WarehouseID = item.EvidenceStockBalance[0].WarehouseID;
+                        this.OldWarehouseID = item.EvidenceStockBalance[0].WarehouseID;
+                    }
+
+                    t += 1;
                 });
 
                 // -------------- Document -------------------------
@@ -506,7 +525,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     async onInsEvidenceIn() {
         this.preloader.setShowPreloader(true);
         await this.setData();
+        await this.TransactionRunningForIns();
+    }
 
+    async TransactionRunningForIns() {
         await this.RevService.TransactionRunninggetByCon("ops_evidence_in", this.DeptStaffRecvCode).then(async item => {
             if (item.length == 0) {
                 this.RevService.TransactionRunninginsAll(this.DeptStaffRecvCode, "ops_evidence_in", "RC").then(async res => {
@@ -514,7 +536,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + "00001";
                         this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        this.InsEvidenceIn();
+                        if (this.evitype == "E") {
+                            await this.InsEvidenceInExternal();
+                        }
+                        else if (this.evitype == "G") {
+                            await this.InsEvidenceInGovernment();
+                        }
+
                     }
                 }, (error) => { console.error(error); return false; });
             }
@@ -527,7 +555,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + RunningNo;
                         this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        this.InsEvidenceIn();
+                        if (this.evitype == "E") {
+                            await this.InsEvidenceInExternal();
+                        }
+                        else if (this.evitype == "G") {
+                            await this.InsEvidenceInGovernment();
+                        }
                     }
                 }, (error) => { console.error(error); return false; });
             }
@@ -535,7 +568,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }, (error) => { console.error(error); return false; });
     }
 
-    InsEvidenceIn() {
+    InsEvidenceInExternal() {
         var isSuccess = true;
 
         this.EviService.EvidenceIninsAll(this.oEvidenceIn).then(async item => {
@@ -571,25 +604,93 @@ export class ManageComponent implements OnInit, OnDestroy {
         }, (error) => { console.error(error); return false; });
     }
 
+    InsEvidenceInGovernment() {
+
+    }
+
     async onUdpEvidenceIn() {
         this.preloader.setShowPreloader(true);
-        this.setData();
 
 
+        if (this.WarehouseID == this.OldWarehouseID) {
+            await this.setData();
+
+            if (this.evitype == "E") {
+                await this.UpdEvidenceInExternal();
+            } else if (this.evitype == "G") {
+                await this.UpdEvidenceInGovernment()
+            }
+        }
+        else {
+            this.EviService.EvidenceInupdDelete(this.EvidenceInID).then(async IsSuccess => {
+                if (IsSuccess) {
+                    this.ListEvidenceInItem.map(f => {
+                        f.IsNewItem = true;
+                    });
+
+                    await this.setData();
+                    await this.TransactionRunningForIns();
+                } else {
+                    this.ShowAlertError(Message.saveFail);
+                }
+            }, (error) => { console.error(error); return false; });
+        }
+    }
+
+    async UpdEvidenceInExternal() {
         // -----------------------------------------------------------
         //                       Call API Update
         // -----------------------------------------------------------
 
         let isSuccess: boolean = true;
 
+        // -----------------------------------------------------------
+        //                          Product
+        // -----------------------------------------------------------
+        if (this.ListEvidenceInItem.length > 0) {
+            this.ListEvidenceInItem.map(async item => {
+                item.EvidenceInID = this.oEvidenceIn.EvidenceInID;
+            });
+
+            // New Product
+            await this.EviService.EvidenceInIteminsAll(this.ListEvidenceInItem.filter(item => item.IsNewItem === true)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+            // Edit Product
+            await this.EviService.EvidenceInItemupdByCon(this.ListEvidenceInItem.filter(item => item.IsNewItem === false)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+
+            // Del Product    
+            await this.EviService.EvidenceInItemupdDelete(this.ListEvidenceInItem.filter(item => item.IsDelItem === true)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+
+            this.ListEvidenceInItem.map(async item => {
+                item.IsNewItem = false;
+            });
+        }
+
+
+        // -----------------------------------------------------------
+        //                          Evidenct In
+        // -----------------------------------------------------------
+        this.oEvidenceIn.EvidenceInItem = [];
+
         await this.EviService.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
             if (!IsSuccess) {
                 isSuccess = IsSuccess;
-                return false;
             }
-        }, (error) => { isSuccess = false; console.error(error); return false; });
-
-        if (!isSuccess) return false;
+        }, (error) => { isSuccess = false; console.error(error); });
 
         // -----------------------------------------------------------
         //                   Document
@@ -604,9 +705,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     await this.proveService.MasDocumentMaininsAll(item).then(pRes => {
                         if (!pRes.IsSuccess) {
                             isSuccess = pRes.IsSuccess;
-                            return false;
                         }
-                    }, (error) => { console.error(error); return false; });
+                    }, (error) => { console.error(error); });
                 });
 
 
@@ -617,9 +717,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     await this.proveService.MasDocumentMainupdByCon(item).then(pRes => {
                         if (!pRes.IsSuccess) {
                             isSuccess = pRes.IsSuccess;
-                            return false;
                         }
-                    }, (error) => { console.error(error); return false; });
+                    }, (error) => { console.error(error); });
                 });
 
             // Del Document    
@@ -629,9 +728,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     await this.proveService.MasDocumentMainupdDelete(item.DocumentID).then(pRes => {
                         if (!pRes.IsSuccess) {
                             isSuccess = pRes.IsSuccess;
-                            return false;
                         }
-                    }, (error) => { console.error(error); return false; });
+                    }, (error) => { console.error(error); });
                 });
         }
 
@@ -643,6 +741,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ShowAlertError(Message.saveFail);
             this.preloader.setShowPreloader(false);
         }
+    }
+
+    async UpdEvidenceInGovernment() {
+
     }
 
     onDelete() {
@@ -731,8 +833,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async generateItemCode() {
-        for (let i = 0; i < this.ListEvidenceInItem.length; i++){
-            if(this.ListEvidenceInItem[i].IsNewItem == true){
+        for (let i = 0; i < this.ListEvidenceInItem.length; i++) {
+            if (this.ListEvidenceInItem[i].IsNewItem == true) {
                 await this.RevService.TransactionRunningItemgetByCon("IN", this.ListEvidenceInItem[i].GroupCode, this.WarehouseID).then(async item => {
                     let date = new Date();
 
@@ -1071,7 +1173,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.ListDoc[aIndex].IsDelItem = true;
                     }
                     else {
-                        this.ListDoc.splice(i, 1);
+                        this.ListDoc.splice(aIndex, 1);
                     }
                 }
             }
@@ -1085,6 +1187,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     AddProduct() {
         this.oEvidenceInItem = {
             EvidenceInItemCode: "Auto Generate",
+            ProductSeq: this.ListEvidenceInItem.length,
+            EvidenceInID: "",
             ProductDesc: "",
             DeliveryQty: "",
             DeliveryQtyUnit: "",
@@ -1110,9 +1214,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    ProductonAutoChange(value: string) {
+    ProductonAutoChange(value: string, i: number) {
         if (value == '') {
             this.Productoptions = [];
+            this.ClearProduct(i);
         } else {
             if (this.rawProductOptions.length == 0) {
                 this.getMasProduct();
@@ -1122,19 +1227,28 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    ProductonAutoFocus(value: string) {
+    ProductonAutoFocus(value: string, i: number) {
         if (value == '') {
             this.Productoptions = [];
+            this.ClearProduct(i)
         }
     }
 
     ProductonAutoSelecteWord(event, i) {
-        let IsNewItem = this.ListEvidenceInItem[i].IsNewItem;
-        let IsDelItem = this.ListEvidenceInItem[i].IsDelItem;
+        var aIndex;
+        aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
 
-        this.ListEvidenceInItem[i] = {
-            EvidenceInItemCode: "Auto Generate",
-            EvidenceInID: "",
+        let IsNewItem = this.ListEvidenceInItem[aIndex].IsNewItem;
+        let IsDelItem = this.ListEvidenceInItem[aIndex].IsDelItem;
+        let ItemCode = this.ListEvidenceInItem[aIndex].EvidenceInItemCode;
+        let EviInID = this.ListEvidenceInItem[aIndex].EvidenceInID;
+        let ItemID = this.ListEvidenceInItem[aIndex].EvidenceInItemID;
+
+        this.ListEvidenceInItem[aIndex] = {
+            EvidenceInItemID: ItemID,
+            EvidenceInItemCode: ItemCode,
+            ProductSeq: aIndex,
+            EvidenceInID: EviInID,
             GroupCode: event.GroupCode,
             IsDomestic: event.IsDomestic,
             ProductCode: event.ProductCode,
@@ -1171,32 +1285,115 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    CalReceive(i: number) {
-        this.ListEvidenceInItem[i].ReceiveQty = +`${this.ListEvidenceInItem[i].DeliveryQty == "" ? "0" : this.ListEvidenceInItem[i].DeliveryQty}` - +`${this.ListEvidenceInItem[i].DamageQty == "" ? "0" : this.ListEvidenceInItem[i].DamageQty}`;
+    ClearProduct(i: number){
+        var aIndex;
+        aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
 
-        if (this.ListEvidenceInItem[i].ReceiveQty < 0) {
+        let IsNewItem = this.ListEvidenceInItem[aIndex].IsNewItem;
+        let IsDelItem = this.ListEvidenceInItem[aIndex].IsDelItem;
+        let ItemCode = this.ListEvidenceInItem[aIndex].EvidenceInItemCode;
+        let EviInID = this.ListEvidenceInItem[aIndex].EvidenceInID;
+        let ItemID = this.ListEvidenceInItem[aIndex].EvidenceInItemID;
+
+        this.ListEvidenceInItem[aIndex] = {
+            EvidenceInItemID: ItemID,
+            EvidenceInItemCode: ItemCode,
+            ProductSeq: aIndex,
+            EvidenceInID: EviInID,
+            GroupCode: "",
+            IsDomestic: "",
+            ProductCode: "",
+            BrandCode: "",
+            BrandNameTH: "",
+            BrandNameEN: "",
+            SubBrandCode: "",
+            SubBrandNameTH: "",
+            SubBrandNameEN: "",
+            ModelCode: "",
+            ModelName: "",
+            FixNo1: "",
+            FixNo2: "",
+            SequenceNo: "",
+            ProductDesc: "",
+            DeliveryQty: "",
+            DeliveryQtyUnit: "",
+            DeliverySize: "",
+            DeliverySizeUnit: "",
+            DeliveryNetVolumn: "",
+            DeliveryNetVolumnUnit: "",
+            DamageQty: "",
+            DamageQtyUnit: "",
+            DamageSize: "",
+            DamageSizeUnit: "",
+            DamageNetVolumn: "",
+            DamageNetVolumnUnit: "",
+            ReceiveQty: "",
+            ReceiveNetVolumn: "",
+            IsActive: "",
+            IsNewItem: IsNewItem,
+            IsDelItem: IsDelItem,
+            EvidenceStockBalance: []
+        }
+    }
+
+    CalReceive(i: number) {
+        var aIndex;
+        aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
+
+        this.ListEvidenceInItem[aIndex].ReceiveQty = +`${this.ListEvidenceInItem[aIndex].DeliveryQty == "" ? "0" : this.ListEvidenceInItem[aIndex].DeliveryQty}` - +`${this.ListEvidenceInItem[aIndex].DamageQty == "" ? "0" : this.ListEvidenceInItem[aIndex].DamageQty}`;
+
+        if (this.ListEvidenceInItem[aIndex].ReceiveQty < 0) {
             this.ShowAlertWarning("จำนวนชำรุดต้องไม่มากกว่าจำนวนส่ง !!!");
-            this.ListEvidenceInItem[i].DamageQty = this.ListEvidenceInItem[i].DeliveryQty;
-            this.ListEvidenceInItem[i].ReceiveQty = 0;
+            this.ListEvidenceInItem[aIndex].DamageQty = this.ListEvidenceInItem[aIndex].DeliveryQty;
+            this.ListEvidenceInItem[aIndex].ReceiveQty = 0;
         }
     }
 
     CalReceiveNetVolumn(i: number) {
-        this.ListEvidenceInItem[i].ReceiveNetVolumn = +`${this.ListEvidenceInItem[i].DeliveryNetVolumn == "" ? "0" : this.ListEvidenceInItem[i].DeliveryNetVolumn}` - +`${this.ListEvidenceInItem[i].DamageNetVolumn == "" ? "0" : this.ListEvidenceInItem[i].DamageNetVolumn}`;
+        var aIndex;
+        aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
 
-        if (this.ListEvidenceInItem[i].ReceiveNetVolumn < 0) {
+        this.ListEvidenceInItem[aIndex].ReceiveNetVolumn = +`${this.ListEvidenceInItem[aIndex].DeliveryNetVolumn == "" ? "0" : this.ListEvidenceInItem[aIndex].DeliveryNetVolumn}` - +`${this.ListEvidenceInItem[aIndex].DamageNetVolumn == "" ? "0" : this.ListEvidenceInItem[aIndex].DamageNetVolumn}`;
+
+        if (this.ListEvidenceInItem[aIndex].ReceiveNetVolumn < 0) {
             this.ShowAlertWarning("ปริมาณชำรุดต้องไม่มากกว่าปริมาณส่ง !!!");
-            this.ListEvidenceInItem[i].DamageNetVolumn = this.ListEvidenceInItem[i].DeliveryNetVolumn;
-            this.ListEvidenceInItem[i].ReceiveNetVolumn = 0;
+            this.ListEvidenceInItem[aIndex].DamageNetVolumn = this.ListEvidenceInItem[aIndex].DeliveryNetVolumn;
+            this.ListEvidenceInItem[aIndex].ReceiveNetVolumn = 0;
         }
     }
 
+    DelProduct(i: number) {
+        swal({
+            title: '',
+            text: Message.confirmDeleteProduct,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                var aIndex;
+                aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
+
+                if (aIndex != -1) {
+                    if (this.ListEvidenceInItem[aIndex].IsNewItem == false) {
+                        this.ListEvidenceInItem[aIndex].IsDelItem = true;
+                    }
+                    else {
+                        this.ListEvidenceInItem.splice(aIndex, 1);
+                    }
+                }
+            }
+        })
+    }
 
     // **********************************************
     // ------------ Product by Warehourse -----------
     // **********************************************
 
-    TestSearchWarehourse(){
+    TestSearchWarehourse() {
         this.getEvidenceInOutgetByWarehouseID();
     }
 

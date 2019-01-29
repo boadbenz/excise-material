@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Evidence_In } from './evidenceIn';
+import { Evidence_In, EvidenceInItem } from './evidenceIn';
 import { appConfig } from '../../app.config';
 import { Observable } from "rxjs/Observable";
 
@@ -127,6 +127,42 @@ export class EvidenceService {
       return res;
     } catch (error) {
       await alert(error);
+    }
+  }
+
+  async EvidenceInIteminsAll(oItem: any): Promise<any> {
+    const params = JSON.stringify(oItem);
+    const url = `${appConfig.api8776}/EvidenceInIteminsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async EvidenceInItemupdByCon(oItem: any): Promise<any> {
+    const params = JSON.stringify(oItem);
+    const url = `${appConfig.api8776}/EvidenceInItemupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async EvidenceInItemupdDelete(oItem: any): Promise<any> {
+    const params = JSON.stringify(oItem);
+    const url = `${appConfig.api8776}/EvidenceInItemupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
     }
   }
 }

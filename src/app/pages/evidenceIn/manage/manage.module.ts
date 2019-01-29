@@ -12,9 +12,10 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
-import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { IsActivePipeModule } from '../../../shared/pipe/IsActivePipe.module';
+//import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
 
 const routes: Routes = [
     {
@@ -46,8 +47,9 @@ const routes: Routes = [
         MyDatePickerTHModule,
         MatAutocompleteModule,
         PaginationTableModule,
+        IsActivePipeModule
     ],
-    declarations: [ManageComponent,IsActivePipe],
+    declarations: [ManageComponent],
     providers: [EvidenceService, IncomeService, ProveService, MasterService],
     exports: [MatAutocompleteModule]
 })
