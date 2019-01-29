@@ -520,28 +520,28 @@ export class ManageComponent implements OnInit, OnDestroy {
                         });
                     }
 
-                    var rIndex = 1;
+                    // var rIndex = 1;
 
-                    for (var a = 0; a < this.ListRevenueDetail.length; a++) {
-                        if (a != 0) {
-                            if (this.ListRevenueDetail[a - 1].CompareCode == this.ListRevenueDetail[a].CompareCode) {
-                                //this.ListRevenueDetailPaging[a].CompareCode = "";
-                                this.ListRevenueDetail[a].RevenueIndex = "";
-                            }
-                            else {
-                                rIndex += 1;
-                                this.ListRevenueDetail[a].RevenueIndex = rIndex;
-                            }
-                        }
-                        else {
-                            this.ListRevenueDetail[a].RevenueIndex = 1;
-                        }
-                    }
+                    // for (var a = 0; a < this.ListRevenueDetail.length; a++) {
+                    //     if (a != 0) {
+                    //         if (this.ListRevenueDetail[a - 1].CompareCode == this.ListRevenueDetail[a].CompareCode) {
+                    //             //this.ListRevenueDetailPaging[a].CompareCode = "";
+                    //             this.ListRevenueDetail[a].RevenueIndex = "";
+                    //         }
+                    //         else {
+                    //             rIndex += 1;
+                    //             this.ListRevenueDetail[a].RevenueIndex = rIndex;
+                    //         }
+                    //     }
+                    //     else {
+                    //         this.ListRevenueDetail[a].RevenueIndex = 1;
+                    //     }
+                    // }
 
-                    this.ListRevenueDetail.filter(item => item.RevenueIndex == "").map(async p => {
-                        p.CompareCode = "";
-                        p.LawBreaker = p.LawBreaker.Replace("null", "");
-                    });
+                    // this.ListRevenueDetail.filter(item => item.RevenueIndex == "").map(async p => {
+                    //     p.CompareCode = "";
+                    //     p.LawBreaker = p.LawBreaker.Replace("null", "");
+                    // });
 
                     // set total record
                     this.paginage.TotalItems = this.ListRevenueDetail.length;
@@ -615,30 +615,30 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     }
 
-                    if (this.mode == 'C') {
-                        var rIndex = 1;
+                    // if (this.mode == 'C') {
+                    //     var rIndex = 1;
 
-                        for (var a = 0; a < this.ListRevenueDetail.length; a++) {
-                            if (a != 0) {
-                                if (this.ListRevenueDetail[a - 1].CompareCode == this.ListRevenueDetail[a].CompareCode) {
-                                    //this.ListRevenueDetailPaging[a].CompareCode = "";
-                                    this.ListRevenueDetail[a].RevenueIndex = "";
-                                }
-                                else {
-                                    rIndex += 1;
-                                    this.ListRevenueDetail[a].RevenueIndex = rIndex;
-                                }
-                            }
-                            else {
-                                this.ListRevenueDetail[a].RevenueIndex = 1;
-                            }
-                        }
+                    //     for (var a = 0; a < this.ListRevenueDetail.length; a++) {
+                    //         if (a != 0) {
+                    //             if (this.ListRevenueDetail[a - 1].CompareCode == this.ListRevenueDetail[a].CompareCode) {
+                    //                 //this.ListRevenueDetailPaging[a].CompareCode = "";
+                    //                 this.ListRevenueDetail[a].RevenueIndex = "";
+                    //             }
+                    //             else {
+                    //                 rIndex += 1;
+                    //                 this.ListRevenueDetail[a].RevenueIndex = rIndex;
+                    //             }
+                    //         }
+                    //         else {
+                    //             this.ListRevenueDetail[a].RevenueIndex = 1;
+                    //         }
+                    //     }
 
-                        this.ListRevenueDetail.filter(item => item.RevenueIndex == "").map(async p => {
-                            p.CompareCode = "";
-                            p.LawBreaker = p.LawBreaker.Replace("null", "");
-                        });
-                    }
+                    //     this.ListRevenueDetail.filter(item => item.RevenueIndex == "").map(async p => {
+                    //         p.CompareCode = "";
+                    //         p.LawBreaker = p.LawBreaker.Replace("null", "");
+                    //     });
+                    // }
 
 
                     // set total record

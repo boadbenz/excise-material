@@ -253,7 +253,8 @@
                                                 (change)="checkIfAllChbSelected();" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField">
                                             <label [for]="'ListChK'+i" class="m-0"></label>
                                         </td>
-                                        <th style="text-align: center">{{item.RevenueIndex}}</th>
+                                        <!-- <th style="text-align: center">{{item.RevenueIndex}}</th> -->
+                                        <th style="text-align: center">{{ i + 1 }}</th>
                                         <th>{{ item.CompareCode }}</th>
                                         <th style="text-align: center;">{{ item.ReceiptNo }}</th>
                                         <th>{{ item.LawBreaker }} <br> {{ item.SurnameLawBreaker}}</th>

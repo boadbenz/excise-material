@@ -188,11 +188,11 @@
                     <tr *ngIf="evitype == '11'">
                         <th style="text-align: center;width:5%">ลำดับ</th>
                         <th>เลขที่คืน</th>
-                        <th style="width:15%">วันที่คืน</th>
-                        <th style="width:15%">เลขที่หนังสือนำส่งคืน</th>
-                        <th style="width:15%">วันที่นำส่งคืน</th>
-                        <th style="width:15%">ผู้นำส่งคืน</th>
-                        <th style="width:15%">หน่วยงานนำส่งคืน</th>
+                        <th>วันที่คืน</th>
+                        <th>เลขที่หนังสือนำส่งคืน</th>
+                        <th>วันที่นำส่งคืน</th>
+                        <th>ผู้นำส่งคืน</th>
+                        <th>หน่วยงานนำส่งคืน</th>
                         <th></th>
                     </tr>
 
@@ -248,7 +248,7 @@
                         <th style="text-align: center;width:5%">ลำดับ</th>
                         <th style="width:15%">เลขที่โอนย้าย</th>
                         <th style="width:15%">วันที่โอนย้าย</th>
-                        <th style="width:15%">เลขที่หนังสือนำส่ง</th>
+                        <th style="width:15%">เลขที่หนังสือนำส่งคืน</th>
                         <th style="width:15%">วันที่อนุมัติ</th>
                         <th style="width:15%">ผู้นำโอนย้าย</th>
                         <th>หน่วยงาน</th>
@@ -257,87 +257,16 @@
                 </thead>
 
                 <tbody>
-                    <!-- <tr *ngFor="let item of RevenueList; let i=index;">
+                    <tr *ngFor="let item of EvidenceOutList; let i=index;">
                         <td style="text-align: center;">{{i + 1}}</td>
-                        <td>{{item.RevenueCode}}</td>
-                        <td>{{item.RevenueDate}}</td>
-                        <td>{{item.RevenueOneStaff}}</td>
-                        <td>{{item.RevenueOneStaffDept}}</td>
-                        <td style="text-align: center;">{{item.ResultCount}}</td>
-                        <td class="text-center;">{{item.RevenueStatus}}</td>
+                        <td>{{item.EvidenceOutCode}}</td>
+                        <td>{{item.EvidenceOutDate}}</td>
+                        <td>{{item.EvidenceOutNo}}</td>
+                        <td>{{item.EvidenceOutNoDate}}</td>
+                        <td>{{item.EvidenceStaffName}}</td>
+                        <td>{{item.DeptName}}</td>
                         <td class="text-center;">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueID)">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr> -->
-
-                    <tr>
-                        <td style="text-align: center;">1</td>
-                        <td>RC0001</td>
-                        <td>03 มกราคม 2562</td>
-                        <td>กค. 001/2562</td>
-                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
-                        <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>หน่วยงานภายใน</td>
-                        <td class="text-center;">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView('')">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center;">2</td>
-                        <td>RC0002</td>
-                        <td>03 มกราคม 2562</td>
-                        <td>กค. 001/2562</td>
-                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
-                        <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>หน่วยงานภายใน</td>
-                        <td class="text-center;">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView('')">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center;">3</td>
-                        <td>RC0003</td>
-                        <td>03 มกราคม 2562</td>
-                        <td>กค. 001/2562</td>
-                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
-                        <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>หน่วยงานภายใน</td>
-                        <td class="text-center;">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView('')">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center;">4</td>
-                        <td>RC0004</td>
-                        <td>03 มกราคม 2562</td>
-                        <td>กค. 001/2562</td>
-                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
-                        <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>หน่วยงานภายใน</td>
-                        <td class="text-center;">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView('')">
-                                <i class="mdi mdi-eye fa-lg"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center;">5</td>
-                        <td>RC0005</td>
-                        <td>03 มกราคม 2562</td>
-                        <td>กค. 001/2562</td>
-                        <td *ngIf="evitype != '12'">03 มกราคม 2562</td>
-                        <td>สสท.ระนอง สาขาเมือง</td>
-                        <td>หน่วยงานภายใน</td>
-                        <td class="text-center;">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueID)">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.EvidenceOutID)">
                                 <i class="mdi mdi-eye fa-lg"></i>
                             </a>
                         </td>
@@ -347,10 +276,10 @@
         </div>
 
 
-        <!-- <div class="card-footer card-footer-unset">
+        <div class="card-footer card-footer-unset">
             <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
                 [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
             </app-pagination-table>
-        </div> -->
+        </div>
     </div>
 </div>
