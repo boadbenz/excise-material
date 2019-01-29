@@ -339,7 +339,6 @@ export class ManageComponent implements OnInit {
     IsProve = await this.lawsuitService.LawsuitArrestGetByCon(indictmentID).then(res => {
       return res[0].LawsuitArrestIndicment[0].IsProve;
     });
-
     if (IsProve == 0) {/// IdProve = 0 (goto ILG60-06-02-00-00)
       await this.lawsuitService.LawsuitComparegetByLawsuitID(lawsuitID).then(res => {
         if (res.length == 0) { /// if not found data
@@ -449,7 +448,24 @@ export class ManageComponent implements OnInit {
     })
 
   }
-
+  async setButtonCase() {
+    this.preLoaderService.setShowPreloader(true);
+    await this.ngOnInit();
+    this.showEditField = false;
+    this.navService.setEditField(true);
+    this.navService.setEditButton(true);
+    this.navService.setPrintButton(true);
+    this.navService.setDeleteButton(true);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    if (this.prove == 1) {
+      this.navService.setNextPageButton(true);
+      this.navService.setInnerTextNextPageButton('งานพิสูจน์')
+    } else if (this.prove == 0) {
+      this.navService.setNextPageButton(true);
+      this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
+    }
+  }
   private async onSave() {
     this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
@@ -551,43 +567,16 @@ export class ManageComponent implements OnInit {
             text: "บันทึกสำเร็จ",
             type: 'success',
           })
-
+          this.setButtonCase()
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           if (checkComplete.length != 0) {
             let popup = {
               checkComplete: checkComplete
             }
             this.viewNotComplete(popup)
-            this.showEditField = false;
-            this.navService.setEditField(true);
-            this.navService.setEditButton(true);
-            this.navService.setPrintButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setSaveButton(false);
-            this.navService.setCancelButton(false);
-            if (this.prove == 1) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('งานพิสูจน์')
-            } else if (this.prove == 0) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
-            }
             this.preLoaderService.setShowPreloader(false);
           } else {
-            this.showEditField = false;
-            this.navService.setEditField(true);
-            this.navService.setEditButton(true);
-            this.navService.setPrintButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setSaveButton(false);
-            this.navService.setCancelButton(false);
-            if (this.prove == 1) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('งานพิสูจน์')
-            } else if (this.prove == 0) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
-            }
+
             this.preLoaderService.setShowPreloader(false);
           }
         } else {
@@ -602,42 +591,15 @@ export class ManageComponent implements OnInit {
             text: "บันทึกสำเร็จ",
             type: 'success',
           })
+          this.setButtonCase()
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           if (checkComplete.length != 0) {
             let popup = {
               checkComplete: checkComplete
             }
             this.viewNotComplete(popup)
-            this.showEditField = false;
-            this.navService.setEditField(true);
-            this.navService.setEditButton(true);
-            this.navService.setPrintButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setSaveButton(false);
-            this.navService.setCancelButton(false);
-            if (this.prove == 1) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('งานพิสูจน์')
-            } else if (this.prove == 0) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
-            }
             this.preLoaderService.setShowPreloader(false);
           } else {
-            this.showEditField = false;
-            this.navService.setEditField(true);
-            this.navService.setEditButton(true);
-            this.navService.setPrintButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setSaveButton(false);
-            this.navService.setCancelButton(false);
-            if (this.prove == 1) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('งานพิสูจน์')
-            } else if (this.prove == 0) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
-            }
             this.preLoaderService.setShowPreloader(false);
           }
         } else {
@@ -779,40 +741,14 @@ export class ManageComponent implements OnInit {
                   }
                   this.viewNotComplete(popup)
                   // ให้เด้งป๊อบอัพ
-                  this.showEditField = false;
-                  this.navService.setEditField(true);
-                  this.navService.setEditButton(true);
-                  this.navService.setPrintButton(true);
-                  this.navService.setDeleteButton(true);
-                  this.navService.setSaveButton(false);
-                  this.navService.setCancelButton(false);
-                  if (this.prove == 1) {
-                    this.navService.setNextPageButton(true);
-                    this.navService.setInnerTextNextPageButton('งานพิสูจน์')
-                  } else if (this.prove == 0) {
-                    this.navService.setNextPageButton(true);
-                    this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
-                  }
+                  this.setButtonCase()
                   this.preLoaderService.setShowPreloader(false);
                   this.router.navigate(['/lawsuit/manage', 'R'], {
                     queryParams: { IndictmentID: this.IndictmentID, LawsuitID: result.LawsuitID }
                   });
                 } else {
                   await this.lawsuitService.LawsuitArrestupdByCon(this.lawsuitArrestForm.value.ArrestCode)
-                  this.showEditField = false;
-                  this.navService.setEditField(true);
-                  this.navService.setEditButton(true);
-                  this.navService.setPrintButton(true);
-                  this.navService.setDeleteButton(true);
-                  this.navService.setSaveButton(false);
-                  this.navService.setCancelButton(false);
-                  if (this.prove == 1) {
-                    this.navService.setNextPageButton(true);
-                    this.navService.setInnerTextNextPageButton('งานพิสูจน์')
-                  } else if (this.prove == 0) {
-                    this.navService.setNextPageButton(true);
-                    this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
-                  }
+                  this.setButtonCase()
                   this.preLoaderService.setShowPreloader(false);
                   this.router.navigate(['/lawsuit/manage', 'R'], {
                     queryParams: { IndictmentID: this.IndictmentID, LawsuitID: result.LawsuitID }
@@ -820,7 +756,6 @@ export class ManageComponent implements OnInit {
                 }
 
               } else {
-                console.log("not success")
                 this.preLoaderService.setShowPreloader(false);
               }
             }
@@ -1674,7 +1609,7 @@ export class ManageComponent implements OnInit {
 //   }
 
 //   async ngOnInit() {
-//     this.sidebarService.setVersion('0.0.0.31');
+//     this.sidebarService.setVersion('0.0.0.32');
 //     this.preLoaderService.setShowPreloader(true);
 //     await this.navigate_service();
 //     await this.getParamFromActiveRoute();
