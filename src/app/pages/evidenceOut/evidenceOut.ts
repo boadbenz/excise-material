@@ -18,6 +18,8 @@ export class EvidenceOut {
     public ApproveNo?: string;
     public EvidenceOutCode?: string;
     public IsActive?: string;
+    public DeptName?: string;
+    public EvidenceStaffName?: string;
     public EvidenceOutItem?: EvidenceOutItem[];
     public EvidenceOutStaff?: EvidenceOutStaff[];
 }

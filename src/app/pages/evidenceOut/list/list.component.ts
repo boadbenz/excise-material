@@ -25,6 +25,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
     advSearch: any;
+    evidenceOut = new Array<EvidenceOut>();
+    EvidenceOutList = new Array<EvidenceOut>();
     paginage = pagination;
     DateStartTo: any;
     _dateStartFrom: any;
@@ -72,18 +74,19 @@ export class ListComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.sidebarService.setVersion('evidenceOut 0.0.0.1');
         this.RevenueStatus = "";
+        this.EvidenceOutList = [];
         this.active_Route();
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async TextSearch => {
+            if (TextSearch) {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { Textsearch: "" }
-                ts = Textsearch;
+                ts = { TextSearch: "" }
+                ts = TextSearch;
 
-                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "", EvidenceOutType: this.EvidenceOutType }); }
-                else { this.onSearch(Textsearch); }
+                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "", EvidenceOutType: this.EvidenceOutType }); }
+                else { this.onSearch(TextSearch); }
 
             }
         })
@@ -92,10 +95,10 @@ export class ListComponent implements OnInit, OnDestroy {
             if (status) {
                 await this.navService.setOnNextPage(false);
 
-                if(this.evitype == "11" || this.evitype == '15'){
+                if (this.evitype == "11" || this.evitype == '15') {
                     this.modal = this.ngbModel.open(this.evidenceTypeModel, { size: 'lg', centered: true });
                 }
-                else{
+                else {
                     this._router.navigate(['/evidenceOut/manage', this.evitype, 'C', 'NEW']);
                 }
             }
@@ -123,22 +126,22 @@ export class ListComponent implements OnInit, OnDestroy {
                         case '12':
                             data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
                             data.codePage = "ILG60-12-01-00-00";
-                            this.EvidenceOutType = "2";
+                            this.EvidenceOutType = "4";
                             break;
                         case '13':
                             data.urls[1].title = "ค้นหารายการขายทอดตลาด";
                             data.codePage = "ILG60-13-01-00-00";
-                            this.EvidenceOutType = "3";
+                            this.EvidenceOutType = "2";
                             break;
                         case '14':
                             data.urls[1].title = "ค้นหารายการทำลายของกลาง";
                             data.codePage = "ILG60-14-01-00-00";
-                            this.EvidenceOutType = "4";
+                            this.EvidenceOutType = "1";
                             break;
                         case '15':
                             data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
                             data.codePage = "ILG60-15-01-00-00";
-                            this.EvidenceOutType = "5";
+                            this.EvidenceOutType = "3,5";
                             break;
                         case '16':
                             data.urls[1].title = "ค้นหารายการโอนย้ายของกลาง";
@@ -149,6 +152,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
                 }
             );
+
+            this.EvidenceOutList = [];
         });
     }
 
@@ -160,14 +165,62 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
 
         this.EvidenceService.getByKeyword(Textsearch).subscribe(list => {
-            // this.onSearchComplete(list)
+            this.onSearchComplete(list)
 
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
 
-            // this.ShowAlertNoRecord();
-            // this.EvidenceInList = [];
+            this.ShowAlertNoRecord();
+            this.EvidenceOutList = [];
             this.preloader.setShowPreloader(false);
         });
     }
+
+    ShowAlertNoRecord() {
+        swal({
+            title: '',
+            text: Message.noRecord,
+            type: 'warning',
+            confirmButtonText: 'ตกลง'
+        });
+    }
+
+    async onSearchComplete(list: any) {
+        this.evidenceOut = [];
+
+        if (!list.length) {
+            this.ShowAlertNoRecord();
+            this.EvidenceOutList = [];
+
+            return false;
+        }
+
+        await list.map((item) => {
+            item.EvidenceOutDate = toLocalShort(item.EvidenceOutDate);
+            item.EvidenceOutNoDate = toLocalShort(item.EvidenceOutNoDate);
+
+            // หน่วยงานที่นำส่งคืน
+            item.EvidenceOutStaff.filter(f => f.ContributorID == 43).map(s => {
+                item.EvidenceStaffName = `${s.TitleName == 'null' || s.TitleName == null ? '' : s.TitleName}`
+                + `${s.FirstName == 'null' || s.FirstName == null ? '' : s.FirstName}` + ' '
+                + `${s.LastName == 'null' || s.LastName == null ? '' : s.LastName}`;
+                item.DeptName = s.OfficeName;
+            });
+        })
+
+        if (Array.isArray(list)) {
+            this.evidenceOut = list;
+        } else {
+            this.evidenceOut.push(list);
+        }
+
+        // set total record
+        this.paginage.TotalItems = this.evidenceOut.length;
+        this.EvidenceOutList = this.evidenceOut.slice(0, this.paginage.RowsPerPageOptions[0]);
+    }
+
+    async pageChanges(event) {
+        this.EvidenceOutList = await this.evidenceOut.slice(event.startIndex - 1, event.endIndex);
+    }
+
 }
