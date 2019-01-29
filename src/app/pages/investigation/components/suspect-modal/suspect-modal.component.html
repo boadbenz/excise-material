@@ -1,8 +1,8 @@
 <div class="modal-header bg-theme">
   <div class="row">
     <div class="col-lg-5">
-      <h4 class="modal-title text-white">เพิ่มผู้ต้องหา
-        <a class="btn btn-ghost" [routerLink]="['/investigation/suspect', 'C', 'NEW']" target="_blank">
+      <h4 class="modal-title text-white">เพิ่มผู้ต้องสงสัย
+        <a class="btn btn-ghost" [routerLink]="['/suppression/investigation/suspect', 'C', 'NEW']" target="_blank">
           <i class="ti-plus"></i>
           สร้างข้อมูล
         </a>
@@ -42,7 +42,7 @@
       <div class="card-body">
         <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onSearchAdv(advForm.value)">
           <div class="row">
-            <label for="" class="col-lg-2 col-sm-4">ประเภทผู้ต้องหา :</label>
+            <label for="" class="col-lg-2 col-sm-4">ประเภทผู้ต้องสงสัย :</label>
             <div class="col-lg-4 col-sm-8 form-group">
               <select name="EntityType" ngModel class="form-control form-control-sm">
                 <option value="" selected disabled></option>
@@ -105,8 +105,8 @@
               <tr>
                 <th></th>
                 <th class="text-center">ลำดับ</th>
-                <th>ประเภทผู้ต้องหา</th>
                 <th>ประเภทบุคคล</th>
+                <th>ประเภทผู้ต้องสงสัย</th>
                 <th>เลขประจำตัว</th>
                 <th>ชื่อ</th>
                 <th>จำนวนครั้งการกระทำผิด</th>
@@ -120,20 +120,20 @@
                   <label for="td{{i}}" class="m-0"></label>
                 </td>
                 <td class="text-center">{{item.get('RowId').value}}</td>
-                <td>{{item.get('SuspectTypeName').value}}</td>
                 <td>{{item.get('EntityTypeName').value}}</td>
+                <td>{{item.get('SuspectTypeName').value}}</td>
                 <td>{{item.get('ReferenceID').value}}</td>
                 <td>{{item.get('FullName').value}}</td>
                 <td class="text-center">{{item.get('ResultCount').value}}</td>
                 <td class="text-center">
                   <div *ngIf="item.get('ResultCount').value != null; else elseTempate">
-                    <a class="text-center text-secondary" [routerLink]="['/investigation/lawbreaker', 'R', item.value.SuspectID]"
+                    <a class="text-center text-secondary" [routerLink]="['/suppression/investigation/lawbreaker', 'R', item.value.SuspectID]"
                       target="_blank">
                       <i class="fa fa-eye fa-lg"></i>
                     </a>
                   </div>
                   <ng-template #elseTempate>
-                    <a class="text-center text-secondary" [routerLink]="['/investigation/suspect', 'R', item.value.SuspectID]"
+                    <a class="text-center text-secondary" [routerLink]="['/suppression/investigation/suspect', 'R', item.value.SuspectID]"
                       target="_blank">
                       <i class="fa fa-eye fa-lg"></i>
                     </a>

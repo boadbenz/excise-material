@@ -155,7 +155,6 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         this.loadMasterData();
                         break;
                     case 'R':
-                        this.enableBtnModeR();
                         this.resetConfig();
                         this.onPageLoad();
                         break;
@@ -238,12 +237,12 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private resetConfig() {
         let routerConfig = this.router['config'];
         routerConfig
-            .find(x => x.path == 'investigation')['_loadedConfig'].routes // core investigation path
+            .find(x => x.path == 'suppression/investigation')['_loadedConfig'].routes // core investigation path
             .filter(x => x.path.indexOf('detail-manage') >= 0) // curent path
             .map(x => {
                 x.data.urls
-                    .find(y => y.url.indexOf('/investigation/manage') >= 0)
-                    .url = `/investigation/manage/R/${this.investCode}`; // previous path
+                    .find(y => y.url.indexOf('suppression/investigation/manage') >= 0)
+                    .url = `/suppression/investigation/manage/R/${this.investCode}`; // previous path
                 return x;
             })
         this.router.resetConfig(routerConfig);
@@ -313,6 +312,8 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     async onPageLoad() {
         this.loaderService.show();
+        this.enableBtnModeR();
+        
         let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
             
@@ -709,7 +710,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     formatterOffice = (x: { OfficeName: string }) => x.OfficeName;
 
-    formatterUnit = (DutyCode: string) => DutyCode;
+    formatterUnit = (x: {DutyCode: string}) => x.DutyCode;
 
     selectItemLocaleRegion(e, i) {
         this.InvestigateDetailLocal.at(i).patchValue({
@@ -1069,12 +1070,16 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private async insertInvestigate(investCode: string) {
         let invest = this.stateInvest;
         invest.InvestigateCode = investCode;
+        invest.DateStart = setZeroHours(invest.DateStart);
+        invest.DateEnd = setZeroHours(invest.DateEnd);
+
         await this.s_invest.InvestigateinsAll(invest).then(async x => {
             if (!this.checkIsSuccess(x)) return;
             this.investCode = investCode;
+            await this.insertInvestigateDetail(investCode);
+
             this.investMode = 'R';
             this.resetConfig();
-            await this.insertInvestigateDetail(investCode);
 
         }, () => { this.saveFail(); return; })
             .catch((error) => this.catchError(error));
