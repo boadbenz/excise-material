@@ -23,4 +23,16 @@ export class EvidenceOutService {
     const url = `${appConfig.api8775}/EvidenceOutgetByKeyword`;
     return this.http.post<EvidenceOut[]>(url, params, this.httpOptions);
   }
+
+  async getByConAdv(form: any): Promise<any> {
+    const params = JSON.stringify(form);
+    const url = `${appConfig.api8775}/EvidenceOutgetByConAdv`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
+    } catch (error) {
+      return [];
+    }
+  }
 }
