@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ArrestService } from '../../model/arrest.service';
 import { LawsuitService } from '../../model/lawsuit.service';
 import { MasterService }  from '../../model/master.service';
+import { IncomeService } from '../../income/income.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { IsActivePipeModule } from '../../../shared/pipe/IsActivePipe.module';
@@ -49,7 +50,8 @@ const routes: Routes = [
         ArrestService,
         LawsuitService,
         MasterService,
-        EvidenceService
+        EvidenceService,
+        IncomeService
     ],
     declarations: [ManageComponent],
     exports: [MatAutocompleteModule]
