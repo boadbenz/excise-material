@@ -35,15 +35,43 @@ export class ManageComponent implements OnInit, OnDestroy {
     mode: string;
     modal: any;
     evitype: any;
-
-
-
-
-
     showEditField: any;
-    selectAllChb: any;
     paginage = pagination;
 
+
+    EvidenceOutNo: string;      // เลขที่หนังสือขอคืน / เลขที่หนังสือแจ้งคืน / เลขที่หนังสือ / เลขที่หนังสืออนุมัติ / เลขที่หนังสือนำส่ง
+    EvidenceOutNoDate: any;     // ลงวันที่
+    EvidenceOutNoTime: string;  // เวลาลง
+    ReturnDate: any;            // วันที่กำหนดคืนของกลาง กรณียืมของกลางออกจากคลัง
+    StaffRequestName: string;   // ชื่อผู้ขอรับคืน / ชื่อผู้เสนออนุมัติ / ชื่อผู้ขอนำออก / ชื่อผู้ขอโอนย้าย
+    PosRequest: string;         // ตำแหน่งผู้ขอรับคืน / ตำแหน่งผู้เสนอออนุมัติ / ตำแหน่งผู้ขอนำออก / ตำแหน่งผู้ขอโอนย้าย
+    DeptRequest: string;        // หน่วยงานผู้ขอรับคืน / หน่วยงานผู้เสนอออนุมัติ / หน่วยงานผู้ขอนำออก / หน่วยงานผู้ขอโอนย้าย
+    StaffApproveName: string;   // ชื่อผู้อนุมัติ   / ชื่อผู้พิจารณาเห็นชอบ
+    PosApprove: string;         // ตำแหน่งผู้อนุมัติ / ตำแหน่งผู้พิจารณา
+    DeptApprove: string;        // หน่วยงานผู้อนุมัติ / หน่วยงานผู้พิจารณา
+    BookNo: string;             // ใบเสร็จรับเงินภาษีเล่มที่ กรณีคืนของกลางเท่านั้น
+    ReceiptNo: string;          // ใบเสร็จรับเงินภาษีเลขที่ กรณีคืนของกลางเท่านั้น
+    PayDate: any;               // วันที่ชำระภาษี กรณีคืนของกลางเท่านั้น
+    PayTime: string;            // เวลาที่ชำระภาษี กรณีคืนของกลางเท่านั้น
+    ApproveDate: any;           // วันที่อนุมัติ / วันที่พิจารณา
+    ApproveTime: string;        // เวลาอนุมัติ / เวลาพิจารณา
+    ArrestCode: string;         // เลขที่ใบงาน
+    Lawsuit: string;            // เลขที่คดี, หน่วยงาน
+    Remark: string;             // เหตุผลในการนำออก
+    WarehouseID: string;        // รหัสคลังปลายทาง กรณีโอนย้ายของกลาง
+    WarehouseName: string;      // ชื่อคลังปลายทาง กรณีโอนย้ายของกลาง
+    ApproveNo: string;          // เลขที่หนังสืออนุมัติ กรณีโอนย้ายของกลาง
+    EvidenceOutCode: string;    // เลขที่จำหน่ายของกลาง / เลขที่คืน / เลขที่นำออก
+    EvidenceOutDate: any;       //
+    EvidenceOutTime: string;    //
+
+
+
+
+
+
+    
+    selectAllChb: any;
     RevenueID: string;
     RevenueCode: string;    // เลขที่นำส่งเงิน
     RevenueNo: string;  // เลขที่หนังสือนำส่ง

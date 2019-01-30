@@ -388,7 +388,7 @@
                                 <td>
                                     <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.ProductDesc" name="item.ProductDesc" placeholder=""
                                         aria-label="Number" [matAutocomplete]="auto4" (input)="ProductonAutoChange($event.target.value, item.ProductSeq)"
-                                        (focus)="ProductonAutoFocus($event.target.value, item.ProductSeq)" [disabled]="showEditField || evitype != 'E'"
+                                        (focus)="ProductonAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'E'"
                                         [ngClass]="{'ng-touched':isRequired}" required>
                                     <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
                                         <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.ProductDesc" (click)="ProductonAutoSelecteWord(pOption, item.ProductSeq)"

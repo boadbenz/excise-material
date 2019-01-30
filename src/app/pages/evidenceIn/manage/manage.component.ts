@@ -16,6 +16,7 @@ import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMy
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import swal from 'sweetalert2';
 import { pagination } from '../../../config/pagination';
+import { async } from '../../../../../node_modules/@types/q';
 
 
 @Component({
@@ -140,6 +141,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.DeliveryTime = this.getCurrentTime();
         this.EvidenceInTime = this.getCurrentTime();
+        this.EvidenceInCode = "Auto Generate";
+        this.WarehouseID = "1";
 
         if (this.evitype == "I") {
             await this.getProve();
@@ -149,14 +152,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             //await this.getEvidenceInOutgetByWarehouseID();
         }
 
-        if (this.mode === 'R') {
+        if (this.mode == "R") {
             await this.ShowEvidenceIn();
-        } else {
-            this.preloader.setShowPreloader(false);
         }
-
-        this.EvidenceInCode = "Auto Generate";
-        this.WarehouseID = "1";
     }
 
     ngOnDestroy(): void {
@@ -225,7 +223,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private navigate_Service() {
 
-        this.navService.showFieldEdit.subscribe(p => {
+        this.navService.showFieldEdit.subscribe(async p => {
             this.showEditField = p;
         });
 
@@ -242,13 +240,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSave(false);
 
                 let listProd = this.ListEvidenceInItem.filter(f => f.EvidenceInItemCode == "" || f.ProductDesc == ""
-                                || f.DeliveryQty == "" || f.DamageQty == "" || f.DeliveryQtyUnit == ""
-                                || f.DeliveryNetVolumn == "" || f.DamageNetVolumn == "" || f.DeliveryNetVolumnUnit == "");
+                     || f.DeliveryQty.toString() == "" || f.DamageQty.toString() == "" || f.DeliveryQtyUnit == ""
+                     || f.DeliveryNetVolumn.toString() == "" || f.DamageNetVolumn.toString() == "" || f.DeliveryNetVolumnUnit == ""
+                );
 
                 if (this.DeliveryNo == "" || this.DeliveryNo == undefined
                     || this.DeliveryDate == null || this.DeliveryDate == undefined
-                    || this.DeliveryTime == "" || this.DeliveryTime == undefined
-                    || this.ReturnDate == null || this.ReturnDate == undefined
+                    || (this.evitype == "E" && (this.DeliveryTime == "" || this.DeliveryTime == undefined))
+                    || (this.evitype == "E" && (this.ReturnDate == null || this.ReturnDate == undefined))
                     || this.StaffSendName == "" || this.StaffSendName == undefined
                     || this.EvidenceInCode == "" || this.EvidenceInCode == undefined
                     || this.EvidenceInDate == null || this.EvidenceInDate == undefined
@@ -432,6 +431,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ReceiverPositionName = res[0].ReceiverPositionName;
                 this.ReceiverOfficeShortName = res[0].ReceiverOfficeShortName;
             }
+            this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             this.ShowAlertError("พบปัญหาในการติดต่อ Server");
         });
@@ -447,6 +447,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.DeliveryNo = res.DeliveryNo
                 this.DeliveryDate = setDateMyDatepicker(new Date(res.DeliveryDate));
                 if (res.ReturnDate == null || res.ReturnDate == '') { this.ReturnDate = ""; } else { this.ReturnDate = setDateMyDatepicker(new Date(res.ReturnDate)) }
+                
                 this.DeliveryTime = res.DeliveryTime;
                 this.Remark = res.Remark;
 
@@ -461,9 +462,21 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.oEviInSendStaff = sTemp[0];
                 }
 
-                this.EvidenceInCode = res.EvidenceInCode;
-                this.EvidenceInDate = setDateMyDatepicker(new Date(res.EvidenceInDate));
-                this.EvidenceInTime = res.EvidenceInTime;
+                if (res.EvidenceInCode) {
+                    this.EvidenceInCode = res.EvidenceInCode;
+                } else {
+                    this.EvidenceInCode = "Auto Generate";
+                }
+
+                if (res.EvidenceInDate) {
+                    this.EvidenceInDate = setDateMyDatepicker(new Date(res.EvidenceInDate));
+                    this.EvidenceInTime = res.EvidenceInTime;
+                } else {
+                    this.EvidenceInDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+                    this.EvidenceInTime = this.getCurrentTime();
+                }
+
+                
 
                 sTemp = res.EvidenceInStaff.filter(f => f.ContributorID == "42");
                 if (sTemp.length > 0) {
@@ -592,8 +605,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (isSuccess) {
                     this.ShowAlertSuccess(Message.saveComplete);
                     this.onComplete();
-
-                    this.oEvidenceIn = {};
+                    this.WarehouseID = "1";
+                    await this.ShowEvidenceIn();
 
                     this.preloader.setShowPreloader(false);
                     this.router.navigate([`/evidenceIn/manage/${this.evitype}/R/${this.EvidenceInID}/${this.ProveID}`]);
@@ -615,7 +628,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (this.WarehouseID == this.OldWarehouseID) {
             await this.setData();
 
-            if (this.evitype == "E") {
+            if (this.evitype == "E" || this.evitype == "I") {
+                if (this.EvidenceInCode == "Auto Generate") {
+                    await this.TransactionRunningForIns();
+                }
                 await this.UpdEvidenceInExternal();
             } else if (this.evitype == "G") {
                 await this.UpdEvidenceInGovernment()
@@ -774,6 +790,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async setData() {
         this.oEvidenceIn = {
+            ProveID: this.ProveID,
             EvidenceInID: this.EvidenceInID,
             EvidenceInCode: this.EvidenceInCode,
             EvidenceInDate: this.ConvertDateYYYYmmdd(this.EvidenceInDate.date),
@@ -793,10 +810,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ListEvidenceInItem.map(async item => {
             item.DamageQtyUnit = item.DeliveryQtyUnit;
             item.DamageNetVolumnUnit = item.DeliveryNetVolumnUnit;
+            
 
             this.oStockBalance = {
+                StockID: item.EvidenceStockBalance[0].StockID,
                 WarehouseID: this.WarehouseID,
-                EvidenceInItemID: "",
+                EvidenceInItemID: item.EvidenceInItemID,
                 ReceiveQty: item.ReceiveQty,
                 ReceiveQtyUnit: item.DeliveryQtyUnit,
                 ReceiveSize: item.DeliverySize,
@@ -813,6 +832,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsReceive: "1"
             }
 
+            item.EvidenceStockBalance = [];
             item.EvidenceStockBalance.push(this.oStockBalance);
         });
 
@@ -835,11 +855,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     async generateItemCode() {
         for (let i = 0; i < this.ListEvidenceInItem.length; i++) {
             if (this.ListEvidenceInItem[i].IsNewItem == true) {
-                await this.RevService.TransactionRunningItemgetByCon("IN", this.ListEvidenceInItem[i].GroupCode, this.WarehouseID).then(async item => {
+                await this.EviService.TransactionRunningItemgetByCon("IN", this.ListEvidenceInItem[i].GroupCode, this.WarehouseID).then(async item => {
                     let date = new Date();
 
                     if (item.length == 0) {
-                        await this.RevService.TransactionRunningIteminsAll((date.getFullYear() + 543).toString().substring(2), date.getMonth(), "IN", this.ListEvidenceInItem[i].GroupCode,
+                        await this.EviService.TransactionRunningIteminsAll((date.getFullYear() + 543).toString().substring(2), date.getMonth(), "IN", this.ListEvidenceInItem[i].GroupCode,
                             this.WarehouseID, "00001").then(res => {
                                 if (res.IsSuccess) {
                                     this.ListEvidenceInItem[i].EvidenceInItemCode = "IN" + ("000".substring(0, 3 - this.WarehouseID.length) + this.WarehouseID)
@@ -848,7 +868,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                             }, (error) => { console.error(error); return false; });
                     }
                     else {
-                        await this.RevService.TransactionRunningItemupdByCon(item[0].RunningID).then(async res => {
+                        await this.EviService.TransactionRunningItemupdByCon(item[0].RunningID).then(async res => {
                             if (res.IsSuccess) {
                                 var pad = "00000"
                                 var RunningNo = pad.substring(0, pad.length - item[0].RunningNo.toString().length) + (+item[0].RunningNo + 1);
@@ -1209,6 +1229,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (res) {
                 this.rawProductOptions = res;
             }
+
+            this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
             this.ShowAlertError("พบปัญหาในการติดต่อ Server");
         });
@@ -1227,10 +1249,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    ProductonAutoFocus(value: string, i: number) {
+    ProductonAutoFocus(value: string) {
         if (value == '') {
             this.Productoptions = [];
-            this.ClearProduct(i)
         }
     }
 
@@ -1285,7 +1306,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    ClearProduct(i: number){
+    ClearProduct(i: number) {
         var aIndex;
         aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
 
@@ -1398,7 +1419,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async getEvidenceInOutgetByWarehouseID() {
-        await this.RevService.getEvidenceInOutgetByWarehouseID(this.WarehouseID).then(async res => {
+        await this.EviService.getEvidenceInOutgetByWarehouseID(this.WarehouseID).then(async res => {
             if (res) {
                 this.rawProdbyWarehourseOptions = res;
             }

@@ -71,7 +71,7 @@ export class EvidenceService {
   }
 
   async getProveProductUnit(Textsearch: string): Promise<any> {
-    const params = {  };
+    const params = {};
     const url = `${appConfig.api8777}/MasDutyUnitMaingetAll`;
 
     try {
@@ -164,5 +164,67 @@ export class EvidenceService {
     } catch (error) {
       return [];
     }
+  }
+
+
+  async TransactionRunningItemgetByCon(RunningPrefix, RunningGroupCode, RunningWarehouseID): Promise<any> {
+    let pValue = {
+      "RunningPrefix": RunningPrefix,
+      "RunningGroupCode": RunningGroupCode,
+      "RunningWarehouseID": RunningWarehouseID
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.api8776}/TransactionRunningItemgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async TransactionRunningIteminsAll(RunningYear, RunningMonth, RunningPrefix, RunningGroupCode, RunningWarehouseID, RunningNo): Promise<any> {
+    let pValue = {
+      "RunningYear": RunningYear,
+      "RunningMonth": RunningMonth,
+      "RunningPrefix": RunningPrefix,
+      "RunningGroupCode": RunningGroupCode,
+      "RunningWarehouseID": RunningWarehouseID,
+      "RunningNo": RunningNo
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.api8776}/TransactionRunningIteminsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async TransactionRunningItemupdByCon(RunningID): Promise<any> {
+    const params = { RunningID };
+    const url = `${appConfig.api8776}/TransactionRunningItemupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async getEvidenceInOutgetByWarehouseID(WarehouseID: string): Promise<any> {
+    const params = { WarehouseID };
+    const url = `${appConfig.api8776}/EvidenceInOutgetByWarehouseID`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) { }
   }
 }

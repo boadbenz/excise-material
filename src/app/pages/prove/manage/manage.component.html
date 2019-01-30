@@ -603,7 +603,7 @@
                                             [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}"
                                             required> -->
                                         <input type="text" class="form-control" [(ngModel)]="oProveProduct.ProductDesc" name="oProveProduct.ProductDesc" placeholder=""
-                                            aria-label="Number" matInput [matAutocomplete]="auto7" (input)="onAutoProductChange($event.target.value)"
+                                            aria-label="text" matInput [matAutocomplete]="auto7" (input)="onAutoProductChange($event.target.value)"
                                             (focus)="onAutoProductFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                                             required (keydown.Tab)="chooseFirstProduct()">
                                         <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
@@ -638,7 +638,7 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <!-- (input)="CalVatProve()" -->
-                                        <input type="number" [(ngModel)]="oProveProduct.NetVolume" name="oProveProduct.NetVolume" class="form-control"
+                                        <input type="text" [(ngModel)]="oProveProduct.NetVolume" name="oProveProduct.NetVolume" class="form-control"
                                             [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required>
                                     </div>
                                 </div>
@@ -779,7 +779,7 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label">จำนวน :</label>
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
-                                        <input type="number" [(ngModel)]="oProveProduct.QtyBalance" name="oProveProduct.QtyBalance" class="form-control"
+                                        <input type="text" [(ngModel)]="oProveProduct.QtyBalance" name="oProveProduct.QtyBalance" class="form-control"
                                             [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="varidateQtyBalance()">
                                     </div>
                                 </div>
@@ -797,7 +797,7 @@
                                 <label for="" class="col-lg-2 col-md-4 control-label">ปริมาณสุทธิ :</label>
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
-                                        <input type="number" [(ngModel)]="oProveProduct.NetVolumeBalance" name="oProveProduct.NetVolumeBalance" class="form-control"
+                                        <input type="text" [(ngModel)]="oProveProduct.NetVolumeBalance" name="oProveProduct.NetVolumeBalance" class="form-control"
                                             [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="varidateNetVolumeBalance()">
                                     </div>
                                 </div>

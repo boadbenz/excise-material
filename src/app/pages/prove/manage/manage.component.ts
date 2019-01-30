@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ProveService } from '../prove.service';
 import { ArrestService } from '../../model/arrest.service';
 import { LawsuitService } from '../../model/lawsuit.service';
+import { IncomeService } from '../../income/income.service';
 import { MasterService } from '../../model/master.service';
 import { Evidence_In, Document, EvidenceInStaff, EvidenceInItem, EvidenceStockBalance } from '../../evidenceIn/evidenceIn';
 import { EvidenceService } from '../../evidenceIn/evidenceIn.service';
@@ -21,6 +22,7 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import swal from 'sweetalert2'
+import { async } from '../../../../../node_modules/@types/q';
 
 declare var $: any;
 
@@ -153,6 +155,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     ProductID: string;
 
 
+    // **************************************
+    // ----- Popup -----
+    // **************************************
+    WarehouseID: string;
+    EvidenceInID: string;
+
     // --- Object ---
     oArrest: Arrest;
     oProve: Prove;
@@ -167,6 +175,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     oEvidenceIn: Evidence_In;
     oEviInStaff: EvidenceInStaff;
     oEvidenceInItem: EvidenceInItem;
+    oEvidenceStockBalance: EvidenceStockBalance;
 
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -180,6 +189,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private LawsuitSV: LawsuitService,
         private MasterSV: MasterService,
         private EviInSV: EvidenceService,
+        private RevService: IncomeService,
         private router: Router,
         private preloader: PreloaderService
     ) {
@@ -226,6 +236,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         //this.DeliveryTime = await this.getCurrentTime();
         //this.ProveScienceTime = await this.getCurrentTime();
 
+        this.WarehouseID = "1";
+
         await this.ProveArrestgetByCon();
         // this.preloader.setShowPreloader(false);
     }
@@ -268,7 +280,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sub = this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p;
             //this.ShowDeliveryField = p;
-
             this.checkNextPage();
         });
 
@@ -514,83 +525,123 @@ export class ManageComponent implements OnInit, OnDestroy {
             // **************************************************
             // -------------- Set Data for Evidence -------------
             // **************************************************
-            this.oEvidenceIn = {
-                EvidenceInID: "",
-                EvidenceInCode: "",
-                DeliveryNo: this.DeliverNo + "/" + this.DeliverNoYear,
-                DeliveryDate: cDateDeliver,
-                EvidenceInType: "0",
-                IsActive: 1,
-                IsEdit: 1,
-                EvidenceInStaff: []
-            }
-
-            this.oEviInStaff = {
-                EvidenceInStaffID: "",
-                EvidenceInID: "",
-                StaffCode: this.oProveStaffSend.StaffCode,
-                TitleName: this.oProveStaffSend.TitleName,
-                FirstName: this.oProveStaffSend.FirstName,
-                LastName: this.oProveStaffSend.LastName,
-                PositionCode: this.oProveStaffSend.PositionCode,
-                PositionName: this.oProveStaffSend.PositionName,
-                PosLevel: this.oProveStaffSend.PosLevel,
-                PosLevelName: this.oProveStaffSend.PosLevelName,
-                DepartmentCode: this.oProveStaffSend.DepartmentCode,
-                DepartmentName: this.oProveStaffSend.DepartmentName,
-                DepartmentLevel: this.oProveStaffSend.DepartmentLevel,
-                OfficeCode: this.oProveStaffSend.OfficeCode,
-                OfficeName: this.oProveStaffSend.OfficeName,
-                OfficeShortName: this.oProveStaffSend.OfficeShortName,
-                ContributorID: "13",
-                IsActive: "1"
-            }
-
-            this.oEvidenceIn.EvidenceInStaff.push(this.oEviInStaff);
-
-            for(let i = 0; i < this.oProve.ProveProduct.length; i++){
-                this.oEvidenceInItem = {
-                    EvidenceInItemID: "",
-                    EvidenceInItemCode: "",
-                    ProductSeq: i,
+            if (this.mode == "C") {
+                this.oEvidenceIn = {
                     EvidenceInID: "",
-                    GroupCode: this.oProve.ProveProduct[i].GroupCode,
-                    IsDomestic: this.oProve.ProveProduct[i].IsDomestic,
-                    ProductCode: this.oProve.ProveProduct[i].ProductCode,
-                    BrandCode: this.oProve.ProveProduct[i].BrandCode,
-                    BrandNameTH: this.oProve.ProveProduct[i].BrandNameTH,
-                    BrandNameEN: this.oProve.ProveProduct[i].BrandNameEN,
-                    SubBrandCode: this.oProve.ProveProduct[i].SubBrandCode,
-                    SubBrandNameTH: this.oProve.ProveProduct[i].SubBrandNameTH,
-                    SubBrandNameEN: this.oProve.ProveProduct[i].SubBrandNameEN,
-                    ModelCode: this.oProve.ProveProduct[i].ModelCode,
-                    ModelName: this.oProve.ProveProduct[i].ModelName,
-                    FixNo1: this.oProve.ProveProduct[i].FixNo1,
-                    FixNo2: this.oProve.ProveProduct[i].FixNo2,
-                    SequenceNo: this.oProve.ProveProduct[i].SequenceNo,
-                    ProductDesc: this.oProve.ProveProduct[i].ProductDesc,
-                    DeliveryQty: "",
-                    DeliveryQtyUnit: "",
-                    DeliverySize: this.oProve.ProveProduct[i].Size,
-                    DeliverySizeUnit: this.oProve.ProveProduct[i].SizeUnitCode,
-                    DeliveryNetVolumn: "",
-                    DeliveryNetVolumnUnit: "",
-                    DamageQty: "",
-                    DamageQtyUnit: "",
-                    DamageSize: this.oProve.ProveProduct[i].Size,
-                    DamageSizeUnit: this.oProve.ProveProduct[i].SizeUnitCode,
-                    DamageNetVolumn: "",
-                    DamageNetVolumnUnit: "",
-                    ReceiveQty: "",
-                    ReceiveNetVolumn: "",
-                    IsActive: "",
-                    EvidenceStockBalance: []
+                    EvidenceInCode: "",
+                    ProveID: "",
+                    DeliveryNo: this.DeliverNo + "/" + this.DeliverNoYear,
+                    DeliveryDate: this.ConvertDateYYYYmmdd(this.DeliverDate.date),
+                    EvidenceInType: "0",
+                    IsActive: 1,
+                    IsEdit: 1,
+                    EvidenceInStaff: [],
+                    EvidenceInItem: []
                 }
 
-                this.oEvidenceIn.EvidenceInItem.push(this.oEvidenceInItem);
+                this.oEviInStaff = {
+                    EvidenceInStaffID: "",
+                    EvidenceInID: "",
+                    StaffCode: this.oProveStaffSend.StaffCode,
+                    TitleName: this.oProveStaffSend.TitleName,
+                    FirstName: this.oProveStaffSend.FirstName,
+                    LastName: this.oProveStaffSend.LastName,
+                    PositionCode: this.oProveStaffSend.PositionCode,
+                    PositionName: this.oProveStaffSend.PositionName,
+                    PosLevel: this.oProveStaffSend.PosLevel,
+                    PosLevelName: this.oProveStaffSend.PosLevelName,
+                    DepartmentCode: this.oProveStaffSend.DepartmentCode,
+                    DepartmentName: this.oProveStaffSend.DepartmentName,
+                    DepartmentLevel: this.oProveStaffSend.DepartmentLevel,
+                    OfficeCode: this.oProveStaffSend.OfficeCode,
+                    OfficeName: this.oProveStaffSend.OfficeName,
+                    OfficeShortName: this.oProveStaffSend.OfficeShortName,
+                    ContributorID: "13",
+                    IsActive: "1"
+                }
+
+                this.oEvidenceIn.EvidenceInStaff.push(this.oEviInStaff);
+
+                for (let i = 0; i < this.lsProveProduct.length; i++) {
+                    this.oEvidenceStockBalance = {
+                        WarehouseID: this.WarehouseID,
+                        EvidenceInItemID: "",
+                        ReceiveQty: this.lsProveProduct[i].QtyBalance,
+                        ReceiveQtyUnit: this.lsProveProduct[i].QtyBalanceUnit,
+                        ReceiveSize: this.lsProveProduct[i].Size,
+                        ReceiveSizeUnit: this.lsProveProduct[i].SizeUnitCode,
+                        ReceiveNetVolumn: this.lsProveProduct[i].NetVolumeBalance,
+                        ReceiveNetVolumnUnit: this.lsProveProduct[i].NetVolumeBalanceUnit,
+                        BalanceQty: this.lsProveProduct[i].QtyBalance,
+                        BalanceQtyUnit: this.lsProveProduct[i].QtyBalanceUnit,
+                        BalanceSize: this.lsProveProduct[i].Size,
+                        BalanceSizeUnit: this.lsProveProduct[i].SizeUnitCode,
+                        BalanceNetVolumn: this.lsProveProduct[i].NetVolumeBalance,
+                        BalanceNetVolumnUnit: this.lsProveProduct[i].NetVolumeBalanceUnit,
+                        IsFinish: "2",
+                        IsReceive: "0"
+                    }
+
+                    this.oEvidenceInItem = {
+                        EvidenceInItemID: "",
+                        EvidenceInItemCode: "",
+                        ProductSeq: i,
+                        EvidenceInID: "",
+                        GroupCode: this.lsProveProduct[i].GroupCode,
+                        IsDomestic: this.lsProveProduct[i].IsDomestic,
+                        ProductCode: this.lsProveProduct[i].ProductCode,
+                        BrandCode: this.lsProveProduct[i].BrandCode,
+                        BrandNameTH: this.lsProveProduct[i].BrandNameTH,
+                        BrandNameEN: this.lsProveProduct[i].BrandNameEN,
+                        SubBrandCode: this.lsProveProduct[i].SubBrandCode,
+                        SubBrandNameTH: this.lsProveProduct[i].SubBrandNameTH,
+                        SubBrandNameEN: this.lsProveProduct[i].SubBrandNameEN,
+                        ModelCode: this.lsProveProduct[i].ModelCode,
+                        ModelName: this.lsProveProduct[i].ModelName,
+                        FixNo1: this.lsProveProduct[i].FixNo1,
+                        FixNo2: this.lsProveProduct[i].FixNo2,
+                        SequenceNo: this.lsProveProduct[i].SequenceNo,
+                        ProductDesc: this.lsProveProduct[i].ProductDesc,
+                        DeliveryQty: this.lsProveProduct[i].QtyBalance,
+                        DeliveryQtyUnit: this.lsProveProduct[i].QtyBalanceUnit,
+                        DeliverySize: this.lsProveProduct[i].Size,
+                        DeliverySizeUnit: this.lsProveProduct[i].SizeUnitCode,
+                        DeliveryNetVolumn: this.lsProveProduct[i].NetVolumeBalance,
+                        DeliveryNetVolumnUnit: this.lsProveProduct[i].NetVolumeBalanceUnit,
+                        DamageQty: "",
+                        DamageQtyUnit: "",
+                        DamageSize: this.lsProveProduct[i].Size,
+                        DamageSizeUnit: this.lsProveProduct[i].SizeUnitCode,
+                        DamageNetVolumn: "",
+                        DamageNetVolumnUnit: "",
+                        IsActive: "",
+                        EvidenceStockBalance: []
+                    }
+
+                    this.oEvidenceInItem.EvidenceStockBalance.push(this.oEvidenceStockBalance);
+                    this.oEvidenceIn.EvidenceInItem.push(this.oEvidenceInItem);
+                }
+            } else {
+                for (let i = 0; i < this.lsProveProduct.length; i++) {
+                    debugger
+                    this.oEvidenceIn.EvidenceInItem[i].DeliveryQty = this.lsProveProduct[i].QtyBalance;
+                    this.oEvidenceIn.EvidenceInItem[i].DeliveryQtyUnit = this.lsProveProduct[i].QtyBalanceUnit;
+                    this.oEvidenceIn.EvidenceInItem[i].DeliveryNetVolumn = this.lsProveProduct[i].NetVolumeBalance;
+                    this.oEvidenceIn.EvidenceInItem[i].DeliveryNetVolumnUnit = this.lsProveProduct[i].NetVolumeBalanceUnit;
+
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].ReceiveQty = this.lsProveProduct[i].QtyBalance;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].ReceiveQtyUnit = this.lsProveProduct[i].QtyBalanceUnit;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].ReceiveNetVolumn = this.lsProveProduct[i].NetVolumeBalance;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].ReceiveNetVolumnUnit = this.lsProveProduct[i].NetVolumeBalanceUnit;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceQty = this.lsProveProduct[i].QtyBalance;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceQtyUnit = this.lsProveProduct[i].QtyBalanceUnit;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceNetVolumn = this.lsProveProduct[i].NetVolumeBalance;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceNetVolumnUnit = this.lsProveProduct[i].NetVolumeBalanceUnit;
+                }
             }
         }
     }
+
 
     async onInsProve() {
         this.preloader.setShowPreloader(true);
@@ -642,11 +693,15 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 if (this.IsReceive) {
                     this.oProveDeliverProduct.ProveID = res.ProveID;
-                    this.oProveDeliverProduct.IsReceive = null;
+                    this.oProveDeliverProduct.IsReceive = "1";
 
                     await this.proveService.ProveDeliverProductinsAll(this.oProveDeliverProduct).then(async dRes => {
                         if (!dRes.IsSuccess) {
                             isSuccess = dRes.IsSuccess;
+                        } else {
+                            this.oEvidenceIn.ProveID = this.ProveID;
+
+                            await this.InsEvidence();
                         }
                     }, (error) => { isSuccess = false; console.error(error); });
                 }
@@ -771,6 +826,18 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             if (this.IsReceive) {
                 this.oProveDeliverProduct.IsActive = 1;
+
+                await this.EviInSV.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
+                    if (!IsSuccess) {
+                        isSuccess = IsSuccess;
+                    } else {
+                        await this.EviInSV.EvidenceInItemupdByCon(this.oEvidenceIn.EvidenceInItem).then(pRes => {
+                            if (!pRes.IsSuccess) {
+                                isSuccess = pRes.IsSuccess;
+                            }
+                        }, (error) => { console.error(error); });
+                    }
+                }, (error) => { isSuccess = false; console.error(error); });
             }
             else {
                 this.oProveDeliverProduct.IsActive = 0;
@@ -779,9 +846,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.proveService.ProveDeliverProductupdByCon(this.oProveDeliverProduct).then(async sRes => {
                 if (!sRes.IsSuccess) {
                     isSuccess = sRes.IsSuccess;
-                    return false;
-                }
-            }, (error) => { console.error(error); return false; });
+                } 
+            }, (error) => { console.error(error); });
         }
         else {
             // คลิกเลือก “ส่งพิสูจน์ทางวิทยาศาสตร์”
@@ -872,6 +938,56 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    async InsEvidence() {
+        if (this.mode == "C") {
+            await this.generateItemCode();
+        }
+
+        await this.InsEvidenceInExternal();
+    }
+
+    async generateItemCode() {
+        for (let i = 0; i < this.oEvidenceIn.EvidenceInItem.length; i++) {
+            await this.EviInSV.TransactionRunningItemgetByCon("IN", this.oEvidenceIn.EvidenceInItem[i].GroupCode, this.WarehouseID).then(async item => {
+                let date = new Date();
+
+                if (item.length == 0) {
+                    await this.EviInSV.TransactionRunningIteminsAll((date.getFullYear() + 543).toString().substring(2), date.getMonth(), "IN", this.oEvidenceIn.EvidenceInItem[i].GroupCode,
+                        this.WarehouseID, "00001").then(res => {
+                            if (res.IsSuccess) {
+                                this.oEvidenceIn.EvidenceInItem[i].EvidenceInItemCode = "IN" + ("000".substring(0, 3 - this.WarehouseID.length) + this.WarehouseID)
+                                    + ("0000".substring(0, 4 - this.oEvidenceIn.EvidenceInItem[i].GroupCode.length) + this.oEvidenceIn.EvidenceInItem[i].GroupCode) + (date.getFullYear() + 543).toString().substring(2) + "00001";
+                            }
+                        }, (error) => { console.error(error); return false; });
+                }
+                else {
+                    await this.EviInSV.TransactionRunningItemupdByCon(item[0].RunningID).then(async res => {
+                        if (res.IsSuccess) {
+                            var pad = "00000"
+                            var RunningNo = pad.substring(0, pad.length - item[0].RunningNo.toString().length) + (+item[0].RunningNo + 1);
+
+                            this.oEvidenceIn.EvidenceInItem[i].EvidenceInItemCode = item[0].RunningPrefix + ("000".substring(0, 3 - item[0].RunningWarehouseID.toString().length) + item[0].RunningWarehouseID)
+                                + ("0000".substring(0, 4 - item[0].RunningGroupCode.toString().length) + item[0].RunningGroupCode) + item[0].RunningYear + RunningNo;
+                        }
+                    }, (error) => { console.error(error); return false; });
+                }
+            }, (error) => { console.error(error); return false; });
+        }
+    }
+
+    async InsEvidenceInExternal() {
+        var isSuccess = true;
+
+        this.EviInSV.EvidenceIninsAll(this.oEvidenceIn).then(async item => {
+            if (item.IsSuccess) {
+                this.oEvidenceIn.EvidenceInID = item.EvidenceInID;
+                this.EvidenceInID = item.EvidenceInID;
+            } else {
+                this.ShowAlertError(Message.saveFail);
+            }
+        }, (error) => { console.error(error); return false; });
+    }
+
     onDelete() {
         swal({
             title: '',
@@ -884,16 +1000,30 @@ export class ManageComponent implements OnInit, OnDestroy {
             cancelButtonText: 'ยกเลิก'
         }).then((result) => {
             if (result.value) {
+                let isSuccess: boolean = true;
+
                 this.proveService.ProveupdDelete(this.ProveID).then(async IsSuccess => {
-                    if (IsSuccess) {
-                        this.ShowAlertSuccess(Message.saveComplete);
-                        //alert(Message.saveComplete);
-                        this.router.navigate(['/prove/list']);
-                    } else {
-                        this.ShowAlertError(Message.saveFail);
-                        //alert(Message.saveFail);
+                    if(IsSuccess){
+                        if(this.IsReceive){
+                            this.EviInSV.EvidenceInupdDelete(this.oEvidenceIn.EvidenceInID).then(async IsSuccess => {
+                                if (!IsSuccess) {
+                                    isSuccess = IsSuccess;
+                                }
+                            }, (error) => { console.error(error); return false; });
+                        }
+                    } else{
+                        isSuccess = IsSuccess;
                     }
                 }, (error) => { console.error(error); return false; });
+
+                if (isSuccess) {
+                    this.ShowAlertSuccess(Message.saveComplete);
+                    //alert(Message.saveComplete);
+                    this.router.navigate(['/prove/list']);
+                } else {
+                    this.ShowAlertError(Message.saveFail);
+                    //alert(Message.saveFail);
+                }
             }
         })
     }
@@ -923,6 +1053,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     //     this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     // }
 
+    ConvertDateYYYYmmdd(_Date: any) {
+        let tDate = _Date;
+
+        if (tDate != undefined) {
+            return setZeroHours(new Date(`${tDate.year}-${tDate.month}-${tDate.day}`));
+        }
+
+        return "";
+    }
 
     CreateObject() {
         this.oProve = {
@@ -1113,7 +1252,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async getProveByID() {
-        // this.preloader.setShowPreloader(true);
+        this.preloader.setShowPreloader(true);
         await this.proveService.ProvegetByCon(this.ProveID).then(async res => {
             if (res != null) {
 
@@ -1191,7 +1330,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     // item.IsNewItem = false;
                     // item.IsDelItem = false;
                     pIndex += 1;
-                    debugger
+
                     item.Remarks = `${item.Remarks == null || item.Remarks == "null" ? '' : item.Remarks}`;
                     item.ProveScienceResult = `${item.ProveScienceResult == null ? '' : item.ProveScienceResult}`;
                     item.ProveResult = `${item.ProveResult == null || item.ProveResult == undefined ? 'ของกลางลำดับที่ ' + pIndex : item.ProveResult}`;
@@ -1242,6 +1381,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     if (this.oProve.ProveDeliverProduct[0].IsReceive == "1") {
                         this.IsReceive = true;
+                        // this.EvidenceInID
+                        this.EviInSV.getByCon("144").then(async res => {
+                            if (res != null && res.IsSuccess != "False") {
+                                this.oEvidenceIn = res 
+                            }
+                        }, (err: HttpErrorResponse) => {
+                            this.ShowAlertError("API EvidenceIngetByCon :: " + err.message);
+                        });
                     } else {
                         this.IsReceive = false;
                     }
