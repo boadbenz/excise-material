@@ -1536,32 +1536,43 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   canCheck(event, index: any = null) {
     console.log(index);
-    if ((index || (index) == 0) && this.accused.list[index]) {
-      const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
-      const d: any = event;
-      const PaymentFineAppointDate: any = new Date(this.accused.list[index].PaymentFineAppointDate.date.year,this.accused.list[index].PaymentFineAppointDate.date.month, this.accused.list[index].PaymentFineAppointDate.date.day);
-      if (accuseDate <= PaymentFineAppointDate) {
-        this.accused.list[index].cancheck = true;
-        if (this.accused.CompareDate.date.day == d.date.day) {
-          this.accused.list[index].cancheck = false;
-        }
-      } else {
-        this.accused.list[index].cancheck = false;
-      }
-    } else {
-      const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
-      const d: any = event;
-      const PaymentFineAppointDate: any = new Date(d.date.year, d.date.month, d.date.day);
-      if (accuseDate <= PaymentFineAppointDate) {
-        this.editUser.cancheck = true;
-        if (this.accused.CompareDate.date.day == d.date.day) {
-          this.editUser.cancheck = false;
-        }
-      } else {
-        this.editUser.cancheck = false;
-      }
-      console.log(this.editUser.cancheck);
-    }
+    const accuseDate: any = new Date(this.accused.CompareDate.date.year, (+this.accused.CompareDate.date.month) - 1, this.accused.CompareDate.date.day);
+    const d: any = event;
+    console.log(d);
+    const PaymentFineAppointDate: any = new Date(d.date.year, (+d.date.month) - 1, d.date.day);
+    console.log(accuseDate);
+    console.log(PaymentFineAppointDate); 
+    this.accused.list[index].cancheck = accuseDate < PaymentFineAppointDate;
+    console.log(this.accused.list[index].cancheck);
+    // if ((index || (index) == 0) && this.accused.list[index]) {
+      // const accuseDate: any = new Date(this.accused.CompareDate.date.year, (+this.accused.CompareDate.date.month) - 1, this.accused.CompareDate.date.day);
+      // const d: any = event;
+      // console.log(d);
+      // const PaymentFineAppointDate: any = new Date(this.accused.list[index].PaymentFineAppointDate.date.year,(+this.accused.list[index].PaymentFineAppointDate.date.month) - 1, this.accused.list[index].PaymentFineAppointDate.date.day);
+      // console.log(accuseDate);
+      // console.log(PaymentFineAppointDate);
+      // console.log(accuseDate < PaymentFineAppointDate);
+      // this.accused.list[index].cancheck = accuseDate < PaymentFineAppointDate;
+      // if (accuseDate < PaymentFineAppointDate) {
+      //   this.accused.list[index].cancheck = true;
+      //   if (this.accused.CompareDate.date.day == d.date.day) {
+      //     this.accused.list[index].cancheck = false;
+      //   }
+      // } else {
+      //   this.accused.list[index].cancheck = false;
+      // }
+    // } else {
+     
+    //   if (accuseDate < PaymentFineAppointDate) {
+    //     this.editUser.cancheck = true;
+    //     if (this.accused.CompareDate.date.day == d.date.day) {
+    //       this.editUser.cancheck = false;
+    //     }
+    //   } else {
+    //     this.editUser.cancheck = false;
+    //   }
+    //   console.log(this.editUser.cancheck);
+    // }
 
   }
   saveAccused() {

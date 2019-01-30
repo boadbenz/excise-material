@@ -380,7 +380,7 @@
               <span *ngIf="item.cancheck && item.checkBox1 && item.checkBox2">ประกันและหลักประกัน</span>
             </td>
             <td class=" text-center">
-              <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
+              <a *ngIf="item.cancheck" (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
                  data-target="#testimonyPopup" [hidden]="!showEditField">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
@@ -426,7 +426,7 @@
             <label class="col-form-label col-md-3">คดีเปรียบเทียบที่ : </label>
             <div class="row col-md-4">
                 <div class="row col-md-4">
-                    <span *ngIf="receipt.IsOutside" style="padding: 0.5rem;">น</span>
+                    <span *ngIf="receipt.IsOutside" style="padding: 0.5rem;">น.</span>
                   </div>
                   <div class="row col-md-10">
                       <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
