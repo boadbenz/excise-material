@@ -597,8 +597,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 this.enableBthModeR();
                 this.expandCard();
                 this.pageRefresh(arrestCode);
-                await this.navService.setNextPageButton(true);
-                await this.navService.setInnerTextNextPageButton('รับคำกล่าวโทษ');
+                // await this.navService.setNextPageButton(true);
+                // await this.navService.setInnerTextNextPageButton('รับคำกล่าวโทษ');
                 break;
         }
     }
@@ -780,7 +780,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     return arrProd;
                 });
 
-                arrIndictD.ArrestLawbreaker = [lawB];
                 if (!arrIndictD) {
                     arrIndictD = new ArrestIndictmentDetail();
                     arrIndictD.IndictmentID = ai.IndictmentID;
@@ -789,12 +788,17 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     arrIndictD.LawsuitEnd = 0;
                     arrIndictD.LawsuitType = '0';
                     arrIndictD.IndictmentDetailID = null;
+
+                    arrIndictD.ArrestLawbreaker = [lawB];
                     arrIndictD.ArrestLawbreaker[0].IsChecked = this.ACCEPTABILITY.ACCEPTABLE;
 
                 } else {
+                    arrIndictD.ArrestLawbreaker = [lawB];
                     arrIndictD.ArrestLawbreaker[0].IsChecked = this.ACCEPTABILITY.INACCEPTABLE;
                     arrIndictD.ArrestProductDetail.filter((x1: fromModels.ArrestProductDetail) => {
                         let _arrIndictProductD_ = _arrIndictProductD.find(p => p.ProductID == x1.ProductID);
+                        console.log(arrIndictD.IndictmentDetailID);
+                        
                         _arrIndictProductD_.IndictmentDetailID = arrIndictD.IndictmentDetailID;
                         _arrIndictProductD_.ProductDetailID = x1.ProductDetailID;
                         _arrIndictProductD_.SizeUnit = x1.SizeUnit;
@@ -1176,7 +1180,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         let arr = new FormArray([]);
         if (!this.ArrestLawbreaker.length || !Array.isArray(o)) {
             let lawb = new fromModels.ArrestLawbreaker();
-            lawb.IsChecked = this.ACCEPTABILITY.INACCEPTABLE;
+            lawb.IsChecked = this.mode == 'C' ? this.ACCEPTABILITY.INACCEPTABLE : this.ACCEPTABILITY.ACCEPTABLE;
             arr.push(this.groupArrestLawbreaker(lawb));
         } else if (Array.isArray(o) && o.length) {
             o.map(x => {
@@ -1296,7 +1300,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         item.ArrestCode = this.arrestCode;
         item.ProductID = '';
         item.IsModify = 'c';
-        item.IsChecked = true;
+        item.IsChecked = this.mode == 'C' ? true : false;
         item.GroupCode = '1';
         item.IsDomestic = '1';
 
@@ -1307,7 +1311,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         }
 
         const lastDoc = this.ArrestProduct.at(lastIndex).value;
-        lastDoc.IsChecked = true;
+        // lastDoc.IsChecked =  true;
         if (lastDoc.ProductDesc) {
             item.RowId = lastDoc.RowId + 1;
             this.ArrestProduct.push(this.fb.group(item));
@@ -1737,7 +1741,18 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                             await this.modifyProduct(),
                             await this.modifyDocument()
                         ])
-                        this.router.navigate(['arrest/list']);
+
+                        swal({
+                            title: '',
+                            text: Message.saveComplete,
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then(res => {
+                            if (res.value)
+                                this.router.navigate(['arrest/list']);
+                        })
                         this.loaderService.hide();
                     }
                 })
