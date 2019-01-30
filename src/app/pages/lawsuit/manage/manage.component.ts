@@ -665,6 +665,7 @@ export class ManageComponent implements OnInit {
             "IsActive": this.LawsuitStaffOnsave.IsActive
           })
 
+
           let json = {
             "LawsuitID": this.LawsuitID,
             "IndictmentID": this.IndictmentID,
@@ -673,8 +674,8 @@ export class ManageComponent implements OnInit {
             "LawsuitNo": lawsuitNo,
             "LawsuitDate": _lawDate,
             "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
-            "LawsuitStationCode": this.lawsuitForm.controls['LawsuitStation'].value,
-            "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
+            "LawsuitStationCode": this.lawsuitForm.controls['LawsuitStationCode'].value,
+            "LawsuitStation": this.staff.LawsuitStation,
             "IsOutside": isOut,
             "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
             "LawsuitResult": '',
@@ -708,6 +709,7 @@ export class ManageComponent implements OnInit {
               "LawsuitStaff": []
             }
           }
+          console.log(json)
           if (this.lawsuitForm.controls['LawsuitTableList'].value.length == 0) {
             json.LawsuitType = 3
             json.LawsuitEnd = 4
@@ -1306,8 +1308,7 @@ export class ManageComponent implements OnInit {
   onChangeStationReslut(text) {
     this.staff.LawsuitStation = text.OfficeName
     this.staff.LawsuitStationCode = text.OfficeCode
-
-    this.lawsuitForm.controls['LawsuitStation'].setValue(this.validateData(text.OfficeName));
+    this.lawsuitForm.controls['LawsuitStation'].setValue(text.OfficeName);
     this.suggestionsStation = [];
   }
   isLawsuitCheckReq() {
