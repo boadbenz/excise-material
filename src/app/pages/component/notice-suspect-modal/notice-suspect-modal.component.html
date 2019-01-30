@@ -134,8 +134,12 @@
                           <td>{{item.get('SuspectFullName').value}}</td>
                           <td>{{item.get('MistreatNo').value}}</td>
                           <td class="text-center">
+                            <a href="#/arrest/lawbreaker/R/{{item.get('SuspectID').value}}" 
+                                class="text-center text-secondary" target="_blank" *ngIf="item.get('MistreatNo').value>0">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
                               <a href="#/notice/suspect/R/{{item.get('SuspectID').value}}" 
-                                class="text-center text-secondary" target="_blank">
+                                class="text-center text-secondary" target="_blank" *ngIf="item.get('MistreatNo').value==0">
                                   <i class="fa fa-eye fa-lg"></i>
                               </a>
                           </td>

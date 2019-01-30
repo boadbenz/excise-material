@@ -511,7 +511,13 @@ export class SuspectComponent implements OnInit, OnDestroy {
     getNationality(){
         this.mainMasterService.MasNationalityMaingetAll().then(res=>{
             this.nationnalitys=res;
-            console.log(this.nationnalitys);
+            for(let l of res){
+                let code = l.NationalityCode;
+                if(code==1){
+                    this.SuspectFG.patchValue({NationalityCode: code});
+                    break;
+                }
+            }
         });
     }
     searchNationality = (text3$: Observable<string>) =>
@@ -539,7 +545,16 @@ export class SuspectComponent implements OnInit, OnDestroy {
         }
     }
     getRace(){
-        this.mainMasterService.MasRaceMaingetAll().then(res=>this.races=res);
+        this.mainMasterService.MasRaceMaingetAll().then(res=>{
+            this.races=res;
+            for(let l of res){
+                let code = l.RaceCode;
+                if(code==1){
+                    this.SuspectFG.patchValue({RaceCode: code});
+                    break;
+                }
+            }
+        });
     }
     searchRace = (text3$: Observable<string>) =>
         text3$

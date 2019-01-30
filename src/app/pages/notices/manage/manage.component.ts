@@ -147,7 +147,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.35');
+        this.sidebarService.setVersion('0.0.2.36');
 
         this.navigate_service();
 
@@ -203,8 +203,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                         ContributorID: 1,
                         TitleName: l.TitleName,
                         FirstName: l.FirstName,
-                        LastName: l.LastName
+                        LastName: l.LastName,
+                        OfficeCode: l.OfficeCode,
+                        OfficeName: l.OfficeName,
+                        OfficeShortName: l.OfficeShortName
                     });
+
                     break;
                 }
             }
@@ -547,7 +551,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             CommunicationChanelID: res.CommunicationChanelID,
             ArrestCode: res.ArrestCode,
             IsActive: res.IsActive,
-            IsArrest: res.IsArrest || 1
+            IsArrest: res.IsArrest || 0
         });
 
         // if(res.IsArrest==1){
@@ -676,10 +680,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setDataInit(res);
         });
 
-        // await this.noticeService.getDocument(code).then(async res => {
-        //     res.map(item => item.IsNewItem = false)
-        //     await this.setItemFormArray(res, 'NoticeDocument')
-        // })
+        await this.noticeService.documentRequestgetByCon(code).then(async res => {
+            res.map(item => item.IsNewItem = false);
+            await this.setItemFormArray(res, 'NoticeDocument');
+        });
     }
 
     private async onCreate() {
@@ -719,7 +723,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             noticeLocale.push(l);
         }
         
-        console.log(noticeForm.NoticeProduct);
         for(let l of noticeForm.NoticeProduct){
             l.NoticeCode = this.noticeCode;
             l.IsActive = 1;
@@ -756,15 +759,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!isSuccess) { IsSuccess = false; return false; };
         }, () => { IsSuccess = false; return; });
 
-        // if (IsSuccess) {
-        //     await this.NoticeDocument.value.map(async doc => {
-        //         // insert Document
-        //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
-        //             if (!docIsSuccess) { IsSuccess = false; return false; };
+        if (IsSuccess) {
+            await this.NoticeDocument.value.map(async doc => {
+                doc.ReferenceCode = this.noticeCode;
+                // insert Document
+                await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
+                    if (!docIsSuccess) { IsSuccess = false; return false; };
 
-        //         }, () => { IsSuccess = false; return false; });
-        //     });
-        // }
+                }, () => { IsSuccess = false; return false; });
+            });
+        }
 
         if (IsSuccess) {
             this.showSwal(Message.saveComplete, "success");
@@ -835,19 +839,20 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }
                 }
             }
-            // const document = this.NoticeDocument.value;
-            // await document.map(async (item: NoticeDocument) => {
-            //     if (item.IsNewItem) {
-            //         await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
-            //             if (!docIsSuccess) { IsSuccess = false; return; };
-            //         }, () => { IsSuccess = false; return; });
+            const document = this.NoticeDocument.value;
+            await document.map(async (item: NoticeDocument) => {
+                if (item.IsNewItem) {
+                    item.ReferenceCode = this.noticeCode;
+                    await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
+                        if (!docIsSuccess) { IsSuccess = false; return; };
+                    }, () => { IsSuccess = false; return; });
 
-            //     } else {
-            //         this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
-            //             if (!docIsSuccess) { IsSuccess = false; return };
-            //         }, () => { IsSuccess = false; return; })
-            //     }
-            // });
+                } else {
+                    this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
+                        if (!docIsSuccess) { IsSuccess = false; return };
+                    }, () => { IsSuccess = false; return; })
+                }
+            });
         }
 
         if (IsSuccess) {
@@ -1033,6 +1038,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         document.DocumentName = "";
         document.FilePath = "";
         document.IsNewItem = true;
+        document.DocumentType = 2;
         if (lastIndex < 0) {
             this.NoticeDocument.push(this.fb.group(document));
         } else {
@@ -1246,11 +1252,14 @@ export class ManageComponent implements OnInit, OnDestroy {
             BrandFullName: ele.item.ProductDesc
         });
     }
+
+    selectUnit:boolean = false;
     selectItemUnit(ele: any, index: number) {
         this.NoticeProduct.at(index).patchValue({
             QtyUnit: ele.item.DutyUnitCode,
             DutyCode: ele.item.DutyCode
         });
+        this.selectUnit = true;
     }
     blurSelectItemProductItem(index: number) {
         const productID = this.NoticeProduct.at(index).value.ProductID;
@@ -1319,13 +1328,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             let units = this.typeheadProductUnit
                     .filter(v => (v.DutyCode.toLowerCase().indexOf(text.toLowerCase()) > - 1)
                     ).slice(0, 10);
-            if(units.length<0||units.length>0){
+            if(units.length<0||units.length>0 && !this.selectUnit){
                 this.NoticeProduct.at(index).patchValue({
                     QtyUnit: "",
                     DutyCode: ""
                 });
                 ele.value = "";
             }
+
+            this.selectUnit = true;
         }
 
     }

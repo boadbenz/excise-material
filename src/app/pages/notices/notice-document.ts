@@ -13,6 +13,7 @@ export class NoticeDocument {
     public ReferenceCode: string;
     public FilePath: string;
     public DataSource: string;
+    public DocumentType:number;
 
     // --- Custom --- //
     public IsNewItem: boolean;
@@ -33,6 +34,7 @@ export const NoticeDocumentFormControl = {
     ReferenceCode: new FormControl(null),
     FilePath: new FormControl(null),
     DataSource: new FormControl(null),
+    DocumentType: new FormControl(2),
     IsActive: new FormControl(1),
     IsNewItem: new FormControl(null)
 }

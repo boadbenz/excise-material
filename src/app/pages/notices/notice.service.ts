@@ -201,15 +201,15 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    // async documentRequestgetByCon(ReferenceCode: string): Promise<NoticeDocument[]> {
-    //     const params = { ReferenceCode };
-    //     const url = `${appConfig.api8883}/DocumentRequestgetByCon`;
-    //     const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
-    //     if (!res.length) {
-    //         return new Array<NoticeDocument>()
-    //     }
-    //     return res;
-    // }
+    async documentRequestgetByCon(ReferenceCode: string): Promise<NoticeDocument[]> {
+        const params = { ReferenceCode, DocumentType:2 };
+        const url = `${appConfig.api8883}/MasDocumentMaingetAll`;
+        const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
+        if (!res.length) {
+            return new Array<NoticeDocument>()
+        }
+        return res;
+    }
 
     // async documentRequestinsAll(document: NoticeDocument): Promise<any> {
     //     const params = document;
@@ -219,19 +219,19 @@ export class NoticeService {
 
     async noticeDocumentinsAll(document: NoticeDocument): Promise<any> {
         const params = document;
-        const url = `${appConfig.api8882}/NoticeDocumentinsAll`;
+        const url = `${appConfig.api8882}/MasDocumentMaininsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async noticeDocumentupd(document: NoticeDocument): Promise<any> {
         const params = document;
-        const url = `${appConfig.api8882}/NoticeDocumentupd`;
+        const url = `${appConfig.api8882}/MasDocumentMainupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async noticeDocumentupdDelete(DocumentID: string): Promise<any> {
         const params = { DocumentID };
-        const url = `${appConfig.api8882}/NoticeDocumentupdDelete`;
+        const url = `${appConfig.api8882}/MasDocumentMainupdDelete`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
