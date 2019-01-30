@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.41');
+    this.sidebarService.setVersion('0.0.0.42');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -940,7 +940,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             data.CompareStaff = await this.checkStaff(this.jsonCopy(data.CompareStaff));
             console.log(data);
 
-            // return null;
+            return null;
             if (this.params.CompareID == 0) {
               return await this.fineService.postMethod('CompareinsAll', data);
               // console.log(data);
@@ -978,7 +978,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(this.DataToSave);
       const data: any = {
         "CompareCode" : this.receipt.CompareNo + '/' + this.receipt.CompareYear,
-        "OfficeCode" : this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
+        "OfficeCode" : this.accused.StationCode,
         "IsOutside" : this.receipt.IsOutside ? 1 : 0
       }
       return await this.fineService.postMethod('CompareVerifyCompareCode', data);
@@ -1028,6 +1028,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // รายละเอียดค่าปรับ
         if (localStorage.getItem('officeShortName')) {
           this.accused.StationName = localStorage.getItem('officeShortName');
+          this.accused.StationCode = localStorage.getItem('officeCode');
         }
         if (localStorage.getItem('fullName')) {
           this.accused.CompareStaffName = localStorage.getItem('fullName');

@@ -380,11 +380,11 @@
               <span *ngIf="item.cancheck && item.checkBox1 && item.checkBox2">ประกันและหลักประกัน</span>
             </td>
             <td class=" text-center">
-              <a *ngIf="item.cancheck" (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
+              <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
                  data-target="#testimonyPopup" [hidden]="!showEditField">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a (click)="editAccused(item, i, 1)" class="text-warning" [hidden]="showEditField"
+              <a *ngIf="item.cancheck" (click)="editAccused(item, i, 1)" class="text-warning" [hidden]="showEditField"
                  data-toggle="modal"
                  data-target="#testimonyPopup">
                 <i class="ti-pencil-alt btn-action"></i>
