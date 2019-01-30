@@ -35,6 +35,7 @@ import { TransactionRunning } from 'app/models/transaction-running.model';
 import { groupArrayItem, removeObjectItem, clearFormArray, sortFormArray } from '../../arrest.helper';
 import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
 import { Acceptability, ArrestIndictmentProduct, ArrestIndictmentDetail } from '../../models';
+import { ArrestLawbreaker } from 'app/pages/model/arrest-lawbreaker';
 
 @Component({
     selector: 'app-manage',
@@ -348,7 +349,9 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             _IndictD.at(_Index).patchValue(this.groupArrestIndictmentDetail(x).value);
 
         } else {
-            x.ArrestLawbreaker[0].IsChecked = this.ACCEPTABILITY.INACCEPTABLE;
+            x.ArrestLawbreaker[0].IsChecked = this.mode == 'C'
+                ? this.ACCEPTABILITY.INACCEPTABLE
+                : this.ACCEPTABILITY.ACCEPTABLE;
             _IndictD.push(this.groupArrestIndictmentDetail(x));
         }
     }
@@ -358,12 +361,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
         const _ArrestProduct = this.ArrestProduct.value.filter(pd => pd.ProductID);
         x.IsChecked = _AProduct.at(_PIndex).value.IsChecked;
-
+        
         if (_ArrestProduct.length == _AProduct.length) {
             _AProduct.at(_PIndex).patchValue(this.groupArrestIndictmentProduct(x).value);
 
         } else {
-            x.IsChecked = true;
+            x.IsChecked = this.mode == 'C' ? true : false;
             _AProduct.push(this.groupArrestIndictmentProduct(x));
         }
     }
@@ -751,6 +754,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 // เพื่อนำเอาข้อมูลมาใส่ให้กับส่วนผู้ต้องหา
                 if (x.ArrestLawbreaker.length) {
                     x.ArrestLawbreaker[0].IsModify = 'v';
+                    x.ArrestLawbreaker[0].IsChecked = this.ACCEPTABILITY.ACCEPTABLE;
                     _ALawbreaker.push(...x.ArrestLawbreaker);
                 }
             });
@@ -761,10 +765,11 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         // map และ loop ตามจำนวนข้อกล่าวหา (ArrestIndictment)
         let _AIindictment = await _indict.map(async ai => {
             ai.IsModify = 'v';
+
             // map และ loop ตามจำนวน ผู้ต้องหา (ArrestLawbreaker)
             ai.ArrestIndicmentDetail = _ALawbreaker.map(lawB => {
-                let arrIndictD = ai.ArrestIndicmentDetail
-                    .find(x1 => x1.LawbreakerID == lawB.LawbreakerID);
+
+                let arrIndictD = ai.ArrestIndicmentDetail.find(x1 => x1.LawbreakerID == lawB.LawbreakerID);
 
                 // map และ loop ตามจำนวน ของกลาง (ArrestLawbreaker)
                 let _arrIndictProductD = _arrProduct.map(x1 => {
@@ -789,16 +794,9 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     arrIndictD.LawsuitType = '0';
                     arrIndictD.IndictmentDetailID = null;
 
-                    arrIndictD.ArrestLawbreaker = [lawB];
-                    arrIndictD.ArrestLawbreaker[0].IsChecked = this.ACCEPTABILITY.ACCEPTABLE;
-
                 } else {
-                    arrIndictD.ArrestLawbreaker = [lawB];
-                    arrIndictD.ArrestLawbreaker[0].IsChecked = this.ACCEPTABILITY.INACCEPTABLE;
                     arrIndictD.ArrestProductDetail.filter((x1: fromModels.ArrestProductDetail) => {
                         let _arrIndictProductD_ = _arrIndictProductD.find(p => p.ProductID == x1.ProductID);
-                        console.log(arrIndictD.IndictmentDetailID);
-                        
                         _arrIndictProductD_.IndictmentDetailID = arrIndictD.IndictmentDetailID;
                         _arrIndictProductD_.ProductDetailID = x1.ProductDetailID;
                         _arrIndictProductD_.SizeUnit = x1.SizeUnit;
@@ -809,8 +807,19 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     });
                 }
 
-                arrIndictD.ArrestProductDetail = _arrIndictProductD;
+                let _lawB = new fromModels.ArrestLawbreaker();
+                _lawB.IsChecked = arrIndictD.IndictmentDetailID ? this.ACCEPTABILITY.INACCEPTABLE : this.ACCEPTABILITY.ACCEPTABLE;
+                _lawB.LawbreakerID = lawB.LawbreakerID;
+                _lawB.LawbreakerTitleName = lawB.LawbreakerTitleName || null;
+                _lawB.LawbreakerFirstName = lawB.LawbreakerFirstName || null;
+                _lawB.LawbreakerMiddleName = lawB.LawbreakerMiddleName || null;
+                _lawB.LawbreakerLastName = lawB.LawbreakerLastName || null;
+                _lawB.LawbreakerOtherName = lawB.LawbreakerOtherName || null;
+                _lawB.IsModify = lawB.IsModify || 'v';
 
+                arrIndictD.ArrestLawbreaker = [_lawB];
+
+                arrIndictD.ArrestProductDetail = _arrIndictProductD;
                 return arrIndictD;
             });
 
@@ -1180,7 +1189,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         let arr = new FormArray([]);
         if (!this.ArrestLawbreaker.length || !Array.isArray(o)) {
             let lawb = new fromModels.ArrestLawbreaker();
-            lawb.IsChecked = this.mode == 'C' ? this.ACCEPTABILITY.INACCEPTABLE : this.ACCEPTABILITY.ACCEPTABLE;
+            // lawb.IsChecked = this.mode == 'C' ? this.ACCEPTABILITY.INACCEPTABLE : this.ACCEPTABILITY.ACCEPTABLE;
             arr.push(this.groupArrestLawbreaker(lawb));
         } else if (Array.isArray(o) && o.length) {
             o.map(x => {
@@ -1300,7 +1309,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         item.ArrestCode = this.arrestCode;
         item.ProductID = '';
         item.IsModify = 'c';
-        item.IsChecked = this.mode == 'C' ? true : false;
+        // item.IsChecked = this.mode == 'C' ? true : false;
         item.GroupCode = '1';
         item.IsDomestic = '1';
 
@@ -1325,7 +1334,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         lawbreaker.RowId = 1;
         lawbreaker.IsModify = lawbreaker.IsModify || 'c';
         lawbreaker.IsActive = 1;
-        lawbreaker.IsChecked = Acceptability.INACCEPTABLE;
+        // lawbreaker.IsChecked = Acceptability.INACCEPTABLE;
         lawbreaker = removeObjectItem(lawbreaker, 'ResultCount') as fromModels.ArrestLawbreaker;
         this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
         let sort = sortFormArray(this.ArrestLawbreaker.value, 'RowId');
@@ -1692,7 +1701,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 })
             })
             Promise.all(isLawsuit).then(async () => {
-
                 if (arr.length && arr.some(y => y.ArrestCode == this.arrestCode)) {
                     this.enableBthModeR();
                     swal('', Message.cannotModify, 'warning');
@@ -2348,6 +2356,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     apd.IsActive = x.IndictmentProductIsActive || 1;
 
                     if (!x.IsChecked) return;
+                    console.log('section 1: ', apd);
+
                     await this.s_productDetail.ArrestProductDetailinsAll(apd)
                         .then().catch((error) => this.catchError(error));
                 });
@@ -2379,6 +2389,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
                 if (x.IsChecked && x.IsModify == 'c') {
                     apd.ProductDetailID = null;
+                    console.log('section 2 :', apd);
                     await this.s_productDetail.ArrestProductDetailinsAll(apd)
                         .then().catch((error) => this.catchError(error));
                 }
