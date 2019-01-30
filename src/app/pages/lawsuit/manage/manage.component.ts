@@ -673,8 +673,8 @@ export class ManageComponent implements OnInit {
             "LawsuitNo": lawsuitNo,
             "LawsuitDate": _lawDate,
             "LawsuitTime": this.lawsuitForm.controls['LawsuitTime'].value,
-            "LawsuitStationCode": (this.lawsuitForm.controls['LawsuitStation'].value).OfficeCode,
-            "LawsuitStation": (this.lawsuitForm.controls['LawsuitStation'].value).OfficeName,
+            "LawsuitStationCode": this.lawsuitForm.controls['LawsuitStation'].value,
+            "LawsuitStation": this.lawsuitForm.controls['LawsuitStation'].value,
             "IsOutside": isOut,
             "AccuserTestimony": this.lawsuitForm.controls['AccuserTestimony'].value,
             "LawsuitResult": '',
@@ -837,6 +837,7 @@ export class ManageComponent implements OnInit {
       PositionName: new FormControl(null, Validators.required),
       DepartmentName: new FormControl(null, Validators.required),
       LawsuitStation: new FormControl(null, Validators.required),
+      LawsuitStationCode: new FormControl(null),
       AccuserTestimony: new FormControl(null, Validators.required),
       LawsuitNo: new FormControl(null, Validators.required),
       LawsuitNoSub: new FormControl(this.getNowDate().date.year + 543, Validators.required),
@@ -963,10 +964,10 @@ export class ManageComponent implements OnInit {
             catch (e) {
               console.log('error==>', e)
             }
-            console.log(islaw)
+
             if (islaw == 1) {
               this.staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0]
-              this.staff.LawsuitStation = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStation 
+              this.staff.LawsuitStation = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStation
               this.staff.LawsuitStationCode = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStationCode
               this.staff.StaffID = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0].StaffID
               IsLawsuitCheck = false;
@@ -1143,7 +1144,7 @@ export class ManageComponent implements OnInit {
               arrList.push(a)
             }
           });
-          console.log(localStorage)
+
           await this.oninitFullname(localStorage)
 
           this.lawsuitForm.controls['AccuserTestimony'].setValue(
@@ -1267,7 +1268,12 @@ export class ManageComponent implements OnInit {
         let initOffice = this.masOfficeList.filter(item => (item.OfficeName.includes(value.OfficeName)));
         if (initOffice.length == 1) {
           let office = initOffice[0]
+          this.LawsuitStaffOnsave.LawsuitStation = office.OfficeName
+          this.LawsuitStaffOnsave.LawsuitStationCode = office.OfficeCode
+          this.staff.LawsuitStation = office.OfficeName
+          this.staff.LawsuitStationCode = office.OfficeCode
           this.lawsuitForm.controls['LawsuitStation'].setValue(this.validateData(office.OfficeName));
+          this.lawsuitForm.controls["LawsuitStationCode"].setValue(office.OfficeCode);
           this.suggestionsStation = [];
         }
       }
