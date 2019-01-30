@@ -44,17 +44,17 @@
           <div class="row">
             <label for="" class="col-lg-2 col-sm-4">ประเภทผู้ต้องสงสัย :</label>
             <div class="col-lg-4 col-sm-8 form-group">
-              <select name="EntityType" ngModel class="form-control form-control-sm">
+              <select name="SuspectType" ngModel class="form-control form-control-sm">
                 <option value="" selected disabled></option>
-                <option *ngFor="let item of entityType" [value]="item.value">{{item.text}}</option>
+                <option *ngFor="let item of lawbreakerType" [value]="item.value">{{item.text}}</option>
               </select>
             </div>
 
             <label for="" class="col-lg-2 col-sm-4">ประเภทบุคคล :</label>
             <div class="col-lg-4 col-sm-8 form-group">
-              <select name="SuspectType" ngModel class="form-control form-control-sm">
+              <select name="EntityType" ngModel class="form-control form-control-sm">
                 <option value="" selected disabled></option>
-                <option *ngFor="let item of lawbreakerType" [value]="item.value">{{item.text}}</option>
+                <option *ngFor="let item of entityType" [value]="item.value">{{item.text}}</option>
               </select>
             </div>
           </div>
@@ -105,8 +105,8 @@
               <tr>
                 <th></th>
                 <th class="text-center">ลำดับ</th>
-                <th>ประเภทบุคคล</th>
                 <th>ประเภทผู้ต้องสงสัย</th>
+                <th>ประเภทบุคคล</th>
                 <th>เลขประจำตัว</th>
                 <th>ชื่อ</th>
                 <th>จำนวนครั้งการกระทำผิด</th>
@@ -120,13 +120,13 @@
                   <label for="td{{i}}" class="m-0"></label>
                 </td>
                 <td class="text-center">{{item.get('RowId').value}}</td>
-                <td>{{item.get('EntityTypeName').value}}</td>
                 <td>{{item.get('SuspectTypeName').value}}</td>
+                <td>{{item.get('EntityTypeName').value}}</td>
                 <td>{{item.get('ReferenceID').value}}</td>
                 <td>{{item.get('FullName').value}}</td>
                 <td class="text-center">{{item.get('ResultCount').value}}</td>
                 <td class="text-center">
-                  <div *ngIf="item.get('ResultCount').value != null; else elseTempate">
+                  <div *ngIf="item.get('ResultCount').value != 0; else elseTempate">
                     <a class="text-center text-secondary" [routerLink]="['/suppression/investigation/lawbreaker', 'R', item.value.SuspectID]"
                       target="_blank">
                       <i class="fa fa-eye fa-lg"></i>
