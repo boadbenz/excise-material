@@ -27,6 +27,18 @@ export async function sortFormArray(arr: any[], arg: string) {
     return a;
 }
 
+export const IntialLastRowID: number = 9999;
+export function sortingArray(arr: any[], arg: string) {
+    let a = arr.sort((a, b) => {
+        if (a[arg] < b[arg]) return -1; // asc
+        if (a[arg] > b[arg]) return 1; // desc
+        return 0;
+    });
+    let i = 0;
+    a.map((x) => { if (x[arg] < IntialLastRowID) x[arg] = ++i; });
+    return a;
+}
+
 export function clearFormArray(formArray: FormArray) {
     while (formArray.length !== 0) {
         formArray.removeAt(0)

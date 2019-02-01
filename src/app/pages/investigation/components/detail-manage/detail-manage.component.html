@@ -116,7 +116,7 @@
                                         (selectItem)="selectItemStaff($event, i)" 
                                         value="{{item.value.StaffFullName}}"
                                         [ngClass]="{'is-invalid': item.get('StaffFullName').invalid && isRequired}" />
-                                    <input type="text" formControlName="StaffFullName" required style="display: none;">
+                                    <input type="text" formControlName="StaffFullName" [required]="item.value.IsModify != 'd'" style="display: none;">
                                 </td>
                                 <td>
                                     <input type="text" formControlName="PositionName" class="form-control form-control-sm"
@@ -129,7 +129,7 @@
                                 </td>
                                 <td>
                                     <select formControlName="ContributorID" class="form-control form-control-sm"
-                                        [attr.disabled]="showEditField ? '' : null" required [ngClass]="{'ng-touched':isRequired}">
+                                        [attr.disabled]="showEditField ? '' : null" [required]="item.value.IsModify != 'd'" [ngClass]="{'ng-touched':isRequired}">
                                         <option value="" disabled selected></option>
                                         <option *ngFor="let c of contributorInvestType;" [value]="c.value">{{c.text}}</option>
                                     </select>
@@ -274,7 +274,7 @@
                                     (selectItem)="selectItemLocaleRegion($event, i)" 
                                     value="{{item.value.Region}}"
                                     [ngClass]="{'is-invalid': item.get('Region').invalid && isRequired}" />
-                                <input type="text" formControlName="Region" required style="display: none;">
+                                <input type="text" formControlName="Region" [required]="item.value.IsModify != 'd'" style="display: none;">
                             </td>
                             <td>
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteLocal(i)">
@@ -331,11 +331,11 @@
                                     (change)="onChangeProductDesc($event, i)" 
                                     [value]="item.value.ProductDesc"
                                     [ngClass]="{'is-invalid': item.get('ProductDesc').invalid && isRequired}" />
-                                <input style="display: none" type="text" required formControlName="ProductDesc">
+                                <input style="display: none" type="text" [required]="item.value.IsModify != 'd'" formControlName="ProductDesc">
                             </td>
                             <td>
                                 <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField"
-                                    min="0" step="0.01" required [ngClass]="{'ng-touched':isRequired}">
+                                    min="0" step="0.01" [required]="item.value.IsModify != 'd'" [ngClass]="{'ng-touched':isRequired}">
                             </td>
                             <td>
                                 <ng-template #qtyUnit let-r="result" let-t="term">
@@ -347,7 +347,7 @@
                                     [value]="item.value.QtyUnit"
                                     [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" 
                                     (change)="changeItemQtyUnit($event, i)" />
-                                <input style="display: none" type="text" required formControlName="QtyUnit">
+                                <input style="display: none" type="text" [required]="item.value.IsModify != 'd'" formControlName="QtyUnit">
                             </td>
                             <td class="text-center">
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
@@ -379,7 +379,7 @@
                     <div class="form-group ">
                         <textarea formControlName="InvestigateDetail" cols="30" rows="5" class="form-control form-control-sm"
                             [readOnly]="showEditField" required 
-                            [ngClass]="{'is-invalid': investigateFG.get('InvestigateDetail').invalid && isRequired}"></textarea>
+                            [ngClass]="{'ng-touched': investigateFG.get('InvestigateDetail').invalid && isRequired}"></textarea>
                     </div>
                 </div>
             </div>

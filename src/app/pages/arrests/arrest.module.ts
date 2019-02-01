@@ -19,6 +19,7 @@ import { ModalOffenseModule } from '../component/modal-offense/modal-offense.mod
 import { ROUTES } from './arrest.routing';
 import { ArrestsService } from './arrests.service';
 import { PreloaderModule } from 'app/shared/preloader/preloader.module';
+import { ArraySortPipe } from './array-sort.pipe';
 
 @NgModule({
   imports: [
@@ -35,9 +36,9 @@ import { PreloaderModule } from 'app/shared/preloader/preloader.module';
     ModalOffenseModule,
     PreloaderModule
   ],
-  declarations: [...fromComponents.components],
+  declarations: [...fromComponents.components, ArraySortPipe],
   exports: [...fromComponents.components],
-  providers: [...fromServices.services, ArrestsService]
+  providers: [...fromServices.services, ArrestsService, ArraySortPipe]
 })
 export class ArrestModule {
 
