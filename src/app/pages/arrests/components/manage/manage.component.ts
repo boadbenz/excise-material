@@ -2114,7 +2114,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
                                 arrestProductId.push({
-                                    ProductID: x.ProductID,
+                                    RowId: x.RowId,
                                     ArrestProductID: y.ProductID
                                 })
                             }, () => { this.saveFail(); return; })
@@ -2131,7 +2131,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
                 if (x.IsModify != 'c') {
                     arrestProductId.push({
-                        ProductID: x.ProductID,
+                        RowId: x.RowId,
                         ArrestProductID: x.ProductID
                     })
                 }
@@ -2253,7 +2253,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         let promises = await product.map(async (x) => {
             if (indictmentModify == 'c' || x.IsModify == 'c') {
                 if (!x.IsChecked) return;
-                const apd = arrestProductId.find(pp => pp.ProductID == x.ProductID);
+                const apd = arrestProductId.find(pp => pp.RowId == x.RowId);
                 if (!apd) return;
                 x.IndictmentID = indictmentId;
                 x.ProductID = apd.ArrestProductID;
