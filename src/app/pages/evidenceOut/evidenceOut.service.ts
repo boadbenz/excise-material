@@ -35,4 +35,15 @@ export class EvidenceOutService {
       return [];
     }
   }
+
+  async StaffgetByKeyword(): Promise<any> {
+    const params = {};
+    const url = `${appConfig.api8777}/MasStaffMaingetAll`;
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      await alert(error);
+    }
+  }
 }

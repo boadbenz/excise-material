@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { EvidenceOutService } from '../evidenceOut.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { EvidenceOut } from '../evidenceOut';
+import { EvidenceOut, EvidenceOutStaff } from '../evidenceOut';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
@@ -37,18 +37,26 @@ export class ManageComponent implements OnInit, OnDestroy {
     evitype: any;
     showEditField: any;
     paginage = pagination;
+    isRequired: boolean | false;
 
 
+    EvidenceOutID: string;       // รหัสการคืน
     EvidenceOutNo: string;      // เลขที่หนังสือขอคืน / เลขที่หนังสือแจ้งคืน / เลขที่หนังสือ / เลขที่หนังสืออนุมัติ / เลขที่หนังสือนำส่ง
     EvidenceOutNoDate: any;     // ลงวันที่
     EvidenceOutNoTime: string;  // เวลาลง
     ReturnDate: any;            // วันที่กำหนดคืนของกลาง กรณียืมของกลางออกจากคลัง
-    StaffRequestName: string;   // ชื่อผู้ขอรับคืน / ชื่อผู้เสนออนุมัติ / ชื่อผู้ขอนำออก / ชื่อผู้ขอโอนย้าย
+    StaffRequestName: string;   // ชื่อผู้ขอรับคืน / ชื่อผู้เสนออนุมัติ / ชื่อผู้ขอนำออก / ชื่อผู้ขอโอนย้าย = 45
     PosRequest: string;         // ตำแหน่งผู้ขอรับคืน / ตำแหน่งผู้เสนอออนุมัติ / ตำแหน่งผู้ขอนำออก / ตำแหน่งผู้ขอโอนย้าย
     DeptRequest: string;        // หน่วยงานผู้ขอรับคืน / หน่วยงานผู้เสนอออนุมัติ / หน่วยงานผู้ขอนำออก / หน่วยงานผู้ขอโอนย้าย
-    StaffApproveName: string;   // ชื่อผู้อนุมัติ   / ชื่อผู้พิจารณาเห็นชอบ
+    DeptCodeRequest: string;    // รหัสหน่วยงานผู้ขอรับคืน / รหัสหน่วยงานผู้เสนอออนุมัติ / รหัสหน่วยงานผู้ขอนำออก / รหัสหน่วยงานผู้ขอโอนย้าย
+    StaffApproveName: string;   // ชื่อผู้อนุมัติ   / ชื่อผู้พิจารณาเห็นชอบ  = 44
     PosApprove: string;         // ตำแหน่งผู้อนุมัติ / ตำแหน่งผู้พิจารณา
     DeptApprove: string;        // หน่วยงานผู้อนุมัติ / หน่วยงานผู้พิจารณา
+    DeptCodeApprove: string;    // รหัสหน่วยงานผู้อนุมัติ / รหัสหน่วยงานผู้พิจารณา
+    StaffEvidenceName: string;  // ชื่อผู้จำหน่าย = 43
+    PosEvidence: string;        // ตำแหน่งผู้จำหน่าย
+    DeptEvidence: string;       // หน่วยงานผู้จำหน่าย
+    DeptCodeEvidence: string;   // รหัสหน่วยงานผู้จำหน่าย
     BookNo: string;             // ใบเสร็จรับเงินภาษีเล่มที่ กรณีคืนของกลางเท่านั้น
     ReceiptNo: string;          // ใบเสร็จรับเงินภาษีเลขที่ กรณีคืนของกลางเท่านั้น
     PayDate: any;               // วันที่ชำระภาษี กรณีคืนของกลางเท่านั้น
@@ -62,59 +70,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     WarehouseName: string;      // ชื่อคลังปลายทาง กรณีโอนย้ายของกลาง
     ApproveNo: string;          // เลขที่หนังสืออนุมัติ กรณีโอนย้ายของกลาง
     EvidenceOutCode: string;    // เลขที่จำหน่ายของกลาง / เลขที่คืน / เลขที่นำออก
-    EvidenceOutDate: any;       //
-    EvidenceOutTime: string;    //
+    EvidenceOutDate: any;       // วันที่จำหน่าย
+    EvidenceOutTime: string;    // เวลาที่จำหน่าย
 
 
+    StaffRequestID: string;     // รหัสผู้ขอ / ผู้เสนอ
+    StaffRequestoptions = [];   // ผู้ขอ / ผู้เสนอ
+    StaffApproveID: string;     // รหัสผู้อนุมัติ
+    StaffApproveoptions = [];   // ผู้อนุมัติ
+    rawStaffOptions = [];       // ผู้ขอ / ผู้เสนอ
 
 
+    oEviOutStaffRequest: EvidenceOutStaff;
+    oEviOutStaffApprove: EvidenceOutStaff;
 
-
-    
-    selectAllChb: any;
-    RevenueID: string;
-    RevenueCode: string;    // เลขที่นำส่งเงิน
-    RevenueNo: string;  // เลขที่หนังสือนำส่ง
-    RevenueNoYear: string;  // ปีเลขที่หนังสือนำส่ง
-    InformTo: string;       // เรียน
-    StaffSendID: string;    // รหัสผู้นำส่ง
-    StaffSendName: string;  // ชื่อผู้นำส่ง
-    PosSend: string;        // ตำแหน่งผู้นำส่ง
-    DeptSend: string;       // แผนกผู้นำส่ง
-    StaffID: string;        // รหัสผู้จัดทำ
-    StaffName: string;      // ชื่อผู้จัดทำ
-    PosStaff: string;        // ตำแหน่งผู้จัดทำ
-    DeptStaff: string;       // แผนกผู้จัดทำ
-    StaffDeptCode: string;   // รหัสแผนกผู้จัดทำ
-    RevenueStation: string;   // เขียนที่
-    CompareFine: string = "0";      // ยอดนำส่งรวม
-    MistreatNo: number = 0;     // จำนวนคดี
-    BribeMoney: string = "0";     // เงินสินบนรวม
-    RewardMoney: string = "0";    // เงินรางวัลรวม
-    TreasuryMoney: string = "0";  // เงินส่งคลัง
-    RevenueDate: any;       // วันที่นำส่ง
-    RevenueTime: string;    // เวลาที่นำส่ง
-    RevenueStatus: number;  // สถานะนำส่ง
-
-
-
-    StaffSendoptions = [];
-    rawStaffSendOptions = [];
-    Staffoptions = [];
-    rawOptions = [];
-    InformTooptions = [];
-    options = [];
-    ListRevenueDetail = [];
-    ListRevenueDetailPaging = [];
-    ListChK = [];
-    RevenueDetailForUDP = [];
-
-    oRevenueSendStaff: Staff;
-    oRevenueStaff: Staff;
-
-    isRequired: boolean | false;
-
-    aaa: string;
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
 
@@ -136,10 +105,22 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         // this.preloader.setShowPreloader(true);
-        this.sidebarService.setVersion('EvidenceIn 0.0.0.2');
-
         this.active_Route();
         this.navigate_Service();
+        //await this.getEvidenceOutStaff();
+
+        this.EvidenceOutNoDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.ReturnDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.PayDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.ApproveDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.EvidenceOutDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+
+        this.EvidenceOutNoTime = this.getCurrentTime();
+        this.PayTime = this.getCurrentTime();
+        this.ApproveTime = this.getCurrentTime();
+        this.EvidenceOutTime = this.getCurrentTime();
+
+        this.EvidenceOutCode = "Auto Generate";
 
         /*this.RevenueStatus = 0;
         this.RevenueNo = "";
@@ -372,6 +353,296 @@ export class ManageComponent implements OnInit, OnDestroy {
         */
     }
 
+    LoadDataFromLocalStorage() {
+        let tempUser = this.rawStaffOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
+
+        // ----- ผู้ขอ / ผู้เสนอ -----
+        this.oEviOutStaffRequest = {
+            EvidenceOutStaffID: "",
+            EvidenceOutID: "",
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "45",
+            IsActive: "1"
+        }
+
+        this.StaffRequestName = localStorage.getItem("fullName");
+        this.PosRequest = localStorage.getItem("operationPosName");
+        this.DeptRequest = localStorage.getItem("officeShortName");
+
+
+        // ----- ผู้อนุมัติ -----
+        this.oEviOutStaffApprove = {
+            EvidenceOutStaffID: "",
+            EvidenceOutID: "",
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "44",
+            IsActive: "1"
+        }
+
+        this.StaffApproveName = localStorage.getItem("fullName");
+        this.PosApprove = localStorage.getItem("operationPosName");
+        this.DeptApprove = localStorage.getItem("officeShortName");
+        this.DeptCodeApprove = localStorage.getItem("officeCode");
+    }
+
+
+    // **********************************
+    // -------------- Alert -------------
+    // **********************************
+    ShowAlertWarning(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'warning',
+            confirmButtonText: 'ตกลง'
+        });
+    }
+
+    ShowAlertSuccess(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'success',
+            confirmButtonText: 'ตกลง'
+        });
+    }
+
+    ShowAlertError(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'error',
+            confirmButtonText: 'ตกลง'
+        });
+    }
+
+
+    // ***********************************************
+    // ------------ DateTime & All Function ----------
+    // ***********************************************
+    getCurrentDate() {
+        let date = new Date();
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
+    }
+
+    getCurrentTime() {
+        let date = new Date();
+        return date.getHours() + ":" + date.getMinutes();
+    }
+
+    getIndexOf(arr, val, prop) {
+        var l = arr.length,
+            k = 0;
+        for (k = 0; k < l; k = k + 1) {
+            if (arr[k][prop] == val) {
+                return k;
+            }
+        }
+        return -1;
+    }
+
+    ConvertDateYYYYmmdd(_Date: any) {
+        let tDate = _Date;
+
+        if (tDate != undefined) {
+            return setZeroHours(new Date(`${tDate.year}-${tDate.month}-${tDate.day}`));
+        }
+
+        return "";
+    }
+
+
+    // *******************************************
+    // -------------- ผู้ขอ หรือ ผู้เสนอ -------------
+    // *******************************************
+    async getEvidenceOutStaff() {
+        await this.EvidenceOutService.StaffgetByKeyword().then(async res => {
+            if (res) {
+                this.rawStaffOptions = res;
+                this.LoadDataFromLocalStorage();
+            }
+        }, (err: HttpErrorResponse) => {
+            this.ShowAlertError("พบปัญหาในการติดต่อ Server");
+        });
+    }
+
+    StaffRequestonAutoChange(value: string) {
+        this.ClearStaffRequestData();
+
+        if (value == '') {
+            this.StaffRequestoptions = [];
+        } else {
+            if (this.rawStaffOptions.length == 0) {
+                this.getEvidenceOutStaff();
+            }
+
+            this.StaffRequestoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    StaffRequestonAutoFocus(value: string) {
+        if (value == '') {
+            this.StaffRequestoptions = [];
+            this.ClearStaffRequestData();
+        }
+    }
+
+    StaffRequestonAutoSelecteWord(event) {
+        this.oEviOutStaffRequest = {
+            EvidenceOutStaffID: this.StaffRequestID,
+            EvidenceOutID: this.EvidenceOutID,
+            StaffCode: event.StaffCode,
+            TitleName: event.TitleName,
+            FirstName: event.FirstName,
+            LastName: event.LastName,
+            PositionCode: event.OperationPosCode,
+            PositionName: event.OperationPosName,
+            PosLevel: event.PosLevel,
+            PosLevelName: event.PosLevelName,
+            DepartmentCode: event.OperationDeptCode,
+            DepartmentName: event.OperationDeptName,
+            DepartmentLevel: event.DeptLevel,
+            OfficeCode: event.OfficeCode,
+            OfficeName: event.OfficeName,
+            OfficeShortName: event.OfficeShortName,
+            ContributorID: "45",
+            IsActive: "1"
+        }
+
+        this.PosRequest = event.OperationPosName;
+        this.DeptRequest = event.OfficeName;
+        this.DeptCodeRequest = event.officeCode;
+    }
+
+    ClearStaffRequestData() {
+        this.PosRequest = "";
+        this.DeptRequest = "";
+
+        this.oEviOutStaffRequest = {
+            EvidenceOutStaffID: this.StaffRequestID,
+            EvidenceOutID: this.EvidenceOutID,
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorID: "45",
+            IsActive: "1"
+        }
+    }
+
+
+    // *******************************************
+    // ------------------ ผู้อนุมัติ -----------------
+    // *******************************************
+    StaffApproveonAutoChange(value: string) {
+        this.ClearStaffApproveData();
+
+        if (value == '') {
+            this.StaffApproveoptions = [];
+        } else {
+            if (this.rawStaffOptions.length == 0) {
+                this.getEvidenceOutStaff();
+            }
+
+            this.StaffApproveoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    StaffApproveonAutoFocus(value: string) {
+        if (value == '') {
+            this.StaffApproveoptions = [];
+            this.ClearStaffApproveData();
+        }
+    }
+
+    StaffApproveonAutoSelecteWord(event) {
+        this.oEviOutStaffApprove = {
+            EvidenceOutStaffID: this.StaffApproveID,
+            EvidenceOutID: this.EvidenceOutID,
+            StaffCode: event.StaffCode,
+            TitleName: event.TitleName,
+            FirstName: event.FirstName,
+            LastName: event.LastName,
+            PositionCode: event.OperationPosCode,
+            PositionName: event.OperationPosName,
+            PosLevel: event.PosLevel,
+            PosLevelName: event.PosLevelName,
+            DepartmentCode: event.OperationDeptCode,
+            DepartmentName: event.OperationDeptName,
+            DepartmentLevel: event.DeptLevel,
+            OfficeCode: event.OfficeCode,
+            OfficeName: event.OfficeName,
+            OfficeShortName: event.OfficeShortName,
+            ContributorID: "44",
+            IsActive: "1"
+        }
+
+        this.PosApprove = event.OperationPosName;
+        this.DeptApprove = event.OfficeName;
+        this.DeptCodeApprove = event.officeCode;
+    }
+
+    ClearStaffApproveData() {
+        this.PosApprove = "";
+        this.DeptApprove = "";
+
+        this.oEviOutStaffApprove = {
+            EvidenceOutStaffID: this.StaffApproveID,
+            EvidenceOutID: this.EvidenceOutID,
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorID: "44",
+            IsActive: "1"
+        }
+    }
 
     /*
         onDelete() {
