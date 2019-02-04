@@ -57,6 +57,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     PosEvidence: string;        // ตำแหน่งผู้จำหน่าย
     DeptEvidence: string;       // หน่วยงานผู้จำหน่าย
     DeptCodeEvidence: string;   // รหัสหน่วยงานผู้จำหน่าย
+    StaffReceiverName: string;  // ชื่อผู้รับบริจาค = 
+    PosReceiver: string;        // ตำแหน่งผู้รับบริจาค
+    DeptReceiver: string;       // หน่วยงานผู้รับบริจาค
+    DeptCodeReceiver: string;   // รหัสหน่วยงานผู้รับบริจาค
     BookNo: string;             // ใบเสร็จรับเงินภาษีเล่มที่ กรณีคืนของกลางเท่านั้น
     ReceiptNo: string;          // ใบเสร็จรับเงินภาษีเลขที่ กรณีคืนของกลางเท่านั้น
     PayDate: any;               // วันที่ชำระภาษี กรณีคืนของกลางเท่านั้น
@@ -78,11 +82,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     StaffRequestoptions = [];   // ผู้ขอ / ผู้เสนอ
     StaffApproveID: string;     // รหัสผู้อนุมัติ
     StaffApproveoptions = [];   // ผู้อนุมัติ
+    StaffEvidenceID: string;    // รหัสผู้จำหน่าย
+    StaffEvidenceoptions = [];  // ผู้จำหน่าย
     rawStaffOptions = [];       // ผู้ขอ / ผู้เสนอ
 
 
     oEviOutStaffRequest: EvidenceOutStaff;
     oEviOutStaffApprove: EvidenceOutStaff;
+    oEviOutStaffEvidence: EvidenceOutStaff;
 
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -107,7 +114,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.preloader.setShowPreloader(true);
         this.active_Route();
         this.navigate_Service();
-        //await this.getEvidenceOutStaff();
+        await this.getEvidenceOutStaff();
 
         this.EvidenceOutNoDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
         this.ReturnDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
@@ -121,6 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.EvidenceOutTime = this.getCurrentTime();
 
         this.EvidenceOutCode = "Auto Generate";
+        this.WarehouseID = "1";
 
         /*this.RevenueStatus = 0;
         this.RevenueNo = "";
@@ -154,7 +162,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         // this.onCancelSubscribe.unsubscribe();
         // this.onEditSubscribe.unsubscribe();
-        // this.onSaveSubscribe.unsubscribe();
+        this.onSaveSubscribe.unsubscribe();
         // this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
     }
@@ -246,111 +254,81 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
-        })
-
-        /*this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
-            if (this.RevenueStatus == 2) {
-                //alert("ไม่สามารถแก้ไขรายการได้");
-                this.ShowAlertWarning("ไม่สามารถแก้ไขรายการได้");
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                // set true
-                this.navService.setPrintButton(true);
-                this.navService.setEditButton(true);
-                this.navService.setDeleteButton(true);
-                this.navService.setEditField(true);
-            }
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
-            //alert(status);
             if (status) {
-                debugger
                 // set action save = false
                 await this.navService.setOnSave(false);
 
-                if (this.RevenueNo == "" || this.RevenueStation == "" || this.RevenueStation == undefined
-                    || this.StaffSendName == "" || this.StaffSendName == undefined
-                    || this.StaffName == "" || this.StaffName == undefined
-                    || this.PosSend == "" || this.PosSend == undefined
-                    || this.DeptSend == "" || this.DeptSend == undefined
-                    || this.PosStaff == "" || this.PosStaff == undefined
-                    || this.DeptStaff == "" || this.DeptStaff == undefined
-                    || this.RevenueDate == null) {
+                var flgValidate = false;
+
+                switch (this.evitype) {
+                    case '11I':
+                        if (this.BookNo == "" || this.BookNo == undefined
+                            || this.ReceiptNo == "" || this.ReceiptNo == undefined
+                            || this.PayDate == "" || this.PayDate == undefined
+                            || this.PayTime == "" || this.PayTime == undefined
+                            || this.StaffApproveName == "" || this.StaffApproveName == undefined
+                            || this.ArrestCode == null || this.ArrestCode == undefined
+                            || this.Lawsuit == null || this.Lawsuit == undefined) {
+                            flgValidate = true;
+                        }
+                        break;
+
+                    case '12':
+                    case '13':
+                    case '14':
+                        if (this.StaffApproveName == "" || this.StaffApproveName == undefined
+                            || this.ApproveDate == null || this.ApproveDate == undefined
+                            || this.ApproveTime == null || this.ApproveTime == undefined) {
+                            flgValidate = true;
+                        }
+                        break;
+
+                    case '15G':
+                        if (this.StaffApproveName == "" || this.StaffApproveName == undefined
+                            || this.ApproveDate == null || this.ApproveDate == undefined
+                            || this.ApproveTime == null || this.ApproveTime == undefined
+                            || this.ReturnDate == null || this.ReturnDate == undefined) {
+                            flgValidate = true;
+                        }
+                        break;
+
+                    case '15D':
+                        if (this.StaffReceiverName == "" || this.StaffReceiverName == undefined
+                            || this.StaffApproveName == "" || this.StaffApproveName == undefined
+                            || this.ApproveDate == null || this.ApproveDate == undefined
+                            || this.ApproveTime == null || this.ApproveTime == undefined) {
+                            flgValidate = true;
+                        }
+                        break;
+
+                    case '16':
+                        if (this.ApproveNo == "" || this.ApproveNo == undefined
+                            || this.StaffApproveName == "" || this.StaffApproveName == undefined
+                            || this.ApproveDate == null || this.ApproveDate == undefined
+                            || this.ApproveTime == null || this.ApproveTime == undefined) {
+                            flgValidate = true;
+                        }
+                        break;
+                }
+
+                if (this.EvidenceOutNo == "" || this.EvidenceOutNo == undefined
+                    || this.EvidenceOutNoDate == null || this.EvidenceOutNoDate == undefined
+                    || this.EvidenceOutNoTime == "" || this.EvidenceOutNoTime == undefined
+                    || (this.evitype != '11I' && (this.StaffRequestName == "" || this.StaffRequestName == undefined))
+                    || this.WarehouseID == "" || this.WarehouseID == "0" || this.WarehouseID == undefined
+                    || flgValidate) {
                     this.isRequired = true;
                     this.ShowAlertWarning(Message.checkData);
-                    //alert(Message.checkData);
 
                     return false;
                 }
 
-                if (+this.MistreatNo < 1) {
-                    this.ShowAlertWarning("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
-                   // alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
-
-                    return false;
-                }
-
-                if (this.mode === 'C') {
-                    //alert("mode C");
-                    await this.onInsRevenue();
-                } else if (this.mode === 'R') {
-                    //alert("mode U");
-                    await this.onUdpRevenue();
-                }
+                alert("Insert");
             }
         });
-
-        this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnDelete(false);
-                this.onDelete();
-            }
-        });
-
-        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
-            if (status) {
-                this.navService.setOnCancel(false);
-
-                swal({
-                    title: '',
-                    text: Message.confirmAction,
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'ยืนยัน',
-                    cancelButtonText: 'ยกเลิก'
-                }).then((result) => {
-                    if (result.value) {
-                        if (this.mode === 'C') {
-                            this.router.navigate(['/income/list']);
-                        } else if (this.mode === 'R') {
-                            // set false
-                            this.navService.setSaveButton(false);
-                            this.navService.setCancelButton(false);
-                            // set true
-                            this.navService.setPrintButton(true);
-                            this.navService.setEditButton(true);
-                            this.navService.setDeleteButton(true);
-                            this.navService.setEditField(true);
-    
-                            this.ShowRevenue();
-                        }
-                    }
-                    else{
-                        this.navService.setSaveButton(true);
-                        this.navService.setCancelButton(true);
-    
-                        this.navService.setPrintButton(false);
-                        this.navService.setEditButton(false);
-                        this.navService.setDeleteButton(false);
-                        this.navService.setEditField(false);
-                    }
-                })
-            }
-        })
-        */
     }
 
     LoadDataFromLocalStorage() {
@@ -409,6 +387,34 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.PosApprove = localStorage.getItem("operationPosName");
         this.DeptApprove = localStorage.getItem("officeShortName");
         this.DeptCodeApprove = localStorage.getItem("officeCode");
+
+
+        // ----- ผู้จำหน่าย -----
+        this.oEviOutStaffEvidence = {
+            EvidenceOutStaffID: "",
+            EvidenceOutID: "",
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "44",
+            IsActive: "1"
+        }
+
+        this.StaffEvidenceName = localStorage.getItem("fullName");
+        this.PosEvidence = localStorage.getItem("operationPosName");
+        this.DeptEvidence = localStorage.getItem("officeShortName");
+        this.DeptCodeEvidence = localStorage.getItem("officeCode");
     }
 
 
@@ -640,6 +646,84 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeName: "",
             OfficeShortName: "",
             ContributorID: "44",
+            IsActive: "1"
+        }
+    }
+
+
+    // *******************************************
+    // ------------------ ผู้จำหน่าย -----------------
+    // *******************************************
+    StaffEvidenceonAutoChange(value: string) {
+        this.ClearStaffEvidenceData();
+
+        if (value == '') {
+            this.StaffEvidenceoptions = [];
+        } else {
+            if (this.rawStaffOptions.length == 0) {
+                this.getEvidenceOutStaff();
+            }
+
+            this.StaffEvidenceoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    StaffEvidenceonAutoFocus(value: string) {
+        if (value == '') {
+            this.StaffEvidenceoptions = [];
+            this.ClearStaffEvidenceData();
+        }
+    }
+
+    StaffEvidenceonAutoSelecteWord(event) {
+        this.oEviOutStaffEvidence = {
+            EvidenceOutStaffID: this.StaffEvidenceID,
+            EvidenceOutID: this.EvidenceOutID,
+            StaffCode: event.StaffCode,
+            TitleName: event.TitleName,
+            FirstName: event.FirstName,
+            LastName: event.LastName,
+            PositionCode: event.OperationPosCode,
+            PositionName: event.OperationPosName,
+            PosLevel: event.PosLevel,
+            PosLevelName: event.PosLevelName,
+            DepartmentCode: event.OperationDeptCode,
+            DepartmentName: event.OperationDeptName,
+            DepartmentLevel: event.DeptLevel,
+            OfficeCode: event.OfficeCode,
+            OfficeName: event.OfficeName,
+            OfficeShortName: event.OfficeShortName,
+            ContributorID: "43",
+            IsActive: "1"
+        }
+
+        this.PosEvidence = event.OperationPosName;
+        this.DeptEvidence = event.OfficeName;
+        this.DeptCodeEvidence = event.officeCode;
+    }
+
+    ClearStaffEvidenceData() {
+        this.PosEvidence = "";
+        this.DeptEvidence = "";
+
+        this.oEviOutStaffEvidence = {
+            EvidenceOutStaffID: this.StaffEvidenceID,
+            EvidenceOutID: this.EvidenceOutID,
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorID: "43",
             IsActive: "1"
         }
     }

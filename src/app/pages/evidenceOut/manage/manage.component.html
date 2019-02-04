@@ -52,8 +52,8 @@
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือขอคืน :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control form-control-sm" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
@@ -73,10 +73,9 @@
             </label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="ผู้ขอ"
-                        aria-label="Number" matInput [matAutocomplete]="auto1" (input)="StaffRequestonAutoChange($event.target.value)"
-                        (focus)="StaffRequestonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto1" (input)="StaffRequestonAutoChange($event.target.value)" (focus)="StaffRequestonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffRequestoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffRequestonAutoSelecteWord(sOption)" (onSelectionChange)="StaffRequestonAutoSelecteWord(sOption)">
@@ -90,15 +89,20 @@
             </label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control form-control-sm" readonly>
+                    <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
                 </div>
             </div>
         </div>
         <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-            </label>
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
+                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
     </div>
@@ -115,15 +119,15 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ใบเสร็จรับเงินภาษีเล่มที่ :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="BookNo" name="BookNo" class="form-control form-control-sm" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                <input type="text" [(ngModel)]="BookNo" name="BookNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                     required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ใบเสร็จรับเงินภาษีเลขที่ :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="ReceiptNo" name="ReceiptNo" class="form-control form-control-sm" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="ReceiptNo" name="ReceiptNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
         </div>
         <div class="row">
@@ -142,8 +146,8 @@
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือแจ้งคืน :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control form-control-sm" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
         </div>
         <div class="row">
@@ -162,10 +166,9 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้อนุมัติหนังสือ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="ผู้อนุมัติ"
-                        aria-label="Number" matInput [matAutocomplete]="auto6" (input)="StaffApproveonAutoChange($event.target.value)"
-                        (focus)="StaffApproveonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto6" (input)="StaffApproveonAutoChange($event.target.value)" (focus)="StaffApproveonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffApproveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffApproveonAutoSelecteWord(sOption)" (onSelectionChange)="StaffApproveonAutoSelecteWord(sOption)">
@@ -176,33 +179,38 @@
             </div>
         </div>
         <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
-            </label>
+            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control form-control-sm" readonly>
+                    <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
                 </div>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-            </label>
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่ใบงาน :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="ArrestCode" name="ArrestCode" class="form-control form-control-sm" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="ArrestCode" name="ArrestCode" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่คดี, หน่วยงาน :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="Lawsuit" name="Lawsuit" class="form-control form-control-sm" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                <input type="text" [(ngModel)]="Lawsuit" name="Lawsuit" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                     required>
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
+                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
     </div>
@@ -220,8 +228,8 @@
             <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือ :</label>
             <label *ngIf="evitype == '13' || evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสืออนุมัติ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control form-control-sm" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
@@ -241,10 +249,9 @@
             <label *ngIf="evitype == '13' || evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">ผู้เสนออนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="ผู้ขอ"
-                        aria-label="Number" matInput [matAutocomplete]="auto2" (input)="StaffRequestonAutoChange($event.target.value)"
-                        (focus)="StaffRequestonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto2" (input)="StaffRequestonAutoChange($event.target.value)" (focus)="StaffRequestonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffRequestoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffRequestonAutoSelecteWord(sOption)" (onSelectionChange)="StaffRequestonAutoSelecteWord(sOption)">
@@ -254,29 +261,26 @@
                 </div>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
-            </label>
+            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control form-control-sm" readonly>
+                    <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
                 </div>
             </div>
         </div>
         <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-            </label>
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
 
             <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาเห็นชอบ :</label>
             <label *ngIf="evitype == '13' || evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="ผู้อนุมัติ"
-                        aria-label="Number" matInput [matAutocomplete]="auto7" (input)="StaffApproveonAutoChange($event.target.value)"
-                        (focus)="StaffApproveonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto7" (input)="StaffApproveonAutoChange($event.target.value)" (focus)="StaffApproveonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffApproveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffApproveonAutoSelecteWord(sOption)" (onSelectionChange)="StaffApproveonAutoSelecteWord(sOption)">
@@ -291,16 +295,14 @@
             </label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="PosApprove" [(ngModel)]="PosApprove" class="form-control form-control-sm" [disabled]="showEditField"
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" name="PosApprove" [(ngModel)]="PosApprove" class="form-control" readonly>
                 </div>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-            </label>
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control form-control-sm" readonly>
+                    <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
                 </div>
             </div>
         </div>
@@ -314,6 +316,12 @@
                 </div>
                 <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                 <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
                     [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
@@ -330,8 +338,8 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control form-control-sm" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :</label>
@@ -359,10 +367,9 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้ขอนำออก :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="ผู้ขอ"
-                        aria-label="Number" matInput [matAutocomplete]="auto3" (input)="StaffRequestonAutoChange($event.target.value)"
-                        (focus)="StaffRequestonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto3" (input)="StaffRequestonAutoChange($event.target.value)" (focus)="StaffRequestonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffRequestoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffRequestonAutoSelecteWord(sOption)" (onSelectionChange)="StaffRequestonAutoSelecteWord(sOption)">
@@ -376,12 +383,12 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
         </div>
 
@@ -389,10 +396,9 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="ผู้อนุมัติ"
-                        aria-label="Number" matInput [matAutocomplete]="auto8" (input)="StaffApproveonAutoChange($event.target.value)"
-                        (focus)="StaffApproveonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto8" (input)="StaffApproveonAutoChange($event.target.value)" (focus)="StaffApproveonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffApproveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffApproveonAutoSelecteWord(sOption)" (onSelectionChange)="StaffApproveonAutoSelecteWord(sOption)">
@@ -404,14 +410,14 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
             </div>
         </div>
 
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :</label>
@@ -427,8 +433,14 @@
         </div>
 
         <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำออก :</label>
-            <div class="form-group col-lg-10 col-md-12">
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField">
             </div>
         </div>
@@ -446,8 +458,8 @@
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือ :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control form-control-sm" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :</label>
@@ -465,10 +477,9 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้เสนออนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="ผู้ขอ"
-                        aria-label="Number" matInput [matAutocomplete]="auto4" (input)="StaffRequestonAutoChange($event.target.value)"
-                        (focus)="StaffRequestonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto4" (input)="StaffRequestonAutoChange($event.target.value)" (focus)="StaffRequestonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffRequestoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffRequestonAutoSelecteWord(sOption)" (onSelectionChange)="StaffRequestonAutoSelecteWord(sOption)">
@@ -480,35 +491,42 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
             </div>
         </div>
 
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้รับบริจาค :</label>
-            <div class="col-lg-4 col-md-7 col-sm-8">
+            <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffReceiverName" name="StaffReceiverName" placeholder=""
+                        aria-label="Number" matInput [matAutocomplete]="auto4" (input)="StaffRequestonAutoChange($event.target.value)"
+                        (focus)="StaffRequestonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                        required>
+                    <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
+                        <mat-option *ngFor="let sOption of StaffRequestoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                            (click)="StaffRequestonAutoSelecteWord(sOption)" (onSelectionChange)="StaffRequestonAutoSelecteWord(sOption)">
+                            {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                        </mat-option>
+                    </mat-autocomplete>
                 </div>
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptSend" name="DeptSend" class="form-control form-control-sm" [disabled]="showEditField">
+                <input type="text" [(ngModel)]="PosReceiver" name="PosReceiver" class="form-control" readonly>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" name="DeptReceiver" [(ngModel)]="DeptReceiver" class="form-control" readonly>
                 </div>
             </div>
         </div>
@@ -516,10 +534,9 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="ผู้อนุมัติ"
-                        aria-label="Number" matInput [matAutocomplete]="auto9" (input)="StaffApproveonAutoChange($event.target.value)"
-                        (focus)="StaffApproveonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto9" (input)="StaffApproveonAutoChange($event.target.value)" (focus)="StaffApproveonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto9="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffApproveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffApproveonAutoSelecteWord(sOption)" (onSelectionChange)="StaffApproveonAutoSelecteWord(sOption)">
@@ -531,13 +548,13 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :</label>
@@ -552,8 +569,14 @@
             </div>
         </div>
         <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำบริจาค :</label>
-            <div class="form-group col-lg-10 col-md-12">
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField">
             </div>
         </div>
@@ -571,8 +594,8 @@
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control form-control-sm" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :</label>
@@ -591,10 +614,9 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้ขอโอนย้าย :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="ผู้ขอ"
-                        aria-label="Number" matInput [matAutocomplete]="auto5" (input)="StaffRequestonAutoChange($event.target.value)"
-                        (focus)="StaffRequestonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRequestName" name="StaffRequestName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto5" (input)="StaffRequestonAutoChange($event.target.value)" (focus)="StaffRequestonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffRequestoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffRequestonAutoSelecteWord(sOption)" (onSelectionChange)="StaffRequestonAutoSelecteWord(sOption)">
@@ -606,21 +628,21 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
             </div>
         </div>
 
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ประเภทหน่วยงานปลายทาง :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField"
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                        required>
                 </div>
             </div>
         </div>
@@ -628,14 +650,14 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานปลายทาง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control form-control-sm" [disabled]="showEditField">
+                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField">
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสืออนุมัติ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="ApproveNo" [(ngModel)]="ApproveNo" class="form-control form-control-sm" [disabled]="showEditField"
-                        [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" name="ApproveNo" [(ngModel)]="ApproveNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                        required>
                 </div>
             </div>
         </div>
@@ -656,10 +678,9 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="ผู้อนุมัติ"
-                        aria-label="Number" matInput [matAutocomplete]="auto10" (input)="StaffApproveonAutoChange($event.target.value)"
-                        (focus)="StaffApproveonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto10" (input)="StaffApproveonAutoChange($event.target.value)" (focus)="StaffApproveonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto10="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffApproveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffApproveonAutoSelecteWord(sOption)" (onSelectionChange)="StaffApproveonAutoSelecteWord(sOption)">
@@ -673,18 +694,24 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control form-control-sm" readonly>
+                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
         </div>
 
         <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
-            <div class="form-group col-lg-10 col-md-12">
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField">
             </div>
         </div>
@@ -852,7 +879,7 @@
                 <label *ngIf="evitype == '15G' || evitype == '15D' || evitype == '16'" for="" class="col-lg-2 col-md-4 control-label">เลขที่นำออก :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" [(ngModel)]="EvidenceOutCode" name="EvidenceOutCode" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="EvidenceOutCode" name="EvidenceOutCode" class="form-control" readonly>
                     </div>
                 </div>
 
@@ -873,13 +900,12 @@
                 <label *ngIf="evitype == '11I' || evitype == '11E'" for="" class="col-lg-2 col-md-4 control-label">ผู้คืน :</label>
                 <label *ngIf="evitype == '15G' || evitype == '15D' || evitype == '16'" for="" class="col-lg-2 col-md-4 control-label">ผู้นำออก :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffEvidenceName" name="StaffEvidenceName" placeholder=""
-                        aria-label="Number" matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)"
-                        (focus)="StaffSendonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
-                            (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
+                    <input type="text" class="form-control" [(ngModel)]="StaffEvidenceName" name="StaffEvidenceName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto11" (input)="StaffEvidenceonAutoChange($event.target.value)" (focus)="StaffEvidenceonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <mat-autocomplete autoActiveFirstOption #auto11="matAutocomplete">
+                        <mat-option *ngFor="let ssOption of StaffEvidenceoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
+                            (click)="StaffEvidenceonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffEvidenceonAutoSelecteWord(ssOption)">
                             {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
                         </mat-option>
                     </mat-autocomplete>
@@ -888,8 +914,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="PosEvidence" name="PosEvidence" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                        required readonly>
+                    <input type="text" [(ngModel)]="PosEvidence" name="PosEvidence" class="form-control" readonly>
                 </div>
 
             </div>
@@ -898,7 +923,7 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptEvidence" name="DeptEvidence" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
+                    <input type="text" [(ngModel)]="DeptEvidence" name="DeptEvidence" class="form-control" [ngClass]="{'ng-touched':isRequired}"
                         required readonly>
                 </div>
             </div>
@@ -921,7 +946,7 @@
                 <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">เลขที่ทำลาย :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" [(ngModel)]="EvidenceOutCode" name="EvidenceOutCode" class="form-control form-control-sm" readonly>
+                        <input type="text" [(ngModel)]="EvidenceOutCode" name="EvidenceOutCode" class="form-control" readonly>
                     </div>
                 </div>
             </div>
@@ -944,13 +969,12 @@
                 <label *ngIf="evitype == '13'" for="" class="col-lg-2 col-md-4 control-label">ประธานขายของกลาง :</label>
                 <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">ประธานทำลายของกลาง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="StaffEvidenceName" name="StaffEvidenceName" placeholder=""
-                        aria-label="Number" matInput [matAutocomplete]="auto" (input)="StaffSendonAutoChange($event.target.value)"
-                        (focus)="StaffSendonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let ssOption of StaffSendoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
-                            (click)="StaffSendonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(ssOption)">
+                    <input type="text" class="form-control" [(ngModel)]="StaffEvidenceName" name="StaffEvidenceName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto11" (input)="StaffEvidenceonAutoChange($event.target.value)" (focus)="StaffEvidenceonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <mat-autocomplete autoActiveFirstOption #auto11="matAutocomplete">
+                        <mat-option *ngFor="let ssOption of StaffEvidenceoptions" [value]="ssOption.TitleName + ssOption.FirstName + ' ' + ssOption.LastName"
+                            (click)="StaffEvidenceonAutoSelecteWord(ssOption)" (onSelectionChange)="StaffEvidenceonAutoSelecteWord(ssOption)">
                             {{ ssOption.TitleName }}{{ ssOption.FirstName }} {{ ssOption.LastName }}
                         </mat-option>
                     </mat-autocomplete>
@@ -958,18 +982,14 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
-                </label>
+                <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="PosEvidence" name="PosEvidence" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                        required readonly>
+                    <input type="text" [(ngModel)]="PosEvidence" name="PosEvidence" class="form-control" readonly>
                 </div>
 
-                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-                </label>
+                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="DeptEvidence" name="DeptEvidence" class="form-control form-control-sm" [ngClass]="{'ng-touched':isRequired}"
-                        required readonly>
+                    <input type="text" [(ngModel)]="DeptEvidence" name="DeptEvidence" class="form-control" readonly>
                 </div>
             </div>
         </div>
