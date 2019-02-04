@@ -154,6 +154,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (this.mode == "R") {
             await this.ShowEvidenceIn();
+        } else {
+            this.preloader.setShowPreloader(false);
         }
     }
 
@@ -162,6 +164,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onSaveSubscribe.unsubscribe();
         this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
+        this.onEditSubscribe.unsubscribe();
     }
 
 
@@ -329,13 +332,19 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         });
 
-
         this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
             if (status) {
                 await this.navService.setOnDelete(false);
                 this.onDelete();
             }
         });
+
+        this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
+            if(this.oEvidenceIn.IsEdit == 0){
+                this.ShowAlertWarning("ไม่อนุญาตให้ทำการแก้ไขข้อมูลการจัดเก็บ !!!");
+                this.onComplete();
+            }
+        })
     }
 
     LoadDataFromLocalStorage() {
@@ -438,7 +447,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ShowEvidenceIn() {
-        this.EviService.getByCon(this.EvidenceInID).then(async res => {
+        this.EviService.getByCon(this.EvidenceInID, this.ProveID).then(async res => {
+            debugger
             if (res != null && res.IsSuccess != "False") {
                 this.ListEvidenceInItem = [];
                 this.oEvidenceIn = res
@@ -764,28 +774,72 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onDelete() {
-        swal({
-            title: '',
-            text: Message.confirmAction,
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'ยืนยัน',
-            cancelButtonText: 'ยกเลิก'
-        }).then((result) => {
-            if (result.value) {
-                this.EviService.EvidenceInupdDelete(this.EvidenceInID).then(async IsSuccess => {
-                    if (IsSuccess) {
-                        this.oEvidenceIn = {};
-                        this.ShowAlertSuccess(Message.saveComplete);
-                        this.router.navigate(['/evidenceIn/list']);
+        if(this.oEvidenceIn.IsEdit != 0){
+            swal({
+                title: '',
+                text: Message.confirmAction,
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.value) {
+                    if(this.evitype == "E"){
+                        this.EviService.EvidenceInupdDelete(this.EvidenceInID).then(async IsSuccess => {
+                            if (IsSuccess) {
+                                this.oEvidenceIn = {};
+                                this.ShowAlertSuccess(Message.saveComplete);
+                                this.router.navigate(['/evidenceIn/list']);
+                            } else {
+                                this.ShowAlertError(Message.saveFail);
+                            }
+                        }, (error) => { console.error(error); return false; });
                     } else {
-                        this.ShowAlertError(Message.saveFail);
+                        this.oEvidenceIn.EvidenceInCode = null;
+                        this.oEvidenceIn.EvidenceInDate = null;
+                        this.oEvidenceIn.EvidenceInTime = null;
+                        this.oEvidenceIn.IsReceive = "0";
+                        this.oEvidenceIn.ReturnDate = null;
+                        this.oEvidenceIn.Remark = null;
+
+                        this.ClearStaffRecvData();
+                        this.oEvidenceIn.EvidenceInStaff = [];
+                        this.oEvidenceIn.EvidenceInStaff.push(this.oEviInSendStaff);
+                        this.oEvidenceIn.EvidenceInStaff.push(this.oEviInRecvStaff);
+
+                        this.oEvidenceIn.EvidenceInItem.map(f => {
+                            f.DamageQty = "0";
+                            f.DamageNetVolumn = "0";
+
+                            f.EvidenceStockBalance.map(item => {
+                                item.ReceiveQty = f.DeliveryQty;
+                                item.ReceiveNetVolumn = f.DeliveryNetVolumn;
+                                item.BalanceQty = f.DeliveryQty;
+                                item.BalanceNetVolumn = f.DeliveryNetVolumn;
+                            })
+                        })
+
+                        this.EviService.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
+                            if (IsSuccess) {
+                                await this.EviService.EvidenceInItemupdByCon(this.ListEvidenceInItem.filter(item => item.IsNewItem === false)).then(pRes => {
+                                    if (pRes.IsSuccess) {
+                                        this.oEvidenceIn = {};
+                                        this.ShowAlertSuccess(Message.saveComplete);
+                                        this.router.navigate(['/evidenceIn/list']);
+                                    }
+                                }, (error) => { console.error(error); });
+                            } else {
+                                this.ShowAlertError(Message.saveFail);
+                            }
+                        }, (error) => { console.error(error); });
                     }
-                }, (error) => { console.error(error); return false; });
-            }
-        })
+                }
+            })
+        } else {
+            this.ShowAlertWarning("ไม่อนุญาตให้ทำการลบข้อมูลการจัดเก็บ !!!");
+        }
     }
 
     async setData() {

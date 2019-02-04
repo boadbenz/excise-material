@@ -58,8 +58,8 @@ export class EvidenceService {
     }
   }
 
-  async getByCon(ProveID: string): Promise<any> {
-    const params = { ProveID };
+  async getByCon(EvidenceInID:string, ProveID: string): Promise<any> {
+    const params = { EvidenceInID, ProveID };
     const url = `${appConfig.api8776}/EvidenceIngetByCon`;
 
     try {

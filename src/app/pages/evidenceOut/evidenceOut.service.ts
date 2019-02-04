@@ -46,4 +46,28 @@ export class EvidenceOutService {
       await alert(error);
     }
   }
+
+  async getByCon( EvidenceOutID: string): Promise<any> {
+    const params = {  EvidenceOutID };
+    const url = `${appConfig.api8775}/EvidenceOutgetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async EvidenceOutinsAll(oEvidence: EvidenceOut): Promise<any> {
+    const params = JSON.stringify(oEvidence);
+    const url = `${appConfig.api8775}/EvidenceOutinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
 }

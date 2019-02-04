@@ -1023,7 +1023,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let lsDoc of ListProveDoc ; let i=index;">
+                            <tr *ngFor="let lsDoc of ListDoc | IsActivePipe ; let i=index;">
                                 <td style="text-align: center">{{i+1}}</td>
                                 <td>
                                     <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
