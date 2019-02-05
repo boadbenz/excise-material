@@ -694,29 +694,29 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="editUser.cancheck === true || editUser.cancheck === false">
+            <div class="row">
               <div class="col-md-12">
                 <div class="form-group row">
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" name="checkBox1" [(ngModel)]="editUser.checkBox1" id="insurance"
                            type="checkbox" [checked]="editUser.checkBox2"
-                           [disabled]="!editUser.cancheck || showEditField || editUser.checkBox2" [required]="!editUser.checkBox2">
+                           [disabled]="showEditField || editUser.checkBox2" [required]="!editUser.checkBox2">
                     <label for="insurance">ประกัน :</label>
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Bail" name="Bail"
-                           [disabled]="(!editUser.checkBox1 || showEditField)" [required]="editUser.checkBox1">
+                           [disabled]="(!editUser.checkBox1 || showEditField) && !editUser.checkBox2" [required]="editUser.checkBox1">
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="row"  *ngIf="editUser.cancheck === true || editUser.cancheck === false">
+            <div class="row">
               <div class="col-md-12">
                 <div class="form-group row">
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" id="collateral"
-                           type="checkbox" name="checkBox2" [(ngModel)]="editUser.checkBox2" [disabled]="showEditField || !editUser.cancheck" [required]="!editUser.cancheck && !editUser.checkBox1">
+                           type="checkbox" name="checkBox2" [(ngModel)]="editUser.checkBox2" [disabled]="showEditField" [required]="!editUser.cancheck && !editUser.checkBox1">
                     <label for="collateral">หลักประกัน :</label>
                   </div>
                   <div class="col-md-7">
