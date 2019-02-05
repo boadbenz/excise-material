@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.41');
+    this.sidebarService.setVersion('0.0.0.43');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -420,6 +420,11 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (compare.Bail && compare.Bail.length > 0) {
         this.accused.list[i].checkBox1 = true;
       }
+
+      const accuseDate: any = new Date(this.accused.CompareDate.date.year, (+this.accused.CompareDate.date.month) - 1, this.accused.CompareDate.date.day);
+      const d: any = this.accused.list[i].PaymentFineAppointDate;
+      const PaymentFineAppointDate: any = new Date(d.date.year, (+d.date.month) - 1, d.date.day);
+      this.accused.list[i].cancheck = accuseDate < PaymentFineAppointDate;
       this.accused.list[i].LawbrakerTestimony = compare.LawbrakerTestimony;
       this.accused.list[i].IsProvisionalAcquittal = compare.IsProvisionalAcquittal;
       // this.e ditUser.PaymentFineAppointDate.formatted
@@ -978,7 +983,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(this.DataToSave);
       const data: any = {
         "CompareCode" : this.receipt.CompareNo + '/' + this.receipt.CompareYear,
-        "OfficeCode" : this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
+        "OfficeCode" : this.accused.StationCode,
         "IsOutside" : this.receipt.IsOutside ? 1 : 0
       }
       return await this.fineService.postMethod('CompareVerifyCompareCode', data);
@@ -1028,6 +1033,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // รายละเอียดค่าปรับ
         if (localStorage.getItem('officeShortName')) {
           this.accused.StationName = localStorage.getItem('officeShortName');
+          this.accused.StationCode = localStorage.getItem('officeCode');
         }
         if (localStorage.getItem('fullName')) {
           this.accused.CompareStaffName = localStorage.getItem('fullName');
@@ -1535,32 +1541,52 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(this.editUser);
   }
   canCheck(event, index: any = null) {
-    console.log(index);
+    // console.log(index);
+    // const accuseDate: any = new Date(this.accused.CompareDate.date.year, (+this.accused.CompareDate.date.month) - 1, this.accused.CompareDate.date.day);
+    // const d: any = event;
+    // console.log(d);
+    // const PaymentFineAppointDate: any = new Date(d.date.year, (+d.date.month) - 1, d.date.day);
+    // console.log(accuseDate);
+    // console.log(PaymentFineAppointDate); 
+    // this.accused.list[index].cancheck = accuseDate < PaymentFineAppointDate;
+    // console.log(this.accused.list[index].cancheck);
     if ((index || (index) == 0) && this.accused.list[index]) {
-      const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
+      const accuseDate: any = new Date(this.accused.CompareDate.date.year, (+this.accused.CompareDate.date.month) - 1, this.accused.CompareDate.date.day);
       const d: any = event;
-      const PaymentFineAppointDate: any = new Date(this.accused.list[index].PaymentFineAppointDate.date.year,this.accused.list[index].PaymentFineAppointDate.date.month, this.accused.list[index].PaymentFineAppointDate.date.day);
-      if (accuseDate <= PaymentFineAppointDate) {
-        this.accused.list[index].cancheck = true;
-        if (this.accused.CompareDate.date.day == d.date.day) {
-          this.accused.list[index].cancheck = false;
-        }
-      } else {
-        this.accused.list[index].cancheck = false;
-      }
+      console.log(d);
+      // const PaymentFineAppointDate: any = new Date(this.accused.list[index].PaymentFineAppointDate.date.year,(+this.accused.list[index].PaymentFineAppointDate.date.month) - 1, this.accused.list[index].PaymentFineAppointDate.date.day);
+      const PaymentFineAppointDate: any = new Date(d.date.year, (+d.date.month) - 1, d.date.day);
+      console.log(accuseDate);
+      console.log(PaymentFineAppointDate);
+      console.log(accuseDate < PaymentFineAppointDate);
+      this.accused.list[index].cancheck = accuseDate < PaymentFineAppointDate;
+      // if (accuseDate < PaymentFineAppointDate) {
+      //   this.accused.list[index].cancheck = true;
+      //   if (this.accused.CompareDate.date.day == d.date.day) {
+      //     this.accused.list[index].cancheck = false;
+      //   }
+      // } else {
+      //   this.accused.list[index].cancheck = false;
+      // }
     } else {
-      const accuseDate: any = new Date(this.accused.CompareDate.date.year, this.accused.CompareDate.date.month, this.accused.CompareDate.date.day);
+      console.log(index);
+      const accuseDate: any = new Date(this.accused.CompareDate.date.year, (+this.accused.CompareDate.date.month) - 1, this.accused.CompareDate.date.day);
       const d: any = event;
-      const PaymentFineAppointDate: any = new Date(d.date.year, d.date.month, d.date.day);
-      if (accuseDate <= PaymentFineAppointDate) {
-        this.editUser.cancheck = true;
-        if (this.accused.CompareDate.date.day == d.date.day) {
-          this.editUser.cancheck = false;
-        }
-      } else {
-        this.editUser.cancheck = false;
-      }
-      console.log(this.editUser.cancheck);
+      console.log(d);
+      const PaymentFineAppointDate: any = new Date(d.date.year, (+d.date.month) - 1, d.date.day);
+      console.log(accuseDate);
+      console.log(PaymentFineAppointDate); 
+      this.editUser.cancheck = accuseDate < PaymentFineAppointDate;
+      // console.log(this.accused.list[index].cancheck);
+      // if (accuseDate < PaymentFineAppointDate) {
+      //   this.editUser.cancheck = true;
+      //   if (this.accused.CompareDate.date.day == d.date.day) {
+      //     this.editUser.cancheck = false;
+      //   }
+      // } else {
+      //   this.editUser.cancheck = false;
+      // }
+      // console.log(this.editUser.cancheck);
     }
 
   }
