@@ -423,7 +423,7 @@
             <div class="row form-group">
                 <div class="col">
                     <input type="checkbox" id="md_checkbox_5" [(ngModel)]="IsReceive" name="IsReceive" class="filled-in chk-col-indigo" (click)="changeReceive()"
-                        [disabled]="showEditField">
+                        [disabled]="showEditField || IsEvidenceReceive">
                     <label for="md_checkbox_5">จัดเก็บของกลาง</label>
                 </div>
             </div>
@@ -780,13 +780,13 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <input type="text" [(ngModel)]="oProveProduct.QtyBalance" name="oProveProduct.QtyBalance" class="form-control"
-                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="varidateQtyBalance()">
+                                            [disabled]="showEditField || IsEvidenceReceive" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="varidateQtyBalance()">
                                     </div>
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วยภาชนะ :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
                                     <select [(ngModel)]="oProveProduct.QtyBalanceUnit" name="oProveProduct.QtyBalanceUnit" class="form-control"
-                                        [disabled]="showEditField">
+                                        [disabled]="showEditField || IsEvidenceReceive">
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
@@ -798,13 +798,13 @@
                                 <div class="col-lg-4 col-md-7">
                                     <div class="form-group ">
                                         <input type="text" [(ngModel)]="oProveProduct.NetVolumeBalance" name="oProveProduct.NetVolumeBalance" class="form-control"
-                                            [disabled]="showEditField" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="varidateNetVolumeBalance()">
+                                            [disabled]="showEditField || IsEvidenceReceive" [ngClass]="{'ng-touched':isPopupRequired}" required (change)="varidateNetVolumeBalance()">
                                     </div>
                                 </div>
                                 <label for="" class="col-lg-2 col-md-4 control-label">หน่วย :</label>
                                 <div class="form-group input-group  col-lg-4 col-md-7">
                                     <select [(ngModel)]="oProveProduct.NetVolumeBalanceUnit" name="oProveProduct.NetVolumeBalanceUnit" class="form-control"
-                                        [disabled]="showEditField">
+                                        [disabled]="showEditField || IsEvidenceReceive">
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>

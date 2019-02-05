@@ -131,7 +131,7 @@ export class ListComponent implements OnInit, OnDestroy {
                         case '11':
                             data.urls[1].title = "ค้นหารายการคืนของกลาง";
                             data.codePage = "ILG60-11-01-00-00";
-                            this.EvidenceOutType = "0";
+                            this.EvidenceOutType = "1";
                             break;
                         case '12':
                             data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
