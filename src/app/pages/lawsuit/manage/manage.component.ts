@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.32');
+    this.sidebarService.setVersion('0.0.0.33');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -557,9 +557,6 @@ export class ManageComponent implements OnInit {
             if (ArrestIndicmentDetail['LawsuitJudgement'].length > 0) {
               await this.lawsuitService.LawsuitJudgementupdDelete(ArrestIndicmentDetail['LawsuitJudgement'][0]['JudgementID'])
             }
-            // if (ArrestIndicmentDetail.IsFine == 1) {
-            //   await this.lawsuitService.LawsuitPaymentFineDetailupdDelete(ArrestIndicmentDetail.PaymentFineID)
-            // }
           }
         });
         if (update.IsSuccess == "True") {
@@ -828,7 +825,7 @@ export class ManageComponent implements OnInit {
     }
   }
   private createLawsuitForm() {
-
+  
     this.lawsuitForm = this.fb.group({
       IsLawsuitCheck: new FormControl(null),
       ReasonDontLawsuit: new FormControl(null),
@@ -981,10 +978,12 @@ export class ManageComponent implements OnInit {
               this.lawsuitForm.controls['LawsuitDate'].setValue('');
               this.lawsuitForm.controls['LawsuitTime'].setValue('');
               this.lawsuitForm.controls['LawsuitNo'].setValue('');
+              this.lawsuitForm.controls['LawsuitNoSub'].setValue('')
               this.lawsuitForm.controls['FullName'].setValue('');
               this.lawsuitForm.controls['PositionName'].setValue('');
               this.lawsuitForm.controls['DepartmentName'].setValue('');
               this.lawsuitForm.controls['IsLawsuitCheck'].setValue(true);
+              this.navService.setNextPageButton(false);
             }
           }
           let IsProve = res[0]['LawsuitArrestIndicment'][0].IsProve;
@@ -1001,8 +1000,7 @@ export class ManageComponent implements OnInit {
               this.navService.setNextPageButton(false);
             }
           } else {
-            this.navService.setNextPageButton(true);
-            this.navService.setInnerTextNextPageButton('งานพิสูจน์')
+            this.navService.setNextPageButton(false);
           }
 
           let IsLawsuitComplete = res[0]['LawsuitArrestIndicment'][0].IsLawsuitComplete;
@@ -1148,7 +1146,6 @@ export class ManageComponent implements OnInit {
           });
 
           await this.oninitFullname(localStorage)
-
           this.lawsuitForm.controls['AccuserTestimony'].setValue(
             "วันนี้ เวลา " + this.lawsuitForm.controls['LawsuitTime'].value + " ข้าฯ พร้อมด้วยพวกได้ดำเนินการจับกุม" +
             textLawbreak + "พร้อมของกลาง ตามบัญชีของกลาง ส.ส.2/4 โดยแจ้งข้อกล่าวหา " + this.lawsuitArrestForm.controls['GuiltBaseName'].value +

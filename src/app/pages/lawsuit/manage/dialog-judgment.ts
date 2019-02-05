@@ -5,6 +5,7 @@ import { LawsuitService } from "../lawsuit.service";
 import { ActivatedRoute } from "@angular/router";
 import { PreloaderService } from "../../../shared/preloader/preloader.component";
 import { MatDialog, MatDialogRef } from '@angular/material';
+import { map, startWith } from 'rxjs/operators';
 import Swal from 'sweetalert2'
 
 @Component({
@@ -14,6 +15,15 @@ import Swal from 'sweetalert2'
 })
 export class DialogJudgment {
     public editMode = false;
+
+    public validStatus = false;
+    public isPayAll = null;
+    public arrestData = [];
+    public MasCourtList: any = []
+    public SearchMasCourtList = []
+    public lawsuitArrestFormDialog: any = {}
+    public LawsuitArrest: any = [];
+
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
         private lawsuitService: LawsuitService,
@@ -22,13 +32,7 @@ export class DialogJudgment {
         private dialogRef: MatDialogRef<DialogJudgment>,
         private preLoaderService: PreloaderService,
     ) { }
-    public validStatus = false;
-    public isPayAll = null;
-    public arrestData = [];
-    public MasCourtList = []
-    public SearchMasCourtList = []
-    public lawsuitArrestFormDialog: any = {}
-    public LawsuitArrest: any = [];
+
     async ngOnInit() {
         this.preLoaderService.setShowPreloader(true);
         this.arrestData = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(this.data.lawsuitArrest.IndictmentDetailID)
@@ -37,10 +41,10 @@ export class DialogJudgment {
         if (this.data.LawsuitID) {
             this.editMode = true;
         }
-
+        console.log(this.arrestData['LawsuitJudgement'].length > 0)
         this.lawsuitArrestFormDialog = this.arrestData['LawsuitJudgement'].length > 0 ? await this.newForm() : await this.newFormNull();
 
-        console.log(this.arrestData)
+
         console.log(this.lawsuitArrestFormDialog)
         console.log(this.lawsuitArrestFormDialog.PaymentUnit)
         this.paymentChange()
@@ -105,7 +109,7 @@ export class DialogJudgment {
             IsImprison: "",
             ImprisonTime: "",
             ImprisonUnit: "",
-            IsPayOnce: "",
+            IsPayOnce: 1,
             PaymentDate: "",
             PaymentPeroid: "",
             PaymentPeroidStartDate: "",
@@ -293,7 +297,7 @@ export class DialogJudgment {
                         JudgementID: PaymentFine.JudgementID
                     });
                 }
-            } 
+            }
         }
         this.closePopup()
     }
@@ -391,7 +395,7 @@ export class DialogJudgment {
 
     public setValidPayment(value) {
         if (value) {
-            this.lawsuitArrestFormDialog.IsPayOnce = "";
+            this.lawsuitArrestFormDialog.IsPayOnce = "1";
             this.lawsuitArrestFormDialog.PaymentDate = "";
             this.lawsuitArrestFormDialog.PaymentPeroid = "";
             this.lawsuitArrestFormDialog.PaymentPeroidStartDate = "";
