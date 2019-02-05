@@ -366,7 +366,7 @@ export class ProveService {
 
     debugger
     const params = JSON.stringify(pValue);
-    const url = `${appConfig.apiReport}/ILL_P038.aspx`;
+    const url = `${appConfig.apiReport}//ILG60_00_05_002.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .catch(this.onCatch)
       .do((res: Response) => {
