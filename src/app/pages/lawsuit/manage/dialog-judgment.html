@@ -92,21 +92,6 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <div class="form-group row">
-            <div class="col-6">
-              <input [(ngModel)]="lawsuitArrestFormDialog.IsFine" name="IsCourtFine" class="filled-in chk-col-indigo"
-                (change)="setValidPayment(lawsuitArrestFormDialog.IsFine)" type="checkbox" id="fine" name="fine">
-              <label class="form-check-label" for="fine">สั่งปรับเป็นจำนวนเงิน (บาท)</label>
-            </div>
-            <div class="col-6">
-              <input type="text" [attr.disabled]="!lawsuitArrestFormDialog.IsFine ? '' : null" [(ngModel)]="lawsuitArrestFormDialog.CourtFine"
-                class="form-control form-control-sm " required>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
           <div class="row form-group">
             <div class="col-6">
               <input [(ngModel)]="lawsuitArrestFormDialog.IsImprison" name="IsImprison" class="filled-in chk-col-indigo"
@@ -131,6 +116,21 @@
                 <option type="number" value="3">ตลอดชีวิต</option>
               </select>
               <!-- <input class="form-control form-control-sm" type="text" [(ngModel)]="ImprisonUnit" name="ImprisonUnit"> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <div class="col-6">
+              <input [(ngModel)]="lawsuitArrestFormDialog.IsFine" name="IsCourtFine" class="filled-in chk-col-indigo"
+                (change)="setValidPayment(lawsuitArrestFormDialog.IsFine)" type="checkbox" id="fine" name="fine">
+              <label class="form-check-label" for="fine">สั่งปรับเป็นจำนวนเงิน (บาท)</label>
+            </div>
+            <div class="col-6">
+              <input type="text" [attr.disabled]="!lawsuitArrestFormDialog.IsFine ? '' : null" [(ngModel)]="lawsuitArrestFormDialog.CourtFine"
+                class="form-control form-control-sm " required>
             </div>
           </div>
         </div>
