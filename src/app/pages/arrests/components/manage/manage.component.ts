@@ -505,7 +505,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 }
                 const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
                 const product: fromModels.ArrestProduct[] = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
-                if (product.filter(x => !x.ProductDesc && !x.QtyUnit && !x.NetVolume && !x.NetVolumeUnit).length) {
+                if (product.filter(x => !x.ProductDesc || !x.Qty || !x.QtyUnit || !x.NetVolume || !x.NetVolumeUnit).length) {
                     swal('', 'กรุณาระบุข้อมูลของกลางให้ครบถ้วน', 'warning');
                     return;
                 }

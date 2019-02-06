@@ -330,12 +330,12 @@
                                     (selectItem)="selectItemProductItem($event, i)"
                                     (change)="onChangeProductDesc($event, i)" 
                                     [value]="item.value.ProductDesc"
-                                    [ngClass]="{'is-invalid': item.get('ProductDesc').invalid && isRequired}" />
-                                <input style="display: none" type="text" [required]="item.value.IsModify != 'd'" formControlName="ProductDesc">
+                                    [ngClass]="{'is-invalid': isRequired}" />
+                                <input style="display: none" type="text" formControlName="ProductDesc">
                             </td>
                             <td>
                                 <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField"
-                                    min="0" step="0.01" [required]="item.value.IsModify != 'd'" [ngClass]="{'ng-touched':isRequired}">
+                                    min="0" step="0.01" [ngClass]="{'ng-touched':isRequired}">
                             </td>
                             <td>
                                 <ng-template #qtyUnit let-r="result" let-t="term">
@@ -345,9 +345,9 @@
                                     [ngbTypeahead]="searchUnit" [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit"
                                     (selectItem)="selectItemQtyUnit($event, i)"  
                                     [value]="item.value.QtyUnit"
-                                    [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" 
+                                    [ngClass]="{'is-invalid': isRequired}" 
                                     (change)="changeItemQtyUnit($event, i)" />
-                                <input style="display: none" type="text" [required]="item.value.IsModify != 'd'" formControlName="QtyUnit">
+                                <input style="display: none" type="text" formControlName="QtyUnit">
                             </td>
                             <td class="text-center">
                                 <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
