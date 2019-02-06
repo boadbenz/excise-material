@@ -515,12 +515,13 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     swal('', 'ต้องมีรายการ “ผู้ต้องหา” หรือ “ของกลาง” อย่างน้อย 1 รายการ', 'warning');
                     return;
                 }
-                if (!this.ArrestIndictment.value.length) {
+                const arrestIndictment: fromModels.ArrestIndictment[] = this.ArrestIndictment.value.filter(x => x.IsModify != 'd');
+                if (!arrestIndictment.length) {
                     this.ILG60_03_02_00_00_E25.next(true);
                     swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
                     return;
                 }
-                if (this.ArrestIndictment.value.filter(x => x.GuiltBaseID == null).length) {
+                if (arrestIndictment.filter(x => x.GuiltBaseID == null).length) {
                     this.ILG60_03_02_00_00_E25.next(true);
                     swal('', 'กรุณาเลือกข้อมูล “ฐานความผิดมาตรา”', 'warning')
                     return;
@@ -841,7 +842,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 .ArrestIndictmentProductgetByIndictmentID(ai.IndictmentID.toString())
                 .then(x => {
                     if (this.checkResponse(x)) {
-                        
+
                         let __arrProduct = _arrProduct.map((x1, index) => {
                             let aip = new fromModels.ArrestIndictmentProduct();
                             aip.RowId = index + 1;
@@ -2277,17 +2278,17 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     if (x.IsChecked) {
                         await this.s_indictment.ArrestIndictmentProductupdByProductID(x)
                             .then().catch(error => this.catchError(error))
-                    } else if(!x.IsChecked) {
+                    } else if (!x.IsChecked) {
                         await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
                             .then().catch(error => this.catchError(error));
                     }
                 } else if (!x.IndictmentProductID && x.IsChecked) {
                     x.IndictmentID = indictmentId;
                     await this.s_indictment.ArrestIndictmentProductinsAll(x)
-                    .then(y => {
-                        if (!this.checkIsSuccess(y)) return;
-                        x.IndictmentProductID = y.IndictmentProductID;
-                    }).catch((error) => this.catchError(error));
+                        .then(y => {
+                            if (!this.checkIsSuccess(y)) return;
+                            x.IndictmentProductID = y.IndictmentProductID;
+                        }).catch((error) => this.catchError(error));
                 }
             }
         })
@@ -2438,7 +2439,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             return Promise.all(_Promise);
 
         } else if (lawbreakerModify != 'd' && lawbreakerChecked == this.ACCEPTABILITY.INACCEPTABLE) {
-            
+
             let promises = await arrestProductDetail.map(async x => {
 
                 if (x.IsModify == 'd' || !x.IsChecked) {
