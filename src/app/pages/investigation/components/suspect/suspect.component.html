@@ -31,7 +31,10 @@
             <div class="row">
                 <label for="" class="col-lg-2 col-sm-4 control-label">เลขบัตรประชาชน :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" formControlName="IDCard" class="form-control form-control-sm" [readonly]="showEditField || requiredCompanyRegister">
+                    <input type="text" formControlName="IDCard" class="form-control form-control-sm" 
+                    [readonly]="showEditField || requiredCompanyRegister"
+                    [required]="SuspectFG.value.EntityType == 1 && SuspectFG.value.LawbreakerType == 1"
+                    [ngClass]="{'ng-touched': isRequired}">
                 </div>
                 <label for="" class="col-lg-2 col-sm-4 control-label">คำนำหน้าชื่อ :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">

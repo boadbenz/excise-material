@@ -13,6 +13,7 @@ import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MainMasterService } from '../../../services/main-master.service';
 
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
+import { NumuricDirective } from '../numuric.directive';
 
 const routes: Routes = [
   {
@@ -25,7 +26,7 @@ const routes: Routes = [
               { title: 'จัดการข้อมูลใบแจ้งความนำจับ', url: '/notice/manage/C/NEW' },
               { title: 'จัดการข้อมูลผู้ต้องสงสัย' }
           ],
-          codePage: 'XCS60-99-01-02-00',  
+          codePage: 'ILG60-99-01-02-00',  
           nextPage: { title: 'งานแจ้งความ', url: '/' }
       },
       component: SuspectComponent
@@ -45,7 +46,7 @@ const routes: Routes = [
     MyDatePickerTHModule,
     SweetAlert2Module.forRoot()
   ],
-  declarations: [SuspectComponent],
+  declarations: [SuspectComponent, NumuricDirective],
   exports: [SuspectComponent],
   providers: [ArrestsService, NoticeService, MainMasterService],
   schemas: [NO_ERRORS_SCHEMA]

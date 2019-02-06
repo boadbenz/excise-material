@@ -47,7 +47,7 @@ export class PrintDocModalComponent implements OnInit {
             }
         ];
 
-        this.proveService.MasDocumentMaingetAll(this.ProveID).then(result => {
+        this.proveService.MasDocumentMaingetAll(this.ProveID,"5").then(result => {
             let pValue = {
                 "IsChecked": false,
                 "DocName": result[0].DocumentName,

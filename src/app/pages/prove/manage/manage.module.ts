@@ -10,10 +10,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { ArrestService } from '../../model/arrest.service';
 import { LawsuitService } from '../../model/lawsuit.service';
 import { MasterService }  from '../../model/master.service';
+import { IncomeService } from '../../income/income.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
-import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
+import { IsActivePipeModule } from '../../../shared/pipe/IsActivePipe.module';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { EvidenceService } from '../../evidenceIn/evidenceIn.service';
 
 const routes: Routes = [
     {
@@ -25,7 +27,7 @@ const routes: Routes = [
                 { title: 'ค้นหางานตรวจรับและพิสูจน์ของกลาง', url: '/prove/list' },  
                 { title: 'จัดการข้อมูลงานตรวจรับและพิสูจน์ของกลาง' }
             ],
-            codePage: 'ILG60-05-01-00-00'
+            codePage: 'ILG60-05-02-00-00'
         },
         component: ManageComponent
     }
@@ -41,14 +43,17 @@ const routes: Routes = [
         CardActionsModule,
         MatAutocompleteModule,
         PrintDocModalModule,
-        MyDatePickerTHModule
+        MyDatePickerTHModule,
+        IsActivePipeModule
     ],
     providers: [ProveService,
         ArrestService,
         LawsuitService,
-        MasterService
+        MasterService,
+        EvidenceService,
+        IncomeService
     ],
-    declarations: [ManageComponent,IsActivePipe],
+    declarations: [ManageComponent],
     exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

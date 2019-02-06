@@ -17,25 +17,25 @@ export class MasDocumentMainService {
 
   MasDocumentMaininsAll(document: any) {
     const params = document;
-    const url = `${appConfig.api7789}/MasDocumentMaininsAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaininsAll`;
     return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
   MasDocumentMaingetAll(DocumentType: any, ReferenceCode: string) {
     const params = {DocumentType, ReferenceCode};
-    const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaingetAll`;
     return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
   MasDocumentMainupdByCon(document: any) {
     const params = document;
-    const url = `${appConfig.api7789}/MasDocumentMainupdByCon`;
+    const url = `${appConfig.api8777}/MasDocumentMainupdByCon`;
     return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 
   MasDocumentMainupdDelete(DocumentID: string) {
     const params = {DocumentID};
-    const url = `${appConfig.api7789}/MasDocumentMainupdDelete`;
+    const url = `${appConfig.api8777}/MasDocumentMainupdDelete`;
     return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
   }
 

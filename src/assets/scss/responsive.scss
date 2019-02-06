@@ -139,22 +139,22 @@ File: scss
         }
     }
     /*Sidebar and wrapper*/
-    .mini-sidebar .page-wrapper{
-        margin-left:0px;
-        padding-top: 70px;
-    }
-    .comment-text{
-        .comment-footer{
-            .action-icons {
-                display: block;
-                padding: 10px 0;
-            } 
+        .mini-sidebar .page-wrapper{
+            margin-left:0px;
+            padding-top: 70px;
         }
-    }
-    
-    .vtabs .tabs-vertical {
-        width: auto;
-    }
+        .comment-text{
+            .comment-footer{
+                .action-icons {
+                    display: block;
+                    padding: 10px 0;
+                } 
+            }
+        }
+        
+        .vtabs .tabs-vertical {
+            width: auto;
+        }
     /*Footer*/
     .footer{
             left: 0px;

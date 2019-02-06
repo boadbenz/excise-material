@@ -1,0 +1,40 @@
+<form #form="ngForm" (ngSubmit)="onSelect()">
+    <div class="modal-header bg-theme">
+        <h4 class="modal-title text-white">เลือกรายการข้อกล่าวหาที่ต้องการบันทึกคำกล่าวโทษ
+            <a class="float-lg-right text-white font-14" aria-label="Close" (click)="closePopup()">
+                <span aria-hidden="true">
+                    <i class=" ti-close"></i>
+                </span>
+            </a>
+        </h4>
+    </div>
+    <div class="modal-body font-14">
+        <div class="table-responsive">
+            <table class="table table-sm table-striped table-set-border">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ฐานควมผิดมาตรา</th>
+                        <th>ฐานควมผิด</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of complete; let i=index;">
+                        <td class="text-center">
+                            <input name="approveRadio" [id]="'td'+i" value="{{item.IndictmentID}}" class="col-form-label with-gap radio-col-indigo"
+                                [(ngModel)]="radioCheck" type="radio">
+                            <label [for]="'td'+i"></label>
+                        </td>
+                        <td>{{item.SubSectionType}}</td>
+                        <td>{{item.GuiltBaseName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col-lg-2 col-4">
+            <button type="submit" class="btn btn-block btn-themecolor">รับคำกล่าวโทษ</button>
+        </div>
+    </div>
+</form>

@@ -44,6 +44,8 @@ export class ArrestIndictmentDetail {
     LawbreakerID?: number;
     ArrestLawbreaker?: Array<ArrestLawbreaker>;
     ArrestProductDetail?: Array<ArrestProductDetail>;
+
+    IsModify: string;
 }
 
 
@@ -94,4 +96,5 @@ export class ArrestIndictmentProduct {
 
     IsChecked: boolean;
     IsModify: string;
+    RowId: number;
 }

@@ -19,7 +19,7 @@ const routes: Routes = [
     path: '',
     data: {
       urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาบันทึกรับคำกล่าวโทษ' }],
-      codePage: 'XCS60-04-01-00-00',
+      codePage: 'ILG60-04-01-00-00',
       pageType: 'list',
       nextPage: { title: 'จัดการข้อมูลบันทึกรับคำกล่าวโทษ', url: '/lawsuit/manage' }
     },

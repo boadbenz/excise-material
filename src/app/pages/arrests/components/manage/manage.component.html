@@ -47,11 +47,11 @@
             {{ r.OfficeName }}
           </ng-template>
 
-          <input type="text" class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}" required
-            [ngbTypeahead]="serachOffice" [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterOffice"
-            (selectItem)="selectItemOffice($event)" [value]="arrestFG.get('ArrestStation').value" (change)="onChangeArrestStation($event)" />
+          <input type="text" class="form-control form-control-sm " [ngbTypeahead]="serachOffice" [resultTemplate]="rt"
+            [readOnly]="showEditField" [inputFormatter]="formatterOffice" (selectItem)="selectItemOffice($event)" value="{{arrestFG.get('ArrestStation').value}}"
+            [ngClass]="{'is-invalid': (arrestFG.get('ArrestStation').invalid && isRequired)}" />
 
-          <input type="text" style="display: none;" formControlName="ArrestStation">
+          <input type="text" style="display: none;" formControlName="ArrestStation" required>
         </div>
       </div>
       <div class="row">
@@ -97,7 +97,10 @@
         <div class="col-lg-2 col-md-3 col-sm-4">
           <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="openModal(noticelist)">เพิ่มใบแจ้งความ</button>
           <ng-template #noticelist let-c="close" let-d="dismiss">
-            <app-modal-notice (c)="modal.close()" (d)="modal.dismiss()" (outputNotice)="setNoticeForm($event)"></app-modal-notice>
+            <app-modal-notice 
+            [arrestDate]="getDateMyDatepicker(arrestFG.value.ArrestDate)" 
+            (c)="modal.close()" (d)="modal.dismiss()" 
+            (outputNotice)="setNoticeForm($event)"></app-modal-notice>
           </ng-template>
         </div>
       </div>
@@ -120,7 +123,7 @@
               <ng-container *ngIf="item.get('IsModify').value != 'd'">
                 <td class="text-center">{{item.get('RowId').value}}</td>
                 <td>{{item.get('NoticeCode').value}}</td>
-                <td>{{item.get('NoticeDateString').value}}</td>
+                <td>{{toLocalShort(item.value.NoticeDate)}}</td>
                 <td>
                   <div *ngFor="let staff of item.value.ArrestNoticeStaff;">{{staff.FullName}}</div>
                 </td>
@@ -187,9 +190,16 @@
                     {{r.LastName == null ? '' : r.LastName}}
                   </ng-template>
 
-                  <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff" [resultTemplate]="rt"
-                    [readOnly]="showEditField" [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
-                    value="{{item.value.FullName}}" />
+                  <input type="text" class="form-control form-control-sm" 
+                  [ngbTypeahead]="searchStaff" 
+                  [resultTemplate]="rt"
+                    [readOnly]="showEditField" 
+                    [inputFormatter]="formatterStaff" 
+                    (selectItem)="selectItemStaff($event, i)"
+                    (change)="onChangeStaff($event, i)" 
+                    value="{{item.value.FullName}}" 
+                    [ngClass]="{'is-invalid': item.get('FullName').invalid && isRequired}" />
+                  <input type="text" formControlName="FullName" [required]="item.value.IsModify != 'd'" style="display: none;">
                 </td>
                 <td>
                   <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
@@ -260,6 +270,7 @@
             <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField">
           </div>
         </div>
+
         <div class="row">
           <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
           <div class="col-lg-4 col-md-7 col-sm-8 form-group">
@@ -271,9 +282,15 @@
               {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
             </ng-template>
 
-            <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion" [resultTemplate]="rt"
-              [readOnly]="showEditField" [inputFormatter]="formatterRegion" (selectItem)="selectItemLocaleRegion($event)"
-              value="{{item.value.Region}}" />
+            <input type="text" class="form-control form-control-sm" 
+              [ngbTypeahead]="searchRegion"
+              [resultTemplate]="rt" 
+              [inputFormatter]="formatterRegion" 
+              (selectItem)="selectItemLocaleRegion($event)"
+              [ngClass]="{'is-invalid': (item.get('Region').invalid && isRequired)}" 
+              [value]="item.get('Region').value" 
+              [readOnly]="showEditField"/>
+              <input type="text" formControlName="Region" required style="display: none;">
           </div>
         </div>
         <div class="row">
@@ -364,31 +381,43 @@
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchProduct"
                     [resultTemplate]="rt" [inputFormatter]="formatterProduct" (selectItem)="selectItemProductItem($event, i)"
-                    [value]="item.value.ProductDesc" />
+                    [value]="item.value.ProductDesc" [ngClass]="{'is-invalid': item.get('ProductDesc').invalid && isRequired}"/>
+                  <input type="text" formControlName="ProductDesc" [required]="item.value.IsModify != 'd'" style="display: none;">
                 </td>
                 <td style="max-width: 30px;">
                   <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField"
-                    min="0" step="0.01">
+                    min="0" step="0.01" [required]="item.value.IsModify != 'd'" [ngClass]="{'ng-touched':isRequired}">
                 </td>
                 <td style="max-width: 60px;">
-                  <ng-template #qtyUnit let-r="result" let-t="term">
-                    {{ r.DutyCode }}
+                  <ng-template #qtyUnit let-rqu="result" let-tqu="term">
+                    {{ rqu.DutyCode }}
                   </ng-template>
-                  <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
-                    [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
-                    [value]="item.value.QtyUnit" />
+                  <input type="text" class="form-control form-control-sm" [readOnly]="showEditField" 
+                    [ngbTypeahead]="searchUnit" 
+                    [resultTemplate]="qtyUnit"
+                    [inputFormatter]="formatterUnit" 
+                    (selectItem)="selectItemQtyUnit($event, i)"
+                    (change)="changeItemQtyUnit($event, i)" 
+                    value="{{item.value.QtyUnit}}" 
+                    [ngClass]="{'is-invalid': item.get('QtyUnit').invalid && isRequired}" />
+                  <input type="text" formControlName="QtyUnit" [required]="item.value.IsModify != 'd'" style="display: none;">
                 </td>
                 <td style="max-width: 30px;">
-                  <input type="number" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField"
-                    min="0" step="0.01">
+                  <input type="number" #NetVolume formControlName="NetVolume" class="form-control form-control-sm"
+                    [readonly]="showEditField" min="0" step="0.01" [required]="item.value.IsModify != 'd'" [ngClass]="{'ng-touched':isRequired}">
                 </td>
                 <td style="max-width: 60px;">
-                  <ng-template #netVolumeUnit let-r="result" let-t="term">
-                    {{ r.DutyCode }}
+                  <ng-template #netVolumeUnit let-rvu="result" let-tvu="term">
+                    {{ rvu.DutyCode }}
                   </ng-template>
                   <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
-                    [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
-                    [value]="item.value.NetVolumeUnit" />
+                    [resultTemplate]="netVolumeUnit" 
+                    [inputFormatter]="formatterUnit" 
+                    (selectItem)="selectItemNetVolumeUnit($event, i)"
+                    [value]="item.value.NetVolumeUnit" 
+                    (change)="changeItemNetVolumeUnit($event, i)" 
+                    [ngClass]="{'is-invalid': item.get('NetVolumeUnit').invalid && isRequired}" />
+                  <input type="text" formControlName="NetVolumeUnit" [required]="item.value.IsModify != 'd'" style="display: none;">
                 </td>
                 <td>
                   <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
@@ -429,7 +458,7 @@
           <thead>
             <tr>
               <th class="text-center">ลำดับ</th>
-              <th>ประเภทผู้ต้องสงสัย</th>
+              <th>ประเภทผู้ต้องหา</th>
               <th>ประเภทบุคคล</th>
               <th>เลขประจำตัว</th>
               <th>ชื่อ</th>
@@ -445,8 +474,7 @@
                 <td>{{item.get('ReferenceID').value}}</td>
                 <td>{{item.get('LawbreakerFullName').value}}</td>
                 <td class="text-center">
-                    <!-- *ngIf="!showEditField" -->
-                  <a href="javaScript:void(0);" class="text-warning text-secondary" (click)="deleteLawbreaker(i)">
+                  <a href="javaScript:void(0);" class="text-warning text-secondary" (click)="deleteLawbreaker(i)" *ngIf="!showEditField">
                     <i class="fa fa-trash-o fa-lg"></i>
                   </a>
                 </td>
@@ -512,10 +540,10 @@
                     </ng-container>
 
                   </td>
-                  <td style="width: 280px;">
-                    <!-- <span class="text-truncate" style="width: 200px;"> -->
-                    {{item.get('GuiltBaseName').value}}
-                    <!-- </span> -->
+                  <td style="width: 300px;">
+                    <p class="text-truncate" style="width: 300px;">
+                      {{item.get('GuiltBaseName').value}}
+                    </p>
                   </td>
                 </ng-template>
 
@@ -525,14 +553,15 @@
 
                       <div formArrayName="ArrestLawbreaker">
                         <ng-container *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
-                          <ng-container *ngIf="lawb.get('LawbreakerID').value">
-                            <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i1+'-'+lIndex+'lb'">
+                          <ng-container *ngIf="lawb.get('LawbreakerID').value && lawb.get('IsModify').value != 'd'">
+                            <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo"
+                              [id]="j+'-'+i1+'-'+lIndex+'lb'" [attr.disabled]="showEditField ? '' : null"
+                              (click)="checkedIndictmentLawbreaker(j, i1)">
                             <label [for]="j+'-'+i1+'-'+lIndex+'lb'">
                               {{ lawb.get('LawbreakerTitleName').value }}
                               {{ lawb.get('LawbreakerFirstName').value }}
                               {{ lawb.get('LawbreakerMiddleName').value }}
                               {{ lawb.get('LawbreakerLastName').value }}
-                              {{ lawb.get('LawbreakerOtherName').value }}
                             </label>
                           </ng-container>
                         </ng-container>
@@ -546,9 +575,10 @@
                   <ng-container formArrayName="ArrestIndictmentProduct">
                     <ng-container *ngFor="let prod of getArrestIndictmentProduct(indict); let i=index;">
                       <div [formGroupName]="i" style="width: 300px;" class="text-truncate">
-                        <ng-container *ngIf="prod.get('ProductID').value">
-                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" id="{{j+'-'+i+'pd'}}">
-                          <label for="{{j+'-'+i+'pd'}}">{{prod.get('ProductDesc').value}}</label>
+                        <ng-container *ngIf="prod.get('ProductID').value && prod.get('IsModify').value != 'd'">
+                          <input formControlName="IsChecked" type="checkbox" class="filled-in chk-col-indigo" [id]="j+'_'+i+'pd'" 
+                            [attr.disabled]="showEditField ? '' : null" (click)="checkedIndictmentProduct(j, i)">
+                          <label [for]="j+'_'+i+'pd'">{{prod.get('ProductDesc').value}}</label>
                         </ng-container>
                       </div>
                     </ng-container>

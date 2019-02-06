@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
+import { ReductionApiService } from '../reduction.api.service';
 
 @Component({
   selector: 'app-manage-detail',
@@ -17,48 +18,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     fullName: 'นายสุชาติ ปัญโญใหญ่',
     dateReport: '',
     typeApprove: ''
-  }]
+  }];
 
-  payFineDataTable = [{
-    fullName: 'นายธวัชชัย บิงขุนทด',
-    dateFine: '20-ม.ค.-2560',
-    finer: 'นางสาวฟาติมา ตันดิลกตระกูล',
-    payment: 'เงินสด',
-    receiptNo: '33',
-    receiptRef: '003/2561',
-    status: 'ยังไม่นำส่งรายได้',
-  }, {
-    fullName: 'นายสุชาติ ปัญโญใหญ่',
-    dateFine: '',
-    finer: '',
-    payment: '',
-    receiptNo: '',
-    receiptRef: '',
-    status: 'ยังไม่ชำระค่าปรับ',
-  }]
+  reductionDataTable = [];
 
-  reductionDataTable = [
-  {
-    fullName: 'นายธวัชชัย บิงขุนทด',
-    exhibit: 'Hoegaarden/Witb',
-    oldFine: '800,000.00',
-    newFine: '900,000.00',
-    diffFine: '100,000.00',
-    status: true,
-    bribe: '160,000.00',
-    prize: '160,000.00',
-    treasury: '480,000.00'
-  }, {
-    fullName: 'นายสุชาติ ปัญโญใหญ่',
-    exhibit: 'Hoegaarden/Witb',
-    oldFine: '800,000.00',
-    newFine: '700,000.00',
-    diffFine: '-100,000.00',
-    status: false,
-    bribe: '160,000.00',
-    prize: '160,000.00',
-    treasury: '480,000.00'
-  }]
+  payFineDataTable = [];
+
 
   listData = [
     {
@@ -151,13 +116,35 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
              + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
     }]
 
+  public detailData = {
+    ArrestCode: '',
+    ArrestDate: '',
+    ArrestTime: '',
+    Behaviour: '',
+    CompareCode: '',
+    CompareDate: '',
+    CompareID: '',
+    CompareName: '',
+    CompareOfficeShortName: '',
+    ComparePositionName: '',
+    CompareTime: '',
+    IsMatchNotice: '',
+    LawsuitName: '',
+    LawsuitNo: '',
+    LawsuitOfficeShortName: '',
+    LawsuitPositionName: '',
+    OccurrenceDate: '',
+    OccurrenceTime: '',
+    Prompt: '',
+    Testimony: '',
+  }
+
   public fileItem = [{
     fileName: '',
     filePath: '',
   }];
 
   public fullName: any;
-  public detailData: any;
   public showField: any;
   public viewMode = true;
   public navServiceSub: any;
@@ -166,16 +153,17 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public compareID: string;
   public indictmentID: string;
-
   private getDataFromListPage: any;
 
-  constructor(private router: Router, private activeRoute: ActivatedRoute, private navService: NavigationService) { }
+  constructor(
+    private router: Router,
+    private activeRoute: ActivatedRoute,
+    private navService: NavigationService,
+    private readonly apiService: ReductionApiService
+  ) { }
 
   ngOnInit() {
 
-    console.log(this.activeRoute.snapshot.params);
-    console.log(this.activeRoute.snapshot.paramMap.get('mode'));
-    console.log(this.activeRoute.snapshot.paramMap.get('code'));
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
     } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {
@@ -203,20 +191,100 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     });
 
 
-    this.getDataFromListPage = this.activeRoute.params
-      .subscribe(params => {
-        // check id from manage view page
-        for (let i = 0; i < this.listData.length; i++) {
-          if (params.code === this.listData[i].arrestCode) {
-            this.detailData = this.listData[i];
-            this.fullName =
-              this.listData[i].titleName +
-              this.listData[i].firstName +
-              ' ' +
-              this.listData[i].lastName;
+    // this.getDataFromListPage = this.activeRoute.params
+    //   .subscribe(params => {
+    //     // check id from manage view page
+    //     for (let i = 0; i < this.listData.length; i++) {
+    //       if (params.code === this.listData[i].arrestCode) {
+    //         this.detailData = this.listData[i];
+    //         this.fullName =
+    //           this.listData[i].titleName +
+    //           this.listData[i].firstName +
+    //           ' ' +
+    //           this.listData[i].lastName;
+    //       }
+    //     }
+    //   });
+
+    this.getAdjustArrestgetByCon(this.activeRoute.snapshot.paramMap.get('compareid'));
+    this.getAdjustFinegetByCon(this.activeRoute.snapshot.paramMap.get('compareid'),
+    this.activeRoute.snapshot.paramMap.get('comparedetailid'));
+  }
+
+  // เตรียมข้อมูลรายละเอียดคดีจาก
+  public getAdjustArrestgetByCon(CompareID: any = null): void {
+    if (CompareID == null ) { return }
+    this.apiService.post('/XCS60/AdjustArrestgetByCon', {CompareID: CompareID})
+        .subscribe(response => {
+          if (response.length > 0) {
+            Object.assign(this.detailData, response[0]);
           }
-        }
-      });
+        }, error => console.log(error))
+  }
+
+  // ดึงข้อมูลการปรับเพิ่มหรือปรับลด
+  public getAdjustFinegetByCon(CompareID: any = null, CompareDetailID: any = null) {
+    if (CompareID == null || CompareDetailID == null) { return }
+    this.apiService.post('/XCS60/AdjustFinegetByCon', {
+      CompareID: CompareID,
+      CompareDetailID: CompareDetailID
+    })
+    .subscribe(response => {
+      if (response.length > 0) {
+        this.reductionDataTable = response;
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  // ดึงข้อมูลในส่วนของการชำระค่าปรับ
+  public getAdjustReceiptgetByCompareDetailId(CompareDetailID: any = null) {
+    if (CompareDetailID == null) { return; }
+    this.apiService.post('/XCS60/AdjustReceiptgetByCompareDetailId', {
+      CompareDetailID: CompareDetailID
+    })
+    .subscribe(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  // ดึงข้อมูลการจออนุมัติเปรียบเทียบคดีและแบบอนุ
+  public getAdjustDetailgetByCompareDetailId(CompareDetailID: any = null) {
+    if (CompareDetailID == null ) { return; }
+    this.apiService.post('/XCS60/AdjustDetailgetByCompareDetailId', { CompareDetailID: CompareDetailID})
+        .subscribe(response => {
+          console.log(response);
+        }, error => {
+          console.log(error);
+        });
+  }
+
+  // ดึงข้อมูลเอกสารแนบภายใน
+  public getMasDocumentMaingetAll(CompareID: any = null) {
+    if (CompareID == null) { return; }
+    this.apiService.post('/XCS60/MasDocumentMaingetAll', {
+      DocumentType: 10,
+      ReferenceCode: CompareID
+    })
+    .subscribe(response => {
+      console.log(response);
+    }, error => console.log(error));
+  }
+
+  // ดึงข้อมูลตรวจสอบข้อมูล
+  public getAdjustFinecheckComplete(CompareDetailID: any = null) {
+    if (CompareDetailID == null) { return; }
+    this.apiService.post('/XCS60/AdjustFinecheckComplete', {
+      CompareDetailID: CompareDetailID
+    })
+    .subscribe(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
+    })
   }
 
   viewData() {

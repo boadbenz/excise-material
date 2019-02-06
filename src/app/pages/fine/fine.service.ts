@@ -35,13 +35,13 @@ export class FineService {
 
     // getByCon(form: any) {
     //     const params = JSON.stringify(form);
-    //     const url = `${appConfig.api8881}/ComparegetByCon`;
+    //     const url = `${appConfig.api8887}/ComparegetByCon`;
     //     return this.http.post<Compare[]>(url, params, this.httpOptions);
     // }
 
     async getByCon(CompareID: string): Promise<any> {
         const params = { CompareID };
-        const url = `${appConfig.api8881}/ComparegetByCon`;
+        const url = `${appConfig.api8887}/ComparegetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -76,7 +76,7 @@ export class FineService {
     }
     // async getByConAdv(form: any): Promise<any> {
     //     const params = JSON.stringify(form);
-    //     const url = `${appConfig.api8881}/CompareListgetByConAdv`;
+    //     const url = `${appConfig.api8887}/CompareListgetByConAdv`;
 
     //     try {
     //         // const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -111,7 +111,7 @@ export class FineService {
 
     async getByDoc(ReferenceCode: string): Promise<Arrest> {
         const params = { ReferenceCode };
-        const url = `${appConfig.api8881}/CompareDocumentgetByCon`;
+        const url = `${appConfig.api8887}/CompareDocumentgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -123,7 +123,7 @@ export class FineService {
 
     async LawsuitegetByCon(LawsuitID: string): Promise<Lawsuit> {
         const params = { LawsuitID };
-        const url = `${appConfig.api8083}/LawsuitgetByCon`;
+        const url = `${appConfig.api8777}/LawsuitgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -135,7 +135,7 @@ export class FineService {
 
     async MistreatgetByCon(Misterat: ICompareMistreat): Promise<any> {
         const params = JSON.stringify(Misterat);
-        const url = `${appConfig.api8881}/CompareCountMistreatgetByCon`;
+        const url = `${appConfig.api8887}/CompareCountMistreatgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -147,7 +147,7 @@ export class FineService {
 
     async RateMistreatgetByCon(Misterat: IRateMistreat): Promise<any> {
         const params = JSON.stringify(Misterat);
-        const url = `${appConfig.api8881}/CompareCountRateMistreatgetByCon`;
+        const url = `${appConfig.api8887}/CompareCountRateMistreatgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -160,7 +160,7 @@ export class FineService {
 
     async DivisionRategetByCon(): Promise<any> {
         const params = {};
-        const url = `${appConfig.api8881}/CompareMasDivisionRategetByCon`;
+        const url = `${appConfig.api8887}/CompareMasDivisionRategetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -172,7 +172,7 @@ export class FineService {
 
     async insAll(Compare: ICompareIns): Promise<any> {
         const params = Compare;
-        const url = `${appConfig.api8881}/CompareinsAll`;
+        const url = `${appConfig.api8887}/CompareinsAll`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -184,7 +184,7 @@ export class FineService {
 
     async CompareupdByCon(oCompare: Compare): Promise<any> {
         const params = JSON.stringify(oCompare);
-        const url = `${appConfig.api8881}/CompareupdByCon`;
+        const url = `${appConfig.api8887}/CompareupdByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -196,7 +196,7 @@ export class FineService {
 
     async CompareUpdDelete(oCompare: Compare): Promise<any> {
         const params = JSON.stringify(oCompare);
-        const url = `${appConfig.api8881}/CompareUpdDelete`;
+        const url = `${appConfig.api8887}/CompareUpdDelete`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -209,7 +209,7 @@ export class FineService {
     async insDetailAll(Compare: CompareDetail): Promise<any> {
         debugger
         const params = JSON.stringify(Compare);
-        const url = `${appConfig.api8881}/CompareDetailinsAll`;
+        const url = `${appConfig.api8887}/CompareDetailinsAll`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -221,7 +221,7 @@ export class FineService {
 
     async updDetailAll(Compare: CompareDetail): Promise<any> {
         const params = JSON.stringify(Compare);
-        const url = `${appConfig.api8881}/CompareDetailupdByCon`;
+        const url = `${appConfig.api8887}/CompareDetailupdByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -234,7 +234,7 @@ export class FineService {
     async getStation(): Promise<any> {
         debugger
         const params = {};
-        const url = `${appConfig.api8881}/CompareMasOfficegetByKeyword`;
+        const url = `${appConfig.api8887}/CompareMasOfficegetByKeyword`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -246,7 +246,7 @@ export class FineService {
 
     async getStaff(Textsearch: string): Promise<any> {
         const params = { Textsearch };
-        const url = `${appConfig.api8881}/CompareMasStaffgetByKeyword`;
+        const url = `${appConfig.api8887}/CompareMasStaffgetByKeyword`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

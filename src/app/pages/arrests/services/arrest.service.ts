@@ -16,7 +16,7 @@ export class ArrestService {
     ) {
     }
 
-    version = '0.0.0.44'
+    version = '0.0.0.70'
 
     private httpOptions = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -48,7 +48,7 @@ export class ArrestService {
 
     ArrestReportgetByCon(ArrestCode: string) {
         const params = { ArrestCode };
-        const url = `${appConfig.apiReport}/ArrestgetByCon.aspx`;
+        const url = `${appConfig.apiReport}/ILG60_00_03_001.aspx`;
         this.showLoader();
         return this.httpClient.post(url, params, { ...this.httpOptions, responseType: 'blob' })
             .catch(this.onCatch)

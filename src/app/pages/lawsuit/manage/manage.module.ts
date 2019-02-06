@@ -25,6 +25,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { IndicmentModalComponent } from '../indictment/indicment-modal.component';
 import { DialogJudgment } from './dialog-judgment'
 import { StepWizardModule } from '../../component/step-wizard/step-wizard.module';
+import { DialogNotComplete } from './dialog-notComplete';
 const routes: Routes = [
   {
     path: "",
@@ -65,10 +66,14 @@ const routes: Routes = [
     StepWizardModule
     // DetailModule,
   ],
-  entryComponents: [DialogJudgment],
+  entryComponents: [
+    DialogJudgment,
+    DialogNotComplete
+  ],
   declarations: [
     ManageComponent,
     DialogJudgment,
+    DialogNotComplete,
     IndicmentModalComponent
   ], providers: [
     { provide: NgbDatepickerI18n, useClass: DatepickerI18nService },

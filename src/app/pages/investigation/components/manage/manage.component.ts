@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -11,13 +10,14 @@ import * as fromService from '../../services';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { Message } from 'app/config/message';
-import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker, toLocalShort } from 'app/config/dateFormat';
+import { MyDatePickerOptions, getDateMyDatepicker, compareDate, setDateMyDatepicker, toLocalShort, setZeroHours } from 'app/config/dateFormat';
 import { IMyDateModel } from 'mydatepicker-th';
 import { Subject } from 'rxjs/Subject';
 import * as fromStore from '../../store';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import swal from 'sweetalert2'
+import { sortFormArray } from 'app/pages/arrests/arrest.helper';
 
 
 @Component({
@@ -114,14 +114,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.activeRoute.params.takeUntil(this.destroy$).subscribe(p => {
             this.mode = p['mode'];
             this.investCode = p['code'];
-            switch (this.mode) {
-                case 'C':
-                    this.enableBtnModeC();
-                    break;
-                case 'R':
-                    this.enableBtnModeR();
-                    break;
-            }
             this.pageLoad();
         });
     }
@@ -162,7 +154,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
                 await this.navService.setOnCancel(false);
                 switch (this.mode) {
                     case 'C':
-                        this.router.navigate(['/investigation/list']);
+                        this.router.navigate(['/suppression/investigation/list']);
                         break;
                     case 'R':
                         this.investigateForm.reset();
@@ -207,8 +199,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        f.DateStart = getDateMyDatepicker(f.DateStart);
-        f.DateEnd = getDateMyDatepicker(f.DateEnd);
+        f.DateStart = setZeroHours(getDateMyDatepicker(f.DateStart));
+        f.DateEnd = setZeroHours(getDateMyDatepicker(f.DateEnd));
 
         switch (this.mode) {
             case 'R':
@@ -221,12 +213,14 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     private pageLoad() {
         switch (this.mode) {
             case 'C':
+                this.enableBtnModeC();
                 if (this.stateInvest) {
                     this.pageRefreshInvestigate(this.stateInvest);
                 }
                 break;
 
             case 'R':
+                this.enableBtnModeR();
                 this.s_invest.InvestigategetByCon(this.investCode)
                     .takeUntil(this.destroy$)
                     .subscribe((x: fromModels.InvestigateModel) => {
@@ -238,10 +232,16 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private async pageRefreshInvestigate(x: fromModels.InvestigateModel) {
-        x.DateStart = setDateMyDatepicker(x.DateStart);
-        x.DateEnd = setDateMyDatepicker(x.DateEnd);
 
-        let investDetail = x.InvestigateDetail.filter(x => x.InvestigateDetailID);
+        x.DateStart = (setDateMyDatepicker(x.DateStart));
+        x.DateEnd = (setDateMyDatepicker(x.DateEnd));
+
+        let investDetail = x.InvestigateDetail
+            .filter(x => x.InvestigateDetailID)
+            .sort((a, b) => {
+                return parseInt(a.InvestigateSeq) - parseInt(b.InvestigateSeq);
+            });
+        x.InvestigateDetail = investDetail;
         if (!investDetail) return;
         await investDetail.map(id => {
             let staff: fromModels.InvestigateDetailStaff[] = id.InvestigateDetailStaff
@@ -260,8 +260,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
             id.InvestigateDetailStaff = staff;
         })
-        investDetail.sort((a, b) => { if (a.InvestigateSeq < b.InvestigateSeq) return -1; })
-        this.setItemFormArray(investDetail, 'InvestigateDetail')
+
+        this.setItemFormArray(investDetail, 'InvestigateDetail');
         this.investigateForm.patchValue(x);
         this.investigateNo0.nativeElement.value = x.InvestigateNo && x.InvestigateNo.split('/')[0];
         this.investigateNo1.nativeElement.value = x.InvestigateNo && x.InvestigateNo.split('/')[1];
@@ -325,10 +325,10 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onCreateInvestDetail() {
         let invest = this.investigateForm.value as fromModels.InvestigateModel;
-        const dateStart = getDateMyDatepicker(invest.DateStart);
-        const dateEnd = getDateMyDatepicker(invest.DateEnd);
-        invest.DateStart = (dateStart);
-        invest.DateEnd = (dateEnd);
+        // const dateStart = getDateMyDatepicker(invest.DateStart);
+        // const dateEnd = getDateMyDatepicker(invest.DateEnd);
+        // invest.DateStart = setZeroHours(dateStart);
+        // invest.DateEnd = setZeroHours(dateEnd);
 
         invest.DateStart = getDateMyDatepicker(invest.DateStart);
         invest.DateEnd = getDateMyDatepicker(invest.DateEnd);
@@ -340,7 +340,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.router.navigate(
-            [`investigation/detail-manage`, 'C'],
+            [`suppression/investigation/detail-manage`, 'C'],
             {
                 queryParams: {
                     investMode: this.mode,
@@ -353,7 +353,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     onViewInvesDetail(invesDetailId: string, investigateSeq: string) {
 
         this.router.navigate(
-            [`investigation/detail-manage`, 'R'],
+            [`suppression/investigation/detail-manage`, 'R'],
             {
                 queryParams: {
                     investMode: this.mode,
@@ -427,7 +427,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
                     .subscribe(x => {
                         if (this.checkIsSuccess(x)) {
                             swal('', Message.delComplete, 'success');
-                            this.router.navigate(['/investigation/list']);
+                            this.router.navigate(['/suppression/investigation/list']);
                         } else {
                             swal('', Message.delFail, 'error');
                         }
@@ -452,13 +452,22 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.s_invest.InvestigateupdAll(invest)
             .takeUntil(this.destroy$)
             .subscribe(x => {
-                if (!this.checkIsSuccess(x)) {
+                if (this.checkIsSuccess(x)) {
+                    swal({
+                        title: '',
+                        text: Message.saveComplete,
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                    }).then(async (result) => {
+                        if (result.value) {
+                            this.pageLoad();
+                        }
+                    });
+                } else {
                     swal('', Message.saveFail, 'error');
-                    return;
                 }
-                swal('', Message.saveComplete, 'success');
-
-                this.router.navigate(['/investigation/manage', this.mode, this.investCode])
             }, (error) => this.catchError(error));
     }
 

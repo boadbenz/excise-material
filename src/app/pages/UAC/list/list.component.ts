@@ -41,6 +41,7 @@ export class ListComponent implements OnInit {
   clickManage(event: any) {
     const getdata = event;
     // event.path[1].innerText
+    localStorage.setItem('UserName', 'UserName');
     localStorage.setItem('Name', getdata.name);
     localStorage.setItem('positionName', getdata.pName);
     localStorage.setItem('officeName', getdata.offName);

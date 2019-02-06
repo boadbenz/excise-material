@@ -27,7 +27,7 @@
       </a>
   </div>
 </div>
-<h5 class="text-right mt-3 pr-3">XCS60-02-02-02-00</h5>
+<h5 class="text-right mt-3 pr-3">ILG60-02-02-02-00</h5>
 <div class="modal-body font-14">
   <div *ngIf="advSearch">
       <div class="card card-outline-bluish unset-radius">
@@ -134,8 +134,12 @@
                           <td>{{item.get('SuspectFullName').value}}</td>
                           <td>{{item.get('MistreatNo').value}}</td>
                           <td class="text-center">
-                              <a href="#/notice/suspect/R/{{item.get('SuspectID').value?item.get('SuspectID').value:item.get('LawbreakerID').value}}" 
-                                class="text-center text-secondary" target="_blank">
+                            <a href="#/arrest/lawbreaker/R/{{item.get('SuspectID').value}}" 
+                                class="text-center text-secondary" target="_blank" *ngIf="item.get('MistreatNo').value>0">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
+                              <a href="#/notice/suspect/R/{{item.get('SuspectID').value}}" 
+                                class="text-center text-secondary" target="_blank" *ngIf="item.get('MistreatNo').value==0">
                                   <i class="fa fa-eye fa-lg"></i>
                               </a>
                           </td>
@@ -156,3 +160,15 @@
       <button type="button" class="btn btn-block btn-themecolor" (click)="exportData()">บันทึก</button>
   </div>
 </div>
+
+<swal
+  #alertSwal
+  text=""
+  type=""
+  [showConfirmButton]="false"
+  [showCancelButton]="true"
+  buttonsStyling="false"
+  cancelButtonText="OK"
+  cancelButtonClass="swal2-confirm"
+  [focusCancel]="true">
+</swal>

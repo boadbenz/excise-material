@@ -22,7 +22,7 @@ export const routes: Routes = [
         path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/arrests/arrest.module#ArrestModule'
     }, {
-        path: 'investigation', component: LayoutComponent, canActivate: [AuthGuard],
+        path: 'suppression/investigation', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/investigation/investigation.module#InvestigationModule'
     }, {
         path: 'prove', component: LayoutComponent, canActivate: [AuthGuard],
@@ -58,6 +58,13 @@ export const routes: Routes = [
             { path: 'manage', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
         ]
     }, 
+    {
+        path: 'report', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/report/list/list.module#ListModule' },
+            { path: 'manage', loadChildren: './pages/report/manage/manage.module#ManageModule' }
+        ]
+    }, 
     // {
     //     path: 'reward', component: LayoutComponent,
     //     children: [
@@ -80,7 +87,10 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
-            { path: 'manage/:mode/:code', loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule' }
+            {
+                path: 'manage/:mode/:compareid/:comparedetailid',
+                loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule'
+            }
         ]
     },
 
@@ -172,5 +182,19 @@ export const routes: Routes = [
         component: LayoutComponent,
         loadChildren:
             './pages/icons/material/material.module#MaterialComponentModule'
+    },
+    {
+        path: 'evidenceIn', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/evidenceIn/list/list.module#ListModule' },
+            { path: 'manage/:type/:mode/:code/:proveid', loadChildren: './pages/evidenceIn/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'evidenceOut', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list/:type', loadChildren: './pages/evidenceOut/list/list.module#ListModule' },
+            { path: 'manage/:type/:mode/:code', loadChildren: './pages/evidenceOut/manage/manage.module#ManageModule' }
+        ]
     }
 ];

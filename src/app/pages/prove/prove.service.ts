@@ -55,7 +55,7 @@ export class ProveService {
 
   async getProveProductUnit(Textsearch: string): Promise<any> {
     const params = {  };
-    const url = `${appConfig.api7789}/MasDutyUnitMaingetAll`;
+    const url = `${appConfig.api8777}/MasDutyUnitMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -219,7 +219,7 @@ export class ProveService {
 
   async MasDocumentMaininsAll(oProveDocument: ProveDocument): Promise<any> {
     const params = JSON.stringify(oProveDocument);
-    const url = `${appConfig.api7789}/MasDocumentMaininsAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaininsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -231,7 +231,7 @@ export class ProveService {
 
   async MasDocumentMainupdByCon(oProveDocument: ProveDocument): Promise<any> {
     const params = JSON.stringify(oProveDocument);
-    const url = `${appConfig.api7789}/MasDocumentMainupdByCon`;
+    const url = `${appConfig.api8777}/MasDocumentMainupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -243,7 +243,7 @@ export class ProveService {
 
   async MasDocumentMainupdDelete(DocumentID: string): Promise<any> {
     const params = {DocumentID};
-    const url = `${appConfig.api7789}/MasDocumentMainupdDelete`;
+    const url = `${appConfig.api8777}/MasDocumentMainupdDelete`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -292,14 +292,14 @@ export class ProveService {
     }
   }
 
-  async MasDocumentMaingetAll(ReferenceCode: string): Promise<any> {
+  async MasDocumentMaingetAll(ReferenceCode: string, _DocumentType: string): Promise<any> {
     let pValue = {
       "ReferenceCode" : ReferenceCode,
-      "DocumentType" : 5
+      "DocumentType" : _DocumentType
     }
 
     const params = JSON.stringify(pValue);
-    const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -347,7 +347,7 @@ export class ProveService {
 
   async LawsuitArrestgetByCon(IndictmentID: string): Promise<any> {
     const params = { IndictmentID };
-    const url = `${appConfig.api8083}/LawsuitArrestgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitArrestgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -364,8 +364,9 @@ export class ProveService {
       "IndictmentID": IndictmentID
     }
 
+    debugger
     const params = JSON.stringify(pValue);
-    const url = `${appConfig.apiReport}/ILL_P038.aspx`;
+    const url = `${appConfig.apiReport}//ILG60_00_05_002.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .catch(this.onCatch)
       .do((res: Response) => {

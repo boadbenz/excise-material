@@ -3,7 +3,7 @@ import { BehaviorSubject } from "rxjs";
 export class ManageConfig {
     ILG60_03_02_00_00_E08 = new BehaviorSubject<Boolean>(true);
     ILG60_03_02_00_00_E10 = new BehaviorSubject<Boolean>(false);
-    ILG60_03_02_00_00_E13 = new BehaviorSubject<Boolean>(false);
+    ILG60_03_02_00_00_E13 = new BehaviorSubject<Boolean>(true);
     ILG60_03_02_00_00_E18 = new BehaviorSubject<Boolean>(false);
     ILG60_03_02_00_00_E20 = new BehaviorSubject<Boolean>(false);
     ILG60_03_02_00_00_E21 = new BehaviorSubject<Boolean>(false);

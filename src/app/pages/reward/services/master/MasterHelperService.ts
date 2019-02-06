@@ -1,5 +1,5 @@
 import { appConfig } from 'app/app.config';
 
 export class MasterHelperService {
-    protected ApiPrefixUrl = `${appConfig.api7789}`;
+    protected ApiPrefixUrl = `${appConfig.api8777}`;
 }

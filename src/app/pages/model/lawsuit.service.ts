@@ -18,7 +18,7 @@ export class LawsuitService {
 
   async LawsuitegetByCon(LawsuitID: string): Promise<any> {
     const params = { LawsuitID };
-    const url = `${appConfig.api8083}/LawsuitgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -31,7 +31,7 @@ export class LawsuitService {
   async LawsuitegetByCon2(LawsuitID: string): Promise<Lawsuit> {
     console.log(LawsuitID);
     const params = { LawsuitID };
-    const url = `${appConfig.api8083}/LawsuitgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -43,7 +43,7 @@ export class LawsuitService {
 
   async getGuiltBaseByCon(GuiltBaseID: string): Promise<GuiltBase> {
     const params = { GuiltBaseID };
-    const url = `${appConfig.api8881}/CompareMasLawgetByCon`;
+    const url = `${appConfig.api8887}/CompareMasLawgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -55,7 +55,7 @@ export class LawsuitService {
 
   async CompareMasLawgetByCon(GuiltBaseID) {
     const params = { GuiltBaseID: GuiltBaseID };
-    const url = `${appConfig.api8881}/CompareMasLawgetByCon`;
+    const url = `${appConfig.api8887}/CompareMasLawgetByCon`;
     const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
     // if (res.IsSuccess) {
     //   return res.ResponseData
