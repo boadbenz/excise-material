@@ -493,7 +493,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
                 if (staff.length < 1) {
                     swal('', 'ต้องมีรายการผู้จับกุมอย่างน้อย 1 รายการ', 'warning')
-                    return
+                    return;
                 }
                 if (staff.filter(x => x.ContributorID == '6').length !== 1) {
                     swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการ', 'warning');
@@ -503,12 +503,17 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     swal('', 'กรุณาเลือกฐานะของผู้จับกุม', 'warning');
                     return;
                 }
-                if (staff.filter(x => x.FullName == '').length > 0) {
+                if (staff.filter(x => !x.FullName).length > 0) {
                     swal('', 'กรุณากรุณาระบุข้อมูลผู้จับกุม', 'warning');
                     return;
                 }
                 const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
                 const product: fromModels.ArrestProduct[] = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
+                if (product.filter(x => !x.ProductDesc && !x.QtyUnit && !x.NetVolume && !x.NetVolumeUnit).length) {
+                    swal('', 'กรุณาระบุข้อมูลของกลางให้ครบถ้วน', 'warning');
+                    return;
+                }
+
                 if (lawbreaker.length <= 0 && product.length <= 0) {
                     this.ILG60_03_02_00_00_E21.next(true);
                     this.ILG60_03_03_00_00_E15.next(true);
@@ -1446,6 +1451,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     deleteArrestIndictmentProduct(APIndex: number, RowId: number, _IndictmentProduct: FormArray) {
         let nip = _IndictmentProduct.value as fromModels.ArrestIndictmentProduct[];
+        if (!nip[APIndex]) return;
         nip[APIndex].RowId = RowId;
         nip[APIndex].IsModify = 'd';
         nip[APIndex].IsChecked = false;
@@ -1461,6 +1467,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 if (_ProductDetail.length) {
                     // อัพเดท ArrestProductDetail ตามที่ได้รับ index มา
                     let apd = _ProductDetail.value as fromModels.ArrestProductDetail[];
+                    if (!apd[APIndex]) return;
                     apd[APIndex].RowId = RowId;
                     apd[APIndex].IsModify = 'd';
                     apd[APIndex].IsChecked = false;
@@ -2070,7 +2077,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 x.ArrestCode = this.arrestCode;
                 switch (x.IsModify) {
                     case 'd':
-                        if (this.mode == 'C') return;
+                        if (this.mode == 'C' || !x.StaffID) return;
                         await this.s_staff.ArrestStaffupdDelete(x.StaffID)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -2106,7 +2113,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 x.ArrestCode = this.arrestCode;
                 switch (x.IsModify) {
                     case 'd':
-                        if (this.mode == 'C') return;
+                        if (this.mode == 'C' || !x.ProductID) return;
                         await this.s_product.ArrestProductupdDelete(x.ProductID)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
@@ -2210,7 +2217,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 let indict;
                 switch (x.IsModify) {
                     case 'd':
-                        if (this.mode == 'C') return;
+                        if (this.mode == 'C' || !x.IndictmentID) return;
                         indict = await this.s_indictment.ArrestIndictmentupdDelete(x.IndictmentID.toString())
                             .then().catch((error) => this.catchError(error));
                         break;
@@ -2268,12 +2275,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     }).catch((error) => this.catchError(error));
 
             } else if (x.IsModify == 'd') {
-                if (this.mode == 'C') return;
+                if (this.mode == 'C' || !x.ProductID) return;
                 await this.s_indictment.ArrestIndictmentProductupdDeleteByProductID(x.ProductID.toString())
                     .then().catch(error => this.catchError(error));
 
             } else if (x.IsModify == 'u' || x.IsModify == 'v') {
-                if (this.mode == 'C') return;
+                if (this.mode == 'C' || !x.ProductID) return;
                 if (x.IndictmentProductID) {
                     if (x.IsChecked) {
                         await this.s_indictment.ArrestIndictmentProductupdByProductID(x)
