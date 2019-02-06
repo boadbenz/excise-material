@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.34');
+    this.sidebarService.setVersion('0.0.0.35');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -963,7 +963,7 @@ export class ManageComponent implements OnInit {
             catch (e) {
               console.log('error==>', e)
             }
-
+            console.log(islaw)
             if (islaw == 1) {
               this.staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0]
               this.staff.LawsuitStation = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStation
@@ -988,7 +988,7 @@ export class ManageComponent implements OnInit {
           }
           let IsProve = res[0]['LawsuitArrestIndicment'][0].IsProve;
           this.prove = IsProve
-          if (IsProve == 0) {
+          if (IsProve == 0 && res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'] != 0) {
             var countType = 0;
             await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].forEach(item => {
               if (item.LawsuitType == 1) { countType++; }
@@ -1265,12 +1265,13 @@ export class ManageComponent implements OnInit {
         this.lawsuitForm.controls['officeCode'].setValue(value.OfficeCode);
         this.suggestions = [];
         let initOffice = this.masOfficeList.filter(item => (item.OfficeName.includes(value.OfficeName)));
-        if (initOffice.length == 1) {
+        if (initOffice.length > 0) {
           let office = initOffice[0]
           this.LawsuitStaffOnsave.LawsuitStation = office.OfficeName
           this.LawsuitStaffOnsave.LawsuitStationCode = office.OfficeCode
           this.staff.LawsuitStation = office.OfficeName
           this.staff.LawsuitStationCode = office.OfficeCode
+
           this.lawsuitForm.controls['LawsuitStation'].setValue(this.validateData(office.OfficeName));
           this.lawsuitForm.controls["LawsuitStationCode"].setValue(office.OfficeCode);
           this.suggestionsStation = [];
