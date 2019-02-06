@@ -809,6 +809,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 } else {
                     arrIndictD.ArrestProductDetail.filter((x1: fromModels.ArrestProductDetail) => {
                         let _arrIndictProductD_ = _arrIndictProductD.find(p => p.ProductID == x1.ProductID);
+                        if (!_arrIndictProductD_) return;
                         _arrIndictProductD_.IndictmentDetailID = arrIndictD.IndictmentDetailID;
                         _arrIndictProductD_.ProductDetailID = x1.ProductDetailID;
                         _arrIndictProductD_.SizeUnit = x1.SizeUnit;
@@ -840,6 +841,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 .ArrestIndictmentProductgetByIndictmentID(ai.IndictmentID.toString())
                 .then(x => {
                     if (this.checkResponse(x)) {
+                        
                         let __arrProduct = _arrProduct.map((x1, index) => {
                             let aip = new fromModels.ArrestIndictmentProduct();
                             aip.RowId = index + 1;
@@ -864,6 +866,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
                         x.filter((x1: fromModels.ArrestIndictmentProduct) => {
                             let _arrProduct_ = __arrProduct.find(p => p.ProductID == x1.ProductID);
+                            if (!_arrProduct_) return;
                             _arrProduct_.IndictmentProductID = x1.IndictmentProductID;
                             _arrProduct_.IsProdcutCo = x1.IsProdcutCo;
                             _arrProduct_.IndictmentProductMistreatRate = x1.IndictmentProductMistreatRate;
