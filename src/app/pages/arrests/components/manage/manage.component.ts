@@ -499,12 +499,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการ', 'warning');
                     return;
                 }
-                if (staff.filter(x => x.ContributorID == '').length > 0) {
-                    swal('', 'กรุณาเลือกฐานะของผู้จับกุม', 'warning');
-                    return;
-                }
-                if (staff.filter(x => !x.FullName).length > 0) {
-                    swal('', 'กรุณากรุณาระบุข้อมูลผู้จับกุม', 'warning');
+                if (staff.filter(x => !x.ContributorID || !x.FullName).length > 0) {
+                    swal('', 'กรุณาผู้จับกุมให้ครบถ้วน', 'warning');
                     return;
                 }
                 const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
