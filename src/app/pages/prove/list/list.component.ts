@@ -241,6 +241,8 @@ export class ListComponent implements OnInit {
     clickView(LawsuitID: string, ArrestCode: string, IndictmentID: string, GuiltBaseID: string, ProveID: string) {
         //this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${IndictmentID}/${GuiltBaseID}/${ProveID}`]);
         debugger
+        console.log("ProveID : ",ProveID)
+        console.log("IndictmentID : ",IndictmentID)
         if (ProveID == "" || ProveID == undefined) {
             ProveID = "0";
             this._router.navigate([`/prove/manage/C/${ProveID}/${IndictmentID}`]);

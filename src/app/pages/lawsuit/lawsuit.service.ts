@@ -309,6 +309,20 @@ export class LawsuitService {
       .map(x => x)
 
   }
+  LawsuitReport2(ArrestCode) {
+    const params = { ArrestCode };
+    const url = `${appConfig.apiReport}/ILG60_00_04_002.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .map(x => x)
+
+  }
+  LawsuitReport3(LawsuitID) {
+    const params = { LawsuitID };
+    const url = `${appConfig.apiReport}/ILG60_00_06_004.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .map(x => x)
+
+  }
   // async getByKeyword(filterValue) {
   //   const params = JSON.stringify(filterValue);
   //   const url = `${appConfig.apiUrl}/LawsuitgetByKeyword`;
