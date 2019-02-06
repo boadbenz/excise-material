@@ -705,7 +705,7 @@
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Bail" name="Bail"
-                           [disabled]="(!editUser.checkBox1 || showEditField) && !editUser.checkBox2" [required]="editUser.checkBox1">
+                           [disabled]="(!editUser.checkBox1 && !editUser.checkBox2) || showEditField" [required]="editUser.checkBox1">
                   </div>
                 </div>
               </div>
