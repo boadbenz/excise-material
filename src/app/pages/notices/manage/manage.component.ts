@@ -63,6 +63,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onPrintSubscribe: any;
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
+    private onShowEditFieldSubscribe: any;
 
     actionFrom:string;
     months:any[];
@@ -150,9 +151,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sidebarService.setVersion('0.0.2.36');
 
         this.navigate_service();
-
         this.active_route();
-
         this.createForm();
 
         await this.setCommunicateStore();
@@ -274,7 +273,21 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private navigate_service() {
-        this.navService.showFieldEdit.subscribe(async p => {
+        this.onShowEditFieldSubscribe = this.navService.showFieldEdit.subscribe(async p => {
+            console.log(this.noticeForm);
+            if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
+                this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
+                p = true;
+                
+                // await this.navService.setEditField(true);
+                await this.navService.setEditButton(true);
+                await this.navService.setPrintButton(false);
+                await this.navService.setDeleteButton(false);
+                await this.navService.setNextPageButton(true);
+                // // set false
+                await this.navService.setSaveButton(false);
+                await this.navService.setCancelButton(true);
+            }
             this.showEditField = p;
         });
 
@@ -1477,6 +1490,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.onShowEditFieldSubscribe.unsubscribe();
         this.onCancelSubscribe.unsubscribe();
         this.onSaveSubscribe.unsubscribe();
         this.onDeleSubscribe.unsubscribe();
@@ -1556,9 +1570,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async onCancelEdit(){
+        sessionStorage.removeItem("notice_form_data");
         await this.navService.setOnCancel(false);
         this.router.navigate(['/notice/list']);
-
-        sessionStorage.removeItem("notice_form_data");
     }
 }
