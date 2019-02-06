@@ -203,7 +203,7 @@ export class NoticeService {
 
     async documentRequestgetByCon(ReferenceCode: string): Promise<NoticeDocument[]> {
         const params = { ReferenceCode, DocumentType:2 };
-        const url = `${appConfig.api8883}/MasDocumentMaingetAll`;
+        const url = `${appConfig.api8777}/MasDocumentMaingetAll`;
         const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
         if (!res.length) {
             return new Array<NoticeDocument>()
