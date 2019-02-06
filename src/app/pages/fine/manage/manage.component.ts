@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.43');
+    this.sidebarService.setVersion('0.0.0.44');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -755,7 +755,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     try {
       const rec: any = this.receipt.list[index];
         const data: any = {
-          FineType: 1,
+          FineType: (this.params.CompareID == 0 ? 0 : 1),
           ReferenceID: CompareReceiptID,
           PaymentPeriodNo: 1,
           PaymentFine: this.sumAllCompare.sum,
