@@ -598,9 +598,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                 StaffReceip: res[j].RevenueCompareStaff[i].TitleName + res[j].RevenueCompareStaff[i].FirstName + " " + res[j].RevenueCompareStaff[i].LastName,
                                                 PaymentDate: toLocalShort(res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
                                                 TotalFine: +`${res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
-                                                BribeMoney: +`${res[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : res[0].RevenueCompareDetail[i].BribeMoney}`,
-                                                TreasuryMoney: +`${res[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : res[0].RevenueCompareDetail[i].TreasuryMoney}`,
-                                                RewardMoney: +`${res[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : res[0].RevenueCompareDetail[i].RewardMoney}`,
+                                                BribeMoney: +`${res[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : res[j].RevenueCompareDetail[i].BribeMoney}`,
+                                                TreasuryMoney: +`${res[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : res[j].RevenueCompareDetail[i].TreasuryMoney}`,
+                                                RewardMoney: +`${res[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : res[j].RevenueCompareDetail[i].RewardMoney}`,
                                                 IsCheck: false,
                                                 IsNewItem: true,
                                                 IsDelItem: false
