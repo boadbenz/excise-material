@@ -364,6 +364,9 @@ export class ProveService {
       "IndictmentID": IndictmentID
     }
 
+    console.log("ArrestCode : ",ArrestCode)
+    console.log("ProveID : ",ProveID)
+    console.log("IndictmentID : ",IndictmentID)
     debugger
     const params = JSON.stringify(pValue);
     const url = `${appConfig.apiReport}//ILG60_00_05_002.aspx`;
