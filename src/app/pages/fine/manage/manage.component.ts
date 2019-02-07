@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.43');
+    this.sidebarService.setVersion('0.0.0.44');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -364,9 +364,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             // console.log('staff 19 ', st.ProcessCode, j);
             const ind: any = parseInt(st.ProcessCode != null ? st.ProcessCode : 0);
             // console.log(ind);
-            if (typeof ind == 'number') {
+            let indexUser = 0;
+            if (typeof ind == 'number' && this.receipt.list.length > ind) {
               try {
-                console.log((+st.ProcessCode) == parseFloat(j));
+                // console.log((+st.ProcessCode) == parseFloat(j));
                 this.receipt.list[ind].OperationPosName = st.PositionName;
                 this.receipt.list[ind].OperationPosCode = st.PositionCode;
                 this.receipt.list[ind].ReceiptStaff = name;
@@ -376,7 +377,40 @@ export class ManageComponent implements OnInit, OnDestroy {
               } catch (err) {
                 console.log(err);
               }
-
+            }
+            for (const u of this.DataToSave.userData) {
+              if (st.ContributorID == 19 && u.IndictmentDetailID == st.ProcessCode) {
+                try {
+                  this.receipt.list[indexUser].OperationPosName = st.PositionName;
+                  this.receipt.list[indexUser].OperationPosCode = st.PositionCode;
+                  this.receipt.list[indexUser].ReceiptStaff = name;
+                  this.receipt.list[indexUser].ReceipPosition = st.PositionName;
+                  this.receipt.list[indexUser].ReceipDepartment = st.OfficeShortName;
+                  this.receipt.list[indexUser].staff = st;
+                } catch (err) {
+                  console.log(err);
+                }
+              } else if (u.IndictmentDetailID == st.ProcessCode) {
+                if (st.ContributorID == 39) {
+                  this.approveReportList[indexUser].staff = name;
+                  this.approveReportList[indexUser].position1 = st.PositionName;
+                  this.approveReportList[indexUser].department1 = st.OfficeShortName;
+                  this.approveReportList[indexUser].staff1 = this.jsonCopy(st);
+                } else if (st.ContributorID == 40) {
+                  // console.log((+st.ProcessCode) , parseFloat(j + '.2'));
+                  this.approveReportList[indexUser].reviewer = name;
+                  this.approveReportList[indexUser].rank = st.PositionName;
+                  this.approveReportList[indexUser].department2 = st.OfficeShortName;
+                  this.approveReportList[indexUser].staff2 = this.jsonCopy(st);
+                } else if (st.ContributorID == 41) {
+                  // console.log((+st.ProcessCode) , parseFloat(j + '.3'));
+                  this.approveReportList[indexUser].approver = name;
+                  this.approveReportList[indexUser].rank2 = st.PositionName;
+                  this.approveReportList[indexUser].department3 = st.OfficeShortName;
+                  this.approveReportList[indexUser].staff3 = this.jsonCopy(st);
+                }
+              }
+              indexUser++;
             }
           }
         }
@@ -721,7 +755,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     try {
       const rec: any = this.receipt.list[index];
         const data: any = {
-          FineType: 1,
+          FineType: (this.params.CompareID == 0 ? 0 : 1),
           ReferenceID: CompareReceiptID,
           PaymentPeriodNo: 1,
           PaymentFine: this.sumAllCompare.sum,
@@ -2150,7 +2184,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     for (const d of this.receipt.list) {
       if (d.staff) {
         d.staff.ProgramCode = 'ILG60-06-02-03';
-        d.staff.ProcessCode = i;
+        d.staff.ProcessCode = this.DataToSave.userData[i].IndictmentDetailID;
         d.staff.ContributorID = 19;
         if (d.staff.OperationPosName && d.staff.OperationPosCode) {
           d.staff.PositionName = d.staff.OperationPosName;
@@ -2171,7 +2205,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     for (const d of this.approveReportList) {
       if (d.staff1) {
         d.staff1.ProgramCode = 'ILG60-06-02-04';
-        d.staff1.ProcessCode = i + '.1';
+        d.staff1.ProcessCode = this.DataToSave.userData[i].IndictmentDetailID;
         if (d.staff1.OperationPosName && d.staff1.OperationPosCode) {
           d.staff1.PositionName = d.staff1.OperationPosName;
           d.staff1.PositionCode = d.staff1.OperationPosCode;
@@ -2187,7 +2221,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       if (d.staff2) {
         d.staff2.ProgramCode = 'ILG60-06-02-04';
-        d.staff2.ProcessCode = i + '.2';
+        d.staff2.ProcessCode = this.DataToSave.userData[i].IndictmentDetailID;
         if (d.staff2.OperationPosName && d.staff2.OperationPosCode) {
           d.staff2.PositionName = d.staff2.OperationPosName;
           d.staff2.PositionCode = d.staff2.OperationPosCode;
@@ -2200,7 +2234,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       if (d.staff3) {
         d.staff3.ProgramCode = 'ILG60-06-02-04';
-        d.staff3.ProcessCode = i + '.3';
+        d.staff3.ProcessCode = this.DataToSave.userData[i].IndictmentDetailID;
         if (d.staff3.OperationPosName && d.staff3.OperationPosCode) {
           d.staff3.PositionName = d.staff3.OperationPosName;
           d.staff3.PositionCode = d.staff3.OperationPosCode;
