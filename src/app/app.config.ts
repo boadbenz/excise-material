@@ -28,12 +28,4 @@ export const appConfig = {
     mockapi: 'http://demo1735762.mockable.io/XCS60',
     exciseService: 'http://webtest.excise.go.th'
     
-    //*******/This is api stoped on colo server********//
-    // api8082: 'http://103.233.193.94:8082/XCS60',
-    // api8888: 'http://103.233.193.94:8888/XCS60',
-    // api8083: 'http://103.233.193.94:8083/XCS60',
-    // api7789: 'http://103.233.193.94:7789/XCS60',
-    // api8084: 'http://103.233.193.94:8084/XCS60',
-    // api8087: 'http://103.233.193.94:8087/XCS60',
-
 }
