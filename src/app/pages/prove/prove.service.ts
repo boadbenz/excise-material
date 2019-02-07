@@ -54,7 +54,7 @@ export class ProveService {
   }
 
   async getProveProductUnit(Textsearch: string): Promise<any> {
-    const params = {  };
+    const params = {};
     const url = `${appConfig.api8777}/MasDutyUnitMaingetAll`;
 
     try {
@@ -203,7 +203,7 @@ export class ProveService {
       return [];
     }
   }
-  
+
 
   async ProvegetByCon(ProveID: string): Promise<any> {
     const params = { ProveID };
@@ -242,7 +242,7 @@ export class ProveService {
   }
 
   async MasDocumentMainupdDelete(DocumentID: string): Promise<any> {
-    const params = {DocumentID};
+    const params = { DocumentID };
     const url = `${appConfig.api8777}/MasDocumentMainupdDelete`;
 
     try {
@@ -294,8 +294,8 @@ export class ProveService {
 
   async MasDocumentMaingetAll(ReferenceCode: string, _DocumentType: string): Promise<any> {
     let pValue = {
-      "ReferenceCode" : ReferenceCode,
-      "DocumentType" : _DocumentType
+      "ReferenceCode": ReferenceCode,
+      "DocumentType": _DocumentType
     }
 
     const params = JSON.stringify(pValue);
@@ -332,7 +332,7 @@ export class ProveService {
       await alert(error);
     }
   }
-  
+
   async ArrestIndictmentProductgetByIndictmentID(IndictmentID: string): Promise<any> {
     const params = { IndictmentID };
     const url = `${appConfig.api7788}/ArrestIndictmentProductgetByIndictmentID`;
@@ -357,19 +357,34 @@ export class ProveService {
     }
   }
 
-  ProveReport2getByCon(ArrestCode:string, ProveID: string, IndictmentID: string) {
+  ProveReport2getByCon(ArrestCode: string, ProveID: string, IndictmentID: string) {
     let pValue = {
-      "ArrestCode" : ArrestCode,
-      "ProveID" : ProveID,
+      "ArrestCode": ArrestCode,
+      "ProveID": ProveID,
       "IndictmentID": IndictmentID
     }
 
-    console.log("ArrestCode : ",ArrestCode)
-    console.log("ProveID : ",ProveID)
-    console.log("IndictmentID : ",IndictmentID)
+    console.log("ArrestCode : ", ArrestCode)
+    console.log("ProveID : ", ProveID)
+    console.log("IndictmentID : ", IndictmentID)
     debugger
     const params = JSON.stringify(pValue);
     const url = `${appConfig.apiReport}//ILG60_00_05_002.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .catch(this.onCatch)
+      .do((res: Response) => {
+        this.onSuccess(res);
+      }, (error: any) => {
+        this.onError(error);
+      });
+  }
+  ProveReport2(ProveID: string) {
+    let pValue = {
+      "ProveID": ProveID
+    }
+    debugger
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.apiReport}//ILG60_00_05_001.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .catch(this.onCatch)
       .do((res: Response) => {

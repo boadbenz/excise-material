@@ -47,7 +47,7 @@ export class PrintDocModalComponent implements OnInit {
             }
         ];
 
-        this.proveService.MasDocumentMaingetAll(this.ProveID,"5").then(result => {
+        this.proveService.MasDocumentMaingetAll(this.ProveID, "5").then(result => {
             let pValue = {
                 "IsChecked": false,
                 "DocName": result[0].DocumentName,
@@ -76,6 +76,31 @@ export class PrintDocModalComponent implements OnInit {
                         // link.download = `${this.ProveID}.pdf`;
                         // link.click();
 
+                        const file = new Blob([x], { type: 'application/pdf' });
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            });
+
+            _print.filter(x => x.DocName == "บันทึกการตรวจรับของกลาง").map(item => {
+                console.log("this.ProveID : ",this.ProveID)
+                this.preloader.setShowPreloader(true);
+                this.proveService.ProveReport2(this.ProveID)                
+                    .subscribe(x => {
                         const file = new Blob([x], { type: 'application/pdf' });
                         const fileURL = URL.createObjectURL(file);
                         window.open(fileURL);
