@@ -1335,17 +1335,20 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         item.GroupCode = '1';
         item.IsDomestic = '1';
 
-        if (lastIndex < 0) {
-            item.RowId = 1;
-            this.ArrestProduct.push(this.fb.group(item));
-            return;
-        }
+        // if (lastIndex < 0) {
+        //     item.RowId = 1;
+        //     this.ArrestProduct.push(this.fb.group(item));
+        //     return;
+        // }
 
-        const lastDoc = this.ArrestProduct.at(lastIndex).value;
-        if (lastDoc.ProductDesc) {
-            item.RowId = lastDoc.RowId;
-            this.ArrestProduct.push(this.fb.group(item));
-        } else if (lastDoc.IsModify == 'd') {
+
+        if (lastIndex >= 0) {
+            const lastDoc = this.ArrestProduct.at(lastIndex).value;
+            if (lastDoc.ProductDesc) {
+                item.RowId = lastDoc.RowId;
+                this.ArrestProduct.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
         }
@@ -1417,7 +1420,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     deleteProduct(i: number) {
-        debugger
         const ArrestProductDelete = this.ArrestProduct.value.filter($ => $.IsModify == 'd');
         const RowId = ArrestProductDelete.length
             ? ArrestProductDelete
