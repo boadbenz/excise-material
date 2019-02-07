@@ -1326,6 +1326,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     addProduct() {
+        debugger
         const lastIndex = this.ArrestProduct.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.ArrestProduct();
         item.ArrestCode = this.arrestCode;
@@ -1335,17 +1336,20 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         item.GroupCode = '1';
         item.IsDomestic = '1';
 
-        if (lastIndex < 0) {
-            item.RowId = 1;
-            this.ArrestProduct.push(this.fb.group(item));
-            return;
-        }
+        // if (lastIndex < 0) {
+        //     item.RowId = 1;
+        //     this.ArrestProduct.push(this.fb.group(item));
+        //     return;
+        // }
 
-        const lastDoc = this.ArrestProduct.at(lastIndex).value;
-        if (lastDoc.ProductDesc) {
-            item.RowId = lastDoc.RowId;
-            this.ArrestProduct.push(this.fb.group(item));
-        } else if (lastDoc.IsModify == 'd') {
+
+        if (lastIndex >= 0) {
+            const lastDoc = this.ArrestProduct.at(lastIndex).value;
+            if (lastDoc.ProductDesc) {
+                item.RowId = lastDoc.RowId;
+                this.ArrestProduct.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
         }
