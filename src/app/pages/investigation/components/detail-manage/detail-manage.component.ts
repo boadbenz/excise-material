@@ -313,10 +313,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     async onPageLoad() {
         this.loaderService.show();
         this.enableBtnModeR();
-        
+
         let invest = await this.s_investDetail.InvestigateDetailgetByCon(this.invesDetailId).then(async (x: fromModels.InvestigateDetail) => {
             if (!this.checkResponse(x)) return;
-            
+
             let invest = this.investigateFG;
             x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
             x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
@@ -710,7 +710,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
 
     formatterOffice = (x: { OfficeName: string }) => x.OfficeName;
 
-    formatterUnit = (x: {DutyCode: string}) => x.DutyCode;
+    formatterUnit = (x: { DutyCode: string }) => x.DutyCode;
 
     selectItemLocaleRegion(e, i) {
         this.InvestigateDetailLocal.at(i).patchValue({
@@ -979,9 +979,17 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         if (local.length) {
             if (local.filter(x => x.Region == '').length > 1) {
                 swal('', 'ส่วนสถานที่ทำการสืบสวน กรุณาระบุ “ตำบล/อำเภอ/จังหวัด”', 'warning')
+                return;
             }
         } else {
             swal('', 'ส่วนสถานที่ทำการสืบสวน ต้องมีอย่างน้อย 1 รายการ', 'warning');
+            return;
+        }
+
+        const product: fromModels.InvestigateDetailProduct[] = this.InvestigateDetailProduct.value.filter(x => x.IsModify != 'd');
+        if (product.filter(x => !x.ProductDesc || !x.QtyUnit || !x.Qty).length) {
+            swal('', 'กรุณาระบุข้อมูลของกลางให้ครบถ้วน', 'warning');
+            return;
         }
 
         switch (this.mode) {
