@@ -1608,7 +1608,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,
-            ContributorID: e.item.ContributorID || staff.ContributorID
+            ContributorID: e.item.ContributorID || staff.ContributorID,
+            ContributorCode: e.item.ContributorID || staff.ContributorID
         })
     }
 
@@ -1623,7 +1624,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             FirstName: e.target.value,
             ProgramCode: 'ILG60-03-02-00-00',
             ProcessCode: '02',
-            ContributorID: staff.ContributorID
+            ContributorID: staff.ContributorID,
+            ContributorCode: staff.ContributorID
         })
     }
 
