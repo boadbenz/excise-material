@@ -1326,7 +1326,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     addProduct() {
-        debugger
         const lastIndex = this.ArrestProduct.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.ArrestProduct();
         item.ArrestCode = this.arrestCode;
@@ -1421,7 +1420,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     deleteProduct(i: number) {
-        debugger
         const ArrestProductDelete = this.ArrestProduct.value.filter($ => $.IsModify == 'd');
         const RowId = ArrestProductDelete.length
             ? ArrestProductDelete
