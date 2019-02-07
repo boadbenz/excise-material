@@ -212,7 +212,7 @@ export class PrintDocModalComponent implements OnInit {
             CompareID: mCompareID,
             IndictmentID: mIndictmentID
         };
-        const url = `${appConfig.apiReport}/ILL_P031.aspx`;
+        const url = `${appConfig.apiReport}/ILG60_00_06_002.aspx`;
 
         return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
             .catch(this.onCatch)
