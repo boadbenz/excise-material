@@ -111,6 +111,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`;
   isReportNo: any = false;
   logedinUser: any = {};
+  staffTmp: any = {};
   get CompareDocument(): FormArray {
     return this.compareForm.get('CompareDocument') as FormArray;
   }
@@ -130,7 +131,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.44');
+    this.sidebarService.setVersion('0.0.0.45');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -246,6 +247,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (resp) {
         this.compareDataUpdate = this.jsonCopy(resp);
         this.compareDataUpdateTmp = this.jsonCopy(resp);
+        this.staffTmp = this.jsonCopy(resp.CompareStaff);
       } else {
         swal('', 'ไม่พบข้อมูลการเปรียบเทียบ', 'error');
         throw 'ไม่พบข้อมูลการเปรียบเทียบ';
@@ -334,8 +336,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             // console.log('contribute');
             this.accused.staff = st;
             this.accused.CompareStaffName = name;
-            this.accused.OperationPosName = st.PositionName;
-            this.accused.OperationPosCode = st.PositionCode;
+            this.accused.OperationPosName = st.PositionName ? st.PositionName : this.accused.OperationPosName;
+            this.accused.OperationPosCode = st.PositionCode ? st.PositionCode : this.accused.OperationPosCode;
             this.accused.OperationDeptCode = st.OfficeCode;
             this.accused.OperationDeptName = st.OfficeShortName;
           } else if (st.ProcessCode && st.ProcessCode.split('.').length == 2) {
@@ -368,8 +370,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (typeof ind == 'number' && this.receipt.list.length > ind) {
               try {
                 // console.log((+st.ProcessCode) == parseFloat(j));
-                this.receipt.list[ind].OperationPosName = st.PositionName;
-                this.receipt.list[ind].OperationPosCode = st.PositionCode;
+                this.receipt.list[ind].OperationPosName = st.PositionName ? st.PositionName : this.receipt.list[ind].OperationPosName;
+                this.receipt.list[ind].OperationPosCode = st.PositionCode ? st.PositionCode : this.receipt.list[ind].OperationPosCode;
                 this.receipt.list[ind].ReceiptStaff = name;
                 this.receipt.list[ind].ReceipPosition = st.PositionName;
                 this.receipt.list[ind].ReceipDepartment = st.OfficeShortName;
@@ -381,8 +383,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             for (const u of this.DataToSave.userData) {
               if (st.ContributorID == 19 && u.IndictmentDetailID == st.ProcessCode) {
                 try {
-                  this.receipt.list[indexUser].OperationPosName = st.PositionName;
-                  this.receipt.list[indexUser].OperationPosCode = st.PositionCode;
+                  this.receipt.list[indexUser].OperationPosName = st.PositionName ? st.PositionName : this.receipt.list[indexUser].OperationPosName;
+                  this.receipt.list[indexUser].OperationPosCode = st.PositionCode ? st.PositionCode : this.receipt.list[indexUser].OperationPosCode;
                   this.receipt.list[indexUser].ReceiptStaff = name;
                   this.receipt.list[indexUser].ReceipPosition = st.PositionName;
                   this.receipt.list[indexUser].ReceipDepartment = st.OfficeShortName;
@@ -1624,8 +1626,27 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
   }
+  checkBoxData(type = null) {
+    if (this.editUser.checkBox2) {
+      this.editUser.checkBox1 = true;
+    }
+    if (!this.editUser.checkBox1) {
+      this.editUser.Bail = '';
+    }
+    if (!this.editUser.checkBox2) {
+      this.editUser.Guaruntee = '';
+    }
+    console.log(this.editUser.checkBox1);
+    console.log(this.editUser.checkBox2);
+  }
   saveAccused() {
-    console.log(this.editUser);
+    if (!this.editUser.checkBox2) {
+      this.editUser.Guaruntee = '';
+    }
+    if (!this.editUser.checkBox1) {
+      this.editUser.Bail = '';
+      this.editUser.Guaruntee = '';
+    }
     this.accused.list[this.editUser.index] = this.jsonCopy(this.editUser);
     this.accused.list[this.editUser.index].PaymentFineAppointDate = this.editUser.PaymentFineAppointDate;
     this.accused.list[this.editUser.index].PaymentFineAppointShow = this.editUser.PaymentFineAppointDate.formatted;
@@ -2157,9 +2178,9 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   getAllStaff() {
     const staff: any = [];
-    console.log(this.accused);
-    console.log(this.approveReportList);
-    console.log(this.receipt);
+    // console.log(this.accused);
+    // console.log(this.approveReportList);
+    // console.log(this.receipt);
     this.accused.staff = this.jsonCopy(this.accused.staff);
     this.receipt.list = this.jsonCopy(this.receipt.list);
     this.approveReportList = this.jsonCopy(this.approveReportList);
@@ -2253,16 +2274,25 @@ export class ManageComponent implements OnInit, OnDestroy {
     for (const st of staffApprove) {
       staff.push(st);
     }
-    // console.log(staff);
+
     if (this.compareDataUpdateTmp) {
       for (let st of staff) {
         for (let tmp of this.compareDataUpdateTmp.CompareStaff) {
           // alert(st.ProcessCode + ' ' + tmp.ProcessCode + ' ' + (!st.ProcessCode && !tmp.ProcessCode));
           if ((st.ProcessCode == tmp.ProcessCode) || (st.ProcessCode == null && tmp.ProcessCode == 'null')) {
+            // console.log(st);
             st.StaffID = tmp.StaffID;
             st.CompareID = tmp.CompareID;
             st.PosLevelName = st.operationPosName;
             st.PosLevel = st.OperationPosCode;
+            if (!st.OperationPosCode) {
+              st.OperationPosCode = tmp.PositionCode;
+            }
+            if (!st.OperationPosName) {
+              st.OperationPosName = tmp.PositionName;
+            }
+            st.PositionCode = st.OperationPosCode;
+            st.PositionName = st.OperationPosName;
           } else {
             st.CompareID = tmp.CompareID;
             st.PosLevelName = st.operationPosName;
@@ -2271,7 +2301,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
       }
     }
-    
+    // console.log(staff);
     return staff;
   }
   getStaffData(data: any) {
