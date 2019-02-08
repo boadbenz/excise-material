@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.35');
+    this.sidebarService.setVersion('0.0.0.36');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -552,7 +552,9 @@ export class ManageComponent implements OnInit {
       if (LawsuitArrestIndicmentDetail.length != 0) {
         await this.LawsuitTableList.value.forEach(async element => {
           let ArrestIndicmentDetail = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID)
-          await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(element.LawsuitType), Number(element.LawsuitEnd))
+          if(isLaw != 0) {
+            await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(element.LawsuitType), Number(element.LawsuitEnd))
+          }
           if (element.LawsuitType != 0) {
             if (ArrestIndicmentDetail['LawsuitJudgement'].length > 0) {
               await this.lawsuitService.LawsuitJudgementupdDelete(ArrestIndicmentDetail['LawsuitJudgement'][0]['JudgementID'])
@@ -718,13 +720,14 @@ export class ManageComponent implements OnInit {
                 type: 'success',
               })
               await this.lawsuitService.LawsuitArrestIndicmentupdByCon(this.IndictmentID)
-              // await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID, this.LawsuitTableList.value[0].LawsuitType, this.LawsuitTableList.value[0].LawsuitEnd)
               let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
               let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
               if (LawsuitArrestIndicmentDetail.length != 0) {
                 await this.LawsuitTableList.value.forEach(async element => {
                   let ArrestIndicmentDetail = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID)
-                  await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(element.LawsuitType), Number(element.LawsuitEnd))
+                  if(isLaw != 0) {
+                    await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(element.LawsuitType), Number(element.LawsuitEnd))
+                  }
                   if (element.LawsuitType != 0) {
                     if (ArrestIndicmentDetail['LawsuitJudgement'].length > 0) {
                       await this.lawsuitService.LawsuitJudgementupdDelete(ArrestIndicmentDetail['LawsuitJudgement'][0]['JudgementID'])
@@ -1218,8 +1221,6 @@ export class ManageComponent implements OnInit {
         console.log('error==>', e)
       }
     }
-
-
     if (islaw == 1) {
       this.lawsuitForm.controls['ReasonDontLawsuit'].setValue('');
       this.lawsuitForm.controls['ReasonDontLawsuit'].clearValidators()
@@ -1412,7 +1413,6 @@ export class ManageComponent implements OnInit {
   changeNoticeDoc(e: any, index: number) {
     let reader = new FileReader();
     let file = e.target.files[0];
-    console.log(file);
     reader.readAsDataURL(file);
     reader.onload = () => {
       let dataSource = (<string>reader.result).split(',')[1];
@@ -1429,7 +1429,6 @@ export class ManageComponent implements OnInit {
 
   viewData(item) {
     ///###change path to lawsuit detail
-    console.log('viewData===>', item);
     const dialogRef = this.dialog.open(DialogJudgment, {
       width: '80%',
       maxWidth: 'none',
