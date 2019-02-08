@@ -16,7 +16,8 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
-    if (window.performance.navigation.type != 1) {
+    let IsNewSuspect = localStorage.getItem('IsNewSuspect')
+    if (window.performance.navigation.type != 1 && IsNewSuspect != 'true') {
       localStorage.clear();
     }
   }

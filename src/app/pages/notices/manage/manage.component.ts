@@ -1499,6 +1499,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     openSuspect(e) {
+        localStorage.setItem('IsNewSuspect',"true")
         sessionStorage.setItem("notice_form_data", JSON.stringify(this.noticeForm.value));
         this.modal = this.suspectModalService.open(e, { size: 'lg', centered: true });
     }
