@@ -341,7 +341,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
             if(this.oEvidenceIn.IsEdit == 0){
-                this.ShowAlertWarning("ไม่อนุญาตให้ทำการแก้ไขข้อมูลการจัดเก็บ !!!");
+                this.ShowAlertWarning("ไม่อนุญาตให้ทำการแก้ไขข้อมูลการจัดเก็บของกลาง !!!");
                 this.onComplete();
             }
         })
