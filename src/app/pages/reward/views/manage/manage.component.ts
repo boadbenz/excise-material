@@ -123,7 +123,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.7');
+    this.sidebarService.setVersion('0.0.1.8');
     this.pageLoad();
   }
 
@@ -187,7 +187,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.1.1(1.3)
           this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.1.1(1.3.1)
-          this.ILG60_08_02_00_00E09_EXPANDED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = true
           // 4.1.1(1.3.2)
           this.ILG60_08_02_00_00E11_EXPANDED = false;
           this.ILG60_08_02_00_00E14_EXPANDED = true;
@@ -401,7 +401,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.2.2(1.4.1(1))
           this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.2.2(1.4.1(1.1))
-          this.ILG60_08_02_00_00E09_EXPANDED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = true;
           this.ILG60_08_02_00_00E11_EXPANDED = true;
           this.ILG60_08_02_00_00E14_EXPANDED = true;
 
