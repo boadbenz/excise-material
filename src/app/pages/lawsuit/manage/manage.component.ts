@@ -122,7 +122,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.36');
+    this.sidebarService.setVersion('0.0.0.37');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -174,6 +174,15 @@ export class ManageComponent implements OnInit {
             type: 'warning',
           })
 
+          return false;
+        }
+        else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
+          this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
+          this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
+          Swal({
+            text: Message.checkData,
+            type: 'warning',
+          })
           return false;
         }
         this.onSave();
@@ -397,15 +406,11 @@ export class ManageComponent implements OnInit {
           this.navService.setCancelButton(false);
           this.navService.setSaveButton(false);
         }
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        this.navService.setEditButton(true);
-        if (this.prove == 1) {
-          this.navService.setNextPageButton(true);
-          this.navService.setInnerTextNextPageButton('งานพิสูจน์')
-        } else if (this.prove == 0) {
-          this.navService.setNextPageButton(true);
-          this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
+        let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
+        if (isLaw == 0) {
+          this.setButtonCaseIslaw();
+        } else {
+          this.setButtonCase();
         }
       } else {
         return;
@@ -466,6 +471,19 @@ export class ManageComponent implements OnInit {
       this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
     }
   }
+
+  async setButtonCaseIslaw() {
+    this.preLoaderService.setShowPreloader(true);
+    await this.ngOnInit();
+    this.showEditField = false;
+    this.navService.setEditField(true);
+    this.navService.setEditButton(true);
+    this.navService.setPrintButton(true);
+    this.navService.setDeleteButton(true);
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setNextPageButton(false);
+  }
   private async onSave() {
     this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
@@ -499,7 +517,7 @@ export class ManageComponent implements OnInit {
         "OfficeName": this.staff.OfficeName,
         "OfficeShortName": this.staff.OfficeShortName,
         "ContributorID": 12,
-        "IsActive": this.staff.IsActive
+        "IsActive": 1
       })
 
       let json = {
@@ -547,12 +565,13 @@ export class ManageComponent implements OnInit {
           "LawsuitStaff": []
         }
       }
+
       let update = await this.lawsuitService.LawsuitformupdByCon(json)
       let LawsuitArrestIndicmentDetail = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'] || []
       if (LawsuitArrestIndicmentDetail.length != 0) {
         await this.LawsuitTableList.value.forEach(async element => {
           let ArrestIndicmentDetail = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID)
-          if(isLaw != 0) {
+          if (isLaw != 0) {
             await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(element.LawsuitType), Number(element.LawsuitEnd))
           }
           if (element.LawsuitType != 0) {
@@ -566,7 +585,11 @@ export class ManageComponent implements OnInit {
             text: "บันทึกสำเร็จ",
             type: 'success',
           })
-          this.setButtonCase()
+          if (isLaw != 0) {
+            this.setButtonCase()
+          } else {
+            this.setButtonCaseIslaw()
+          }
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           if (checkComplete.length != 0) {
             let popup = {
@@ -590,7 +613,11 @@ export class ManageComponent implements OnInit {
             text: "บันทึกสำเร็จ",
             type: 'success',
           })
-          this.setButtonCase()
+          if (isLaw != 0) {
+            this.setButtonCase()
+          } else {
+            this.setButtonCaseIslaw()
+          }
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           if (checkComplete.length != 0) {
             let popup = {
@@ -725,7 +752,7 @@ export class ManageComponent implements OnInit {
               if (LawsuitArrestIndicmentDetail.length != 0) {
                 await this.LawsuitTableList.value.forEach(async element => {
                   let ArrestIndicmentDetail = await this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(element.IndictmentDetailID)
-                  if(isLaw != 0) {
+                  if (isLaw != 0) {
                     await this.lawsuitService.LawsuitArrestIndicmentDetailupdByCon(element.IndictmentDetailID, Number(element.LawsuitType), Number(element.LawsuitEnd))
                   }
                   if (element.LawsuitType != 0) {
@@ -743,14 +770,22 @@ export class ManageComponent implements OnInit {
                   }
                   this.viewNotComplete(popup)
                   // ให้เด้งป๊อบอัพ
-                  this.setButtonCase()
+                  if (isLaw != 0) {
+                    this.setButtonCase()
+                  } else {
+                    this.setButtonCaseIslaw()
+                  }
                   this.preLoaderService.setShowPreloader(false);
                   this.router.navigate(['/lawsuit/manage', 'R'], {
                     queryParams: { IndictmentID: this.IndictmentID, LawsuitID: result.LawsuitID }
                   });
                 } else {
                   await this.lawsuitService.LawsuitArrestupdByCon(this.lawsuitArrestForm.value.ArrestCode)
-                  this.setButtonCase()
+                  if (isLaw != 0) {
+                    this.setButtonCase()
+                  } else {
+                    this.setButtonCaseIslaw()
+                  }
                   this.preLoaderService.setShowPreloader(false);
                   this.router.navigate(['/lawsuit/manage', 'R'], {
                     queryParams: { IndictmentID: this.IndictmentID, LawsuitID: result.LawsuitID }
@@ -828,7 +863,7 @@ export class ManageComponent implements OnInit {
     }
   }
   private createLawsuitForm() {
-  
+
     this.lawsuitForm = this.fb.group({
       IsLawsuitCheck: new FormControl(null),
       ReasonDontLawsuit: new FormControl(null),
@@ -966,12 +1001,13 @@ export class ManageComponent implements OnInit {
             catch (e) {
               console.log('error==>', e)
             }
-            console.log(islaw)
+            console.log(res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0])
             if (islaw == 1) {
-              this.staff = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0]
-              this.staff.LawsuitStation = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStation
-              this.staff.LawsuitStationCode = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0].LawsuitStationCode
-              this.staff.StaffID = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['LawsuitStaff'][0].StaffID
+              let lawsuitDetail = res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]
+              this.staff = lawsuitDetail['LawsuitStaff'][0] ? lawsuitDetail['LawsuitStaff'][0] : {}
+              this.staff.LawsuitStation = lawsuitDetail.LawsuitStation
+              this.staff.LawsuitStationCode = lawsuitDetail.LawsuitStationCode
+              this.staff.StaffID = lawsuitDetail['LawsuitStaff'][0] ? lawsuitDetail['LawsuitStaff'][0].StaffID : ""
               IsLawsuitCheck = false;
               this.lawsuitForm.controls['IsLawsuitCheck'].setValue(false);
               this.lawsuitForm.controls['ReasonDontLawsuit'].setValue('');
