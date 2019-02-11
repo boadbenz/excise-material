@@ -1305,21 +1305,18 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     addStaff() {
-        const lastIndex = this.ArrestStaff.length - 1;
+        const lastIndex = this.ArrestStaff.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new ArrestStaff();
         item.ArrestCode = this.arrestCode;
         item.IsModify = 'c'
-        if (lastIndex < 0) {
-            item.RowId = 1;
-            this.ArrestStaff.push(this.fb.group(item));
-            return;
-        }
 
-        const lastDoc = this.ArrestStaff.at(lastIndex).value;
-        if (lastDoc.ContributorID) {
-            item.RowId = lastDoc.RowId + 1;
-            this.ArrestStaff.push(this.fb.group(item));
-        } else if (lastDoc.IsModify == 'd') {
+        if (lastIndex >= 0) {
+            const lastDoc = this.ArrestStaff.at(lastIndex).value;
+            if (lastDoc.ContributorID) {
+                item.RowId = lastDoc.RowId + 1;
+                this.ArrestStaff.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.ArrestStaff.push(this.fb.group(item));
         }
@@ -1334,13 +1331,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         // item.IsChecked = this.mode == 'C' ? true : false;
         item.GroupCode = '1';
         item.IsDomestic = '1';
-
-        // if (lastIndex < 0) {
-        //     item.RowId = 1;
-        //     this.ArrestProduct.push(this.fb.group(item));
-        //     return;
-        // }
-
 
         if (lastIndex >= 0) {
             const lastDoc = this.ArrestProduct.at(lastIndex).value;
@@ -1369,39 +1359,36 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     addIndictment() {
-        const lastIndex = this.ArrestIndictment.length - 1;
+        const lastIndex = this.ArrestIndictment.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.ArrestIndictment();
         item.ArrestCode = this.arrestCode;
         item.IsModify = 'c';
         item.RowId = null;
-        if (lastIndex < 0) {
-            this.setArrestIndictment([item], null);
-            return;
-        }
 
-        const lastDoc = this.ArrestIndictment.at(lastIndex).value;
-        if (lastDoc.GuiltBaseID || lastDoc.IsModify == 'd') {
+        if (lastIndex >= 0) {
+            const lastDoc = this.ArrestIndictment.at(lastIndex).value;
+            if (lastDoc.GuiltBaseID || lastDoc.IsModify == 'd') {
+                this.setArrestIndictment([item], null);
+            }
+        } else {
             this.setArrestIndictment([item], null);
         }
     }
 
     addDocument() {
-        const lastIndex = this.ArrestDocument.length - 1;
+        const lastIndex = this.ArrestDocument.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new ArrestDocument();
         item.DocumentType = '3';
         item.ReferenceCode = this.arrestCode;
         item.IsModify = 'c';
-        if (lastIndex < 0) {
-            item.RowId = 1;
-            this.ArrestDocument.push(this.fb.group(item));
-            return;
-        }
 
-        const lastItem = this.ArrestDocument.at(lastIndex).value;
-        if (lastItem.DataSource && lastItem.FilePath) {
-            item.RowId = lastItem.RowId + 1;
-            this.ArrestDocument.push(this.fb.group(item));
-        } else if (lastItem.IsModify == 'd') {
+        if (lastIndex >= 0) {
+            const lastItem = this.ArrestDocument.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                item.RowId = lastItem.RowId + 1;
+                this.ArrestDocument.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.ArrestDocument.push(this.fb.group(item));
         }

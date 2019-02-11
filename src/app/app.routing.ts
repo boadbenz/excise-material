@@ -22,7 +22,8 @@ export const routes: Routes = [
         path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/arrests/arrest.module#ArrestModule'
     }, {
-        path: 'suppression/investigation', component: LayoutComponent, canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
+        path: 'suppression/investigation', component: LayoutComponent, 
         loadChildren: './pages/investigation/investigation.module#InvestigationModule'
     }, {
         path: 'prove', component: LayoutComponent, canActivate: [AuthGuard],
