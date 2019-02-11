@@ -232,7 +232,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ShowReceiveField = true;
         this.IsEvidence = false;
         this.IsEvidenceReceive = false;
-        this.EvidenceInID = "181";
         
         let date = new Date();
         this.ProveYear = (date.getFullYear() + 543).toString();
