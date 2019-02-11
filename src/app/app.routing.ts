@@ -19,12 +19,10 @@ export const routes: Routes = [
             { path: 'suspect/:mode/:code', loadChildren: './pages/notices/suspect/suspect.module#SuspectModule' }
         ]
     }, {
-        path: 'arrest', component: LayoutComponent,
-            // , canActivate: [AuthGuard],
+        path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/arrests/arrest.module#ArrestModule'
     }, {
-        // canActivate: [AuthGuard],
-        path: 'suppression/investigation', component: LayoutComponent, 
+        path: 'suppression/investigation', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/investigation/investigation.module#InvestigationModule'
     }, {
         path: 'prove', component: LayoutComponent, canActivate: [AuthGuard],
