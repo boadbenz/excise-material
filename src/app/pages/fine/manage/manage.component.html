@@ -260,9 +260,9 @@
                 <!--<input class="form-control" type="date" [(ngModel)]="CompareDate" name="CompareDate" [disabled]="showEditField" local="th">-->
               </div>
               <label class="col-form-label text-center col-md-2">เวลา</label>
-              <div class="col-md-3">
+              <div class="col-md-3 editable"  data-placeholder="น.">
                 <input class="form-control without_ampm" type="text" [(ngModel)]="accused.CompareTime" name="CompareTime"
-                       [disabled]="showEditField" pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$">
+                       [disabled]="showEditField">
               </div>
             </div>
           </div>
@@ -453,6 +453,7 @@
         </div>
       </div>
     </div>
+    <!-- && (receipt.RevenueStatus > 0) -->
     <div class="table-responsive">
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
@@ -477,7 +478,7 @@
               <my-date-picker-th [(ngModel)]="item.PaymentDate" [name]="'PaymentDate' + i"
               placeholder="" locale="th"
               [options]="DateOption"
-              [disabled]="showEditField || ((!(item.CompareReceiptID == null || item.CompareReceiptID == undefined)) && (receipt.RevenueStatus > 0))"
+              [disabled]="showEditField || ((!(item.CompareReceiptID == null || item.CompareReceiptID == undefined)))"
               aria-required="true" required></my-date-picker-th>
           </td>
           <td>
@@ -489,7 +490,7 @@
                          matInput [matAutocomplete]="autoStaff"
                          (input)="StaffonAutoChange($event.target.value)"
                          (focus)="StaffonAutoFocus($event.target.value)"
-                         [disabled]="showEditField || item.CompareReceiptID  && (receipt.RevenueStatus > 0)" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, i)">
+                         [disabled]="showEditField || item.CompareReceiptID" (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1, i)">
                   <mat-autocomplete #autoStaff="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -505,7 +506,7 @@
           <td class="text-center">
               <select class="custom-select col-12"
               [(ngModel)]="item.ReceiptChanel"
-              [name]="'ReceiptChanel' + i" required [disabled]="(item.CompareReceiptID  && (receipt.RevenueStatus > 0)) || showEditField">
+              [name]="'ReceiptChanel' + i" required [disabled]="(item.CompareReceiptID || showEditField)">
                 <option value="1" [selected]="true">เงินสด</option>
                 <option value="2">EDC</option>
                 <option value="3">เครดิต</option>
@@ -516,19 +517,19 @@
               <input class="form-control" type="text"
               [(ngModel)]="item.ReceiptBookNo"
               name="ReceiptBookNo"
-              [disabled]="showEditField || (item.CompareReceiptID  && (receipt.RevenueStatus > 0) )" [required]="!(item.ReceiptChanel > 1)">
+              [disabled]="showEditField || (item.CompareReceiptID)" [required]="!(item.ReceiptChanel > 1)">
           </td>
           <td class="text-center">
               <input class="form-control" type="text"
               [(ngModel)]="item.ReceiptNo"
               [name]="'ReceiptNo' + i"
-              [disabled]="showEditField ||  (item.CompareReceiptID  && (receipt.RevenueStatus > 0) )" [required]="!(item.ReceiptChanel > 1)">
+              [disabled]="showEditField ||  (item.CompareReceiptID)" [required]="!(item.ReceiptChanel > 1)">
           </td>
           <td class="text-center">
               <input class="form-control" type="text"
               [(ngModel)]="item.ReferenceNo"
               name="ReferenceNo"
-              [disabled]="showEditField || !(item.ReceiptChanel > 1) || (item.CompareReceiptID  && (receipt.RevenueStatus > 0) )" [required]="item.ReceiptChanel > 1">
+              [disabled]="showEditField || !(item.ReceiptChanel > 1) || (item.CompareReceiptID)" [required]="item.ReceiptChanel > 1">
           </td>
           <td></td>
           <td>
@@ -700,8 +701,8 @@
                   <div class="custom-control custom-checkbox col-form-label col-md-4">
                     <input class="col-form-label filled-in chk-col-indigo" name="checkBox1" [(ngModel)]="editUser.checkBox1" id="insurance"  (click)="checkBoxData()"
                            type="checkbox"
-                           [disabled]="showEditField" [required]="!editUser.checkBox2">
-                    <label for="insurance">ประกัน :</label>
+                           [disabled]="showEditField" [required]="!editUser.checkBox2" [checked]="editUser.checkBox2 || editUser.checkBox1">
+                    <label for="insurance">ประกัน : </label>
                   </div>
                   <div class="col-md-7">
                     <input class="form-control" type="text" [(ngModel)]="editUser.Bail" name="Bail"
@@ -1039,7 +1040,8 @@
                   <label class="col-form-label text-center col-md-2">เวลา</label>
                   <div class="col-md-3">
                     <input class="form-control" type="text" name="payTime"
-                           [(ngModel)]="compareUserDetailPopup.payTime" pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" disabled>
+                           [(ngModel)]="compareUserDetailPopup.payTime" disabled>
+                           <!-- pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"  -->
                   </div>
                 </div>
               </div>

@@ -131,7 +131,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.45');
+    this.sidebarService.setVersion('0.0.0.46');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -144,7 +144,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.compareDate = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}};
     this.DateToday = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
     this.timeNow = this.getTimeNow();
-    this.accused.CompareTime = this.timeNow;
+    this.accused.CompareTime = this.timeNow + ' น.';
     this.generateYear();
     this.setAutocompleteStyle();
   }
@@ -431,7 +431,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.accused.StationName = this.compareDataUpdateTmp.CompareStation;
     this.accused.StationCode = this.compareDataUpdateTmp.CompareStationCode;
     this.accused.CompareDate = this.toDatePickerFormat(new Date(this.compareDataUpdateTmp.CompareDate));
-    this.accused.CompareTime = this.getTimeNow(new Date(this.compareDataUpdateTmp.CompareDate));
+    this.accused.CompareTime = this.getTimeNow(new Date(this.compareDataUpdateTmp.CompareDate)) + ' น.';
     // console.log(staff);
   }
   async setCompareDetail() {
@@ -480,6 +480,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.receipt.list[i].ReferenceNo = compare.CompareDetailReceipt[recLastIndex].ReferenceNo != 'null' ? compare.CompareDetailReceipt[recLastIndex].ReferenceNo : '';
         this.receipt.list[i].ReceiptNo = compare.CompareDetailReceipt[recLastIndex].ReceiptNo ? compare.CompareDetailReceipt[recLastIndex].ReceiptNo : '';
         this.receipt.list[i].CompareReceiptID = compare.CompareDetailReceipt[recLastIndex].CompareReceiptID;
+        this.receipt.list[i].CompareDetailID = compare.CompareDetailReceipt[recLastIndex].CompareDetailID;
       }
       console.log('compare');
       console.log(compare);
@@ -706,7 +707,8 @@ export class ManageComponent implements OnInit, OnDestroy {
           console.log(rec1);
           if (this.validateReceiptData(rec1, reqField) && rec.staff && !this.isNotValidTxtField(rec.ReceiptStaff)) {
             receiptData.RevenueDate = '';
-            if (!this.receipt.list[index].CompareReceiptID || !(JSON.stringify(this.receipt.list[index]) === JSON.stringify(this.dataForCompare.receipt[index]))) {
+            // || !(JSON.stringify(this.receipt.list[index]) === JSON.stringify(this.dataForCompare.receipt[index]))
+            if (!this.receipt.list[index].CompareReceiptID) {
               const resp :any = await this.CompareDetailReceipinsAll(receiptData);
               console.log('ค่าการรีเทิร์น');
               console.log(resp);
@@ -757,7 +759,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     try {
       const rec: any = this.receipt.list[index];
         const data: any = {
-          FineType: (this.params.CompareID == 0 ? 0 : 1),
+          FineType: (this.params.CompareID || this.params.CompareID != '0' ? 1 : 0),
           ReferenceID: CompareReceiptID,
           PaymentPeriodNo: 1,
           PaymentFine: this.sumAllCompare.sum,
@@ -873,7 +875,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.compareDate = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}};
     this.DateToday = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
     this.timeNow = this.getTimeNow();
-    this.accused.CompareTime = this.timeNow;
+    this.accused.CompareTime = this.timeNow + ' น.';
     this.generateYear();
 
     this.DataToSave = {};
@@ -883,7 +885,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.compareDate = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}};
     this.DateToday = { date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}, formatted: toLocalShort(d.toString()).replace(/ /g, '/') };
     this.timeNow = this.getTimeNow();
-    this.accused.CompareTime = this.timeNow;
+    this.accused.CompareTime = this.timeNow + ' น.';
     this.compareDocument = {
         DocumentID: '',
         DocumentName: '',
@@ -1253,7 +1255,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
                 console.log(fineOfMatch);
                 for (const fMatch of fineOfMatch) {
-                  if (!fMatch.GroupCode) {
+                  if (fMatch.GroupCode || (!fMatch.GroupCode && !isMatch)) {
                     if (detail.Mistreat == fMatch.MistreatStartNo || fMatch === fineOfMatch[fineOfMatch.length - 1]) {
                       if ((!fMatch.FineRate) || fMatch.FineRate == 0 || fMatch.FineRate == null) {
                         detail.multi = 1;
@@ -1266,6 +1268,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                       }
                       break;
                     }
+                  } else {
+
                   }
 
                 }
@@ -1630,14 +1634,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     if (this.editUser.checkBox2) {
       this.editUser.checkBox1 = true;
     }
-    if (!this.editUser.checkBox1) {
-      this.editUser.Bail = '';
-    }
-    if (!this.editUser.checkBox2) {
-      this.editUser.Guaruntee = '';
-    }
-    console.log(this.editUser.checkBox1);
-    console.log(this.editUser.checkBox2);
   }
   saveAccused() {
     if (!this.editUser.checkBox2) {
@@ -1873,7 +1869,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.compareUserDetailPopup = this.jsonCopy(item);
     this.compareUserDetailPopup.index = index;
     this.compareUserDetailPopup.payDate = item.payDate ? item.payDate : this.DateToday;
-    this.compareUserDetailPopup.payTime = item.payTime ? item.payTime : this.timeNow;
+    this.compareUserDetailPopup.payTime = ( item.payTime ? item.payTime : this.timeNow ) + ' น.';
     this.compareUserDetailPopup.dateOfIssue = item.dateOfIssue ?  item.dateOfIssue : this.DateToday;
     this.compareUserDetailPopup.payAmount = this.sumAllCompare.sum;
     this.compareUserDetailPopup.ApproveReportDate = this.DateToday;
@@ -1883,6 +1879,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   saveApprove() {
     console.log(this.compareUserDetailPopup);
     this.approveReportList[this.compareUserDetailPopup.index] = this.jsonCopy(this.compareUserDetailPopup);
+    this.approveReportList[this.compareUserDetailPopup.index].payTime = this.compareUserDetailPopup.payTime.substr(0, 5);
     this.approveReportList[this.compareUserDetailPopup.index].ApproveReportDateShow = this.compareUserDetailPopup.ApproveReportDate.formatted.split('/').join(' ');
     this.clearDataList(this.compareUserDetailPopup);
   }
@@ -1913,7 +1910,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const CompareData: any = {
       CompareID: this.params.CompareID ? (+this.params.CompareID) : '',
       CompareCode: this.receipt.CompareNo + '/' + this.receipt.CompareYear,
-      CompareDate: `${this.convertToNormalDate(this.accused.CompareDate.date).toString()} ${this.accused.CompareTime.toString()}:00 +07.00`,
+      CompareDate: `${this.convertToNormalDate(this.accused.CompareDate.date).toString()} ${this.accused.CompareTime.toString().substring(0, 5)}:00 +07.00`,
       CompareStation: this.accused.StationName,
       CompareStationCode: ( compareStation && compareStation[0] ) ? compareStation[0].OfficeCode : '',
       IsOutside: this.receipt.IsOutside ? 1 : 0,
@@ -2122,11 +2119,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     let i: any = 0;
     console.log(this.receipt);
     const reqField: any = ['ReceiptBookNo', 'ReceiptNo', 'ReceiptChanel', 'PaymentDate'];
-
     for (const rec of this.receipt.list) {
+      console.log(rec);
       if (rec.CompareReceiptID) {
         const rec1: any = {
           CompareReceiptID: rec.CompareReceiptID,
+          CompareDetailID: rec.CompareDetailID,
           ReceiptType: 'A',
           ReceiptBookNo: rec.ReceiptBookNo,
           ReceiptNo: rec.ReceiptNo,
