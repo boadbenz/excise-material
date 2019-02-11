@@ -1,6 +1,5 @@
 export const appConfig = {
-    
-    // apiUrl:  'http://192.168.3.158:8777/XCS60',   
+     
     // api7788: 'http://192.168.3.158:7788/XCS60',      
     // api8882: 'http://192.168.3.158:8882/XCS60',    
     // api8883: 'http://192.168.3.158:8883/XCS60',
@@ -10,22 +9,22 @@ export const appConfig = {
     // api8776: 'http://192.168.3.158:8776/XCS60', 
     // api8775: 'http://192.168.3.158:8775/XCS60',  
     // apiReport:'http://192.168.3.158/Report_XCS',
-    // mockapi: 'http://demo1735762.mockable.io/XCS60',
     // exciseService: 'http://webtest.excise.go.th'
 
 
 //-----------------------------------------------------------------//
-    apiUrl:  'http://103.233.193.94:8777/XCS60',   
+    
+    api7777: 'http://103.233.193.94:7777/XCS60',
+
     api7788: 'http://103.233.193.94:7788/XCS60',      
-    api8882: 'http://103.233.193.94:8882/XCS60',    
-    api8883: 'http://103.233.193.94:8883/XCS60',
+    // api8882: 'http://103.233.193.94:8882/XCS60',    
+    // api8883: 'http://103.233.193.94:8883/XCS60',
     api8086: 'http://103.233.193.94:8086/XCS60',  
-    api8887: 'http://103.233.193.94:8887/XCS60', 
+    // api8887: 'http://103.233.193.94:8887/XCS60', 
     api8777: 'http://103.233.193.94:8777/XCS60',
     api8776: 'http://103.233.193.94:8776/XCS60', 
     api8775: 'http://103.233.193.94:8775/XCS60',  
     apiReport:'http://103.233.193.62:8000/Report_XCS',
-    mockapi: 'http://demo1735762.mockable.io/XCS60',
     exciseService: 'http://webtest.excise.go.th'
     
 }

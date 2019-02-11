@@ -219,19 +219,19 @@ export class NoticeService {
 
     async noticeDocumentinsAll(document: NoticeDocument): Promise<any> {
         const params = document;
-        const url = `${appConfig.api8882}/MasDocumentMaininsAll`;
+        const url = `${appConfig.api8777}/MasDocumentMaininsAll`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async noticeDocumentupd(document: NoticeDocument): Promise<any> {
         const params = document;
-        const url = `${appConfig.api8882}/MasDocumentMainupdByCon`;
+        const url = `${appConfig.api8777}/MasDocumentMainupdByCon`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
     async noticeDocumentupdDelete(DocumentID: string): Promise<any> {
         const params = { DocumentID };
-        const url = `${appConfig.api8882}/MasDocumentMainupdDelete`;
+        const url = `${appConfig.api8777}/MasDocumentMainupdDelete`;
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
