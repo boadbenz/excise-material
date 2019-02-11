@@ -235,7 +235,12 @@ export class NoticeService {
         return this.responsePromisModify(JSON.stringify(params), url);
     }
 
-    public print(noticeCode: any){
+    public printRV1(noticeCode: any){
+        const params = { 'NoticeCode': noticeCode };
+        const url = `${appConfig.apiReport}/ILG60_00_02_001.aspx`;
+        return this.http.post(url, params, {...this.httpOptions, responseType: 'blob'}).map(res=>res);
+    }
+    public printRV2(noticeCode: any){
         const params = { 'NoticeCode': noticeCode };
         const url = `${appConfig.apiReport}/ILG60_00_02_002.aspx`;
         return this.http.post(url, params, {...this.httpOptions, responseType: 'blob'}).map(res=>res);

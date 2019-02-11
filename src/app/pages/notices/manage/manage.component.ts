@@ -354,20 +354,16 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
             if (status) {
-                this.preloader.setShowPreloader(true);
+                // this.preloader.setShowPreloader(true);
                 await this.navService.setOnPrint(false);
-                this.noticeService.print(this.noticeCode).subscribe((res)=>{
-                    this.preloader.setShowPreloader(false);
+                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+                // this.noticeService.print(this.noticeCode).subscribe((res)=>{
+                //     this.preloader.setShowPreloader(false);
 
-                    const file = new Blob([res], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
-
-                    // let a = document.createElement("a");
-                    // a.href = fileURL;
-                    // a.target = "_blank";
-                    // a.click();
-                    window.open(fileURL, "_blank");
-                });
+                //     const file = new Blob([res], {type: 'application/pdf'});
+                //     const fileURL = URL.createObjectURL(file);
+                //     window.open(fileURL, "_blank");
+                // });
             }
         })
 
