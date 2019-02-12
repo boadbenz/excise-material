@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ListConfig } from './list.config';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { RequestListService } from '../../services/RequestList.service';
-import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import {
   IRequestList,
   IRequestListgetByConAdv
@@ -10,7 +9,6 @@ import {
 import { FormGroup } from '@angular/forms';
 import {
   convertDateForSave,
-  toLocalNumeric,
   getDateMyDatepicker,
   compareDate
 } from 'app/config/dateFormat';
@@ -41,7 +39,7 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.6');
+    this.sidebarService.setVersion('0.0.1.7');
     this.setShowButton();
     // this.fetchData('');
   }
@@ -76,7 +74,7 @@ export class ListComponent extends ListConfig implements OnInit {
     }));
   }
   public submitAdvSearch($event: FormGroup) {
-    console.log(' $event.value', $event.value);
+    // console.log(' $event.value', $event.value);
 
     if ($event.value) {
       const data: any = $event.value;
@@ -127,7 +125,6 @@ export class ListComponent extends ListConfig implements OnInit {
         const newMap = RequestListgetByConAdvModel;
         for (const key in newMap) {
           if (newMap.hasOwnProperty(key)) {
-            const element = newMap[key];
             newMap[key] = formData[key];
           }
         }
@@ -152,7 +149,7 @@ export class ListComponent extends ListConfig implements OnInit {
             convertDateForSave(getDateMyDatepicker(newMap.OccurrenceDateTo))
           )
           : '';
-        console.log('newMap', newMap);
+        // console.log('newMap', newMap);
         this.requestListService
           .RequestListgetByConAdv(newMap)
           .subscribe((res: any[]) => {
@@ -163,6 +160,8 @@ export class ListComponent extends ListConfig implements OnInit {
             }
           });
       }
+    } else {
+      swal('', 'ไม่พบข้อมูล', 'warning');
     }
   }
 }
