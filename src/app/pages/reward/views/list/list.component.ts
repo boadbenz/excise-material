@@ -41,7 +41,7 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.5');
+    this.sidebarService.setVersion('0.0.1.6');
     this.setShowButton();
     // this.fetchData('');
   }
@@ -99,13 +99,13 @@ export class ListComponent extends ListConfig implements OnInit {
           new Date(data['OccurrenceDateTo'])
         )
       ) {
-        swal('[วันที่จับกุม] ต้องน้อยกว่าหรือเท่ากับ [ถึง]', 'warning');
+        swal('', '[วันที่จับกุม] ต้องน้อยกว่าหรือเท่ากับ [ถึง]', 'warning');
         check *= 0;
       }
       if (
         new Date(data['OccurrenceDateTo']).valueOf() >= new Date().valueOf()
       ) {
-        swal('[วันที่จับกุม ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน', 'warning');
+        swal('', '[วันที่จับกุม ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน', 'warning');
         check *= 0;
       }
       if (
@@ -114,11 +114,11 @@ export class ListComponent extends ListConfig implements OnInit {
           new Date(data['LawsuitDateTo'])
         )
       ) {
-        swal('[วันที่รับคดี] ต้องน้อยกว่าหรือเท่ากับ [ถึง]', 'warning');
+        swal('', '[วันที่รับคดี] ต้องน้อยกว่าหรือเท่ากับ [ถึง]', 'warning');
         check *= 0;
       }
       if (new Date(data['LawsuitDateTo']).valueOf() >= new Date().valueOf()) {
-        swal('[วันที่รับคดี ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน', 'warning');
+        swal('', '[วันที่รับคดี ถึง] ต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน', 'warning');
         check *= 0;
       }
 
@@ -134,23 +134,23 @@ export class ListComponent extends ListConfig implements OnInit {
 
         newMap.LawsuitDateFrom = newMap.LawsuitDateFrom
           ? this.ConvDateTimeToDate(
-              convertDateForSave(getDateMyDatepicker(newMap.LawsuitDateFrom))
-            )
+            convertDateForSave(getDateMyDatepicker(newMap.LawsuitDateFrom))
+          )
           : '';
         newMap.LawsuitDateTo = newMap.LawsuitDateTo
           ? this.ConvDateTimeToDate(
-              convertDateForSave(getDateMyDatepicker(newMap.LawsuitDateTo))
-            )
+            convertDateForSave(getDateMyDatepicker(newMap.LawsuitDateTo))
+          )
           : '';
         newMap.OccurrenceDateFrom = newMap.OccurrenceDateFrom
           ? this.ConvDateTimeToDate(
-              convertDateForSave(getDateMyDatepicker(newMap.OccurrenceDateFrom))
-            )
+            convertDateForSave(getDateMyDatepicker(newMap.OccurrenceDateFrom))
+          )
           : '';
         newMap.OccurrenceDateTo = newMap.OccurrenceDateTo
           ? this.ConvDateTimeToDate(
-              convertDateForSave(getDateMyDatepicker(newMap.OccurrenceDateTo))
-            )
+            convertDateForSave(getDateMyDatepicker(newMap.OccurrenceDateTo))
+          )
           : '';
         console.log('newMap', newMap);
         this.requestListService
@@ -159,7 +159,7 @@ export class ListComponent extends ListConfig implements OnInit {
             if (res.length > 0) {
               this.gridData = this.newData(res);
             } else {
-              swal('ไม่พบข้อมูล', 'error');
+              swal('', 'ไม่พบข้อมูล', 'warning');
             }
           });
       }
