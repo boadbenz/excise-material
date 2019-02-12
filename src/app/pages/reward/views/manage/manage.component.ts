@@ -47,6 +47,7 @@ import swal from 'sweetalert2';
   styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
+  ReqBribeDTL: any
   constructor(
     private navService: NavigationService,
     private activatedRoute: ActivatedRoute,
@@ -222,6 +223,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
             })
             .toPromise();
+            this.ReqBribeDTL = RequestBribe[0].RequestBribeID;
+            localStorage.setItem("ReqDTL",this.ReqBribeDTL)
           // 4.1.1(2.2.1)
           if (RequestBribe.length > 0) {
             // 4.1.1(2.2.1(1))

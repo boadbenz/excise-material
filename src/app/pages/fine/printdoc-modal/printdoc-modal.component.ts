@@ -99,9 +99,6 @@ export class PrintDocModalComponent implements OnInit {
         if (this.check.checkbox1) {
             var mCompareID = this.manageComponent.params.CompareID;
             var mIndictmentID = this.manageComponent.params.IndictmentID;
-            console.log("Chk1")
-            // console.log("mCompareID : ", mCompareID)
-            // console.log("mIndictmentID : ", mIndictmentID)
             this.preloader.setShowPreloader(true);
             await this.ReportForm1(mCompareID, mIndictmentID)
                 .subscribe(x => {
@@ -115,9 +112,6 @@ export class PrintDocModalComponent implements OnInit {
             console.log("Chk2")
             var mCompareID = this.manageComponent.params.CompareID;
             var mIndictmentID = this.manageComponent.params.IndictmentID;
-            console.log("Chk1")
-            // console.log("mCompareID : ", mCompareID)
-            // console.log("mIndictmentID : ", mIndictmentID)
             this.preloader.setShowPreloader(true);
             await this.ReportForm2(mCompareID, mIndictmentID)
                 .subscribe(x => {
@@ -131,11 +125,97 @@ export class PrintDocModalComponent implements OnInit {
             console.log("Chk3")
             var mCompareID = this.manageComponent.params.CompareID;
             var mIndictmentID = this.manageComponent.params.IndictmentID;
-            console.log("Chk1")
-            // console.log("mCompareID : ", mCompareID)
-            // console.log("mIndictmentID : ", mIndictmentID)
             this.preloader.setShowPreloader(true);
             await this.ReportForm3(mCompareID, mIndictmentID, this.ArrestCode)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
+        if (this.check.checkbox4) {
+            console.log("Chk4")
+            // var mCompareID = this.manageComponent.params.CompareID;
+            var LawsuitID = this.manageComponent.headerData.LawsuitID;
+            console.log("LawsuitID+++ : ", LawsuitID)
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm4(LawsuitID)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
+        if (this.check.checkbox5) {
+            console.log("Chk5")
+            // var mCompareID = this.manageComponent.params.r;
+            // var LawsuitID = this.manageComponent.headerData.;
+            // console.log("LawsuitID+++ : ", LawsuitID)
+            var RequestBribeID = "";
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm5(RequestBribeID)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
+        if (this.check.checkbox6) {
+            console.log("Chk6")
+            var CompareDetailID = this.manageComponent.params.CompareDetailID;
+            // var CompareDetailID = this.manageComponent.headerData.CompareDetailID;
+            console.log("CompareDetailID+++ : ", CompareDetailID)
+            var RequestBribeID = "";
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm6(CompareDetailID)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
+        if (this.check.checkbox7) {
+            console.log("Chk7")
+            var CompareDetailID = this.manageComponent.params.CompareDetailID;
+            // var CompareDetailID = this.manageComponent.headerData.CompareDetailID;
+            console.log("CompareDetailID+++ : ", CompareDetailID)
+            var RequestBribeID = "";
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm7(CompareDetailID)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
+        if (this.check.checkbox8) {
+            console.log("Chk8")
+            var CompareDetailID = this.manageComponent.params.CompareDetailID;
+            // var CompareDetailID = this.manageComponent.headerData.CompareDetailID;
+            console.log("CompareDetailID+++ : ", CompareDetailID)
+            var RequestBribeID = "";
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm8(CompareDetailID)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
+        if (this.check.checkbox9) {
+            console.log("Chk9")
+            var CompareDetailID = this.manageComponent.params.CompareDetailID;
+            // var CompareDetailID = this.manageComponent.headerData.CompareDetailID;
+            console.log("CompareDetailID+++ : ", CompareDetailID)
+            var RequestBribeID = "";
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm9(CompareDetailID)
                 .subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -231,7 +311,6 @@ export class PrintDocModalComponent implements OnInit {
             ArrestCode: ArrestCode
         };
         const url = `${appConfig.apiReport}/ILG60_00_06_003.aspx`;
-
         return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
             .catch(this.onCatch)
             .do((res: Response) => {
@@ -242,6 +321,97 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
+    ReportForm4(LawsuitID: string) {
+        const params = {
+            LawsuitID: LawsuitID
+        };
+        const url = `${appConfig.apiReport}/ILG60_00_06_004.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
+    }
+    ReportForm5(RequestBribeID: string) {
+        const params = {
+            RequestBribeID: RequestBribeID
+        };
+        const url = `${appConfig.apiReport}/ILG60_00_06_005.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
+    }
+    ReportForm6(CompareDetailID: string) {
+        const params = {
+            CompareDetailID: CompareDetailID
+        };
+        const url = `${appConfig.apiReport}/ILG60_00_06_006.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
+    }
+    ReportForm7(CompareDetailID: string) {
+        const params = {
+            CompareDetailID: CompareDetailID
+        };
+        const url = `${appConfig.apiReport}/ILG60_00_06_007.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
+    }
+    ReportForm8(CompareDetailID: string) {
+        const params = {
+            CompareDetailID: CompareDetailID
+        };
+        const url = `${appConfig.apiReport}/ILG60_00_06_008.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
+    }
+    ReportForm9(CompareDetailID: string) {
+        const params = {
+            CompareDetailID: CompareDetailID
+        };
+        const url = `${appConfig.apiReport}/ILG60_00_06_009.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
+    }
+    
 
     dismiss(e: any) {
         console.log('dd');

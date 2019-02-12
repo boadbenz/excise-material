@@ -484,6 +484,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       console.log('compare');
       console.log(compare);
+      this.params.CompareDetailID = compare.CompareDetailID
       if (compare.CompareDetailFine) {
         for (const cd of compare.CompareDetailFine) {
           if (!this.ListCompareDetail[countCD]) {
@@ -1047,6 +1048,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.receipt.list = [];
     try {
       const resp: any = await this.fineService.postMethod('CompareArrestgetByIndictmentID', { IndictmentID: this.params.IndictmentID});
+      console.log("CompareArrestgetByIndictmentID+++ : ",resp)
       // ส่วนรายละเอียด Header
       if (resp && resp.length > 0) {
         this.headerData.ArrestCode = resp[0].ArrestCode;
