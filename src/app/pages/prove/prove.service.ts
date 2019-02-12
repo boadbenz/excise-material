@@ -22,7 +22,7 @@ export class ProveService {
 
   getByKeyword(Textsearch: string) {
     const params = Textsearch;
-    const url = `${appConfig.api8882}/ProveListgetByKeyword`;
+    const url = `${appConfig.api7777}/ProveListgetByKeyword`;
     return this.http.post<Prove[]>(url, params, this.httpOptions);
   }
 
@@ -42,7 +42,7 @@ export class ProveService {
   async getByConAdv(form: any): Promise<any> {
     debugger
     const params = JSON.stringify(form);
-    const url = `${appConfig.api8882}/ProveListgetByConAdv`;
+    const url = `${appConfig.api7777}/ProveListgetByConAdv`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -68,7 +68,7 @@ export class ProveService {
 
   async insAll(oProve: Prove): Promise<any> {
     const params = JSON.stringify(oProve);
-    const url = `${appConfig.api8882}/ProveinsAll`;
+    const url = `${appConfig.api7777}/ProveinsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -81,7 +81,7 @@ export class ProveService {
   async ProveProductinsAll(oProduct: ProveProduct): Promise<any> {
     debugger
     const params = JSON.stringify(oProduct);
-    const url = `${appConfig.api8882}/ProveProductinsAll`;
+    const url = `${appConfig.api7777}/ProveProductinsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -94,7 +94,7 @@ export class ProveService {
   async ProveScienceinsAll(oProductScience: ProveScience): Promise<any> {
     debugger
     const params = JSON.stringify(oProductScience);
-    const url = `${appConfig.api8882}/ProveScienceinsAll`;
+    const url = `${appConfig.api7777}/ProveScienceinsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -107,7 +107,7 @@ export class ProveService {
   async ProveScienceupdByCon(oProductScience: ProveScience): Promise<any> {
     debugger
     const params = JSON.stringify(oProductScience);
-    const url = `${appConfig.api8882}/ProveScienceupdByCon`;
+    const url = `${appConfig.api7777}/ProveScienceupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -120,7 +120,7 @@ export class ProveService {
   async ProveScienceupdDelete(ProveScienceID: string): Promise<any> {
     debugger
     const params = { ProveScienceID };
-    const url = `${appConfig.api8882}/ProveScienceupdDelete`;
+    const url = `${appConfig.api7777}/ProveScienceupdDelete`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -133,7 +133,7 @@ export class ProveService {
   async ProveDeliverProductinsAll(oProveDeliver: ProveDeliverProduct): Promise<any> {
     debugger
     const params = JSON.stringify(oProveDeliver);
-    const url = `${appConfig.api8882}/ProveDeliverProductinsAll`;
+    const url = `${appConfig.api7777}/ProveDeliverProductinsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -146,7 +146,7 @@ export class ProveService {
   async ProveDeliverProductupdByCon(oProveDeliver: ProveDeliverProduct): Promise<any> {
     debugger
     const params = JSON.stringify(oProveDeliver);
-    const url = `${appConfig.api8882}/ProveDeliverProductupdByCon`;
+    const url = `${appConfig.api7777}/ProveDeliverProductupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -158,7 +158,7 @@ export class ProveService {
 
   async ProveProductupdByCon(oProduct: ProveProduct): Promise<any> {
     const params = JSON.stringify(oProduct);
-    const url = `${appConfig.api8882}/ProveProductupdByCon`;
+    const url = `${appConfig.api7777}/ProveProductupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -170,7 +170,7 @@ export class ProveService {
 
   async ProveProductupdDelete(oProduct: ProveProduct): Promise<any> {
     const params = JSON.stringify(oProduct);
-    const url = `${appConfig.api8882}/ProveProductupdDelete`;
+    const url = `${appConfig.api7777}/ProveProductupdDelete`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -182,7 +182,7 @@ export class ProveService {
 
   async ProveupdDelete(ProveID: string): Promise<any> {
     const params = { ProveID };
-    const url = `${appConfig.api8882}/ProveupdDelete`;
+    const url = `${appConfig.api7777}/ProveupdDelete`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -194,7 +194,7 @@ export class ProveService {
 
   async ProveupdByCon(oProve: Prove): Promise<any> {
     const params = JSON.stringify(oProve);
-    const url = `${appConfig.api8882}/ProveupdByCon`;
+    const url = `${appConfig.api7777}/ProveupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -207,7 +207,7 @@ export class ProveService {
 
   async ProvegetByCon(ProveID: string): Promise<any> {
     const params = { ProveID };
-    const url = `${appConfig.api8882}/ProvegetByCon`;
+    const url = `${appConfig.api7777}/ProvegetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -256,7 +256,7 @@ export class ProveService {
   async DocumentinsAll(oPD: ProveDocument): Promise<any> {
     debugger
     const params = JSON.stringify(oPD);
-    const url = `${appConfig.api8882}/DocumentinsAll`;
+    const url = `${appConfig.api7777}/DocumentinsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -269,7 +269,7 @@ export class ProveService {
   async DocumentupdByCon(oPD: ProveDocument): Promise<any> {
     debugger
     const params = JSON.stringify(oPD);
-    const url = `${appConfig.api8882}/DocumentupdByCon`;
+    const url = `${appConfig.api7777}/DocumentupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -282,7 +282,7 @@ export class ProveService {
   async DocumentupdDelete(oPD: ProveDocument): Promise<any> {
     debugger
     const params = JSON.stringify(oPD);
-    const url = `${appConfig.api8882}/DocumentupdDelete`;
+    const url = `${appConfig.api7777}/DocumentupdDelete`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -311,7 +311,7 @@ export class ProveService {
 
   async ProveArrestgetByCon(IndictmentID: string): Promise<any> {
     const params = { IndictmentID };
-    const url = `${appConfig.api8882}/ProveArrestgetByCon`;
+    const url = `${appConfig.api7777}/ProveArrestgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -323,7 +323,7 @@ export class ProveService {
 
   async ProveProductgetByCon(ProductID: string): Promise<any> {
     const params = { ProductID };
-    const url = `${appConfig.api8882}/ProveProductgetByCon`;
+    const url = `${appConfig.api7777}/ProveProductgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
