@@ -1320,6 +1320,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             item.RowId = 1;
             this.ArrestStaff.push(this.fb.group(item));
         }
+        this.sortFormArray(this.ArrestStaff);
     }
 
     addProduct() {
@@ -1342,8 +1343,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
         }
-        let sort = sortFormArray(this.ArrestProduct.value, 'RowId');
-        sort.then(x => this.setItemFormArray(x, 'ArrestProduct'))
+        this.sortFormArray(this.ArrestProduct);
     }
 
     addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
@@ -1353,9 +1353,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         // lawbreaker.IsChecked = Acceptability.INACCEPTABLE;
         lawbreaker = removeObjectItem(lawbreaker, 'ResultCount') as fromModels.ArrestLawbreaker;
         this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
-        let sort = sortFormArray(this.ArrestLawbreaker.value, 'RowId');
-        sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
-            .catch((error) => this.catchError(error));
+        this.sortFormArray(this.ArrestLawbreaker);
     }
 
     addIndictment() {
@@ -1373,6 +1371,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         } else {
             this.setArrestIndictment([item], null);
         }
+        this.sortFormArray(this.ArrestIndictment);
     }
 
     addDocument() {
@@ -1392,18 +1391,25 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             item.RowId = 1;
             this.ArrestDocument.push(this.fb.group(item));
         }
+        this.sortFormArray(this.ArrestDocument);
     }
 
-    private deleteFormArray(o: FormArray, i: number, controls: string) {
-        o.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let sort = sortFormArray(o.value, 'RowId');
-        o.value.map(() => o.removeAt(0));
-        sort.then(x => this.setItemFormArray(x, controls))
-            .catch((error) => this.catchError(error));
+    private sortFormArray(o: FormArray) {
+        let sort = sortingArray(o.value, 'RowId');
+        sort.forEach(($, i1) => o.at(i1).patchValue($));
+    }
+
+    private deleteFormArray(o: FormArray, i: number) {
+        const arr = o.value.filter($ => $.IsModify == 'd');
+        const RowId = arr.length
+            ? arr.reduce((max, p) => p.RowId > max ? p.RowId : max, arr[0].RowId) + 1
+            : IntialLastRowID;
+        o.at(i).patchValue({ IsModify: 'd', RowId: RowId });
+        sortingArray(o.value, 'RowId').forEach(($, i1) => o.at(i1).patchValue($));
     }
 
     deleteStaff(i: number) {
-        this.deleteFormArray(this.ArrestStaff, i, 'ArrestStaff');
+        this.deleteFormArray(this.ArrestStaff, i);
     }
 
     deleteProduct(i: number) {
@@ -1484,33 +1490,35 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     deleteLawbreaker(i: number) {
-        this.deleteFormArray(this.ArrestLawbreaker, i, 'ArrestLawbreaker');
+        this.deleteFormArray(this.ArrestLawbreaker, i);
     }
 
     deleteDocument(i: number) {
-        this.deleteFormArray(this.ArrestDocument, i, 'ArrestDocument');
+        this.deleteFormArray(this.ArrestDocument, i);
     }
 
     deleteNotice(i: number) {
-        this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let notice = sortFormArray(this.ArrestNotice.value, 'RowId');
-        this.ArrestNotice.value.map(() => this.ArrestNotice.removeAt(0));
-        notice.then(x => this.setNoticeForm(x))
-            .catch((error) => this.catchError(error));
+        this.deleteFormArray(this.ArrestNotice, i);
+        // this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        // let notice = sortFormArray(this.ArrestNotice.value, 'RowId');
+        // this.ArrestNotice.value.map(() => this.ArrestNotice.removeAt(0));
+        // notice.then(x => this.setNoticeForm(x))
+        //     .catch((error) => this.catchError(error));
     }
 
     async deleteIndicment(i: number) {
-        this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        const indictment = sortFormArray(this.ArrestIndictment.value, 'RowId');
-        this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
-        indictment.then((_x) => {
-            _x.filter(x => x.IsModify != 'd')
-                .map((x) => {
-                    x.RowId = null;
-                    return x;
-                });
-            this.setArrestIndictment(_x, null);
-        })
+        this.deleteFormArray(this.ArrestIndictment, i);
+            // this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+            // const indictment = sortFormArray(this.ArrestIndictment.value, 'RowId');
+            // this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
+            // indictment.then((_x) => {
+            //     _x.filter(x => x.IsModify != 'd')
+            //         .map((x) => {
+            //             x.RowId = null;
+            //             return x;
+            //         });
+            //     this.setArrestIndictment(_x, null);
+            // })
     }
 
     searchProduct = (text$: Observable<string>) =>
