@@ -50,6 +50,7 @@ export class ManageComponent implements OnInit {
   showEditField: Boolean;
   disabled: Boolean;
   isRequired: boolean;
+  isRequired2: boolean;
   lawBrakerForm: FormArray;
   LawsuitArrestIndictmentProduct: any = [];
   LawsuitArrestIndictmentProductTableListShow = false;
@@ -179,6 +180,7 @@ export class ManageComponent implements OnInit {
         else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
           this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
           this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
+          this.isRequired2 = true;
           Swal({
             text: Message.checkData,
             type: 'warning',
