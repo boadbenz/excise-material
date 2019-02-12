@@ -458,7 +458,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     endLoader = () => this.loaderService.hide();
 
     addStaff() {
-        const lastIndex = this.InvestigateDetailStaff.length - 1;
+        const lastIndex = this.InvestigateDetailStaff.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.InvestigateDetailStaff();
         item.StaffID = null;
         item.ProgramCode = null;
@@ -482,14 +482,15 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.ContributorID = null;
         item.IsActive = null;
         item.IsModify = 'c'
-        if (lastIndex < 0) {
+
+        if (lastIndex >= 0) {
+            const lastDoc = this.InvestigateDetailStaff.at(lastIndex).value;
+            if (lastDoc.ContributorID) {
+                item.RowId = lastDoc.RowId + 1;
+                this.InvestigateDetailStaff.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
-            this.InvestigateDetailStaff.push(this.fb.group(item));
-            return;
-        }
-        const lastDoc = this.InvestigateDetailStaff.at(lastIndex).value;
-        if (lastDoc.ContributorID) {
-            item.RowId = lastDoc.RowId + 1;
             this.InvestigateDetailStaff.push(this.fb.group(item));
         }
     }
@@ -505,7 +506,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     addLocal() {
-        const lastIndex = this.InvestigateDetailLocal.length - 1;
+        const lastIndex = this.InvestigateDetailLocal.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.InvestigateDetailLocal();
         item.LocalID = null;
         item.InvestigateDetailID = null;
@@ -528,20 +529,21 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.IsActive = 1;
         item.Region = '';
         item.IsModify = 'c';
-        if (lastIndex < 0) {
+
+        if (lastIndex >= 0) {
+            const lastDoc = this.InvestigateDetailLocal.at(lastIndex).value;
+            if (lastDoc.Address) {
+                item.RowId = lastDoc.RowId + 1;
+                this.InvestigateDetailLocal.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
-            this.InvestigateDetailLocal.push(this.fb.group(item));
-            return;
-        }
-        const lastDoc = this.InvestigateDetailLocal.at(lastIndex).value;
-        if (lastDoc.Address) {
-            item.RowId = lastDoc.RowId + 1;
             this.InvestigateDetailLocal.push(this.fb.group(item));
         }
     }
 
     addProduct() {
-        const lastIndex = this.InvestigateDetailProduct.length - 1;
+        const lastIndex = this.InvestigateDetailProduct.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.InvestigateDetailProduct();
         item.ProductID = null;
         item.InvestigateDetailID = null;
@@ -575,20 +577,21 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.IsActive = null;
         item.IsModify = 'c';
         item.GroupCode = '1';
-        if (lastIndex < 0) {
+
+        if (lastIndex >= 0) {
+            const lastDoc = this.InvestigateDetailProduct.at(lastIndex).value;
+            if (lastDoc.ProductDesc) {
+                item.RowId = lastDoc.RowId + 1;
+                this.InvestigateDetailProduct.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
-            this.InvestigateDetailProduct.push(this.fb.group(item));
-            return;
-        }
-        const lastDoc = this.InvestigateDetailProduct.at(lastIndex).value;
-        if (lastDoc.ProductDesc) {
-            item.RowId = lastDoc.RowId + 1;
             this.InvestigateDetailProduct.push(this.fb.group(item));
         }
     }
 
     addDocument() {
-        const lastIndex = this.InvestigateDocument.length - 1;
+        const lastIndex = this.InvestigateDocument.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.InvestigateDocumentModel();
         item.DocumentType = this.documentType;
         item.DataSource = null;
@@ -599,9 +602,15 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             this.InvestigateDocument.push(this.fb.group(item));
             return;
         }
-        const lastItem = this.InvestigateDocument.at(lastIndex).value;
-        if (lastItem.DataSource && lastItem.FilePath) {
-            item.RowId = lastItem.RowId + 1;
+
+        if (lastIndex >= 0) {
+            const lastItem = this.InvestigateDocument.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                item.RowId = lastItem.RowId + 1;
+                this.InvestigateDocument.push(this.fb.group(item));
+            }
+        } else {
+            item.RowId = 1;
             this.InvestigateDocument.push(this.fb.group(item));
         }
     }
