@@ -1,5 +1,6 @@
 export const Message = {
     noRecord: 'ไม่พบข้อมูล',
+    getDataError: 'โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง',
     saveComplete: 'บันทึกเรียบร้อย',
     saveFail: 'บันทึกข้อมูลไม่สำเร็จ',
     delFail: 'ลบข้อมูลไม่สำเร็จ',
