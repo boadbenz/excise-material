@@ -41,7 +41,7 @@ export const ContributorList: DropdownInterface[] = [
   }
 ];
 export class RewardConfig extends RewardHelper {
-  public OfficeCode = '102546';
+  public OfficeCode = localStorage.getItem('officeCode');
 
   public ContributorList: DropdownInterface[] = ContributorList;
   public RequestBribeCode: string;

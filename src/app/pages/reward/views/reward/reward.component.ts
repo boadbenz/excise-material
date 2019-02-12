@@ -347,7 +347,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.10');
+    this.sidebarService.setVersion('0.0.1.11');
     this.pageLoad();
   }
   public changeFullName(text, index) {
@@ -1173,7 +1173,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             // 2.2.8 'WAIT'
             break;
         }
-        swal('บันทึกสำเร็จ', 'success');
+        swal('', 'บันทึกสำเร็จ', 'success');
         // location.reload();
         // this.pageLoad();
         this.isEdit = false;
@@ -1182,10 +1182,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           this.RequestRewardID$.getValue()
         ]);
       } catch (error) {
-        swal('บันทึกไม่สำเร็จ', 'error');
+        swal('', 'บันทึกไม่สำเร็จ', 'error');
       }
     } else {
-      swal('กรุณากรอกให้ครบถ้วน', 'warning');
+      swal('', 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน', 'warning');
     }
   }
   public async buttonPrint() {
@@ -1256,9 +1256,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       .toPromise();
 
     if (delResp.IsSuccess) {
-      swal('ลบข้อมูลสำเร็จ', 'success');
+      swal('', 'ลบข้อมูลสำเร็จ', 'success');
     } else {
-      swal('ลบข้อมูลไม่สำเร็จ', 'error');
+      swal('', 'ลบข้อมูลไม่สำเร็จ', 'error');
     }
     // }
   }
