@@ -393,6 +393,21 @@ export class ProveService {
         this.onError(error);
       });
   }
+  ProveReport3(ProveID: string) {
+    let pValue = {
+      "ProveID": ProveID
+    }
+    debugger
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.apiReport}//ILG60_00_05_003.aspx`;
+    return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+      .catch(this.onCatch)
+      .do((res: Response) => {
+        this.onSuccess(res);
+      }, (error: any) => {
+        this.onError(error);
+      });
+  }
 
   private onSuccess(res: Response): void {
     console.log('Request successful');

@@ -44,6 +44,12 @@ export class PrintDocModalComponent implements OnInit {
                 DocName: 'บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4',
                 DocType: 0,
                 DocTypeName: 'แบบฟอร์ม'
+            },
+            {
+                IsChecked: false,
+                DocName: 'บันทึกการตรวจพิสูจน์นอกสถานที่ทำการ',
+                DocType: 0,
+                DocTypeName: 'แบบฟอร์ม'
             }
         ];
 
@@ -100,6 +106,31 @@ export class PrintDocModalComponent implements OnInit {
                 console.log("this.ProveID : ",this.ProveID)
                 this.preloader.setShowPreloader(true);
                 this.proveService.ProveReport2(this.ProveID)                
+                    .subscribe(x => {
+                        const file = new Blob([x], { type: 'application/pdf' });
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            });
+
+            _print.filter(x => x.DocName == "บันทึกการตรวจพิสูจน์นอกสถานที่ทำการ").map(item => {
+                console.log("this.ProveID : ",this.ProveID)
+                this.preloader.setShowPreloader(true);
+                this.proveService.ProveReport3(this.ProveID)                
                     .subscribe(x => {
                         const file = new Blob([x], { type: 'application/pdf' });
                         const fileURL = URL.createObjectURL(file);
