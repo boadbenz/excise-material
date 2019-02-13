@@ -380,7 +380,7 @@
               <span *ngIf="item.cancheck && item.checkBox1 && item.checkBox2">ประกันและหลักประกัน</span>
             </td>
             <td class=" text-center">
-              <a (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
+              <a *ngIf="item.IsProvisionalAcquittal" (click)="editAccused(item, i, 0)" class="text-secondary" data-toggle="modal"
                  data-target="#testimonyPopup" [hidden]="!showEditField">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
@@ -1031,13 +1031,13 @@
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-form-label col-md-4">วันที่ชำระค่าปรับ : </label>
-                  <div class="col-md-3">
+                  <div class="col-md-4" style="padding-right: 0px">
                     <my-date-picker-th [(ngModel)]="compareUserDetailPopup.payDate" name="payDate" placeholder="" locale="th"
                                        [options]="DateOption"
                                        [disabled]="true"
                     ></my-date-picker-th>
                   </div>
-                  <label class="col-form-label text-center col-md-2">เวลา</label>
+                  <label class="col-form-label text-center col-md-1" style="padding-right: 0px;padding-left: 0px">เวลา</label>
                   <div class="col-md-3">
                     <input class="form-control" type="text" name="payTime"
                            [(ngModel)]="compareUserDetailPopup.payTime" disabled>
