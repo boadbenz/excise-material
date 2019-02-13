@@ -134,6 +134,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
+        this.oEvidenceIn = {
+            IsEdit: 1
+        }
+
         this.active_Route();
         this.navigate_Service();
         this.getUnit();
@@ -147,8 +151,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.EvidenceInTime = this.getCurrentTime();
         this.EvidenceInCode = "Auto Generate";
 
-        this.DestinationCode = "030700";
-        //this.DestinationCode = localStorage.getItem("officeCode");
+        //this.DestinationCode = "030700";
+        this.DestinationCode = localStorage.getItem("officeCode");
         this.getWarehouse();
 
         if (this.evitype == "I") {
@@ -1142,6 +1146,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     WarehouseOnAutoSelecteWord(event) {
         this.WarehouseID = event.WarehouseID;
+
+        if(this.evitype == "G"){
+            this.getEvidenceInOutgetByWarehouseID();
+        }
     }
 
     chooseFirstWarehouse(): void {
@@ -1503,12 +1511,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ------------ Product by Warehourse -----------
     // **********************************************
 
-    TestSearchWarehourse() {
-        this.getEvidenceInOutgetByWarehouseID();
-    }
-
     async getEvidenceInOutgetByWarehouseID() {
+        this.preloader.setShowPreloader(true);
         await this.EviService.getEvidenceInOutgetByWarehouseID(this.WarehouseID).then(async res => {
+            this.preloader.setShowPreloader(false);
             if (res) {
                 this.rawProdbyWarehourseOptions = res;
             }

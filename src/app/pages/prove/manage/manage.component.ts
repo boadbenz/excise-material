@@ -223,8 +223,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.getProveStaff();
         await this.getProduct();
 
-        this.DestinationCode = "030700";
-        //this.DestinationCode = localStorage.getItem("officeCode");
+        //this.DestinationCode = "030700";
+        this.DestinationCode = localStorage.getItem("officeCode");
         this.getWarehouse();
 
         this.ArrestCode = this.ArrestCode;
@@ -244,15 +244,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         let date = new Date();
         this.ProveYear = (date.getFullYear() + 543).toString();
         this.ProveDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
-        //this.ProveTime = await this.getCurrentTime();
         this.DeliveryDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
-        //this.DeliveryTime = await this.getCurrentTime();
-        //this.ProveScienceTime = await this.getCurrentTime();
-
-        this.WarehouseID = "1";
 
         await this.ProveArrestgetByCon();
-        // this.preloader.setShowPreloader(false);
     }
 
     private active_Route() {
