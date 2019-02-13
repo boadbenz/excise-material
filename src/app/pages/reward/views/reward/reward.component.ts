@@ -347,7 +347,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.11');
+    this.sidebarService.setVersion('0.0.1.12');
     this.pageLoad();
   }
   public changeFullName(text, index) {
@@ -609,7 +609,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             BribeMoney: `${m.PaymentFine * 0.2 || 0}`,
             RewardMoney: `${m.PaymentFine * 0.2 || 0}`
           }));
-          this.listData = mapData;
+          // this.listData = mapData;
           this.checkList = mapData.map(m => true);
           this.aggregate.BribeMoney.sum = Number(
             mapData.map(m => m.BribeMoney).reduce((a, b) => (a += b))
