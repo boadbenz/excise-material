@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { Router, ActivatedRoute } from '@angular/router';
-
 import { ReductionApiService } from '../reduction.api.service';
-
 import { Subject } from 'rxjs/Subject';
-
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReductionModelListComponent } from './reduction-model-list/reduction-model-list.component';
+
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -118,6 +116,10 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     this._adjustArrestgetByCon(this.compareID);
     this._adjustReceiptgetByCon(this.compareID);
     this._adjustDetailgetByCon(this.compareID);
+
+    console.log("adjustDetailgetByCon : ",this.adjustDetailData)
+    console.log("adjustReceiptgetByCon : ", this.tableData)
+    console.log("adjustArrestgetByCon : ", this.detailData)
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
