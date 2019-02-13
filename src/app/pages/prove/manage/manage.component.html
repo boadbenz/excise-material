@@ -492,7 +492,20 @@
                     </mat-autocomplete>
                 </div>
             </div>
-
+            <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
+                <div class="form-group col-lg-4 col-md-7">
+                    <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder=""  matInput
+                        [matAutocomplete]="auto6" (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                        [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                    <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
+                        <mat-option *ngFor="let optionWh of Destinationoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                            (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                            {{ optionWh.WarehouseName }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </div>
+            </div>
         </form>
 
     </div>

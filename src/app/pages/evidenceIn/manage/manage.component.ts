@@ -79,7 +79,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     Remark: string;         // เหตุผลในการนำส่ง
     EvidenceInType: string; // ประเภทการรับของกลาง
     WarehouseID: string;    // รหัสคลังจัดเก็บ
-    OldWarehouseID: string; // รหัสคลัดจัดเก็บเดิม
 
 
     // -------- ตรวจรัยจากหน่วยงานภายใน -------
@@ -243,8 +242,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSave(false);
 
                 let listProd = this.ListEvidenceInItem.filter(f => f.EvidenceInItemCode == "" || f.ProductDesc == ""
-                     || f.DeliveryQty.toString() == "" || f.DamageQty.toString() == "" || f.DeliveryQtyUnit == ""
-                     || f.DeliveryNetVolumn.toString() == "" || f.DamageNetVolumn.toString() == "" || f.DeliveryNetVolumnUnit == ""
+                    || f.DeliveryQty.toString() == "" || f.DamageQty.toString() == "" || f.DeliveryQtyUnit == ""
+                    || f.DeliveryNetVolumn.toString() == "" || f.DamageNetVolumn.toString() == "" || f.DeliveryNetVolumnUnit == ""
                 );
 
                 if (this.DeliveryNo == "" || this.DeliveryNo == undefined
@@ -266,25 +265,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (this.mode === 'C') {
                     await this.onInsEvidenceIn();
                 } else if (this.mode === 'R') {
-                    if (this.OldWarehouseID == this.WarehouseID) {
-                        await this.onUdpEvidenceIn();
-                    } else {
-                        swal({
-                            title: '',
-                            text: "ยืนยันที่จัดเปลี่ยนคลังจัดเก็บของกลาง ใช่หรือไม่?",
-                            type: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'ยืนยัน',
-                            cancelButtonText: 'ยกเลิก'
-                        }).then((result) => {
-                            if (result.value) {
-                                this.onUdpEvidenceIn();
-                            }
-                        })
-                    }
-
+                    await this.onUdpEvidenceIn();
                 }
             }
         });
@@ -340,7 +321,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
-            if(this.oEvidenceIn.IsEdit == 0){
+            if (this.oEvidenceIn.IsEdit == 0) {
                 this.ShowAlertWarning("ไม่อนุญาตให้ทำการแก้ไขข้อมูลการจัดเก็บของกลาง !!!");
                 this.onComplete();
             }
@@ -451,17 +432,17 @@ export class ManageComponent implements OnInit, OnDestroy {
             debugger
             if (res != null && res.IsSuccess != "False") {
                 this.ListEvidenceInItem = [];
-                this.oEvidenceIn = res
-                this.ListEvidenceInItem = res.EvidenceInItem;
+                this.oEvidenceIn = res[0];
+                this.ListEvidenceInItem = this.oEvidenceIn.EvidenceInItem;
 
-                this.DeliveryNo = res.DeliveryNo
-                this.DeliveryDate = setDateMyDatepicker(new Date(res.DeliveryDate));
-                if (res.ReturnDate == null || res.ReturnDate == '') { this.ReturnDate = ""; } else { this.ReturnDate = setDateMyDatepicker(new Date(res.ReturnDate)) }
-                
-                this.DeliveryTime = res.DeliveryTime;
-                this.Remark = res.Remark;
+                this.DeliveryNo = this.oEvidenceIn.DeliveryNo
+                this.DeliveryDate = setDateMyDatepicker(new Date(this.oEvidenceIn.DeliveryDate));
+                if (this.oEvidenceIn.ReturnDate == null || this.oEvidenceIn.ReturnDate == '') { this.ReturnDate = ""; } else { this.ReturnDate = setDateMyDatepicker(new Date(this.oEvidenceIn.ReturnDate)) }
 
-                var sTemp = res.EvidenceInStaff.filter(f => f.ContributorID == "13");
+                this.DeliveryTime = this.oEvidenceIn.DeliveryTime;
+                this.Remark = this.oEvidenceIn.Remark;
+
+                var sTemp = this.oEvidenceIn.EvidenceInStaff.filter(f => f.ContributorID == "13");
                 if (sTemp.length > 0) {
                     this.StaffSendName = `${sTemp[0].TitleName == 'null' || sTemp[0].TitleName == null ? '' : sTemp[0].TitleName}`
                         + `${sTemp[0].FirstName == 'null' || sTemp[0].FirstName == null ? '' : sTemp[0].FirstName}` + ' '
@@ -486,10 +467,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.EvidenceInTime = this.getCurrentTime();
                 }
 
-                
 
-                sTemp = res.EvidenceInStaff.filter(f => f.ContributorID == "42");
-                if (sTemp.length > 0) {
+
+                sTemp = this.oEvidenceIn.EvidenceInStaff.filter(f => f.ContributorID == "42");
+                if (sTemp.length > 0 && sTemp[0].FirstName != 'null' && sTemp[0].FirstName != null && sTemp[0] != "") {
                     this.StaffRecvName = `${sTemp[0].TitleName == 'null' || sTemp[0].TitleName == null ? '' : sTemp[0].TitleName}`
                         + `${sTemp[0].FirstName == 'null' || sTemp[0].FirstName == null ? '' : sTemp[0].FirstName}` + ' '
                         + `${sTemp[0].LastName == 'null' || sTemp[0].LastName == null ? '' : sTemp[0].LastName}`;
@@ -510,7 +491,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     if (item.EvidenceStockBalance.length > 0) {
                         this.WarehouseID = item.EvidenceStockBalance[0].WarehouseID;
-                        this.OldWarehouseID = item.EvidenceStockBalance[0].WarehouseID;
                     }
 
                     t += 1;
@@ -633,33 +613,16 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async onUdpEvidenceIn() {
         this.preloader.setShowPreloader(true);
+        
+        await this.setData();
 
-
-        if (this.WarehouseID == this.OldWarehouseID) {
-            await this.setData();
-
-            if (this.evitype == "E" || this.evitype == "I") {
-                if (this.EvidenceInCode == "Auto Generate") {
-                    await this.TransactionRunningForIns();
-                }
-                await this.UpdEvidenceInExternal();
-            } else if (this.evitype == "G") {
-                await this.UpdEvidenceInGovernment()
+        if (this.evitype == "E" || this.evitype == "I") {
+            if (this.EvidenceInCode == "Auto Generate") {
+                await this.TransactionRunningForIns();
             }
-        }
-        else {
-            this.EviService.EvidenceInupdDelete(this.EvidenceInID).then(async IsSuccess => {
-                if (IsSuccess) {
-                    this.ListEvidenceInItem.map(f => {
-                        f.IsNewItem = true;
-                    });
-
-                    await this.setData();
-                    await this.TransactionRunningForIns();
-                } else {
-                    this.ShowAlertError(Message.saveFail);
-                }
-            }, (error) => { console.error(error); return false; });
+            await this.UpdEvidenceInExternal();
+        } else if (this.evitype == "G") {
+            await this.UpdEvidenceInGovernment()
         }
     }
 
@@ -774,7 +737,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     onDelete() {
-        if(this.oEvidenceIn.IsEdit != 0){
+        if (this.oEvidenceIn.IsEdit != 0) {
             swal({
                 title: '',
                 text: Message.confirmAction,
@@ -786,7 +749,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.value) {
-                    if(this.evitype == "E"){
+                    if (this.evitype == "E") {
                         this.EviService.EvidenceInupdDelete(this.EvidenceInID).then(async IsSuccess => {
                             if (IsSuccess) {
                                 this.oEvidenceIn = {};
@@ -818,20 +781,23 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 item.ReceiveNetVolumn = f.DeliveryNetVolumn;
                                 item.BalanceQty = f.DeliveryQty;
                                 item.BalanceNetVolumn = f.DeliveryNetVolumn;
+                                item.IsReceive = "0";
                             })
-                        })
+                        });
 
-                        this.EviService.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
-                            if (IsSuccess) {
-                                await this.EviService.EvidenceInItemupdByCon(this.ListEvidenceInItem.filter(item => item.IsNewItem === false)).then(pRes => {
-                                    if (pRes.IsSuccess) {
+                        this.EviService.EvidenceInItemupdByCon(this.oEvidenceIn.EvidenceInItem).then(async pRes => {
+                            if (pRes.IsSuccess) {
+                                
+                                await this.EviService.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
+                                    if (IsSuccess) {
                                         this.oEvidenceIn = {};
                                         this.ShowAlertSuccess(Message.saveComplete);
                                         this.router.navigate(['/evidenceIn/list']);
+                                    } else {
+                                        this.ShowAlertError(Message.saveFail);
                                     }
                                 }, (error) => { console.error(error); });
-                            } else {
-                                this.ShowAlertError(Message.saveFail);
+
                             }
                         }, (error) => { console.error(error); });
                     }
@@ -864,7 +830,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ListEvidenceInItem.map(async item => {
             item.DamageQtyUnit = item.DeliveryQtyUnit;
             item.DamageNetVolumnUnit = item.DeliveryNetVolumnUnit;
-            
+
 
             this.oStockBalance = {
                 StockID: item.EvidenceStockBalance[0].StockID,
@@ -881,7 +847,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 BalanceSize: item.DeliverySize,
                 BalanceSizeUnit: item.DeliverySizeUnit,
                 BalanceNetVolumn: item.ReceiveNetVolumn,
-                BalanceNetVolumnUnit: item.ReceiveNetVolumn,
+                BalanceNetVolumnUnit: item.DeliveryQtyUnit,
                 IsFinish: "2",
                 IsReceive: "1"
             }

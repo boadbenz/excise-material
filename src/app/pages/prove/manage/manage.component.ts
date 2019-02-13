@@ -61,11 +61,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     options = [];
     rawStaffOptions = [];
     rawProductOptions = [];
+    rawWarehouseOptions = [];
     Staffoptions = [];
     Scienceoptions = [];
     StaffSendoptions = [];
     Deliveryoptions = [];
     Destinationoptions = [];
+    Warehouseoptions = [];
     Productoptions = [];
     UnitOption = [];
     ListProveDoc = [];
@@ -141,7 +143,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     StaffSendName: string;          // ผู้นำส่ง
     PosStaffSend: string;           // ตำแหน่งผู้นำส่ง
     DeptStaffSend: string;          // หน่วยงานผู้นำส่ง
+    DestinationCode: string;        // รหัสน่วยงานที่นำส่ง
     DeliverTo: string;              // หน่วยงานที่นำส่ง
+    WarehouseName: string;          // ชื่อคลังจัดเก็บ
 
 
 
@@ -232,7 +236,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ShowReceiveField = true;
         this.IsEvidence = false;
         this.IsEvidenceReceive = false;
-        
+
         let date = new Date();
         this.ProveYear = (date.getFullYear() + 543).toString();
         this.ProveDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
@@ -479,10 +483,6 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oProve.ProveStaff.push(this.oProveScienceStaff);
         }
 
-        if (this.oProveStaffSend != null && this.oProveStaffSend != undefined) {
-            this.oProve.ProveStaff.push(this.oProveStaffSend);
-        }
-
         if (this.IsProveScience) {
             // Set Data Science to Ins
             let SDate, cDateProveScience;
@@ -625,6 +625,46 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceNetVolumnUnit = this.lsProveProduct[i].NetVolumeBalanceUnit;
                 }
             }
+        } else {
+            this.DeliverDate = "";
+            this.DeliverNo = "";
+            this.DeliverTo = "";
+            this.DeliverNoYear = "";
+            this.DeliverDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+
+            let tempUser = this.rawStaffOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
+
+            // ----- ผู้นำส่ง -----
+            this.oProveStaffSend = {
+                StaffID: this.StaffSendID,
+                ProveID: this.ProveID,
+                ProgramCode: "XCS-60",
+                ProcessCode: "XCS-60-05",
+                LawsuitID: this.LawsuitID,
+                StaffCode: localStorage.getItem("staffCode"),
+                TitleName: tempUser[0].TitleName,
+                FirstName: tempUser[0].FirstName,
+                LastName: tempUser[0].LastName,
+                PositionCode: tempUser[0].OperationPosCode,
+                PositionName: localStorage.getItem("operationPosName"),
+                PosLevel: tempUser[0].PosLevel,
+                PosLevelName: tempUser[0].PosLevelName,
+                DepartmentCode: tempUser[0].OperationDeptCode,
+                DepartmentName: tempUser[0].OperationDeptName,
+                DepartmentLevel: tempUser[0].DeptLevel,
+                OfficeCode: localStorage.getItem("officeCode"),
+                OfficeName: tempUser[0].OfficeName,
+                OfficeShortName: localStorage.getItem("officeShortName"),
+                ContributorID: "13"
+            }
+
+            this.StaffSendName = localStorage.getItem("fullName");
+            this.PosStaffSend = localStorage.getItem("operationPosName");
+            this.DeptStaffSend = localStorage.getItem("officeShortName");
+        }
+
+        if (this.oProveStaffSend != null && this.oProveStaffSend != undefined) {
+            this.oProve.ProveStaff.push(this.oProveStaffSend);
         }
     }
 
@@ -869,7 +909,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oProve.ProveScience = [];
         this.oProve.ProveProduct = [];
         this.oProve.ProveDeliverProduct = [];
-        
+
         await this.proveService.ProveupdByCon(this.oProve).then(async pRes => {
             if (!pRes.IsSuccess) {
                 isSuccess = pRes.IsSuccess;
@@ -983,7 +1023,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }, (error) => { console.error(error); return false; });
     }
 
-    setStaffOfEvidence(){
+    setStaffOfEvidence() {
         this.oEvidenceIn.EvidenceInStaff = [];
 
         this.oEviInStaff = {
@@ -1342,7 +1382,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
                 var PScienceStaff = this.oProve.ProveStaff.filter(f => f.ContributorID == "15");
-                if (PScienceStaff.length) {
+                if (PScienceStaff.length > 0) {
                     this.ScienceStaffName = `${PScienceStaff[0].TitleName == 'null' || PScienceStaff[0].TitleName == null ? '' : PScienceStaff[0].TitleName}`
                         + `${PScienceStaff[0].FirstName == 'null' || PScienceStaff[0].FirstName == null ? '' : PScienceStaff[0].FirstName}` + ' '
                         + `${PScienceStaff[0].LastName == 'null' || PScienceStaff[0].LastName == null ? '' : PScienceStaff[0].LastName}`;
@@ -1355,7 +1395,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
                 var PSendStaff = this.oProve.ProveStaff.filter(f => f.ContributorID == "13");
-                if (PSendStaff.length) {
+                if (PSendStaff.length > 0 && PSendStaff[0].FirstName != null && PSendStaff[0].FirstName != 'null' && PSendStaff[0].FirstName != "") {
                     this.StaffSendName = `${PSendStaff[0].TitleName == null || PSendStaff[0].TitleName == 'null' ? '' : PSendStaff[0].TitleName}` + `${PSendStaff[0].FirstName == null || PSendStaff[0].FirstName == 'null' ? '' : PSendStaff[0].FirstName}` + ' ' + `${PSendStaff[0].LastName == null || PSendStaff[0].LastName == 'null' ? '' : PSendStaff[0].LastName}`;
                     this.PosStaffSend = `${PSendStaff[0].PositionName == null || PSendStaff[0].PositionName == 'null' ? '' : PSendStaff[0].PositionName}`;
                     this.DeptStaffSend = `${PSendStaff[0].OfficeName == null || PSendStaff[0].OfficeName == 'null' ? '' : PSendStaff[0].OfficeName}`;
@@ -1425,11 +1465,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                     if (this.oProve.ProveDeliverProduct[0].IsReceive == "1") {
                         this.IsReceive = true;
 
-                        this.EviInSV.getByCon(this.EvidenceInID,this.oProve.ProveID).then(async res => {
+                        this.EviInSV.getByCon(this.EvidenceInID, this.oProve.ProveID).then(async res => {
                             if (res != null && res.IsSuccess != "False") {
-                                this.oEvidenceIn = res
+                                this.oEvidenceIn = res[0]
                                 this.IsEvidence = true;
-                                if (res.IsReceive == "1") { this.IsEvidenceReceive = true; } else { this.IsEvidenceReceive == false}
+                                if (this.oEvidenceIn.IsReceive == "1") { this.IsEvidenceReceive = true; } else { this.IsEvidenceReceive == false }
                             }
                         }, (err: HttpErrorResponse) => {
                             this.ShowAlertError("API EvidenceIngetByCon :: " + err.message);
@@ -1455,7 +1495,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.DeliverDate = setDateMyDatepicker(new Date(DvDate[0]));
                 } else {
                     this.IsEvidence = false;
-                    this.changeDataReceive();
+                    // this.changeDataReceive();
                 }
 
                 // -------------- Document -------------------------
@@ -1612,7 +1652,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async getProveProduct() {
-        
+
         // ---- กรณีไม่มีเลข ProveID จะ default Product จาก ArrestProduct----
         if (this.ProveID == "0") {
             if (this.ArrestProduct.length > 0) {
@@ -1826,8 +1866,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     DestinationOnAutoSelecteWord(event) {
-        // this.oProve.DeliveryStationCode = event.OfficeCode;
-        // this.oProve.DeliveryStation = event.OfficeName;
+       this.DestinationCode = event.OfficeCode;
+       this.getWarehouse();
     }
 
     chooseFirstDestination(): void {
@@ -2310,6 +2350,51 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ----- End Product ---
 
 
+    // --- คลังจัดเก็บ ---
+    async getWarehouse() {
+        this.preloader.setShowPreloader(true);
+
+        this.DestinationCode = "030700";
+        await this.MasterSV.getWarehourse(this.DestinationCode).then(res => {
+            if (res) {
+                this.rawWarehouseOptions = res;
+
+                this.preloader.setShowPreloader(false);
+            }
+
+        }, (err: HttpErrorResponse) => {
+            //alert(err.message);
+        });
+    }
+
+    WarehouseOnAutoChange(value: string) {
+        if (value == '') {
+            this.Warehouseoptions = [];
+
+            // this.oProve.DeliveryStationCode = "";
+            // this.oProve.DeliveryStation = "";
+        } else {
+            this.Warehouseoptions = this.rawWarehouseOptions.filter(f => f.WarehouseName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    WarehouseOnAutoFocus(value: string) {
+        if (value == '') {
+            this.Warehouseoptions = [];
+        }
+    }
+
+    WarehouseOnAutoSelecteWord(event) {
+        // this.oProve.DeliveryStationCode = event.OfficeCode;
+        // this.oProve.DeliveryStation = event.OfficeName;
+    }
+
+    chooseFirstWarehouse(): void {
+        this.WarehouseName = this.Warehouseoptions[0].WarehouseName;
+    }
+    // ----- End หน่วยงานที่นำส่ง ---
+
+
     // ----- DateTime -----
     getCurrentDate() {
         let date = new Date();
@@ -2596,36 +2681,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     changeReceive() {
         if (this.IsReceive) {
             this.ShowReceiveField = true;
-            // this.DeliverDate = "";
-            // this.DeliverNo = "";
-            // this.StaffSendName = "";
-            // this.PosStaffSend = "";
-            // this.DeptStaffSend = "";
-            // this.DeliverTo = "";
-            // this.DeliverNoYear = "";
-
-            // this.oProveStaffSend = {
-            //     ProveID: this.ProveID,
-            //     ProgramCode: "XCS-60",
-            //     ProcessCode: "XCS-60-05",
-            //     StaffID: this.StaffSendID,
-            //     LawsuitID: this.LawsuitID,
-            //     StaffCode: "",
-            //     TitleName: "",
-            //     FirstName: "",
-            //     LastName: "",
-            //     PositionCode: "",
-            //     PositionName: "",
-            //     PosLevel: "",
-            //     PosLevelName: "",
-            //     DepartmentCode: "",
-            //     DepartmentName: "",
-            //     DepartmentLevel: "",
-            //     OfficeCode: "",
-            //     OfficeName: "",
-            //     OfficeShortName: "",
-            //     ContributorID: "13"
-            // };
         }
         else {
             this.ShowReceiveField = false;
@@ -2718,7 +2773,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     VatProveFormat() {
-        
+
         this.oProveProduct.VatProve = (+this.oProveProduct.VatProve.replace(',', '')).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
     }
 
@@ -2766,7 +2821,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     VaridateNumber(event) {
-        
+
         let e = <KeyboardEvent>event;
         if (e.keyCode > 31 && ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode != 44 && e.keyCode != 46)) {
             return false;
