@@ -223,6 +223,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.getProveStaff();
         await this.getProduct();
 
+        this.DestinationCode = "030700";
+        //this.DestinationCode = localStorage.getItem("officeCode");
+        this.getWarehouse();
+
         this.ArrestCode = this.ArrestCode;
         this.ProveStaffName = "";
         this.ScienceStaffName = "";
@@ -364,7 +368,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     if (this.IsReceive) {
                         if (this.DeliverNo == ""        // หนังสือนำส่งเลขที่
                             || this.DeliverDate == null    // วันที่นำส่ง  || this.DeliverTime == "" || this.DeliverTime == undefined
-                            || this.DeliverTo == "" || this.DeliverTo == undefined      // หน่วยงานปลายทาง
+                            //|| this.DeliverTo == "" || this.DeliverTo == undefined      // หน่วยงานปลายทาง
                             || this.StaffSendName == ""   // ผู้นำส่ง
                         ) {
                             this.isRequired = true;
@@ -522,7 +526,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 DeliverDate: cDateDeliver,
                 // DeliverTime: this.DeliverTime,
                 DeliverTime: "",
-                DeliverTo: this.DeliverTo,
+                //DeliverTo: this.DeliverTo,
+                DeliverTo: localStorage.getItem("officeShortName"),
                 IsReceive: "1",
                 IsActive: 1,
             }
@@ -607,8 +612,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.oEvidenceIn.EvidenceInItem.push(this.oEvidenceInItem);
                 }
             } else {
-                await this.setStaffOfEvidence();
-
                 for (let i = 0; i < this.lsProveProduct.length; i++) {
                     this.oEvidenceIn.EvidenceInItem[i].DeliveryQty = this.lsProveProduct[i].QtyBalance;
                     this.oEvidenceIn.EvidenceInItem[i].DeliveryQtyUnit = this.lsProveProduct[i].QtyBalanceUnit;
@@ -623,13 +626,35 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceQtyUnit = this.lsProveProduct[i].QtyBalanceUnit;
                     this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceNetVolumn = this.lsProveProduct[i].NetVolumeBalance;
                     this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceNetVolumnUnit = this.lsProveProduct[i].NetVolumeBalanceUnit;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].WarehouseID = this.WarehouseID;
                 }
+
+                this.oEvidenceIn.EvidenceInStaff.filter(f => f.ContributorID == "13").map(m => {
+                    m.StaffCode = this.oProveStaffSend.StaffCode,
+                        m.TitleName = this.oProveStaffSend.TitleName,
+                        m.FirstName = this.oProveStaffSend.FirstName,
+                        m.LastName = this.oProveStaffSend.LastName,
+                        m.PositionCode = this.oProveStaffSend.PositionCode,
+                        m.PositionName = this.oProveStaffSend.PositionName,
+                        m.PosLevel = this.oProveStaffSend.PosLevel,
+                        m.PosLevelName = this.oProveStaffSend.PosLevelName,
+                        m.DepartmentCode = this.oProveStaffSend.DepartmentCode,
+                        m.DepartmentName = this.oProveStaffSend.DepartmentName,
+                        m.DepartmentLevel = this.oProveStaffSend.DepartmentLevel,
+                        m.OfficeCode = this.oProveStaffSend.OfficeCode,
+                        m.OfficeName = this.oProveStaffSend.OfficeName,
+                        m.OfficeShortName = this.oProveStaffSend.OfficeShortName
+                })
             }
         } else {
             this.DeliverDate = "";
             this.DeliverNo = "";
             this.DeliverTo = "";
             this.DeliverNoYear = "";
+            this.WarehouseID = "";
+            this.WarehouseName = "";
+            this.EvidenceInID = "";
+
             this.DeliverDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
 
             let tempUser = this.rawStaffOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
@@ -894,6 +919,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     if (!sRes.IsSuccess) {
                         isSuccess = sRes.IsSuccess;
                     } else {
+                        debugger
                         await this.InsEvidence();
                         this.IsEvidence = true;
                     }
@@ -1013,7 +1039,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async InsEvidenceInExternal() {
         var isSuccess = true;
 
-        this.EviInSV.EvidenceIninsAll(this.oEvidenceIn).then(async item => {
+        await this.EviInSV.EvidenceIninsAll(this.oEvidenceIn).then(async item => {
             if (item.IsSuccess) {
                 this.oEvidenceIn.EvidenceInID = item.EvidenceInID;
                 this.EvidenceInID = item.EvidenceInID;
@@ -1401,6 +1427,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.DeptStaffSend = `${PSendStaff[0].OfficeName == null || PSendStaff[0].OfficeName == 'null' ? '' : PSendStaff[0].OfficeName}`;
                     this.StaffSendID = PSendStaff[0].StaffID;
                     this.oProveStaffSend = PSendStaff[0];
+                } else {
+                    if (PSendStaff.length > 0) {
+                        this.StaffSendID = PSendStaff[0].StaffID;
+                        this.oProveStaffSend.StaffID = PSendStaff[0].StaffID;
+                    }
                 }
 
                 this.oProve.ProveStaff = [];
@@ -1454,7 +1485,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.ProveScienceDate = setDateMyDatepicker(new Date(ScDate[0]));
                 }
 
-
                 if (this.oProve.ProveDeliverProduct.length > 0) {
                     this.oProve.ProveDeliverProduct.map(item => {
                         item.DeliverNo = `${item.DeliverNo == null ? '' : item.DeliverNo}`;
@@ -1470,6 +1500,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 this.oEvidenceIn = res[0]
                                 this.IsEvidence = true;
                                 if (this.oEvidenceIn.IsReceive == "1") { this.IsEvidenceReceive = true; } else { this.IsEvidenceReceive == false }
+
+                                var tWarehouse = this.rawWarehouseOptions.filter(f => f.WarehouseID == this.oEvidenceIn.EvidenceInItem[0].EvidenceStockBalance[0].WarehouseID);
+                                this.WarehouseID = tWarehouse[0].WarehouseID;
+                                this.WarehouseName = tWarehouse[0].WarehouseName;
                             }
                         }, (err: HttpErrorResponse) => {
                             this.ShowAlertError("API EvidenceIngetByCon :: " + err.message);
@@ -1847,7 +1881,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ----- End หน่วยงานที่นำส่ง ---
 
 
-    // --- หน่วยงานที่นำส่ง ---
+    // --- หน่วยงานปลายทาง ---
     DestinationOnAutoChange(value: string) {
         if (value == '') {
             this.Destinationoptions = [];
@@ -1866,8 +1900,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     DestinationOnAutoSelecteWord(event) {
-       this.DestinationCode = event.OfficeCode;
-       this.getWarehouse();
+        this.DestinationCode = event.OfficeCode;
+
     }
 
     chooseFirstDestination(): void {
@@ -2354,7 +2388,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     async getWarehouse() {
         this.preloader.setShowPreloader(true);
 
-        this.DestinationCode = "030700";
         await this.MasterSV.getWarehourse(this.DestinationCode).then(res => {
             if (res) {
                 this.rawWarehouseOptions = res;
@@ -2371,8 +2404,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (value == '') {
             this.Warehouseoptions = [];
 
-            // this.oProve.DeliveryStationCode = "";
-            // this.oProve.DeliveryStation = "";
+            this.WarehouseID = "";
+            this.WarehouseName = "";
         } else {
             this.Warehouseoptions = this.rawWarehouseOptions.filter(f => f.WarehouseName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
@@ -2381,18 +2414,21 @@ export class ManageComponent implements OnInit, OnDestroy {
     WarehouseOnAutoFocus(value: string) {
         if (value == '') {
             this.Warehouseoptions = [];
+
+            this.WarehouseID = "";
+            this.WarehouseName = "";
         }
     }
 
     WarehouseOnAutoSelecteWord(event) {
-        // this.oProve.DeliveryStationCode = event.OfficeCode;
-        // this.oProve.DeliveryStation = event.OfficeName;
+        this.WarehouseID = event.WarehouseID;
     }
 
     chooseFirstWarehouse(): void {
+        this.WarehouseID = this.Warehouseoptions[0].WarehouseID;
         this.WarehouseName = this.Warehouseoptions[0].WarehouseName;
     }
-    // ----- End หน่วยงานที่นำส่ง ---
+    // ----- End คลังจัดเก็บ ---
 
 
     // ----- DateTime -----
