@@ -2415,6 +2415,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     ) {
         if ((indictmentModify == 'c' || lawbreakerModify == 'c') && lawbreakerChecked == this.ACCEPTABILITY.INACCEPTABLE) {
             const _Promise = await indictmentProduct
+                .filter(x => x.IsModify != 'd')
                 .map(async x => {
                     let apd = new fromModels.ArrestProductDetail();
                     apd.ProductDetailID = null;
