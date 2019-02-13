@@ -366,7 +366,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.10');
+    this.sidebarService.setVersion('0.0.1.11');
 
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
@@ -387,7 +387,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
           .MasStaffMaingetAll()
           .toPromise()).map(m => ({
             ...m,
-            FullName: m.TitleName + m.FirstName + ' ' + m.LastName
+            FullName: m.TitleName || '' + m.FirstName || '' + ' ' + m.LastName || ''
           })); // 1.1.1
         this.MasOfficeMainAllList = await this.masOfficeService
           .MasOfficeMaingetAll()
@@ -512,12 +512,12 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
             }
 
             this.BribeFormGroup.get('StaffName').patchValue(
-              `${f.TitleName}${f.FirstName} ${f.LastName}`
+              `${f.TitleName || ''}${f.FirstName || ''} ${f.LastName || ''}`
             );
             this.BribeFormGroup.get('PositionName').patchValue(
-              `${f.PositionName}`
+              `${f.PositionName || ''}`
             );
-            this.BribeFormGroup.get('OfficeName').patchValue(`${f.OfficeName}`);
+            this.BribeFormGroup.get('OfficeName').patchValue(`${f.OfficeName || ''}`);
           });
 
           this.TotalPart = RequestBribe.TotalPart;
@@ -738,10 +738,10 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
             mapForSave['RequestDate'] = this.ConvDateTimeToDate(
               convertDateForSave(getDateMyDatepicker(mapForSave['RequestDate']))
             );
-            mapForSave['POADate'] = this.ConvDateTimeToDate(
+            mapForSave['POADate'] = this.BribeFormGroup.get('StaffName').value ? this.ConvDateTimeToDate(
               convertDateForSave(getDateMyDatepicker(mapForSave['POADate']))
-            );
-
+            ) : '';
+            mapForSave['POATime'] = this.BribeFormGroup.get('StaffName').value ? mapForSave['POATime'] : '';
             const requestBribe = await this.requestBribeService
               .RequestBribeinsAll(mapForSave)
               .toPromise();
@@ -822,14 +822,16 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
             mapForUpdate[
               'RequestBribeRewardID'
             ] = this.RequestBribeRewardID$.getValue().toString();
-            mapForUpdate['RequestDate'] = this.ConvDateTimeToDate(
+            mapForUpdate['RequestDate'] = (typeof mapForUpdate['RequestDate'] === 'object') ? this.ConvDateTimeToDate(
               convertDateForSave(
                 getDateMyDatepicker(mapForUpdate['RequestDate'])
               )
-            );
-            mapForUpdate['POADate'] = this.ConvDateTimeToDate(
+            ) : mapForUpdate['RequestDate'];
+            // tslint:disable-next-line:max-line-length
+            mapForUpdate['POADate'] = this.BribeFormGroup.get('StaffName').value ? ((typeof mapForUpdate['POADate'] === 'object') ? this.ConvDateTimeToDate(
               convertDateForSave(getDateMyDatepicker(mapForUpdate['POADate']))
-            );
+            ) : mapForUpdate['POADate']) : '';
+            mapForUpdate['POATime'] = this.BribeFormGroup.get('StaffName').value ? mapForUpdate['POATime'] : '';
 
             mapForUpdate[
               'RequestBribeID'
@@ -992,6 +994,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       // 1.1.2(1)
       // 1.1.2(1.1)
       swal('', 'ลบข้อมูลสำเร็จ', 'success');
+      this._location.back();
       // 1.1.2(1.2) 'WAIT'
     } else {
       // 1.1.2(2)
