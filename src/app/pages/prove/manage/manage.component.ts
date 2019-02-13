@@ -223,6 +223,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.getProveStaff();
         await this.getProduct();
 
+        this.WarehouseID = "";
+        
         //this.DestinationCode = "030700";
         this.DestinationCode = localStorage.getItem("officeCode");
         this.getWarehouse();
@@ -240,6 +242,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ShowReceiveField = true;
         this.IsEvidence = false;
         this.IsEvidenceReceive = false;
+        
 
         let date = new Date();
         this.ProveYear = (date.getFullYear() + 543).toString();
