@@ -396,9 +396,11 @@ export class ManageComponent implements OnInit {
             if (result.LawsuitJudgement > 0) {
               if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {
                 this.lawsuitService.LawsuitJudgementupdDelete(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
+                console.log(result['LawsuitJudgement'][0])
                 if (result['LawsuitJudgement'][0]['IsFine'] == 1) {
-                  console.log(result)
-                  // this.lawsuitService.LawsuitPaymentFineDetailupdDelete(result.PaymentFineID)
+                  result['LawsuitJudgement'][0]['LawsuitPaymentFine'].forEach(element => {
+                    this.lawsuitService.LawsuitPaymentFineDetailupdDelete(element.PaymentFineID)
+                  });
                 }
                 this.router.navigate(['/lawsuit/list']);
               } else {
@@ -876,7 +878,7 @@ export class ManageComponent implements OnInit {
       ReasonDontLawsuit: new FormControl(null),
       IsOutsideCheck: new FormControl(false),
       LawsuitDate: new FormControl(this.getNowDate() || null, Validators.required),
-      LawsuitTime: new FormControl(this.getNowTime() || null, Validators.required),
+      LawsuitTime: new FormControl(this.getNowTime() + " น." || null, Validators.required),
       FullName: new FormControl(null, Validators.required),
       PositionName: new FormControl(null, Validators.required),
       DepartmentName: new FormControl(null, Validators.required),
