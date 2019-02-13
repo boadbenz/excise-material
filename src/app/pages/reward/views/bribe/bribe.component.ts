@@ -101,10 +101,10 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         term.length < 1
           ? []
           : this.MasOfficeMainAllList.filter(
-              v => v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1
-            )
-              .slice(0, 10)
-              .map(m => m.OfficeName)
+            v => v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1
+          )
+            .slice(0, 10)
+            .map(m => m.OfficeName)
       )
     );
   searchStationOfPOA = (text$: Observable<string>) =>
@@ -115,10 +115,10 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         term.length < 1
           ? []
           : this.MasOfficeMainAllList.filter(
-              v => v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1
-            )
-              .slice(0, 10)
-              .map(m => m.OfficeName)
+            v => v.OfficeName.toLowerCase().indexOf(term.toLowerCase()) > -1
+          )
+            .slice(0, 10)
+            .map(m => m.OfficeName)
       )
     );
   searchStaffMainName = (text$: Observable<string>) =>
@@ -129,10 +129,10 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         term.length < 1
           ? []
           : this.MasStaffMaingetAllList.filter(
-              v => v.FullName.toLowerCase().indexOf(term.toLowerCase()) > -1
-            )
-              .slice(0, 10)
-              .map(m => m.FullName)
+            v => v.FullName.toLowerCase().indexOf(term.toLowerCase()) > -1
+          )
+            .slice(0, 10)
+            .map(m => m.FullName)
       )
     );
   constructor(
@@ -366,7 +366,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.9');
+    this.sidebarService.setVersion('0.0.1.10');
 
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
@@ -480,8 +480,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
               // tslint:disable-next-line:max-line-length
               LawbreakerName: [
                 `${f.LawbreakerTitleName || ''}${f.LawbreakerFirstName ||
-                  ''} ${f.LawbreakerMiddleName || ''} ${f.LawbreakerLastName ||
-                  ''}${f.LawbreakerOtherName || ''}`
+                ''} ${f.LawbreakerMiddleName || ''} ${f.LawbreakerLastName ||
+                ''}${f.LawbreakerOtherName || ''}`
               ],
               FineTypeName: [
                 f.FineType === 0 ? 'เปรียบเทียบคดี' : 'ส่งฟ้องศาล'
@@ -496,7 +496,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
               BribeMoney: [Number(f.PaymentFine * 0.2)],
               NetBribeMoney: [
                 Number(Number(f.PaymentFine * 0.2) / Number(this.TotalPart)) *
-                  Number(this.PartMoney)
+                Number(this.PartMoney)
               ]
             };
 
@@ -604,8 +604,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       const checkLengthDetail =
         this.RequestBribeDetail.value.filter(f => f.check === true).length || 0;
       if (!(checkLengthDetail > 0)) {
-        swal(
-          'ต้องมีรายการในส่วนรายละเอียดคำร้องขอรับเงินสินบนอย่างน้อย 1 รายการที่ CheckBox.Check =  True',
+        swal('', 'ต้องมีรายการในส่วนรายละเอียดคำร้องขอรับเงินสินบนอย่างน้อย 1 รายการที่ CheckBox.Check =  True',
           'warning'
         );
       } else {
@@ -892,9 +891,9 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         }
         // tslint:disable-next-line:curly
         if (!this.RequestBribeID$.getValue()) {
-          swal('บันทึกไม่สำเร็จ', 'error');
+          swal('', 'บันทึกไม่สำเร็จ', 'error');
         } else {
-          swal('บันทึกสำเร็จ', 'success');
+          swal('', 'บันทึกสำเร็จ', 'success');
           this.isEdit = false;
           this.router.navigate([
             '/reward/bribe/R',
@@ -903,7 +902,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         }
       }
     } else {
-      swal('บันทึกไม่สำเร็จ', 'error');
+      swal('', 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน', 'warning');
     }
   }
 
@@ -959,7 +958,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       backdrop: 'static'
     });
     dialogRef.componentInstance.data = printDoc;
-    dialogRef.result.then(r => {});
+    dialogRef.result.then(r => { });
     // 2 END
   }
   private async buttonEdit() {
@@ -968,9 +967,9 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     this.MasStaffMaingetAllList = (await this.masStaffService
       .MasStaffMaingetAll()
       .toPromise()).map(m => ({
-      ...m,
-      FullName: m.TitleName + m.FirstName + ' ' + m.LastName
-    })); // 1.1.1
+        ...m,
+        FullName: m.TitleName + m.FirstName + ' ' + m.LastName
+      })); // 1.1.1
     this.MasOfficeMainAllList = await this.masOfficeService
       .MasOfficeMaingetAll()
       .toPromise(); // 1.1.2
@@ -992,12 +991,12 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     if (RequestBribeupdDeleteResponse.IsSuccess) {
       // 1.1.2(1)
       // 1.1.2(1.1)
-      swal('ลบข้อมูลสำเร็จ', 'success');
+      swal('', 'ลบข้อมูลสำเร็จ', 'success');
       // 1.1.2(1.2) 'WAIT'
     } else {
       // 1.1.2(2)
       // 1.1.2(2.1)
-      swal('ลบข้อมูลไม่สำเร็จ', 'error');
+      swal('', 'ลบข้อมูลไม่สำเร็จ', 'error');
     }
     // } else {
     //   // 1.2.1
@@ -1097,8 +1096,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
           // tslint:disable-next-line:max-line-length
           LawbreakerName: [
             `${f.LawbreakerTitleName || ''}${f.LawbreakerFirstName ||
-              ''} ${f.LawbreakerMiddleName || ''} ${f.LawbreakerLastName ||
-              ''}${f.LawbreakerOtherName || ''}`
+            ''} ${f.LawbreakerMiddleName || ''} ${f.LawbreakerLastName ||
+            ''}${f.LawbreakerOtherName || ''}`
           ],
           FineTypeName: [f.FineType === 0 ? 'เปรียบเทียบคดี' : 'ส่งฟ้องศาล'],
           PaymentDate: [
@@ -1111,7 +1110,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
           BribeMoney: [Number(f.PaymentFine * 0.2)],
           NetBribeMoney: [
             Number(Number(f.PaymentFine * 0.2) / Number(this.TotalPart)) *
-              Number(this.PartMoney)
+            Number(this.PartMoney)
           ]
         };
         // tslint:disable-next-line:max-line-length
@@ -1119,7 +1118,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.RequestBribeDetail.push(this.fb.group(newMap));
       });
     } else {
-      swal('ไม่พบข้อมูลที่สามารถขอรับเงินสินบน', 'error');
+      swal('', 'ไม่พบข้อมูลที่สามารถขอรับเงินสินบน', 'error');
     }
   }
 
