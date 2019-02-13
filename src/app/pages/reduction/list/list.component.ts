@@ -110,6 +110,17 @@ export class ListComponent implements OnInit {
                     + this.autoZero(this.lawsuitDateStart.date.day) + ' 00:00:00';
     const date_to = this.lawsuitDateEnd.date.year + '-' + this.autoZero(this.lawsuitDateEnd.date.month) + '-'
                   + this.autoZero(this.lawsuitDateEnd.date.day)  + ' 00:00:00';
+
+    if (Date.parse(date_from) > Date.parse(date_to)) {
+      swal('วันที่เปลียบเทียบคดีไม่ถูกต้อง', 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สุดท้าย', 'error');
+      return;
+    }
+
+    if (Date.now() < Date.parse(date_to)) {
+      swal('วันที่เปลียบเทียบคดีไม่ถูกต้อง', 'วันที่สุดท้ายต้องไม่มากกว่าวันที่ปัจจุบัน', 'error');
+      return;
+    }
+
     const param = {
       ArrestCode: this.arrestCode || '',
       LawsuitNo: this.lawsuitNo || '',

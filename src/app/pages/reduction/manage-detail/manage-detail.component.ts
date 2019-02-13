@@ -303,7 +303,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.getDataFromListPage.unsubscribe();
+    // this.getDataFromListPage.unsubscribe();
     this.navServiceSub.unsubscribe();
   }
 
