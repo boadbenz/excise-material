@@ -32,7 +32,7 @@
             <label class="control-label col-md-3">ชื่อศาล: </label>
             <div class="col-md-9">
               <input class="form-control form-control-sm" style="color: black;" [matAutocomplete]="auto4" [ngClass]="{'ng-touched':isRequired}"
-                [(ngModel)]="lawsuitArrestFormDialog.CourtName" type="text" (input)="onChangeCourt($event.target.value)"
+                [(ngModel)]="lawsuitArrestFormDialog.CourtName" type="text" [ngClass]="{'ng-touched':isRequired.CourtName}"  (input)="onChangeCourt($event.target.value)"
                 name="CourtName" required>
               <mat-autocomplete #auto4="matAutocomplete">
                 <mat-option *ngFor="let value of SearchMasCourtList" [value]="value.CourtName" (onSelectionChange)="selectCourt(value)">

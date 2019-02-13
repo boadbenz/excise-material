@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.38');
+    this.sidebarService.setVersion('0.0.0.39');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -179,8 +179,9 @@ export class ManageComponent implements OnInit {
         }
         else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
           this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
-          this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
+          this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
           this.isRequired2 = true;
+
           Swal({
             text: Message.checkData,
             type: 'warning',
@@ -394,9 +395,13 @@ export class ManageComponent implements OnInit {
           this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(IndictmentDetailID).then(result => {
             if (result.LawsuitJudgement > 0) {
               if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {
+                this.lawsuitService.LawsuitJudgementupdDelete(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
+                if (result['LawsuitJudgement'][0]['IsFine'] == 1) {
+                  console.log(result)
+                  // this.lawsuitService.LawsuitPaymentFineDetailupdDelete(result.PaymentFineID)
+                }
                 this.router.navigate(['/lawsuit/list']);
               } else {
-                this.lawsuitService.LawsuitJudgementupdDelete(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
                 this.router.navigate(['/lawsuit/list']);
               }
               // case 2.1.1
