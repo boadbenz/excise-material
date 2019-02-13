@@ -1,3 +1,7 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+  <app-print-doc-modal (c)="modal.close()" (d)="modal.dismiss()" ></app-print-doc-modal>
+</ng-template>
+
 <div class="card card-outline-bluish unset-radius">
   <div class="card-header unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>

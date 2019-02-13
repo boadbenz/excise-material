@@ -15,7 +15,11 @@ import { ReductionModelListComponent } from './reduction-model-list/reduction-mo
 })
 export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(ReductionModelListComponent)
+  @ViewChild('printDocModal') printDocModel: ElementRef;
   reductionModelList: ReductionModelListComponent;
+
+  private onPrintSubscribe: any;
+  modal: any;
 
   tableData = [
     // {
@@ -48,7 +52,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     FaultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
     FaultNo: '203',
     Penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ'
-             + ' 5 เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
+      + ' 5 เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
   };
 
   fileItem = [{
@@ -71,16 +75,16 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   public indictmentID: string;
 
   constructor
-  (private router: Router,
-    private activeRoute: ActivatedRoute,
-    private navService: NavigationService,
-    private readonly apiServer: ReductionApiService,
-    private ngbModel: NgbModal
-  ) { }
+    (private router: Router,
+      private activeRoute: ActivatedRoute,
+      private navService: NavigationService,
+      private readonly apiServer: ReductionApiService,
+      private ngbModel: NgbModal
+    ) { }
 
   ngOnInit() {
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
-    || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
+      || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
       alert('ไม่สามารถดึงค่าข้อมูลรายการเปรียบเทียบได้');
       this.router.navigate(['/reduction/list']);
     }
@@ -117,46 +121,59 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
-          this.onSave();
+        this.onSave();
       }
     });
+
+    this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+      if (status) {
+        await this.navService.setOnPrint(false);
+        this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+      }
+    })
+
   }
+
+  // public onPrint = (content) => {
+  //   console.log("Print2")
+  //   this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
+  // }
 
   private onSave() {
     console.log('5555');
   }
 
   private _adjustArrestgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustArrestgetByCon', {CompareID: compareID})
-        .subscribe(response => {
-          if (response.length > 0) {
-            this.detailData = Object.assign(this.listData, response[0]);
-          } else {
-            this.detailData = Object.assign(this.listData, response);
-          }
+    this.apiServer.post('/XCS60/AdjustArrestgetByCon', { CompareID: compareID })
+      .subscribe(response => {
+        if (response.length > 0) {
+          this.detailData = Object.assign(this.listData, response[0]);
+        } else {
+          this.detailData = Object.assign(this.listData, response);
+        }
 
-          this.fullName =
-            this.detailData.TitleName +
-            this.detailData.FirstName +
-            ' ' +
-            this.detailData.LastName;
-        }, error => console.log(error));
+        this.fullName =
+          this.detailData.TitleName +
+          this.detailData.FirstName +
+          ' ' +
+          this.detailData.LastName;
+      }, error => console.log(error));
   }
 
   private _adjustReceiptgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustReceiptgetByCon', {CompareID: compareID})
-        .subscribe(response => {
-          this.tableData = response;
-        }, error => {
-          console.log(error);
-        }
-    );
+    this.apiServer.post('/XCS60/AdjustReceiptgetByCon', { CompareID: compareID })
+      .subscribe(response => {
+        this.tableData = response;
+      }, error => {
+        console.log(error);
+      }
+      );
   }
 
 
-  private  _adjustDetailgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustDetailgetByCon', {CompareID: compareID})
-        .subscribe(response => this.adjustDetailData =  response, error => console.log(error));
+  private _adjustDetailgetByCon(compareID) {
+    this.apiServer.post('/XCS60/AdjustDetailgetByCon', { CompareID: compareID })
+      .subscribe(response => this.adjustDetailData = response, error => console.log(error));
   }
 
   viewData(CompareID: string, CompareDetailID: string) {
