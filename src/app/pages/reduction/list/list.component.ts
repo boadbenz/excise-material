@@ -1,8 +1,11 @@
 import { Router } from '@angular/router';
+import { Message } from '../../../config/message';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { Component, OnInit } from '@angular/core';
 import { ReductionApiService } from '../reduction.api.service';
 import { Subject } from 'rxjs/Subject';
+
+import swal from 'sweetalert2';
 
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
@@ -20,8 +23,8 @@ export class ListComponent implements OnInit {
   lawsuitNo: string;
   proofNo: string;
   caseNumber: string;
-  lawsuitDateStart: Date;
-  lawsuitDateEnd: Date;
+  lawsuitDateStart: any;
+  lawsuitDateEnd: any;
   lawName: string;
   departmentlawName: string;
   advSearch: any;
@@ -88,7 +91,7 @@ export class ListComponent implements OnInit {
 
     if (this.listData.length === 0) {
       this.listData = [];
-      alert('ไม่พบข้อมูล')
+      this.ShowAlertNoRecord();
     }
 
     this.preloaderService.setShowPreloader(false);
@@ -97,25 +100,30 @@ export class ListComponent implements OnInit {
   public adjustListByKeywordError(error: any): void {
     console.log(error);
     this.listData = [];
-    alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
+    this.ShowAlertGetDataError()
     this.preloaderService.setShowPreloader(false);
   }
 
   public onAdvSearch() {
+    console.log(this.lawsuitDateStart);
+    const date_from = this.lawsuitDateStart.date.year + '-' + this.autoZero(this.lawsuitDateStart.date.month) + '-'
+                    + this.autoZero(this.lawsuitDateStart.date.day) + ' 00:00:00';
+    const date_to = this.lawsuitDateEnd.date.year + '-' + this.autoZero(this.lawsuitDateEnd.date.month) + '-'
+                  + this.autoZero(this.lawsuitDateEnd.date.day)  + ' 00:00:00';
     const param = {
       ArrestCode: this.arrestCode || '',
       LawsuitNo: this.lawsuitNo || '',
       CompareCode: this.caseNumber || '',
       ProveReportNo: this.proofNo || '',
-      CompareDateFrom: this.lawsuitDateStart || '',
-      CompareDateTo: this.lawsuitDateEnd || '',
+      CompareDateFrom: date_from || '',
+      CompareDateTo: date_to || '',
       StaffName: this.lawName || '',
       OfficeShortName: this.departmentlawName || ''
     };
 
     this.preloaderService.setShowPreloader(true);
     this.apiServer.post('/XCS60/AdjustListgetByConAdv', param)
-        .subscribe(response => this.adjustListgetByConAdvDone(response), error => console.log(error));
+        .subscribe(response => this.adjustListgetByConAdvDone(response), error => this.adjustListgetByConAdvError(error));
   }
 
   public adjustListgetByConAdvDone(data: any): void {
@@ -124,7 +132,8 @@ export class ListComponent implements OnInit {
       this.listData.push(data);
     } else {
       this.listData = [];
-      alert('ไม่พบข้อมูล');
+      // this.ShowAlertNoRecord();
+      swal('ไม่พบข้อมูล', 'error')
     }
 
     this.preloaderService.setShowPreloader(false);
@@ -133,8 +142,30 @@ export class ListComponent implements OnInit {
   public adjustListgetByConAdvError(error: any): void {
     console.log(error);
     this.listData = [];
-    alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
+    // this.ShowAlertGetDataError();
+    swal('ไม่พบข้อมูล', 'error')
     this.preloaderService.setShowPreloader(false);
   }
 
+  public ShowAlertNoRecord() {
+    swal({
+        title: '',
+        text: Message.noRecord,
+        type: 'warning',
+        confirmButtonText : 'ตกลง'
+    });
+  }
+
+  public ShowAlertGetDataError() {
+    swal({
+        title: '',
+        text: Message.getDataError,
+        type: 'warning',
+        confirmButtonText : 'ตกลง'
+    });
+  }
+
+  private autoZero(data: string): string {
+    return data.toString().length === 1 ? '0' + data : data;
+  }
 }

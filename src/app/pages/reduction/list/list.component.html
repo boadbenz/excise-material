@@ -53,9 +53,15 @@
                 <div class="form-group row">
                   <label class="col-form-label text-right col-md-4">วันที่เปรียบเทียบคดี : </label>
                   <div class="form-group input-group col-md-8">
-                    <input class="form-control" type="date" [(ngModel)]="lawsuitDateStart" name="lawsuitDateStart">
+                    <!-- <input class="form-control" type="date" [(ngModel)]="lawsuitDateStart" name="lawsuitDateStart"> -->
+                    <div style="width:45%">
+                      <my-date-picker name="lawsuitDateStart" placeholder="dd/mm/yyyy" locale="th" [(ngModel)]="lawsuitDateStart"></my-date-picker>
+                    </div>
                     <label class="col-form-label text-center col-md-2">ถึง</label>
-                    <input class="form-control" type="date" [(ngModel)]="lawsuitDateEnd" name="lawsuitDateEnd">
+                    <div style="width:45%">
+                      <!-- <input class="form-control" type="date" [(ngModel)]="lawsuitDateEnd" name="lawsuitDateEnd"> -->
+                      <my-date-picker name="lawsuitDateEnd" placeholder="dd/mm/yyyy" locale="th" [(ngModel)]="lawsuitDateEnd"></my-date-picker>
+                    </div>
                   </div>
                 </div>
               </div>
