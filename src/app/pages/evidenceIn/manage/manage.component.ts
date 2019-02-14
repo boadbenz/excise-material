@@ -51,6 +51,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     Productoptions = [];
     rawProdbyWarehourseOptions = [];
     ProdbyWarehourseoptions = [];
+    rawWarehouseOptions = [];
+    Warehouseoptions = [];
+
 
     oEviInSendStaff: EvidenceInStaff;
     oEviInRecvStaff: EvidenceInStaff;
@@ -79,6 +82,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     Remark: string;         // เหตุผลในการนำส่ง
     EvidenceInType: string; // ประเภทการรับของกลาง
     WarehouseID: string;    // รหัสคลังจัดเก็บ
+    WarehouseName: string;  // คลังจัดเก็บ
 
 
     // -------- ตรวจรัยจากหน่วยงานภายใน -------
@@ -102,6 +106,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     Receiveuser: string;    // ผู้นำส่ง
     ReceiverPositionName: string;   // ตำแหน่งผู้นำส่ง
     ReceiverOfficeShortName: string;    // หน่วยงานผู้นำส่ง
+    DestinationCode: string;    // รหัสหน่วยงานที่ Login
 
     isRequired: boolean | false;
 
@@ -129,6 +134,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.preloader.setShowPreloader(true);
 
+        this.oEvidenceIn = {
+            IsEdit: 1
+        }
+
         this.active_Route();
         this.navigate_Service();
         this.getUnit();
@@ -141,7 +150,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.DeliveryTime = this.getCurrentTime();
         this.EvidenceInTime = this.getCurrentTime();
         this.EvidenceInCode = "Auto Generate";
-        this.WarehouseID = "1";
+
+        //this.DestinationCode = "030700";
+        this.DestinationCode = localStorage.getItem("officeCode");
+        this.getWarehouse();
 
         if (this.evitype == "I") {
             await this.getProve();
@@ -255,6 +267,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     || this.EvidenceInDate == null || this.EvidenceInDate == undefined
                     || this.EvidenceInTime == "" || this.EvidenceInTime == undefined
                     || this.StaffRecvName == "" || this.StaffRecvName == undefined
+                    || this.WarehouseID == "" || this.WarehouseID == undefined || this.WarehouseID == "0"
                     || listProd.length > 0) {
                     this.isRequired = true;
                     this.ShowAlertWarning(Message.checkData);
@@ -429,7 +442,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ShowEvidenceIn() {
         this.EviService.getByCon(this.EvidenceInID, this.ProveID).then(async res => {
-            debugger
             if (res != null && res.IsSuccess != "False") {
                 this.ListEvidenceInItem = [];
                 this.oEvidenceIn = res[0];
@@ -453,15 +465,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.oEviInSendStaff = sTemp[0];
                 }
 
-                if (res.EvidenceInCode) {
-                    this.EvidenceInCode = res.EvidenceInCode;
+                if (this.oEvidenceIn.EvidenceInCode) {
+                    this.EvidenceInCode = this.oEvidenceIn.EvidenceInCode;
                 } else {
                     this.EvidenceInCode = "Auto Generate";
                 }
 
-                if (res.EvidenceInDate) {
-                    this.EvidenceInDate = setDateMyDatepicker(new Date(res.EvidenceInDate));
-                    this.EvidenceInTime = res.EvidenceInTime;
+                if (this.oEvidenceIn.EvidenceInDate) {
+                    this.EvidenceInDate = setDateMyDatepicker(new Date(this.oEvidenceIn.EvidenceInDate));
+                    this.EvidenceInTime = this.oEvidenceIn.EvidenceInTime;
                 } else {
                     this.EvidenceInDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
                     this.EvidenceInTime = this.getCurrentTime();
@@ -478,7 +490,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.DeptStaffRecv = sTemp[0].OfficeName;
                     this.StaffRecvID = sTemp[0].EvidenceInStaffID;
                     this.oEviInRecvStaff = sTemp[0];
+                } else {
+                    if (sTemp.length > 0) {
+                        this.StaffRecvID = sTemp[0].EvidenceInStaffID;
+                        this.oEviInRecvStaff.EvidenceInStaffID =sTemp[0].EvidenceInStaffID;
+                    }
                 }
+
+                var tWarehouse = this.rawWarehouseOptions.filter(f => f.WarehouseID == this.oEvidenceIn.EvidenceInItem[0].EvidenceStockBalance[0].WarehouseID);
+                this.WarehouseName = tWarehouse[0].WarehouseID;
+                this.WarehouseName = tWarehouse[0].WarehouseName;
 
                 // -------------- Product -------------------------
                 let t = 0;
@@ -495,6 +516,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     t += 1;
                 });
+
 
                 // -------------- Document -------------------------
 
@@ -613,7 +635,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async onUdpEvidenceIn() {
         this.preloader.setShowPreloader(true);
-        
+
         await this.setData();
 
         if (this.evitype == "E" || this.evitype == "I") {
@@ -787,7 +809,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                         this.EviService.EvidenceInItemupdByCon(this.oEvidenceIn.EvidenceInItem).then(async pRes => {
                             if (pRes.IsSuccess) {
-                                
+
                                 await this.EviService.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
                                     if (IsSuccess) {
                                         this.oEvidenceIn = {};
@@ -827,13 +849,18 @@ export class ManageComponent implements OnInit, OnDestroy {
         };
 
 
+
         this.ListEvidenceInItem.map(async item => {
             item.DamageQtyUnit = item.DeliveryQtyUnit;
             item.DamageNetVolumnUnit = item.DeliveryNetVolumnUnit;
 
+            var tStockID = "";
+            if(item.EvidenceStockBalance.length > 0){
+                tStockID = item.EvidenceStockBalance[0].StockID;
+            }
 
             this.oStockBalance = {
-                StockID: item.EvidenceStockBalance[0].StockID,
+                StockID: tStockID,
                 WarehouseID: this.WarehouseID,
                 EvidenceInItemID: item.EvidenceInItemID,
                 ReceiveQty: item.ReceiveQty,
@@ -1080,6 +1107,56 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+
+    // --- คลังจัดเก็บ ---
+    async getWarehouse() {
+        this.preloader.setShowPreloader(true);
+
+        await this.MasService.getWarehourse(this.DestinationCode).then(res => {
+            if (res) {
+                this.rawWarehouseOptions = res;
+
+                this.preloader.setShowPreloader(false);
+            }
+
+        }, (err: HttpErrorResponse) => {
+            //alert(err.message);
+        });
+    }
+
+    WarehouseOnAutoChange(value: string) {
+        if (value == '') {
+            this.Warehouseoptions = [];
+
+            this.WarehouseID = "";
+            this.WarehouseName = "";
+        } else {
+            this.Warehouseoptions = this.rawWarehouseOptions.filter(f => f.WarehouseName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    WarehouseOnAutoFocus(value: string) {
+        if (value == '') {
+            this.Warehouseoptions = [];
+
+            this.WarehouseID = "";
+            this.WarehouseName = "";
+        }
+    }
+
+    WarehouseOnAutoSelecteWord(event) {
+        this.WarehouseID = event.WarehouseID;
+
+        if(this.evitype == "G"){
+            this.getEvidenceInOutgetByWarehouseID();
+        }
+    }
+
+    chooseFirstWarehouse(): void {
+        this.WarehouseID = this.Warehouseoptions[0].WarehouseID;
+        this.WarehouseName = this.Warehouseoptions[0].WarehouseName;
+    }
+    // ----- End คลังจัดเก็บ ---
 
     // **********************************
     // ----------- Unit ----------
@@ -1434,12 +1511,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ------------ Product by Warehourse -----------
     // **********************************************
 
-    TestSearchWarehourse() {
-        this.getEvidenceInOutgetByWarehouseID();
-    }
-
     async getEvidenceInOutgetByWarehouseID() {
+        this.preloader.setShowPreloader(true);
         await this.EviService.getEvidenceInOutgetByWarehouseID(this.WarehouseID).then(async res => {
+            this.preloader.setShowPreloader(false);
             if (res) {
                 this.rawProdbyWarehourseOptions = res;
             }

@@ -479,7 +479,7 @@
                     <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" disabled>
                 </div>
 
-                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานปลายทาง :</label>
+                <!-- <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานปลายทาง :</label>
                 <div class="form-group col-lg-4 col-md-7">
                     <input type="text" class="form-control" [(ngModel)]="DeliverTo" name="DeliverTo" placeholder="" aria-label="Number" matInput
                         [matAutocomplete]="auto5" (input)="DestinationOnAutoChange($event.target.value)" (focus)="DestinationOnAutoFocus($event.target.value)"
@@ -490,16 +490,15 @@
                             {{ optionDest.OfficeName }}
                         </mat-option>
                     </mat-autocomplete>
-                </div>
-            </div>
-            <div class="row">
+                </div> -->
+
                 <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
                 <div class="form-group col-lg-4 col-md-7">
                     <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder=""  matInput
-                        [matAutocomplete]="auto6" (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                        [matAutocomplete]="auto8" (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
                         [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
-                    <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
-                        <mat-option *ngFor="let optionWh of Destinationoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                    <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
+                        <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
                             (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
                             {{ optionWh.WarehouseName }}
                         </mat-option>
