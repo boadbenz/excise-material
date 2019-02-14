@@ -18,6 +18,6 @@ export class ProveStaff {
     public OfficeCode?: string;
     public OfficeName?: string;
     public OfficeShortName?: string;
-    public ContributorCode?: string;
+    public ContributorID?: string;
     public IsActive?: number;
 }

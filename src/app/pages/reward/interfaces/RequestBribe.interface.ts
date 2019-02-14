@@ -16,7 +16,7 @@ export interface IRequestBribe {
   LastName: string;
   TotalPart: number;
 
-  RequestDate: Date;
+  RequestDate: string;
   RequestTime: string;
   StationCode: string;
   Station: string;
@@ -24,7 +24,7 @@ export interface IRequestBribe {
   BribeRemainder: number;
   Informeracknowledge: string;
   StationOfPOA: string;
-  POADate: Date;
+  POADate: string;
   POATime: string;
   POANo: string;
   StationCodeOfPOA: string;
@@ -50,28 +50,7 @@ export interface IRequestBribegetByCon {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface IRequestBribeinsAll {
-  RequestBribeID: number;
-  RequestBribeRewardID: number;
-  RequestBribeCode: string;
-  CommandDetailID: number;
-  RequestDate: Date;
-  RequestTime: string;
-  StationCode: string;
-  Station: string;
-  BribeTotal: number;
-  BribeRemainder: number;
-  Informeracknowledge: string;
-  StationOfPOA: string;
-  POADate: Date;
-  POATime: string;
-  POANo: string;
-  StationCodeOfPOA: string;
-  IsActive: number;
-
-  RequestBribeDetail: Array<IRequestBribeDetail>;
-  RequestBribeStaff: Array<IRequestBribeStaff>;
-}
+export interface IRequestBribeinsAll extends IRequestBribe {}
 
 // tslint:disable-next-line:class-name
 export interface IRequestBribeinsAllResponse extends IResponseCommon {
@@ -79,25 +58,25 @@ export interface IRequestBribeinsAllResponse extends IResponseCommon {
 }
 
 export interface IRequestBribeupdByCon {
-  RequestBribeID: number;
-  RequestBribeRewardID: number;
-  RequestBribeCode: string;
-  CommandDetailID: number;
-  RequestDate: Date;
-  RequestTime: string;
-  StationCode: string;
-  Station: string;
-  BribeTotal: number;
-  BribeRemainder: number;
-  Informeracknowledge: string;
-  StationOfPOA: string;
-  POADate: Date;
-  POATime: string;
-  POANo: string;
-  StationCodeOfPOA: string;
-  IsActive: number;
+  RequestBribeID?: number;
+  RequestBribeRewardID?: number;
+  RequestBribeCode?: string;
+  CommandDetailID?: number;
+  RequestDate?: string;
+  RequestTime?: string;
+  StationCode?: string;
+  Station?: string;
+  BribeTotal?: number;
+  BribeRemainder?: number;
+  Informeracknowledge?: string;
+  StationOfPOA?: string;
+  POADate?: string;
+  POATime?: string;
+  POANo?: string;
+  StationCodeOfPOA?: string;
+  IsActive?: number;
 
-  RequestBribeStaff: Array<IRequestBribeStaff>;
+  RequestBribeStaff?: Array<IRequestBribeStaff>;
 }
 
 // tslint:disable-next-line:no-empty-interface

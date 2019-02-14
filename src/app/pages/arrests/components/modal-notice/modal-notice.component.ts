@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { IMyDateModel } from 'mydatepicker-th';
@@ -8,6 +8,7 @@ import { pagination } from 'app/config/pagination';
 import { Message } from 'app/config/message';
 import * as formService from '../../services';
 import { Subject } from 'rxjs/Subject';
+import swal from 'sweetalert2'
 
 @Component({
     selector: 'app-modal-notice',
@@ -21,6 +22,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
     dateStartFrom: any;
     dateStartTo: any;
 
+    toLocalShort = toLocalShort;
     myDatePickerOptions = MyDatePickerOptions;
 
     paginage = pagination;
@@ -32,11 +34,14 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
         return this.noticeFG.get('ArrestNotice') as FormArray;
     }
 
+    @Input() arrestDate: Date;
+
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
     @Output() outputNotice = new EventEmitter<ArrestNotice[]>();
 
-    @ViewChild('noticeTable') noticeTable: ElementRef
+    @ViewChild('noticeTable') noticeTable: ElementRef;
+    @ViewChild('advForm') advForm: FormGroup;
 
     constructor(
         // private arrestService: ArrestsService,
@@ -71,7 +76,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
         if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate);
+                swal('', Message.checkDate, 'warning');
                 return false;
             }
         }
@@ -84,26 +89,37 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
             .subscribe(x => this.onSearchComplete(x))
     }
 
-    async onSearchComplete(list: ArrestNotice[]) {
+    onSearchComplete(list: ArrestNotice[]) {
 
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
             return;
         }
 
         this.notice = new Array<ArrestNotice>();
-        await list.filter(item => item.IsActive == 1).map((item, i) => {
+        list.filter(item => item.IsActive == 1).map((item, i) => {
             item.RowId = i + 1;
             item.IsChecked = false;
-            item.NoticeDateString = toLocalShort(item.NoticeDate);
             item.NoticeDate = item.NoticeDate;
-            item.ArrestNoticeStaff.map(s => s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`);
-            item.ArrestNoticeSuspect.map(s => s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`);
+            const staff = item.ArrestNoticeStaff
+                .map(s => {
+                    s.FullName = `${s.TitleName} ${s.FirstName} ${s.LastName}`;
+                    return s;
+                });
+            item.ArrestNoticeStaff = staff;
+            const suspect = item.ArrestNoticeSuspect
+                .map(s => {
+                    s.FullName = `${s.SuspectTitleName} ${s.SuspectFirstName} ${s.SuspectLastName}`;
+                    return s;
+                });
+            item.ArrestNoticeSuspect = suspect;
         })
 
         this.notice = list;
         // set total record
-        this.paginage.TotalItems = list.length;
+        const __list = this.notice.slice(0, 5);
+        this.setFormNotice(__list);
+        this.paginage.TotalItems = this.notice.length;
     }
 
     onSDateChange(event: IMyDateModel) {
@@ -124,7 +140,7 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
             const edate = getDateMyDatepicker(this.dateStartTo);
 
             if (!compareDate(sdate, edate)) {
-                alert(Message.checkDate)
+                swal('', Message.checkDate, 'warning')
                 setTimeout(() => {
                     this.dateStartTo = { date: _sdate.date };
                 }, 0);
@@ -149,6 +165,9 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
     toggle() {
         this.advSearch = !this.advSearch;
+        if (this.advSearch == false && this.advForm != undefined) {
+            this.advForm.reset();
+        }
     }
 
     dismiss(e: any) {
@@ -157,21 +176,36 @@ export class ModalNoticeComponent implements OnInit, OnDestroy {
 
     async close(e: any) {
         const n: ArrestNotice[] = this.ArrestNotice.value.filter(item => item.IsChecked);
-        if (n.length) {
-            this.outputNotice.emit(n);
-            this.c.emit(e);
+
+        if (!n.length) {
+            swal('', 'กรุณาเลือกรายการใบแจ้งความนำจับ', 'warning');
+            return;
         }
+
+        const _n: ArrestNotice[] = n.filter(x => this.arrestDate.valueOf() < (new Date(x.NoticeDate)).valueOf());
+
+        // ถ้ามีรายการ วันที่จับกุม < วันที่แจ้งความ ให้ออกจาก function
+        if (_n.length) {
+            swal('', '“วันที่จับกุม” ต้องมากกว่าหรือเท่ากับ “วันที่แจ้งความ” ในส่วนใบแจ้งความนำจับ', 'warning')
+            return;
+        }
+
+        this.outputNotice.emit(n);
+        this.c.emit(e);
     }
 
-    async pageChanges(event) {
-        const list = await this.notice.slice(event.startIndex - 1, event.endIndex);
+    pageChanges(event) {
+        const list = this.notice.slice(event.startIndex - 1, event.endIndex);
+        this.setFormNotice(list);
+    }
+
+    async setFormNotice(list: ArrestNotice[]) {
         let _noticeList = [];
-        await list.map(item => {
+        list.map(item => {
             let FG = this.fb.group({
                 IsChecked: item.IsChecked,
                 RowId: item.RowId,
                 NoticeCode: item.NoticeCode,
-                NoticeDateString: item.NoticeDateString,
                 NoticeDate: item.NoticeDate,
                 ArrestNoticeStaff: this.fb.array(item.ArrestNoticeStaff),
                 ArrestNoticeSuspect: this.fb.array(item.ArrestNoticeSuspect)

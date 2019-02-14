@@ -1,3 +1,7 @@
+// @import '../../../../styles';
+.cdk-overlay-container {
+  z-index: 99999 !important;
+}
   .btn-navy {
     background: rgb(0, 94, 141);
     color: white;
@@ -11,22 +15,22 @@
   .top-navbar {
     background: linear-gradient(45deg, rgb(0, 94, 141), rgb(53, 57, 147));
   }
-  
+
   .btn-action {
     color: red;
     font-size: 20px;
     margin-left: 5px;
     cursor: pointer;
   }
-  
+
   #btn-browse {
     opacity: 0;
   }
-  
+
   .form-popup {
     margin-bottom: 0;
   }
-  
+
   .col-form-label {
     color: black;
     font-weight: 400;
@@ -46,4 +50,51 @@
   background-color: white;
   // top:-2200px;
   // left:600px;
+}
+td p {
+  white-space: nowrap; 
+  max-width: 140px; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+body {
+  font-size: 0.9rem !important;
+}
+input[disabled] {
+  color: black;
+}
+.card {
+  font-size: 0.9rem !important;
+  input {
+    padding: 0.3rem;
+    font-size: 0.9rem !important;
+  }
+}
+.without_ampm::-webkit-datetime-edit-ampm-field {
+  display: none;
+}
+input[type=time]::-webkit-clear-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  -ms-appearance:none;
+  appearance: none;
+  margin: -10px; 
+}
+::ng-deep .cdk-overlay-pane {
+  /* Do you changes here */
+    min-width:15rem;
+}
+.custom-select {
+  background-color: white;
+}
+.custom-select[disabled] {
+  background-color: #e8edf1;
+}
+.mat-expansion-panel-content {
+  font: unset !important;
+}
+:host /deep/ ng2-dropdown-menu div{
+	left: inherit !important;
+	top: inherit !important;
 }

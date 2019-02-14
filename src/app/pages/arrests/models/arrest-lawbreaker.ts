@@ -80,7 +80,7 @@ export class ArrestLawbreaker {
     ReferenceID: string;
     ProductID: string;
     ProductName: string;
-    IsChecked:  Acceptability;
+    IsChecked: Acceptability;
     RowId: number;
     IsNewItem: boolean;
     IsModify: string;
@@ -173,10 +173,10 @@ export const ArrestLawbreakerFormControl = {
     FatherName: new FormControl(''),
     MotherName: new FormControl(''),
     Remarks: new FormControl(''),
-    LinkPhoto: new FormControl(''),
-    PhotoDesc: new FormControl(''),
+    LinkPhoto: new FormControl(),
+    PhotoDesc: new FormControl(),
     IsActive: new FormControl(null),
-
+    ResultCount: new FormControl(null),
 
     EntityTypeName: new FormControl(null),
     LawbreakerTypeName: new FormControl(null),

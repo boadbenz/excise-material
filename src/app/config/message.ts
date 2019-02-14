@@ -6,6 +6,7 @@ export const Message = {
     delComplete: 'ลบข้อมูลสำเร็จ',
     checkDate: 'กรุณาตราวจสอบวันที่สิ้นสุด ต้องไม่น้อยกว่า วันที่เริ่มต้น',
     checkData: 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน!',
+    checkDelivery: 'กรุณาเลือกตรวจรับของกลาง !',
     cannotDelete: 'ไม่สามารถลบข้อมูลได้',
     cannotDeleteRec: 'ไม่สามารถลบรายการได้',
     cannotModify: 'ไม่สามารถแก้ไขได้',
@@ -42,9 +43,11 @@ export const Message = {
     checkReceiveDate: 'กรุณาตราวจสอบวันที่ตรวจรับเริ่มต้น ต้องน้อยกว่า วันที่สิ้นสุด',
     checkScienceDate: 'กรุณาตราวจสอบวันที่ตรวจพิสูจน์เริ่มต้น ต้องน้อยกว่า วันที่สิ้นสุด',
     confirmDeleteProduct: 'ยืนยันการลบข้อมูลของกลาง ใช่หรือไม่ ?',
+    
 
     checkImageType: 'ไฟล์รูปภาพที่สามารถอัพโหลดได้คือ ".png, .jpeg"',
 
-    alertSelectGuiltbase: 'กรุณาเลือกรายการข้อกล่าวหา'
+    alertSelectGuiltbase: 'กรุณาเลือกรายการข้อกล่าวหา',
+    confirmDeleteDoc: 'ยืนยันการลบข้อมูลเอกสารแนบภายใน ใช่หรือไม่ ?'
 
 }

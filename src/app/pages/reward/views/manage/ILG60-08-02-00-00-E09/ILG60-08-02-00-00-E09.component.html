@@ -1,10 +1,112 @@
 <div class="row">
   <div class="col-md-12">
+    <!-- <pre>
+      {{isEdit$ | async}}
+    </pre> -->
+    <!-- <app-form-group [columns]="bindingForm" (outputChange)="changeForm($event)"></app-form-group> -->
+    <form [formGroup]="formGroup" (change)="changeForm(formGroup)">
+      <div class="form-body" *ngIf="formGroup">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">คำสั่งกรมเลขที่<span class="pull-right">:</span></label>
+              <div class="col-md-8">
+                <input class="form-control form-control-sm" type="text" formControlName="CommandNo" [attr.disabled]="!(isEdit$ | async) ? 'disabled' : null">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-form-label col-md-4">วันที่ออกคำสั่ง<span class="pull-right">:</span></label>
+              <div class="col-md-3">
+                <my-date-picker placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions" formControlName="CommandDate"
+                  [disabled]="!(isEdit$ | async)"></my-date-picker>
+              </div>
+              <label class="col-form-label text-center col-md-2">เวลา</label>
+              <div class="col-md-3">
+                <input class="form-control form-control-sm" type="text" formControlName="CommandTime" [attr.disabled]="!(isEdit$ | async) ? 'disabled' : null">
+              </div>
+            </div>
+          </div>
+        </div>
 
+      </div>
+    </form>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    <!-- <app-table-data [columns]="columns$ | async" [data]="gridData$ | async" [options]="TableDataOptions"></app-table-data> -->
+    <!-- <app-table-data [columns]="columnsTable$ | async" [data]="inputData$ | async" [options]="TableDataOptions"></app-table-data> -->
+
+    <div class="card">
+      <div class="card-body">
+        <!-- <app-table-data [columns]="columnsTable$ | async" [data]="inputData$ | async" [options]="TableDataOptions"></app-table-data> -->
+        <div class="table-responsive table-striped no-wrap">
+          <!-- {{checkList | json}} -->
+          <table class="dataTable table table-sm table-striped table-hover">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ลำดับ</th>
+                <ng-container *ngFor="let item of (columnsTable$ | async)">
+                  <th class="footable-sortable">
+                    {{item.title}}
+                  </th>
+                </ng-container>
+                <th class="footable-sortable" colspan="1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dataItem of bindingData; let i=index">
+                <th>
+                  <!-- {{dataItem | json}} -->
+                </th>
+                <th>{{i+1}}</th>
+                <ng-container *ngFor="let item of (columnsTable$ | async)">
+                  <ng-container *ngIf="item.showInput;else any">
+                    <td class="footable-sortable" [width]="item.width || ''">
+                      <input class="form-control form-control-sm text-center" type="number" width="50" [(ngModel)]="inputItem[i]"
+                        (change)="itemChange()" [disabled]="!(isEdit$ | async)">
+                    </td>
+                  </ng-container>
+                  <ng-template #any>
+                    <td class="footable-sortable">
+                      <ng-container *ngIf="item.inputType === 'date'; else typeAny">
+                        {{dataItem[item.field] | thaiDate}}
+                      </ng-container>
+                      <ng-template #typeAny>
+                        {{dataItem[item.field]}}
+                      </ng-template>
+                    </td>
+                  </ng-template>
+
+                </ng-container>
+                <td>
+
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th colspan=7 class="text-right">
+                  รวม
+                </th>
+
+                <th class="footable-sortable">
+                  <input class="form-control form-control-sm text-center" type="text" width="50" disabled [value]="sumItem()">
+                  <!-- {{(aggregate[item.field]?.sum) || ''}} -->
+                </th>
+                <th></th>
+
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+
   </div>
 </div>

@@ -1,4 +1,4 @@
-<form action="" #form="ngForm" (ngSubmit)="onPrint(form)">
+<form action="">
     <div class="modal-header bg-theme">
         <div class="row">
             <div class="col-lg-5">
@@ -12,7 +12,7 @@
         </div>
     </div>
     <h5 class="text-right mt-3 pr-3">ILG60-03-02-01-00</h5>
-    <div class="modal-body font-14">
+    <div class="modal-body font-14" [formGroup]="FG">
 
         <div class="table-responsive">
             <table class="table table-sm table-striped table-set-border">
@@ -24,21 +24,21 @@
                         <th [ngSwitch]="sort" style="cursor: pointer;">
                             <div (click)="sortPrintDoc()">
                                 ประเภทเอกสาร
-                                <i *ngSwitchCase="'desc'" class="fa fa-sort-amount-desc"></i>
-                                <i *ngSwitchCase="'asc'" class="fa fa-sort-amount-asc"></i>
+                                <i *ngSwitchCase="sorting.DESC" class="fa fa-sort-amount-desc"></i>
+                                <i *ngSwitchCase="sorting.ASC" class="fa fa-sort-amount-asc"></i>
                             </div>
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let item of printDoc; let i=index;">
+                <tbody formArrayName="PrintDoc">
+                    <tr *ngFor="let item of PrintDoc.controls; let i=index;" [formGroupName]="i">
                         <td class="text-center">
-                            <input type="checkbox" [id]="'td'+i" name="ischeck" ngModel class="filled-in chk-col-indigo">
+                            <input type="checkbox" formControlName="IsChecked" [id]="'td'+i" class="filled-in chk-col-indigo">
                             <label [for]="'td'+i" class="m-0"></label>
                         </td>
                         <td class="text-center">{{i+1}}</td>
-                        <td>{{item.DocName}}</td>
-                        <td>{{item.DocType}}</td>
+                        <td>{{item.get('DocName').value}}</td>
+                        <td>{{item.get('DocTypeName').value}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -46,7 +46,7 @@
     </div>
     <div class="modal-footer">
         <div class="col-lg-2 col-4">
-            <button type="submit" class="btn btn-block btn-themecolor">พิมพ์</button>
+            <button type="button" class="btn btn-block btn-themecolor" (click)="onPrint()">พิมพ์</button>
         </div>
     </div>
 </form>

@@ -12,30 +12,52 @@ export class TableDataComponent extends TableDataConfig implements OnInit {
   private allItems: any[];
 
   // pager object
-  public pager: IPagerService;
+  public pager: IPagerService = {
+    totalItems: this.paginage.TotalItems,
+    currentPage: this.paginage.CurrentPage,
+    pageSize: this.paginage.PageSize,
+    totalPages: 1,
+    startPage: 1,
+    endPage: 1,
+    startIndex: 1,
+    endIndex: 0,
+    pages: this.paginage.RowsPerPageOptions
+  };
 
   // paged items
   public pagedItems: any[];
-
   constructor(private pagerService: PagerService) {
     super();
   }
 
   ngOnInit() {
     this.data$.subscribe(data => {
-      this.allItems = data;
-      this.setPage(1,  this.paginage.PageSize);
+      if (data != null) {
+        this.allItems = data;
+        this.setPage(1, this.paginage.PageSize);
+      }
     });
   }
+
   public setPage(current: number, pageSize) {
     // get pager object from service
-    this.pager = this.pagerService.getPager(this.allItems.length, current, pageSize);
+    this.pager = this.pagerService.getPager(
+      this.allItems ? this.allItems.length : 0,
+      current,
+      pageSize
+    );
 
     // get current page of items
-    this.pagedItems = this.allItems.slice(
-      this.pager.startIndex,
-      this.pager.endIndex + 1
-    );
+    if (this.allItems) {
+      this.pagedItems = this.allItems.slice(
+        this.pager.startIndex,
+        this.pager.endIndex + 1
+      );
+
+      this.pagedItems.forEach((f, index) => {
+        this.ShowInputModel[index] = 1;
+      });
+    }
   }
   public pageChanges($event) {
     // console.log('pageChange', $event);
@@ -49,4 +71,12 @@ export class TableDataComponent extends TableDataConfig implements OnInit {
     this.setPage($event.currentPage, $event.pageSize);
   }
   public viewData(data) {}
+
+  public customRouteFor(
+    path: string,
+    item: any,
+    route: string[]
+  ): (string | number)[] {
+    return [path, ...route.map(m => item[m])];
+  }
 }
