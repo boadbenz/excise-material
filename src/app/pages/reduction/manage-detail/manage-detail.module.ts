@@ -14,7 +14,8 @@ const routes: Routes = [
       urls: [
         { title: 'หน้าหลัก', url: '/' },
         { title: 'ค้นหารายการปรับเพิ่ม-ปรับลด', url: '/reduction/list' },
-        { title: 'จัดการข้อมูลรายการปรับเพิ่ม-ปรับลด', url: 'reduction/manage/' },
+        // { title: 'จัดการข้อมูลรายการปรับเพิ่ม-ปรับลด', url: '/reduction/manage' },
+        { title: 'จัดการข้อมูลรายการปรับเพิ่ม-ปรับลด', back: true },
         { title: 'จัดการข้อมูลรายละเอียดการปรับเพิ่ม-ปรับลด' }
       ],
       pageType: 'manage',
