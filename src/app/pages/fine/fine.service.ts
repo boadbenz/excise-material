@@ -14,14 +14,13 @@ import {Observable} from 'rxjs/Observable';
 export class FineService {
 
     constructor(private http: HttpClient) { }
-
+    defaultPort = '7777';
     private httpOptions = {
         headers: new HttpHeaders(
             {
                 'Content-Type': 'application/json'
             })
     };
-
     postMethod(url: string, data: any, port: string = '7777') {
         const params = data;
         const full_url = `${appConfig[`api${port}`]}/${url}`;
@@ -30,6 +29,7 @@ export class FineService {
     getByKeyword(Textsearch: string) {
         const params = Textsearch;
         const url = `${appConfig.api7777}/CompareListgetByKeyword`;
+        // return this.postMethod('CompareListgetByKeyword', )
         return this.http.post<Compare[]>(url, params, this.httpOptions);
     }
 
