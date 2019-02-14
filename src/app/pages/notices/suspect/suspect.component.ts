@@ -159,7 +159,9 @@ export class SuspectComponent implements OnInit, OnDestroy {
             LinkPhoto: new FormControl(null),
             PhotoDesc: new FormControl(null),
             IsActive: new FormControl(1),
-            Region: new FormControl(null)
+            Region: new FormControl(null),
+            Latitude: new FormControl(null),
+            Longtitude: new FormControl(null)
         });
     }
 
@@ -267,6 +269,14 @@ export class SuspectComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
         this.noticeService.noticeSuspectgetByCon(SuspectID).then(res => {
             let region = `${res.SubDistrict||''} ${res.District||''} ${res.Province||''}`;
+            let gps = res.GPS;
+            let tmps = gps.split(",");
+            let lat = "";
+            let lon = "";
+            if(tmps.length>1){
+                lat = tmps[0].trim();
+                lon = tmps[1].trim();
+            }
             this.SuspectFG.reset({
                 SuspectID: res.SuspectID,
                 EntityType: res.EntityType,
@@ -331,7 +341,9 @@ export class SuspectComponent implements OnInit, OnDestroy {
                 LinkPhoto: res.LinkPhoto,
                 PhotoDesc: res.PhotoDesc,
                 IsActive: res.IsActive,
-                Region: region
+                Region: region,
+                Latitude: lat,
+                Longtitude: lon
             })
 
             if (res.LinkPhoto) {
@@ -345,6 +357,9 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
     async OnCreate() {
         this.preloader.setShowPreloader(true);
+        if(this.SuspectFG.value.Latitude&&this.SuspectFG.value.Longtitude){
+            this.SuspectFG.value.GPS = this.SuspectFG.value.Latitude+","+this.SuspectFG.value.Longtitude;
+        }
 
         let success: boolean = false;
         let suspectID = "";
@@ -368,6 +383,9 @@ export class SuspectComponent implements OnInit, OnDestroy {
     }
 
     async OnRevice() {
+        if(this.SuspectFG.value.Latitude&&this.SuspectFG.value.Longtitude){
+            this.SuspectFG.value.GPS = this.SuspectFG.value.Latitude+","+this.SuspectFG.value.Longtitude;
+        }
         // Set Preloader
         this.preloader.setShowPreloader(true);
 
