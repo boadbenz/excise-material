@@ -391,10 +391,10 @@ export class SuspectComponent implements OnInit, OnDestroy {
 
         let passportDateIn = this.SuspectFG.value.PassportDateIn;//convertDateForSave(passportDateIn);
         let passportDateOut = this.SuspectFG.value.PassportDateOut;//convertDateForSave(passportDateOut);
-        if(!passportDateIn){
+        if(!passportDateIn.myDate){
             this.SuspectFG.value.PassportDateIn = "";
         }
-        if(!passportDateOut){
+        if(!passportDateOut.myDate){
             this.SuspectFG.value.PassportDateOut = "";
         }
 
