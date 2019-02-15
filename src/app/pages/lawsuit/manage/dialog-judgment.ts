@@ -164,7 +164,6 @@ export class DialogJudgment {
                 text: Message.checkData,
                 type: 'warning',
             })
-            this.dialogRef.close();
             return false;
         }
         return true;
@@ -173,7 +172,6 @@ export class DialogJudgment {
     Submit = async () => {
         if (this.validValue() == false) { return; }
         else if (this.validValue() == true) {
-            this.dialogRef.close();
             Swal({
                 title: '',
                 text: "ยืนยันการทำรายการหรือไม่",
