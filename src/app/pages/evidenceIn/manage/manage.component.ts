@@ -218,14 +218,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                     switch (this.evitype) {
                         case 'I':
                             data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางจากหน่วยงานภายใน";
+                            data.codePage = "ILG60-10-02-00-00";
                             this.EvidenceInType = "0";
                             break;
                         case 'E':
                             data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางจากหน่วยงานภายนอก";
+                            data.codePage = "ILG60-10-03-00-00";
                             this.EvidenceInType = "1";
                             break;
                         case 'G':
                             data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางที่นำออกจากคลังไปใช้ในราชการ";
+                            data.codePage = "ILG60-10-04-00-00";
                             this.EvidenceInType = "2";
                             break;
                     }

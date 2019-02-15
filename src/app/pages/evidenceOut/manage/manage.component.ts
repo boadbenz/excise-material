@@ -199,13 +199,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                         case '11E':
                             data.urls[1].title = "ค้นหารายการคืนของกลาง";
                             data.urls[2].title = "จัดการข้อมูลรายการคืนของกลาง จากหน่วยงานภายนอก";
-                            data.codePage = "ILG60-11-02-00-00";
+                            data.codePage = "ILG60-11-03-00-00";
                             this.EvidenceOutType = "1"
                             break;
                         case '12':
                             data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
                             data.urls[2].title = "จัดการข้อมูลรายการจัดเก็บเข้าพิพิธภัณฑ์";
-                            data.codePage = "ILG60-12-02-00-00";
+                            data.codePage = "ILG60-12-04-00-00";
                             this.EvidenceOutType = "5"
                             break;
                         case '13':
