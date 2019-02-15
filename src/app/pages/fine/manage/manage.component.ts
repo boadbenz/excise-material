@@ -131,7 +131,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.47');
+    this.sidebarService.setVersion('0.0.0.48');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -1062,7 +1062,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.headerData.OfficeShortName = resp[0].OfficeShortName;
         this.headerData.PositionName = resp[0].PositionName;
         this.headerData.LawsuitDate = this.toDatePickerFormat(new Date(resp[0].LawsuitDate)).formatted;
-        this.headerData.LawsuitTime = resp[0].LawsuitTime + ' น.';
+        this.headerData.LawsuitTime = resp[0].LawsuitTime;
         this.headerData.SectionNo = resp[0].SectionNo;
         this.headerData.Province = resp[0].Province;
         this.headerData.GuiltbaseName = resp[0].GuiltbaseName;
