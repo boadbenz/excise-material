@@ -182,7 +182,7 @@ export class LawsuitService {
 
   async LawsuitPaymentFineDetailupdDelete(PaymentFineID) {
     const params = { PaymentFineID: PaymentFineID };
-    const url = `${appConfig.apiUrl}/LawsuitPayfineDetailupdDelete`;
+    const url = `${appConfig.api8777}/LawsuitPayfineDetailupdDelete`;
     // const url = `${appConfig.apiUrl}/LawsuitPaymentFineDetailupdDelete`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
