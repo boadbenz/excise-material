@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.40');
+    this.sidebarService.setVersion('0.0.0.41');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -387,7 +387,7 @@ export class ManageComponent implements OnInit {
       if (result.value) {
         let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
         this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(IndictmentDetailID).then(result => {
-          if (result.LawsuitJudgement > 0) {
+          if (result) {
             if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {
               this.lawsuitService.LawsuitJudgementupdDelete(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
               if (result['LawsuitJudgement'][0]['IsFine'] == 1) {
@@ -1208,6 +1208,7 @@ export class ManageComponent implements OnInit {
           )
           // Staff Default
           this.setItemFormArray(arrList, 'LawsuitTableList', this.lawsuitForm);
+          console.log(this.lawsuitForm.value)
         }
       } else {
         this.lawsuitFormNoData = false
