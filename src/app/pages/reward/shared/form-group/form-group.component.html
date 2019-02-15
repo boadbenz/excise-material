@@ -36,8 +36,8 @@
                         [attr.disabled]="c?.isDisabled ? 'disabled' : null">
                     </ng-template>
                   </div>
-                  <div class="ml-1 mr-1">
-                    <label class="control-label text-center padding-adv-search pt-1">{{c?.title2}}</label>
+                  <div class="text-center" style="width:10%">
+                    <label class="text-center">&nbsp;{{c?.title2}}&nbsp;</label>
                   </div>
                   <div style="width:45%">
                     <ng-container *ngIf="c?.inputType2 === 'date';else text">
