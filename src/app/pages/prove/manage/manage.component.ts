@@ -694,7 +694,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     async onInsProve() {
         this.preloader.setShowPreloader(true);
 
-        this.SetData();
+        await this.SetData();
         var isSuccess = true;
         await this.proveService.insAll(this.oProve).then(async res => {
             if (res.IsSuccess) {
@@ -785,7 +785,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async onUpdProve() {
         this.preloader.setShowPreloader(true);
-        this.SetData();
+        await this.SetData();
         let isSuccess: boolean = true;
 
         // -----------------------------------------------------------
