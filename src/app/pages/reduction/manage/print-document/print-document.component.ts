@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
+import { ReductionApiService } from '../../reduction.api.service';
 
 @Component({
-  selector: 'app-reduction-model-list',
-  templateUrl: './reduction-model-list.component.html',
-  styleUrls: ['./reduction-model-list.component.scss']
+  selector: 'app-print-document',
+  templateUrl: './print-document.component.html',
+  styleUrls: ['./print-document.component.scss']
 })
-export class ReductionModelListComponent implements OnInit {
-
+export class PrintDocumentComponent implements OnInit {
   /**
    * Data ID from parent page
    */
@@ -26,10 +26,9 @@ export class ReductionModelListComponent implements OnInit {
   public checkNo = 0;
   public selected: any[] = [];
 
-  constructor(private formBuilder: FormBuilder) {
-  }
+  constructor( private formBuilder: FormBuilder, private readonly api: ReductionApiService ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     // console.log(this.id);
     // console.log(this.listData);
     // Create a new array with a form control for each order
@@ -38,12 +37,15 @@ export class ReductionModelListComponent implements OnInit {
     this._formBuilderGroup(controls);
   }
 
+
   public activeModel() {
+
   }
 
   public dismiss(e: any) {
     this.d.emit(e);
   }
+
   public next() {
     const result = this._checked();
     console.log(result);
@@ -51,7 +53,7 @@ export class ReductionModelListComponent implements OnInit {
 
   private _checked() {
     const selected = this.checkBoxForm.value.listData
-      .map((v, i) => v ? this.listData[i].LawbreakerName : null)
+      .map((v, i) => v ? this.listData[i].DocumentName : null)
       .filter(v => v !== null);
 
     return selected;
