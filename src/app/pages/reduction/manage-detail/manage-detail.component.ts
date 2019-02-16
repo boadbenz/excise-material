@@ -166,9 +166,14 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
+      this.navService.setSendIncomeButton(true);
     } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {
       this.navService.setEditField(false);
+      this.navService.setSendIncomeButton(false);
     }
+
+    this.compareID = this.activeRoute.snapshot.paramMap.get('compareid');
+    this.indictmentID = this.activeRoute.snapshot.paramMap.get('compareid'); // shoud it differren
     // set show button
     this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;
@@ -190,6 +195,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.navServiceSub = this.navService.onSendIncome.subscribe(status => {
+      console.log(status);
+      if (status) {
+        this.sentInCome();
+      }
+    });
 
     // this.getDataFromListPage = this.activeRoute.params
     //   .subscribe(params => {
@@ -300,6 +311,10 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       fileName: file[0].name,
       filePath: ''
     });
+  }
+
+  public sentInCome(): void {
+    this.router.navigate(['/income/manage', 'R', this.compareID]);
   }
 
   ngOnDestroy() {

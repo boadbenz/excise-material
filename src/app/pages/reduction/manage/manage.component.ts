@@ -85,6 +85,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     this.indictmentID = param.IndictmentID;
 
     this.navService.setEditField(true);
+    this.navService.setSendIncomeButton(false);
     // set show button
     this.navServiceSub = this.navService.onCancel.subscribe(status => {
       if (status) {
