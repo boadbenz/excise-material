@@ -2,7 +2,7 @@
     <div class="row">
       <div class="col-lg-5">
         <h4 class="modal-title text-white">
-          เลือกรายการที่ต้องการปรับเพิ่ม-ลดค่าเปรียบเทียบ
+          พิมพ์เอกสาร
         </h4>
       </div>
       <a href="javaScript:void(0);" class="close text-white font-14" aria-label="Close" (click)="dismiss('Cross click')">
@@ -14,7 +14,7 @@
   </div>
 
 
-  <h5 class="text-right mt-3 pr-3">ILG60-09-02-01-00</h5>
+  <h5 class="text-right mt-3 pr-3">ILG60-09-03-02</h5>
   <div class="modal-body font-14">
     <div>
       <div class="card unset-radius m-b-15">
@@ -25,14 +25,11 @@
                 <thead>
                   <tr>
                     <th>
-                      <input id="allChecked" type="checkbox" [(ngModel)]="allChecked" [ngModelOptions]="{standalone: true}" (click)="checkAll(allChecked)" style="left: 10px; top: 8px;" />
+                      <!-- <input id="allChecked" type="checkbox" [(ngModel)]="allChecked" [ngModelOptions]="{standalone: true}" (click)="checkAll(allChecked)" style="left: 10px; top: 8px;" /> -->
                     </th>
                     <th class="text-center">ลำดับ</th>
-                    <th>ชื่อผู้ต้องหา</th>
-                    <th>ลักษณะคดี</th>
-                    <th>เลขที่เปรียบเทียบ/คำพิพากษาฎีกา</th>
-                    <th>วันที่ชำระเงิน</th>
-                    <th>งวดชำระ</th>
+                    <th>ชื่อเอกสาร</th>
+                    <th>ประเภทเอกสาร</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -41,11 +38,8 @@
                       <input class="form-check-input" id="td{{i}}" type="checkbox" [formControlName]="i" (change)="chicking($event)" />
                     </td>
                     <td class="text-center">{{i + 1}}</td>
-                    <td>{{listData[i].LawbreakerName}}</td>
-                    <td>{{listData[i].IsLawsuitComplete}}</td>
-                    <td>{{listData[i].UndecidedCaseNo}}</td>
-                    <td>{{listData[i].PaymentFineDate}}</td>
-                    <td>{{listData[i].PaymentPeriodNo}}</td>
+                    <td>{{listData[i].DocumentName}}</td>
+                    <td>{{listData[i].DocumentType}}</td>
                     <!-- <td class="text-center">
                       <a class="text-center text-secondary" 
                         [routerLink]="['/investigation/suspect', 'R', i]" target="_blank">
@@ -68,6 +62,6 @@
   </div>
   <div class="modal-footer">
     <div class="col-lg-2 col-4">
-      <button type="button" class="btn btn-block btn-themecolor" (click)="next()">ถัดไป</button>
+      <button type="button" class="btn btn-block btn-themecolor" (click)="next()">พิมพ์</button>
     </div>
   </div>

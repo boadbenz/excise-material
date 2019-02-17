@@ -192,9 +192,15 @@
         ปรับเพิ่ม-ลด 
       </button>
     </div>
+    <!-- ปรับเพิ่ม-ลด dialog -->
     <ng-template #reductionList let-c="close" let-d="dismiss">
       <app-reduction-model-list [listData]="adjustDetailData" [id]="compareID" (d)="dialog.dismiss()" (result)="result($event)"></app-reduction-model-list>
     </ng-template>
+    <!-- print dialog -->
+    <ng-template #printList let-c="close" let-d="dismiss">
+      <app-print-document [listData]="documentMailgetAll" [id]="compareID" (d)="print_dialog.dismiss()" (result)="printResult($event)"></app-print-document>
+    </ng-template>
+
     <div class="table-responsive table-striped no-wrap">
       <table class="table">
         <thead>
@@ -236,7 +242,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="reductionPopup" tabindex="-1" role="dialog" #reductionPopup>
+<!-- <div class="modal fade" id="reductionPopup" tabindex="-1" role="dialog" #reductionPopup>
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header top-navbar text-white">
@@ -291,4 +297,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

@@ -23,8 +23,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
     searchBar: any;
     nextPageButton: any;
     prevPageButton: any;
+    sendInComeButton: any;
 
-    nextPage: string = '';
+    nextPage: any = '';
     nextPageTitle: any;
     prevPageTitle: any;
 
@@ -42,6 +43,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.searchBar = this.navService.showSearchBar;
         this.nextPageButton = this.navService.showNextPageButton;
         this.nextPageTitle = this.navService.innerTextNextPageButton;
+        this.sendInComeButton = this.navService.showSendIncomeButton;
 
         this.prevPageButton = this.navService.showPrevPageButton;
         this.prevPageTitle = this.navService.innerTextPrevPageButton;
@@ -125,6 +127,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     clickDelete() {
         this.navService.setOnDelete(true);
+    }
+
+    clickSendIncome() {
+        this.navService.setOnSendIncome(true);
     }
 
 }

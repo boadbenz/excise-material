@@ -22,7 +22,6 @@ const routes: Routes = [
                 { title: 'หน้าหลัก', url: '/' },
                 { title: 'ค้นหารายการนำส่งเงินรายได้', url: '/income/list' },
                 { title: 'จัดการข้อมูลนำส่งเงินรายได้' },
-                
             ],
             nextPage: { title: '', url: '' },
             codePage: 'ILG60-07-02-00-00'

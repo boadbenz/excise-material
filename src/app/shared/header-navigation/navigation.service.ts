@@ -17,6 +17,7 @@ export class NavigationService {
     showProofButton = new BehaviorSubject<Boolean>(false);
     showSearchBar = new BehaviorSubject<Boolean>(false);
     showFieldEdit = new BehaviorSubject<Boolean>(true);
+    showSendIncomeButton = new BehaviorSubject<Boolean>(false);
 
     onEdit = new BehaviorSubject<Boolean>(false);
     onSave = new BehaviorSubject<Boolean>(false);
@@ -26,6 +27,7 @@ export class NavigationService {
     onPrint = new BehaviorSubject<Boolean>(false);
     onNextPage = new BehaviorSubject<Boolean>(false);
     onPrevPage = new BehaviorSubject<Boolean>(false);
+    onSendIncome = new BehaviorSubject<Boolean>(false);
 
     innerTextNextPageButton = new BehaviorSubject<string>(null);
     innerTextPrevPageButton = new BehaviorSubject<string>(null);
@@ -90,6 +92,10 @@ export class NavigationService {
         this.showPrevPageButton.next(status);
     }
 
+    setSendIncomeButton(status: boolean) {
+        this.showSendIncomeButton.next(status);
+    }
+
     // -- End Set Element --
 
     // -- Set Event --
@@ -127,6 +133,10 @@ export class NavigationService {
 
     setOnPrevPage(status: boolean) {
         this.onPrevPage.next(status);
+    }
+
+    setOnSendIncome(status: boolean): void {
+        this.onSendIncome.next(status);
     }
 
     // -- End Set Event

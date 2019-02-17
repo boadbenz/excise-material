@@ -10,113 +10,7 @@ import { ReductionApiService } from '../reduction.api.service';
 })
 export class ManageDetailComponent implements OnInit, OnDestroy {
 
-  approveDataTable = [{
-    fullName: 'นายธวัชชัย บิงขุนทด',
-    dateReport: '10-ม.ค.-2560',
-    typeApprove: 'แบบอนุมัติ 4'
-  }, {
-    fullName: 'นายสุชาติ ปัญโญใหญ่',
-    dateReport: '',
-    typeApprove: ''
-  }];
-
-  reductionDataTable = [];
-
-  payFineDataTable = [];
-
-
-  listData = [
-    {
-      arrestCode: 'TN90806026000001',
-      lawsuitNo: '001/2561',
-      proofNo: '001/2561',
-      caseNumber: '001/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '10-ม.ค.-2560',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ '
-            + ' 5 เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-
-    }, {
-      arrestCode: 'TN90806026000002',
-      lawsuitNo: 'น.001/2561',
-      proofNo: 'น.001/2561',
-      caseNumber: '001/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '19-มี.ค.-2560',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า'
-             + ' เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ 5 เท่า กระทำผิดครั้งที่ 2 ปรับ 5'
-             + ' เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-
-    }, {
-      arrestCode: 'TN90806026000003',
-      lawsuitNo: '002/2561',
-      proofNo: '002/2561',
-      caseNumber: '002/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '22-ต.ค.-2560',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ 5'
-             + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-    }, {
-      arrestCode: 'TN90806026000004',
-      lawsuitNo: '003/2561',
-      proofNo: '003/2561',
-      caseNumber: '003/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '11-ธ.ค.-2560',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ 5'
-             + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-    }, {
-      arrestCode: 'TN90806026000005',
-      lawsuitNo: '004/2561',
-      proofNo: '004/2561',
-      caseNumber: '004/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '03-มี.ค.-2561',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ 5'
-             + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-    }]
-
-  public detailData = {
+  public adjustArrest = {
     ArrestCode: '',
     ArrestDate: '',
     ArrestTime: '',
@@ -139,6 +33,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     Testimony: '',
   }
 
+  adjustFine = [];
+
+  adjustReceipt = [];
+
+  adjustDetail = [];
+
+
   public fileItem = [{
     fileName: '',
     filePath: '',
@@ -152,6 +53,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public errorShow: any;
 
   public compareID: string;
+  public compareIdDetail: string;
   public indictmentID: string;
   private getDataFromListPage: any;
 
@@ -166,10 +68,23 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
+      this.navService.setSendIncomeButton(true);
     } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {
       this.navService.setEditField(false);
+      this.navService.setSendIncomeButton(false);
     }
+
+    this.compareID = this.activeRoute.snapshot.paramMap.get('compareid');
+    this.compareIdDetail = this.activeRoute.snapshot.paramMap.get('comparedetailid');
+    this.indictmentID = this.activeRoute.snapshot.paramMap.get('compareid'); // shoud it differren
+
     // set show button
+    this.navServiceSub = this.navService.onCancel.subscribe(status => {
+      if (status) {
+        this.navService.setEditField(true);
+      }
+    });
+
     this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;
       if (!this.showField) {
@@ -190,6 +105,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.navServiceSub = this.navService.onSendIncome.subscribe(status => {
+      console.log(status);
+      if (status) {
+        this.sentInCome();
+      }
+    });
 
     // this.getDataFromListPage = this.activeRoute.params
     //   .subscribe(params => {
@@ -206,9 +127,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     //     }
     //   });
 
-    this.getAdjustArrestgetByCon(this.activeRoute.snapshot.paramMap.get('compareid'));
-    this.getAdjustFinegetByCon(this.activeRoute.snapshot.paramMap.get('compareid'),
-    this.activeRoute.snapshot.paramMap.get('comparedetailid'));
+    this.getAdjustArrestgetByCon(this.compareID);
+    this.getAdjustFinegetByCon(this.compareID, this.compareIdDetail);
+    this.getAdjustReceiptgetByCompareDetailId(this.compareIdDetail);
+    this.getAdjustDetailgetByCompareDetailId(this.compareIdDetail);
+    this.getMasDocumentMaingetAll(this.compareID);
+    this.getAdjustFinecheckComplete(this.compareIdDetail);
   }
 
   // เตรียมข้อมูลรายละเอียดคดีจาก
@@ -217,13 +141,14 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.apiService.post('/XCS60/AdjustArrestgetByCon', {CompareID: CompareID})
         .subscribe(response => {
           if (response.length > 0) {
-            Object.assign(this.detailData, response[0]);
+            Object.assign(this.adjustArrest, response[0]);
           }
         }, error => console.log(error))
   }
 
   // ดึงข้อมูลการปรับเพิ่มหรือปรับลด
   public getAdjustFinegetByCon(CompareID: any = null, CompareDetailID: any = null) {
+    console.log(CompareID, CompareDetailID);
     if (CompareID == null || CompareDetailID == null) { return }
     this.apiService.post('/XCS60/AdjustFinegetByCon', {
       CompareID: CompareID,
@@ -231,7 +156,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     })
     .subscribe(response => {
       if (response.length > 0) {
-        this.reductionDataTable = response;
+        this.adjustFine = response;
       }
     }, error => {
       console.log(error);
@@ -246,6 +171,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     })
     .subscribe(response => {
       console.log(response);
+      this.adjustReceipt = response;
     }, error => {
       console.log(error);
     });
@@ -257,6 +183,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.apiService.post('/XCS60/AdjustDetailgetByCompareDetailId', { CompareDetailID: CompareDetailID})
         .subscribe(response => {
           console.log(response);
+          this.adjustDetail = response;
         }, error => {
           console.log(error);
         });
@@ -302,9 +229,16 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  public sentInCome(): void {
+    this.router.navigate(['/income/manage', 'R', this.compareID]);
+  }
+
   ngOnDestroy() {
     // this.getDataFromListPage.unsubscribe();
     this.navServiceSub.unsubscribe();
+
+    // hind ส่งรายได้
+    this.navService.setSendIncomeButton(false);
   }
 
 }

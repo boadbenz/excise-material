@@ -49,6 +49,7 @@ export class ListComponent implements OnInit {
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
+    this.navService.setNewButton(false);
 
     this.allPageCount = this.listData.length / this.numberPage;
     this.numberSelectPage = Array(Math.ceil(this.allPageCount)).fill(0).map((x, i) => i + 1);
