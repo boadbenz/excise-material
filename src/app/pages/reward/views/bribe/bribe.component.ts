@@ -921,18 +921,23 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
 
   private buttonCancel() {
     // if (confirm('ยืนยันการทำรายการหรือไม่')) {
-    switch (this.mode) {
-      case 'C':
-        this.router.navigate([
-          '/reward/manage/',
-          localStorage.getItem('IndictmentID'),
-          localStorage.getItem('ArrestCode'),
-        ]);
-        break;
-      case 'R':
-        this.pageLoad();
-        break;
-    }
+    this.router.navigate([
+      '/reward/manage/',
+      localStorage.getItem('IndictmentID'),
+      localStorage.getItem('ArrestCode'),
+    ]);
+    // switch (this.mode) {
+    //   case 'C':
+    //     this.router.navigate([
+    //       '/reward/manage/',
+    //       localStorage.getItem('IndictmentID'),
+    //       localStorage.getItem('ArrestCode'),
+    //     ]);
+    //     break;
+    //   case 'R':
+    //     this.pageLoad();
+    //     break;
+    // }
     // } else {
     // }
   }
