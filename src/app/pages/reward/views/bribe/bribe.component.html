@@ -16,12 +16,12 @@
     </div>
     <div *ngIf="ILG60_08_03_00_00_E08_EXPANDED" class="card-body">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-sm-12 col-md-12 col-lg-6 ">
           <div class="form-group row">
             <input type="hidden" formControlName="CommandDetailID" />
-            <label class="col-form-label col-md-4">เลขที่ใบแจ้งความนำจับ :
+            <label class="col-form-label col-sm-3 col-md-4">เลขที่ใบแจ้งความนำจับ :
             </label>
-            <div class="col-md-8">
+            <div class="col-sm-9 col-md-8">
               <select formControlName="CommandDetailID" class="form-control form-control-sm"
                 (change)="selectChange($event)" [attr.disabled]="
                   mode === 'R' && isEdit === false ? 'disabled' : null
@@ -33,10 +33,10 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-sm-12 col-md-12 col-lg-6 ">
           <div class="form-group row">
-            <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
-            <div class="col-md-8">
+            <label class="col-form-label col-sm-3 col-md-4">เลขที่คำร้องขอ : </label>
+            <div class="col-sm-9 col-md-8">
               <input class="form-control form-control-sm" type="text" formControlName="RequestBribeCode"
                 [attr.disabled]="'disabled'" />
             </div>
@@ -44,10 +44,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-sm-12 col-md-12 col-lg-6 ">
           <div class="form-group row">
-            <label class="col-form-label col-md-4">เขียนที่ : </label>
-            <div class="col-md-8">
+            <label class="col-form-label col-sm-3 col-md-4">เขียนที่ : </label>
+            <div class="col-sm-9 col-md-8">
               <input class="form-control form-control-sm" type="text" formControlName="Station"
                 [ngbTypeahead]="searchStation" [attr.disabled]="
                   mode === 'R' && isEdit === false ? 'disabled' : null
@@ -55,19 +55,19 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-sm-12 col-md-12 col-lg-6">
           <div class="form-group row">
-            <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
-            <div class="col-sm-8 ">
+            <label class="col-form-label col-sm-3 col-md-4">วันที่จัดทำ : </label>
+            <div class="col-sm-9 col-md-8 ">
 
               <div class="form-group form-line input-group input-group-sm">
-                <div style="width:45%">
+                <div style="width:100%">
                   <my-date-picker formControlName="RequestDate" placeholder="" locale="th"
                     [options]="myDatePickerOptions" [disabled]="mode === 'R' && isEdit === false"></my-date-picker>
                 </div>
 
-                <label class="text-center" style="white-space: nowrap">เวลา</label>
-                <div style="width:45%">
+                <label class="text-center" style="white-space: nowrap;">&nbsp;เวลา&nbsp;</label>
+                <div style="width:100%">
                   <input style="width:100%;" class="form-control form-control-sm" type="text"
                     formControlName="RequestTime" [attr.disabled]="
                   mode === 'R' && isEdit === false ? 'disabled' : null
@@ -191,10 +191,10 @@
     <div *ngIf="ILG60_08_03_00_00_E12_EXPANDED" class="card-body">
       <ng-container>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12 col-lg-6 ">
             <div class="form-group row">
-              <label class="col-form-label col-md-4">เขียนที่ : </label>
-              <div class="col-md-8">
+              <label class="col-form-label col-sm-3 col-md-4">เขียนที่ : </label>
+              <div class="col-sm-9 col-md-8">
                 <input class="form-control form-control-sm" type="text" formControlName="StationOfPOA"
                   [ngbTypeahead]="searchStationOfPOA" [attr.disabled]="
                   mode === 'R' && isEdit === false ? 'disabled' : null
@@ -202,18 +202,18 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-12 col-lg-6 ">
             <div class="form-group row">
-              <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
+              <label class="col-form-label col-sm-3 col-md-4">วันที่จัดทำ : </label>
               <div class="col-sm-8 ">
 
                 <div class="form-line input-group input-group-sm">
-                  <div style="width:45%">
+                  <div style="width:100%">
                     <my-date-picker formControlName="POADate" placeholder="" locale="th"
                       [options]="myDatePickerOptions" [disabled]="mode === 'R' && isEdit === false"></my-date-picker>
                   </div>
-                  <label class="text-center">เวลา</label>
-                  <div style="width:45%">
+                  <label class="text-center">&nbsp;เวลา&nbsp;</label>
+                  <div style="width:100%">
                     <input style="width:100%" class="form-control form-control-sm" type="text" formControlName="POATime"
                       [attr.disabled]="
                   mode === 'R' && isEdit === false ? 'disabled' : null
@@ -223,10 +223,10 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-12 col-md-12 col-lg-6 ">
             <div class="form-group row">
-              <label class="col-form-label col-md-4">ผู้รับมอบอำนาจ : </label>
-              <div class="col-md-8">
+              <label class="col-form-label col-sm-3 col-md-4">ผู้รับมอบอำนาจ : </label>
+              <div class="col-sm-9 col-md-8">
                 <input class="form-control form-control-sm" formControlName="StaffName"
                   [ngbTypeahead]="searchStaffMainName" [attr.disabled]="
                   mode === 'R' && isEdit === false ? 'disabled' : null
@@ -234,19 +234,19 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-12 col-md-12 col-lg-6 ">
             <div class="form-group row">
-              <label class="col-form-label col-md-4">ตำแหน่ง : </label>
-              <div class="col-md-8">
+              <label class="col-form-label col-sm-3 col-md-4">ตำแหน่ง : </label>
+              <div class="col-sm-9 col-md-8">
                 <input class="form-control form-control-sm" formControlName="PositionName" [attr.readonly]="true" />
               </div>
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-sm-12 col-md-12 col-lg-6 ">
             <div class="form-group row">
-              <label class="col-form-label col-md-4">หน่วยงาน : </label>
-              <div class="col-md-8">
+              <label class="col-form-label col-sm-3 col-md-4">หน่วยงาน : </label>
+              <div class="col-sm-9 col-md-8">
                 <input class="form-control form-control-sm" formControlName="OfficeName" [attr.readonly]="true" />
               </div>
             </div>

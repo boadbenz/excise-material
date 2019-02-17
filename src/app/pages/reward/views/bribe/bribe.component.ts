@@ -35,7 +35,7 @@ import { MasDocumentModel } from 'app/models/mas-document.model';
 import { MasStaffModel } from 'app/models';
 import { MasOfficeModel } from 'app/models/mas-office.model';
 import { RequestPaymentFineDetailService } from '../../services/RequestPaymentFineDetail.service';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { IFormChange } from '../../interfaces/FormChange';
 import { RequestBribeDetailService } from '../../services/RequestBribeDetail.service';
 import { PrintDialogComponent } from '../../shared/print-dialog/print-dialog.component';
@@ -168,7 +168,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       RequestBribeID: [null],
       RequestBribeRewardID: [null],
       RequestBribeCode: [null],
-      CommandDetailID: [null],
+      CommandDetailID: [null, Validators.required],
       RequestDate: [this.setDateNow, Validators.required],
       RequestTime: [this.setTimeNow],
       StationCode: [''],
@@ -366,7 +366,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.11');
+    this.sidebarService.setVersion('0.0.1.12');
 
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
@@ -607,6 +607,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         swal('', 'ต้องมีรายการในส่วนรายละเอียดคำร้องขอรับเงินสินบนอย่างน้อย 1 รายการที่ CheckBox.Check =  True',
           'warning'
         );
+
       } else {
         // 2
         switch (this.mode) {
@@ -905,6 +906,16 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       }
     } else {
       swal('', 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน', 'warning');
+
+      // show invalid input
+      const controls = this.BribeFormGroup.controls;
+      for (const key in controls) {
+        if (controls.hasOwnProperty(key)) {
+          this.BribeFormGroup.get(key).markAsTouched();
+
+        }
+      }
+
     }
   }
 
@@ -912,6 +923,11 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     // if (confirm('ยืนยันการทำรายการหรือไม่')) {
     switch (this.mode) {
       case 'C':
+        this.router.navigate([
+          '/reward/manage/',
+          localStorage.getItem('IndictmentID'),
+          localStorage.getItem('ArrestCode'),
+        ]);
         break;
       case 'R':
         this.pageLoad();
@@ -994,7 +1010,12 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       // 1.1.2(1)
       // 1.1.2(1.1)
       swal('', 'ลบข้อมูลสำเร็จ', 'success');
-      this._location.back();
+      this.router.navigate([
+        '/reward/manage/',
+        localStorage.getItem('IndictmentID'),
+        localStorage.getItem('ArrestCode'),
+      ]);
+      // this._location.back();
       // 1.1.2(1.2) 'WAIT'
     } else {
       // 1.1.2(2)
@@ -1009,11 +1030,12 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   private buttonPrevPage() {
     // : ILG60-08-03-00-00-E07 (ปุ่ม “กลับ >>”)
     // 1 START
-    this._location.back();
-    // this.router.navigate([
-    //   '/reward/manage/B',
-    //   this.RequestBribeRewardID$.getValue()
-    // ]);
+    // this._location.back();
+    this.router.navigate([
+      '/reward/manage/',
+      localStorage.getItem('IndictmentID'),
+      localStorage.getItem('ArrestCode'),
+    ]);
     // 2 END
   }
 
