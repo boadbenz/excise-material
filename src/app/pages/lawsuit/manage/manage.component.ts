@@ -461,8 +461,10 @@ export class ManageComponent implements OnInit {
 
   }
   async setButtonCase() {
-    this.preLoaderService.setShowPreloader(true);
     await this.ngOnInit();
+    this.preLoaderService.setShowPreloader(true);
+    await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
+    this.preLoaderService.setShowPreloader(false);
     this.showEditField = false;
     this.navService.setEditField(true);
     this.navService.setEditButton(true);
@@ -480,8 +482,10 @@ export class ManageComponent implements OnInit {
   }
 
   async setButtonCaseIslaw() {
-    this.preLoaderService.setShowPreloader(true);
     await this.ngOnInit();
+    this.preLoaderService.setShowPreloader(true);
+    await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
+    this.preLoaderService.setShowPreloader(false);
     this.showEditField = false;
     this.navService.setEditField(true);
     this.navService.setEditButton(true);
@@ -1094,7 +1098,6 @@ export class ManageComponent implements OnInit {
                 'IsProve': IsProve,
                 'IsLawsuitComplete': IsLawsuitComplete,
               };
-
               if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].EntityType == 1) {
                 a.EntityType = 'บุคคลธรรมดา';
               } else if (item.LawsuitArrestLawbreaker[0] && item.LawsuitArrestLawbreaker[0].EntityType == 2) {
@@ -1116,7 +1119,6 @@ export class ManageComponent implements OnInit {
                   a.LawsuitNoRef = item.LawsuitArrestLawbreaker[0].CompanyRegistrationNo;
                 }
               }
-
               arrList.push(a)
             }
           });
@@ -1197,7 +1199,6 @@ export class ManageComponent implements OnInit {
               arrList.push(a)
             }
           });
-
           await this.oninitFullname(localStorage)
           this.lawsuitForm.controls['AccuserTestimony'].setValue(
             "วันนี้ เวลา " + this.lawsuitForm.controls['LawsuitTime'].value + " ข้าฯ พร้อมด้วยพวกได้ดำเนินการจับกุม" +
