@@ -387,8 +387,9 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
           .MasStaffMaingetAll()
           .toPromise()).map(m => ({
             ...m,
-            FullName: m.TitleName || '' + m.FirstName || '' + ' ' + m.LastName || ''
+            FullName: `${m.TitleName || ''}${m.FirstName || ''} ${m.LastName || ''}`
           })); // 1.1.1
+          
         this.MasOfficeMainAllList = await this.masOfficeService
           .MasOfficeMaingetAll()
           .toPromise(); // 1.1.2
