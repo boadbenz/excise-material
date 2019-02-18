@@ -65,6 +65,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(param => {
       this.IndictmentID$.next(param['IndictmentID']);
       this.ArrestCode$.next(param['ArrestCode']);
+      localStorage.setItem('IndictmentID', param['IndictmentID']);
+      localStorage.setItem('ArrestCode', param['ArrestCode']);
     });
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
