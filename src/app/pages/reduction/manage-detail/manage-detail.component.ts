@@ -64,7 +64,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     private readonly apiService: ReductionApiService
   ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
 
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
@@ -111,21 +111,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         this.sentInCome();
       }
     });
-
-    // this.getDataFromListPage = this.activeRoute.params
-    //   .subscribe(params => {
-    //     // check id from manage view page
-    //     for (let i = 0; i < this.listData.length; i++) {
-    //       if (params.code === this.listData[i].arrestCode) {
-    //         this.detailData = this.listData[i];
-    //         this.fullName =
-    //           this.listData[i].titleName +
-    //           this.listData[i].firstName +
-    //           ' ' +
-    //           this.listData[i].lastName;
-    //       }
-    //     }
-    //   });
 
     this.getAdjustArrestgetByCon(this.compareID);
     this.getAdjustFinegetByCon(this.compareID, this.compareIdDetail);
@@ -214,15 +199,15 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     })
   }
 
-  viewData() {
+  public viewData() {
     this.viewMode = true;
   }
 
-  editData() {
+  public editData() {
     this.viewMode = false;
   }
 
-  attachFile(file) {
+  public attachFile(file) {
     this.fileItem.push({
       fileName: file[0].name,
       filePath: ''
@@ -233,12 +218,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/income/manage', 'R', this.compareID]);
   }
 
-  ngOnDestroy() {
-    // this.getDataFromListPage.unsubscribe();
-    this.navServiceSub.unsubscribe();
-
+  public ngOnDestroy() {
     // hind ส่งรายได้
     this.navService.setSendIncomeButton(false);
+    // hide ปุ่มลบ
+    this.navService.setDeleteButton(false);
+
+    this.navServiceSub.unsubscribe();
   }
 
 }

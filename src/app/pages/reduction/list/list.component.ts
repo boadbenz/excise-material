@@ -113,12 +113,12 @@ export class ListComponent implements OnInit {
                   + this.autoZero(this.lawsuitDateEnd.date.day)  + ' 00:00:00';
 
     if (Date.parse(date_from) > Date.parse(date_to)) {
-      swal('วันที่เปลียบเทียบคดีไม่ถูกต้อง', 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สุดท้าย', 'error');
+      swal('', 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สุดท้าย', 'warning');
       return;
     }
 
     if (Date.now() < Date.parse(date_to)) {
-      swal('วันที่เปลียบเทียบคดีไม่ถูกต้อง', 'วันที่สุดท้ายต้องไม่มากกว่าวันที่ปัจจุบัน', 'error');
+      swal('', 'วันที่สุดท้ายต้องไม่มากกว่าวันที่ปัจจุบัน', 'warning');
       return;
     }
 
@@ -145,7 +145,13 @@ export class ListComponent implements OnInit {
     } else {
       this.listData = [];
       // this.ShowAlertNoRecord();
-      swal('ไม่พบข้อมูล', 'error')
+      // swal('ไม่พบข้อมูล', 'error')
+      swal({
+        title: '',
+        text: 'ไม่พบข้อมูล',
+        type: 'warning',
+        confirmButtonText : 'ตกลง'
+      });
     }
 
     this.preloaderService.setShowPreloader(false);
@@ -155,7 +161,13 @@ export class ListComponent implements OnInit {
     console.log(error);
     this.listData = [];
     // this.ShowAlertGetDataError();
-    swal('ไม่พบข้อมูล', 'error')
+    // swal('ไม่พบข้อมูล', 'error')
+    swal({
+      title: '',
+      text: 'ไม่พบข้อมูล',
+      type: 'warning',
+      confirmButtonText : 'ตกลง'
+    });
     this.preloaderService.setShowPreloader(false);
   }
 
