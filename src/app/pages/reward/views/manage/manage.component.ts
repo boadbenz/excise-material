@@ -41,6 +41,7 @@ import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import swal from 'sweetalert2';
+import { FormGroup, FormBuilder, FormControl, FormArray, FormGroupName } from '@angular/forms';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -770,6 +771,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
+      console.log("RequestBribe : ",RequestBribe)
 
     // 1.2
     const RequestReward: IRequestReward[] = await this.requestRewardService
@@ -777,15 +779,16 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
+      console.log("RequestReward  : ",RequestReward)
 
     const printDocRequestBribe: any[] = RequestBribe.map(m => ({
       DocName: `${m.RequestBribeCode || ''}: คำร้องขอรับเงินสินบน`,
-      DocType: 'แบบฟอร์ม'
+      DocType: 'แบบฟอร์ม', RequestBribeID:`${m.RequestBribeID}`, checked: false, TypeName: "RB"
     }));
 
     const printDocRequestReward: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode || ''}: คำร้องขอรับเงินรางวัล`,
-      DocType: 'แบบฟอร์ม'
+      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RR"
     }));
     const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
 

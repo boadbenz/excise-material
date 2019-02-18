@@ -13,6 +13,7 @@ import { NgbModalRef, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder, FormControl, FormArray, FormGroupName } from '@angular/forms';
 import { PreloaderService } from "../../../../shared/preloader/preloader.component";
 import { RewardService } from '../../reward.service';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-print-dialog',
@@ -20,11 +21,13 @@ import { RewardService } from '../../reward.service';
   styleUrls: ['./print-dialog.component.scss'],
 })
 export class PrintDialogComponent extends CONFIG implements OnInit {
+
+
   printDoc: any[]
   sort = 'asc';
   public data: any
-  // isCheck = ''
-  // printDoc = [];
+  isCheck = ''
+  // PrintDoc = [];
   // printDocData = [];
 
   constructor(
@@ -38,13 +41,17 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
 
-  // FG: FormGroup;
-  // get PrintDoc(): FormArray {
-  //   return this.FG.get('PrintDoc') as FormArray;
-  // }
+  FG: FormGroup;
+  get PrintDoc(): FormArray {
+    return this.FG.get('PrintDoc') as FormArray;
+  }
   async ngOnInit() {
-
+    // this.FG = this.fb.group({
+    //   PrintDoc: this.printDoc
+    // })
     this.printDoc = this.data;
+
+
     // console.log(" printDoc : ",this.printDoc1)
 
 
@@ -80,9 +87,52 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
       return -1; // asc
     });
   }
+  isChecked = true;
+  afterChk = [];
+  onSelect(index) {
+    console.log("onChange")
+  if(this.printDoc[index].checked == true){
+    console.log("inTrue")
+    this.printDoc[index].checked = false;
+  }
+  if(this.printDoc[index].checked == false){
+    this.printDoc[index].checked = true;
+  }
 
-  async onPrint(f: any) { 
-    console.log(f);
+    // this.printDoc[index].checked = this.isChecked;
+    console.log("index : ", index)
+    console.log("onSelect : ", this.printDoc)
+  }
+
+  async onPrint(f: any) {
+    // let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
+
+    // var tempChkbox = this.FG.value.printDoc
+    // for (var i = 0; i < tempChkbox.length; i++) {
+    //   if (tempChkbox[i].IsChecked == true) {
+    //     this.printDoc[i].checked = true
+    //   }
+    // }
+
+    // this.FG = this.fb.group({
+    //   PrintDoc: this.printDoc
+    // })
+
+    // console.log("this.afterChk : ", this.afterChk);
+    console.log("this.printDoc : ", this.printDoc);
+    var afterChk = this.printDoc
+    for (var i = 0; i < this.printDoc.length; i++) {
+      if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RB') {
+        console.log("คำร้องขอรับเงินสินบน : ", this.printDoc[i].DocName)
+      }
+      if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RR') {
+        console.log("คำร้องขอรับเงินรางวัล : ", this.printDoc[i].DocName)
+      }
+    }
+
+
+    // this.printDoc.filter(x => x.checked == true )
+
     // window.open();
     // this.preLoaderService.setShowPreloader(true);
     // let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)

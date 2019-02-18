@@ -190,7 +190,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     this.apiServer.post('/XCS60/MasDocumentMaingetAll', {DocumentType: 10, ReferenceCode: compareID})
         .subscribe(response => response.length > 0
                   ? this.documentMailgetAll = response
-                  : this.documentMailgetAll = [{DocumentName: 'tees', DocumentType: 'data'}]
+                  : this.documentMailgetAll = [{DocumentName: 'NonDoc', DocumentType: 'data'}]
                   , error => console.log(error));
   }
 

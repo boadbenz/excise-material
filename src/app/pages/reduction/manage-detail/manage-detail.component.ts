@@ -166,7 +166,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   // ดึงข้อมูลในส่วนของการชำระค่าปรับ
   public getAdjustReceiptgetByCompareDetailId(CompareDetailID: any = null) {
     if (CompareDetailID == null) { return; }
-    this.apiService.post('/XCS60/AdjustReceiptgetByCompareDetailId', {
+    this.apiService.post('/XCS60/AdjustReceiptgetByCompareDetailID', {
       CompareDetailID: CompareDetailID
     })
     .subscribe(response => {
@@ -180,7 +180,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   // ดึงข้อมูลการจออนุมัติเปรียบเทียบคดีและแบบอนุ
   public getAdjustDetailgetByCompareDetailId(CompareDetailID: any = null) {
     if (CompareDetailID == null ) { return; }
-    this.apiService.post('/XCS60/AdjustDetailgetByCompareDetailId', { CompareDetailID: CompareDetailID})
+    this.apiService.post('/XCS60/AdjustDetailgetByCompareDetailID', { CompareDetailID: CompareDetailID})
         .subscribe(response => {
           console.log(response);
           this.adjustDetail = response;
