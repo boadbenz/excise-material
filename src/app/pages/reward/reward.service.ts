@@ -24,4 +24,32 @@ export class RewardService {
             .map(x => x)
 
     }
+    RewardReport09_001(RequestBribeID) {
+        const params = { RequestBribeID };
+        const url = `${appConfig.apiReport}/ILG60_00_09_001.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .map(x => x)
+
+    }
+    RewardReport09_002(RequestBribeID) {
+        const params = { RequestBribeID };
+        const url = `${appConfig.apiReport}/ILG60_00_09_002.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .map(x => x)
+
+    }
+    RewardReport09_003(RequestBribeID) {
+        const params = { RequestBribeID };
+        const url = `${appConfig.apiReport}/ILG60_00_09_003.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .map(x => x)
+
+    }
+    RewardReport09_004(RequestBribeID) {
+        const params = { RequestBribeID };
+        const url = `${appConfig.apiReport}/ILG60_00_09_004.aspx`;
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .map(x => x)
+
+    }
 }

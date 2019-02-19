@@ -1224,17 +1224,34 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       })
       .toPromise();
 
-    const printDoc: any[] = RequestReward.map(m => ({
+    const printDoc1: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode}: คำร้องขอรับเงินรางวัล`,
       DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RR"
     }));
 
-    printDoc.concat(
+    printDoc1.concat(
       MasDocument.map(m => ({
         DocName: `${m.DocumentName}`,
         DocType: 'เอกสารแนบภายใน'
       }))
     );
+    const printDoc2: any[] = RequestReward.map(m => ({
+      DocName: `คำร้องขอรับเงินรางวัลกรณีคดีถึงที่สุด โดยการเปรียบเทียบคดี รว. 4`,
+      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RV4"
+    }));
+    const printDoc3: any[] = RequestReward.map(m => ({
+      DocName: `คำร้องขอรับเงินรางวัลกรณีคดีถึงที่สุด โดยการพิพากษา รว. 5 `,
+      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RV5"
+    }));
+    const printDoc4: any[] = RequestReward.map(m => ({
+      DocName: `รายงานการจับกุมดำเนินคดีของเจ้าพนักงาน (รว.7)`,
+      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RV7"
+    }));
+    const printDoc5: any[] = RequestReward.map(m => ({
+      DocName: ` แบบฟอร์มตารางการแบ่งจ่ายเงินสินบนรางวัล รว.8`,
+      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RV8"
+    }));
+    const printDoc = [...printDoc1, ...printDoc2,...printDoc3, ...printDoc4, ...printDoc5];
 
     const dialogRef = this.dialog.open(PrintDialogComponent, {
       backdrop: 'static'

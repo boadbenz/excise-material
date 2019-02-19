@@ -771,7 +771,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
-      console.log("RequestBribe : ",RequestBribe)
+      // console.log("RequestBribe : ",RequestBribe)
 
     // 1.2
     const RequestReward: IRequestReward[] = await this.requestRewardService
@@ -779,7 +779,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
-      console.log("RequestReward  : ",RequestReward)
+      // console.log("RequestReward  : ",RequestReward)
 
     const printDocRequestBribe: any[] = RequestBribe.map(m => ({
       DocName: `${m.RequestBribeCode || ''}: คำร้องขอรับเงินสินบน`,

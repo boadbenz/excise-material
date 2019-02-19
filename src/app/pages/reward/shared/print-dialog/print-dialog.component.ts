@@ -86,6 +86,7 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
   afterChk = [];
 
   onSelect(index) {
+    console.log("onSelect")
     if (this.printDoc[index].checked == false) {
       this.printDoc[index].checked = true;
     } else if (this.printDoc[index].checked == true) {
@@ -94,6 +95,7 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
   }
 
   async onPrint(f: any) {
+    console.log("onPrint")
     // let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
 
     // var tempChkbox = this.FG.value.printDoc
@@ -107,16 +109,55 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
     //   PrintDoc: this.printDoc
     // })
 
-   
+
     for (var i = 0; i < this.printDoc.length; i++) {
       if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RB') {
-        console.log("คำร้องขอรับเงินสินบน : ", this.printDoc[i].DocName,"RequestBribeID : ",this.printDoc[i].RequestBribeID)
+        this.rewardService.RewardReport08_001(this.printDoc[i].RequestBribeID).subscribe(x => {
+          const file = new Blob([x], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+          this.preLoaderService.setShowPreloader(false);
+        })
+        // console.log("คำร้องขอรับเงินสินบน : ", this.printDoc[i].DocName, "RequestBribeID : ", this.printDoc[i].RequestBribeID)
       }
       if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RR') {
-        console.log("คำร้องขอรับเงินรางวัล : ", this.printDoc[i].DocName,"RequestRewardID : ",this.printDoc[i].RequestRewardID)
+        console.log("คำร้องขอรับเงินรางวัล : ", this.printDoc[i].DocName, "RequestRewardID : ", this.printDoc[i].RequestRewardID)
       }
-    }
-
+      if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RV4') {
+        console.log("RV4 : ", this.printDoc[i].DocName, "RequestBribeID : ", this.printDoc[i].RequestBribeID)
+        this.rewardService.RewardReport09_001(this.printDoc[i].RequestBribeID).subscribe(x => {
+          const file = new Blob([x], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+          this.preLoaderService.setShowPreloader(false);
+        })
+      }
+        if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RV5') {
+          this.rewardService.RewardReport09_002(this.printDoc[i].RequestBribeID).subscribe(x => {
+            const file = new Blob([x], { type: 'application/pdf' });
+            const fileURL = URL.createObjectURL(file);
+            window.open(fileURL);
+            this.preLoaderService.setShowPreloader(false);
+          })
+        }
+        if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RV7') {
+          this.rewardService.RewardReport09_003(this.printDoc[i].RequestBribeID).subscribe(x => {
+            const file = new Blob([x], { type: 'application/pdf' });
+            const fileURL = URL.createObjectURL(file);
+            window.open(fileURL);
+            this.preLoaderService.setShowPreloader(false);
+          })
+        }
+        if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RV8') {
+          this.rewardService.RewardReport09_004(this.printDoc[i].RequestBribeID).subscribe(x => {
+            const file = new Blob([x], { type: 'application/pdf' });
+            const fileURL = URL.createObjectURL(file);
+            window.open(fileURL);
+            this.preLoaderService.setShowPreloader(false);
+          })
+        }
+      }
+    
 
     // window.open();
     // this.preLoaderService.setShowPreloader(true);
