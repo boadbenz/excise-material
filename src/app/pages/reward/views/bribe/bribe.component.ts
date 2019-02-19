@@ -366,7 +366,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.12');
+    this.sidebarService.setVersion('0.0.1.13');
 
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
@@ -387,8 +387,9 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
           .MasStaffMaingetAll()
           .toPromise()).map(m => ({
             ...m,
-            FullName: m.TitleName || '' + m.FirstName || '' + ' ' + m.LastName || ''
+            FullName: `${m.TitleName || ''}${m.FirstName || ''} ${m.LastName || ''}`
           })); // 1.1.1
+
         this.MasOfficeMainAllList = await this.masOfficeService
           .MasOfficeMaingetAll()
           .toPromise(); // 1.1.2
@@ -713,8 +714,11 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
                     mapDetail[key] = f[key] || '';
                   }
                 }
+
+
                 mapDetailForSave.push(mapDetail);
               });
+            // console.log('map', this.RequestBribeDetail.value);
             mapForSave['RequestBribeDetail'] = mapDetailForSave;
 
             const mapStaffForSave: any[] = [];
@@ -750,6 +754,8 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
             this.RequestBribeID$.next(requestBribe.RequestBribeID);
             // 2.1.4
             mapDetailForSave.forEach(async PaymentFineDetailID => {
+              // console.log('PaymentFineDetailID', PaymentFineDetailID);
+
               await this.requestPaymentFineDetailService
                 .RequestPaymentFineDetailupdByCon({
                   PaymentFineDetailID: PaymentFineDetailID.PaymentFineDetailID
@@ -1095,12 +1101,12 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     );
   }
   public StaffMainNameChange($event) {
-    console.log('$event', $event);
+    // console.log('$event', $event);
     const mapStaff = this.MasStaffMaingetAllList.filter(
       f => f.FullName === $event.target.value
     ).shift();
 
-    console.log('BeforemapStaff', mapStaff);
+    // console.log('BeforemapStaff', mapStaff);
     const newMap = this.StaffFormGroup.value;
     for (const key in this.StaffFormGroup.value) {
       if (this.StaffFormGroup.value.hasOwnProperty(key)) {
@@ -1109,7 +1115,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         this.StaffFormGroup.get(key).patchValue(newMap[key]);
       }
     }
-    console.log('AftermapStaff', newMap);
+    // console.log('AftermapStaff', newMap);
 
     this.PositionName = mapStaff.PositionName;
     this.OfficeName = mapStaff.OfficeName;
@@ -1122,8 +1128,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         NoticeCode: this.RequestCommand_NoticeCode_list.filter(
           f => Number(f.value) === Number(CommandDetailID)
         )
-          .map(m => m.value2)
-          .shift()
+          .map(m => m.value2)[0]
       })
       .toPromise();
 
@@ -1133,6 +1138,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
 
         const newMap = {
           check: [true],
+          PaymentFineDetailID: [f.PaymentFineDetailID],
           // tslint:disable-next-line:max-line-length
           LawbreakerName: [
             `${f.LawbreakerTitleName || ''}${f.LawbreakerFirstName ||
@@ -1169,10 +1175,10 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       case 'ILG60-08-03-00-00-E08':
         this.ILG60_08_03_00_00_E08_FORM_VALID = FormData.valid;
         const dataE08 = FormData.value;
-        console.log(
-          'ILG60-08-03-00-00-E08',
-          this.ILG60_08_03_00_00_E08_FORM_DATA
-        );
+        // console.log(
+        //   'ILG60-08-03-00-00-E08',
+        //   this.ILG60_08_03_00_00_E08_FORM_DATA
+        // );
         const newDataE08 = RequestBribeinsAllModel;
         Object.keys(RequestBribeinsAllModel).forEach(f => {
           newDataE08[f] = dataE08[f] || '';

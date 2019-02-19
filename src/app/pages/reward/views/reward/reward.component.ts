@@ -59,6 +59,7 @@ import swal from 'sweetalert2';
 export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   public ILG60_08_04_00_00_E12_DATA: IRewardBinding[] = [];
   public listData: any[] = [];
+  public DataSelect: any[] = [];
   public RewardFormGroup: FormGroup;
   public MasOfficeMainList: any[];
   public checkList: boolean[];
@@ -347,7 +348,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.13');
+    this.sidebarService.setVersion('0.0.1.14');
     this.pageLoad();
   }
   public changeFullName(text, index) {
@@ -522,17 +523,17 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   public checkboxCal() {
     // this.aggregate.BribeMoney.sum =
     this.aggregate.BribeMoney.sum = Number(
-      this.listData
+      this.DataSelect
         .map((m, index) => (this.checkList[index] ? m.BribeMoney : 0))
         .reduce((a, b) => (a += b))
     );
     this.aggregate.PaymentFine.sum = Number(
-      this.listData
+      this.DataSelect
         .map((m, index) => (this.checkList[index] ? m.PaymentFine : 0))
         .reduce((a, b) => (a += b))
     );
     this.aggregate.RewardMoney.sum = Number(
-      this.listData
+      this.DataSelect
         .map((m, index) => (this.checkList[index] ? m.RewardMoney : 0))
         .reduce((a, b) => (a += b))
     );
@@ -616,28 +617,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             BribeMoney: `${m.PaymentFine * 0.2 || 0}`,
             RewardMoney: `${m.PaymentFine * 0.2 || 0}`
           }));
-          // this.listData = mapData;
-          this.checkList = mapData.map(m => true);
-          this.aggregate.BribeMoney.sum = Number(
-            mapData.map(m => m.BribeMoney).reduce((a, b) => (a += b))
-          );
-          this.aggregate.PaymentFine.sum = Number(
-            mapData.map(m => m.PaymentFine).reduce((a, b) => (a += b))
-          );
-          this.aggregate.RewardMoney.sum = Number(
-            mapData.map(m => m.RewardMoney).reduce((a, b) => (a += b))
-          );
-          mapData.forEach(f => {
-            const data = {
-              RequestRewardDetailID: '',
-              RequestRewardID: '',
-              PaymentFineID: `${f.PaymentFineID || ''}`,
-              IsActive: '1'
-            };
-            this.RequestRewardDetail.push(this.fb.group(data));
-          });
-          // this.checkAll = this.checkChecked(this.checkList);
-          this.checkboxCal();
+          this.listData = mapData;
+
         }
 
         // this.ILG60_08_04_00_00_E08_DATA$.next({
@@ -793,10 +774,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               }
               break;
             case 1:
-            newMapName = {
-              text: `${dataRequestReward.ReferenceNo}`,
-              value: dataRequestReward.ReferenceNo
-            }
+              newMapName = {
+                text: `${dataRequestReward.ReferenceNo}`,
+                value: dataRequestReward.ReferenceNo
+              }
               break;
           }
           this.ReferenceNoList.push(newMapName);
@@ -812,16 +793,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             RewardMoney: `${m.PaymentFine * 0.2 || 0}`
           }));
           this.listData = mapData;
-          this.checkList = mapData.map(m => true);
-          this.aggregate.BribeMoney.sum = Number(
-            mapData.map(m => m.BribeMoney).reduce((a, b) => (a += b))
-          );
-          this.aggregate.PaymentFine.sum = Number(
-            mapData.map(m => m.PaymentFine).reduce((a, b) => (a += b))
-          );
-          this.aggregate.RewardMoney.sum = Number(
-            mapData.map(m => m.RewardMoney).reduce((a, b) => (a += b))
-          );
+
           const datatable_RequestReward = dataRequestReward.RequestRewardStaff.map(
             m => ({
               ...m,
@@ -1200,6 +1172,33 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     } else {
       swal('', 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน', 'warning');
     }
+  }
+  public selectChange(event) {
+    const ReferenceNo = event.target.value;
+    // console.log('event', ReferenceNo);
+
+    this.DataSelect = this.listData;
+    this.checkList = this.DataSelect.map(m => true);
+    this.aggregate.BribeMoney.sum = Number(
+      this.DataSelect.map(m => m.BribeMoney).reduce((a, b) => (a += b))
+    );
+    this.aggregate.PaymentFine.sum = Number(
+      this.DataSelect.map(m => m.PaymentFine).reduce((a, b) => (a += b))
+    );
+    this.aggregate.RewardMoney.sum = Number(
+      this.DataSelect.map(m => m.RewardMoney).reduce((a, b) => (a += b))
+    );
+    this.DataSelect.forEach(f => {
+      const data = {
+        RequestRewardDetailID: '',
+        RequestRewardID: '',
+        PaymentFineID: `${f.PaymentFineID || ''}`,
+        IsActive: '1'
+      };
+      this.RequestRewardDetail.push(this.fb.group(data));
+    });
+    // this.checkAll = this.checkChecked(this.checkList);
+    this.checkboxCal();
   }
   public async buttonPrint() {
     // ILG60-08-02-00-00-E05

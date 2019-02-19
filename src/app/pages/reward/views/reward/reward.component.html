@@ -26,7 +26,7 @@
                 <label class="col-form-label col-sm-3 col-md-4">เลขที่อ้างอิง : </label>
                 <div class="col-sm-9 col-md-8">
                   <select formControlName="ReferenceNo" class="form-control form-control-sm "
-                    [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
+                    [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null" (change)="selectChange($event)">
                     <option [value]="item.value" *ngFor="let item of ReferenceNoList">{{item.text}}</option>
                   </select>
                 </div>
@@ -132,11 +132,11 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let dataItem of listData; let i=index">
+                    <tr *ngFor="let dataItem of DataSelect; let i=index">
                       <td>
                         <input type="checkbox" [id]="'tdsec1'+i" name="ischeck" [ngModelOptions]="{standalone: true}"
                           [(ngModel)]="checkList[i]"
-                          (change)="checkboxHandle(RequestRewardDetail.at(i).get('PaymentFineID').value, i , checkList[i])"
+                          (change)="checkboxHandle(dataItem.PaymentFineID, i , checkList[i])"
                           class="filled-in chk-col-indigo"
                           [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
                         <label [for]="'tdsec1'+i" class="m-0"></label>
@@ -207,7 +207,6 @@
 
     </div>
   </div>
-
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
       <div class="card-actions">
