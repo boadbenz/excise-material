@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.41');
+    this.sidebarService.setVersion('0.0.0.42');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -386,12 +386,12 @@ export class ManageComponent implements OnInit {
     }).then(async (result) => {
       if (result.value) {
         let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
-        this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(IndictmentDetailID).then(result => {
-          if (result) {
+        this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(IndictmentDetailID).then(results => {
+          if (results) {
             if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {
               this.lawsuitService.LawsuitJudgementupdDelete(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
-              if (result['LawsuitJudgement'][0]['IsFine'] == 1) {
-                result['LawsuitJudgement'][0]['LawsuitPaymentFine'].forEach(element => {
+              if (results['LawsuitJudgement'][0]['IsFine'] == 1) {
+                results['LawsuitJudgement'][0]['LawsuitPaymentFine'].forEach(element => {
                   this.lawsuitService.LawsuitPaymentFineDetailupdDelete(element.PaymentFineID)
                 });
               }
@@ -401,6 +401,7 @@ export class ManageComponent implements OnInit {
             }
             // case 2.1.1
           } else {
+
             this.router.navigate(['/lawsuit/list']);
           }
         });
@@ -409,15 +410,11 @@ export class ManageComponent implements OnInit {
           this.navService.setSaveButton(false);
           this.navService.setEditField(true);
         } else {
-          this.navService.setEditField(true);
+          this.navService.setEditButton(false);
+          this.navService.setPrintButton(false);
+          this.navService.setDeleteButton(false);
           this.navService.setCancelButton(false);
           this.navService.setSaveButton(false);
-        }
-        let isLaw = this.lawsuitForm.controls['IsLawsuitCheck'].value ? 0 : 1;
-        if (isLaw == 0) {
-          this.setButtonCaseIslaw();
-        } else {
-          this.setButtonCase();
         }
       } else {
         return;
