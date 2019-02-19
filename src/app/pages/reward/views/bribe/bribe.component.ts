@@ -964,10 +964,14 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         DocumentType: 8
       })
       .toPromise();
+    const printDoc1: any[] = RequestBribe.map(m => ({
+        DocName:  "หนังสือมอบอำนาจ รว.10",
+        DocType: 'แบบฟอร์ม', RequestBribeID:`${m.RequestBribeID}`, checked: false, TypeName: "RB"
+      }));
 
     const printDoc: any[] = RequestBribe.map(m => ({
       DocName: `${m.RequestBribeCode}: คำร้องขอรับเงินสินบน`,
-      DocType: 'แบบฟอร์ม'
+      DocType: 'แบบฟอร์ม', RequestBribeID:`${m.RequestBribeID}`, checked: false, TypeName: "RB"
     }));
 
     printDoc.concat(
@@ -982,6 +986,12 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     });
     dialogRef.componentInstance.data = printDoc;
     dialogRef.result.then(r => { });
+
+    // const dialogRef1 = this.dialog.open(PrintDialogComponent, {
+    //   backdrop: 'static'
+    // });
+    // dialogRef1.componentInstance.data = printDoc1;
+    // dialogRef1.result.then(r => { });
     // 2 END
   }
   private async buttonEdit() {

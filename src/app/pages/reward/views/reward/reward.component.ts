@@ -1227,7 +1227,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
     const printDoc: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode}: คำร้องขอรับเงินรางวัล`,
-      DocType: 'แบบฟอร์ม'
+      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RR"
     }));
 
     printDoc.concat(

@@ -46,13 +46,8 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
     return this.FG.get('PrintDoc') as FormArray;
   }
   async ngOnInit() {
-    // this.FG = this.fb.group({
-    //   PrintDoc: this.printDoc
-    // })
+
     this.printDoc = this.data;
-
-
-    // console.log(" printDoc : ",this.printDoc1)
 
 
     // this.preLoaderService.setShowPreloader(true);
@@ -89,19 +84,13 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
   }
   isChecked = true;
   afterChk = [];
-  onSelect(index) {
-    console.log("onChange")
-  if(this.printDoc[index].checked == true){
-    console.log("inTrue")
-    this.printDoc[index].checked = false;
-  }
-  if(this.printDoc[index].checked == false){
-    this.printDoc[index].checked = true;
-  }
 
-    // this.printDoc[index].checked = this.isChecked;
-    console.log("index : ", index)
-    console.log("onSelect : ", this.printDoc)
+  onSelect(index) {
+    if (this.printDoc[index].checked == false) {
+      this.printDoc[index].checked = true;
+    } else if (this.printDoc[index].checked == true) {
+      this.printDoc[index].checked = false;
+    }
   }
 
   async onPrint(f: any) {
@@ -118,20 +107,16 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
     //   PrintDoc: this.printDoc
     // })
 
-    // console.log("this.afterChk : ", this.afterChk);
-    console.log("this.printDoc : ", this.printDoc);
-    var afterChk = this.printDoc
+   
     for (var i = 0; i < this.printDoc.length; i++) {
       if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RB') {
-        console.log("คำร้องขอรับเงินสินบน : ", this.printDoc[i].DocName)
+        console.log("คำร้องขอรับเงินสินบน : ", this.printDoc[i].DocName,"RequestBribeID : ",this.printDoc[i].RequestBribeID)
       }
       if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'RR') {
-        console.log("คำร้องขอรับเงินรางวัล : ", this.printDoc[i].DocName)
+        console.log("คำร้องขอรับเงินรางวัล : ", this.printDoc[i].DocName,"RequestRewardID : ",this.printDoc[i].RequestRewardID)
       }
     }
 
-
-    // this.printDoc.filter(x => x.checked == true )
 
     // window.open();
     // this.preLoaderService.setShowPreloader(true);
