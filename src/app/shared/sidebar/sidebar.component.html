@@ -202,11 +202,25 @@
                     </ul>
                 </li>
                 <li>
-                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/uac/list">
-                        <!-- <i class="mdi mdi-account-alert"></i> -->
+                    <!-- <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/uac/list"> -->
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"> 
+                    <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>11</strong>
                         <span class="hide-menu">การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด</span>
                     </a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/uac/role/list">
+                                <span>11.1 จัดการสิทธิ์ระดับบทบาท</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/uac/useraccount/list']">
+                                <span>11.2 จัดการสิทธิ์ระดับผู้ใช้</span>
+                            </a>
+                        </li>
+                        
+                    </ul>
                 </li>
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/report/list">              
