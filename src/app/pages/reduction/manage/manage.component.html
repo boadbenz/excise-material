@@ -22,9 +22,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่จับกุม : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitDate" name="LawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceDate" name="LawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitTime" name="LawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceTime" name="LawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -153,7 +153,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ผู้เปรียบเทียบ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="fullName" name="" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareName" name="" disabled>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.PositionlawName" name="PositionlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ComparePositionName" name="PositionlawName" disabled>
             </div>
           </div>
         </div>
@@ -172,7 +172,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitOfficeShortName" name="DepartmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareOfficeShortName" name="DepartmentlawName" disabled>
             </div>
           </div>
         </div>
