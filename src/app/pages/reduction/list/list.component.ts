@@ -18,6 +18,9 @@ export class ListComponent implements OnInit {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   listData = [];
+  listRealData = [];
+  startPage = 0;
+  endPage = 0;
 
   arrestCode: string;
   lawsuitNo: string;
@@ -30,7 +33,7 @@ export class ListComponent implements OnInit {
   advSearch: any;
   allPageCount = 0;
   numberPage = 5;
-  numberSelectPage;
+  numberSelectPage = [];
 
 
   constructor(
@@ -51,7 +54,7 @@ export class ListComponent implements OnInit {
     this.navService.setSaveButton(false);
     this.navService.setNewButton(false);
 
-    this.allPageCount = this.listData.length / this.numberPage;
+    this.allPageCount = this.listRealData.length / this.numberPage;
     this.numberSelectPage = Array(Math.ceil(this.allPageCount)).fill(0).map((x, i) => i + 1);
 
     this.navService.searchByKeyword.subscribe(async text => {
@@ -73,9 +76,31 @@ export class ListComponent implements OnInit {
   }
 
   changeNumPage(numPage: number) {
+    this.startPage = 1;
     this.numberPage = numPage;
-    this.allPageCount = Math.ceil(this.listData.length / this.numberPage);
+    this.allPageCount = Math.ceil(this.listRealData.length / this.numberPage);
     this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i + 1);
+
+    this.listData = this.listRealData.map((data, i) => {
+      return data;
+    });
+
+    this.endPage = numPage;
+  }
+
+  changePage(page: number) {
+    this.listData = this.listRealData.filter((data, i) => {
+      if (i >= ((page - 1) * this.numberPage)) {
+        return data;
+      }
+    });
+
+    this.startPage = ((page - 1) * this.numberPage) + 1;
+    this.endPage = page * this.numberPage;
+
+    if (this.endPage >= this.listRealData.length) {
+      this.endPage = this.listRealData.length;
+    }
   }
 
   public onSearch(text: string): void {
@@ -88,19 +113,20 @@ export class ListComponent implements OnInit {
   }
 
   public adjustListByKeywordDone(lists: any[]): void {
-    this.listData = lists;
+    this.listRealData = lists;
 
-    if (this.listData.length === 0) {
-      this.listData = [];
+    if (this.listRealData.length === 0) {
+      this.listRealData = [];
       this.ShowAlertNoRecord();
     }
 
     this.preloaderService.setShowPreloader(false);
+
+    this.changeNumPage(this.numberPage);
   }
 
   public adjustListByKeywordError(error: any): void {
-    console.log(error);
-    this.listData = [];
+    this.listRealData = [];
     this.ShowAlertGetDataError()
     this.preloaderService.setShowPreloader(false);
   }
@@ -141,9 +167,9 @@ export class ListComponent implements OnInit {
   public adjustListgetByConAdvDone(data: any): void {
     console.log(data);
     if (data) {
-      this.listData.push(data);
+      this.listRealData.push(data);
     } else {
-      this.listData = [];
+      this.listRealData = [];
       // this.ShowAlertNoRecord();
       // swal('ไม่พบข้อมูล', 'error')
       swal({
@@ -159,7 +185,7 @@ export class ListComponent implements OnInit {
 
   public adjustListgetByConAdvError(error: any): void {
     console.log(error);
-    this.listData = [];
+    this.listRealData = [];
     // this.ShowAlertGetDataError();
     // swal('ไม่พบข้อมูล', 'error')
     swal({

@@ -186,7 +186,7 @@
     <div class="form-group row">
       <label class="col-form-label text-left col-md-2">เหตุผลในการปรับ : </label>
       <div class="col-md-10">
-        <textarea class="form-control" type="text" rows="5" [(ngModel)]="adjustArrest.positionLawName" name="positionLawName" [disabled]="showField"></textarea>
+        <textarea class="form-control" type="text" rows="5" [(ngModel)]="adjustFine[0].CompareReason" name="positionLawName" [disabled]="showField"></textarea>
       </div>
     </div>
     <div class="table-responsive table-striped no-wrap">
@@ -238,7 +238,7 @@
             <th class="footable-sortable text-center">ลำดับ</th>
             <th class="footable-sortable">ชื่อผู้ต้องหา</th>
             <th class="footable-sortable">วันที่ชำระค่าปรับ</th>
-            <th class="footable-sortable">ผู้รับชำระค่าปรับ</th>
+            <!-- <th class="footable-sortable">ผู้รับชำระค่าปรับ</th> -->
             <th class="footable-sortable">ช่องทางชำระ</th>
             <th class="footable-sortable">ใบเสร็จเล่มที่</th>
             <th class="footable-sortable">ใบเสร็จเลขที่/เลขอ้างอิง</th>
@@ -251,7 +251,7 @@
             <td class="text-center">{{i+1}}</td>
             <td>{{item.LawbreakerName}}</td>
             <td>{{item.PaymentDate}}</td>
-            <td>Missing ผู้รับชำระ</td>
+            <!-- <td>Missing ผู้รับชำระ</td> -->
             <td>{{item.ReceiptChanel}}</td>
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.ReceiptNo}}</td>
