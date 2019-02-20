@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.42');
+    this.sidebarService.setVersion('0.0.0.43');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -388,8 +388,8 @@ export class ManageComponent implements OnInit {
         let IndictmentDetailID = this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0].IndictmentDetailID
         this.lawsuitService.LawsuitArrestIndicmentDetailgetByCon(IndictmentDetailID).then(results => {
           if (results) {
-            if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 0) {
-              this.lawsuitService.LawsuitJudgementupdDelete(this.lawsuitArrestForm.value.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitJudgement[0].JudgementID)
+            if (this.lawsuitList[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'][0]['LawsuitType'] == 1) {
+              this.lawsuitService.LawsuitJudgementupdDelete(results['LawsuitJudgement'][0]['JudgementID'])
               if (results['LawsuitJudgement'][0]['IsFine'] == 1) {
                 results['LawsuitJudgement'][0]['LawsuitPaymentFine'].forEach(element => {
                   this.lawsuitService.LawsuitPaymentFineDetailupdDelete(element.PaymentFineID)
@@ -458,9 +458,9 @@ export class ManageComponent implements OnInit {
 
   }
   async setButtonCase() {
-    await this.ngOnInit();
     this.preLoaderService.setShowPreloader(true);
-    await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
+    await this.ngOnInit();
+    // await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
     this.preLoaderService.setShowPreloader(false);
     this.showEditField = false;
     this.navService.setEditField(true);
@@ -479,9 +479,10 @@ export class ManageComponent implements OnInit {
   }
 
   async setButtonCaseIslaw() {
-    await this.ngOnInit();
+
     this.preLoaderService.setShowPreloader(true);
-    await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
+    await this.ngOnInit();
+    // await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
     this.preLoaderService.setShowPreloader(false);
     this.showEditField = false;
     this.navService.setEditField(true);
@@ -603,27 +604,22 @@ export class ManageComponent implements OnInit {
             text: "บันทึกสำเร็จ",
             type: 'success',
           })
+          let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           if (isLaw != 0) {
             this.setButtonCase()
           } else {
             this.setButtonCaseIslaw()
           }
-          let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
-          if (checkComplete.length != 0) {
-            let popup = {
-              checkComplete: checkComplete
-            }
-            this.viewNotComplete(popup)
-            this.preLoaderService.setShowPreloader(false);
-          } else {
-
-            this.preLoaderService.setShowPreloader(false);
+          let popup = {
+            checkComplete: checkComplete
           }
+          this.viewNotComplete(popup)
         } else {
           Swal({
             text: "บันทึกไม่สำเร็จ",
             type: 'warning',
           })
+          this.preLoaderService.setShowPreloader(false);
         }
       } else {
         if (update.IsSuccess == "True") {
@@ -631,26 +627,26 @@ export class ManageComponent implements OnInit {
             text: "บันทึกสำเร็จ",
             type: 'success',
           })
-          if (isLaw != 0) {
-            this.setButtonCase()
-          } else {
-            this.setButtonCaseIslaw()
-          }
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
           if (checkComplete.length != 0) {
+            if (isLaw != 0) {
+              this.setButtonCase()
+            } else {
+              this.setButtonCaseIslaw()
+            }
             let popup = {
               checkComplete: checkComplete
             }
             this.viewNotComplete(popup)
-            this.preLoaderService.setShowPreloader(false);
-          } else {
-            this.preLoaderService.setShowPreloader(false);
           }
+          this.preLoaderService.setShowPreloader(false);
+
         } else {
           Swal({
             text: "บันทึกไม่สำเร็จ",
             type: 'warning',
           })
+          this.preLoaderService.setShowPreloader(false);
         }
       }
     }
