@@ -101,8 +101,15 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto13"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto13="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
             </div>
         </div>
     </div>
@@ -167,9 +174,9 @@
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
                     <input type="text" matInput class="form-control" [(ngModel)]="StaffApproveName" name="StaffApproveName" placeholder="" aria-label="Number"
-                        matInput [matAutocomplete]="auto6" (input)="StaffApproveonAutoChange($event.target.value)" (focus)="StaffApproveonAutoFocus($event.target.value)"
+                        matInput [matAutocomplete]="auto12" (input)="StaffApproveonAutoChange($event.target.value)" (focus)="StaffApproveonAutoFocus($event.target.value)"
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                    <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
+                    <mat-autocomplete autoActiveFirstOption #auto12="matAutocomplete">
                         <mat-option *ngFor="let sOption of StaffApproveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
                             (click)="StaffApproveonAutoSelecteWord(sOption)" (onSelectionChange)="StaffApproveonAutoSelecteWord(sOption)">
                             {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
@@ -209,8 +216,15 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto8"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
             </div>
         </div>
     </div>
@@ -321,8 +335,15 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto14"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto14="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
             </div>
         </div>
     </div>
@@ -435,8 +456,15 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto15"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto15="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำออก :</label>
@@ -571,8 +599,15 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto16"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto16="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำบริจาค :</label>
@@ -706,8 +741,15 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField" (input)="TestSearchWarehourse()"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto17"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto17="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
@@ -732,10 +774,10 @@
         <h4 *ngIf="evitype == '16'" class="card-title m-b-0">รายละเอียดของกลางที่โอนย้าย</h4>
     </div>
     <div class="card-body">
-        <div *ngIf="evitype != '11I'" class="row form-group">
+        <div class="row form-group">
             <div class="col-lg-10 col-md-9 col-sm-8"></div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <button class="btn btn-block btn-themecolor" (click)="AddDocument()" [disabled]="showEditField">เพิ่มของกลาง</button>
+                <button class="btn btn-block btn-themecolor" (click)="AddProduct()" [disabled]="showEditField">เพิ่มของกลาง</button>
             </div>
         </div>
 
@@ -745,25 +787,24 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th *ngIf="evitype == '11I' || evitype == '14'"></th>
-                                <th style="text-align: center">ลำดับ</th>
+                                <!-- <th *ngIf="evitype == '11I' || evitype == '14'"></th> -->
+                                <th style="text-align: center;width:7%">ลำดับ</th>
                                 <th *ngIf="evitype == '11E'">เลขหนังสือนำส่ง</th>
-                                <th>เลขทะเบียนบัญชี</th>
+                                <th style="width:14%">เลขทะเบียนบัญชี</th>
                                 <th>ชื่อของกลาง</th>
-                                <th *ngIf="evitype == '11I'">สถานะของกลาง</th>
-                                <th>จำนวน</th>
-                                <th>หน่วย</th>
-                                <th *ngIf="evitype == '11I' || evitype == '11E'">จำนวนคืน</th>
+                                <th style="width:10%">จำนวน</th>
+                                <th style="width:10%">หน่วย</th>
+                                <th style="width:10%" *ngIf="evitype == '11I' || evitype == '11E'">จำนวนคืน</th>
                                 <th *ngIf="evitype == '12'">จำนวนจัดเก็บ</th>
                                 <th *ngIf="evitype == '13'">จำนวนขาย</th>
                                 <th *ngIf="evitype == '14'">จำนวนทำลาย</th>
                                 <th *ngIf="evitype == '15G' || evitype == '15D'">ชำรุด</th>
                                 <th *ngIf="evitype == '16'">จำนวนส่ง</th>
-                                <th>หน่วย</th>
+                                <th style="width:10%">หน่วย</th>
                                 <th *ngIf="evitype == '15G' || evitype == '15D'">จำนวนรับ</th>
                                 <th *ngIf="evitype == '15G' || evitype == '15D'">หน่วย</th>
-                                <th *ngIf="evitype == '11E' || evitype == '11I' || evitype == '15G' || evitype == '15D' || evitype == '16'">หมายเหตุ</th>
-                                <th *ngIf="evitype == '12'">สถานะความเห็นชอบ</th>
+                                <!-- <th *ngIf="evitype == '11E' || evitype == '11I' || evitype == '15G' || evitype == '15D' || evitype == '16'">หมายเหตุ</th> -->
+                                <!-- <th *ngIf="evitype == '12'">สถานะความเห็นชอบ</th> -->
                                 <th *ngIf="evitype == '13' || evitype == '14'">สถานะราชการ</th>
                                 <th *ngIf="evitype == '13'">จำนวนเงิน</th>
                                 <th *ngIf="evitype == '13'">ใบเสร็จเล่มที่</th>
@@ -772,77 +813,94 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th *ngIf="evitype == '11I' || evitype == '14'">
+                            <tr *ngFor="let item of ListEvidenceOutItem | IsActivePipe ; let i=index;">
+                                <!-- <th *ngIf="evitype == '11I' || evitype == '14'">
                                     <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();"
                                         [disabled]="showEditField">
                                     <label for="H_0" class="m-0"></label>
-                                </th>
-                                <th style="text-align: center">{{1}}</th>
+                                </th> -->
+                                <th style="text-align: center">{{i + 1}}</th>
 
                                 <!-- เลขหนังสือนำส่ง -->
                                 <th *ngIf="evitype == '11E'">
-                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                    <input type="text" [(ngModel)]="item.DeliveryNo" name="item.DeliveryNo" class="form-control form-control-sm" [disabled]="showEditField">
                                 </th>
 
                                 <!-- เลขทะเบียนบัญชี -->
                                 <th>
-                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode"
+                                        name="item.ProductDesc" placeholder="" aria-label="Number" [matAutocomplete]="auto18"
+                                        (input)="ProductonAutoChange($event.target.value, item.ProductSeq)" (focus)="ProductonAutoFocus($event.target.value)"
+                                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                                    <mat-autocomplete autoActiveFirstOption #auto18="matAutocomplete">
+                                        <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.EvidenceInItemCode" (click)="ProductonAutoSelecteWord(pOption, item.ProductSeq)"
+                                            style="font-size: 14px;" (onSelectionChange)="ProductonAutoSelecteWord(pOption, item.ProductSeq)">
+                                            {{ pOption.EvidenceInItemCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
                                 </th>
 
                                 <!-- ชื่อของกลาง -->
                                 <th>
-                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
-                                </th>
-
-                                <!-- สถานะของกลาง -->
-                                <th *ngIf="evitype == '11I'">
-                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                    <input type="text" [(ngModel)]="item.ProductDesc" name="item.ProductDesc" class="form-control form-control-sm" readonly>
                                 </th>
 
                                 <!-- จำนวน -->
                                 <th>
-                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                    <input type="text" [(ngModel)]="item.InitBalanceQty" name="item.InitBalanceQty" class="form-control form-control-sm" readonly>
                                 </th>
 
                                 <!-- หน่วย -->
                                 <th>
-                                    <select class="form-control" [disabled]="showEditField">
+                                    <select [(ngModel)]="item.BalanceQtyUnit" name="item.BalanceQtyUnit" class="form-control form-control-sm" style="font-size: 14px"
+                                        readonly>
+                                        <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
+                                        </option>
                                     </select>
                                 </th>
 
                                 <!-- จำนวนคืน, จำนวนจัดเก็บ, จำนวนขาย, จำนวนทำลาย, ชำรุด, จำนวนส่ง -->
                                 <th>
-                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                    <input type="text" [(ngModel)]="item.Qty" name="item.Qty" class="form-control form-control-sm" [disabled]="showEditField"
+                                        [ngClass]="{'ng-touched':isRequired}" required (input)="CalReturn(item.ProductSeq)">
                                 </th>
 
                                 <!-- หน่วย -->
                                 <th>
-                                    <select class="form-control" [disabled]="showEditField">
+                                    <select [(ngModel)]="item.BalanceQtyUnit" name="item.BalanceQtyUnit" class="form-control form-control-sm" style="font-size: 14px"
+                                        readonly>
+                                        <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
+                                        </option>
                                     </select>
                                 </th>
 
                                 <!-- จำนวนรับ -->
                                 <th *ngIf="evitype == '15G' || evitype == '15D'">
-                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
+                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control form-control-sm" [disabled]="showEditField">
                                 </th>
 
                                 <!-- หน่วย -->
                                 <th *ngIf="evitype == '15G' || evitype == '15D'">
-                                    <select class="form-control" [disabled]="showEditField">
+                                    <select [(ngModel)]="item.BalanceQtyUnit" name="item.BalanceQtyUnit" class="form-control form-control-sm" style="font-size: 14px"
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
+                                        <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
+                                        </option>
                                     </select>
                                 </th>
 
                                 <!-- หมายเหตุ -->
-                                <th *ngIf="evitype == '11E' || evitype == '11I' || evitype == '15G' || evitype == '15D' || evitype == '16'">
-                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
-                                </th>
+                                <!-- <th *ngIf="evitype == '11E' || evitype == '11I' || evitype == '15G' || evitype == '15D' || evitype == '16'">
+                                    <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control form-control-sm" [disabled]="showEditField">
+                                </th> -->
 
                                 <!-- สถานะความเห็นชอบ -->
-                                <th *ngIf="evitype == '12'">
-                                    <select class="form-control" [disabled]="showEditField">
+                                <!-- <th *ngIf="evitype == '12'">
+                                    <select [(ngModel)]="item.BalanceQtyUnit" name="item.BalanceQtyUnit" class="form-control form-control-sm" style="font-size: 14px"
+                                            [ngClass]="{'ng-touched':isRequired}" required>
+                                        <option value="0">เห็นชอบ</option>
+                                        <option value="1">ไม่เห็นชอบ</option>
                                     </select>
-                                </th>
+                                </th> -->
 
                                 <!-- สถานะราชการ -->
                                 <th *ngIf="evitype == '13' || evitype == '14'">
@@ -864,7 +922,11 @@
                                 <th *ngIf="evitype == '13'">
                                     <input type="text" [(ngModel)]="DocumentName" name="DocumentName" class="form-control" [disabled]="showEditField">
                                 </th>
-                                <th></th>
+                                <th>
+                                    <a href="javaScript:void(0);" class="text-warning">
+                                        <i class="fa fa-trash-o fa-lg" (click)="DelProduct(item.ProductSeq)" [hidden]="showEditField"></i>
+                                    </a>
+                                </th>
                             </tr>
                         </tbody>
                     </table>
