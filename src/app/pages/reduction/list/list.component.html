@@ -110,7 +110,7 @@
             </thead>
             <tbody>
               <tr class="footable" *ngFor="let item of listData | slice:0:numberPage; let i = index;">
-                <td>{{i+1}}</td>
+                <td>{{i + (startPage == 0 ? 1 : startPage)}}</td>
                 <td>{{item.ArrestCode}}</td>
                 <td>{{item.IsOutside === 1 ? 'น ' + item.LawsuitNo: item.LawsuitNo }}</td>
                 <td>{{item.ProveReportNo}}</td>
@@ -132,19 +132,19 @@
             <div clas="col">
               <a class="icn-pagination"> |&lt;&lt; </a>
               <label> หน้าที่
-                <select>
+                <select (change)="changePage($event.target.value)">
                   <option *ngFor="let number of numberSelectPage;">{{number}}</option>
                 </select> จาก {{allPageCount}} หน้า</label>
               <a class="icn-pagination m-r-10"> &gt;&gt;| </a>
-              รายการที่ 1 - {{numberPage}} จาก {{listData.length}} รายการ
+              รายการที่ {{startPage}} - {{endPage}} จาก {{listRealData.length}} รายการ
             </div>
             <div class="col col-lg-3 text-right">
               <label>แสดง
-                <select>
-                  <option (click)="changeNumPage(5)">5</option>
-                  <option (click)="changeNumPage(10)">10</option>
-                  <option (click)="changeNumPage(15)">15</option>
-                  <option (click)="changeNumPage(20)">20</option>
+                <select (change)="changeNumPage($event.target.value)">
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
                 </select> รายการ</label>
             </div>
           </div>

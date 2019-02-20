@@ -99,12 +99,12 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
       if (!this.showField) {
         this.navService.setCancelButton(true);
         this.navService.setSaveButton(true);
-        this.navService.setPrintButton(false);
+        // this.navService.setPrintButton(false);
         this.navService.setSearchBar(false);
         // this.navService.setDeleteButton(false);
         this.navService.setEditButton(false);
       } else {
-        this.navService.setPrintButton(true);
+        // this.navService.setPrintButton(true);
         // this.navService.setDeleteButton(true);
         this.navService.setEditButton(true);
         this.navService.setSearchBar(false);
