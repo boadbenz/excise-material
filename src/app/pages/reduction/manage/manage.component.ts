@@ -117,7 +117,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.navServiceSub = this.navService.onPrint.subscribe(status => {
       if (status) {
-        this.showPrintPopup(this.printList);
+        // this.showPrintPopup(this.printList);
       }
     });
 
