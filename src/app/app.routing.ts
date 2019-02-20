@@ -53,13 +53,24 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
         ]
-    }, {
+    }, 
+    // {
+    //     path: 'uac', component: LayoutComponent, canActivate: [AuthGuard],
+    //     children: [
+    //         { path: 'list', loadChildren: './pages/UAC/list/list.module#ListModule' },
+    //         { path: 'manage', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
+    //     ]
+    // }, 
+    {
         path: 'uac', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
-            { path: 'list', loadChildren: './pages/UAC/list/list.module#ListModule' },
-            { path: 'manage', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
+            { path: 'useraccount/list', loadChildren: './pages/UAC/useraccount/list/list.module#ListModule' },
+            { path: 'useraccount/manage', loadChildren: './pages/UAC/useraccount/manage/manage.module#ManageModule' },
+
+            { path: 'role/list', loadChildren: './pages/UAC/role/list/list.module#ListModule' },
+            { path: 'role/manage', loadChildren: './pages/UAC/role/manage/manage.module#ManageModule' }
         ]
-    }, 
+    },  
     {
         path: 'report', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
