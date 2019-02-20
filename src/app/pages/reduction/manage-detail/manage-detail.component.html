@@ -18,9 +18,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่จับกุม : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.ArrestDate" name="lawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.OccurrenceDate" name="lawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.ArrestTime" name="lawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.OccurrenceTime" name="lawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -31,7 +31,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ผู้กล่าวหา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.LawsuitName" name="" disabled>
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.CompareName" name="" disabled>
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.LawsuitPositionName" name="positionlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.ComparePositionName" name="positionlawName" disabled>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.LawsuitOfficeShortName" name="departmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.CompareOfficeShortName" name="departmentlawName" disabled>
             </div>
           </div>
         </div>
@@ -58,7 +58,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">สถานที่จับกุม : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.locationlawName" name="locationlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.LocationlawName" name="locationlawName" disabled>
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ฐานความผิดมาตรา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.faultNo" name="faultNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.Behaviour" name="faultNo" disabled>
             </div>
           </div>
         </div>
@@ -208,7 +208,7 @@
           <tr class="footable" *ngFor="let item of adjustFine; let i = index;">
             <td>{{item.LawbreakerName}}</td>
             <td>{{item.ProductDesc}}</td>
-            <td>{{item.OldCompareFine}}</td>
+            <td>{{item.ProductFine}}</td>
             <td>
               <input type="text" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField">
             </td>
