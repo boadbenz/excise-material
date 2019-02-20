@@ -19,7 +19,7 @@ const routes: Routes = [
             urls: [{ title: 'หน้าหลัก', url: '/userlist' }, { title: 'ค้นหาเจ้าพนักงานเพื่อจัดการสิทธิเข้าถึงข้อมูล' }],
             pageType: 'list',
             // nextPage: { title: '', url: '/list/manage' },
-            codePage: 'ILG60-24-01-01-03'
+            codePage: 'ILG60-24-01-00-00'
         },
         component: UserListComponent
     }
