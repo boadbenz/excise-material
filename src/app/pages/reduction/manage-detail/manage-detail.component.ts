@@ -58,6 +58,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public indictmentID: string;
   private getDataFromListPage: any;
 
+  public startIndexSum = 0;
+  public startList = [];
   constructor(
     private router: Router,
     private activeRoute: ActivatedRoute,
@@ -140,42 +142,161 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       CompareID: CompareID,
       CompareDetailID: CompareDetailID
     })
-    .subscribe(response => {
+    .subscribe(async response => {
       if (response.length > 0) {
         this.adjustFine = response;
         if (this.adjustFine.length > 0) {
           this.compareReason = this.adjustFine[0].CompareReason;
 
-          this.adjustFine.forEach((element, i) => {
+          this.adjustFine = [
+            {
+              CompareDetailID: 989,
+              CompareFineID: 813,
+              CompareReason: 'ไม่มี',
+              FineRate: 7,
+              FineType: 3,
+              IsActive: 1,
+              LawbreakerName: 'หยวก  เหมศรี',
+              ProductDesc: null,
+              ProductFine: 16100,
+              ProductID: 1136,
+              VatValue: 2300,
+            },
+            {
+              CompareDetailID: 989,
+              CompareFineID: 813,
+              CompareReason: 'ไม่มี',
+              FineRate: 7,
+              FineType: 3,
+              IsActive: 1,
+              LawbreakerName: 'หยวก  เหมศรี',
+              ProductDesc: null,
+              ProductFine: 16100,
+              ProductID: 1136,
+              VatValue: 2300,
+            },
+            {
+              CompareDetailID: 989,
+              CompareFineID: 813,
+              CompareReason: 'ไม่มี',
+              FineRate: 7,
+              FineType: 3,
+              IsActive: 1,
+              LawbreakerName: 'หยวก2  เหมศรี',
+              ProductDesc: null,
+              ProductFine: 16100,
+              ProductID: 1136,
+              VatValue: 2300,
+            },
+            {
+              CompareDetailID: 989,
+              CompareFineID: 813,
+              CompareReason: 'ไม่มี',
+              FineRate: 7,
+              FineType: 3,
+              IsActive: 1,
+              LawbreakerName: 'หยวก2  เหมศรี',
+              ProductDesc: null,
+              ProductFine: 16100,
+              ProductID: 1136,
+              VatValue: 2300,
+            },
+            {
+              CompareDetailID: 989,
+              CompareFineID: 813,
+              CompareReason: 'ไม่มี',
+              FineRate: 7,
+              FineType: 3,
+              IsActive: 1,
+              LawbreakerName: 'หยวก2  เหมศรี',
+              ProductDesc: null,
+              ProductFine: 16100,
+              ProductID: 1136,
+              VatValue: 2300,
+            },
+            {
+              CompareDetailID: 989,
+              CompareFineID: 813,
+              CompareReason: 'ไม่มี',
+              FineRate: 7,
+              FineType: 3,
+              IsActive: 1,
+              LawbreakerName: 'หยวก3  เหมศรี',
+              ProductDesc: null,
+              ProductFine: 16100,
+              ProductID: 1136,
+              VatValue: 2300,
+            },
+            {
+              CompareDetailID: 989,
+              CompareFineID: 813,
+              CompareReason: 'ไม่มี',
+              FineRate: 7,
+              FineType: 3,
+              IsActive: 1,
+              LawbreakerName: 'หยวก3  เหมศรี',
+              ProductDesc: null,
+              ProductFine: 16100,
+              ProductID: 1136,
+              VatValue: 2300,
+            }
+          ];
+
+          await this.adjustFine.forEach((element, i) => {
             this.calAdjustFine(i);
           });
         }
       }
-    }, error => {
+    }, async error => {
       console.log(error);
     });
   }
 
   // คำนวณปรับเพิ่ม-ลด ใหม่
-  public enterNewValue(event, index): void {
+  public async enterNewValue(event, index): Promise<void> {
     if (event.keyCode === 13) {
       console.log(this.adjustFine[index].CompareFine);
-      this.calAdjustFine(index);
+      await this.calAdjustFine(index);
     }
   }
 
   // คำนวณปรับเพิ่มลด
-  public calAdjustFine(index): any {
+  public async calAdjustFine(index): Promise<any> {
     this.adjustFine[index].CompareFineDiff = 0;
+    this.adjustFine[index].CompareFineTreasuryMoney = 0;
+    this.adjustFine[index].CompareFineBribeMoney = 0;
+    this.adjustFine[index].CompareFineRewardMoney = 0;
     if (this.adjustFine[index].CompareFine) {
-      this.adjustFine[index].CompareFineDiff = this.adjustFine[index].ProductFine - this.adjustFine[index].CompareFine;
-      console.log(this.adjustFine[index].CompareFineDiff);
+      this.adjustFine[index].CompareFineDiff = this.adjustFine[index].CompareFine - this.adjustFine[index].ProductFine;
       if (this.adjustFine[index].ProductFine < this.adjustFine[index].CompareFine) {
         this.adjustFine[index].CompareFineStatus = true;
       } else if (this.adjustFine[index].ProductFine > this.adjustFine[index].CompareFine) {
         this.adjustFine[index].CompareFineStatus = false;
       }
+
+      this.adjustFine[index].CompareFineTreasuryMoney = this.adjustFine[index].CompareFine * (1 - (20 / 100));
+      this.adjustFine[index].CompareFineBribeMoney = this.adjustFine[index].CompareFine * (1 - (20 / 100));
+      this.adjustFine[index].CompareFineRewardMoney = this.adjustFine[index].CompareFineDiff
+                                                    - this.adjustFine[index].CompareFineTreasuryMoney
+                                                    - this.adjustFine[index].CompareFineBribeMoney;
     }
+  }
+
+  public sumAllAdjustFine(column, end = this.adjustFine.length, last = false): any {
+    let sum = 0;
+    for (let i = this.startIndexSum; i < end; i++) {
+      sum += this.adjustFine[i][column];
+    }
+
+    // this.startIndexSum = (end && last) ? end : 2;
+    // if (last) {
+    //   this.startIndexSum = end ? end : this.adjustFine.length;
+    // }
+    return sum;
+  }
+
+  public changestartIndexSum(start_index) {
+    this.startIndexSum = start_index;
   }
 
   // ดึงข้อมูลในส่วนของการชำระค่าปรับ
