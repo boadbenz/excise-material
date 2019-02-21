@@ -21,7 +21,7 @@ export class InvestgateService {
       })
   };
 
-  version = '0.0.0.22'
+  version = '0.0.0.23'
   private onEnd(): void {
     this.hideLoader();
   }  
