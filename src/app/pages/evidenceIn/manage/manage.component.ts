@@ -1214,7 +1214,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     getCurrentTime() {
         let date = new Date();
-        return date.getHours() + ":" + date.getMinutes();
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false }) + " น.";
     }
 
     getIndexOf(arr, val, prop) {

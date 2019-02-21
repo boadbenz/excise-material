@@ -99,6 +99,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     UnitOption = [];            // unit
     rawProductOptions = [];
     Productoptions = [];
+    rawProductList = [];
+    ProductList = [];
 
     oEviOutStaffRequest: EvidenceOutStaff;
     oEviOutStaffApprove: EvidenceOutStaff;
@@ -879,7 +881,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     getCurrentTime() {
         let date = new Date();
-        return date.getHours() + ":" + date.getMinutes();
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false }) + " น.";
     }
 
     getIndexOf(arr, val, prop) {
@@ -1310,6 +1312,31 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.EvidenceOutService.getProduct(this.WarehouseID, this.EvidenceInType).then(async res => {
             if (res) {
                 this.rawProductOptions = res;
+
+                this.rawProductOptions.map(f => {
+                    f.EvidenceOutInItem.forEach(element => {
+                        var item = {
+                            DeliveryNo: f.DeliveryNo,
+                            EvidenceInItemCode: element.EvidenceInItemCode,
+                            ProductDesc: element.ProductDesc,
+                            ReceiveQty: element.EvidenceOutStockBalance[0].ReceiveQty,
+                            ReceiveQtyUnit: element.EvidenceOutStockBalance[0].ReceiveQtyUnit,
+                            BalanceQty: element.EvidenceOutStockBalance[0].BalanceQty,
+                            BalanceQtyUnit: element.EvidenceOutStockBalance[0].BalanceQtyUnit,
+                            ReceiveSize: element.EvidenceOutStockBalance[0].ReceiveSize,
+                            ReceiveSizeUnit: element.EvidenceOutStockBalance[0].ReceiveSizeUnit,
+                            StockID: element.EvidenceOutStockBalance[0].StockID,
+                            
+                            IsChecked: false
+                        }
+
+                        this.rawProductList.push(item);
+                    });
+                });
+
+                // set total record
+                this.paginage.TotalItems = this.rawProductList.length;
+                this.ProductList = this.rawProductList.slice(0, this.paginage.RowsPerPageOptions[0]);
             }
 
             this.preloader.setShowPreloader(false);
@@ -1324,30 +1351,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.Productoptions = [];
                 this.ClearProduct(i);
             } else {
-                if (this.rawProductOptions.length == 0) {
+                if (this.rawProductList.length == 0) {
                     this.getProduct();
                 }
 
-                var pOption = [];
-                this.rawProductOptions.map(f => {
-                    f.EvidenceOutInItem.forEach(element => {
-                        var item = {
-                            EvidenceInItemCode: element.EvidenceInItemCode,
-                            ProductDesc: element.ProductDesc,
-                            ReceiveQty: element.EvidenceOutStockBalance[0].ReceiveQty,
-                            ReceiveQtyUnit: element.EvidenceOutStockBalance[0].ReceiveQtyUnit,
-                            BalanceQty: element.EvidenceOutStockBalance[0].BalanceQty,
-                            BalanceQtyUnit: element.EvidenceOutStockBalance[0].BalanceQtyUnit,
-                            ReceiveSize: element.EvidenceOutStockBalance[0].ReceiveSize,
-                            ReceiveSizeUnit: element.EvidenceOutStockBalance[0].ReceiveSizeUnit,
-                            StockID: element.EvidenceOutStockBalance[0].StockID
-                        }
-
-                        pOption.push(item);
-                    });
-                });
-
-                this.Productoptions = pOption.filter(f => f.EvidenceInItemCode.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
+                this.Productoptions = this.rawProductList.filter(f => f.EvidenceInItemCode.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
             }
         }
     }
@@ -1455,5 +1463,48 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.ListEvidenceOutItem[aIndex].Qty = this.ListEvidenceOutItem[aIndex].InitBalanceQty;
             this.ListEvidenceOutItem[aIndex].BalanceQty = this.ListEvidenceOutItem[aIndex].InitBalanceQty;
         }
+    }
+
+    async pageChanges(event) {
+        this.ProductList = await this.rawProductList.slice(event.startIndex - 1, event.endIndex);
+    }
+
+    ClosePopupProduct() {
+        let ls = this.ProductList.filter(x => x.IsChecked == true)
+
+        if(ls.length > 0){
+            ls.map(m => {
+                this.oEvidenceOutItem = {
+                    StockID: m.StockID,
+                    EvidenceOutItemID: "",
+                    EvidenceInItemCode: m.EvidenceInItemCode,
+                    DeliveryNo: m.DeliveryNo,
+                    ProductSeq: this.ListEvidenceOutItem.length,
+                    EvidenceOutID: "",
+                    ProductDesc: m.ProductDesc,
+                    Size: m.ReceiveSize,
+                    SizeUnit: m.ReceiveSizeUnit,
+                    ReceiveQty: m.ReceiveQty,
+                    ReceiveQtyUnit: m.ReceiveQtyUnit,
+                    InitBalanceQty: m.BalanceQty,
+                    BalanceQtyUnit: m.BalanceQtyUnit,
+                    BalanceQty: m.BalanceQty,
+                    NetVolumn: "",
+                    NetVolumnUnit: "",
+                    Qty: "",
+                    QtyUnit: m.BalanceQtyUnit,
+                    IsNewItem: true,
+                    IsDelItem: false
+                };
+    
+                this.ListEvidenceOutItem.push(this.oEvidenceOutItem);
+            });
+        } else {
+            this.ShowAlertWarning("กรุณาเลือกของกลางที่ต้องการเพิ่ม !!!");
+
+            return false;
+        }
+        
+        $("#ProductPopup .close").click();
     }
 }

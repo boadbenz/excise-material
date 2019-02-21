@@ -20,13 +20,16 @@ export class EvidenceOutService {
 
   getByKeyword(Textsearch: any) {
     const params = JSON.stringify(Textsearch);
-    const url = `${appConfig.api8775}/EvidenceOutgetByKeyword`;
+    // const url = `${appConfig.api8778}/EvidenceOutgetByKeyword`;
+    const url = `${appConfig.api8778}/EvidenceOutListgetByKeyword`;
+
     return this.http.post<EvidenceOut[]>(url, params, this.httpOptions);
   }
 
   async getByConAdv(form: any): Promise<any> {
     const params = JSON.stringify(form);
-    const url = `${appConfig.api8775}/EvidenceOutgetByConAdv`;
+    // const url = `${appConfig.api8778}/EvidenceOutgetByConAdv`;
+    const url = `${appConfig.api8778}/EvidenceOutListgetByConAdv`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -49,7 +52,7 @@ export class EvidenceOutService {
 
   async getByCon( EvidenceOutID: string): Promise<any> {
     const params = {  EvidenceOutID };
-    const url = `${appConfig.api8775}/EvidenceOutgetByCon`;
+    const url = `${appConfig.api8778}/EvidenceOutgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -61,7 +64,7 @@ export class EvidenceOutService {
 
   async EvidenceOutinsAll(oEvidence: EvidenceOut): Promise<any> {
     const params = JSON.stringify(oEvidence);
-    const url = `${appConfig.api8775}/EvidenceOutinsAll`;
+    const url = `${appConfig.api8778}/EvidenceOutinsAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -124,7 +127,7 @@ export class EvidenceOutService {
 
   async EvidenceOutupdByCon(oEvidence: EvidenceOut): Promise<any> {
     const params = JSON.stringify(oEvidence);
-    const url = `${appConfig.api8775}/EvidenceOutupdByCon`;
+    const url = `${appConfig.api8778}/EvidenceOutupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

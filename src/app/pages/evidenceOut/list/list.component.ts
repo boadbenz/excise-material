@@ -96,7 +96,7 @@ export class ListComponent implements OnInit, OnDestroy {
                 ts = { TextSearch: "", OfficeCode: localStorage.getItem("officeCode") }
                 ts = TextSearch;
 
-                if (ts.TextSearch == null) { this.onSearch({ TextSearch: ""}); }
+                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
                 else { this.onSearch(TextSearch); }
             }
         })
@@ -109,7 +109,7 @@ export class ListComponent implements OnInit, OnDestroy {
                     this.modal = this.ngbModel.open(this.evidenceTypeModel, { size: 'lg', centered: true });
                 }
                 else {
-                    this._router.navigate(['/evidenceOut/manage', this.evitype, 'C', 'NEW','0']);
+                    this._router.navigate(['/evidenceOut/manage', this.evitype, 'C', 'NEW', '0']);
                 }
             }
         })
@@ -167,13 +167,19 @@ export class ListComponent implements OnInit, OnDestroy {
         });
     }
 
-    clickView(RevenueID: string) {
-        this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', RevenueID, "0"]);
+    clickView(EvidenceOutID: string, EvidenceInType: string) {
+        if (this.evitype == "11" && EvidenceInType == "0") {
+            this._router.navigate(['/evidenceOut/manage', '11I', 'R', EvidenceOutID, "0"]);
+        } else if (this.evitype == "11" && EvidenceInType == "1") {
+            this._router.navigate(['/evidenceOut/manage', "11E", 'R', EvidenceOutID, "0"]);
+        } else {
+            this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', EvidenceOutID, "0"]);
+        }
     }
 
     async onSearch(p: any) {
         var paramsOther = {
-            TextSearch: p.TextSearch, 
+            TextSearch: p.TextSearch,
             EvidenceOutType: this.EvidenceOutType,
             OfficeCode: localStorage.getItem("officeCode")
         }
