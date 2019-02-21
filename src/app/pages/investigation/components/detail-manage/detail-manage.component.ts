@@ -1103,7 +1103,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         form.InvestigateDateEnd = setZeroHours(dateEnd);
 
         form.InvestigateDetailLocal = form.InvestigateDetailLocal.filter(x => x.IsModify != 'd');
-        form.InvestigateDetailProduct = form.InvestigateDetailProduct.filter(x => x.IsModify != 'd');
+        // form.InvestigateDetailProduct = form.InvestigateDetailProduct.filter(x => x.IsModify != 'd');
         form.InvestigateDetailStaff = form.InvestigateDetailStaff.filter(x => x.IsModify != 'd');
 
         console.log("InvestigateDetailinsAll : ", JSON.stringify(form));
@@ -1131,7 +1131,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         form.InvestigateDateEnd = setZeroHours(dateEnd);
 
         form.InvestigateDetailLocal = form.InvestigateDetailLocal.filter(x => x.IsModify != 'd');
-        form.InvestigateDetailProduct = form.InvestigateDetailProduct.filter(x => x.IsModify != 'd');
+        // form.InvestigateDetailProduct = form.InvestigateDetailProduct.filter(x => x.IsModify != 'd');
         form.InvestigateDetailStaff = form.InvestigateDetailStaff.filter(x => x.IsModify != 'd');
 
         console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));
@@ -1257,7 +1257,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
-                        if (this.mode == 'C') return;
+                        // if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailProductinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;
