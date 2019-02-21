@@ -39,6 +39,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   adjustDetail = [];
 
+  compareReason = '';
 
   public fileItem = [{
     fileName: '',
@@ -142,10 +143,39 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     .subscribe(response => {
       if (response.length > 0) {
         this.adjustFine = response;
+        if (this.adjustFine.length > 0) {
+          this.compareReason = this.adjustFine[0].CompareReason;
+
+          this.adjustFine.forEach((element, i) => {
+            this.calAdjustFine(i);
+          });
+        }
       }
     }, error => {
       console.log(error);
     });
+  }
+
+  // คำนวณปรับเพิ่ม-ลด ใหม่
+  public enterNewValue(event, index): void {
+    if (event.keyCode === 13) {
+      console.log(this.adjustFine[index].CompareFine);
+      this.calAdjustFine(index);
+    }
+  }
+
+  // คำนวณปรับเพิ่มลด
+  public calAdjustFine(index): any {
+    this.adjustFine[index].CompareFineDiff = 0;
+    if (this.adjustFine[index].CompareFine) {
+      this.adjustFine[index].CompareFineDiff = this.adjustFine[index].ProductFine - this.adjustFine[index].CompareFine;
+      console.log(this.adjustFine[index].CompareFineDiff);
+      if (this.adjustFine[index].ProductFine < this.adjustFine[index].CompareFine) {
+        this.adjustFine[index].CompareFineStatus = true;
+      } else if (this.adjustFine[index].ProductFine > this.adjustFine[index].CompareFine) {
+        this.adjustFine[index].CompareFineStatus = false;
+      }
+    }
   }
 
   // ดึงข้อมูลในส่วนของการชำระค่าปรับ
