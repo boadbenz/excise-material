@@ -93,10 +93,10 @@ export class ListComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { TextSearch: "" }
+                ts = { TextSearch: "", OfficeCode: localStorage.getItem("officeCode") }
                 ts = TextSearch;
 
-                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "", EvidenceOutType: this.EvidenceOutType }); }
+                if (ts.TextSearch == null) { this.onSearch({ TextSearch: ""}); }
                 else { this.onSearch(TextSearch); }
             }
         })
@@ -109,7 +109,7 @@ export class ListComponent implements OnInit, OnDestroy {
                     this.modal = this.ngbModel.open(this.evidenceTypeModel, { size: 'lg', centered: true });
                 }
                 else {
-                    this._router.navigate(['/evidenceOut/manage', this.evitype, 'C', 'NEW']);
+                    this._router.navigate(['/evidenceOut/manage', this.evitype, 'C', 'NEW','0']);
                 }
             }
         })
@@ -131,7 +131,7 @@ export class ListComponent implements OnInit, OnDestroy {
                         case '11':
                             data.urls[1].title = "ค้นหารายการคืนของกลาง";
                             data.codePage = "ILG60-11-01-00-00";
-                            this.EvidenceOutType = "1";
+                            this.EvidenceOutType = "0";
                             break;
                         case '12':
                             data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
@@ -151,7 +151,7 @@ export class ListComponent implements OnInit, OnDestroy {
                         case '15':
                             data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
                             data.codePage = "ILG60-15-01-00-00";
-                            this.EvidenceOutType = "3,5";
+                            this.EvidenceOutType = "5";
                             break;
                         case '16':
                             data.urls[1].title = "ค้นหารายการโอนย้ายของกลาง";
@@ -168,20 +168,19 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(RevenueID: string) {
-        this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', RevenueID]);
+        this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', RevenueID, "0"]);
     }
 
-    onSearch(Textsearch: any) {
-        this.preloader.setShowPreloader(true);
+    async onSearch(p: any) {
+        var paramsOther = {
+            TextSearch: p.TextSearch, 
+            EvidenceOutType: this.EvidenceOutType,
+            OfficeCode: localStorage.getItem("officeCode")
+        }
 
-        this.EvidenceService.getByKeyword(Textsearch).subscribe(list => {
+        this.EvidenceService.getByKeyword(paramsOther).subscribe(list => {
             this.onSearchComplete(list)
 
-            this.preloader.setShowPreloader(false);
-        }, (err: HttpErrorResponse) => {
-
-            this.ShowAlertNoRecord();
-            this.EvidenceOutList = [];
             this.preloader.setShowPreloader(false);
         });
     }
@@ -287,13 +286,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
         let oEvidenceOut = {
             EvidenceOutCode: this.EvidenceOutCode,
-            EvidenceOutDateStart: this.EvidenceOutDateStart,
+            EvidenceOutDateFrom: this.EvidenceOutDateStart,
             EvidenceOutDateTo: this.EvidenceOutDateTo,
             EvidenceOutNo: this.EvidenceOutNo,
-            EvidenceOutNoDateStart: this.EvidenceOutNoDateStart,
+            EvidenceOutNoDateFrom: this.EvidenceOutNoDateStart,
             EvidenceOutNoDateTo: this.EvidenceOutNoDateTo,
             StaffName: this.StaffName,
-            OfficeName: this.OfficeName,
+            StaffOfficeName: this.OfficeName,
+            OfficeCode: localStorage.getItem("officeCode"),
             EvidenceOutType: this.EvidenceOutType
         }
 

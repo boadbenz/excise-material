@@ -18,15 +18,15 @@ export class EvidenceOutService {
       })
   };
 
-  getByKeyword(Textsearch: string) {
-    const params = Textsearch;
-    const url = `${appConfig.api8775}/EvidenceOutgetByKeyword`;
+  getByKeyword(Textsearch: any) {
+    const params = JSON.stringify(Textsearch);
+    const url = `${appConfig.api8778}/EvidenceOutgetByKeyword`;
     return this.http.post<EvidenceOut[]>(url, params, this.httpOptions);
   }
 
   async getByConAdv(form: any): Promise<any> {
     const params = JSON.stringify(form);
-    const url = `${appConfig.api8775}/EvidenceOutgetByConAdv`;
+    const url = `${appConfig.api8778}/EvidenceOutgetByConAdv`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -49,7 +49,7 @@ export class EvidenceOutService {
 
   async getByCon( EvidenceOutID: string): Promise<any> {
     const params = {  EvidenceOutID };
-    const url = `${appConfig.api8775}/EvidenceOutgetByCon`;
+    const url = `${appConfig.api8778}/EvidenceOutgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -61,7 +61,70 @@ export class EvidenceOutService {
 
   async EvidenceOutinsAll(oEvidence: EvidenceOut): Promise<any> {
     const params = JSON.stringify(oEvidence);
-    const url = `${appConfig.api8775}/EvidenceOutinsAll`;
+    const url = `${appConfig.api8778}/EvidenceOutinsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async getProduct(WarehouseID: string, EvidenceInType: string): Promise<any> {
+    let pValue = {
+      "WarehouseID": WarehouseID,
+      "EvidenceInType": EvidenceInType
+    }
+
+    const params = JSON.stringify(pValue);
+    const url = `${appConfig.api8778}/EvidenceOutIngetByKeyword`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) { }
+  }
+
+  async EvidenceOutIteminsAll(oItem: any): Promise<any> {
+    const params = JSON.stringify(oItem);
+    const url = `${appConfig.api8778}/EvidenceOutIteminsAll`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async EvidenceOutItemupdByCon(oItem: any): Promise<any> {
+    const params = JSON.stringify(oItem);
+    const url = `${appConfig.api8778}/EvidenceOutItemupdByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async EvidenceOutItemupdDelete(oItem: any): Promise<any> {
+    const params = JSON.stringify(oItem);
+    const url = `${appConfig.api8778}/EvidenceOutItemupdDelete`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async EvidenceOutupdByCon(oEvidence: EvidenceOut): Promise<any> {
+    const params = JSON.stringify(oEvidence);
+    const url = `${appConfig.api8778}/EvidenceOutupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

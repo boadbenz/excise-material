@@ -16,6 +16,7 @@ import { IsActivePipeModule } from '../../../shared/pipe/IsActivePipe.module';
 import { MasterService } from '../../model/master.service';
 import { IncomeService } from '../../income/income.service';
 import { ProveService } from '../../prove/prove.service';
+import { EvidenceService } from '../../evidenceIn/evidenceIn.service';
 
 const routes: Routes = [
     {
@@ -53,7 +54,7 @@ const routes: Routes = [
     declarations: [
         ManageComponent
     ],
-    providers: [EvidenceOutService, IncomeService, ProveService, MasterService],
+    providers: [EvidenceOutService, IncomeService, ProveService, MasterService, EvidenceService],
     exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

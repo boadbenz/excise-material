@@ -207,7 +207,7 @@ export const routes: Routes = [
         path: 'evidenceOut', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list/:type', loadChildren: './pages/evidenceOut/list/list.module#ListModule' },
-            { path: 'manage/:type/:mode/:code', loadChildren: './pages/evidenceOut/manage/manage.module#ManageModule' }
+            { path: 'manage/:type/:mode/:code/:intype', loadChildren: './pages/evidenceOut/manage/manage.module#ManageModule' }
         ]
     }
 ];
