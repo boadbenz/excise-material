@@ -76,7 +76,11 @@ export class ListComponent implements OnInit, OnDestroy {
                       jsdate: this.advForm.value.LawsuitDateFrom.jsdate,
                     });
                     console.log(this.advForm.controls['LawsuitDateTo'])
-                    alert(Message.checkDate);
+                    swal(
+                        '',
+                        Message.checkDate,
+                        'warning'
+                    );
                     return;
                   }
                   else {
@@ -117,7 +121,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.48');
+        this.sidebarService.setVersion('0.0.0.49');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
             LawsuitCode: new FormControl(''),
