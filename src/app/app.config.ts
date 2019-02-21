@@ -18,7 +18,7 @@ export const appConfig = {
     api8086: 'http://103.233.193.94:8086/XCS60',
     api8777: 'http://103.233.193.94:8777/XCS60',
     api8776: 'http://103.233.193.94:8776/XCS60', 
-    api8778: 'http://192.168.3.158:8778/XCS60',  
+    api8778: 'http://103.233.193.94:8778/XCS60',  
     apiReport:'http://103.233.193.62:8000/Report_XCS',
     exciseService: 'http://webtest.excise.go.th'
     
